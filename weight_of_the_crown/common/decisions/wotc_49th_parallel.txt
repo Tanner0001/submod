@@ -46,6 +46,14 @@ wotc_49th_parallel = {
 		ai_will_do = { factor = 1 }
 	}
 
+	# NOTE: HOI4's Operations system (common/operations/) is occupation- and
+	# resistance-network based (see operation_targeted_sabotage_infrastructure)
+	# - it can't be launched against a state Canada doesn't occupy, which rules
+	# it out for sabotaging a live hostile country's rail hubs from a decision.
+	# This instead applies a dynamic state modifier (wotc_49th_parallel_sabotage_modifier,
+	# built from real keys used elsewhere in this repo) to every currently
+	# hostile-controlled border state, which is the closest verified
+	# equivalent to the GDD's intent.
 	wotc_sabotage_rail_hubs = {
 		icon = GFX_decision_generic_sabotage
 		available = {
@@ -55,31 +63,46 @@ wotc_49th_parallel = {
 		days_re_enable = 60
 
 		complete_effect = {
-			log = "[GetLogRoot]: wotc_sabotage_rail_hubs - hook into an off-map operation, not scripted here"
-			# TODO: this should call into KR's existing operations system
-			# (common/operations/) rather than a bespoke effect - check
-			# common/operations for a rail/infrastructure-sabotage operation
-			# template to extend instead of duplicating the framework.
+			every_state = {
+				limit = {
+					wotc_is_49th_parallel_state = yes
+					wotc_state_controller_is_hostile_to_canada = yes
+				}
+				set_state_flag = { flag = wotc_sabotage_active days = 60 }
+				add_dynamic_modifier = { modifier = wotc_49th_parallel_sabotage_modifier }
+			}
+			add_to_variable = { wotc_border_tension = 3 } # covert action carries its own escalation risk
 		}
 
 		ai_will_do = { factor = 0.5 }
 	}
 
+	# NOTE: `create_wargoal` issued directly from a decision effect (as seen
+	# in this repo's "01 China decisions.txt", e.g. china_attack_decision's
+	# remove_effect) never goes through the World Tension-gated declare-war
+	# diplomatic action at all - it's the standard way KR content already
+	# bypasses WT, not a special trick. No separate "bypass" effect exists to
+	# copy because this already is that pattern.
 	wotc_intervention_war_justification = {
 		icon = GFX_decision_generic_war
 		available = {
 			wotc_tier_intervention = yes
-			NOT = { has_war_with = WCA }
-			NOT = { has_war_with = APG }
+			OR = {
+				AND = { country_exists = WCA NOT = { has_war_with = WCA } }
+				AND = { country_exists = APG NOT = { has_war_with = APG } }
+			}
 		}
 		cost = 150
 
 		complete_effect = {
-			log = "[GetLogRoot]: wotc_intervention_war_justification - bypasses World Tension, mirror an existing KR proxy-war justification effect"
-			# TODO: copy the actual bypass-WT wargoal effect from an existing
-			# KR proxy-war system (per the GDD review, this pattern is already
-			# precedented elsewhere in the mod) rather than inventing new
-			# create_wargoal syntax here untested.
+			if = {
+				limit = { country_exists = WCA NOT = { has_war_with = WCA } }
+				create_wargoal = { target = WCA type = annex_everything } # type is a placeholder - pick the wargoal type that matches how KR's other proxy interventions justify war
+			}
+			if = {
+				limit = { country_exists = APG NOT = { has_war_with = APG } }
+				create_wargoal = { target = APG type = annex_everything }
+			}
 			if = {
 				limit = { NOT = { has_government = democratic } }
 				add_stability = -0.15
