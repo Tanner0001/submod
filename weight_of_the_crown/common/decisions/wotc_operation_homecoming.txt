@@ -1,4 +1,32 @@
-### Weight of the Crown - Operation Homecoming ###
+### Weight of the Crown - Operation Homecoming (redesigned) ###
+###
+### Full rework from the original 3-phase version. What changed and why:
+###
+### - Iceland (state 100, ICE's entire territory - confirmed a single-state
+###   minor) no longer gets annexed in one instant decision. Split into an
+###   overture (diplomatic buildup, timed) then a separate occupation
+###   decision, so there's a real gap between "we're moving in" and
+###   "we own it" - addresses it feeling too sudden.
+### - Faroe Islands (state 337) and Orkney & Shetland (state 938) are NOT
+###   interchangeable "stepping stones" anymore - they're mechanically
+###   different, verified from their own history files:
+###     - Faroe Islands is owned by DEN (Denmark), a neutral minor, same
+###       annex-a-minor shape as Iceland (with its own buildup).
+###     - Orkney & Shetland is owned by ENG (Union of Britain) itself - it's
+###       enemy home territory, not a minor to annex by decision. It already
+###       has `add_claim_by = IMP` in its history file (a scripted claim for
+###       the exiled Crown) plus an existing level-8 naval base and a naval
+###       supply hub. So this isn't taken by decision at all - it has to be
+###       conquered in the actual war, and the decision here just activates
+###       once Canada already controls it, formalizing use of infrastructure
+###       that's already sitting there.
+### - Because of that, "the stepping stones" now means completing both an
+###   annexation (Faroe) and an actual battlefield objective (Shetland)
+###   before the final landing - more if-conditions, not fewer, per your
+###   Operation Anvil feedback that you liked that shape.
+### - Phase 3 renamed "Commit to the Landing" is still last and still not
+###   auto-detected (no on_action fires on invasion launch), so it stays a
+###   deliberate player decision.
 
 wotc_operation_homecoming = {
 	icon = GFX_decision_category_generic
@@ -8,38 +36,39 @@ wotc_operation_homecoming = {
 		has_war_with = ENG # confirm actual UoB tag - assumed ENG (Union of Britain) per KR convention
 	}
 
-	# Iceland (ICE) is a single-state minor - state 100 is its entire
-	# territory (confirmed in history/states/100 - Iceland.txt), so taking it
-	# is a full annexation, not a slice of a larger country. Per design
-	# decision, that's intended: this models Canada moving in on Iceland the
-	# way the Allies did in 1940, just ending in outright control rather
-	# than a basing agreement. State 100 already has a level-3/level-1 naval
-	# base in its starting history, which we top up rather than build from 0.
-	#
-	# NOTE: this gates on who currently owns state 100, not on
-	# `country_exists = ICE`. Checked Iceland's own focus tree
-	# (ICE_Sca_Defense_Union) - it only has Iceland *ask to join* a Nordic
-	# faction (ask_to_join_faction), which keeps ICE fully independent and
-	# still owning state 100. There's no scripted merger that hands Iceland's
-	# territory to Scandinavia. But nothing stops ordinary wartime play from
-	# letting someone else (SCA included) conquer Iceland the normal way, so
-	# gating on ICE specifically would permanently lock this decision out if
-	# that happened. Checking the state's actual owner instead means this
-	# still works (takes it from whoever holds it) regardless of how Iceland
-	# got there.
-	wotc_phase1_reconnaissance = {
+	### --- Stage 1: Iceland --- ###
+
+	wotc_ice_overture = {
+		icon = GFX_decision_generic_agreement
+		available = {
+			NOT = { 100 = { owner = CAN } }
+			NOT = { has_country_flag = wotc_ice_overture_done }
+			NOT = { has_country_flag = wotc_ice_overture_pending }
+		}
+		cost = 30
+
+		complete_effect = {
+			set_country_flag = wotc_ice_overture_done
+			set_country_flag = { flag = wotc_ice_overture_pending days = 45 } # the buildup window
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_ice_occupy = {
 		icon = GFX_decision_generic_radar
 		available = {
-			NOT = { has_country_flag = wotc_homecoming_phase_1_done }
+			has_country_flag = wotc_ice_overture_done
+			NOT = { has_country_flag = wotc_ice_overture_pending } # the 45-day buildup has elapsed
 			NOT = { 100 = { owner = CAN } }
 		}
 		cost = 50
 
 		complete_effect = {
-			set_country_flag = wotc_homecoming_phase_1_done
+			set_country_flag = wotc_homecoming_iceland_secured
 			add_ideas = wotc_idea_north_sea_intel # permanent naval intel buff, defined alongside the other ideas
 
-			transfer_state = 100 # Iceland - see note above on what this means for ICE as a country
+			transfer_state = 100 # Iceland - full annexation, see file header
 			100 = {
 				add_building_construction = {
 					type = naval_base
@@ -53,29 +82,80 @@ wotc_operation_homecoming = {
 		ai_will_do = { factor = 1 }
 	}
 
-	wotc_phase2_stepping_stones = {
-		icon = GFX_decision_generic_navy_invasion
+	### --- Stage 2a: Faroe Islands (annex, same shape as Iceland) --- ###
+
+	wotc_faroe_overture = {
+		icon = GFX_decision_generic_agreement
 		available = {
-			has_country_flag = wotc_homecoming_phase_1_done
-			NOT = { has_country_flag = wotc_homecoming_phase_2_done }
+			has_country_flag = wotc_homecoming_iceland_secured
+			NOT = { 337 = { owner = CAN } }
+			NOT = { has_country_flag = wotc_faroe_overture_done }
+			NOT = { has_country_flag = wotc_faroe_overture_pending }
 		}
-		cost = 100
-		days_remove = 21 # the "timed mission" window itself
+		cost = 30
 
 		complete_effect = {
-			set_country_flag = wotc_homecoming_phase_2_done
-			# TODO: state-target the Faroe/Shetland states directly with a
-			# temporary supply-hub-range modifier - needs
-			# state_target_trigger, this is a country-scope stub.
+			set_country_flag = wotc_faroe_overture_done
+			set_country_flag = { flag = wotc_faroe_overture_pending days = 30 }
 		}
 
 		ai_will_do = { factor = 1 }
 	}
 
+	wotc_faroe_annex = {
+		icon = GFX_decision_generic_naval
+		available = {
+			has_country_flag = wotc_faroe_overture_done
+			NOT = { has_country_flag = wotc_faroe_overture_pending }
+			NOT = { 337 = { owner = CAN } }
+		}
+		cost = 40
+
+		complete_effect = {
+			set_country_flag = wotc_homecoming_faroe_secured
+			transfer_state = 337 # Faroe Islands - owned by DEN per history/states/337 - Faroe Islands.txt
+			337 = {
+				add_building_construction = {
+					type = naval_base
+					level = 2 # tops up the existing level-1 base at this province
+					instant_build = yes
+					province = 13003
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	### --- Stage 2b: Orkney & Shetland (real invasion objective, not annexed by decision) --- ###
+
+	wotc_shetland_secure_footing = {
+		icon = GFX_decision_generic_invasion
+		available = {
+			has_country_flag = wotc_homecoming_iceland_secured
+			938 = { is_controlled_by = CAN } # must actually be conquered in the war first - see file header
+			NOT = { has_country_flag = wotc_homecoming_shetland_secured }
+		}
+		cost = 20 # cheap - the hard part was winning the state, not this paperwork
+
+		complete_effect = {
+			set_country_flag = wotc_homecoming_shetland_secured
+			add_ideas = wotc_idea_shetland_staging_bonus
+			# State 938 already carries a level-8 naval base and a naval
+			# supply hub in its own history file - this doesn't build
+			# anything new, it just formalizes using what's already there.
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	### --- Stage 3: Commit to the Landing --- ###
+
 	wotc_phase3_commit_to_the_landing = {
 		icon = GFX_decision_generic_invasion
 		available = {
-			has_country_flag = wotc_homecoming_phase_2_done
+			has_country_flag = wotc_homecoming_faroe_secured
+			has_country_flag = wotc_homecoming_shetland_secured
 			NOT = { has_country_flag = wotc_homecoming_phase_3_active }
 		}
 		cost = 150
@@ -83,10 +163,9 @@ wotc_operation_homecoming = {
 		complete_effect = {
 			set_country_flag = { flag = wotc_homecoming_phase_3_active days = 14 }
 			add_ideas = wotc_idea_homecoming_landing_bonus
-			# Phase 3's bonus is meant to ramp rather than sit flat for the
-			# whole window - stagger it with a couple of scheduled effects,
-			# e.g. a stronger idea for days 1-4 swapped for a lighter one for
-			# the remainder, rather than one flat 14-day modifier.
+			# Still flagged in the README: this bonus is flat for 14 days
+			# rather than ramped/staggered, which was the original design
+			# intent and still isn't built.
 		}
 
 		ai_will_do = { factor = 1 }
