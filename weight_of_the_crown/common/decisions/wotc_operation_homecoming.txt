@@ -15,11 +15,23 @@ wotc_operation_homecoming = {
 	# way the Allies did in 1940, just ending in outright control rather
 	# than a basing agreement. State 100 already has a level-3/level-1 naval
 	# base in its starting history, which we top up rather than build from 0.
+	#
+	# NOTE: this gates on who currently owns state 100, not on
+	# `country_exists = ICE`. Checked Iceland's own focus tree
+	# (ICE_Sca_Defense_Union) - it only has Iceland *ask to join* a Nordic
+	# faction (ask_to_join_faction), which keeps ICE fully independent and
+	# still owning state 100. There's no scripted merger that hands Iceland's
+	# territory to Scandinavia. But nothing stops ordinary wartime play from
+	# letting someone else (SCA included) conquer Iceland the normal way, so
+	# gating on ICE specifically would permanently lock this decision out if
+	# that happened. Checking the state's actual owner instead means this
+	# still works (takes it from whoever holds it) regardless of how Iceland
+	# got there.
 	wotc_phase1_reconnaissance = {
 		icon = GFX_decision_generic_radar
 		available = {
 			NOT = { has_country_flag = wotc_homecoming_phase_1_done }
-			country_exists = ICE
+			NOT = { 100 = { owner = CAN } }
 		}
 		cost = 50
 
