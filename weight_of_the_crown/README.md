@@ -12,7 +12,7 @@ script files before considering any of it play-tested.
 | Exiles vs. Autonomy (§1, simplified to a read-only bar) | Variables, tiered ideas, hysteresis logic done. GUI is a stub - needs real art and the scripted_gui frame binding. |
 | Entente High Command (§2) | Shared Arsenal is functional (faked stockpile transfer). Objective Mandates and Joint Invasions are stubbed pending a verified `add_ai_strategy` type. |
 | 49th Parallel Escalation (§3) | Tension tracking via `on_state_control_changed` + decay pulse is functional. Sabotage now applies a real dynamic state modifier (HOI4's Operations system can't target unoccupied hostile states, so this is the verified substitute). Intervention now issues a real `create_wargoal` - the wargoal `type` is still a placeholder pending your call on what it should be. |
-| Operation Homecoming (§4) | Phase gating via flags is functional. Phase 2/3 state-targeted bonuses are stubbed at country scope. |
+| Operation Homecoming (§4) | Phase gating via flags is functional. Phase 1 now actually annexes Iceland (state 100, its entire territory - confirmed a single-state minor) via `transfer_state` and builds up its existing naval base, per user confirmation that full annexation is intended. Phase 2/3 state-targeted bonuses are still stubbed at country scope. |
 | Operation Anvil (new - NFA + USA naval invasion of France) | Fully gated: `USA = { is_in_faction_with = ENT }` for the diplomatic/staging decisions, and the launch decision requires `has_war_with = FRA`. Resolved via kaiserreich.wiki - FRA (Commune of France) occupies mainland France; NFA only holds Algeria/Tunisia/French West Africa/Corsica in this timeline. |
 
 ## Known gaps to close before this is playable

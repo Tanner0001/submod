@@ -8,16 +8,34 @@ wotc_operation_homecoming = {
 		has_war_with = ENG # confirm actual UoB tag - assumed ENG (Union of Britain) per KR convention
 	}
 
+	# Iceland (ICE) is a single-state minor - state 100 is its entire
+	# territory (confirmed in history/states/100 - Iceland.txt), so taking it
+	# is a full annexation, not a slice of a larger country. Per design
+	# decision, that's intended: this models Canada moving in on Iceland the
+	# way the Allies did in 1940, just ending in outright control rather
+	# than a basing agreement. State 100 already has a level-3/level-1 naval
+	# base in its starting history, which we top up rather than build from 0.
 	wotc_phase1_reconnaissance = {
 		icon = GFX_decision_generic_radar
 		available = {
 			NOT = { has_country_flag = wotc_homecoming_phase_1_done }
+			country_exists = ICE
 		}
 		cost = 50
 
 		complete_effect = {
 			set_country_flag = wotc_homecoming_phase_1_done
 			add_ideas = wotc_idea_north_sea_intel # permanent naval intel buff, defined alongside the other ideas
+
+			transfer_state = 100 # Iceland - see note above on what this means for ICE as a country
+			100 = {
+				add_building_construction = {
+					type = naval_base
+					level = 2 # tops up the existing level-3 base at this province to 5; tune to taste
+					instant_build = yes
+					province = 12674 # confirmed from history/states/100 - Iceland.txt, already has a level-3 naval base
+				}
+			}
 		}
 
 		ai_will_do = { factor = 1 }
