@@ -13,6 +13,7 @@ script files before considering any of it play-tested.
 | Entente High Command (§2) | Shared Arsenal is functional (faked stockpile transfer). Objective Mandates and Joint Invasions are stubbed pending a verified `add_ai_strategy` type. |
 | 49th Parallel Escalation (§3) | Tension tracking via `on_state_control_changed` + decay pulse is functional. Sabotage now applies a real dynamic state modifier (HOI4's Operations system can't target unoccupied hostile states, so this is the verified substitute). Intervention now issues a real `create_wargoal` - the wargoal `type` is still a placeholder pending your call on what it should be. |
 | Operation Homecoming (§4) | Phase gating via flags is functional. Phase 2/3 state-targeted bonuses are stubbed at country scope. |
+| Operation Anvil (new - NFA + USA naval invasion of France) | Decision chain and gating on `USA = { is_in_faction_with = ENT }` is functional. The occupier/target-region condition is an explicit placeholder (`wotc_anvil_occupier_tag`, always-yes) - not guessed, see `common/decisions/wotc_operation_anvil.txt` header. |
 
 ## Known gaps to close before this is playable
 
@@ -38,3 +39,9 @@ script files before considering any of it play-tested.
    (`common/dynamic_modifiers/wotc_dynamic_modifiers.txt`) - the values are
    plausible-but-arbitrary, copied in structure (not magnitude) from
    `CAN_nee_resistance`.
+8. Fill in `wotc_anvil_occupier_tag` in
+   `common/decisions/wotc_operation_anvil.txt` - needs the real tag (and
+   possibly specific state/region ids) for whoever currently occupies the
+   mainland French territory NFA is meant to liberate. Not guessable from
+   this repo (Alsace-Lorraine belongs to GER permanently per the history
+   files, which reads as a fixed WWI loss, not this scenario).

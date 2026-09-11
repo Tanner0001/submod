@@ -1,0 +1,81 @@
+### Weight of the Crown - Operation Anvil ###
+### NatFrance (NFA)-led naval invasion of occupied mainland France, with USA
+### assistance once the USA has joined the Entente. Mirrors the Operation
+### Homecoming pattern (gated decisions -> flags -> timed commit), but scoped
+### to NFA instead of CAN.
+###
+### OPEN QUESTION (do not guess): which tag currently occupies the mainland
+### French territory NFA is meant to liberate here? Alsace-Lorraine belongs
+### to GER permanently in this repo's history files, but that reads as a
+### fixed WWI loss, not the "occupied France" scenario this system assumes.
+### `wotc_anvil_occupier_tag` below is a placeholder trigger you need to
+### fill in with the real tag (and, if relevant, the actual target region/
+### state ids) before this can gate correctly - everything else here only
+### depends on confirmed triggers (is_in_faction_with, has_war_with, flags).
+
+wotc_anvil_occupier_tag = {
+	# TODO: replace with the real occupier, e.g. `tag = GER` or
+	# `is_in_faction_with = MTL` (whatever the actual Mitteleuropa/occupier
+	# bloc tag is) - left empty (always yes) so the file is syntactically
+	# valid, not because this condition is optional.
+	always = yes
+}
+
+wotc_operation_anvil = {
+	icon = GFX_decision_category_generic
+
+	visible = {
+		tag = NFA
+		is_in_faction_with = ENT
+	}
+
+	wotc_anvil_request_american_support = {
+		icon = GFX_decision_generic_alliance
+		available = {
+			USA = { is_in_faction_with = ENT }
+			NOT = { has_country_flag = wotc_anvil_usa_committed }
+		}
+		cost = 50
+
+		complete_effect = {
+			set_country_flag = wotc_anvil_usa_committed
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_anvil_stage_invasion_fleet = {
+		icon = GFX_decision_generic_navy
+		available = {
+			has_country_flag = wotc_anvil_usa_committed
+			USA = { is_in_faction_with = ENT } # re-checked in case the USA has since left the faction
+			NOT = { has_country_flag = wotc_anvil_fleet_staged }
+		}
+		days_re_enable = 30 # cooldown if the USA leaves the faction before this completes and it needs retrying
+		cost = 100
+
+		complete_effect = {
+			set_country_flag = wotc_anvil_fleet_staged
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_anvil_launch = {
+		icon = GFX_decision_generic_invasion
+		available = {
+			has_country_flag = wotc_anvil_fleet_staged
+			USA = { is_in_faction_with = ENT }
+			wotc_anvil_occupier_tag = yes # placeholder - see file header
+			NOT = { has_country_flag = wotc_anvil_launched }
+		}
+		cost = 150
+
+		complete_effect = {
+			set_country_flag = { flag = wotc_anvil_launched days = 14 }
+			add_ideas = wotc_idea_anvil_landing_bonus
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+}
