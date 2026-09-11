@@ -1,0 +1,235 @@
+initialise_regional_annexation_variables = {
+	add_to_regional_annexation_array = yes
+	set_state_as_annexation_target = yes
+}
+
+set_state_as_annexation_target = {
+	if = {
+		limit = { NOT = { has_variable = PREV.annexation_target } }
+		set_variable = { PREV.annexation_target = THIS }
+	}
+}
+
+add_to_regional_annexation_array = {
+	if = {
+		limit = { NOT = { is_in_array = { annexation_extra_states = PREV } } }
+		add_to_array = { annexation_extra_states = PREV }
+	}
+}
+
+annexation_decision_effect = {
+	clear_retained_states = yes
+	FROM = {
+		if = {
+			limit = { has_variable = annexation_target }
+			var:annexation_target = { save_event_target_as = targeted_annexation_state }
+		}
+		else = {
+			save_event_target_as = targeted_annexation_state
+		}
+	}
+	set_country_flag = { flag = open_annexation_event days = 16 value = 1 }
+	if = {
+		limit = {
+			OR = {
+				check_variable = { FROM.annexation_target:annexation_event = 2057 }
+				check_variable = { FROM.annexation_target:annexation_event = 3076 }
+				check_variable = { FROM.annexation_target:annexation_event = 3075 }
+				check_variable = { FROM.annexation_target:annexation_event = 3074 }
+				check_variable = { FROM.annexation_target:annexation_event = 3019 }
+				check_variable = { FROM.annexation_target:annexation_event = 3083 }
+				check_variable = { FROM.annexation_target:annexation_event = 3078 }
+				check_variable = { FROM.annexation_target:annexation_event = 3071 }
+				check_variable = { FROM.annexation_target:annexation_event = 3067 }
+				check_variable = { FROM.annexation_target:annexation_event = 5052 }
+				check_variable = { FROM.annexation_target:annexation_event = 5054 }
+			}
+		}
+		FROM = {
+			meta_effect = {
+				text = { state_event = { id = [EVENT] trigger_for = ROOT } }
+				EVENT = "annexation_events.[?annexation_target:annexation_event]"
+			}
+		}
+	}
+	else = {
+		meta_effect = {
+			text = { country_event = [EVENT] }
+			EVENT = "annexation_events.[?FROM.annexation_target:annexation_event]"
+		}
+	}
+}
+
+allow_annexation_decision_selection = {
+	clr_country_flag = open_annexation_event
+	clear_retained_states = yes
+}
+
+recheck_annexations_base = {
+	hidden_effect = {
+		clear_array = potential_grant_targets
+		clear_array = valid_italian_targets_grant
+		clear_array = valid_italian_targets_offer
+		clear_array = offered_states_array
+		allow_annexation_decision_selection = yes
+	}
+}
+
+recheck_annexations = {
+	hidden_effect = {
+		if = {
+			limit = { NOT = { has_country_flag = currently_offering_states } }
+			if = {
+				limit = { check_variable = { active_annexation_decisions < 1 } }
+				set_variable = { active_annexation_decisions = 1 }
+			}
+			recheck_annexations_base = yes
+			country_event = { id = annexation_events.1 days = 1 random_days = 3 }
+			refresh_occupation_penalties = yes
+		}
+	}
+}
+
+recheck_annexations_immediate = {
+	hidden_effect = {
+		if = {
+			limit = { NOT = { has_country_flag = currently_offering_states } }
+			recheck_annexations_base = yes
+			country_event = annexation_events.1
+			refresh_occupation_penalties = yes
+		}
+	}
+}
+
+refresh_occupation_penalties = {
+	for_each_scope_loop = {
+		array = annexation_resistance_states
+		if = {
+			limit = { NOT = { has_dynamic_modifier = { modifier = annexation_resistance_target scope = ROOT } } }
+			add_to_temp_array = { states_to_remove = THIS }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					NOT = { is_owned_by = PREV }
+					is_claimed_by = PREV
+					is_core_of = PREV
+					has_state_flag = retain_state_@PREV
+					has_state_flag = occupied_by_@PREV
+					has_variable = can_integrate_@PREV
+				}
+			}
+			add_to_temp_array = { states_to_remove = THIS }
+			remove_dynamic_modifier = { modifier = annexation_resistance_target scope = ROOT }
+		}
+	}
+	if = {
+		limit = { check_variable = { annexation_resistance_states^num = states_to_remove^num } }
+		clear_array = annexation_resistance_states
+	}
+	else = {
+		for_each_scope_loop = {
+			array = states_to_remove
+			remove_from_array = { PREV.annexation_resistance_states = THIS }
+		}
+	}
+}
+
+build_annexation_temp_arrays = {
+	if = {
+		limit = {
+			has_variable = annexation_target:annexation_extra_states^num
+			check_variable = { priority_country_@var:annexation_target = 0 } #== already evaluated once through a different state, no need to redo it
+			check_variable = { priority_state_@var:annexation_target = 0 } #== already evaluated once through a different state, no need to redo it
+		}
+		if = {
+			limit = { var:annexation_target = { is_valid_annexation_state = yes } }
+			set_temp_variable = { priority_state_@var:annexation_target = annexation_target }
+			for_each_scope_loop = {
+				array = annexation_target:annexation_extra_states
+				if = {
+					limit = {
+						is_allowed_annexation_state_for_owner = yes
+						impassable = no
+					}
+
+					### build owners array
+					if = {
+						limit = { NOT = { is_in_array = { owners_@PREV = owner } } }
+						add_to_temp_array = { owners_@PREV = owner }
+						set_temp_variable = { total_score_@var:owner = 0 }
+					}
+
+					### add up total owned strategic value
+					add_to_temp_variable = { total_score_@var:owner = state_strategic_value }
+				}
+			}
+		}
+		else = {
+			for_each_scope_loop = {
+				array = annexation_target:annexation_extra_states
+				if = {
+					limit = {
+						is_allowed_annexation_state_for_owner = yes
+						impassable = no
+					}
+
+					### build owners array
+					if = {
+						limit = { NOT = { is_in_array = { owners_@PREV = owner } } }
+						add_to_temp_array = { owners_@PREV = owner }
+						set_temp_variable = { total_score_@var:owner = 0 }
+					}
+
+					### add up total owned strategic value
+					add_to_temp_variable = { total_score_@var:owner = state_strategic_value }
+
+					### select best state to target the decision
+					if = {
+						limit = {
+							is_owned_by = ROOT
+							check_variable = { annexation_target = PREV.annexation_target }
+						}
+						if = {
+							limit = { check_variable = { priority_state_@var:annexation_target = 0 } }
+							set_temp_variable = { priority_state_@var:annexation_target = THIS }
+						}
+						else_if = {
+							limit = { var:priority_state_@var:annexation_target = { check_variable = { state_strategic_value < PREV.state_strategic_value } } }
+							set_temp_variable = { priority_state_@var:annexation_target = THIS }
+						}
+						else_if = {
+							limit = { var:priority_state_@var:annexation_target = { check_variable = { id < PREV.id } } } #state ids are negative
+							set_temp_variable = { priority_state_@var:annexation_target = THIS }
+						}
+					}
+				}
+			}
+		}
+
+		### assign total owned strategic value to each owner
+		for_each_loop = {
+			array = owners_@THIS
+			add_to_temp_array = { owner_scores_@THIS = total_score_@var:v }
+		}
+
+		### select country with the highest total owned strategic value
+		find_highest_in_array = { array = owner_scores_@THIS }
+		set_temp_variable = { priority_country_@var:annexation_target = owners_@THIS^i }
+	}
+}
+
+check_possible_annexations = {
+	if = {
+		limit = {
+			meta_trigger = {
+				text = { can_release_[STATE] = yes }
+				STATE = "[?THIS.annexation_target.GetID]"
+			}
+		}
+		ROOT = {
+			add_to_variable = { active_annexation_decisions = 1 }
+			activate_targeted_decision = { decision = annexation_decision target = PREV }
+		}
+	}
+}

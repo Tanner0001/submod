@@ -1,0 +1,1297 @@
+###########################
+# Swiss Decisions
+###########################
+# By Delincious
+###########################
+SWI_Savoie_decisions = {
+	SWI_peace_mission_ongoing = {
+		icon = generic_civil_support
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+
+		days_mission_timeout = 90
+		is_good = yes
+
+		cancel_trigger = {
+			OR = {
+				divisions_in_state = {
+					state = 943
+					size < 1
+				}
+				has_war = yes
+				943 = {
+					OR = {
+						NOT = { is_owned_and_controlled_by = SWI }
+						is_core_of = SWI
+					}
+				}
+				hidden_trigger = {
+					has_global_flag = can_demand_romandy
+					has_completed_focus = SWI_bend_to_france
+					has_completed_focus = SWI_enemies_on_all_sides
+					has_completed_focus = SWI_peace_at_last
+				}
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 943 }
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SWI_peace_mission_ongoing"
+			hidden_effect = {
+				if = {
+					limit = {
+						943 = { is_owned_and_controlled_by = SWI }
+						NOT = {
+							has_global_flag = can_demand_romandy
+							has_completed_focus = SWI_bend_to_france
+							has_completed_focus = SWI_enemies_on_all_sides
+							has_completed_focus = SWI_peace_at_last
+						}
+					}
+					activate_mission = SWI_maintain_peace_mission
+				}
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SWI_peace_mission_ongoing"
+			add_political_power = 15
+			add_stability = 0.025
+			hidden_effect = {
+				activate_mission = SWI_peace_mission_ongoing
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_maintain_peace_mission = {
+		icon = generic_civil_support
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			divisions_in_state = {
+				state = 943
+				size > 0
+			}
+		}
+
+		cancel_trigger = {
+			hidden_trigger = {
+				OR = {
+					has_war = yes
+					943 = {
+						OR = {
+							NOT = { is_owned_and_controlled_by = SWI }
+							is_core_of = SWI
+						}
+					}
+					has_global_flag = can_demand_romandy
+					has_completed_focus = SWI_bend_to_france
+					has_completed_focus = SWI_enemies_on_all_sides
+					has_completed_focus = SWI_peace_at_last
+				}
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 943 }
+		}
+
+		days_mission_timeout = 21
+		is_good = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_maintain_peace_mission"
+			activate_mission = SWI_peace_mission_ongoing
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SWI_maintain_peace_mission"
+			hidden_effect = {
+				activate_mission = SWI_maintain_peace_mission
+			}
+			country_event = switzerland_events.178
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_fortify_savoie = {
+		icon = fortress
+
+		highlight_states = {
+			highlight_state_targets = { state = 943 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		visible = {
+			943 = { is_owned_and_controlled_by = ROOT }
+			has_socialist_government = no
+			NOT = { has_completed_focus = SWI_bend_to_france }
+		}
+
+		fire_only_once = yes
+
+		cost = 20
+		days_remove = 80
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_fortify_savoie"
+			943 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = {
+							all_provinces = yes
+						}
+						level = 2
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_all_provinces
+						BUILDING = bunker
+						NUMBER = 2
+					}
+				}
+			}
+			add_popularity = {
+				ideology = syndicalist
+				popularity = -0.02
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	SWI_savoie_crackdown = {
+		icon = oppression
+
+		available = {
+			has_socialist_government = no
+		}
+
+		visible = {
+			943 = { is_owned_and_controlled_by = ROOT }
+			has_socialist_government = no
+			NOT = { has_completed_focus = SWI_bend_to_france }
+		}
+
+		custom_cost_trigger = {
+			NOT = { command_power < 20 }
+			NOT = { has_manpower < 1000 }
+		}
+		custom_cost_text = SWI_1000_manpower_20_cp
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_savoie_crackdown"
+			hidden_effect = {
+				add_command_power = -20
+				add_manpower = -1000
+			}
+		}
+		days_remove = 30
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_savoie_crackdown"
+			add_stability = 0.03
+			add_popularity = {
+				ideology = totalist
+				popularity = -0.01
+			}
+			add_popularity = {
+				ideology = syndicalist
+				popularity = -0.03
+			}
+			add_popularity = {
+				ideology = radical_socialist
+				popularity = -0.01
+			}
+		}
+
+		ai_will_do = { base = 0 }
+		fixed_random_seed = no
+	}
+
+	SWI_return_savoie = {
+		icon = GFX_decision_generic_political_discourse
+
+		available = {
+			has_war = no
+		}
+
+		visible = {
+			943 = { is_owned_and_controlled_by = ROOT }
+			NOT = { has_government = national_populist }
+			if = {
+				limit = { has_completed_focus = SWI_bend_to_france }
+				FRA = {
+					has_war = no
+					OR = {
+						owns_state = 735
+						owns_state = 20
+					}
+				}
+			}
+			else_if = {
+				limit = { owns_state = 735 }
+				controls_state = 735
+				var:20.owner = {
+					OR = {
+						tag = NFA
+						tag = FRP
+					}
+					has_war = no
+					OR = {
+						has_socialist_government = no
+						ROOT = { has_socialist_government = yes }
+					}
+				}
+			}
+			else = {
+				var:735.owner = {
+					NOT = {
+						tag = FRA
+						tag = ROOT
+					}
+					has_war = no
+					OR = {
+						has_socialist_government = no
+						ROOT = { has_socialist_government = yes }
+					}
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 10
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_return_savoie"
+			country_event = switzerland_events.180
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_return_savoie"
+			add_political_power = 50
+			hidden_effect = {
+				if = {
+					limit = { owns_state = 735 }
+					var:20.owner = {
+						country_event = { id = switzerland_events.181 days = 10 }
+					}
+				}
+				else = {
+					var:735.owner = {
+						country_event = { id = switzerland_events.181 days = 10 }
+					}
+				}
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+
+	SWI_haute_savoie_make_canton = {
+		icon = GFX_decision_generic_political_discourse
+
+		available = {
+			has_war = no
+			controls_state = 943
+		}
+
+		visible = {
+			owns_state = 943
+			NOT = { 943 = { is_core_of = ROOT } }
+			OR = {
+				has_completed_focus = SWI_austrian_assisstance
+				has_completed_focus = SWI_german_aid
+				has_completed_focus = SWI_embrace_neutrality
+				has_government = national_populist
+				has_country_flag = SWI_totalist_win
+				has_completed_focus = SWI_the_peoples_republic
+			}
+		}
+
+		cancel_trigger = {
+			NOT = { owns_state = 943 }
+		}
+
+		cost = 50
+		days_remove = 40
+		fire_only_once = no
+
+		ai_will_do = { factor = 10 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_haute_savoie_make_canton"
+			add_stability = 0.05
+			943 = { remove_claim_and_add_core_of_ROOT = yes }
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_make_state_canton = {
+		icon = GFX_decision_generic_political_discourse
+
+		available = {
+			has_war = no
+			controls_state = FROM
+		}
+
+		cancel_trigger = {
+			NOT = { owns_state = FROM }
+		}
+
+		targets = { 735 942 1003 }
+		target_trigger = {
+			owns_state = FROM
+			NOT = { FROM = { is_core_of = ROOT } }
+		}
+
+		cost = 50
+		days_remove = 40
+		state_target = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = { factor = 10 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SWI_make_state_canton"
+			add_stability = 0.05
+			FROM = { remove_claim_and_add_core_of_ROOT = yes }
+		}
+		fixed_random_seed = no
+	}
+}
+
+SWI_economic_decisions = {
+	SWI_riedholf_mine = {
+		icon = GFX_decision_steel
+
+		highlight_states = {
+			highlight_state_targets = { state = 151 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		visible = {
+			151 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 10
+		days_remove = 30
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_riedholf_mine"
+			151 = {
+				add_resource = {
+					type = steel
+					amount = 2
+				}
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+
+	SWI_gonzen_mine = {
+		icon = GFX_decision_steel
+
+		highlight_states = {
+			highlight_state_targets = { state = 151 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 3
+		}
+
+		visible = {
+			151 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 40
+		days_remove = 30
+
+		modifier = {
+			civilian_factory_use = 4
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_gonzen_mine"
+			151 = {
+				add_resource = {
+					type = steel
+					amount = 14
+				}
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+
+	SWI_kapfnach_mine = {
+		icon = GFX_decision_steel
+
+		highlight_states = {
+			highlight_state_targets = { state = 151 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		visible = {
+			151 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 20
+		days_remove = 30
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_kapfnach_mine"
+			151 = {
+				add_resource = {
+					type = steel
+					amount = 6
+				}
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+
+	SWI_cadlimo_mine = {
+		icon = GFX_decision_chromium
+
+		highlight_states = {
+			highlight_state_targets = { state = 761 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		visible = {
+			761 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 15
+		days_remove = 30
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_cadlimo_mine"
+			761 = {
+				add_resource = {
+					type = chromium
+					amount = 5
+				}
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+}
+
+SWI_new_order_decisions = {
+	SWI_new_order_natpop = {
+		icon = generic_army_support
+		allowed = { always = no } #manually activated
+
+		available = {
+			if = {
+				limit = { is_ai = no }
+				national_populist > 0.8
+			}
+			else = {
+				if = {
+					limit = {
+						OR = {
+							has_game_rule = { rule = SWI_path option = DEFAULT }
+							has_game_rule = { rule = SWI_path option = SWI_PATH_NATPOP }
+						}
+					}
+					national_populist > 0.4
+				}
+				else = {
+					always = no
+				}
+			}
+		}
+
+		is_good = no
+		fire_only_once = yes
+		days_mission_timeout = 365
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_government = national_populist }
+				is_subject = yes
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_new_order_natpop"
+			country_event = switzerland_events.192
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SWI_new_order_natpop"
+			add_political_power = -100
+			add_stability = -0.5
+			country_event = switzerland_events.186
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_hold_parade_natpop = {
+		icon = generic_form_nation
+
+		visible = {
+			has_active_mission = SWI_new_order_natpop
+		}
+
+		days_remove = 65
+		cost = 25
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_hold_parade_natpop"
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.025
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SWI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SWI_path option = SWI_PATH_NATPOP } }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_nationalize_foreign_assets_natpop = {
+		icon = generic_industry
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 3
+		}
+
+		days_remove = 100
+		cost = 50
+		fire_only_once = yes
+
+		modifier = {
+			civilian_factory_use = 4
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_nationalize_foreign_assets_natpop"
+			GER = { country_event = switzerland_events.185 }
+			AUS = { country_event = switzerland_events.185 }
+			add_offsite_building = { type = industrial_complex level = 2 }
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				NOT = { has_country_flag = SWI_natpop_control }
+				OR = {
+					has_game_rule = { rule = SWI_path option = DEFAULT }
+					has_game_rule = { rule = SWI_path option = SWI_PATH_NATPOP }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_purge_military_natpop = {
+		icon = generic_independence
+
+		cost = 75
+
+		fire_only_once = yes
+		days_remove = 10
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_purge_military_natpop"
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+			army_experience = -100
+			set_country_flag = SWI_military_purged
+			country_event = switzerland_events.83
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SWI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SWI_path option = SWI_PATH_NATPOP } }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_declare_martial_law_natpop = {
+		icon = generic_army_support
+
+		fire_only_once = yes
+		days_remove = 10
+
+		custom_cost_trigger = {
+			NOT = { command_power < 35 }
+		}
+		custom_cost_text = CP_35
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_declare_martial_law_natpop"
+			hidden_effect = {
+				add_command_power = -35
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_declare_martial_law_natpop"
+			hidden_effect = {
+				if = {
+					limit = {
+						NOT = { has_country_flag = SWI_military_purged }
+					}
+					country_event = switzerland_events.184
+				}
+				country_event = { id = switzerland_events.187 days = 5 }
+			}
+			custom_effect_tooltip = SWI_martial_law_effect
+			add_popularity = {
+				ideology = national_populist
+				popularity = -0.05
+			}
+			add_stability = 0.1
+			set_country_flag = SWI_martial_law_declared
+			custom_effect_tooltip = SWI_martial_law_effect_2
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				NOT = { has_country_flag = SWI_military_purged }
+				OR = {
+					has_game_rule = { rule = SWI_path option = DEFAULT }
+					has_game_rule = { rule = SWI_path option = SWI_PATH_NATPOP }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_secure_ostschweiz_natpop = {
+		icon = generic_prepare_civil_war
+
+		highlight_states = {
+			highlight_state_targets = { state = 151 }
+		}
+
+		available = {
+			has_country_flag = SWI_martial_law_declared
+		}
+
+		visible = {
+			has_active_mission = SWI_new_order_natpop
+			owns_state = 151
+		}
+
+		fire_only_once = yes
+		days_remove = 30
+
+		custom_cost_trigger = {
+			NOT = { command_power < 50 }
+			NOT = { has_manpower < 5000 }
+		}
+		custom_cost_text = SWI_5000_manpower_20_cp
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_secure_ostschweiz_natpop"
+			hidden_effect = {
+				add_command_power = -50
+				add_manpower = -5000
+				country_event = { id = switzerland_events.190 days = 6 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_secure_ostschweiz_natpop"
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.1
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+
+	SWI_secure_mittelland_natpop = {
+		icon = generic_prepare_civil_war
+
+		highlight_states = {
+			highlight_state_targets = { state = 3 }
+		}
+
+		available = {
+			has_country_flag = SWI_martial_law_declared
+		}
+
+		visible = {
+			has_active_mission = SWI_new_order_natpop
+			owns_state = 3
+		}
+
+		fire_only_once = yes
+		days_remove = 30
+
+		custom_cost_trigger = {
+			NOT = { command_power < 50 }
+			NOT = { has_manpower < 5000 }
+		}
+		custom_cost_text = SWI_5000_manpower_20_cp
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_secure_mittelland_natpop"
+			hidden_effect = {
+				add_command_power = -50
+				add_manpower = -5000
+				country_event = { id = switzerland_events.188 days = 6 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_secure_mittelland_natpop"
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.1
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+
+	SWI_secure_ticino_natpop = {
+		icon = generic_prepare_civil_war
+
+		highlight_states = {
+			highlight_state_targets = { state = 761 }
+		}
+
+		available = {
+			has_country_flag = SWI_martial_law_declared
+		}
+
+		visible = {
+			has_active_mission = SWI_new_order_natpop
+			owns_state = 761
+		}
+
+		fire_only_once = yes
+		days_remove = 30
+
+		custom_cost_trigger = {
+			NOT = { command_power < 50 }
+			NOT = { has_manpower < 5000 }
+		}
+		custom_cost_text = SWI_5000_manpower_20_cp
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_secure_ticino_natpop"
+			hidden_effect = {
+				add_command_power = -50
+				add_manpower = -5000
+				country_event = { id = switzerland_events.188 days = 2 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SWI_secure_ticino_natpop"
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.1
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+
+	SWI_conquer_romandie_natpop = {
+		icon = generic_nationalism
+
+		available = {
+			is_owner_neighbor_of = FROM
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_government = national_populist }
+				is_subject = yes
+				NOT = { can_declare_war_on = FROM }
+				NOT = { FROM = { owns_state = 760 } } #Romandy
+			}
+		}
+
+		targets = { 760.owner }
+		target_root_trigger = {
+			has_completed_focus = SWI_unity_through_conquest
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = { owns_state = 760 } #Romandy
+		}
+
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+		}
+
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 760 } #Romandy
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SWI_conquer_romandie_natpop"
+			clear_decision_attack_AI = yes
+			add_command_power = 25
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SWI_conquer_romandie_natpop"
+			hidden_effect = { add_command_power = -25 }
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SWI_conquer_romandie_natpop"
+			clear_decision_attack_AI = yes
+			add_state_claim = 760 #Romandy
+			add_war_support = 0.1
+			declare_war_on = {
+				target = FROM
+				type = take_state
+				generator = { 760 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_conquer_vorarlberg_natpop = {
+		icon = generic_nationalism
+
+		available = {
+			controls_state = 760 #Romandy
+			is_owner_neighbor_of = FROM
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_government = national_populist }
+				is_subject = yes
+				NOT = { can_declare_war_on = FROM }
+				FROM = {
+					NOT = { owns_state = 942 } #Vorarlberg
+				}
+			}
+		}
+
+		targets = { 942.owner }
+		target_root_trigger = {
+			has_completed_focus = SWI_unity_through_conquest
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_state = 942 #Vorarlberg
+			}
+		}
+
+		custom_cost_text = CP_50
+		custom_cost_trigger = {
+			NOT = { command_power < 50 }
+		}
+
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 942 } #Vorarlberg
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SWI_conquer_vorarlberg_natpop"
+			clear_decision_attack_AI = yes
+			add_command_power = 50
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SWI_conquer_vorarlberg_natpop"
+			hidden_effect = { add_command_power = -50 }
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SWI_conquer_vorarlberg_natpop"
+			clear_decision_attack_AI = yes
+			add_state_claim = 942 #Vorarlberg
+			declare_war_on = {
+				target = FROM
+				type = take_state
+				generator = { 942 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_conquer_valle_natpop = {
+		icon = generic_nationalism
+
+		available = {
+			controls_state = 760 #Romandy
+			is_owner_neighbor_of = FROM
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_government = national_populist }
+				is_subject = yes
+				NOT = { can_declare_war_on = FROM }
+				NOT = { FROM = { owns_state = 1003 } } #Aosta Valley
+			}
+		}
+
+		targets = { 1003.owner }
+		target_root_trigger = {
+			has_completed_focus = SWI_unity_through_conquest
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		custom_cost_text = CP_50
+		custom_cost_trigger = {
+			NOT = { command_power < 50 }
+		}
+
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 1003 } #Aosta Valley
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SWI_conquer_valle_natpop"
+			clear_decision_attack_AI = yes
+			add_command_power = 50
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SWI_conquer_valle_natpop"
+			hidden_effect = { add_command_power = -50 }
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SWI_conquer_valle_natpop"
+			clear_decision_attack_AI = yes
+			add_state_claim = 1003 #Aosta Valley
+			add_war_support = 0.1
+			declare_war_on = {
+				target = FROM
+				type = take_state
+				generator = { 1003 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SWI_conquer_savoie_natpop = {
+		icon = generic_nationalism
+
+		available = {
+			controls_state = 760 #Romandy
+			is_owner_neighbor_of = FROM
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_any_state_of = {
+					735 #Savoy
+					943 #Upper Savoy
+				}
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_government = national_populist }
+				is_subject = yes
+				NOT = { can_declare_war_on = FROM }
+				FROM = {
+					NOT = {
+						owns_any_state_of = {
+							735 #Savoy
+							943 #Upper Savoy
+						}
+					}
+				}
+			}
+		}
+
+		targets = { 735.owner 943.owner }
+		target_root_trigger = {
+			has_completed_focus = SWI_unity_through_conquest
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_any_state_of = {
+					735 #Savoy
+					943 #Upper Savoy
+				}
+			}
+		}
+
+		custom_cost_text = CP_50
+		custom_cost_trigger = {
+			NOT = { command_power < 50 }
+		}
+
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 735 #Savoy
+				state = 943 #Upper Savoy
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SWI_conquer_savoie_natpop"
+			clear_decision_attack_AI = yes
+			add_command_power = 50
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SWI_conquer_savoie_natpop"
+			hidden_effect = { add_command_power = -50 }
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SWI_conquer_savoie_natpop"
+			clear_decision_attack_AI = yes
+			add_state_claim = 735 #Savoy
+			add_state_claim = 943 #Upper Savoy
+			add_war_support = 0.1
+			declare_war_on = {
+				target = FROM
+				type = take_state
+				generator = { 735 943 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SWI_foreign_policy_decisions = {
+	SWI_join_AUS = {
+		icon = GFX_decision_generic_flags
+
+		visible = {
+			has_completed_focus = SWI_austrian_assisstance
+			AUS = { is_faction_leader = yes }
+		}
+
+		fire_only_once = yes
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_join_AUS"
+			AUS = {
+				country_event = { id = switzerland_events.175 days = 2 }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+	SWI_join_GER = {
+		icon = GFX_decision_generic_flags
+
+		visible = {
+			has_completed_focus = SWI_german_aid
+			GER = { is_faction_leader = yes }
+		}
+
+		fire_only_once = yes
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_join_GER"
+			GER = {
+				country_event = { id = switzerland_events.37 days = 2 }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+	SWI_internationale = {
+		icon = GFX_decision_generic_flags
+
+		available = {
+			has_war = no
+		}
+
+		visible = {
+			has_completed_focus = SWI_bend_to_france
+			INT = { is_faction_leader = yes }
+			has_socialist_government = yes
+		}
+
+		fire_only_once = yes
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SWI_internationale"
+			INT = {
+				country_event = { id = switzerland_events.34 days = 2 }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+}

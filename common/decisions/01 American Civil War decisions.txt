@@ -1,0 +1,1260 @@
+######################################
+### American Civil War Decisions   ###
+### by Herkles, Rylock and Alpinia ###
+######################################
+
+@ACW_recruit_in_state_days_remove = 12
+
+ACW_foreign_volunteer_decisions = {
+	ACW_support_socialists = {
+		icon = ger_military_buildup
+
+		visible = {
+			country_exists = FROM
+			if = {
+				limit = {
+					is_chinese_tag = yes
+				}
+				china_is_aligned_with_left_kmt = yes
+			}
+			else = {
+				has_socialist_government = yes
+			}
+			NOT = { country_exists = var:ACW_supported_tag }
+			NOT = { has_war_with = FROM }
+		}
+
+		targets = { WCA }
+		target_root_trigger = {
+			has_global_flag = USA_civil_war_begun_flag
+			has_socialist_government = yes
+		}
+		target_trigger = {
+			has_socialist_government = yes
+			NOT = { country_exists = var:ACW_supported_tag }
+			NOT = { has_war_with = FROM }
+		}
+
+		custom_cost_text = 2000_guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 2000 } }
+		}
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_equipment = { infantry_equipment < 4000 }
+			}
+			modifier = {
+				factor = 0
+				num_of_military_factories < 5
+			}
+			modifier = {
+				factor = 0
+				country_has_any_active_threat = yes
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ACW_support_socialists"
+			USA_support_side_decision_complete_effect = yes
+		}
+		fixed_random_seed = no
+	}
+
+	ACW_support_non_socialists = {
+		icon = ger_military_buildup
+
+		available = {
+			if = {
+				limit = {
+					is_in_faction_with = CAN
+					is_in_faction_with = ENT
+				}
+				has_global_flag = CAN_supports_@FROM
+			}
+		}
+
+		visible = {
+			country_exists = FROM
+			has_socialist_government = no
+			NOT = { country_exists = var:ACW_supported_tag }
+			NOT = { has_war_with = FROM }
+		}
+
+		targets = { USA ACC APG }
+		target_root_trigger = {
+			has_global_flag = USA_civil_war_begun_flag
+			has_socialist_government = no
+		}
+		target_trigger = {
+			if = {
+				limit = {
+					is_chinese_tag = yes
+				}
+				china_is_aligned_with_left_kmt = no
+			}
+			else = {
+				has_socialist_government = no
+			}
+			NOT = { country_exists = var:ACW_supported_tag }
+			NOT = { has_war_with = FROM }
+		}
+
+		custom_cost_text = 2000_guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 2000 } }
+		}
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				num_of_military_factories < 5
+			}
+			modifier = {
+				factor = 0
+				has_equipment = { infantry_equipment < 4000 }
+			}
+			modifier = {
+				factor = 0
+				country_has_any_active_threat = yes
+			}
+			modifier = {
+				factor = 0
+				is_in_north_america = no
+				is_in_south_america = no
+				is_actual_major = no
+			}
+			modifier = {
+				factor = 0.01
+				FROM = { same_government_type_as_ROOT_authoritarian = no }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ACW_support_non_socialists"
+			USA_support_side_decision_complete_effect = yes
+		}
+		fixed_random_seed = no
+	}
+}
+
+ACW_civil_war_decisions = {
+	ACW_federal_deadline_looms = {
+		icon = generic_army_support
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			has_global_flag = USA_civil_war_begun_flag
+		}
+
+		days_mission_timeout = 30
+		is_good = yes
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout ACW_federal_deadline_looms"
+			country_event = american_civil_war_events.5 #war starts
+			effect_tooltip = {
+				if = {
+					limit = { can_declare_war_on = USA }
+					declare_war_on = { target = USA type = annex_everything }
+				}
+				if = {
+					limit = { can_declare_war_on = WCA }
+					declare_war_on = { target = WCA type = annex_everything }
+				}
+				if = {
+					limit = { can_declare_war_on = ACC }
+					declare_war_on = { target = ACC type = annex_everything }
+				}
+				if = {
+					limit = { can_declare_war_on = APG }
+					declare_war_on = { target = APG type = annex_everything }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ACC_deal_with_devil = {
+		icon = generic_agreement
+
+		allowed = { original_tag = ACC }
+
+		available = {
+			has_war_with = FROM
+		}
+
+		visible = {
+			has_global_flag = USA_civil_war_begun_flag
+			has_global_flag = { flag = USA_civil_war_begun_flag days > 90 }
+			is_in_faction = no
+			OR = {
+				AND = {
+					NOT = { country_exists = USA }
+					WCA = {
+						has_war_with = ROOT
+						has_war_with = FROM
+					}
+				}
+				AND = {
+					NOT = { country_exists = WCA }
+					USA = {
+						has_war_with = ROOT
+						has_war_with = FROM
+					}
+				}
+			}
+			FROM = {
+				exists = yes
+				is_in_faction = no
+				surrender_progress < 0.80
+				OR = {
+					tag = USA
+					tag = APG
+				}
+				NOT = {
+					has_country_flag = ACW_refused_truce
+					has_country_flag = ACW_accepted_truce
+					has_country_flag = ACW_proposed_truce
+				}
+			}
+
+			if = {
+				limit = { NOT = { country_exists = USA } }
+				set_temp_variable = { enemy_advantage = { value = WCA.num_of_military_factories add = WCA.num_controlled_states } }
+			}
+			else = {
+				set_temp_variable = { enemy_advantage = { value = USA.num_of_military_factories add = USA.num_controlled_states } }
+			}
+			check_expr = {
+				value = enemy_advantage
+				subtract = ROOT.num_of_military_factories
+				subtract = ROOT.num_controlled_states
+				subtract = FROM.num_of_military_factories
+				subtract = FROM.num_controlled_states
+				greater_than = { value = 0 }
+			}
+		}
+
+		targets = { USA APG }
+		target_trigger = {
+			FROM = {
+				exists = yes
+				is_in_faction = no
+				surrender_progress < 0.80
+				NOT = {
+					has_country_flag = ACW_refused_truce
+					has_country_flag = ACW_proposed_truce
+				}
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ACC_deal_with_devil"
+			set_country_flag = ACW_proposed_truce
+			if = {
+				limit = {
+					NOT = { country_exists = USA }
+				}
+				WCA = { save_event_target_as = enemy_country }
+			}
+			else = {
+				USA = { save_event_target_as = enemy_country }
+			}
+			FROM = {
+				country_event = american_civil_war_events.520
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	APG_deal_with_devil = {
+		icon = generic_agreement
+
+		allowed = { original_tag = APG }
+
+		available = {
+			has_war_with = FROM
+		}
+
+		visible = {
+			has_global_flag = USA_civil_war_begun_flag
+			has_global_flag = { flag = USA_civil_war_begun_flag days > 90 }
+			NOT = { country_exists = ACC }
+			is_in_faction = no
+			country_exists = WCA
+			country_exists = USA
+			FROM = {
+				exists = yes
+				is_in_faction = no
+				surrender_progress < 0.80
+				NOT = {
+					has_country_flag = ACW_refused_truce
+					has_country_flag = ACW_accepted_truce
+					has_country_flag = ACW_proposed_truce
+				}
+			}
+			OR = {
+				AND = {
+					USA = {
+						has_war_with = ROOT
+						has_war_with = FROM
+					}
+					check_expr = {
+						value = USA.num_of_military_factories
+						add = USA.num_controlled_states
+						subtract = ROOT.num_of_military_factories
+						subtract = ROOT.num_controlled_states
+						subtract = FROM.num_of_military_factories
+						subtract = FROM.num_controlled_states
+						greater_than = { value = 0 }
+					}
+				}
+				AND = {
+					WCA = {
+						has_war_with = ROOT
+						has_war_with = FROM
+					}
+					check_expr = {
+						value = WCA.num_of_military_factories
+						add = WCA.num_controlled_states
+						subtract = ROOT.num_of_military_factories
+						subtract = ROOT.num_controlled_states
+						subtract = FROM.num_of_military_factories
+						subtract = FROM.num_controlled_states
+						greater_than = { value = 0 }
+					}
+				}
+			}
+		}
+
+		targets = { USA WCA }
+		target_trigger = {
+			FROM = {
+				exists = yes
+				is_in_faction = no
+				surrender_progress < 0.80
+				NOT = {
+					has_country_flag = ACW_refused_truce
+					has_country_flag = ACW_accepted_truce
+					has_country_flag = ACW_proposed_truce
+				}
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete APG_deal_with_devil"
+			set_country_flag = ACW_proposed_truce
+			if = {
+				limit = {
+					FROM = { tag = USA }
+				}
+				WCA = { save_event_target_as = enemy_country }
+			}
+			else = {
+				USA = { save_event_target_as = enemy_country }
+			}
+			FROM = {
+				country_event = american_civil_war_events.520
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ACW_break_deal_with_devil = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			NOT = { has_war_with = FROM }
+		}
+
+		visible = {
+			has_country_flag = ACW_has_deal_with_devil
+			has_global_flag = USA_civil_war_begun_flag
+			FROM = {
+				exists = yes
+				has_country_flag = ACW_deal_with_devil_@ROOT
+				NOT = {
+					tag = ROOT
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		targets = { USA WCA ACC APG }
+		target_trigger = {
+			FROM = {
+				has_country_flag = ACW_deal_with_devil_@ROOT
+				NOT = {
+					tag = ROOT
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress < 0.80 }
+				has_war = yes
+			}
+			modifier = {
+				factor = 0
+				strength_ratio = { tag = FROM ratio < 0.75 }
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel ACW_break_deal_with_devil"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ACW_break_deal_with_devil"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ACW_break_deal_with_devil"
+			clear_decision_attack_AI = yes
+			clr_country_flag = ACW_has_deal_with_devil
+			clr_country_flag = ACW_deal_with_devil_@FROM
+			FROM = {
+				clr_country_flag = ACW_has_deal_with_devil
+				clr_country_flag = ACW_deal_with_devil_@ROOT
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			if = {
+				limit = {
+					CAN = {
+						has_country_flag = CAN_deal_with_devil_@ROOT
+						NOT = {
+							has_war_with = ROOT
+							has_war_with = FROM
+						}
+					}
+				}
+				hidden_effect = {
+					save_event_target_as = can_ally
+					FROM = { save_event_target_as = can_enemy }
+					CAN = { country_event = american_civil_war_events.526 }
+				}
+			}
+			else_if = {
+				limit = {
+					CAN = {
+						has_country_flag = CAN_deal_with_devil_@FROM
+						NOT = {
+							has_war_with = ROOT
+							has_war_with = FROM
+						}
+					}
+				}
+				hidden_effect = {
+					save_event_target_as = can_enemy
+					FROM = { save_event_target_as = can_ally }
+					CAN = { country_event = american_civil_war_events.526 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	USA_relocate_capital_civil_war = {
+		icon = generic_political_discourse
+
+		allowed = { original_tag = USA }
+
+		available = {
+			capital_scope = {
+				state = 361
+				NOT = { is_fully_controlled_by = ROOT }
+			}
+		}
+
+		visible = {
+			has_global_flag = USA_civil_war_begun_flag
+			any_state_of = {
+				target = { 377 382 388 797 }
+				is_owned_and_controlled_by = USA
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				controls_state = 361 #Maryland
+				controls_state = 369 #Kentucky
+				OR = {
+					controls_state = 929 #West Virginia
+					controls_state = 362 #Virginia
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete USA_relocate_capital_civil_war"
+			set_country_flag = USA_relocate_capital_flag
+			USA = { country_event = american_civil_war_events.76 }
+		}
+		fixed_random_seed = no
+	}
+
+	ACW_federal_front = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			NOT = { original_tag = USA }
+		}
+
+		available = {
+			NOT = {
+				has_idea = ACW_federal_front_idea
+				has_idea = ACW_syndicalist_front_idea
+				has_idea = ACW_longist_front_idea
+				has_idea = ACW_pacific_front_idea
+			}
+		}
+
+		visible = {
+			has_global_flag = USA_civil_war_begun_flag
+			has_war_with = USA
+		}
+
+		days_re_enable = 180
+		fire_only_once = no
+
+		ai_hint_pp_cost = 25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+			NOT = { has_political_power < 25 }
+		}
+		custom_cost_text = CP_25_PP_25
+
+		ai_will_do = {
+			factor = 250
+			modifier = {
+				factor = 0
+				NOT = { any_home_area_neighbor_country = { original_tag = USA } }
+			}
+			modifier = {
+				factor = 2
+				any_owned_state = {
+					is_core_of = ROOT
+					is_controlled_by = USA
+				}
+			}
+			modifier = {
+				factor = 2
+				check_variable = { USA.num_controlled_states > WCA.num_controlled_states }
+				check_variable = { USA.num_controlled_states > APG.num_controlled_states }
+				check_variable = { USA.num_controlled_states > ACC.num_controlled_states }
+			}
+			modifier = {
+				factor = 0.25
+				NOT = {
+					any_controlled_state = {
+						count = 3
+						is_in_home_area = yes #ignore Alaska
+						any_neighbor_state = { is_controlled_by = USA }
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ACW_federal_front"
+			hidden_effect = {
+				add_command_power = -25
+				add_political_power = -25
+			}
+			add_timed_idea = {
+				idea = ACW_federal_front_idea
+				days = 90
+			}
+			if = {
+				limit = {
+					has_global_flag = CAN_supports_@ROOT
+					CAN = {
+						has_war_with = USA
+						has_country_flag = CAN_joined_the_ACW
+					}
+				}
+				CAN = {
+					add_timed_idea = {
+						idea = ACW_federal_front_idea
+						days = 90
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ACW_syndicalist_front = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			NOT = { original_tag = WCA }
+		}
+
+		available = {
+			NOT = {
+				has_idea = ACW_federal_front_idea
+				has_idea = ACW_syndicalist_front_idea
+				has_idea = ACW_longist_front_idea
+				has_idea = ACW_pacific_front_idea
+			}
+		}
+
+		visible = {
+			has_global_flag = USA_civil_war_begun_flag
+			has_war_with = WCA
+		}
+
+		days_re_enable = 180
+		fire_only_once = no
+
+		ai_hint_pp_cost = 25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+			NOT = { has_political_power < 25 }
+		}
+		custom_cost_text = CP_25_PP_25
+
+		ai_will_do = {
+			factor = 200
+			modifier = {
+				factor = 0
+				tag = ACC
+				country_exists = USA
+			}
+			modifier = {
+				factor = 0
+				NOT = { any_home_area_neighbor_country = { original_tag = WCA } }
+			}
+			modifier = {
+				factor = 0.75
+				tag = APG
+				country_exists = USA
+			}
+			modifier = {
+				factor = 2
+				tag = USA
+			}
+			modifier = {
+				factor = 2
+				any_owned_state = {
+					is_core_of = ROOT
+					is_controlled_by = WCA
+				}
+			}
+			modifier = {
+				factor = 2
+				check_variable = { WCA.num_controlled_states > USA.num_controlled_states }
+				check_variable = { WCA.num_controlled_states > APG.num_controlled_states }
+				check_variable = { WCA.num_controlled_states > ACC.num_controlled_states }
+			}
+			modifier = {
+				factor = 0.25
+				NOT = {
+					any_controlled_state = {
+						count = 3
+						is_in_home_area = yes #ignore Alaska
+						any_neighbor_state = { is_controlled_by = WCA }
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ACW_syndicalist_front"
+			hidden_effect = {
+				add_command_power = -25
+				add_political_power = -25
+			}
+			add_timed_idea = {
+				idea = ACW_syndicalist_front_idea
+				days = 90
+			}
+			if = {
+				limit = {
+					has_global_flag = CAN_supports_@ROOT
+					CAN = {
+						has_war_with = WCA
+						has_country_flag = CAN_joined_the_ACW
+					}
+				}
+				CAN = {
+					add_timed_idea = {
+						idea = ACW_syndicalist_front_idea
+						days = 90
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ACW_longist_front = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			NOT = { original_tag = APG }
+		}
+
+		available = {
+			NOT = {
+				has_idea = ACW_federal_front_idea
+				has_idea = ACW_syndicalist_front_idea
+				has_idea = ACW_longist_front_idea
+				has_idea = ACW_pacific_front_idea
+			}
+		}
+
+		visible = {
+			has_global_flag = USA_civil_war_begun_flag
+			has_war_with = APG
+		}
+
+		days_re_enable = 180
+		fire_only_once = no
+
+		ai_hint_pp_cost = 25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+			NOT = { has_political_power < 25 }
+		}
+		custom_cost_text = CP_25_PP_25
+
+		ai_will_do = {
+			factor = 200
+			modifier = {
+				factor = 0
+				tag = ACC
+				country_exists = USA
+			}
+			modifier = {
+				factor = 0
+				NOT = { any_home_area_neighbor_country = { original_tag = APG } }
+			}
+			modifier = {
+				factor = 0.5
+				tag = WCA
+				country_exists = USA
+			}
+			modifier = {
+				factor = 2
+				any_owned_state = {
+					is_core_of = ROOT
+					is_controlled_by = APG
+				}
+			}
+			modifier = {
+				factor = 2
+				check_variable = { APG.num_controlled_states > USA.num_controlled_states }
+				check_variable = { APG.num_controlled_states > WCA.num_controlled_states }
+				check_variable = { APG.num_controlled_states > ACC.num_controlled_states }
+			}
+			modifier = {
+				factor = 0.25
+				NOT = {
+					any_controlled_state = {
+						count = 3
+						is_in_home_area = yes #ignore Alaska
+						any_neighbor_state = { is_controlled_by = APG }
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ACW_longist_front"
+			hidden_effect = {
+				add_command_power = -25
+				add_political_power = -25
+			}
+			add_timed_idea = {
+				idea = ACW_longist_front_idea
+				days = 90
+			}
+			if = {
+				limit = {
+					has_global_flag = CAN_supports_@ROOT
+					CAN = {
+						has_war_with = APG
+						has_country_flag = CAN_joined_the_ACW
+					}
+				}
+				CAN = {
+					add_timed_idea = {
+						idea = ACW_longist_front_idea
+						days = 90
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ACW_pacific_front = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			NOT = { original_tag = ACC }
+		}
+
+		available = {
+			NOT = {
+				has_idea = ACW_federal_front_idea
+				has_idea = ACW_syndicalist_front_idea
+				has_idea = ACW_longist_front_idea
+				has_idea = ACW_pacific_front_idea
+			}
+		}
+
+		visible = {
+			has_global_flag = USA_civil_war_begun_flag
+			has_war_with = ACC
+		}
+
+		days_re_enable = 180
+		fire_only_once = no
+
+		ai_hint_pp_cost = 25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+			NOT = { has_political_power < 25 }
+		}
+		custom_cost_text = CP_25_PP_25
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				NOT = { tag = USA }
+				country_exists = USA
+			}
+			modifier = {
+				factor = 0
+				NOT = { any_home_area_neighbor_country = { original_tag = ACC } }
+			}
+			modifier = {
+				factor = 20
+				NOT = { country_exists = USA }
+			}
+			modifier = {
+				factor = 2
+				any_owned_state = {
+					is_core_of = ROOT
+					is_controlled_by = ACC
+				}
+			}
+			modifier = {
+				factor = 2
+				check_variable = { ACC.num_controlled_states > USA.num_controlled_states }
+				check_variable = { ACC.num_controlled_states > WCA.num_controlled_states }
+				check_variable = { ACC.num_controlled_states > APG.num_controlled_states }
+			}
+			modifier = {
+				factor = 0.25
+				NOT = {
+					any_controlled_state = {
+						count = 3
+						is_in_home_area = yes #ignore Alaska
+						any_neighbor_state = { is_controlled_by = ACC }
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ACW_pacific_front"
+			hidden_effect = {
+				add_command_power = -25
+				add_political_power = -25
+			}
+			add_timed_idea = {
+				idea = ACW_pacific_front_idea
+				days = 90
+			}
+			if = {
+				limit = {
+					has_global_flag = CAN_supports_@ROOT
+					CAN = {
+						has_war_with = ACC
+						has_country_flag = CAN_joined_the_ACW
+					}
+				}
+				CAN = {
+					add_timed_idea = {
+						idea = ACW_pacific_front_idea
+						days = 90
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ACW_recruit_in_state = {
+		name = ACW_recruit_in_state
+		icon = us_flag
+
+		allowed = { always = no } #activated by scripted effect USA_initial_events
+
+		available = {
+			NOT = { has_country_flag = ACW_is_recruiting }
+			FROM = { is_demilitarized_zone = no }
+		}
+
+		visible = {
+			controls_state = FROM
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { controls_state = FROM }
+				FROM = { is_demilitarized_zone = yes }
+			}
+		}
+
+		state_target = yes
+		days_remove = @ACW_recruit_in_state_days_remove
+		on_map_mode = map_only
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				set_temp_variable = {
+					units_to_spawn = {
+						value = FROM.state_population_k
+						multiply = 0.001
+						clamp = { min = 1 max = 50 }
+					}
+				}
+				if = {
+					limit = {
+						OR = {
+							FROM = { is_core_of = ROOT }
+							AND = {
+								tag = ACC
+								FROM = {
+									is_core_of = USA
+									is_owned_by = USA
+								}
+							}
+						}
+					}
+					multiply_temp_variable = { units_to_spawn = 2 }
+				}
+				round_temp_variable = units_to_spawn
+
+				if = {
+					limit = {
+						NOT = { has_game_rule = { rule = unit_limit_options option = NONE } }
+						check_expr = { #unit_limit_factor
+							value = num_divisions
+							add = units_to_spawn
+							greater_than = { value = max_divisions }
+						}
+					}
+					set_temp_variable = { units_to_spawn = 0 }
+				}
+
+				factor = units_to_spawn
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel ACW_recruit_in_state"
+			clr_country_flag = ACW_is_recruiting
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ACW_recruit_in_state"
+			set_country_flag = { flag = ACW_is_recruiting days = @ACW_recruit_in_state_days_remove value = 1 }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ACW_recruit_in_state"
+			clr_country_flag = ACW_is_recruiting
+			FROM = { ACW_spawn_militia_divisions = yes }
+			hidden_effect = {
+				USA = { remove_targeted_decision = { decision = ACW_recruit_in_state target = FROM } }
+				WCA = { remove_targeted_decision = { decision = ACW_recruit_in_state target = FROM } }
+				APG = { remove_targeted_decision = { decision = ACW_recruit_in_state target = FROM } }
+				ACC = { remove_targeted_decision = { decision = ACW_recruit_in_state target = FROM } }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ACC_Operation_Liberty_mission = {
+		icon = generic_ignite_civil_war
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			has_full_control_of_state = 387 #Idaho
+			has_full_control_of_state = 380 #Utah
+			has_full_control_of_state = 377	#Arizona
+		}
+
+		cancel_trigger = {
+			has_global_flag = USA_civil_war_over_flag
+		}
+
+		days_mission_timeout = 150
+		is_good = no
+		fire_only_once = yes
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout ACC_Operation_Liberty_mission"
+			add_timed_idea = {
+				idea = ACC_failed_operation_liberty
+				days = 120
+			}
+			hidden_effect = {
+				country_event = america_constitutional_coalition_events.202
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ACC_Operation_Liberty_mission"
+			country_event = america_constitutional_coalition_events.201
+		}
+		fixed_random_seed = no
+	}
+}
+
+ACW_rocky_mountain_ceasefire_decisions = {
+	ACW_break_ceasefire = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			controls_all_owned_states = yes
+			OR = {
+				has_global_flag = { flag = ACC_rockies_ceasefire days > 180 }
+				FROM = { surrender_progress > 0.2 }
+				is_in_faction = yes
+				FROM = { is_in_faction = yes }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		targets = { USA WCA APG ACC }
+		target_root_trigger = { has_global_flag = ACC_rockies_ceasefire }
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = USA_ai_do_not_break_ceasefire
+			}
+			modifier = {
+				factor = 0
+				FROM = { alliance_strength_ratio > 1 }
+				strength_ratio = { tag = FROM ratio < 1 }
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					is_in_faction = yes
+					alliance_strength_ratio > 1
+					any_allied_country = {
+						strength_ratio = { tag = ROOT ratio > 0.9 }
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				is_in_faction = yes
+				FROM = {
+					is_in_faction = yes
+					surrender_progress < 0.2
+				}
+				second_weltkrieg_has_begun = no
+			}
+			modifier = {
+				factor = 0
+				USA = { has_country_flag = USA_considering_reunion }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ACC_WCA_peace option = ACC_WCA_PEACE_YES }
+				ACC = {
+					exists = yes
+					OR = {
+						has_government = social_democrat
+						NOT = { has_country_flag = NEE_had_1940_election }
+					}
+				}
+				WCA = {
+					exists = yes
+					NOT = { has_government = totalist }
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE_PRISON }
+				ACC = { exists = yes }
+				USA = { exists = yes }
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel ACW_break_ceasefire"
+			clear_decision_attack_AI = yes
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ACW_break_ceasefire"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ACW_break_ceasefire"
+			clear_decision_attack_AI = yes
+			clr_global_flag = ACC_rockies_ceasefire
+			add_war_support = 0.10
+			hidden_effect = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							state = 463 #Alaska
+							state = 685 #Panama Canal
+							is_mainland_america = yes
+						}
+						is_claim_or_core_of_ROOT = no
+					}
+					add_claim_by = FROM
+				}
+			}
+			FROM = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							state = 463 #Alaska
+							state = 685 #Panama Canal
+							is_mainland_america = yes
+						}
+						is_claim_or_core_of_ROOT = no
+					}
+					add_claim_by = ROOT
+				}
+			}
+			diplomatic_relation = {
+				country = FROM
+				relation = non_aggression_pact
+				active = no
+			}
+			declare_war_on = {
+				type = annex_everything
+				target = FROM
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	USA_reunite_with_ACC = {
+		icon = us_flag
+		allowed = { tag = USA }
+		available = {
+			has_global_flag = { flag = ACC_rockies_ceasefire days > 30 }
+			has_war = no
+			has_elected_government = yes
+			is_subject = no
+			FROM = {
+				has_war = no
+				has_elected_government = yes
+				OR = {
+					is_subject = no
+					is_subject_of = USA
+				}
+			}
+		}
+		visible = {
+			country_exists = FROM
+			NOT = { has_war_with = FROM }
+		}
+
+		targets = { ACC }
+		target_root_trigger = {
+			has_global_flag = ACC_rockies_ceasefire
+		}
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+		}
+
+		fire_only_once = yes
+		cost = 25
+
+		ai_will_do = {
+			factor = 200
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_WAR }
+			}
+			modifier = {
+				factor = 100
+				OR = {
+					has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE }
+					has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE_PRISON }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete USA_reunite_with_ACC"
+			set_country_flag = USA_considering_reunion
+			ACC = {
+				country_event = united_states_events.530
+			}
+		}
+		fixed_random_seed = no
+	}
+}

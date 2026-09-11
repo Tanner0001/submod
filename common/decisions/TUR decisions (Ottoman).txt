@@ -1,0 +1,4630 @@
+###########################
+# Ottoman Decisions
+###########################
+# By Jeankedezeehond
+###########################
+
+OTT_Suppressing_Society_Category = {
+	OTT_suppression_of_society = {
+		icon = GFX_decision_freedom
+		priority = 1000
+
+		allowed = {
+			always = no
+		}
+		available = {
+			has_completed_focus = OTT_Reform_on_the_Homefront
+			has_completed_focus = OTT_Lift_Ban_Political_Parties
+			if = {
+				limit = { NOT = { has_country_flag = ott_free_press } }
+				has_completed_focus = OTT_Lift_Press_Restrictions
+			}
+			NOT = { has_idea = ott_varlik_vargisi }
+		}
+		cancel_trigger = {
+			OTT = { has_dictatorship_government = yes }
+		}
+
+		is_good = no
+		fixed_random_seed = no
+		days_mission_timeout = 300
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_suppression_of_society"
+			add_political_power = 50
+			add_war_support = 0.1
+			set_temp_variable = { ideology_change_var = 0.05 }
+			change_ruling_party_popularity = yes
+			if = {
+				limit = { has_country_flag = ott_women_suffrage }
+				hidden_effect = { country_event = { id = ottomans_kemalist_events.54 days = 50 random_days = 30 } }
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout OTT_suppression_of_society"
+			activate_mission = OTT_suppression_of_society
+			if = {
+				limit = { has_war = yes }
+				random_list = {
+					33 = {
+						add_stability = -0.01
+					}
+					33 = {
+						add_war_support = -0.01
+					}
+					34 = {
+						add_political_power = -10
+					}
+					1 = {
+						every_owned_state = {
+							ott_increase_revolt_risk = yes
+						}
+					}
+				}
+			}
+			else = {
+				random_list = {
+					30 = {
+						add_stability = -0.10
+					}
+					30 = {
+						add_war_support = -0.10
+					}
+					30 = {
+						add_political_power = -100
+					}
+					10 = {
+						every_owned_state = {
+							ott_increase_revolt_risk = yes
+						}
+					}
+				}
+			}
+		}
+	}
+}
+OTT_AMN_Category = {
+	OTT_Invite_AMN_Persia = {
+		name = OTT_Invite_AMN
+		icon = GFX_decision_generic_agreement
+
+		cancel_trigger = {
+			OR = {
+				NOT = { country_exists = FROM }
+				has_war_with = FROM
+				FROM = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+				}
+				FROM = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+				hidden_trigger = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_BUFFER }
+			}
+		}
+
+		targets = { PER }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Islamic_Economic_Union
+				has_completed_focus = OTT_Association_Muslim_Nations
+			}
+			OR = {
+				has_completed_focus = OTT_Oriental_Cooperation
+				has_completed_focus = OTT_Allies_in_the_Orient
+			}
+			NOT = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_BUFFER }
+		}
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			NOT = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_BUFFER }
+			FROM = {
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				OR = {
+					is_in_faction = no
+					is_in_faction_with = ROOT
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_AMN_Persia"
+			FROM = { country_event = ottomans_foreign_policy_events.84 }
+		}
+		fixed_random_seed = no
+	}
+	OTT_Invite_AMN_Afghanistan = {
+		name = OTT_Invite_AMN
+		icon = GFX_decision_generic_agreement
+
+		cancel_trigger = {
+			OR = {
+				NOT = { country_exists = FROM }
+				has_war_with = FROM
+				FROM = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+				}
+				FROM = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+				hidden_trigger = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_AFG_PUPPET }
+			}
+		}
+
+		targets = { AFG }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Islamic_Economic_Union
+				has_completed_focus = OTT_Association_Muslim_Nations
+			}
+			OR = {
+				has_completed_focus = OTT_Oriental_Cooperation
+				has_completed_focus = OTT_Allies_in_the_Orient
+			}
+			NOT = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_AFG_PUPPET }
+		}
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			NOT = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_AFG_PUPPET }
+			FROM = {
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				OR = {
+					is_in_faction = no
+					is_in_faction_with = ROOT
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_AMN_Afghanistan"
+			FROM = { country_event = ottomans_foreign_policy_events.84 }
+		}
+		fixed_random_seed = no
+	}
+	OTT_Invite_AMN_Orient = {
+		name = OTT_Invite_AMN
+		icon = GFX_decision_generic_agreement
+
+		cancel_trigger = {
+			OR = {
+				NOT = { country_exists = FROM }
+				has_war_with = FROM
+				FROM = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+				}
+				FROM = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+		}
+
+		targets = { AZR TRK BUK KHI KAZ KUM ETS INS MAL SAR }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Islamic_Economic_Union
+				has_completed_focus = OTT_Association_Muslim_Nations
+			}
+			OR = {
+				has_completed_focus = OTT_Oriental_Cooperation
+				has_completed_focus = OTT_Allies_in_the_Orient
+			}
+		}
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			FROM = {
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				OR = {
+					is_in_faction = no
+					is_in_faction_with = ROOT
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_AMN_Orient"
+			FROM = { country_event = ottomans_foreign_policy_events.84 }
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_Invite_AMN_Maghreb = {
+		name = OTT_Invite_AMN
+		icon = GFX_decision_generic_agreement
+
+		cancel_trigger = {
+			OR = {
+				NOT = { country_exists = FROM }
+				has_war_with = FROM
+				FROM = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+				}
+				FROM = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+		}
+
+		targets = { MOR ALG TUN LBA EGY SUD SOM CHA MLI NGR MRT ZAN CHA }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Islamic_Economic_Union
+				has_completed_focus = OTT_Association_Muslim_Nations
+			}
+			OR = {
+				has_completed_focus = OTT_Maghrebi_Frontier
+				has_completed_focus = OTT_Allies_in_the_Maghreb
+			}
+		}
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			FROM = {
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				OR = {
+					is_in_faction = no
+					is_in_faction_with = ROOT
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_AMN_Maghreb"
+			FROM = { country_event = ottomans_foreign_policy_events.84 }
+		}
+		fixed_random_seed = no
+	}
+	OTT_Invite_AMN_Arabia = {
+		name = OTT_Invite_AMN
+		icon = GFX_decision_generic_agreement
+
+		cancel_trigger = {
+			OR = {
+				NOT = { country_exists = FROM }
+				has_war_with = FROM
+				FROM = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+				}
+				FROM = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+		}
+
+		targets = { JBS OMA YEM }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Islamic_Economic_Union
+				has_completed_focus = OTT_Association_Muslim_Nations
+			}
+			OR = {
+				has_completed_focus = OTT_Security_on_the_Arab_Peninsula
+				has_completed_focus = OTT_Stability_Arab_Peninsula
+			}
+		}
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			FROM = {
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				OR = {
+					is_in_faction = no
+					is_in_faction_with = ROOT
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_AMN_Arabia"
+			FROM = { country_event = ottomans_foreign_policy_events.84 }
+		}
+		fixed_random_seed = no
+	}
+	OTT_Invite_AMN_Albania = {
+		name = OTT_Invite_AMN
+		icon = GFX_decision_generic_agreement
+
+		cancel_trigger = {
+			OR = {
+				NOT = { country_exists = FROM }
+				has_war_with = FROM
+				FROM = {
+					is_subject = yes
+					NOT = { is_subject_of = ROOT }
+				}
+				FROM = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+		}
+
+		targets = { ALB }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Islamic_Economic_Union
+				has_completed_focus = OTT_Association_Muslim_Nations
+			}
+			OR = {
+				has_completed_focus = OTT_Relinquish_European_Ambitions
+				has_completed_focus = OTT_United_Against_Imperialism_HIF
+			}
+		}
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			FROM = {
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				OR = {
+					is_in_faction = no
+					is_in_faction_with = ROOT
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_AMN_Albania"
+			FROM = { country_event = ottomans_foreign_policy_events.84 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+foreign_politics = {
+	ASY_White_Peace_Assyrian_Revolt = {
+		icon = oppression
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			NOT = { has_war_with = ASY }
+		}
+
+		cancel_trigger = {
+			is_valid_peace_target = no
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 812 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ASY_White_Peace_Assyrian_Revolt"
+			add_stability = 0.05
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout ASY_White_Peace_Assyrian_Revolt"
+			every_owned_state = {
+				limit = { OTT_is_turkish_state = no }
+				ott_increase_revolt_risk = yes
+			}
+			ASY = {
+				white_peace_with_ROOT = yes
+				country_event = assyria_events.16
+			}
+		}
+		fixed_random_seed = no
+	}
+	ASY_White_Peace_Assyrian_Revolt_assyrian = {
+		icon = oppression
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			NOT = { has_war_with = OTT }
+		}
+
+		cancel_trigger = {
+			OTT = { is_valid_peace_target = no }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 812 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout ASY_White_Peace_Assyrian_Revolt_assyrian"
+			effect_tooltip = {
+				country_event = assyria_events.16
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_Invite_Istanbul_Pact_Orient = {
+		name = OTT_Invite_Istanbul_Pact
+		icon = GFX_decision_hand_out
+
+		allowed = {
+			tag = OTT
+		}
+
+		available = {
+			FROM = { at_peace_or_same_enemies_as_ROOT = yes }
+		}
+
+		visible = {
+			is_faction_leader = yes
+			country_exists = FROM
+			FROM = {
+				is_in_faction = no
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				has_capitulated = no
+				if = {
+					limit = { tag = AFG }
+					NOT = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_BUFFER }
+				}
+			}
+		}
+
+		targets = { AFG AZR }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Oriental_Cooperation
+				has_completed_focus = OTT_Allies_in_the_Orient
+			}
+			is_faction_leader = yes
+		}
+		target_trigger = {
+			FROM = {
+				is_in_faction = no
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				if = {
+					limit = { tag = AFG }
+					NOT = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_BUFFER }
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_Istanbul_Pact_Orient"
+			FROM = { country_event = ottomans_foreign_policy_events.18 }
+		}
+		fixed_random_seed = no
+	}
+	OTT_Invite_Istanbul_Pact_Maghreb = {
+		name = OTT_Invite_Istanbul_Pact
+		icon = GFX_decision_hand_out
+
+		allowed = {
+			tag = OTT
+		}
+
+		available = {
+			FROM = { at_peace_or_same_enemies_as_ROOT = yes }
+		}
+
+		visible = {
+			is_faction_leader = yes
+			country_exists = FROM
+			FROM = {
+				is_in_faction = no
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+
+		targets = { MOR ALG LBA TUN SOM CHA MLI NGR ZAN }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Maghrebi_Frontier
+				has_completed_focus = OTT_Allies_in_the_Maghreb
+			}
+			is_faction_leader = yes
+		}
+		target_trigger = {
+			FROM = {
+				is_in_faction = no
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				has_capitulated = no
+				has_socialist_government = no
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_Istanbul_Pact_Maghreb"
+			FROM = { country_event = ottomans_foreign_policy_events.18 }
+		}
+		fixed_random_seed = no
+	}
+	OTT_Invite_Istanbul_Pact_Arabia = {
+		name = OTT_Invite_Istanbul_Pact
+		icon = GFX_decision_hand_out
+
+		allowed = {
+			tag = OTT
+		}
+
+		available = {
+			FROM = { at_peace_or_same_enemies_as_ROOT = yes }
+		}
+
+		visible = {
+			is_faction_leader = yes
+			country_exists = FROM
+			FROM = {
+				is_in_faction = no
+				NOT = { has_war_with = ROOT }
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+				has_capitulated = no
+			}
+		}
+
+		targets = { YEM OMA JBS }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = OTT_Security_on_the_Arab_Peninsula
+				has_completed_focus = OTT_Stability_Arab_Peninsula
+			}
+			is_faction_leader = yes
+		}
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			FROM = {
+				is_in_faction = no
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 5 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Invite_Istanbul_Pact_Arabia"
+			FROM = { country_event = ottomans_foreign_policy_events.18 }
+		}
+		fixed_random_seed = no
+	}
+	OTT_war_for_thrace = {
+		icon = GFX_decision_eng_trade_unions_demand
+
+		allowed = { always = no }
+
+		available = {
+			owns_state = 341 #Adrianople
+			controls_all_owned_states = yes
+			FROM = { has_war_with = BPL }
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { FROM = { focus_progress = { focus = BUL_kostantiniye_diplomacy progress = 0 } } }
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { FROM = { has_war_with = BPL } }
+				FROM = { has_completed_focus = BUL_kostantiniye_diplomacy }
+			}
+		}
+
+		target_trigger = {
+			FROM = {
+				owns_any_state_of = {
+					184 #Komotini
+					1089 #Kardzhali
+				}
+			}
+			NOT = { has_global_flag = balkan_war_ended }
+		}
+
+		cancel_if_not_visible = yes
+
+		cost = 0
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				BUL = { is_ai = yes }
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL }
+				}
+			}
+			modifier = {
+				factor = 0
+				has_war = yes
+				NOT = { has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT } }
+				NOT = { has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT } }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel OTT_war_for_thrace"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete OTT_war_for_thrace"
+			add_war_support = 0.05
+			FROM = { country_event = belgrade_pact_events.25 }   #warning event
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_war_for_thrace"
+			clear_decision_attack_AI = yes
+			set_country_flag = OTT_war_for_thrace
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			hidden_effect = {
+				country_event = { id = ottomans_kemalist_events.60 days = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_leave_edirne_accords = {
+		icon = GFX_decision_generic_break_treaty
+
+		allowed = { always = no } #activated by effect
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				has_offensive_war = yes
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_leave_edirne_accords"
+			remove_ideas = ott_balkan_military_accords
+			every_country = {
+				limit = { has_idea = ott_balkan_military_accords }
+				diplomatic_relation = {
+					country = ROOT
+					relation = non_aggression_pact
+					active = no
+				}
+				country_event = ottomans_foreign_policy_events.161
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	##Sarajevo Accords Decisions ###
+	Sarajevo_invite_ROM = {
+		name = OTT_Invite_Sarajevo
+		icon = generic_agreement
+
+		allowed = { always = no } #activated by OTT_Sarajevo_Accord
+
+		available = {
+			has_country_flag = alliance_aus
+			713 = { is_owned_by_ROOT_or_ally = yes } # Suceava
+			FROM = { at_peace_or_same_enemies_as_ROOT = yes }
+		}
+
+		visible = {
+			BUL = { has_completed_focus = BUL_balkan_war_victory }
+			FROM = {
+				has_country_leader = { character = ROM_mihai_hohenzollern_sigmaringen }
+				has_democratic_government = yes
+				exists = yes
+				is_in_faction = no
+				is_subject = no
+				has_capitulated = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = { base = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete Sarajevo_invite_ROM"
+			ROM = { country_event = { id = ottomans_foreign_policy_events.88 days = 3 } }
+			custom_effect_tooltip = if_they_accept_tt
+			event_option_tooltip = ottomans_foreign_policy_events.88.a
+		}
+		fixed_random_seed = no
+	}
+
+	Sarajevo_invite_ALB_MNT = {
+		name = OTT_Invite_Sarajevo
+		icon = generic_agreement
+
+		allowed = { always = no } #activated by OTT_Relinquish_European_Ambitions
+
+		available = {
+			has_country_flag = alliance_aus
+			FROM = {
+				at_peace_or_same_enemies_as_ROOT = yes
+				has_opinion = { target = OTT value > 124 }
+			}
+		}
+
+		visible = {
+			FROM = {
+				exists = yes
+				OR = {
+					AND = {
+						is_in_faction_with = AUS
+						AUS = { is_faction_leader = yes }
+						NOT = { is_in_faction_with = ROOT }
+					}
+					is_in_faction = no
+				}
+				has_civil_war = no
+				is_subject = no
+				has_capitulated = no
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = { base = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete Sarajevo_invite_ALB_MNT"
+			FROM = { country_event = { id = ottomans_foreign_policy_events.89 days = 3 } }
+		}
+		fixed_random_seed = no
+	}
+
+	Sarajevo_invite_BUL = {
+		name = OTT_Invite_Sarajevo
+		icon = generic_agreement
+
+		allowed = { always = no } #activated by OTT_Relinquish_European_Ambitions
+
+		available = {
+			has_country_flag = alliance_aus
+			if = {
+				limit = { BUL = { has_completed_focus = BUL_balkan_war_victory } }
+				NOT = {
+					owns_state = 769
+					owns_state = 989
+				}
+			}
+			FROM = {
+				if = {
+					limit = {
+						has_completed_focus = BUL_balkan_war_victory
+						any_core_state = { is_owned_by = ROOT }
+					}
+					has_opinion = { target = OTT value > 149 }
+				}
+				else = {
+					has_opinion = { target = OTT value > 124 }
+				}
+				at_peace_or_same_enemies_as_ROOT = yes
+			}
+		}
+
+		visible = {
+			FROM = {
+				exists = yes
+				OR = {
+					AND = {
+						is_in_faction_with = AUS
+						AUS = { is_faction_leader = yes }
+						NOT = { is_in_faction_with = ROOT }
+					}
+					is_in_faction = no
+				}
+				has_civil_war = no
+				is_subject = no
+				has_capitulated = no
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = { base = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete Sarajevo_invite_BUL"
+			FROM = { country_event = { id = ottomans_foreign_policy_events.87 days = 3 } }
+			custom_effect_tooltip = if_they_accept_tt
+			if = {
+				limit = { FROM = { has_completed_focus = BUL_balkan_war_victory } }
+				event_option_tooltip = ottomans_foreign_policy_events.87.a
+			}
+			else = {
+				event_option_tooltip = ottomans_foreign_policy_events.87.b
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	Sarajevo_invite_GRE = {
+		name = OTT_Invite_Sarajevo
+		icon = generic_agreement
+
+		allowed = { always = no } #activated by OTT_Greco_Ottoman_Treaty
+
+		available = {
+			has_country_flag = alliance_aus
+			FROM = {
+				has_opinion = { target = OTT value > 124 }
+			}
+		}
+
+		visible = {
+			FROM = {
+				exists = yes
+				has_idea = ott_greco_turkish_accord
+				NOT = { has_country_flag = alliance_aus_accepted }
+				OR = {
+					AND = {
+						is_in_faction_with = AUS
+						AUS = { is_faction_leader = yes }
+						NOT = { is_in_faction_with = ROOT }
+					}
+					is_in_faction = no
+				}
+				has_civil_war = no
+				is_subject = no
+				has_capitulated = no
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = { base = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete Sarajevo_invite_GRE"
+			FROM = { country_event = { id = ottomans_foreign_policy_events.88 days = 3 } }
+			custom_effect_tooltip = if_they_accept_tt
+			effect_tooltip = {
+				TUR = {
+					remove_state_core = 187
+					remove_state_core = 164
+					remove_state_claim = 989
+					if = {
+						limit = { GRE = { owns_state = 769 } }
+						remove_state_claim = 769
+					}
+				}
+				GRE = {
+					transfer_state = 187
+					transfer_state = 164
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_Handling_Suriye = {
+	OTT_SYR_Abolish_Lebanon = {
+		icon = generic_break_treaty
+
+		available = {
+			has_completed_focus = OTT_Status_of_the_Autonomous_Regions
+			has_full_control_of_state = 553
+		}
+
+		visible = {
+			owns_state = 553
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		highlight_states = {
+			highlight_state_targets = { state = 553 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_SYR_Abolish_Lebanon"
+			add_stability = -0.10
+			553 = {
+				clr_state_flag = mt_lebanon_mutasarrifate_state
+				ott_increase_revolt_risk = yes
+			}
+			add_to_variable = { syr_integration_factor = 20 tooltip = ott_increase_syr_int }
+			clamp_variable = {
+				var = syr_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_SYR_Central_Tax_Collection_Agency = {
+		icon = ger_mefo_bills
+
+		available = {
+			has_completed_focus = OTT_Reeling_in_the_Arab_Vilayets
+			has_full_control_of_state = 554
+			OR = {
+				has_completed_focus = OTT_Modern_Census
+				custom_override_tooltip = {
+					tooltip = { localization_key = has_completed_decision DECISION = OTT_SYR_Centralise_Infrastructural_Maintenance }
+					has_country_flag = ott_syr_railroad
+				}
+			}
+		}
+
+		visible = {
+			owns_state = 554
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+		days_remove = 200
+
+		highlight_states = {
+			highlight_state_targets = { state = 554 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_SYR_Central_Tax_Collection_Agency"
+			add_political_power = 100
+			add_to_variable = { syr_integration_factor = 20 tooltip = ott_increase_syr_int }
+			clamp_variable = {
+				var = syr_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_SYR_estabish_community_centres = {
+		icon = GFX_decision_hand_out
+
+		available = {
+			has_completed_focus = OTT_Expand_Halkevleri
+			has_full_control_of_state = 554
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		visible = {
+			owns_state = 554
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 25
+		modifier = { civilian_factory_use = 1 }
+		days_remove = 400
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_SYR_estabish_community_centres"
+			add_to_variable = { syr_integration_factor = 20 tooltip = ott_increase_syr_int }
+			clamp_variable = {
+				var = syr_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_SYR_Centralise_Infrastructural_Maintenance = {
+		icon = GFX_decision_railroad
+
+		available = {
+			has_completed_focus = OTT_Order_by_the_Locomotive
+			has_full_control_of_state = 455
+			has_full_control_of_state = 677
+			has_full_control_of_state = 995
+		}
+
+		visible = {
+			owns_state = 995
+			NOT = { has_country_flag = ott_syr_railroad }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 0
+		days_remove = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = 995 }
+		}
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_SYR_Centralise_Infrastructural_Maintenance"
+			add_to_variable = { syr_integration_factor = 10 tooltip = ott_increase_syr_int }
+			clamp_variable = {
+				var = syr_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_SYR_Centralise_Infrastructural_Maintenance"
+			995 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			build_railway = {
+				path = { 7151 7170 1074 4111 4550 11919 1056 7140 12473 }
+			}
+			set_country_flag = ott_syr_railroad
+		}
+		fixed_random_seed = no
+	}
+	OTT_SYR_Settle_Tribes = {
+		icon = infiltrate_state
+
+		available = {
+			has_completed_focus = OTT_Reeling_in_the_Arab_Vilayets
+			has_full_control_of_state = 455
+		}
+
+		visible = {
+			owns_state = 455
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+		days_remove = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = 455 }
+		}
+
+		modifier = {
+			political_power_gain = -0.05
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_SYR_Settle_Tribes"
+			455 = {
+				increase_state_category_by_one_level = yes
+			}
+			680 = {
+				increase_state_category_by_one_level = yes
+			}
+			add_to_variable = { syr_integration_factor = 5 tooltip = ott_increase_syr_int }
+			clamp_variable = {
+				var = syr_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_SYR_Restrict_Arab_Nationalist_Newspapers = {
+		icon = GFX_decision_generic_speech
+
+		available = {
+			has_completed_focus = OTT_Crack_down_on_the_SSNP
+			NOT = { has_country_flag = ott_free_press }
+			has_full_control_of_state = 554
+		}
+
+		visible = {
+			owns_state = 554
+			NOT = { has_country_flag = ott_free_press }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 50
+
+		highlight_states = {
+			highlight_state_targets = { state = 554 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_SYR_Restrict_Arab_Nationalist_Newspapers"
+			add_war_support = 0.05
+			set_temp_variable = { ideology_change_var = 0.05 }
+			change_ruling_party_popularity = yes
+			add_to_variable = { syr_integration_factor = 5 tooltip = ott_increase_syr_int }
+			clamp_variable = {
+				var = syr_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_SYR_Finish_West_Jordan_Irrigation_Project = {
+		icon = GFX_decision_oasis
+
+		available = {
+			has_full_control_of_state = 454
+		}
+
+		visible = {
+			has_country_flag = OTT_Fahrettin_Governor
+			owns_state = 454
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 200
+
+		highlight_states = {
+			highlight_state_targets = { state = 454 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_SYR_Finish_West_Jordan_Irrigation_Project"
+			454 = {
+				increase_state_category_by_one_level = yes
+			}
+			add_offsite_building = {
+				type = industrial_complex
+				level = 1
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			if = {
+				limit = {
+					check_variable = { syr_integration_factor < 100 }
+				}
+				add_to_variable = { syr_integration_factor = 5 tooltip = ott_increase_syr_int }
+				clamp_variable = {
+					var = syr_integration_factor
+					min = 0
+					max = 100
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_SYR_Hunt_Down_Insurgents = {
+		icon = GFX_decision_generic_operation
+
+		available = {
+			has_full_control_of_state = 454
+		}
+
+		visible = {
+			has_country_flag = OTT_Fahrettin_Governor
+			owns_state = 454
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+		days_remove = 150
+
+		highlight_states = {
+			highlight_state_targets = { state = 454 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		modifier = {
+			command_power_gain = -0.05
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_SYR_Hunt_Down_Insurgents"
+			if = {
+				limit = {
+					check_variable = { syr_integration_factor < 100 }
+				}
+				add_to_variable = { syr_integration_factor = 5 tooltip = ott_increase_syr_int }
+				clamp_variable = {
+					var = syr_integration_factor
+					min = 0
+					max = 100
+				}
+			}
+			454 = {
+				ott_decrease_revolt_risk = yes
+			}
+			992 = {
+				ott_decrease_revolt_risk = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_SYR_Ensure_Demographic_Balance = {
+		icon = GFX_decision_generic_agreement
+
+		available = {
+			has_full_control_of_state = 454
+			has_full_control_of_state = 291
+			has_full_control_of_state = 49
+		}
+
+		visible = {
+			has_country_flag = OTT_Fahrettin_Governor
+			owns_state = 454
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 150
+
+		highlight_states = {
+			highlight_state_targets = { state = 454 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		modifier = {
+			political_power_gain = -0.10
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_SYR_Ensure_Demographic_Balance"
+			454 = {
+				ott_decrease_revolt_risk = yes
+			}
+			455 = {
+				ott_decrease_revolt_risk = yes
+			}
+			992 = {
+				ott_decrease_revolt_risk = yes
+			}
+			custom_effect_tooltip = tooltip_white_line
+			454 = {
+				add_dynamic_modifier = {
+					modifier = jerusalem_religious_peace
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_Handling_Greek_Vilayets = {
+	OTT_GRE_Abolish_Mutasarrifate = {
+		icon = generic_break_treaty
+
+		available = {
+			has_completed_focus = OTT_Status_of_the_Autonomous_Regions
+			has_full_control_of_state = 183
+		}
+
+		visible = {
+			owns_state = 183
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		highlight_states = {
+			highlight_state_targets = { state = 183 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_GRE_Abolish_Mutasarrifate"
+			183 = {
+				clr_state_flag = cyprus_mutasarrifate_state
+				ott_increase_revolt_risk = yes
+			}
+			add_stability = -0.03
+			add_to_variable = { gre_integration_factor = 20 tooltip = ott_increase_gre_int }
+			clamp_variable = {
+				var = gre_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_GRE_Central_Tax_Collection_Agency = {
+		icon = ger_mefo_bills
+
+		available = {
+			has_completed_focus = OTT_Status_of_the_Autonomous_Regions
+			has_completed_focus = OTT_Modern_Census
+			if = {
+				limit = { owns_state = 164 } #Dodecanese
+				controls_state = 164
+			}
+			if = {
+				limit = { owns_state = 183 } #Cyprus
+				controls_state = 183
+			}
+			if = {
+				limit = { owns_state = 187 } #Aegean Islands
+				controls_state = 187
+			}
+		}
+
+		visible = {
+			owns_any_state_of = {
+				164 #Dodecanese
+				183 #Cyprus
+				187 #Aegean Islands
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		highlight_states = {
+			highlight_state_targets = { state = 187 }
+		}
+
+		days_remove = 200
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_GRE_Central_Tax_Collection_Agency"
+			add_political_power = 50
+			add_to_variable = { gre_integration_factor = 15 tooltip = ott_increase_gre_int }
+			clamp_variable = {
+				var = gre_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_GRE_estabish_community_centres = {
+		icon = GFX_decision_hand_out
+
+		available = {
+			has_completed_focus = OTT_Expand_Halkevleri
+			if = {
+				limit = { owns_state = 164 } #Dodecanese
+				controls_state = 164
+			}
+			if = {
+				limit = { owns_state = 183 } #Cyprus
+				controls_state = 183
+			}
+			if = {
+				limit = { owns_state = 187 } #Aegean Islands
+				controls_state = 187
+			}
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		visible = {
+			owns_any_state_of = {
+				164 #Dodecanese
+				183 #Cyprus
+				187 #Aegean Islands
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 25
+		modifier = { civilian_factory_use = 1 }
+		days_remove = 400
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_GRE_estabish_community_centres"
+			add_to_variable = { gre_integration_factor = 10 tooltip = ott_increase_gre_int }
+			clamp_variable = {
+				var = gre_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_GRE_Turkish_Employement_Program = {
+		icon = GFX_decision_cash_flow
+
+		available = {
+			has_completed_focus = OTT_OHF_Membership_Reward_Program
+			has_full_control_of_state = 339
+		}
+
+		visible = {
+			owns_state = 339
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+		days_remove = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = 183 }
+		}
+
+		modifier = {
+			stability_weekly = -0.002
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_GRE_Turkish_Employement_Program"
+			183 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_to_variable = { gre_integration_factor = 5 tooltip = ott_increase_gre_int }
+			clamp_variable = {
+				var = gre_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_GRE_Enforce_Turkish_Curriculum = {
+		icon = GFX_decision_eng_trade_unions_support
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = TRIGGER_HAS_COMPLETED_FOCUS
+					FOCUS = OTT_Millet_Mektepleri
+				}
+				OR = {
+					has_completed_focus = OTT_Millet_Mektepleri
+					has_completed_focus = OTT_Millet_Mektepleri_FEV
+				}
+			}
+			if = {
+				limit = { owns_state = 164 } #Dodecanese
+				controls_state = 164
+			}
+			if = {
+				limit = { owns_state = 183 } #Cyprus
+				controls_state = 183
+			}
+			if = {
+				limit = { owns_state = 187 } #Aegean Islands
+				controls_state = 187
+			}
+		}
+
+		visible = {
+			has_authoritarian_government = yes
+			NOT = { has_completed_focus = OTT_Consolidate_Military_Dictatorship }
+			owns_any_state_of = {
+				164 #Dodecanese
+				183 #Cyprus
+				187 #Aegean Islands
+			}
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				any_state_of = {
+					target = { 164 183 187 339 }
+					OTT_revolt_risk_medium = yes
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 0
+
+		highlight_states = {
+			highlight_state_targets = { state = 164 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_GRE_Enforce_Turkish_Curriculum"
+			187 = {
+				ott_increase_revolt_risk = yes
+			}
+			164 = {
+				ott_increase_revolt_risk = yes
+			}
+			183 = {
+				ott_increase_revolt_risk = yes
+			}
+			339 = {
+				ott_increase_revolt_risk = yes
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_to_variable = { gre_integration_factor = 5 tooltip = ott_increase_gre_int }
+			clamp_variable = {
+				var = gre_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_GRE_Crack_Down_Tax_Havens = {
+		icon = eng_trade_unions_demand
+
+		available = {
+			OR = {
+				has_completed_focus = OTT_Reorganise_Vilayet_System
+				hidden_trigger = { has_completed_focus = OTT_Vilayet_Reorganisation }
+				has_completed_focus = OTT_Multi_Level_Democracy_FEV
+				has_completed_focus = OTT_Committee_Inquest
+			}
+			if = {
+				limit = { owns_state = 164 } #Dodecanese
+				controls_state = 164
+			}
+			if = {
+				limit = { owns_state = 183 } #Cyprus
+				controls_state = 183
+			}
+			if = {
+				limit = { owns_state = 187 } #Aegean Islands
+				controls_state = 187
+			}
+		}
+
+		visible = {
+			owns_any_state_of = {
+				164 #Dodecanese
+				183 #Cyprus
+				187 #Aegean Islands
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 35
+
+		highlight_states = {
+			highlight_state_targets = { state = 164 }
+		}
+
+		days_remove = 100
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_GRE_Crack_Down_Tax_Havens"
+			add_to_variable = { gre_integration_factor = 5 tooltip = ott_increase_gre_int }
+			clamp_variable = {
+				var = gre_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_Handling_Kurdish_Vilayets = {
+	OTT_KUR_Centralise_Tax_Collection = {
+		icon = ger_mefo_bills
+
+		available = {
+			has_completed_focus = OTT_Extend_Authority_Kurdish_Territories
+			OR = {
+				has_completed_focus = OTT_Modern_Census
+				custom_override_tooltip = {
+					tooltip = { localization_key = has_completed_decision DECISION = OTT_KUR_Complete_the_Copper_Line }
+					has_country_flag = ott_copper_line_completed
+				}
+			}
+			if = {
+				limit = { owns_state = 350 } #Diyarbekir
+				controls_state = 350
+			}
+			if = {
+				limit = { owns_state = 352 } #Van
+				controls_state = 352
+			}
+		}
+
+		visible = {
+			owns_any_state_of = {
+				350 #Diyarbekir
+				352 #Van
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+		days_remove = 200
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_KUR_Centralise_Tax_Collection"
+			add_political_power = 75
+			add_to_variable = { kur_integration_factor = 15 tooltip = ott_increase_kur_int }
+			clamp_variable = {
+				var = kur_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_KUR_estabish_community_centres = {
+		icon = GFX_decision_hand_out
+
+		available = {
+			has_completed_focus = OTT_Expand_Halkevleri
+			if = {
+				limit = { owns_state = 350 } #Diyarbekir
+				controls_state = 350
+			}
+			if = {
+				limit = { owns_state = 352 } #Van
+				controls_state = 352
+			}
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		visible = {
+			owns_any_state_of = {
+				350 #Diyarbekir
+				352 #Van
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 25
+		modifier = { civilian_factory_use = 1 }
+		days_remove = 400
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_KUR_estabish_community_centres"
+			add_to_variable = { kur_integration_factor = 10 tooltip = ott_increase_kur_int }
+			clamp_variable = {
+				var = kur_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_KUR_Complete_the_Copper_Line = {
+		icon = GFX_decision_railroad
+
+		available = {
+			has_completed_focus = OTT_Order_by_the_Locomotive
+			has_full_control_of_state = 344
+			has_full_control_of_state = 350
+		}
+
+		visible = {
+			owns_state = 350
+			NOT = { has_country_flag = ott_copper_line_completed }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 25
+
+		days_remove = 250
+
+		highlight_states = {
+			highlight_state_targets = { state = 350 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_KUR_Complete_the_Copper_Line"
+			350 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			build_railway = {
+				path = { 4512 5004 11871 9823 9893 3889 806 11746 }
+			}
+			build_railway = {
+				path = { 4512 13745 12318 864 6935 }
+			}
+			352 = {
+				add_extra_state_shared_building_slots = 1
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = supply_node
+						province = 6935
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = supply_node
+						NUMBER = 1
+						VP = 6935
+					}
+				}
+			}
+			add_to_variable = { kur_integration_factor = 10 tooltip = ott_increase_kur_int }
+			clamp_variable = {
+				var = kur_integration_factor
+				min = 0
+				max = 100
+			}
+			set_country_flag = ott_copper_line_completed
+		}
+		fixed_random_seed = no
+	}
+	OTT_KUR_Increase_Ottoman_Gendarmerie = {
+		icon = GFX_decision_soldierly_discipline
+
+		available = {
+			if = {
+				limit = { owns_state = 350 } #Diyarbekir
+				controls_state = 350
+			}
+			if = {
+				limit = { owns_state = 352 } #Van
+				controls_state = 352
+			}
+		}
+
+		visible = {
+			owns_any_state_of = {
+				350 #Diyarbekir
+				352 #Van
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 100
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_KUR_Increase_Ottoman_Gendarmerie"
+			350 = {
+				ott_decrease_revolt_risk = yes
+				add_resistance_target = {
+					amount = -25
+					occupier = OTT
+					days = 250
+					tooltip = OTT_KUR_Increase_Ottoman_Gendarmerie_tt
+				}
+			}
+			352 = {
+				ott_decrease_revolt_risk = yes
+				add_resistance_target = {
+					amount = -25
+					occupier = OTT
+					days = 250
+					tooltip = OTT_KUR_Increase_Ottoman_Gendarmerie_tt
+				}
+			}
+			add_to_variable = { kur_integration_factor = 5 tooltip = ott_increase_kur_int }
+			clamp_variable = {
+				var = kur_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_KUR_Abolish_the_Hamidiye = {
+		icon = oppression
+
+		available = {
+			has_completed_focus = OTT_Reform_the_Conscription_System
+			has_completed_focus = OTT_Extend_Authority_Kurdish_Territories
+			if = {
+				limit = { owns_state = 350 } #Diyarbekir
+				controls_state = 350
+			}
+			if = {
+				limit = { owns_state = 352 } #Van
+				controls_state = 352
+			}
+		}
+
+		visible = {
+			owns_any_state_of = {
+				350 #Diyarbekir
+				352 #Van
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 15
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_KUR_Abolish_the_Hamidiye"
+			add_stability = 0.05
+			add_war_support = 0.05
+			add_to_variable = { kur_integration_factor = 10 tooltip = ott_increase_kur_int }
+			clamp_variable = {
+				var = kur_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_Handling_Arab_Vilayets = {
+	OTT_ARA_Abolish_Sharif = {
+		icon = generic_break_treaty
+
+		available = {
+			has_completed_focus = OTT_Status_of_the_Autonomous_Regions
+			has_full_control_of_state = 679
+			has_full_control_of_state = 754
+			OR = {
+				has_country_flag = ott_sharif_dead
+				has_completed_focus = OTT_Ottoman_Authority_Peninsula
+			}
+		}
+
+		visible = {
+			owns_state = 679
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				any_state_of = {
+					target = { 679 754 }
+					OTT_revolt_risk_low = yes
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_ARA_Abolish_Sharif"
+			add_stability = -0.10
+			set_country_flag = ott_sharif_abolished
+			679 = {
+				custom_effect_tooltip = ott_increase_revolt_risk_large_tt
+				hidden_effect = {
+					ott_increase_revolt_risk = yes
+					ott_increase_revolt_risk = yes
+				}
+			}
+			754 = {
+				custom_effect_tooltip = ott_increase_revolt_risk_large_tt
+				hidden_effect = {
+					ott_increase_revolt_risk = yes
+					ott_increase_revolt_risk = yes
+				}
+			}
+			add_to_variable = { hej_integration_factor = 20 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_ARA_Centralise_Tax_Collection = {
+		icon = ger_mefo_bills
+
+		available = {
+			OR = {
+				has_completed_focus = OTT_Modern_Census
+				custom_override_tooltip = {
+					tooltip = { localization_key = has_completed_decision DECISION = OTT_ARA_Abolish_Sharif }
+					has_country_flag = ott_sharif_abolished
+				}
+			}
+			if = {
+				limit = { owns_state = 679 } #Medina
+				controls_state = 679
+			}
+			if = {
+				limit = { owns_state = 754 } #Medina
+				controls_state = 754
+			}
+		}
+
+		visible = {
+			owns_any_state_of = {
+				679 #Mecca
+				754 #Medina
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 0
+		days_remove = 200
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 679 #Mecca
+				state = 754 #Medina
+			}
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_ARA_Centralise_Tax_Collection"
+			add_political_power = 100
+			add_to_variable = { hej_integration_factor = 15 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_ARA_Salination_Plant = {
+		icon = generic_construction
+
+		available = {
+			has_full_control_of_state = 679
+		}
+
+		visible = {
+			owns_state = 679
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 30
+		days_remove = 200
+
+		highlight_states = {
+			highlight_state_targets = { state = 679 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_ARA_Salination_Plant"
+			679 = {
+				ott_decrease_revolt_risk = yes
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_ARA_Salination_Plant"
+			679 = {
+				increase_state_category_by_one_level = yes
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { hej_integration_factor = 5 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_ARA_Settle_Tribes = {
+		icon = infiltrate_state
+
+		available = {
+			has_completed_focus = OTT_Reeling_in_the_Arab_Vilayets
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+		days_remove = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = 754 }
+		}
+
+		modifier = {
+			political_power_gain = -0.05
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_ARA_Settle_Tribes"
+			754 = {
+				increase_state_category_by_one_level = yes
+				ott_increase_revolt_risk = yes
+			}
+			add_to_variable = { hej_integration_factor = 5 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_ARA_Expand_Dubai_Air_Base = {
+		icon = GFX_decision_generic_air
+
+		available = {
+			has_completed_focus = OTT_army_aviation_unq
+			has_completed_focus = OTT_Create_the_Sanjak_of_al_Hasa
+			controls_state = 658
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 20
+		days_remove = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = 658 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_ARA_Expand_Dubai_Air_Base"
+			658 = {
+				add_building_construction = {
+					type = air_base
+					level = 2
+				}
+			}
+			add_to_variable = { hej_integration_factor = 5 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_ARA_Abolish_Trucial_States = {
+		icon = generic_break_treaty
+
+		available = {
+			has_completed_focus = OTT_Create_the_Sanjak_of_al_Hasa
+			controls_state = 993
+			controls_state = 658
+			controls_state = 907
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				any_state_of = {
+					target = { 658 907 993 }
+					OTT_revolt_risk_low = yes
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 0
+
+		highlight_states = {
+			highlight_state_targets = { state = 907 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_ARA_Abolish_Trucial_States"
+			add_stability = -0.05
+			993 = {
+				custom_effect_tooltip = ott_increase_revolt_risk_large_tt
+				hidden_effect = {
+					ott_increase_revolt_risk = yes
+					ott_increase_revolt_risk = yes
+				}
+			}
+			658 = {
+				custom_effect_tooltip = ott_increase_revolt_risk_large_tt
+				hidden_effect = {
+					ott_increase_revolt_risk = yes
+					ott_increase_revolt_risk = yes
+				}
+			}
+			907 = {
+				custom_effect_tooltip = ott_increase_revolt_risk_large_tt
+				hidden_effect = {
+					ott_increase_revolt_risk = yes
+					ott_increase_revolt_risk = yes
+				}
+			}
+			add_to_variable = { hej_integration_factor = 20 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_ARA_Crack_Down_Gulf_Smuggling = {
+		icon = GFX_decision_generic_naval
+
+		available = {
+			has_completed_focus = OTT_Create_the_Sanjak_of_al_Hasa
+			controls_state = 658
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 20
+		days_remove = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = 658 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_ARA_Crack_Down_Gulf_Smuggling"
+			658 = {
+				ott_increase_revolt_risk = yes
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { hej_integration_factor = 5 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_ARA_Align_Oman = {
+		icon = GFX_decision_shield
+
+		allowed = { always = no }				# Activated by focus OTT_Create_the_Sanjak_of_al_Hasa
+
+		available = {
+			has_completed_focus = OTT_Create_the_Sanjak_of_al_Hasa
+			OMA = {
+				NOT = { has_completed_focus = OMA_freedom_once_more }
+			}
+			OMA = { is_subject = no }
+		}
+
+		visible = {
+			OTT = { has_completed_focus = OTT_Ottoman_Authority_Peninsula }
+			OMA = { is_subject = no }
+			NOT = {
+				OMA = { has_completed_focus = OMA_freedom_once_more }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_ARA_Align_Oman"
+			OMA = { country_event = { id = ottomans_foreign_policy_events.351 days = 2 } }
+			custom_effect_tooltip = if_they_accept_tt
+			effect_tooltip = {
+				set_autonomy = {
+					target = OMA
+					autonomy_state = nominal_puppet
+					end_wars = no
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_ARA_Military_Mission_to_ARA = {
+		icon = generic_prepare_civil_war
+
+		visible = {
+			country_exists = FROM
+			NOT = {
+				has_war_with = FROM
+				EGY = {
+					is_faction_leader = yes
+					is_in_faction_with = FROM
+				}
+				FROM = { has_idea = ott_army_training }
+			}
+			OR = {
+				has_subject = FROM
+				FROM = { is_subject = no }
+			}
+		}
+
+		targets = { OMA JBS YEM }
+		target_trigger = {
+			NOT = {
+				has_war_with = FROM
+				EGY = {
+					is_faction_leader = yes
+					is_in_faction_with = FROM
+				}
+				FROM = { has_idea = ott_army_training }
+			}
+			OR = {
+				has_subject = FROM
+				FROM = { is_subject = no }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		custom_cost_text = 250_guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 250 } }
+		}
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete OTT_ARA_Military_Mission_to_ARA"
+			add_political_power = 25
+			army_experience = 10
+			add_war_support = 0.025
+			custom_effect_tooltip = tooltip_white_line
+			send_equipment = {
+				amount = 250
+				target = FROM
+				equipment = infantry_equipment
+				old_prioritised = yes
+			}
+			FROM = {
+				add_ideas = ott_army_training
+				custom_effect_tooltip = tooltip_white_line
+				army_experience = 35
+				add_war_support = 0.10
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_Jeddah_Aden_Line = {
+		icon = GFX_decision_train
+
+		allowed = { always = no }				# Activated by focus OTT_Handle_the_Yemeni_Affair
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = OTT_TRI_Tripoli_Benghazi_Railway }
+				has_country_flag = ott_completed_tripoli_benghazi
+			}
+			679 = { is_controlled_by_ROOT_or_subject = yes }
+			982 = { is_controlled_by_ROOT_or_subject = yes }
+			293 = { is_controlled_by_ROOT_or_subject = yes }
+			659 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+
+		ai_will_do = { base = 10 }
+
+		fire_only_once = yes
+
+		cost = 75
+
+		days_remove = 300
+
+		highlight_states = {
+			highlight_state_targets = { state = 982 state = 293 state = 659 }
+		}
+
+		cancel_trigger = {
+			NOT = {
+				982 = { is_owned_by_ROOT_or_subject = yes }
+				293 = { is_owned_by_ROOT_or_subject = yes }
+				659 = { is_owned_by_ROOT_or_subject = yes }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_Jeddah_Aden_Line"
+			hidden_effect = {
+				country_event = { id = ottomans_separatist_events.40 days = 250 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_Jeddah_Aden_Line"
+			659 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			293 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			982 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+			}
+			if = {
+				limit = { OTT = { has_idea = ott_zayidi_resistance } }
+				build_railway = {
+					level = 1
+					path = { 12883 1923 13664 8073 13836 10752 5074 }
+				}
+			}
+			else = {
+				build_railway = {
+					level = 1
+					path = { 12883 1923 13664 8073 13836 10840 1973 5074 }
+				}
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { hej_integration_factor = 5 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_Leylines_Red_Sea = {
+		icon = generic_naval_base
+
+		allowed = { always = no }				# Activated by focus OTT_Handle_the_Yemeni_Affair
+
+		available = {
+			982 = { is_controlled_by_ROOT_or_subject = yes }
+			293 = { is_controlled_by_ROOT_or_subject = yes }
+			659 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+
+		ai_will_do = { factor = 10 }
+
+		fire_only_once = yes
+
+		cost = 100
+
+		days_remove = 250
+
+		highlight_states = {
+			highlight_state_targets = { state = 982 state = 293 state = 659 }
+		}
+
+		cancel_trigger = {
+			NOT = {
+				293 = { is_owned_by_ROOT_or_subject = yes }
+				659 = { is_owned_by_ROOT_or_subject = yes }
+				982 = { is_owned_by_ROOT_or_subject = yes }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_Leylines_Red_Sea"
+			659 = {
+				increase_state_category_by_one_level = yes
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 1
+						province = 5074
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 1
+						VP = 5074
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 3
+						province = 5074
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 3
+						VP = 5074
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+			}
+			293 = {
+				increase_state_category_by_one_level = yes
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 1
+						province = 13836
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 1
+						VP = 13836
+					}
+				}
+			}
+			982 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 1
+						province = 8073
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 1
+						VP = 8073
+					}
+				}
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { hej_integration_factor = 5 tooltip = ott_increase_hej_int }
+			clamp_variable = {
+				var = hej_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_Handling_Iraqi_Vilayets = {
+	OTT_IRQ_Abolish_Assyrian_Autonomous_Zone = {
+		icon = generic_break_treaty
+
+		visible = {
+			owns_state = 812
+		}
+
+		available = {
+			has_completed_focus = OTT_Status_of_the_Autonomous_Regions
+			OR = {
+				has_country_flag = ASY_got_an_ass_whooping
+				has_completed_focus = OTT_Ottoman_Authority_Peninsula
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		highlight_states = {
+			highlight_state_targets = { state = 812 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_IRQ_Abolish_Assyrian_Autonomous_Zone"
+			812 = {
+				ott_increase_revolt_risk = yes
+			}
+			add_to_variable = { irq_integration_factor = 20 tooltip = ott_increase_irq_int }
+			clamp_variable = {
+				var = irq_integration_factor
+				min = 0
+				max = 100
+			}
+			if = {
+				limit = { NOT = { has_country_flag = ASY_got_an_ass_whooping } }
+				hidden_effect = {
+					country_event = { id = ottomans_separatist_events.37 days = 15 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_IRQ_Coordinate_Shia_Tourism = {
+		icon = eng_blackshirt_march
+
+		available = {
+			PER = {
+				OR = {
+					has_socialist_government = yes
+					is_faction_leader = yes
+					has_war_with = OTT
+				}
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		highlight_states = {
+			highlight_state_targets = { state = 291 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_IRQ_Coordinate_Shia_Tourism"
+			add_war_support = 0.025
+			291 = {
+				ott_increase_revolt_risk = yes
+			}
+			PER = {
+				add_opinion_modifier = {
+					target = OTT
+					modifier = protest_action_strong
+				}
+			}
+			add_to_variable = { irq_integration_factor = 5 tooltip = ott_increase_irq_int }
+			clamp_variable = {
+				var = irq_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_IRQ_Iraqi_Road_System = {
+		icon = GFX_decision_road
+
+		available = {
+			has_completed_focus = OTT_Order_by_the_Locomotive
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		days_remove = 300
+
+		highlight_states = {
+			highlight_state_targets = { state = 291 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_IRQ_Iraqi_Road_System"
+			676 = {
+				ott_decrease_revolt_risk = yes
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			819 = {
+				ott_decrease_revolt_risk = yes
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			291 = {
+				ott_decrease_revolt_risk = yes
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = { owns_state = 812 }
+				812 = {
+					ott_decrease_revolt_risk = yes
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { irq_integration_factor = 5 tooltip = ott_increase_irq_int }
+			clamp_variable = {
+				var = irq_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_IRQ_Mosul_Development = {
+		icon = GFX_decision_factories
+
+		available = {
+			has_completed_focus = OTT_Reeling_in_the_Arab_Vilayets
+			OR = {
+				has_completed_focus = OTT_Tigris_Program
+				has_completed_focus = OTT_Populist_Economics
+			}
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 25
+		modifier = { civilian_factory_use = 1 }
+		days_remove = 300
+
+		highlight_states = {
+			highlight_state_targets = { state = 676 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_IRQ_Mosul_Development"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_IRQ_Mosul_Development"
+			676 = {
+				increase_state_category_by_one_level = yes
+			}
+			build_railway = {
+				path = { 4512 12416 1549 10804 10106 1600 8123 }
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { irq_integration_factor = 10 tooltip = ott_increase_irq_int }
+			clamp_variable = {
+				var = irq_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_IRQ_Basra_Harbour_Project = {
+		icon = generic_naval_base
+
+		visible = {
+			owns_state = 812
+		}
+
+		available = {
+			has_completed_focus = OTT_Basra_Kuwait
+			has_country_flag = ASY_got_an_ass_whooping
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 50
+
+		days_remove = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = 812 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_IRQ_Basra_Harbour_Project"
+			812 = {
+				add_extra_state_shared_building_slots = 1
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						province = 2089
+						level = 2
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 2089
+					}
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 2
+						province = 2089
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 2
+						VP = 2089
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 2
+						province = 8085
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 2
+						VP = 8085
+					}
+				}
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { irq_integration_factor = 10 tooltip = ott_increase_irq_int }
+			clamp_variable = {
+				var = irq_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_IRQ_Navigation_Law = {
+		icon = generic_naval
+
+		available = {
+			has_completed_focus = OTT_Reeling_in_the_Arab_Vilayets
+			has_completed_focus = OTT_Striving_for_Autarky
+		}
+
+		visible = {
+			NOT = { has_country_flag = ott_centralist_DF }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 25
+
+		highlight_states = {
+			highlight_state_targets = { state = 676 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_IRQ_Navigation_Law"
+			every_other_country = {
+				display_individual_scopes = yes
+				limit = {
+					OR = {
+						tag = CAN
+						tag = GER
+					}
+					NOT = { is_ally_with = OTT }
+					has_socialist_government = no
+				}
+				add_opinion_modifier = {
+					target = OTT
+					modifier = protest_action_light
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_equipment_to_stockpile = {
+				type = convoy
+				amount = 100
+			}
+			custom_effect_tooltip = tooltip_white_line
+			676 = {
+				ott_decrease_revolt_risk = yes
+			}
+			291 = {
+				ott_decrease_revolt_risk = yes
+			}
+			812 = {
+				ott_increase_revolt_risk = yes
+			}
+			add_to_variable = { irq_integration_factor = 10 tooltip = ott_increase_irq_int }
+			clamp_variable = {
+				var = irq_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_Handling_Libyan_Vilayets = {
+	OTT_TRI_Tripoli_Benghazi_Railway = {
+		icon = GFX_decision_train
+
+		available = {
+			has_completed_focus = OTT_Order_by_the_Locomotive
+			451 = { is_controlled_by_ROOT_or_subject = yes }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+
+		visible = {
+			owns_state = 448
+			NOT = { has_country_flag = ott_completed_tripoli_benghazi }
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				any_state_of = {
+					target = { 450 448 }
+					OTT_revolt_risk_medium = yes
+				}
+			}
+		}
+
+		modifier = { civilian_factory_use = 3 }
+		days_remove = 600
+
+		highlight_states = {
+			highlight_state_targets = { state = 448 }
+		}
+
+		cancel_trigger = {
+			OR = {
+				OTT_has_centralist_government = no
+				NOT = { owns_state = 448 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_TRI_Tripoli_Benghazi_Railway"
+			hidden_effect = {
+				country_event = { id = ottomans_economy_events.8 days = 150 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_TRI_Tripoli_Benghazi_Railway"
+			set_country_flag = ott_completed_tripoli_benghazi
+			450 = {
+				ott_increase_revolt_risk = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			451 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			663 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			448 = {
+				ott_increase_revolt_risk = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			build_railway = {
+				level = 1
+				path = { 1149 4194 7209 9980 1118 1041 4047 10046 10117 12088 4057 1198 1127 4120 11954 }
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { tri_integration_factor = 50 tooltip = ott_increase_tri_int }
+			clamp_variable = {
+				var = tri_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_TRI_Fezzan_Expedition = {
+		icon = generic_army_support
+
+		available = {
+			controls_state = 273
+		}
+
+		visible = {
+			owns_state = 273
+			273 = { OTT_revolt_risk_high = yes }
+			has_country_flag = OTT_can_send_fezzan_expedition
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 50
+		days_remove = 50
+		fire_only_once = no
+		days_re_enable = 200
+
+		highlight_states = {
+			highlight_state_targets = { state = 273 }
+		}
+
+		cancel_trigger = {
+			OR = {
+				OTT_has_centralist_government = no
+				NOT = { 273 = { is_owned_and_controlled_by = ROOT } }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_TRI_Fezzan_Expedition"
+			273 = {
+				ott_decrease_revolt_risk = yes
+				add_resistance_target = {
+					amount = -25
+					occupier = OTT
+					days = 250
+					tooltip = OTT_resistance_garrisons
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_to_variable = { tri_integration_factor = 5 tooltip = ott_increase_tri_int }
+			clamp_variable = {
+				var = tri_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_TRI_Centralise_Taxation = {
+		icon = ger_mefo_bills
+
+		available = {
+			has_completed_focus = OTT_Reeling_in_the_Arab_Vilayets
+			OR = {
+				has_completed_focus = OTT_Modern_Census
+				custom_override_tooltip = {
+					tooltip = { localization_key = has_completed_decision DECISION = OTT_TRI_Combat_Senussi_Order }
+					has_country_flag = ott_combatted_senussi_influence
+				}
+				custom_override_tooltip = {
+					tooltip = { localization_key = has_completed_decision DECISION = OTT_TRI_Tripoli_Benghazi_Railway }
+					has_country_flag = ott_completed_tripoli_benghazi
+				}
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		days_remove = 300
+
+		highlight_states = {
+			highlight_state_targets = { state = 448 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_TRI_Centralise_Taxation"
+			add_political_power = 50
+			add_to_variable = { tri_integration_factor = 20 tooltip = ott_increase_tri_int }
+			clamp_variable = {
+				var = tri_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_TRI_Misrata_Program = {
+		icon = generic_naval_base
+
+		available = {
+			has_completed_focus = OTT_Naval_Program
+			controls_state = 448
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		days_remove = 150
+
+		highlight_states = {
+			highlight_state_targets = { state = 448 }
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_TRI_Misrata_Program"
+			448 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 4
+						province = 9980
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 4
+						VP = 9980
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 3
+						province = 9980
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 3
+						VP = 9980
+					}
+				}
+			}
+			448 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+			}
+			add_popularity = {
+				ideology = ROOT
+				popularity = 0.015
+			}
+			add_to_variable = { tri_integration_factor = 10 tooltip = ott_increase_tri_int }
+			clamp_variable = {
+				var = tri_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_TRI_Combat_Senussi_Order = {
+		icon = oppression
+
+		available = {
+			LBA = {
+				exists = yes
+				is_subject = no
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 10
+
+		highlight_states = {
+			highlight_state_targets = { state = 663 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_TRI_Combat_Senussi_Order"
+			add_war_support = 0.025
+			LBA = {
+				add_stability = -0.05
+				set_temp_variable = { ideology_change_var = -0.1 }
+				change_ruling_party_popularity = yes
+			}
+			add_to_variable = { tri_integration_factor = 5 tooltip = ott_increase_tri_int }
+			clamp_variable = {
+				var = tri_integration_factor
+				min = 0
+				max = 100
+			}
+			set_country_flag = ott_combatted_senussi_influence
+		}
+		fixed_random_seed = no
+	}
+	OTT_TRI_Settle_Tripolitanian_Tribes = {
+		icon = infiltrate_state
+
+		available = {
+			has_completed_focus = OTT_Reeling_in_the_Arab_Vilayets
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+		days_remove = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = 448 }
+		}
+
+		modifier = {
+			political_power_gain = -0.05
+		}
+
+		cancel_trigger = {
+			OTT_has_centralist_government = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_TRI_Settle_Tripolitanian_Tribes"
+			448 = {
+				increase_state_category_by_one_level = yes
+			}
+			add_to_variable = { tri_integration_factor = 10 tooltip = ott_increase_tri_int }
+			clamp_variable = {
+				var = tri_integration_factor
+				min = 0
+				max = 100
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+OTT_egypt_suppression_decisions = {
+	OTT_egyptian_resistance_decay = {
+		icon = generic_prepare_civil_war
+		priority = 100
+
+		allowed = {
+			always = no
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		cancel_trigger = {
+			OTT = { has_idea = ott_egyptian_resistance_1 }
+		}
+
+		selectable_mission = no
+		is_good = yes
+		days_mission_timeout = 250
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout OTT_egyptian_resistance_decay"
+			set_temp_variable = { OTT_anger_change = -1 }
+			OTT_change_egyptian_anger_level = yes
+			if = {
+				limit = {
+					has_country_flag = ott_egy_abortive_revolt
+					NOT = {
+						has_idea = ott_egyptian_resistance_3
+						has_idea = ott_egyptian_resistance_2
+						has_idea = ott_egyptian_resistance_1
+					}
+				}
+				activate_mission = OTT_egyptian_resistance_decay
+			}
+			else_if = {
+				limit = { NOT = { has_idea = ott_egyptian_resistance_1 } }
+				activate_mission = OTT_egyptian_resistance_decay
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_Refurbish_Port_Sudan = {
+		icon = generic_naval_base
+
+		allowed = { always = no }				# Activated by focus OTT_Settle_Sudanese_Issue
+
+		available = {
+			SUD = {
+				is_subject_of = OTT
+				controls_state = 1007 #Nubia
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+
+		cost = 75
+
+		days_remove = 200
+
+		highlight_states = {
+			highlight_state_targets = { state = 1007 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete OTT_Refurbish_Port_Sudan"
+		}
+
+		cancel_trigger = {
+			NOT = {
+				SUD = { is_subject_of = OTT }
+				1007 = { is_owned_and_controlled_by_ROOT_or_ally = yes }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Refurbish_Port_Sudan"
+			if = {
+				limit = { SUD = { is_subject_of = ROOT } }
+				SUD = {
+					swap_ideas = {
+						remove_idea = ott_sudan_puppet_1
+						add_idea = ott_sudan_puppet_2
+					}
+				}
+			}
+			1007 = {
+				increase_state_category_by_two_levels = yes
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = 12725
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 12725
+					}
+				}
+			}
+			set_country_flag = ott_refurbish_port_sudan_finished
+			hidden_effect = {
+				remove_targeted_decision = { decision = OTT_Refurbish_Port_Sudan target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_Connections_To_Khartoum = {
+		icon = GFX_decision_train
+
+		allowed = { always = no }				# Activated by focus OTT_Settle_Sudanese_Issue
+
+		available = {
+			has_completed_focus = OTT_Order_by_the_Locomotive
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = OTT_Refurbish_Port_Sudan }
+				has_country_flag = ott_refurbish_port_sudan_finished
+			}
+			SUD = { is_subject_of = OTT }
+			551 = { is_owned_and_controlled_by_ROOT_or_ally = yes } #Khartoum
+			1007 = { is_owned_and_controlled_by_ROOT_or_ally = yes } #Nubia
+		}
+
+		ai_will_do = { base = 100 }
+
+		cost = 100
+
+		days_remove = 150
+
+		highlight_states = {
+			highlight_state_targets = { state = 551 state = 1007 }
+		}
+
+		cancel_trigger = {
+			NOT = {
+				SUD = { is_subject_of = OTT }
+				551 = { is_owned_and_controlled_by_ROOT_or_ally = yes } #Khartoum
+				1007 = { is_owned_and_controlled_by_ROOT_or_ally = yes } #Nubia
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Connections_To_Khartoum"
+			if = {
+				limit = { SUD = { is_subject_of = ROOT } }
+				SUD = {
+					swap_ideas = {
+						remove_idea = ott_sudan_puppet_2
+						add_idea = ott_sudan_puppet_3
+					}
+				}
+			}
+			1007 = { #Nubia
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+			}
+			551 = { #Khartoum
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			build_railway = {
+				level = 1
+				path = { 12725 2003 2046 10126 12881 12806 7925 }
+			}
+			clr_country_flag = ott_refurbish_port_sudan_finished
+			hidden_effect = {
+				remove_targeted_decision = { decision = OTT_Connections_To_Khartoum target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_EGY_Alexandria_Benghazi_Railway = {
+		icon = GFX_decision_train
+
+		allowed = { always = no }				# Activated by focus OTT_Haifa_Cairo_Railroad
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = OTT_TRI_Tripoli_Benghazi_Railway }
+				has_country_flag = ott_completed_tripoli_benghazi
+			}
+			has_completed_focus = OTT_Cairo_Aleppo
+		}
+
+		ai_will_do = { base = 100 }
+
+		fire_only_once = yes
+
+		cost = 100
+
+		days_remove = 400
+
+		highlight_states = {
+			highlight_state_targets = { state = 451 state = 452 state = 447 }
+		}
+
+		cancel_trigger = {
+			OR = {
+				EGY = { is_subject = no }
+				NOT = { owns_state = 448 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_EGY_Alexandria_Benghazi_Railway"
+			add_days_mission_timeout = {
+				mission = OTT_egyptian_resistance_decay
+				days = -100
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_EGY_Alexandria_Benghazi_Railway"
+			447 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			452 = {
+				add_extra_state_shared_building_slots = 1
+			}
+			451 = {
+				add_extra_state_shared_building_slots = 1
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = supply_node
+						province = 1204
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = supply_node
+						NUMBER = 1
+						VP = 1204
+					}
+				}
+			}
+			450 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = supply_node
+						province = 11954
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = supply_node
+						NUMBER = 1
+						VP = 11954
+					}
+				}
+			}
+			build_railway = {
+				level = 1
+				path = { 4076 4145 1071 11910 10061 11967 9989 7079 10120 4136 1130 9992 7082 1204 4151 12094 10123 11954 }
+			}
+			set_temp_variable = { OTT_anger_change = -1 }
+			OTT_change_egyptian_anger_level = yes
+		}
+		fixed_random_seed = no
+	}
+	OTT_Abolish_Trade_Barriers = {
+		icon = GFX_decision_global_trade
+
+		allowed = { always = no } #activated by OTT_Economic_Integration_Commission
+
+		visible = {
+			has_authoritarian_government = no
+		}
+
+		available = {
+			NOT = {
+				has_idea = closed_economy
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+		days_remove = 30
+
+		ai_will_do = { factor = 50 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_Abolish_Trade_Barriers"
+			add_ideas = ott_autarky
+		}
+		fixed_random_seed = no
+	}
+	OTT_Priority_Agricultural_Partner = {
+		icon = GFX_decision_generic_agriculture
+
+		allowed = { always = no } #activated by OTT_Economic_Integration_Commission
+
+		available = {
+			has_idea = ott_agriculture
+		}
+
+		cost = 30
+		fire_only_once = yes
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_Priority_Agricultural_Partner"
+			swap_ideas = {
+				remove_idea = ott_agriculture
+				add_idea = ott_agriculture_2
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_Khedivate_Nationalisation = {
+		icon = GFX_decision_hand_grab
+
+		allowed = { always = no } #activated by ottomans_foreign_policy_events.109a
+
+		available = {
+			NOT = { has_country_flag = OTT_khedivate_land_reform_promises_timer }
+		}
+
+		visible = {
+			EGY = {
+				is_subject_of = OTT
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+		days_remove = 120
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete OTT_Khedivate_Nationalisation"
+			set_temp_variable = { OTT_anger_change = 3 }
+			OTT_change_egyptian_anger_level = yes
+			custom_effect_tooltip = ott_landowners_angry
+			set_country_flag = ott_landowners_angry
+			remove_targeted_decision = { target = FROM decision = OTT_Khedivate_Land_Buyouts }
+			if = {
+				limit = { NOT = { has_country_flag = ott_fellahin_promised_land } }
+				remove_targeted_decision = { target = FROM decision = OTT_Khedivate_Land_Reform_Promises }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Khedivate_Nationalisation"
+			if = {
+				limit = { has_country_flag = ott_fellahin_promised_land }
+				set_temp_variable = { OTT_monopoly_change = 3 }
+				OTT_change_egyptian_monopolies_level = yes
+				set_temp_variable = { OTT_anger_change = -1 }
+				OTT_change_egyptian_anger_level = yes
+				EGY = {
+					add_stability = 0.10
+				}
+			}
+			else = {
+				set_temp_variable = { OTT_monopoly_change = 3 }
+				OTT_change_egyptian_monopolies_level = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_Khedivate_Land_Buyouts = {
+		icon = GFX_decision_give_cash
+
+		allowed = { always = no } #activated by ottomans_foreign_policy_events.109a
+
+		available = {
+			NOT = { has_country_flag = OTT_khedivate_land_reform_promises_timer }
+		}
+
+		visible = {
+			EGY = {
+				is_subject_of = OTT
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+		days_remove = 90
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete OTT_Khedivate_Land_Buyouts"
+			set_temp_variable = { OTT_anger_change = 1 }
+			OTT_change_egyptian_anger_level = yes
+			remove_targeted_decision = { target = FROM decision = OTT_Khedivate_Nationalisation }
+			if = {
+				limit = { NOT = { has_country_flag = ott_fellahin_promised_land } }
+				remove_targeted_decision = { target = FROM decision = OTT_Khedivate_Land_Reform_Promises }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_Khedivate_Land_Buyouts"
+			set_temp_variable = { OTT_monopoly_change = 1 }
+			OTT_change_egyptian_monopolies_level = yes
+			if = {
+				limit = { has_country_flag = ott_fellahin_promised_land }
+				set_temp_variable = { OTT_anger_change = -1 }
+				OTT_change_egyptian_anger_level = yes
+				EGY = {
+					add_stability = 0.20
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_Khedivate_Land_Reform_Promises = {
+		icon = GFX_decision_generic_welfare
+
+		allowed = { always = no } #activated by ottomans_foreign_policy_events.109a
+
+		visible = {
+			EGY = {
+				is_subject_of = OTT
+			}
+		}
+
+		cost = 25
+		fire_only_once = yes
+		days_remove = 180
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_Khedivate_Land_Reform_Promises"
+			add_days_mission_timeout = {
+				mission = OTT_egyptian_resistance_decay
+				days = -25
+			}
+			set_country_flag = { flag = OTT_khedivate_land_reform_promises_timer days = 180 value = 1 }
+			custom_effect_tooltip = ott_fellahin_promised_land
+			set_country_flag = ott_fellahin_promised_land
+		}
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_Khedivate_Land_Reform_Promises"
+			EGY = {
+				add_stability = 0.10
+			}
+		}
+		fixed_random_seed = no
+	}
+	OTT_expand_project_zakat = {
+		icon = GFX_decision_generic_welfare
+
+		allowed = { always = no } #activated by ottomans_foreign_policy_events.111.c
+
+		visible = {
+			EGY = {
+				is_subject_of = OTT
+			}
+		}
+
+		cost = 25
+		days_remove = 100
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_expand_project_zakat"
+			add_to_variable = { OTT_expand_project_zakat_counter = 1 }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_expand_project_zakat"
+			if = {
+				limit = {
+					set_temp_variable = { OTT_egyptian_anger_compare_var = 3 }
+					OTT_egyptian_anger_check = yes
+				}
+				set_temp_variable = { OTT_anger_change = -1 }
+				OTT_change_egyptian_anger_level = yes
+				EGY = {
+					add_stability = 0.1
+				}
+			}
+			else = {
+				random_owned_state = {
+					limit = {
+						OTT_revolt_risk_low = yes
+						is_controlled_by = OTT
+					}
+					ott_decrease_revolt_risk = yes
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						OTT_revolt_risk_low = yes
+						is_controlled_by = OTT
+					}
+					ott_decrease_revolt_risk = yes
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = { check_variable = { OTT_expand_project_zakat_counter = 5 } }
+				hidden_effect = {
+					clear_variable = OTT_expand_project_zakat_counter
+					remove_targeted_decision = { target = EGY decision = OTT_expand_project_zakat }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+OTT_Millet_Mektepleri_dec = {
+	OTT_MME_Anatolian_Expansion = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by TUR_enable_millet_mektepleri
+
+		cost = 0
+		state_target = yes
+		days_remove = 300
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 49 state = 339 state = 340 state = 342 state = 343 state = 344 state = 345 state = 346 state = 354 state = 355 state = 356 state = 585 state = 1001 }
+		}
+
+		modifier = {
+			political_power_gain = -0.15
+		}
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_MME_Anatolian_Expansion"
+			set_temp_variable = { TUR_modify_literacy_value = 0.04 }
+			TUR_modify_literacy_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	OTT_MME_Kurdish_Expansion = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by TUR_enable_millet_mektepleri
+
+		cost = 0
+		state_target = yes
+		days_remove = 300
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 350 state = 352 }
+		}
+
+		modifier = {
+			political_power_gain = -0.05
+		}
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_MME_Kurdish_Expansion"
+			set_temp_variable = { TUR_modify_literacy_value = 0.01 }
+			TUR_modify_literacy_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	OTT_MME_Syrian_Expansion = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by TUR_enable_millet_mektepleri
+
+		cost = 0
+		state_target = yes
+		days_remove = 300
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 454 state = 455 state = 553 state = 554 state = 677 state = 680 state = 992 state = 995 }
+		}
+
+		modifier = {
+			political_power_gain = -0.10
+		}
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_MME_Syrian_Expansion"
+			set_temp_variable = { TUR_modify_literacy_value = 0.02 }
+			TUR_modify_literacy_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	OTT_MME_Mesopotamian_Expansion = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by TUR_enable_millet_mektepleri
+
+		cost = 0
+		state_target = yes
+		days_remove = 300
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 291 state = 349 state = 676 state = 812 }
+		}
+
+		modifier = {
+			political_power_gain = -0.10
+		}
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_MME_Mesopotamian_Expansion"
+			set_temp_variable = { TUR_modify_literacy_value = 0.02 }
+			TUR_modify_literacy_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	OTT_MME_Hejazi_Expansion = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by TUR_enable_millet_mektepleri
+
+		cost = 0
+		state_target = yes
+		days_remove = 300
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 679 state = 754 }
+		}
+
+		modifier = {
+			political_power_gain = -0.05
+		}
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove OTT_MME_Hejazi_Expansion"
+			set_temp_variable = { TUR_modify_literacy_value = 0.01 }
+			TUR_modify_literacy_effect = yes
+		}
+		fixed_random_seed = no
+	}
+}
+
+##############
+# PARLIAMENT #
+##############
+
+OTT_congress = {
+	OTT_prorogue_parliament = {
+		icon = eng_ally_imperialist_coup
+
+		available = {
+			has_completed_focus = OTT_Revise_Constitution
+			has_government = social_conservative
+			NOT = { has_country_leader = { character = TUR_abdulmecid_osmanoglu } }
+		}
+
+		cost = 35
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_prorogue_parliament"
+			country_event = ottomans_arslan_events.8
+			activate_mission = OTT_prorogue_parliament_mission
+			custom_effect_tooltip = prorogue_timer_tt
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_prorogue_parliament_mission = {
+		icon = eng_ally_imperialist_coup
+
+		allowed = {
+			always = no
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		selectable_mission = no
+		days_mission_timeout = 150
+
+		is_good = no
+
+		cancel_trigger = {
+			NOT = {
+				has_government = social_conservative
+				has_government = paternal_autocrat
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_prorogue_parliament_mission"
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout OTT_prorogue_parliament_mission"
+			set_temp_variable = { ideology_change_var = -0.1 }
+			change_ruling_party_popularity = yes
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_early_elections = {
+		icon = eng_trade_unions_support
+		available = {
+			check_variable = {
+				tooltip = OTT_less_than_124_deputies
+				representatives_support < 124
+			}
+			date > 1938.01.01
+		}
+
+		visible = {
+			NOT = { has_government = social_conservative }
+		}
+
+		cost = 100
+
+		fire_only_once = yes
+
+		days_remove = 30
+
+		ai_will_do = { base = 0 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_early_elections"
+			add_stability = -0.15
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_early_elections"
+			country_event = ottomans_liberal_events.13
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_df_coalition = {
+		icon = GFX_decision_hand_out
+
+		visible = {
+			NOT = { has_government = social_conservative }
+		}
+
+		cost = 0
+		fire_only_once = yes
+		days_remove = 20
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_df_coalition"
+			country_event = ottomans_liberal_events.9
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_congress_turkish_nationalists = {
+	### TURKISH NATIONALIST CATERING
+	OTT_con_halkevleri_program = {
+		icon = GFX_decision_cash_flow
+		available = {
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_halkevleri_program"
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.03
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.03
+			}
+
+			### Add Turkish Nationalist votes in favour
+			add_to_variable = { nat_tur_sup_deputies = 10 tooltip = nat_tur_sup_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+
+			set_country_flag = ott_reform_enacted
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_halkevleri_program"
+			clr_country_flag = ott_reform_enacted
+		}
+		fixed_random_seed = no
+	}
+	OTT_con_anatolian_relief_program = {
+		icon = GFX_decision_generic_agriculture
+		available = {
+			num_of_civilian_factories_available_for_projects > 3
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		modifier = {
+			civilian_factory_use = 4
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 49 }
+		}
+
+		days_remove = 200
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_anatolian_relief_program"
+			### Add Turkish Nationalist votes in favour
+			add_to_variable = { nat_tur_sup_deputies = 30 tooltip = nat_tur_sup_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_anatolian_relief_program"
+			clr_country_flag = ott_reform_enacted
+			set_temp_variable = { ideology_change_var = 0.05 }
+			change_ruling_party_popularity = yes
+		}
+		fixed_random_seed = no
+	}
+	OTT_con_turkish_language_decree = {
+		icon = generic_civil_support
+		available = {
+			check_variable = {
+				tooltip = more_tur_than_ara_tt
+				nat_tur_deputies > nat_ara_deputies
+			}
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_turkish_language_decree"
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.06
+			}
+
+			### Add Turkish Nationalist votes in favour
+			add_to_variable = { nat_tur_sup_deputies = 60 tooltip = nat_tur_sup_tt }
+
+			### Add Arab Nationalist votes to coalition
+			subtract_from_variable = { nat_ara_sup_deputies = 60 tooltip = nat_ara_opp_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+
+			set_country_flag = ott_reform_enacted
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_turkish_language_decree"
+			clr_country_flag = ott_reform_enacted
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_congress_arab_nationalists = {
+	### ARAB NATIONALIST CATERING
+	OTT_con_elevate_arab_language = {
+		icon = GFX_decision_eng_trade_unions_support
+		available = {
+			has_completed_focus = OTT_Multi_Level_Democracy
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_elevate_arab_language"
+			### Add Turkish Nationalist votes in favour
+			subtract_from_variable = { nat_tur_sup_deputies = 60 tooltip = nat_tur_opp_tt }
+
+			### Add Arab Nationalist votes in favour
+			add_to_variable = { nat_ara_sup_deputies = 60 tooltip = nat_ara_sup_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+
+			set_country_flag = ott_reform_enacted
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_elevate_arab_language"
+			clr_country_flag = ott_reform_enacted
+		}
+		fixed_random_seed = no
+	}
+	OTT_con_reappoint_walis = {
+		icon = generic_political_discourse
+		available = {
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_reappoint_walis"
+			add_war_support = 0.05
+			set_temp_variable = { ideology_change_var = -0.05 }
+			change_ruling_party_popularity = yes
+			add_stability = -0.05
+			### Add Arab Nationalist votes in favour
+			add_to_variable = { nat_ara_sup_deputies = 30 tooltip = nat_ara_sup_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+
+			set_country_flag = ott_reform_enacted
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_reappoint_walis"
+			clr_country_flag = ott_reform_enacted
+		}
+		fixed_random_seed = no
+	}
+	OTT_con_concessions_to_tribes = {
+		icon = GFX_decision_generic_operation
+		available = {
+			has_completed_focus = OTT_Distribute_Miri_Land
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_concessions_to_tribes"
+			add_war_support = 0.025
+			set_temp_variable = { ideology_change_var = -0.1 }
+			change_ruling_party_popularity = yes
+			### Add Arab Nationalist votes in favour
+			add_to_variable = { nat_ara_sup_deputies = 30 tooltip = nat_ara_sup_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+
+			set_country_flag = ott_reform_enacted
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_concessions_to_tribes"
+			clr_country_flag = ott_reform_enacted
+		}
+		fixed_random_seed = no
+	}
+}
+
+OTT_congress_conservatives = {
+	### CONSERVATIVE CATERING
+	OTT_con_mosque_renovation_program = {
+		icon = GFX_decision_cement_mixer
+		available = {
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = OTT_path option = OTT_PATH_SOCCON }
+			}
+		}
+
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_mosque_renovation_program"
+			add_timed_idea = {
+				idea = ott_mosque_cost
+				days = 30
+			}
+			### Add Conservative votes to Coalition
+			add_to_variable = { con_sup_deputies = 30 tooltip = con_sup_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+
+			set_country_flag = ott_reform_enacted
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_mosque_renovation_program"
+			clr_country_flag = ott_reform_enacted
+		}
+		fixed_random_seed = no
+	}
+	OTT_con_legalise_polygamy = {
+		icon = GFX_population_icon
+		available = {
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = OTT_path option = OTT_PATH_SOCCON }
+			}
+		}
+
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_legalise_polygamy"
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = social_conservative
+				popularity = 0.02
+			}
+			add_stability = -0.05
+			### Add Conservative votes to Coalition
+			add_to_variable = { con_sup_deputies = 30 tooltip = con_sup_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+
+			set_country_flag = ott_reform_enacted
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_legalise_polygamy"
+			clr_country_flag = ott_reform_enacted
+		}
+		fixed_random_seed = no
+	}
+	OTT_con_fund_medreses = {
+		icon = GFX_decision_give_cash
+		available = {
+			has_completed_focus = OTT_Repeal_Unification_Law
+			NOT = {
+				has_country_flag = ott_reform_enacted
+			}
+		}
+
+		cost = 50
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = OTT_path option = OTT_PATH_SOCCON }
+			}
+		}
+
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_con_fund_medreses"
+			add_war_support = 0.1
+			### Add Conservative votes to Coalition
+			add_to_variable = { con_sup_deputies = 30 tooltip = con_sup_tt }
+
+			### Calculate coalition strength
+			OTT_calc_coalition_strength = yes
+
+			set_country_flag = ott_reform_enacted
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_con_fund_medreses"
+			clr_country_flag = ott_reform_enacted
+		}
+		fixed_random_seed = no
+	}
+}
+

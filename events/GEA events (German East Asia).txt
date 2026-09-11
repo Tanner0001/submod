@@ -1,0 +1,2067 @@
+###########################
+# German East Asia Events
+# By PPsyrius
+###########################
+
+add_namespace = german_east_asia_events
+
+### Black Monday ###
+country_event = { # Black Monday
+	id = german_east_asia_events.2
+	title = german_east_asia_events.2.t
+	desc = german_east_asia_events.2.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = GEA_black_monday_idea }
+	}
+
+	option = { # Disastrous
+		log = "[GetLogInfo]: event german_east_asia_events.2 option german_east_asia_events.2.a"
+		name = german_east_asia_events.2.a
+		effect_tooltip = { add_ideas = GEA_black_monday_idea }
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.208 days = 2 }
+			country_event = { id = german_east_asia_events.3 days = 7 } # One Week Later (BM)
+			LEC = { country_event = { id = legation_cities_events.7 days = 7 } } #LEC's Black Monday event
+		}
+	}
+}
+country_event = { # Black Monday - a week after
+	id = german_east_asia_events.3
+	title = german_east_asia_events.3.t
+	desc = german_east_asia_events.3.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = { # Something need to be done here
+		log = "[GetLogInfo]: event german_east_asia_events.3 option german_east_asia_events.3.a"
+		name = german_east_asia_events.3.a
+		add_stability = -0.1
+		add_ideas = GEA_colonial_disaster_idea
+		hidden_effect = {
+			set_country_flag = { flag = GEA_Indochinese_Anger value = 0 }
+		}
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.30 days = 5 } # Colonial Events
+		}
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.4 days = 17 } # Instability in Indochina
+		}
+	}
+}
+
+### The Roads towards Uprising (Vietnam) ###
+## Yen Bai Mutiny ##
+country_event = { # Instability in Indochina
+	id = german_east_asia_events.4
+	title = german_east_asia_events.4.t
+	desc = german_east_asia_events.4.d
+	picture = GFX_report_event_INC_vietnam
+
+	is_triggered_only = yes
+
+	option = { # This colony is notorious for insubordination
+		log = "[GetLogInfo]: event german_east_asia_events.4 option german_east_asia_events.4.a"
+		name = german_east_asia_events.4.a
+		modify_country_flag = {
+			flag = GEA_Indochinese_Anger
+			value = 1
+		}
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.5 days = 20 } # Nationalist Agitation
+		}
+	}
+}
+country_event = { # Nationalist Agitation in Tonkin
+	id = german_east_asia_events.5
+	title = german_east_asia_events.5.t
+	desc = german_east_asia_events.5.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = { # We must prepare
+		log = "[GetLogInfo]: event german_east_asia_events.5 option german_east_asia_events.5.a"
+		name = german_east_asia_events.5.a
+	}
+}
+country_event = { # Yen Bai Mutiny
+	id = german_east_asia_events.6
+	title = german_east_asia_events.6.t
+	desc = german_east_asia_events.6.d
+	picture = GFX_report_event_INC_vietunit
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			FRA = { country_event = { id = german_east_asia_events.7 days = 3 } } # FRA ver.
+			HND = { country_event = { id = german_east_asia_events.8 days = 3 } } # HND ver.
+		}
+	}
+
+	option = { # Concentrate our force to crush these bandits!
+		log = "[GetLogInfo]: event german_east_asia_events.6 option german_east_asia_events.6.a"
+		name = german_east_asia_events.6.a
+		ai_chance = { base = 50 }
+		set_global_flag = GEA_Martial_Law_NOT_Declared
+		add_political_power = -30 # Weaken the Stability
+		add_to_variable = {
+			var = INC.guerilla_activity
+			value = 8
+		}
+	}
+	option = { # Declare martial law in all Indochina!
+		log = "[GetLogInfo]: event german_east_asia_events.6 option german_east_asia_events.6.b"
+		name = german_east_asia_events.6.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 100
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		add_political_power = -50 # Weaken the Stability
+		add_war_support = -0.05
+	}
+}
+country_event = { # Yen Bai Mutiny (FRA)
+	id = german_east_asia_events.7
+	title = german_east_asia_events.7.t
+	desc = german_east_asia_events.7.d
+	picture = GFX_report_event_INC_vietunit
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # Bon voyage, Indochinese comrades!
+		log = "[GetLogInfo]: event german_east_asia_events.7 option german_east_asia_events.7.a"
+		name = german_east_asia_events.7.a
+		ai_chance = { base = 100 }
+		set_global_flag = INC_FRA_Help
+		add_command_power = -15
+		add_manpower = -500
+		send_equipment = {
+			target = INC
+			type = infantry_equipment
+			amount = 1000
+		}
+	}
+	option = { # We are not modern Pigneau de Behaine.
+		log = "[GetLogInfo]: event german_east_asia_events.7 option german_east_asia_events.7.b"
+		name = german_east_asia_events.7.b
+		ai_chance = { base = 0 }
+	}
+}
+country_event = { # Yen Bai Mutiny (HND)
+	id = german_east_asia_events.8
+	title = german_east_asia_events.8.t
+	desc = german_east_asia_events.8.d
+	picture = GFX_report_event_INC_vietunit
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # Send our help
+		log = "[GetLogInfo]: event german_east_asia_events.8 option german_east_asia_events.8.a"
+		name = german_east_asia_events.8.a
+		ai_chance = { base = 90 }
+		add_political_power = -30
+		set_global_flag = INC_HND_Help
+	}
+	option = { # We are not interested.
+		log = "[GetLogInfo]: event german_east_asia_events.8 option german_east_asia_events.8.b"
+		name = german_east_asia_events.8.b
+	}
+}
+## Bao Dai Reforms ##
+country_event = { # BBR Start
+	id = german_east_asia_events.9
+	title = german_east_asia_events.9.t
+	desc = german_east_asia_events.9.d
+	picture = GFX_report_event_VIN_royalfamily
+
+	is_triggered_only = yes
+
+	option = { # Welcome, our puppet emperor
+		log = "[GetLogInfo]: event german_east_asia_events.9 option german_east_asia_events.9.a"
+		name = german_east_asia_events.9.a
+		add_stability = 0.03
+		modify_country_flag = {
+			flag = GEA_Indochinese_Anger
+			value = -1
+		}
+	}
+}
+country_event = { # BBR Round 1 (Local Management)
+	id = german_east_asia_events.10
+	title = german_east_asia_events.10.t
+	desc = german_east_asia_events.10.d
+	picture = GFX_report_event_VIN_cabinet
+
+	is_triggered_only = yes
+
+	option = { # Give it a go
+		log = "[GetLogInfo]: event german_east_asia_events.10 option german_east_asia_events.10.a"
+		name = german_east_asia_events.10.a
+		ai_chance = { base = 90 }
+		add_stability = 0.02 # add popularity and stability
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.11 days = 50 }
+		}
+	}
+	option = { # Stop him. He has gone too far
+		log = "[GetLogInfo]: event german_east_asia_events.10 option german_east_asia_events.10.b"
+		name = german_east_asia_events.10.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_VIN }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		modify_country_flag = {
+			flag = GEA_Indochinese_Anger
+			value = 1
+		}
+	}
+}
+country_event = { # BBR Round 2 (Police)
+	id = german_east_asia_events.11
+	title = german_east_asia_events.11.t
+	desc = german_east_asia_events.11.d
+	picture = GFX_report_event_VIN_vanguard
+
+	is_triggered_only = yes
+
+	option = { # It will help
+		log = "[GetLogInfo]: event german_east_asia_events.11 option german_east_asia_events.11.a"
+		name = german_east_asia_events.11.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_YES }
+			}
+		}
+		add_war_support = 0.02 # add popularity and stability
+		set_global_flag = GEA_Bao_Dai_Reform_Success
+	}
+	option = { # Giving Annamese power is dangerous
+		log = "[GetLogInfo]: event german_east_asia_events.11 option german_east_asia_events.11.b"
+		name = german_east_asia_events.11.b
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_VIN }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		add_to_variable = {
+			var = INC.guerilla_activity
+			value = 3
+		}
+		modify_country_flag = {
+			flag = GEA_Indochinese_Anger
+			value = 1
+		}
+	}
+}
+## Revolution in Cochinchina ##
+country_event = { # Instability in Cochinchina
+	id = german_east_asia_events.12
+	title = german_east_asia_events.12.t
+	desc = german_east_asia_events.12.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # I sense the calm before the storm
+		log = "[GetLogInfo]: event german_east_asia_events.12 option german_east_asia_events.12.a"
+		name = german_east_asia_events.12.a
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.13 days = 30 }
+		}
+	}
+}
+country_event = { # Jail-break in Poulo Condor
+	id = german_east_asia_events.13
+	title = german_east_asia_events.13.t
+	desc = german_east_asia_events.13.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = { # This colony has been nothing but trouble!
+		log = "[GetLogInfo]: event german_east_asia_events.13 option german_east_asia_events.13.a"
+		name = german_east_asia_events.13.a
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.14 days = 6 }
+		}
+	}
+}
+country_event = { # Binh Dinh Commune movement
+	id = german_east_asia_events.14
+	title = german_east_asia_events.14.t
+	desc = german_east_asia_events.14.d
+	picture = GFX_report_event_INC_vietcong
+
+	is_triggered_only = yes
+
+	option = { # See if we can solve it peacefully - This is not gonna work
+		log = "[GetLogInfo]: event german_east_asia_events.14 option german_east_asia_events.14.a"
+		name = german_east_asia_events.14.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.15 days = 6 }
+			FRA = { country_event = { id = german_east_asia_events.15 days = 6 } }
+		}
+	}
+
+	option = { # Send in our army!
+		log = "[GetLogInfo]: event german_east_asia_events.14 option german_east_asia_events.14.b"
+		name = german_east_asia_events.14.b
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_YES }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_VIN }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = {
+						flag = GEA_Indochinese_Anger
+						value < 1
+					}
+				}
+				country_event = { id = german_east_asia_events.33 days = 15 }
+			}
+			if = {
+				limit = {
+					has_country_flag = {
+						flag = GEA_Indochinese_Anger
+						value > 0
+					}
+					has_country_flag = {
+						flag = GEA_Indochinese_Anger
+						value < 3
+					}
+				}
+				random_list = {
+					50 = {
+						country_event = { id = german_east_asia_events.33 days = 15 }
+					}
+					50 = {
+						country_event = { id = german_east_asia_events.15 days = 36 }
+						FRA = { country_event = { id = german_east_asia_events.15 days = 36 } }
+					}
+				}
+			}
+			if = {
+				limit = {
+					has_country_flag = {
+						flag = GEA_Indochinese_Anger
+						value > 2
+					}
+				}
+				country_event = { id = german_east_asia_events.15 days = 6 }
+				FRA = { country_event = { id = german_east_asia_events.15 days = 6 } }
+			}
+		}
+		add_political_power = -50
+		add_manpower = -3000
+	}
+	option = { # cheat option for AI if have avoid rebellion game rule
+		log = "[GetLogInfo]: event german_east_asia_events.14 option german_east_asia_events.14.c"
+		name = german_east_asia_events.14.c
+		ai_chance = { base = 1 }
+		trigger = {
+			has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			is_ai = yes
+		}
+		country_event = { id = german_east_asia_events.33 days = 15 }
+		clr_global_flag = GEA_Indochina_Uprising_Fired
+	}
+}
+country_event = { # Saigon Uprising
+	id = german_east_asia_events.15
+
+	immediate = { log = "KR_Event_Logging;ICW STARTS" }
+
+	title = german_east_asia_events.15.t
+	desc = {
+		text = german_east_asia_events.15.d
+		trigger = {
+			tag = GEA
+		}
+	}
+	desc = {
+		text = german_east_asia_events.15.d.fra
+		trigger = {
+			tag = FRA
+		}
+	}
+	picture = GFX_report_event_INC_mass
+
+	is_triggered_only = yes
+
+	option = { # Vive la Revolution!
+		log = "[GetLogInfo]: event german_east_asia_events.15 option german_east_asia_events.15.a"
+		name = german_east_asia_events.15.a
+		trigger = { tag = GEA }
+		ai_chance = { base = 0 }
+		hidden_effect = { GEA_spawn_indochinese_revolt = yes }
+		INC = { change_tag_from = ROOT }
+		hidden_effect = {
+			set_variable = { country_guide_page_count = 0 }
+		}
+	}
+	option = { # Damn the Vietcong!
+		log = "[GetLogInfo]: event german_east_asia_events.15 option german_east_asia_events.15.b"
+		name = german_east_asia_events.15.b
+		trigger = { tag = GEA }
+		hidden_effect = { GEA_spawn_indochinese_revolt = yes }
+		hidden_effect = {
+			set_variable = { country_guide_page_count = 0 }
+		}
+	}
+	option = { # Wait, I'm coming with you!
+		log = "[GetLogInfo]: event german_east_asia_events.15 option german_east_asia_events.15.a.fra"
+		name = german_east_asia_events.15.a.fra
+		trigger = { tag = FRA }
+		ai_chance = { base = 0 }
+		INC = { change_tag_from = ROOT }
+	}
+
+	option = { # Good luck, comrades!
+		log = "[GetLogInfo]: event german_east_asia_events.15 option german_east_asia_events.15.b.fra"
+		name = german_east_asia_events.15.b.fra
+		trigger = { tag = FRA }
+	}
+}
+
+# War is not going well - 16
+country_event = { # Evacuate our assets?
+	id = german_east_asia_events.16
+	title = german_east_asia_events.16.t
+	desc = german_east_asia_events.16.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = GEA
+		has_war_with = INC
+		controls_state = 671
+		INC = {
+			controls_state = 827
+			surrender_progress < 0.20
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			GER = { country_event = german_east_asia_events.17 } # Situation in Indochina deteriorates
+		}
+	}
+
+	option = { # We must hurry!
+		log = "[GetLogInfo]: event german_east_asia_events.16 option german_east_asia_events.16.a"
+		name = german_east_asia_events.16.a
+		671 = {
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+		336 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_political_power = -30
+	}
+	option = { # Everything is alright!
+		log = "[GetLogInfo]: event german_east_asia_events.16 option german_east_asia_events.16.b"
+		name = german_east_asia_events.16.b
+	}
+}
+country_event = { # GEA in trouble
+	id = german_east_asia_events.17
+	title = german_east_asia_events.17.t
+	desc = german_east_asia_events.17.d
+	picture = GFX_report_event_INC_vietnam
+
+	is_triggered_only = yes
+
+	option = { # That colony is full of trouble
+		log = "[GetLogInfo]: event german_east_asia_events.17 option german_east_asia_events.17.a"
+		name = german_east_asia_events.17.a
+		ai_chance = { base = 30 }
+	}
+	option = { # Send our reinforcement!
+		log = "[GetLogInfo]: event german_east_asia_events.17 option german_east_asia_events.17.b"
+		name = german_east_asia_events.17.b
+		ai_chance = { base = 50 }
+		add_political_power = -30
+		add_manpower = -10000
+
+		send_equipment = {
+			target = GEA
+			type = infantry_equipment
+			amount = 1000
+		}
+		GEA = {
+			country_event = { id = german_east_asia_events.21 days = 2 }
+		}
+	}
+	option = { # Fighting a land war in Asia sounds like fun!
+		log = "[GetLogInfo]: event german_east_asia_events.17 option german_east_asia_events.17.c"
+		name = german_east_asia_events.17.c
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				any_enemy_country = {
+					is_major = yes
+				}
+			}
+			modifier = { # You don't want fight in a remote jungle if you're not militarist
+				factor = 0
+				has_idea = GER_victors_of_wwi
+			}
+			modifier = { # Don't ruin players' game
+				factor = 0
+				INC = { is_ai = no }
+			}
+		}
+		add_war_support = -0.25 # sounds like fun!
+		add_to_war = {
+			targeted_alliance = GEA
+			enemy = INC
+		}
+		hidden_effect = {
+			INC = {
+				country_event = { id = german_east_asia_events.23 days = 5 }
+			}
+		}
+	}
+}
+country_event = { # Time to Retreat?
+	id = german_east_asia_events.18
+	title = german_east_asia_events.18.t
+	desc = german_east_asia_events.18.d
+	picture = GFX_report_event_INC_vietnam
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.18 option german_east_asia_events.18.a"
+		name = german_east_asia_events.18.a # Fight!
+		trigger = { is_ai = no }
+		ai_chance = { base = 0 }
+		add_political_power = -25
+		if = {
+			limit = {
+				INC = { controls_state = 671 }
+			}
+			add_war_support = -0.03
+		}
+		hidden_effect = {
+			INC = {
+				country_event = { id = german_east_asia_events.19 days = 1 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.18 option german_east_asia_events.18.b"
+		name = german_east_asia_events.18.b # Time to retreat
+		ai_chance = { base = 100 }
+		GEA = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						region = 196 #Indochina
+						state = 825 #Battambang
+						state = 882 #Samabuli
+					}
+				}
+				transfer_state_to = INC
+			}
+		}
+		if = {
+			limit = {
+				country_exists = VIN
+				is_ally_with = VIN
+			}
+			VIN = { remove_puppet_and_leave_faction = yes }
+		}
+		if = {
+			limit = {
+				country_exists = LAO
+				is_ally_with = LAO
+			}
+			LAO = { remove_puppet_and_leave_faction = yes }
+		}
+		if = {
+			limit = {
+				country_exists = CAM
+				is_ally_with = CAM
+			}
+			CAM = { remove_puppet_and_leave_faction = yes }
+		}
+		if = {
+			limit = { original_tag = GER } # So second weltkrieg does not count as started
+			set_global_flag = { flag = second_weltkrieg_should_not_start value = 1 days = 2 }
+		}
+		FROM = { white_peace_with_ROOT = yes }
+		hidden_effect = {
+			every_state = {
+				limit = {
+					OR = {
+						region = 196 #Indochina
+						state = 825 #Battambang
+						state = 882 #Samabuli
+					}
+				}
+				remove_core_of = GEA
+				add_claim_by = GEA
+			}
+			INC = {
+				country_event = { id = german_east_asia_events.20 days = 5 }
+			}
+		}
+	}
+}
+country_event = { #
+	id = german_east_asia_events.19
+	title = german_east_asia_events.19.t
+	desc = german_east_asia_events.19.d
+	picture = GFX_report_event_INC_vietunit
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.19 option german_east_asia_events.19.a"
+		name = german_east_asia_events.19.a # We will fight forever
+	}
+}
+country_event = { # Victory
+	id = german_east_asia_events.20
+	immediate = {
+		log = "KR_Event_Logging;Indochina WINS ICW"
+	}
+	title = german_east_asia_events.20.t
+	desc = german_east_asia_events.20.d
+	picture = GFX_report_event_INC_mass2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.20 option german_east_asia_events.20.a"
+		name = german_east_asia_events.20.a # Excellent!
+		add_political_power = 25 # Be happy with victory
+		clr_global_flag = GEA_Indochina_Uprising_Fired
+		add_stability = 0.05
+		if = {
+			limit = { has_template = "Linh Tap" }
+			set_division_template_lock = {
+				division_template = "Linh Tap"
+				is_locked = no
+			}
+		}
+		every_core_state = {
+			limit = {
+				OR = {
+					is_core_of = CAM
+					is_core_of = LAO
+				}
+			}
+			remove_core_of = ROOT
+			add_claim_by = ROOT
+			hidden_effect = {
+				if = {
+					limit = { has_resistance = no }
+					start_resistance = yes
+				}
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = { has_idea = INC_vietminh }
+				remove_ideas = INC_vietminh
+			}
+			country_event = { id = indochina_events.82 days = 365 } # Liberation day, triggers every year
+			news_event = { id = indochina_events.173 days = 2 }
+			GEA = {
+				if = {
+					limit = { is_ai = yes }
+					add_manpower = 250000
+					add_equipment_to_stockpile = {
+						type = infantry_equipment
+						amount = 6500
+						producer = GER
+					}
+				}
+			}
+		}
+	}
+}
+country_event = { # Reinforcement Arrived
+	id = german_east_asia_events.21
+	title = german_east_asia_events.21.t
+	desc = german_east_asia_events.21.d
+	picture = GFX_report_event_GEA_coltroops
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.21 option german_east_asia_events.21.a"
+		name = german_east_asia_events.21.a # Excellent!
+		add_political_power = -25 # shame to you
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_create_division_template
+				NAME = "Garde-Infanterie-Division"
+				LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 10 }
+				SUPPORT_1 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+			}
+			if = {
+				limit = { has_template = "Garde-Infanterie-Division" }
+				delete_unit_template_and_units = { division_template = "Garde-Infanterie-Division" disband = yes } #no cheating
+			}
+			division_template = {
+				name = "Garde-Infanterie-Division"
+				division_names_group = GEA_INF_02
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+					infantry = { x = 1 y = 2 }
+					infantry = { x = 2 y = 0 }
+					infantry = { x = 2 y = 1 }
+					infantry = { x = 2 y = 2 }
+					infantry = { x = 3 y = 0 }
+				}
+				support = {
+					artillery = { x = 0 y = 0 }
+				}
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		capital_scope = {
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_units
+					TYPE = "Garde-Infanterie-Division"
+					COUNT = 3
+				}
+				create_unit = {
+					division = "division_template = \"Garde-Infanterie-Division\" start_experience_factor = 0.2"
+					owner = ROOT
+					count = 3
+				}
+			}
+		}
+	}
+}
+country_event = { #Indochinese rebellion crushed
+	id = german_east_asia_events.22
+	immediate = {
+		log = "KR_Event_Logging;GEA (with or without Vietnam) WINS ICW"
+		clr_global_flag = GEA_Indochina_Uprising_Fired
+	}
+	title = german_east_asia_events.22.t
+	desc = german_east_asia_events.22.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.22 option german_east_asia_events.22.a"
+		name = german_east_asia_events.22.a
+		add_political_power = 20
+		hidden_effect = {
+			news_event = { id = indochina_events.174 days = 2 }
+		}
+	}
+}
+
+country_event = { #Escalation - If I can't fix the bug...make it a feature
+	id = german_east_asia_events.23
+	title = german_east_asia_events.23.t
+	desc = german_east_asia_events.23.d
+	picture = GFX_report_event_INC_mass
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		tag = INC
+		has_global_flag = GEA_Indochina_Uprising_Fired
+		has_war_with = GEA
+		has_war_with = GER
+		GER = {
+			NOT = {
+				has_war_with = FRA
+				has_war_with = JAP
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.23 option german_east_asia_events.23.a"
+		name = german_east_asia_events.23.a
+		add_political_power = 20
+	}
+}
+
+#The Bao Dai Solution
+country_event = {
+	id = german_east_asia_events.25
+	title = german_east_asia_events.25.t
+	desc = german_east_asia_events.25.d
+	picture = GFX_report_event_VIN_royalfamily
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.25 option german_east_asia_events.25.a"
+		name = german_east_asia_events.25.a #Accept, release VIN
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_YES }
+			}
+		}
+		add_stability = 0.05
+		set_temp_variable = { target = VIN }
+		hidden_effect = {
+			var:target = {
+				every_core_state = {
+					remove_core_of = ROOT
+					remove_claim_by = ROOT
+					clear_variable = ambition_area_@ROOT
+					ROOT = { PREV = { disable_state_integration = yes } }
+				}
+			}
+		}
+		every_owned_state = {
+			limit = { is_core_of = var:target }
+			transfer_state_during_war = yes
+		}
+		set_autonomy = {
+			target = VIN
+			autonomy_state = autonomous_puppet
+			end_wars = no
+		}
+		hidden_effect = {
+			VIN = {
+				set_cosmetic_tag = VIN_monarchy
+				transfer_technology_without_doctrines = yes
+				random_owned_controlled_state = {
+					prioritize = { 671 }
+					create_unit = {
+						division = "name = \"1st Tonkinese Rifles\" division_template = \"Infanterie Regulares\" start_experience_factor = 0.1"
+						prioritize_location = 4075
+						owner = PREV
+					}
+					create_unit = {
+						division = "name = \"Tonkin Militia\" division_template = \"Militia Division\" start_experience_factor = 0.1"
+						prioritize_location = 11936
+						owner = PREV
+					}
+				}
+				random_owned_controlled_state = {
+					prioritize = { 827 }
+					create_unit = {
+						division = "name = \"2nd Tonkinese Rifles\" division_template = \"Infanterie Regulares\" start_experience_factor = 0.1"
+						prioritize_location = 4379
+						owner = PREV
+					}
+					create_unit = {
+						division = "name = \"Annam Militia\" division_template = \"Militia Division\" start_experience_factor = 0.1"
+						prioritize_location = 4379
+						owner = PREV
+					}
+				}
+				add_equipment_to_stockpile = {
+					type = medium_plane_airframe
+					amount = 10
+					producer = GER
+				}
+			}
+		}
+		every_enemy_country = {
+			VIN = {
+				add_to_war = {
+					targeted_alliance = ROOT
+					enemy = PREV
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.25 option german_east_asia_events.25.b"
+		name = german_east_asia_events.25.b #No Way
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_VIN }
+			}
+		}
+		add_political_power = -100
+		add_war_support = -0.05
+	}
+}
+
+## New Colonial Event ##
+country_event = { # Falling Rice Price
+	id = german_east_asia_events.30
+	title = german_east_asia_events.30.t
+	desc = german_east_asia_events.30.d
+	picture = GFX_report_event_INC_farmers
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.31 days = 17 }
+		}
+	}
+
+	option = { # Not our business
+		log = "[GetLogInfo]: event german_east_asia_events.30 option german_east_asia_events.30.a"
+		name = german_east_asia_events.30.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		add_timed_idea = {
+			idea = GEA_falling_price_idea
+			days = 365
+		}
+		modify_country_flag = {
+			flag = GEA_Indochinese_Anger
+			value = 1
+		}
+		add_to_variable = {
+			var = INC.guerilla_activity
+			value = 5
+		}
+	}
+
+	option = { # Protect Indochina
+		log = "[GetLogInfo]: event german_east_asia_events.30 option german_east_asia_events.30.b"
+		name = german_east_asia_events.30.b
+		ai_chance = { base = 30 }
+		add_political_power = -25
+		add_timed_idea = {
+			idea = GEA_conrol_price_idea
+			days = 365
+		}
+	}
+
+	option = { # Protect Malaya
+		log = "[GetLogInfo]: event german_east_asia_events.30 option german_east_asia_events.30.c"
+		name = german_east_asia_events.30.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		add_political_power = -25
+		add_timed_idea = {
+			idea = GEA_conrol_price_idea
+			days = 180
+		}
+		modify_country_flag = {
+			flag = GEA_Indochinese_Anger
+			value = 2
+		}
+		add_to_variable = {
+			var = INC.guerilla_activity
+			value = 5
+		}
+	}
+}
+
+country_event = { # European privileges
+	id = german_east_asia_events.31
+	title = german_east_asia_events.31.t
+	desc = german_east_asia_events.31.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.32 days = 37 }
+		}
+	}
+
+	option = { # Refuse
+		log = "[GetLogInfo]: event german_east_asia_events.31 option german_east_asia_events.31.a"
+		name = german_east_asia_events.31.a
+		ai_chance = { base = 80 }
+		add_political_power = -50
+	}
+
+	option = { # Accept
+		log = "[GetLogInfo]: event german_east_asia_events.31 option german_east_asia_events.31.b"
+		name = german_east_asia_events.31.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		add_political_power = 25
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.1
+		}
+		modify_country_flag = {
+			flag = GEA_Indochinese_Anger
+			value = 1
+		}
+		add_to_variable = {
+			var = INC.guerilla_activity
+			value = 6
+		}
+	}
+}
+
+country_event = { # Strikes in Annamese plantations
+	id = german_east_asia_events.32
+	title = german_east_asia_events.32.t
+	desc = german_east_asia_events.32.d
+	picture = GFX_report_event_INC_farmers
+
+	is_triggered_only = yes
+
+	option = { # Send Police to put them down
+		log = "[GetLogInfo]: event german_east_asia_events.32 option german_east_asia_events.32.a"
+		name = german_east_asia_events.32.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = INC_revolt option = INC_REVOLT_NO }
+			}
+		}
+		add_political_power = -25
+		modify_country_flag = {
+			flag = GEA_Indochinese_Anger
+			value = 1
+		}
+		add_to_variable = {
+			var = INC.guerilla_activity
+			value = 3
+		}
+	}
+
+	option = { # Negotiation
+		log = "[GetLogInfo]: event german_east_asia_events.32 option german_east_asia_events.32.b"
+		name = german_east_asia_events.32.b
+		ai_chance = { base = 50 }
+		add_timed_idea = {
+			idea = GEA_plantations_negotiation_idea
+			days = 100
+		}
+	}
+}
+
+country_event = { # Binh Dinh is Binh Dinh-ed
+	id = german_east_asia_events.33
+	title = german_east_asia_events.33.t
+	desc = german_east_asia_events.33.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event german_east_asia_events.33 option german_east_asia_events.33.a"
+		name = german_east_asia_events.33.a
+		add_stability = 0.1
+		hidden_effect = {
+			country_event = { id = german_east_asia_events.34 days = 37 }
+			set_variable = { country_guide_page_count = 0 }
+		}
+	}
+}
+
+country_event = { # The end of socialist agitation
+	id = german_east_asia_events.34
+	title = german_east_asia_events.34.t
+	desc = german_east_asia_events.34.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event german_east_asia_events.34 option german_east_asia_events.34.a"
+		name = german_east_asia_events.34.a
+		add_stability = 0.05
+		clr_global_flag = GEA_Indochina_Uprising_Fired
+	}
+}
+
+country_event = { # Counterinsurgency tactic
+	id = german_east_asia_events.35
+	title = german_east_asia_events.35.t
+	desc = german_east_asia_events.35.d
+	picture = GFX_report_event_INC_femalevc2
+
+	fire_only_once = yes
+	trigger = {
+		tag = GEA
+		has_war_with = INC
+		has_army_experience > 3
+
+		has_global_flag = GEA_Indochina_Uprising_Fired
+		NOT = {
+			INC = {
+				OR = {
+					has_completed_focus = INC_Mobile_Warfare
+					has_completed_focus = INC_General_Offensive_General_Uprising
+				}
+			}
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event german_east_asia_events.35 option german_east_asia_events.35.a"
+		name = german_east_asia_events.35.a
+		add_timed_idea = { idea = GEA_vietcong_killer_idea days = 720 }
+	}
+	option = { #
+		log = "[GetLogInfo]: event german_east_asia_events.35 option german_east_asia_events.35.b"
+		name = german_east_asia_events.35.b
+		add_war_support = 0.05
+	}
+}
+
+# GEA as a German colony
+
+country_event = { # Mittelafrikaan Advisors
+	id = german_east_asia_events.40
+	title = german_east_asia_events.40.t
+	desc = german_east_asia_events.40.d
+	picture = GFX_report_event_GER_ship
+
+	is_triggered_only = yes
+
+	option = { # Advisors
+		log = "[GetLogInfo]: event german_east_asia_events.40 option german_east_asia_events.40.a"
+		name = german_east_asia_events.40.a
+		hidden_effect = { country_event = { id = german_east_asia_events.41 days = 35 }
+		}
+	}
+}
+
+country_event = { #
+	id = german_east_asia_events.41
+	title = german_east_asia_events.41.t
+	desc = german_east_asia_events.41.d
+	picture = GFX_report_event_GEA_coltroops
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.41 option german_east_asia_events.41.a"
+		name = german_east_asia_events.41.a # Excellent!
+	}
+}
+
+# Syndicalist uprising in Philippines
+country_event = { # Help the military
+	id = german_east_asia_events.60
+	title = german_east_asia_events.60.t
+	desc = german_east_asia_events.60.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = { # Sectretly support to Philippine army
+		log = "[GetLogInfo]: event german_east_asia_events.60 option german_east_asia_events.60.a"
+		name = german_east_asia_events.60.a
+		trigger = {
+			has_equipment = { infantry_equipment > 500 }
+		}
+		ai_chance = { base = 30 }
+		add_political_power = -25
+		send_equipment = {
+			target = PHI
+			type = infantry_equipment
+			amount = 500
+		}
+	}
+
+	option = { # Not our business
+		log = "[GetLogInfo]: event german_east_asia_events.60 option german_east_asia_events.60.b"
+		name = german_east_asia_events.60.b
+		ai_chance = { base = 70 }
+	}
+}
+
+country_event = { # Syndicalist victory
+	id = german_east_asia_events.61
+	title = german_east_asia_events.61.t
+	desc = german_east_asia_events.61.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = {
+			has_socialist_government = yes
+			NOT = { has_war_with = ROOT }
+		}
+	}
+
+	option = { # Send fleet to secure southern islands
+		log = "[GetLogInfo]: event german_east_asia_events.61 option german_east_asia_events.61.a"
+		name = german_east_asia_events.61.a
+		ai_chance = { base = 0 }
+		add_political_power = -50
+		FROM = {
+			country_event = german_east_asia_events.62
+		}
+		add_state_claim = 626
+		add_state_claim = 627
+	}
+
+	option = { # Better not intervene
+		log = "[GetLogInfo]: event german_east_asia_events.61 option german_east_asia_events.61.b"
+		name = german_east_asia_events.61.b
+		ai_chance = { base = 100 }
+	}
+}
+
+country_event = { # GEA intervention
+	id = german_east_asia_events.62
+	title = german_east_asia_events.62.t
+	desc = german_east_asia_events.62.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = { # We will die heorically
+		log = "[GetLogInfo]: event german_east_asia_events.62 option german_east_asia_events.62.a"
+		name = german_east_asia_events.62.a
+		ai_chance = { base = 0 }
+		add_political_power = 150
+		declare_war_on = {
+			target = GEA
+			type = annex_everything
+		}
+		GEA = {
+			country_event = { id = german_east_asia_events.65 days = 3 }
+		}
+		GER = {
+			country_event = { id = german_east_asia_events.65 days = 3 }
+		}
+	}
+
+	option = { # We can't do anything
+		log = "[GetLogInfo]: event german_east_asia_events.62 option german_east_asia_events.62.b"
+		name = german_east_asia_events.62.b
+		ai_chance = { base = 100 }
+		add_political_power = -50
+		GEA = {
+			country_event = { id = german_east_asia_events.63 days = 15 }
+		}
+	}
+}
+
+country_event = { # Philippines fold
+	id = german_east_asia_events.63
+	title = german_east_asia_events.63.t
+	desc = german_east_asia_events.63.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = { # excellent
+		log = "[GetLogInfo]: event german_east_asia_events.63 option german_east_asia_events.63.a"
+		name = german_east_asia_events.63.a
+		add_political_power = 50
+		transfer_state = 626
+		transfer_state = 627
+		GER = {
+			country_event = german_east_asia_events.64
+		}
+	}
+}
+
+country_event = { # good news
+	id = german_east_asia_events.64
+	title = german_east_asia_events.64.t
+	desc = german_east_asia_events.64.d
+	picture = GFX_report_event_GER_ship
+
+	is_triggered_only = yes
+
+	option = { # excellent job
+		log = "[GetLogInfo]: event german_east_asia_events.64 option german_east_asia_events.64.a"
+		name = german_east_asia_events.64.a
+		add_political_power = 20
+	}
+}
+
+country_event = { # bad news
+	id = german_east_asia_events.65
+	title = german_east_asia_events.65.t
+	desc = german_east_asia_events.65.d
+	picture = GFX_report_event_GER_ship
+
+	is_triggered_only = yes
+
+	option = { # damn
+		log = "[GetLogInfo]: event german_east_asia_events.65 option german_east_asia_events.65.a"
+		name = german_east_asia_events.65.a
+		add_political_power = -20
+	}
+}
+
+# Syndicalist uprising in Burma
+
+country_event = { # Unrest in Burma
+	id = german_east_asia_events.66
+	title = german_east_asia_events.66.t
+	desc = german_east_asia_events.66.d
+	picture = GFX_report_event_BRM_rangoon_protest
+
+	is_triggered_only = yes
+
+	option = { # Send fleet to show our support to Burmese monarchy
+		log = "[GetLogInfo]: event german_east_asia_events.66 option german_east_asia_events.66.a"
+		name = german_east_asia_events.66.a
+		ai_chance = { base = 50 }
+		add_political_power = -25
+
+		BRM = {
+			set_country_flag = GEA_support_burma_military
+			country_event = german_east_asia_events.67
+		}
+	}
+
+	option = { # Not our business
+		log = "[GetLogInfo]: event german_east_asia_events.66 option german_east_asia_events.66.b"
+		name = german_east_asia_events.66.b
+		ai_chance = { base = 50 }
+	}
+}
+
+country_event = { # German fleet arrived
+	id = german_east_asia_events.67
+	title = german_east_asia_events.67.t
+	desc = german_east_asia_events.67.d
+	picture = GFX_report_event_GER_ship
+
+	is_triggered_only = yes
+
+	option = { # Mighty Germany!
+		log = "[GetLogInfo]: event german_east_asia_events.67 option german_east_asia_events.67.a"
+		name = german_east_asia_events.67.a
+		add_political_power = 50
+	}
+}
+
+country_event = { # Order restored in Burma
+	id = german_east_asia_events.68
+	title = german_east_asia_events.68.t
+	desc = german_east_asia_events.68.d
+	picture = GFX_report_event_GER_ship
+
+	is_triggered_only = yes
+
+	option = { # Guarantee their independence
+		log = "[GetLogInfo]: event german_east_asia_events.68 option german_east_asia_events.68.a"
+		name = german_east_asia_events.68.a
+		ai_chance = { base = 70 }
+		add_political_power = 20
+		if = { # Kept this for now if player wanna mess around
+			limit = { GEA = { is_ai = no } }
+			give_guarantee = BRM
+		}
+	}
+
+	option = { # I don't know anything about Burma!
+		log = "[GetLogInfo]: event german_east_asia_events.68 option german_east_asia_events.68.b"
+		name = german_east_asia_events.68.b
+		ai_chance = { base = 30 }
+	}
+}
+
+country_event = { #Rabaul caldera
+	id = german_east_asia_events.69
+	title = german_east_asia_events.69.t
+	desc = german_east_asia_events.69.d
+	picture = GFX_report_event_ELS_volcano
+
+	fire_only_once = yes
+
+	trigger = {
+		date > 1937.03.06
+		tag = GEA
+		owns_state = 737
+	}
+
+	option = { #rip
+		log = "[GetLogInfo]: event german_east_asia_events.69 option german_east_asia_events.69.a"
+		name = german_east_asia_events.69.a
+		add_political_power = -30
+		737 = {
+			damage_building = {
+				type = infrastructure
+				damage = 0.1
+			}
+			add_victory_points = { province = 7251 value = -4 }
+		}
+		757 = {
+			add_victory_points = { province = 12237 value = 3 }
+		}
+	}
+}
+
+country_event = { # Fleet Parade
+	id = german_east_asia_events.100
+	title = german_east_asia_events.100.t
+	desc = german_east_asia_events.100.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = { # It will help
+		log = "[GetLogInfo]: event german_east_asia_events.100 option german_east_asia_events.100.a"
+		name = german_east_asia_events.100.a
+		add_political_power = 50 # Cost popularity and stability
+	}
+}
+
+### new roparex stuff
+country_event = { # Steal manpower from home
+	id = german_east_asia_events.200
+	title = german_east_asia_events.200.t
+	desc = german_east_asia_events.200.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.200 option german_east_asia_events.200.a"
+		name = german_east_asia_events.200.a
+		add_manpower = -25000
+	}
+}
+
+country_event = { # Steal guns from home
+	id = german_east_asia_events.201
+	title = german_east_asia_events.201.t
+	desc = german_east_asia_events.201.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.201 option german_east_asia_events.201.a"
+		name = german_east_asia_events.201.a
+		send_equipment = {
+			equipment = infantry_equipment
+			amount = 2500
+			target = GEA
+		}
+	}
+}
+
+country_event = { # give guns to lep
+	id = german_east_asia_events.202
+	title = german_east_asia_events.202.t
+	desc = german_east_asia_events.202.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.202 option german_east_asia_events.202.a"
+		name = german_east_asia_events.202.a
+		GEA = {
+			send_equipment = {
+				equipment = infantry_equipment
+				amount = 2500
+				target = LEP
+			}
+		}
+		ai_chance = { base = 80 }
+		add_to_variable = {
+			GEA.GEA_payback_for_lep_involvement = 1
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.202 option german_east_asia_events.202.b"
+		name = german_east_asia_events.202.b
+		ai_chance = { base = 20 }
+		GEA = {
+			add_opinion_modifier = {
+				target = LEP
+				modifier = KR_displeased
+			}
+		}
+	}
+}
+
+country_event = { # give factories to lep
+	id = german_east_asia_events.203
+	title = german_east_asia_events.203.t
+	desc = german_east_asia_events.203.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.203 option german_east_asia_events.203.a"
+		name = german_east_asia_events.203.a
+		ai_chance = { base = 80 }
+		add_offsite_building = { type = arms_factory level = 2 }
+		add_to_variable = {
+			GEA.GEA_payback_for_lep_involvement = 1
+		}
+		country_event = { id = german_east_asia_events.204 days = 120 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.203 option german_east_asia_events.203.b"
+		name = german_east_asia_events.203.b
+		ai_chance = { base = 20 }
+		GEA = {
+			add_opinion_modifier = {
+				target = LEP
+				modifier = KR_displeased
+			}
+			set_country_flag = GEA_no_factory_lease
+		}
+	}
+}
+
+country_event = { # get factories back from lep
+	id = german_east_asia_events.204
+	title = german_east_asia_events.204.t
+	desc = german_east_asia_events.204.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.204 option german_east_asia_events.204.a"
+		name = german_east_asia_events.204.a
+
+		add_offsite_building = { type = arms_factory level = -2 }
+	}
+}
+
+country_event = { # AOG buys a boat i mean railway
+	id = german_east_asia_events.207
+	title = german_east_asia_events.207.t
+	desc = german_east_asia_events.207.d
+	#picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.207 option german_east_asia_events.207.a"
+		name = german_east_asia_events.207.a
+	}
+}
+
+country_event = { # AOG black monday
+	id = german_east_asia_events.208
+	title = german_east_asia_events.208.t
+	desc = german_east_asia_events.208.d
+	#picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.208 option german_east_asia_events.208.a"
+		name = german_east_asia_events.208.a
+	}
+}
+
+country_event = { # AOG reacts chinese instability
+	id = german_east_asia_events.209
+	title = german_east_asia_events.209.t
+	desc = german_east_asia_events.209.d
+	#picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = GEA
+		LEP = {
+			has_war_with = ANQ
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.209 option german_east_asia_events.209.a"
+		name = german_east_asia_events.209.a
+	}
+}
+
+country_event = { # AOG reacts to LEP collapse
+	id = german_east_asia_events.210
+	title = german_east_asia_events.210.t
+	desc = german_east_asia_events.210.d
+	picture = GFX_report_event_GEA_falkenhausen
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { country_exists = LEP }
+		OR = {
+			NOT = { country_exists = QIE }
+			NOT = {
+				QIE = { has_dynamic_modifier = { modifier = QIE_german_influence_dynamic_modifier } }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.210 option german_east_asia_events.210.a"
+		name = german_east_asia_events.210.a
+		remove_ideas = GEA_AOG_bonus_idea
+		clear_variable = GEA_AOG_CITIES
+		clear_variable = GEA_AOG_CITIES_NUMBER
+		hidden_effect = {
+			if = {
+				limit = {
+					has_dynamic_modifier = { modifier = GEA_AOG_BONUS }
+				}
+				remove_dynamic_modifier = { modifier = GEA_AOG_BONUS }
+			}
+		}
+	}
+}
+
+country_event = { # AOG reacts to LEP survival
+	id = german_east_asia_events.211
+	title = german_east_asia_events.211.t
+	desc = german_east_asia_events.211.d
+	#picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = GEA
+		country_exists = LEP
+		NOT = {
+			country_exists = ANQ
+			country_exists = SHD
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.211 option german_east_asia_events.211.a"
+		name = german_east_asia_events.211.a
+	}
+}
+
+country_event = { # GEA wants to strengthen ties with qing
+	id = german_east_asia_events.212
+	title = german_east_asia_events.212.t
+	desc = german_east_asia_events.212.d
+	#picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.212 option german_east_asia_events.212.a"
+		name = german_east_asia_events.212.a
+		add_tech_bonus = {
+			name = german_east_asia_events.212.t
+			bonus = 0.5
+			uses = 2
+			category = dd_tech
+			category = ca_tech
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.212 option german_east_asia_events.212.b"
+		name = german_east_asia_events.212.b
+		add_tech_bonus = {
+			name = german_east_asia_events.212.t
+			bonus = 0.5
+			uses = 2
+			category = bb_tech
+			category = bc_tech
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.212 option german_east_asia_events.212.c"
+		name = german_east_asia_events.212.c
+		add_ideas = GEA_naval_attache_idea
+	}
+}
+
+country_event = { # German Support Lost
+	id = german_east_asia_events.213
+	title = german_east_asia_events.213.t
+	desc = german_east_asia_events.213.d
+	#picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	trigger = {
+		OR = {
+			tag = LEP
+			has_idea = GEA_naval_attache_idea
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.213 option german_east_asia_events.213.a"
+		name = german_east_asia_events.213.a
+		trigger = {
+			tag = LEP
+		}
+		if = {
+			limit = { has_idea = LEP_Kommission_Sponsorship }
+			remove_ideas = LEP_Kommission_Sponsorship
+		}
+		else_if = {
+			limit = { has_idea = LEP_Kommission_Sponsorship }
+			remove_ideas = LEP_Kommission_Sponsorship2
+		}
+		else_if = {
+			limit = { has_idea = LEP_Kommission_Sponsorship }
+			remove_ideas = LEP_Kommission_Sponsorship3
+		}
+		else_if = {
+			limit = { has_idea = LEP_Kommission_Sponsorship }
+			remove_ideas = LEP_Kommission_Sponsorship4
+		}
+		else_if = {
+			limit = { has_idea = LEP_Kommission_Sponsorship }
+			remove_ideas = LEP_Kommission_Sponsorship5
+		}
+		else_if = {
+			limit = { has_idea = LEP_Kommission_Sponsorship }
+			remove_ideas = LEP_Kommission_Sponsorship6
+		}
+		else_if = {
+			limit = { has_idea = LEP_Kommission_Sponsorship }
+			remove_ideas = LEP_Kommission_Sponsorship7
+		}
+		else_if = {
+			limit = { has_idea = LEP_Kommission_Sponsorship }
+			remove_ideas = LEP_Kommission_Sponsorship8
+		}
+		if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration0 }
+			remove_ideas = LEP_Tsingtau_Collaboration0
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration1 }
+			remove_ideas = LEP_Tsingtau_Collaboration1
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration2 }
+			remove_ideas = LEP_Tsingtau_Collaboration2
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration3 }
+			remove_ideas = LEP_Tsingtau_Collaboration3
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration4 }
+			remove_ideas = LEP_Tsingtau_Collaboration4
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration5 }
+			remove_ideas = LEP_Tsingtau_Collaboration5
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration6 }
+			remove_ideas = LEP_Tsingtau_Collaboration6
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration7 }
+			remove_ideas = LEP_Tsingtau_Collaboration7
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration8 }
+			remove_ideas = LEP_Tsingtau_Collaboration8
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration9 }
+			remove_ideas = LEP_Tsingtau_Collaboration9
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration10 }
+			remove_ideas = LEP_Tsingtau_Collaboration10
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration11 }
+			remove_ideas = LEP_Tsingtau_Collaboration11
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration12 }
+			remove_ideas = LEP_Tsingtau_Collaboration12
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration13 }
+			remove_ideas = LEP_Tsingtau_Collaboration13
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration14 }
+			remove_ideas = LEP_Tsingtau_Collaboration14
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration15 }
+			remove_ideas = LEP_Tsingtau_Collaboration15
+		}
+		else_if = {
+			limit = { has_idea = LEP_Tsingtau_Collaboration16 }
+			remove_ideas = LEP_Tsingtau_Collaboration16
+		}
+		clear_variable = LEP_Tsingtau_level
+		remove_targeted_decision = { target = GEA decision = LEP_AOG_factories_civ }
+		remove_targeted_decision = { target = GEA decision = LEP_AOG_factories_mil }
+		remove_targeted_decision = { target = GEA decision = LEP_AOG_training }
+		remove_targeted_decision = { target = GEA decision = LEP_AOG_decrease_influence }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.213 option german_east_asia_events.213.a"
+		name = german_east_asia_events.213.a
+		trigger = {
+			NOT = { tag = LEP }
+		}
+		remove_ideas = GEA_naval_attache_idea
+	}
+}
+country_event = { # German ally is restored on chinese soil
+	id = german_east_asia_events.214
+	title = german_east_asia_events.214.t
+	desc = german_east_asia_events.214.d
+	picture = GFX_report_event_GEA_falkenhausen
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_dynamic_modifier = { modifier = GEA_AOG_BONUS } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.214 option german_east_asia_events.214.a"
+		name = german_east_asia_events.214.a
+		add_ideas = GEA_AOG_bonus_idea
+		set_variable = { GEA_AOG_CITIES = 0 }
+		set_variable = { GEA_AOG_CITIES_NUMBER = 0 }
+		hidden_effect = {
+			add_dynamic_modifier = { modifier = GEA_AOG_BONUS }
+			#reset the count since this comes after control changes
+			if = {
+				limit = { 592 = { is_controlled_by_ROOT_or_ally = yes } }
+				add_to_variable = { GEA_AOG_CITIES = -0.1 }
+				add_to_variable = { GEA_AOG_CITIES_NUMBER = 1 }
+			}
+			if = {
+				limit = { 802 = { is_controlled_by_ROOT_or_ally = yes } }
+				add_to_variable = { GEA_AOG_CITIES = -0.1 }
+				add_to_variable = { GEA_AOG_CITIES_NUMBER = 1 }
+			}
+			if = {
+				limit = { 803 = { is_controlled_by_ROOT_or_ally = yes } }
+				add_to_variable = { GEA_AOG_CITIES = -0.1 }
+				add_to_variable = { GEA_AOG_CITIES_NUMBER = 1 }
+			}
+			if = {
+				limit = { 1075 = { is_owned_by_ROOT_or_ally = yes } }
+
+				add_to_variable = { GEA_AOG_CITIES = -0.1 }
+				add_to_variable = { GEA_AOG_CITIES_NUMBER = 1 }
+			}
+		}
+	}
+}
+#Germany Defends East Asia
+news_event = {
+	id = german_east_asia_events.300
+	immediate = { log = "[GetLogInfo]: event german_east_asia_events.300" }
+	title = german_east_asia_events.300.t
+	desc = {
+		text = german_east_asia_events.300.d.guam
+		trigger = {
+			JAP = { owns_state = 638 } #Guam
+		}
+	}
+	desc = {
+		text = german_east_asia_events.300.d.noguam
+		trigger = {
+			NOT = { JAP = { owns_state = 638 } } #Guam
+		}
+	}
+	picture = GFX_news_event_GER_colonial
+
+	is_triggered_only = yes
+	fire_for_sender = yes
+	major = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = german_east_asia_events.300.a #The last bastion of peace in the Pacific.
+		trigger = {
+			is_ally_with = GER
+		}
+	}
+
+	option = {
+		name = german_east_asia_events.300.b #The final holdout of imperialism in Asia.
+		trigger = {
+			is_ally_with = JAP
+		}
+	}
+	option = {
+		name = german_east_asia_events.300.c #The last bastion of peace? Or the final holdout of Imperialism?
+		trigger = {
+			NOT = {
+				is_ally_with = JAP
+				is_ally_with = GER
+			}
+		}
+	}
+}
+
+country_event = { # GEA wants to reestablish colonial rule with German splinter or their overlord
+	id = german_east_asia_events.1000
+	title = german_east_asia_events.1000.t
+	desc = {
+		text = german_east_asia_events.1000.d.german
+		trigger = {
+			is_germany_or_splinter_tag = yes
+		}
+	}
+	desc = {
+		text = german_east_asia_events.1000.d.overlord
+		trigger = {
+			is_germany_or_splinter_tag = no
+		}
+	}
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = { #We welcome Singapore back to the fold
+		log = "[GetLogInfo]: event german_east_asia_events.1000 option german_east_asia_events.1000.a"
+		name = german_east_asia_events.1000.a
+		GEA = { get_current_government_type = yes }
+		set_autonomy = {
+			target = GEA
+			autonomy_state = colonial_government
+			end_wars = no
+		}
+		GEA = { restore_previous_government_type = yes }
+		GEA = { country_event = german_east_asia_events.1001 }
+	}
+	option = { #No, they would simply be dead weight
+		log = "[GetLogInfo]: event german_east_asia_events.1000 option german_east_asia_events.1000.b"
+		name = german_east_asia_events.1000.b
+		ai_chance = { base = 0 }
+		GEA = { country_event = german_east_asia_events.1002 }
+	}
+}
+
+country_event = { # FROM accepts GEA becoming their subject
+	id = german_east_asia_events.1001
+	title = german_east_asia_events.1001.t
+	desc = german_east_asia_events.1001.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.1001 option german_east_asia_events.1001.a"
+		name = german_east_asia_events.1001.a
+		effect_tooltip = {
+			FROM = {
+				set_autonomy = {
+					target = GEA
+					autonomy_state = colonial_government
+					end_wars = no
+				}
+			}
+		}
+		clr_country_flag = GEA_realignment_with_berlin_flag
+	}
+}
+
+country_event = { # FROM refuses GEA becoming their subject
+	id = german_east_asia_events.1002
+	title = german_east_asia_events.1002.t
+	desc = german_east_asia_events.1002.d
+	picture = GFX_report_event_SIA_German_Economical_Dominance
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event german_east_asia_events.1002 option german_east_asia_events.1002.a"
+		name = german_east_asia_events.1002.a
+		clr_country_flag = GEA_realignment_with_berlin_flag
+	}
+}

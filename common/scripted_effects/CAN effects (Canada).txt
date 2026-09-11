@@ -1,0 +1,2392 @@
+CAN_transfer_iedc_leadership = {
+	if = {
+		limit = {
+			OR = {
+				is_in_economic_sphere = no
+				AND = {
+					has_event_target = iedc_leader
+					event_target:iedc_leader = { is_leader_of_economic_sphere_of_PREV = yes }
+				}
+			}
+		}
+		CAN_add_to_iedc = yes
+		if = {
+			limit = { has_event_target = iedc_leader }
+			event_target:iedc_leader = { remove_ideas = CAN_iedc_main }
+		}
+		add_ideas = CAN_iedc_main
+		set_economic_sphere_leader = yes
+	}
+}
+
+CAN_add_to_iedc = {
+	if = {
+		limit = { ENT_is_in_iedc = no }
+		custom_effect_tooltip = CAN_joins_iedc
+		set_country_flag = CAN_joined_iedc
+		clr_country_flag = CAN_invited_to_iedc
+		clr_country_flag = CAN_refused_iedc
+		set_temp_variable = { sphere_target = THIS }
+		event_target:iedc_leader = {
+			add_to_economic_sphere = yes
+			reverse_add_opinion_modifier = { target = PREV modifier = CAN_iedc_member }
+		}
+	}
+}
+
+CAN_remove_from_iedc = {
+	if = {
+		limit = { ENT_is_in_iedc = yes }
+		custom_effect_tooltip = CAN_leave_the_iedc
+		CAN_remove_from_iedc_effect = yes
+		leave_economic_sphere = yes
+	}
+}
+
+CAN_remove_from_iedc_effect = {
+	clr_country_flag = CAN_joined_iedc
+	if = {
+		limit = { has_idea = CAN_iedc_econ1 }
+		remove_ideas = CAN_iedc_econ1
+	}
+	if = {
+		limit = { has_idea = CAN_iedc_econ2 }
+		remove_ideas = CAN_iedc_econ2
+	}
+	if = {
+		limit = { has_idea = CAN_iedc_econ3 }
+		remove_ideas = CAN_iedc_econ3
+	}
+	if = {
+		limit = { has_idea = CAN_iedc_naval1 }
+		remove_ideas = CAN_iedc_naval1
+	}
+	if = {
+		limit = { has_idea = CAN_iedc_naval2 }
+		remove_ideas = CAN_iedc_naval2
+	}
+	if = {
+		limit = { has_idea = CAN_iedc_naval3 }
+		remove_ideas = CAN_iedc_naval3
+	}
+	if = {
+		limit = { has_idea = CAN_iedc_const1 }
+		remove_ideas = CAN_iedc_const1
+	}
+	if = {
+		limit = { has_idea = CAN_iedc_const2 }
+		remove_ideas = CAN_iedc_const2
+	}
+	if = {
+		limit = { has_idea = CAN_iedc_const3 }
+		remove_ideas = CAN_iedc_const3
+	}
+	if = {
+		limit = { check_variable = { iedc_civ_factories > 0 } }
+		custom_effect_tooltip = CAN_remove_iedc_civ
+		hidden_effect = {
+			set_temp_variable = { tempvar1 = { value = iedc_civ_factories multiply = -1 } }
+			add_offsite_building = { type = industrial_complex level = var:tempvar1 }
+		}
+	}
+	if = {
+		limit = { check_variable = { iedc_mil_factories > 0 } }
+		custom_effect_tooltip = CAN_remove_iedc_mil
+		hidden_effect = {
+			set_temp_variable = { tempvar2 = { value = iedc_mil_factories multiply = -1 } }
+			add_offsite_building = { type = arms_factory level = var:tempvar2 }
+		}
+	}
+	if = {
+		limit = { check_variable = { iedc_nav_factories > 0 } }
+		custom_effect_tooltip = CAN_remove_iedc_nav
+		hidden_effect = {
+			set_temp_variable = { tempvar3 = { value = iedc_nav_factories multiply = -1 } }
+			add_offsite_building = { type = dockyard level = var:tempvar3 }
+		}
+	}
+	clear_variable = iedc_contribution
+	clear_variable = iedc_civ_factories
+	clear_variable = iedc_mil_factories
+	clear_variable = iedc_nav_factories
+	hidden_effect = {
+		event_target:iedc_leader = {
+			remove_opinion_modifier = { target = ROOT modifier = CAN_iedc_member }
+		}
+	}
+}
+
+#requires a temp variable ENT_pp_investment
+CAN_add_iedc_pp = {
+	multiply_temp_variable = { ENT_pp_investment = -1 }
+	add_political_power = var:ENT_pp_investment
+	multiply_temp_variable = { ENT_pp_investment = -1 }
+	add_to_variable = {
+		global.iedc_pp = ENT_pp_investment
+		tooltip = CAN_add_pp_to_iedc
+	}
+	if = {
+		limit = { has_completed_focus = IRE_anglo_irish_connections }
+		multiply_temp_variable = { ENT_pp_investment = 2 }
+	}
+	set_variable = { iedc_contribution = ENT_pp_investment }
+}
+
+CAN_find_entente_leader = {
+	if = {
+		limit = {
+			NOT = { tag = GBR }
+			GBR = {
+				is_in_faction_with = ROOT
+				is_subject = no
+				surrender_progress < 0.40
+			}
+		}
+		GBR = { save_event_target_as = entente_transfer_to }
+	}
+	else_if = {
+		limit = {
+			NOT = { tag = CAN }
+			CAN = {
+				is_in_faction_with = ROOT
+				is_subject = no
+				surrender_progress < 0.40
+			}
+		}
+		CAN = { save_event_target_as = entente_transfer_to }
+	}
+	else_if = {
+		limit = {
+			NOT = { original_tag = NFA }
+			NFA = {
+				is_in_faction_with = ROOT
+				is_subject = no
+				surrender_progress < 0.40
+			}
+		}
+		NFA = { save_event_target_as = entente_transfer_to }
+	}
+	else_if = {
+		limit = {
+			any_allied_country = {
+				is_subject = no
+				is_actual_major = yes
+				surrender_progress < 0.40
+				NOT = {
+					tag = AST
+					tag = NZL
+					tag = GEX
+				}
+			}
+		}
+		random_allied_country = {
+			limit = {
+				is_subject = no
+				is_actual_major = yes
+				surrender_progress < 0.40
+				NOT = {
+					tag = AST
+					tag = NZL
+					tag = GEX
+				}
+			}
+			save_event_target_as = entente_transfer_to
+		}
+	}
+	else = {
+		save_event_target_as = entente_collapses
+	}
+}
+
+CAN_transfer_entente_leader = {
+	if = {
+		limit = { NOT = { tag = ENT } }
+		if = {
+			limit = { ENT = { tag = event_target:iedc_leader } }
+			CAN_transfer_iedc_leadership = yes
+		}
+		set_faction_leader = yes
+		save_global_event_target_as = KR_entente_leader
+	}
+}
+
+CAN_entente_collapses = {
+	hidden_effect = {
+		# release puppets
+		every_subject_country = {
+			ROOT = {
+				set_autonomy = {
+					target = PREV
+					autonomy_state = autonomy_free
+				}
+			}
+		}
+		# inform Entente members
+		every_possible_country = { clr_country_flag = KR_was_in_entente }
+		every_allied_country = {
+			set_country_flag = KR_was_in_entente
+			country_event = entente_events.257
+			# Portugal collapses if exiled
+			if = {
+				limit = { tag = POR }
+				country_event = { id = portugal_exile_events.14 days = 7 }
+			}
+		}
+		# peace out the Entente
+		every_country = {
+			limit = {
+				has_war = yes
+				is_valid_peace_target = yes
+				NOT = { has_country_flag = KR_was_in_entente }
+				any_enemy_country = { has_country_flag = KR_was_in_entente }
+			}
+			country_event = { id = entente_events.258 hours = 3 }
+		}
+		# disband ISAC if created
+		if = {
+			limit = { is_in_tech_sharing_group = entente_research }
+			every_country = {
+				limit = { is_in_tech_sharing_group = entente_research }
+				remove_from_tech_sharing_group = entente_research
+			}
+		}
+		# disband IEDC if created
+		if = {
+			limit = { has_global_flag = CAN_iedc_created }
+			clr_global_flag = CAN_iedc_created
+			event_target:iedc_leader = { remove_ideas = CAN_iedc_main }
+			every_country = {
+				clr_country_flag = CAN_refused_iedc
+				CAN_remove_from_iedc = yes
+			}
+			clear_global_event_target = iedc_leader
+		}
+		# remove NFA's claims and cores, if it's dead
+		if = {
+			limit = { NOT = { country_exists = NFA } }
+			every_state = {
+				remove_core_of = NFA
+				remove_claim_by = NFA
+			}
+		}
+		add_named_threat = {
+			threat = 15
+			name = CAN_entente_collapse_threat
+		}
+		IRE = {
+			if = {
+				limit = { is_in_faction_with = ENT }
+				country_event = { id = ireland_events.2006 days = 15 }		# IRE joining RP?
+			}
+			else = {
+				country_event = { id = ireland_flavour_events.7 days = 7 }		# Fall of IMP - should only be for if IMP is dead, ENT can still be alive
+			}
+		}
+	}
+	dismantle_faction = yes
+	GBR = { save_global_event_target_as = KR_entente_leader }
+}
+
+CAN_find_next_king_base = {
+	if = {
+		limit = {
+			NOT = { tag = GBR }
+			GBR = {
+				is_in_faction_with = PREV
+				surrender_progress < 0.30
+			}
+		}
+		GBR = { save_event_target_as = king_flees_to }
+	}
+	else_if = {
+		limit = {
+			NOT = { tag = CAN }
+			CAN = {
+				is_in_faction_with = PREV
+				surrender_progress < 0.30
+			}
+		}
+		CAN = { save_event_target_as = king_flees_to }
+	}
+	else_if = {
+		limit = {
+			NOT = { original_tag = AST }
+			AST = {
+				is_in_faction_with = PREV
+				surrender_progress < 0.30
+				NOT = { has_government = paternal_autocrat }
+			}
+		}
+		AST = { save_event_target_as = king_flees_to }
+	}
+	else_if = {
+		limit = {
+			NOT = { original_tag = RAJ }
+			RAJ = {
+				is_in_faction_with = PREV
+				surrender_progress < 0.30
+				NOT = { has_government = social_democrat }
+			}
+		}
+		RAJ = { save_event_target_as = king_flees_to }
+	}
+	else_if = {
+		limit = {
+			NOT = { original_tag = SAF }
+			SAF = {
+				is_in_faction_with = PREV
+				surrender_progress < 0.30
+				has_dictatorship_government = no
+			}
+		}
+		SAF = { save_event_target_as = king_flees_to }
+	}
+	else_if = { #ENT leader is always last resort of KR_king_base
+		limit = { has_event_target = entente_transfer_to }
+		event_target:entente_transfer_to = { save_event_target_as = king_flees_to }
+	}
+	else_if = {
+		limit = {
+			NOT = { has_event_target = entente_collapses }
+			is_in_faction_with = ENT
+		}
+		ENT = { save_event_target_as = king_flees_to }
+	}
+
+	# first have the king flee to another country
+	if = {
+		limit = { has_event_target = king_flees_to }
+		# King Flees
+		event_target:king_flees_to = { CAN_transfer_king_base = yes }
+		if = {
+			limit = { has_variable = CAN_king_may_be_captured }
+			hidden_effect = { event_target:king_flees_to = { news_event = entente_events.259 } }
+		}
+		event_target:king_flees_to = { country_event = { id = entente_events.252 days = 2 } } #Inform of King's arrival
+		#TODO: Longer term, adding loc for all possible cases of king fleeing would be good
+	}
+	else = {
+		#King Captured
+		GBR = { CAN_transfer_king_base = yes }
+		if = {
+			limit = { has_variable = CAN_king_may_be_captured }
+			hidden_effect = { news_event = entente_events.260 }
+		}
+		#TODO: Longer term, adding events for king being captured when cause was not king base capitulation would be good
+	}
+}
+
+CAN_transfer_king_base = {
+	if = {
+		limit = { NOT = { tag = event_target:KR_king_base } }
+		set_country_flag = KR_british_king_base
+		clr_country_flag = CAN_king_toured
+		clr_global_flag = CAN_king_on_tour
+		clr_global_flag = CAN_king_busy
+		set_global_flag = { flag = CAN_king_busy days = 30 value = 1 }
+		clr_country_flag = CAN_visit_cancel
+		set_variable = { king_popularity = event_target:KR_king_base.king_popularity }
+		event_target:KR_king_base = {
+			if = {
+				limit = { check_variable = { king_civ_factories > 0 } }
+				custom_effect_tooltip = CAN_remove_king_civ
+				hidden_effect = {
+					set_variable = { tempvar1 = 0 }
+					subtract_from_variable = { var = tempvar1 value = king_civ_factories }
+					add_offsite_building = { type = industrial_complex level = tempvar1 }
+					clear_variable = tempvar1
+				}
+			}
+			if = {
+				limit = { check_variable = { king_mil_factories > 0 } }
+				custom_effect_tooltip = CAN_remove_king_mil
+				hidden_effect = {
+					set_variable = { tempvar2 = 0 }
+					subtract_from_variable = { var = tempvar2 value = king_mil_factories }
+					add_offsite_building = { type = arms_factory level = tempvar2 }
+					clear_variable = tempvar2
+				}
+			}
+			if = {
+				limit = { tag = CAN }
+				CAN_disable_returning_home_decisions = yes
+			}
+		}
+		set_variable = { king_civ_factories = 0 }
+		set_variable = { king_mil_factories = 0 }
+		if = {
+			limit = { NOT = { tag = GBR } }
+			set_variable = { king_influence = 1 }
+		}
+		if = {
+			limit = {
+				tag = GBR
+				check_variable = { king_popularity < 5 }
+			}
+			add_to_variable = { king_popularity = 1 }
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_home_isles }
+			}
+			set_country_flag = CAN_speech_home_isles
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_war_eng }
+			}
+			set_country_flag = CAN_speech_war_eng
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_war_ger }
+			}
+			set_country_flag = CAN_speech_war_ger
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_war_acw }
+			}
+			set_country_flag = CAN_speech_war_acw
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_france_taken }
+			}
+			set_country_flag = CAN_speech_france_taken
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_france_mainland }
+			}
+			set_country_flag = CAN_speech_france_mainland
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_india_united }
+			}
+			set_country_flag = CAN_speech_india_united
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_italy_united }
+			}
+			set_country_flag = CAN_speech_italy_united
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_india_defeated }
+			}
+			set_country_flag = CAN_speech_india_defeated
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_aus_syndicalist }
+			}
+			set_country_flag = CAN_speech_aus_syndicalist
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_wif_syndicalist }
+			}
+			set_country_flag = CAN_speech_wif_syndicalist
+		}
+		if = {
+			limit = {
+				event_target:KR_king_base = { has_country_flag = CAN_speech_acw_begins }
+			}
+			set_country_flag = CAN_speech_acw_begins
+		}
+		event_target:KR_king_base = {
+			set_country_flag = CAN_visit_cancel
+			clr_country_flag = KR_british_king_base
+			clr_country_flag = CAN_speech_home_isles
+			clr_country_flag = CAN_speech_war_eng
+			clr_country_flag = CAN_speech_war_ger
+			clr_country_flag = CAN_speech_war_acw
+			clr_country_flag = CAN_speech_france_taken
+			clr_country_flag = CAN_speech_france_mainland
+			clr_country_flag = CAN_speech_india_united
+			clr_country_flag = CAN_speech_italy_united
+			clr_country_flag = CAN_speech_india_defeated
+			clr_country_flag = CAN_speech_aus_syndicalist
+			clr_country_flag = CAN_speech_wif_syndicalist
+			clr_country_flag = CAN_speech_acw_begins
+			clr_country_flag = CAN_suppressed_exiles
+			clr_country_flag = CAN_supported_government
+			clr_country_flag = CAN_exile_inc_influence
+			clr_country_flag = CAN_exile_inc_industry
+			clr_country_flag = CAN_exile_inc_popularity
+			clr_country_flag = CAN_non_commonwealth_king_base
+			if = {
+				limit = { tag = CAN }
+				set_variable = { CAN_was_king_popularity = king_popularity }
+			}
+			clear_variable = king_popularity
+			clear_variable = king_influence
+			clear_variable = CAN_visit_stability
+			clear_variable = CAN_visit_war_support
+			clear_variable = CAN_visit_mobilisation
+			clear_variable = CAN_visit_morale
+			clear_variable = king_civ_factories
+			clear_variable = king_mil_factories
+			clear_variable = CAN_exile_building
+			clear_variable = CAN_exile_factory
+			clear_variable = CAN_exile_power
+			clear_variable = CAN_exile_stability
+		}
+		save_global_event_target_as = KR_king_base
+		CAN_calc_royal_visit_effects = yes
+		if = {
+			limit = { NOT = { tag = GBR } }
+			CAN_calc_exile_influence_effects = yes
+		}
+		if = {
+			limit = { tag = CAN }
+			CAN_enable_returning_home_decisions = yes
+		}
+		if = {
+			limit = {
+				OR = {
+					tag = GBR
+					tag = CAN
+					tag = AST
+					tag = RAJ
+					tag = SAF
+				}
+			}
+			hidden_effect = {
+				country_event = { id = entente_events.50 days = 90 random_days = 60 } #restart random royal events
+			}
+		}
+		else = {
+			set_country_flag = CAN_non_commonwealth_king_base #Crucial for identifying king base as non commonwealth tag
+		}
+	}
+}
+
+CAN_add_ws_based_on_popularity_cw = {
+	if = {
+		limit = {
+			check_variable = { event_target:KR_king_base.king_popularity > 4 }
+		}
+		add_war_support = 0.10
+	}
+	else_if = {
+		limit = {
+			check_variable = { event_target:KR_king_base.king_popularity > 3 }
+			check_variable = { event_target:KR_king_base.king_popularity < 5 }
+		}
+		add_war_support = 0.075
+	}
+	else_if = {
+		limit = {
+			check_variable = { event_target:KR_king_base.king_popularity > 2 }
+			check_variable = { event_target:KR_king_base.king_popularity < 4 }
+		}
+		add_war_support = 0.05
+	}
+	else_if = {
+		limit = {
+			check_variable = { event_target:KR_king_base.king_popularity > 1 }
+			check_variable = { event_target:KR_king_base.king_popularity < 3 }
+		}
+		add_war_support = 0.035
+	}
+	else = {
+		add_war_support = 0.025
+	}
+}
+
+CAN_add_ws_based_on_popularity = {
+	if = {
+		limit = {
+			check_variable = { event_target:KR_king_base.king_popularity > 5 }
+		}
+		add_war_support = 0.10
+	}
+	else_if = {
+		limit = {
+			check_variable = { event_target:KR_king_base.king_popularity > 4 }
+			check_variable = { event_target:KR_king_base.king_popularity < 6 }
+		}
+		add_war_support = 0.075
+	}
+	else_if = {
+		limit = {
+			check_variable = { event_target:KR_king_base.king_popularity > 3 }
+			check_variable = { event_target:KR_king_base.king_popularity < 5 }
+		}
+		add_war_support = 0.05
+	}
+	else_if = {
+		limit = {
+			check_variable = { event_target:KR_king_base.king_popularity > 2 }
+			check_variable = { event_target:KR_king_base.king_popularity < 4 }
+		}
+		add_war_support = 0.035
+	}
+	else = {
+		add_war_support = 0.025
+	}
+}
+
+CAN_calc_royal_visit_effects = {
+	hidden_effect = {
+		event_target:KR_king_base = {
+			if = {
+				limit = {
+					check_variable = { king_popularity > 4 }
+				}
+				set_variable = { CAN_visit_stability = 0.05 }
+				set_variable = { CAN_visit_war_support = 0.20 }
+				set_variable = { CAN_visit_mobilisation = 0.20 }
+				set_variable = { CAN_visit_morale = 0.20 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { king_popularity > 3 }
+					check_variable = { king_popularity < 5 }
+				}
+				set_variable = { CAN_visit_stability = 0.04 }
+				set_variable = { CAN_visit_war_support = 0.15 }
+				set_variable = { CAN_visit_mobilisation = 0.15 }
+				set_variable = { CAN_visit_morale = 0.15 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { king_popularity > 2 }
+					check_variable = { king_popularity < 4 }
+				}
+				set_variable = { CAN_visit_stability = 0.03 }
+				set_variable = { CAN_visit_war_support = 0.10 }
+				set_variable = { CAN_visit_mobilisation = 0.10 }
+				set_variable = { CAN_visit_morale = 0.10 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { king_popularity > 1 }
+					check_variable = { king_popularity < 3 }
+				}
+				set_variable = { CAN_visit_stability = 0.02 }
+				set_variable = { CAN_visit_war_support = 0.075 }
+				set_variable = { CAN_visit_mobilisation = 0.075 }
+				set_variable = { CAN_visit_morale = 0.075 }
+			}
+			else = {
+				set_variable = { CAN_visit_stability = 0.01 }
+				set_variable = { CAN_visit_war_support = 0.05 }
+				set_variable = { CAN_visit_mobilisation = 0.05 }
+				set_variable = { CAN_visit_morale = 0.05 }
+			}
+			force_update_dynamic_modifier = yes
+		}
+	}
+}
+
+CAN_calc_exile_influence_effects = {
+	hidden_effect = {
+		event_target:KR_king_base = {
+			if = {
+				limit = {
+					check_variable = { king_influence > 4 }
+				}
+				set_variable = { CAN_exile_building = 0.25 }
+				set_variable = { CAN_exile_factory = 0.25 }
+				set_variable = { CAN_exile_power = 0.25 }
+				set_variable = { CAN_exile_stability = 0.10 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { king_influence > 3 }
+					check_variable = { king_influence < 5 }
+				}
+				set_variable = { CAN_exile_building = 0.20 }
+				set_variable = { CAN_exile_factory = 0.20 }
+				set_variable = { CAN_exile_power = 0.20 }
+				set_variable = { CAN_exile_stability = 0.08 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { king_influence > 2 }
+					check_variable = { king_influence < 4 }
+				}
+				set_variable = { CAN_exile_building = 0.15 }
+				set_variable = { CAN_exile_factory = 0.15 }
+				set_variable = { CAN_exile_power = 0.15 }
+				set_variable = { CAN_exile_stability = 0.06 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { king_influence > 1 }
+					check_variable = { king_influence < 3 }
+				}
+				set_variable = { CAN_exile_building = 0.10 }
+				set_variable = { CAN_exile_factory = 0.10 }
+				set_variable = { CAN_exile_power = 0.10 }
+				set_variable = { CAN_exile_stability = 0.04 }
+			}
+			else = {
+				set_variable = { CAN_exile_building = 0.05 }
+				set_variable = { CAN_exile_factory = 0.05 }
+				set_variable = { CAN_exile_power = 0.05 }
+				set_variable = { CAN_exile_stability = 0.02 }
+			}
+			force_update_dynamic_modifier = yes
+		}
+	}
+}
+
+CAN_improve_depression_idea = {
+	if = {
+		limit = { has_idea = CAN_great_depression_1 }
+		swap_ideas = {
+			remove_idea = CAN_great_depression_1
+			add_idea = CAN_great_depression_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = CAN_great_depression_2 }
+		swap_ideas = {
+			remove_idea = CAN_great_depression_2
+			add_idea = CAN_great_depression_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = CAN_great_depression_3 }
+		remove_ideas = CAN_great_depression_3
+	}
+}
+
+CAN_improve_french_tensions_idea = {
+	if = {
+		limit = { has_idea = CAN_anglo_french_tensions_1 }
+		swap_ideas = {
+			remove_idea = CAN_anglo_french_tensions_1
+			add_idea = CAN_anglo_french_tensions_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = CAN_anglo_french_tensions_2 }
+		swap_ideas = {
+			remove_idea = CAN_anglo_french_tensions_2
+			add_idea = CAN_anglo_french_tensions_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = CAN_anglo_french_tensions_3 }
+		remove_ideas = CAN_anglo_french_tensions_3
+	}
+}
+
+CAN_reduce_quebecois_resistance = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier } }
+		if = {
+			limit = { CAN_quebec_resistance_level_1 = yes }
+			remove_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+			clear_variable = CAN_qr_state_resources_factor
+			clear_variable = CAN_qr_local_factory_sabotage
+			clear_variable = CAN_qr_local_manpower
+			hidden_effect = {
+				ROOT = { remove_targeted_decision = { decision = CAN_suppress_quebecois_state target = PREV } }
+			}
+		}
+		else = {
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = CAN_quebecois_resistance_modifier
+			}
+			add_to_variable = {
+				CAN_qr_state_resources_factor = 0.2
+				tooltip = state_resources_factor_tooltip
+			}
+			add_to_variable = {
+				CAN_qr_local_manpower = 0.2
+				tooltip = local_manpower_tooltip
+			}
+			add_to_variable = {
+				CAN_qr_local_factory_sabotage = -0.1
+				tooltip = local_factory_sabotage_tooltip
+			}
+		}
+	}
+	else = {
+		effect_tooltip = {
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = CAN_quebecois_resistance_modifier
+			}
+			add_to_variable = {
+				CAN_qr_state_resources_factor = 0.2
+				tooltip = state_resources_factor_tooltip
+			}
+			add_to_variable = {
+				CAN_qr_local_manpower = 0.2
+				tooltip = local_manpower_tooltip
+			}
+			add_to_variable = {
+				CAN_qr_local_factory_sabotage = -0.1
+				tooltip = local_factory_sabotage_tooltip
+			}
+		}
+	}
+}
+
+CAN_create_governor_general = {
+	if = {
+		limit = { has_character = CAN_ernest_makins } #prevents error log flood
+		CAN_ernest_makins = {
+			set_character_as_regent = yes
+			remove_all_country_leader_roles = yes
+			for_each_loop = {
+				array = global.ideology_groups
+				if = {
+					limit = { ideology_group_is_socialist = no }
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									desc = CAN_ernest_makins_leader_desc
+									ideology = [IDEOLOGY]
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[?v.GetTokenKey]_subtype"
+					}
+				}
+			}
+		}
+	}
+	else_if = {
+		limit = { has_character = CAN_john_buchan } #prevents error log flood
+		CAN_john_buchan = {
+			set_character_as_regent = yes
+			remove_all_country_leader_roles = yes
+			for_each_loop = {
+				array = global.ideology_groups
+				if = {
+					limit = { ideology_group_is_socialist = no }
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									desc = CAN_john_buchan_leader_desc
+									ideology = [IDEOLOGY]
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[?v.GetTokenKey]_subtype"
+					}
+				}
+			}
+		}
+	}
+	else_if = {
+		limit = { has_character = CAN_andrew_mcnaughton } #prevents error log flood
+		CAN_andrew_mcnaughton = {
+			set_character_as_regent = yes
+			remove_all_country_leader_roles = yes
+			for_each_loop = {
+				array = global.ideology_groups
+				if = {
+					limit = { ideology_group_is_socialist = no }
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									desc = CAN_andrew_mcnaughton_leader_desc
+									ideology = [IDEOLOGY]
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[?v.GetTokenKey]_subtype"
+					}
+				}
+			}
+		}
+	}
+}
+
+CAN_create_monarchy = {
+	if = {
+		limit = { ENT_king_edward_viii = yes }
+		GBR_create_edward = yes
+	}
+	else_if = {
+		limit = { ENT_king_albert_i = yes }
+		GBR_create_albert = yes
+	}
+	else_if = {
+		limit = { ENT_king_henry_ix = yes }
+		GBR_create_henry = yes
+	}
+	else_if = {
+		limit = { ENT_king_george_vi = yes }
+		GBR_create_george = yes
+	}
+	else = { #this should never happen... but just in case
+		var:global.GBR_british_king = { clr_character_flag = GBR_british_king }
+
+		GBR = {
+			GBR_george_frederick_windsor = {
+				set_nationality = PREV.PREV
+				set_character_flag = GBR_british_king
+				set_variable = { global.GBR_british_king = THIS }
+				character_becomes_leader_of_ruling_party_effect_tooltip = yes
+				hidden_effect = {
+					remove_all_country_leader_roles = yes
+					if = {
+						limit = { PREV = { tag = GBR } }
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_GBR_leader_desc
+								ideology = social_democrat_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_GBR_leader_desc
+								ideology = social_liberal_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_GBR_leader_desc
+								ideology = market_liberal_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_GBR_leader_desc
+								ideology = social_conservative_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_GBR_leader_desc
+								ideology = authoritarian_democrat_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_GBR_leader_desc
+								ideology = paternal_autocrat_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_GBR_leader_desc
+								ideology = national_populist_subtype
+							}
+							promote_leader = yes
+						}
+					}
+					else = {
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_exiled_leader_desc
+								ideology = social_democrat_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_exiled_leader_desc
+								ideology = social_liberal_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_exiled_leader_desc
+								ideology = market_liberal_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_exiled_leader_desc
+								ideology = social_conservative_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_exiled_leader_desc
+								ideology = authoritarian_democrat_subtype
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = GBR_george_frederick_windsor_king_exiled_leader_desc
+								ideology = paternal_autocrat_subtype
+							}
+							promote_leader = yes
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# move the princes too if they're not country leaders elsewhere (usually AST)
+	GBR = {
+		GBR_george_frederick_windsor = {
+			if = {
+				limit = {
+					is_country_leader = no
+					is_dead = no
+				}
+				set_nationality = PREV.PREV
+				if = {
+					limit = {
+						owner = { tag = GBR }
+						has_trait = GBR_british_exile_trait
+					}
+					remove_unit_leader_trait = GBR_british_exile_trait
+				}
+			}
+		}
+		GBR_edward_windsor = {
+			if = {
+				limit = {
+					is_country_leader = no
+					is_dead = no
+				}
+				set_nationality = PREV.PREV
+				if = {
+					limit = {
+						owner = { tag = GBR }
+						has_trait = GBR_british_exile_trait
+					}
+					remove_unit_leader_trait = GBR_british_exile_trait
+				}
+			}
+		}
+		GBR_albert_windsor = {
+			if = {
+				limit = {
+					is_country_leader = no
+					is_dead = no
+				}
+				set_nationality = PREV.PREV
+				if = {
+					limit = {
+						owner = { tag = GBR }
+						has_trait = GBR_british_exile_trait
+					}
+					remove_unit_leader_trait = GBR_british_exile_trait
+				}
+			}
+		}
+		GBR_henry_windsor = {
+			if = {
+				limit = {
+					is_country_leader = no
+					is_dead = no
+				}
+				set_nationality = PREV.PREV
+				if = {
+					limit = {
+						owner = { tag = GBR }
+						has_trait = GBR_british_exile_trait
+					}
+					remove_unit_leader_trait = GBR_british_exile_trait
+				}
+			}
+		}
+		GBR_george_windsor = {
+			if = {
+				limit = {
+					is_country_leader = no
+					is_dead = no
+				}
+				set_nationality = PREV.PREV
+				if = {
+					limit = {
+						owner = { tag = GBR }
+						has_trait = GBR_british_exile_trait
+					}
+					remove_unit_leader_trait = GBR_british_exile_trait
+				}
+			}
+		}
+	}
+}
+
+CAN_create_republic = {
+	if = {
+		limit = { has_cosmetic_tag = CAN_entente }
+		set_cosmetic_tag = CAN
+	}
+	hidden_effect = {
+		if = {
+			limit = { has_character = CAN_john_buchan }
+			CAN_john_buchan = { remove_all_country_leader_roles = yes }
+		}
+		if = {
+			limit = { has_character = CAN_ernest_makins }
+			CAN_ernest_makins = { remove_all_country_leader_roles = yes }
+		}
+		if = {
+			limit = { has_character = CAN_andrew_mcnaughton }
+			CAN_andrew_mcnaughton = { remove_all_country_leader_roles = yes }
+		}
+	}
+	if = {
+		limit = { has_character = GBR_albert_windsor }
+		custom_effect_tooltip = tooltip_white_line
+		GBR_albert_windsor = {
+			set_character_name = GBR_albert_windsor
+			set_character_as_monarch = yes
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			set_nationality = GBR
+		}
+	}
+	if = {
+		limit = { has_character = GBR_louis_mountbatten }
+		custom_effect_tooltip = tooltip_white_line
+		GBR_louis_mountbatten = {
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			set_nationality = GBR
+		}
+	}
+	if = {
+		limit = { has_character = GBR_john_vereker }
+		custom_effect_tooltip = tooltip_white_line
+		GBR_john_vereker = {
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			set_nationality = GBR
+		}
+	}
+}
+
+CAN_king_becomes_unpopular = {
+	var:global.GBR_british_king = {
+		if = {
+			limit = { has_trait = GBR_popular_figurehead }
+			effect_tooltip = { remove_trait = { trait = GBR_popular_figurehead } }
+			hidden_effect = {
+				set_character_flag = GBR_remove_popular_figurehead
+				remove_trait = { trait = GBR_popular_figurehead ideology = social_democrat_subtype }
+				remove_trait = { trait = GBR_popular_figurehead ideology = social_liberal_subtype }
+				remove_trait = { trait = GBR_popular_figurehead ideology = market_liberal_subtype }
+				remove_trait = { trait = GBR_popular_figurehead ideology = social_conservative_subtype }
+				remove_trait = { trait = GBR_popular_figurehead ideology = authoritarian_democrat_subtype }
+				remove_trait = { trait = GBR_popular_figurehead ideology = paternal_autocrat_subtype }
+			}
+		}
+		else_if = {
+			limit = { has_trait = GBR_returning_king }
+			effect_tooltip = { remove_trait = { trait = GBR_returning_king } }
+			hidden_effect = {
+				clr_character_flag = GBR_has_returning_king
+				remove_trait = { trait = GBR_returning_king ideology = social_democrat_subtype }
+				remove_trait = { trait = GBR_returning_king ideology = social_liberal_subtype }
+				remove_trait = { trait = GBR_returning_king ideology = market_liberal_subtype }
+				remove_trait = { trait = GBR_returning_king ideology = social_conservative_subtype }
+				remove_trait = { trait = GBR_returning_king ideology = authoritarian_democrat_subtype }
+				remove_trait = { trait = GBR_returning_king ideology = paternal_autocrat_subtype }
+			}
+		}
+		else = {
+			effect_tooltip = { add_trait = { trait = GBR_unpopular_monarch } }
+			hidden_effect = {
+				set_character_flag = GBR_has_unpopular_monarch
+				add_trait = { trait = GBR_unpopular_monarch ideology = social_democrat_subtype }
+				add_trait = { trait = GBR_unpopular_monarch ideology = social_liberal_subtype }
+				add_trait = { trait = GBR_unpopular_monarch ideology = market_liberal_subtype }
+				add_trait = { trait = GBR_unpopular_monarch ideology = social_conservative_subtype }
+				add_trait = { trait = GBR_unpopular_monarch ideology = authoritarian_democrat_subtype }
+				add_trait = { trait = GBR_unpopular_monarch ideology = paternal_autocrat_subtype }
+			}
+		}
+	}
+}
+
+CAN_add_returning_king = {
+	var:global.GBR_british_king = {
+		if = {
+			limit = { has_trait = GBR_popular_figurehead }
+			set_character_flag = GBR_remove_popular_figurehead
+			remove_trait = { trait = GBR_popular_figurehead ideology = social_democrat_subtype }
+			remove_trait = { trait = GBR_popular_figurehead ideology = social_liberal_subtype }
+			remove_trait = { trait = GBR_popular_figurehead ideology = market_liberal_subtype }
+			remove_trait = { trait = GBR_popular_figurehead ideology = social_conservative_subtype }
+			remove_trait = { trait = GBR_popular_figurehead ideology = authoritarian_democrat_subtype }
+			remove_trait = { trait = GBR_popular_figurehead ideology = paternal_autocrat_subtype }
+		}
+		else_if = {
+			limit = { has_trait = GBR_unpopular_monarch }
+			clr_character_flag = GBR_has_unpopular_monarch
+			remove_trait = { trait = GBR_unpopular_monarch ideology = social_democrat_subtype }
+			remove_trait = { trait = GBR_unpopular_monarch ideology = social_liberal_subtype }
+			remove_trait = { trait = GBR_unpopular_monarch ideology = market_liberal_subtype }
+			remove_trait = { trait = GBR_unpopular_monarch ideology = social_conservative_subtype }
+			remove_trait = { trait = GBR_unpopular_monarch ideology = authoritarian_democrat_subtype }
+			remove_trait = { trait = GBR_unpopular_monarch ideology = paternal_autocrat_subtype }
+		}
+		set_character_flag = GBR_has_returning_king
+		add_trait = { trait = GBR_returning_king ideology = social_democrat_subtype }
+		add_trait = { trait = GBR_returning_king ideology = social_liberal_subtype }
+		add_trait = { trait = GBR_returning_king ideology = market_liberal_subtype }
+		add_trait = { trait = GBR_returning_king ideology = social_conservative_subtype }
+		add_trait = { trait = GBR_returning_king ideology = authoritarian_democrat_subtype }
+		add_trait = { trait = GBR_returning_king ideology = paternal_autocrat_subtype }
+	}
+}
+
+CAN_add_major_james_coldwell_sic = {
+	effect_tooltip = {
+		if = {
+			limit = {
+				CAN_is_dominion = yes
+				has_character = CAN_major_james_coldwell
+				CAN_major_james_coldwell = { is_second_in_command = no }
+			}
+			activate_advisor = CAN_major_james_coldwell_sic
+		}
+	}
+}
+
+CAN_add_mackenzie_king_sic = {
+	effect_tooltip = {
+		if = {
+			limit = {
+				CAN_is_dominion = yes
+				has_character = CAN_william_lyon_mackenzie_king
+				CAN_william_lyon_mackenzie_king = { is_second_in_command = no }
+			}
+			activate_advisor = CAN_william_lyon_mackenzie_king_sic
+		}
+	}
+}
+
+CAN_add_louis_st_laurent_sic = {
+	effect_tooltip = {
+		if = {
+			limit = {
+				CAN_is_dominion = yes
+				has_character = CAN_louis_st_laurent
+				CAN_louis_st_laurent = { is_second_in_command = no }
+			}
+			activate_advisor = CAN_louis_st_laurent_sic
+		}
+	}
+}
+
+CAN_add_conservative_second_in_command = {
+	effect_tooltip = {
+		if = {
+			limit = { CAN_is_dominion = yes }
+			if = {
+				limit = {
+					has_character = CAN_robert_manion
+					CAN_robert_manion = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_robert_manion_sic
+			}
+			else_if = {
+				limit = {
+					has_character = CAN_richard_bedford_bennett
+					CAN_richard_bedford_bennett = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_richard_bedford_bennett_sic
+			}
+			else_if = {
+				limit = {
+					has_character = CAN_john_bracken
+					CAN_john_bracken = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_john_bracken_sic
+			}
+		}
+	}
+	hidden_effect = {
+		if = {
+			limit = { CAN_is_dominion = yes }
+			if = {
+				limit = {
+					has_character = CAN_robert_manion
+					CAN_robert_manion = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_robert_manion_sic
+			}
+			else_if = {
+				limit = {
+					has_character = CAN_richard_bedford_bennett
+					CAN_richard_bedford_bennett = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_richard_bedford_bennett_sic
+			}
+			else_if = {
+				limit = {
+					has_character = CAN_john_bracken
+					CAN_john_bracken = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_john_bracken_sic
+			}
+		}
+	}
+}
+
+CAN_add_hugh_guthrie_sic = {
+	effect_tooltip = {
+		if = {
+			limit = {
+				CAN_is_dominion = yes
+				has_character = CAN_hugh_guthrie
+				CAN_hugh_guthrie = { is_second_in_command = no }
+			}
+			activate_advisor = CAN_hugh_guthrie_sic
+		}
+	}
+}
+
+CAN_add_correct_second_in_command = {
+	if = {
+		limit = { CAN_is_dominion = no }
+		activate_advisor = CAN_canadian_parliament_sic
+	}
+	else = {
+		if = {
+			limit = {
+				has_government = social_democrat
+				CAN_major_james_coldwell = { has_advisor_role = second_in_command }
+			}
+			activate_advisor = CAN_major_james_coldwell_sic
+		}
+		else_if = {
+			limit = {
+				has_government = social_liberal
+				CAN_louis_st_laurent = { has_advisor_role = second_in_command }
+			}
+			activate_advisor = CAN_louis_st_laurent_sic
+		}
+		else_if = {
+			limit = {
+				has_government = market_liberal
+				CAN_william_lyon_mackenzie_king = { has_advisor_role = second_in_command }
+			}
+			activate_advisor = CAN_william_lyon_mackenzie_king_sic
+		}
+		else_if = {
+			limit = { has_government = social_conservative }
+			if = {
+				limit = {
+					CAN_john_bracken = { can_be_country_leader = yes }
+					CAN_john_bracken = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_john_bracken_sic
+			}
+			else_if = {
+				limit = {
+					CAN_robert_manion = { can_be_country_leader = yes }
+					CAN_robert_manion = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_robert_manion_sic
+			}
+			else_if = {
+				limit = {
+					CAN_richard_bedford_bennett = { has_advisor_role = second_in_command }
+				}
+				activate_advisor = CAN_richard_bedford_bennett_sic
+			}
+			else = {
+				activate_advisor = CAN_canadian_parliament_sic
+			}
+		}
+		else_if = {
+			limit = {
+				has_government = authoritarian_democrat
+				CAN_hugh_guthrie = { has_advisor_role = second_in_command }
+			}
+			activate_advisor = CAN_hugh_guthrie_sic
+		}
+		else = {
+			activate_advisor = CAN_canadian_parliament_sic
+		}
+	}
+}
+
+CAN_convert_british_pm_slots = {
+	set_global_flag = GBR_british_pm_slot_changed
+	if = {
+		limit = { GBR_austen_chamberlain = { is_political_advisor = yes } }
+		hidden_effect = { deactivate_advisor = GBR_austen_chamberlain_advisor }
+		activate_advisor = GBR_austen_chamberlain_sic
+	}
+	else_if = {
+		limit = { GBR_anthony_eden = { is_political_advisor = yes } }
+		hidden_effect = { deactivate_advisor = GBR_anthony_eden_advisor }
+		activate_advisor = GBR_anthony_eden_sic
+	}
+	else_if = {
+		limit = { GBR_robert_gascoyne_cecil = { is_political_advisor = yes } }
+		hidden_effect = { deactivate_advisor = GBR_robert_gascoyne_cecil_advisor }
+		activate_advisor = GBR_robert_gascoyne_cecil_sic
+	}
+	else_if = {
+		limit = { GBR_robert_vansittart = { is_political_advisor = yes } }
+		hidden_effect = { deactivate_advisor = GBR_robert_vansittart_advisor }
+		activate_advisor = GBR_robert_vansittart_sic
+	}
+	else_if = {
+		limit = { GBR_henry_page_croft = { is_political_advisor = yes } }
+		hidden_effect = { deactivate_advisor = GBR_henry_page_croft_advisor }
+		activate_advisor = GBR_henry_page_croft_sic
+	}
+}
+
+CAN_revert_british_pm_slots = {
+	set_global_flag = GBR_british_pm_slot_changed
+	if = {
+		limit = { GBR_austen_chamberlain = { is_second_in_command = yes } }
+		hidden_effect = { CAN_add_correct_second_in_command = yes }
+		activate_advisor = GBR_austen_chamberlain_advisor
+	}
+	else_if = {
+		limit = { GBR_anthony_eden = { is_second_in_command = yes } }
+		hidden_effect = { CAN_add_correct_second_in_command = yes }
+		activate_advisor = GBR_anthony_eden_advisor
+	}
+	else_if = {
+		limit = { GBR_robert_gascoyne_cecil = { is_second_in_command = yes } }
+		hidden_effect = { CAN_add_correct_second_in_command = yes }
+		activate_advisor = GBR_robert_gascoyne_cecil_advisor
+	}
+	else_if = {
+		limit = { GBR_robert_vansittart = { is_second_in_command = yes } }
+		hidden_effect = { CAN_add_correct_second_in_command = yes }
+		activate_advisor = GBR_robert_vansittart_advisor
+	}
+	else_if = {
+		limit = { GBR_henry_page_croft = { is_second_in_command = yes } }
+		hidden_effect = { CAN_add_correct_second_in_command = yes }
+		activate_advisor = GBR_henry_page_croft_advisor
+	}
+}
+
+CAN_add_british_pm = {
+	hidden_effect = { CAN_remove_current_british_pm = yes }
+	if = {
+		limit = { GBR = { GBR_henry_page_croft = { is_character = var:global.GBR_prime_minister } } }
+		set_global_flag = GBR_cons_leader_croft
+		clr_global_flag = GBR_cons_leader_cecil
+		clr_global_flag = GBR_cons_leader_eden
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_henry_page_croft_sic
+		}
+		else = {
+			activate_advisor = GBR_henry_page_croft_advisor
+		}
+	}
+	else_if = {
+		limit = { GBR = { GBR_robert_gascoyne_cecil = { is_character = var:global.GBR_prime_minister } } }
+		clr_global_flag = GBR_cons_leader_croft
+		set_global_flag = GBR_cons_leader_cecil
+		clr_global_flag = GBR_cons_leader_eden
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_robert_gascoyne_cecil_sic
+		}
+		else = {
+			activate_advisor = GBR_robert_gascoyne_cecil_advisor
+		}
+	}
+	else_if = {
+		limit = { GBR = { GBR_anthony_eden = { is_character = var:global.GBR_prime_minister } } }
+		clr_global_flag = GBR_cons_leader_croft
+		clr_global_flag = GBR_cons_leader_cecil
+		set_global_flag = GBR_cons_leader_eden
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_anthony_eden_sic
+		}
+		else = {
+			activate_advisor = GBR_anthony_eden_advisor
+		}
+	}
+	else_if = {
+		limit = { GBR = { GBR_robert_vansittart = { is_character = var:global.GBR_prime_minister } } }
+		clr_global_flag = GBR_cons_leader_croft
+		clr_global_flag = GBR_cons_leader_cecil
+		clr_global_flag = GBR_cons_leader_eden
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_robert_vansittart_sic
+		}
+		else = {
+			activate_advisor = GBR_robert_vansittart_advisor
+		}
+	}
+	else = {
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_austen_chamberlain_sic
+		}
+		else = {
+			activate_advisor = GBR_austen_chamberlain_advisor
+		}
+	}
+}
+
+CAN_remove_current_british_pm = {
+	hidden_effect = { remove_ideas_with_trait = GBR_british_pm_in_exile }
+}
+
+CAN_activate_resources_decisions = {		# Used for american tags in annex canada event
+	if = {
+		limit = { 276 = { NOT = { has_state_flag = CAN_coal_mines_developed } } }
+		activate_targeted_decision = { target = 276 decision = CAN_develop_ontario_coal_mines }
+	}
+	if = {
+		limit = { 470 = { NOT = { has_state_flag = CAN_oil_wells_developed } } }
+		activate_targeted_decision = { target = 470 decision = CAN_develop_alberta_oil_wells }
+	}
+	if = {
+		limit = { 682 = { NOT = { has_state_flag = CAN_aluminium_mines_developed } } }
+		activate_targeted_decision = { target = 682 decision = CAN_develop_ontario_aluminium_mines }
+	}
+	if = {
+		limit = { 470 = { NOT = { has_state_flag = CAN_oil_wells_developed2 } } }
+		activate_targeted_decision = { target = 470 decision = CAN_develop_alberta_oil_wells2 }
+	}
+	if = {
+		limit = { 469 = { NOT = { has_state_flag = CAN_oil_wells_developed } } }
+		activate_targeted_decision = { target = 469 decision = CAN_develop_sask_oil_wells }
+	}
+	if = {
+		limit = { 471 = { NOT = { has_state_flag = CAN_oil_wells_developed } } }
+		activate_targeted_decision = { target = 471 decision = CAN_develop_yukon_oil_wells }
+	}
+	if = {
+		limit = { 332 = { NOT = { has_state_flag = CAN_tungsten_mines_developed } } }
+		activate_targeted_decision = { target = 332 decision = CAN_develop_quebec_tungsten_mines }
+	}
+	if = {
+		limit = { 465 = { NOT = { has_state_flag = CAN_tungsten_mines_developed } } }
+		activate_targeted_decision = { target = 465 decision = CAN_develop_newbrun_tungsten_mines }
+	}
+	if = {
+		limit = { 332 = { NOT = { has_state_flag = CAN_iron_mines_developed } } }
+		activate_targeted_decision = { target = 332 decision = CAN_develop_labrador_iron_mines }
+	}
+	if = {
+		limit = { 466 = { NOT = { has_state_flag = CAN_aluminium_mines_developed } } }
+		activate_targeted_decision = { target = 466 decision = CAN_develop_quebec_aluminium_mines }
+	}
+	if = {
+		limit = { 682 = { NOT = { has_state_flag = CAN_chromium_mines_developed } } }
+		activate_targeted_decision = { target = 682 decision = CAN_develop_ontario_chromium_mines }
+	}
+	if = {
+		limit = { 332 = { NOT = { has_state_flag = CAN_chromium_mines_developed } } }
+		activate_targeted_decision = { target = 332 decision = CAN_develop_quebec_chromium_mines }
+	}
+}
+
+CAN_setup_NEE_suppression_decisions = {
+	every_state = {
+		limit = { is_new_england = yes }
+		PREV = { activate_targeted_decision = { decision = CAN_put_down_rebellion target = PREV } }
+		WCA = { activate_targeted_decision = { decision = CAN_extend_yankee_rebellion target = PREV } }
+	}
+}
+
+CAN_teardown_NEE_suppression_decisions = {
+	every_state = {
+		limit = { is_new_england = yes }
+		PREV = { remove_targeted_decision = { decision = CAN_put_down_rebellion target = PREV } }
+	}
+}
+
+entente_add_reclamation_wars_threat = {
+	if = {
+		limit = { NOT = { has_global_flag = entente_reclamation_wars_threat } }
+		set_global_flag = entente_reclamation_wars_threat
+		ENT = {
+			add_named_threat = {
+				threat = 15
+				name = reclamation_wars_threat
+			}
+		}
+	}
+}
+
+CAN_add_starting_variants = {
+	if = {
+		limit = { has_dlc_nsb = yes }
+		create_equipment_variant = {
+			name = "A1 Light Tank"
+			type = light_tank_chassis_0
+			parent_version = 0
+			show_position = no
+			modules = {
+				main_armament_slot = tank_heavy_machine_gun
+				turret_type_slot = tank_light_one_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+			}
+			design_team = mio:IMP_canadian_car_organisation
+			obsolete = yes
+		}
+		create_equipment_variant = {
+			name = "A4 'Reliant' Mk. I"
+			type = light_tank_chassis_1
+			parent_version = 0
+			show_position = no
+			modules = {
+				main_armament_slot = tank_small_cannon
+				turret_type_slot = tank_light_one_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 2
+				tank_nsb_armor_upgrade = 1
+			}
+			obsolete = yes #used for oob
+			design_team = mio:IMP_canadian_car_organisation
+		}
+		create_equipment_variant = {
+			name = "A4 'Reliant' Mk. II"
+			type = light_tank_chassis_1
+			parent_version = 1
+			show_position = no
+			modules = {
+				main_armament_slot = tank_small_cannon
+				turret_type_slot = tank_light_two_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+				special_type_slot_2 = smoke_launchers
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 2
+				tank_nsb_armor_upgrade = 1
+			}
+			design_team = mio:IMP_canadian_car_organisation
+		}
+		create_equipment_variant = {
+			name = "A6 'Timberwolf'"
+			type = medium_tank_chassis_0
+			parent_version = 0
+			show_position = no
+			modules = {
+				main_armament_slot = tank_auto_cannon
+				turret_type_slot = tank_medium_three_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+				special_type_slot_2 = wet_ammo_storage
+			}
+			upgrades = {
+				tank_nsb_armor_upgrade = 1
+				tank_nsb_engine_upgrade = 4
+			}
+			design_team = mio:IMP_canadian_vickers_organisation
+		}
+		create_equipment_variant = {
+			name = "Vickers A1 'Independent'"
+			type = heavy_tank_chassis_1
+			show_position = no
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_close_support_gun
+				turret_type_slot = tank_medium_two_man_tank_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+				special_type_slot_2 = additional_machine_guns
+			}
+			design_team = mio:IMP_canadian_vickers_organisation
+		}
+	}
+
+	if = {
+		limit = { has_dlc_bba = yes }
+		### Obsolete planes
+		create_equipment_variant = {
+			name = "Gloster Gladiator"
+			type = small_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_4x		# 4 x .303 Browning
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			obsolete = yes
+			design_team = mio:IMP_gloster_organisation
+		}
+		### Small planes
+		create_equipment_variant = {
+			name = "Gloster Venom"
+			type = small_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_4x		# Imaginary - same as Bf.109
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:IMP_gloster_organisation
+		}
+		create_equipment_variant = {
+			name = "Fairey Battle"
+			type = small_plane_cas_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = bomb_locks
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:IMP_fairey_aviation_canada_organisation
+		}
+		create_equipment_variant = {
+			name = "Fairey Swordfish"
+			type = small_plane_naval_bomber_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = torpedo_mounting
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:IMP_bristol_organisation
+		}
+		### CV planes
+		create_equipment_variant = {
+			name = "Sea Venom"
+			type = cv_small_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_4x
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:IMP_gloster_organisation
+		}
+		create_equipment_variant = {
+			name = "Fairey Swordfish"
+			type = cv_small_plane_naval_bomber_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = torpedo_mounting
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:IMP_bristol_organisation
+		}
+		### Medium planes
+		create_equipment_variant = {
+			name = "Fairey Hendon"
+			type = medium_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay		# 753 kg bombs
+				fixed_auxiliary_weapon_slot_1 = empty
+				engine_type_slot = engine_1_2x
+				special_type_slot_1 = lmg_defense_turret
+			}
+			design_team = mio:IMP_avro_canada_organisation
+		}
+	}
+}
+
+AST_add_starting_variants = {
+	if = {
+		limit = { has_dlc_nsb = yes }
+		create_equipment_variant = {
+			name = "A1 Light Tank"
+			type = light_tank_chassis_0
+			parent_version = 0
+			show_position = no
+			modules = {
+				main_armament_slot = tank_heavy_machine_gun
+				turret_type_slot = tank_light_one_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+			}
+			design_team = mio:AST_new_south_wales_organisation
+			obsolete = yes
+		}
+		create_equipment_variant = {
+			name = "A4 'Reliant' Mk. I"
+			type = light_tank_chassis_1
+			parent_version = 0
+			show_position = no
+			modules = {
+				main_armament_slot = tank_small_cannon
+				turret_type_slot = tank_light_one_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 2
+				tank_nsb_armor_upgrade = 1
+			}
+			obsolete = yes #used for oob
+			design_team = mio:AST_new_south_wales_organisation
+		}
+		create_equipment_variant = {
+			name = "A4 'Reliant' Mk. II"
+			type = light_tank_chassis_1
+			parent_version = 1
+			show_position = no
+			modules = {
+				main_armament_slot = tank_small_cannon
+				turret_type_slot = tank_light_two_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+				special_type_slot_2 = smoke_launchers
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 2
+				tank_nsb_armor_upgrade = 1
+			}
+			design_team = mio:AST_new_south_wales_organisation
+		}
+		create_equipment_variant = {
+			name = "A6 'Timberwolf'"
+			type = medium_tank_chassis_0
+			parent_version = 0
+			show_position = no
+			modules = {
+				main_armament_slot = tank_auto_cannon
+				turret_type_slot = tank_medium_three_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+				special_type_slot_2 = wet_ammo_storage
+			}
+			upgrades = {
+				tank_nsb_armor_upgrade = 1
+				tank_nsb_engine_upgrade = 4
+			}
+			design_team = mio:AST_vickers_armstrong_organisation
+		}
+		create_equipment_variant = {
+			name = "Vickers A1 'Independent'"
+			type = heavy_tank_chassis_1
+			show_position = no
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_close_support_gun
+				turret_type_slot = tank_medium_two_man_tank_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+				special_type_slot_2 = additional_machine_guns
+			}
+			design_team = mio:AST_vickers_armstrong_organisation
+		}
+	}
+
+	if = {
+		limit = { has_dlc_bba = yes }
+		### Obsolete planes
+		create_equipment_variant = {
+			name = "Gloster Gladiator"
+			type = small_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_4x
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			obsolete = yes
+			design_team = mio:AST_government_aircraft_factories_organisation
+		}
+		### Small planes
+		create_equipment_variant = {
+			name = "Gloster Venom"
+			type = small_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_4x
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:AST_government_aircraft_factories_organisation
+		}
+		create_equipment_variant = {
+			name = "Fairey Battle"
+			type = small_plane_cas_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = bomb_locks
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:AST_government_aircraft_factories_organisation
+		}
+		create_equipment_variant = {
+			name = "Fairey Swordfish"
+			type = small_plane_naval_bomber_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = torpedo_mounting
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:AST_government_aircraft_factories_organisation
+		}
+		### CV planes
+		create_equipment_variant = {
+			name = "Sea Venom"
+			type = cv_small_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_4x
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:AST_government_aircraft_factories_organisation
+		}
+		create_equipment_variant = {
+			name = "Fairey Swordfish"
+			type = cv_small_plane_naval_bomber_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = torpedo_mounting
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:AST_government_aircraft_factories_organisation
+		}
+		### Medium planes
+		create_equipment_variant = {
+			name = "Fairey Hendon"
+			type = medium_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay		# 753 kg bombs
+				fixed_auxiliary_weapon_slot_1 = empty
+				engine_type_slot = engine_1_2x
+				special_type_slot_1 = lmg_defense_turret
+			}
+			design_team = mio:AST_government_aircraft_factories_organisation
+		}
+	}
+}
+
+CAN_enable_returning_home_decisions = {
+	activate_targeted_decision = { decision = CAN_attack_uob target = ENG }
+	activate_targeted_decision = { decision = CAN_attack_uob target = GBP }
+
+	activate_targeted_decision = { decision = CAN_all_hands_on_deck target = ENG }
+
+	if = {
+		limit = { has_completed_focus = CAN_contact_loyalists }
+		activate_targeted_decision = { decision = CAN_contact_british_loyalists target = ENG }
+		activate_targeted_decision = { decision = CAN_contact_northern_irish_loyalists target = IRE }
+		activate_targeted_decision = { decision = CAN_contact_northern_irish_loyalists target = ENG }
+	}
+
+	if = {
+		limit = { has_completed_focus = CAN_within_arms_reach }
+		activate_targeted_decision = { decision = CAN_bailout_iceland target = ICE }
+		activate_targeted_decision = { decision = CAN_fund_icelandic_resistance target = ICE }
+
+		activate_targeted_decision = { decision = CAN_approach_ireland target = IRE }
+		activate_targeted_decision = { decision = CAN_reconcile_with_ireland target = IRE }
+	}
+
+	activate_targeted_decision = { decision = CAN_seize_greenland target = DEN }
+	activate_targeted_decision = { decision = CAN_build_base_greenland target = 101 }
+}
+
+CAN_disable_returning_home_decisions = {
+	remove_targeted_decision = { decision = CAN_attack_uob target = ENG }
+	remove_targeted_decision = { decision = CAN_attack_uob target = GBP }
+
+	remove_targeted_decision = { decision = CAN_all_hands_on_deck target = ENG }
+
+	remove_targeted_decision = { decision = CAN_contact_british_loyalists target = ENG }
+	remove_targeted_decision = { decision = CAN_contact_northern_irish_loyalists target = IRE }
+	remove_targeted_decision = { decision = CAN_contact_northern_irish_loyalists target = ENG }
+
+	remove_targeted_decision = { decision = CAN_bailout_iceland target = ICE }
+	remove_targeted_decision = { decision = CAN_fund_icelandic_resistance target = ICE }
+
+	remove_targeted_decision = { decision = CAN_approach_ireland target = IRE }
+	remove_targeted_decision = { decision = CAN_reconcile_with_ireland target = IRE }
+
+	remove_targeted_decision = { decision = CAN_seize_greenland target = DEN }
+}
+
+CAN_spawn_loyalist_units = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_create_division_template
+			NAME = "Loyalist Rebels"
+			LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 9 }
+			SUPPORT_1 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+		}
+		if = {
+			limit = { has_template = "Loyalist Rebels" }
+			delete_unit_template_and_units = { division_template = "Loyalist Rebels" disband = yes } #no cheating
+		}
+		division_template = {
+			name = "Loyalist Rebels"
+			division_names_group = CAN_INF_01
+			is_locked = yes
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+				infantry = { x = 0 y = 2 }
+				infantry = { x = 1 y = 0 }
+				infantry = { x = 1 y = 1 }
+				infantry = { x = 1 y = 2 }
+				infantry = { x = 2 y = 0 }
+				infantry = { x = 2 y = 1 }
+				infantry = { x = 2 y = 2 }
+			}
+			support = {
+				artillery = { x = 0 y = 0 }
+			}
+			template_counter = 91
+		}
+	}
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_create_division_template
+			NAME = "Loyalist Mountaineers"
+			LINE_1 = { localization_key = line_battalion_tt NAME = mountaineers ICON = GFX_unit_mountaineers_icon_small COUNT = 6 }
+			SUPPORT_1 = { localization_key = support_battalion_tt NAME = recon ICON = GFX_unit_recon_icon_small }
+			SUPPORT_2 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+		}
+		if = {
+			limit = { has_template = "Loyalist Mountaineers" }
+			delete_unit_template_and_units = { division_template = "Loyalist Mountaineers" disband = yes } #no cheating
+		}
+		division_template = {
+			name = "Loyalist Mountaineers"
+			is_locked = yes
+			division_names_group = CAN_MTN_01
+			regiments = {
+				mountaineers = { x = 0 y = 0 }
+				mountaineers = { x = 0 y = 1 }
+				mountaineers = { x = 0 y = 2 }
+				mountaineers = { x = 1 y = 0 }
+				mountaineers = { x = 1 y = 1 }
+				mountaineers = { x = 1 y = 2 }
+			}
+			support = {
+				recon = { x = 0 y = 0 }
+				engineer = { x = 0 y = 1 }
+			}
+			priority = 2
+		}
+	}
+	if = {
+		limit = {
+			ENG = {
+				NOT = {
+					any_owned_state = {
+						OR = {
+							region = 1 #Southern England
+							region = 2 #Northern England
+						}
+						is_core_of = ENG
+						is_controlled_by = CAN
+					}
+				}
+				any_owned_state = {
+					region = 3 #Scotland
+					is_core_of = ENG
+					NOT = { state = 938 } #Orkney & Shetland
+					is_controlled_by = CAN
+				}
+			}
+		}
+		120 = { #Scottish Highlands
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_units
+					COUNT = 2
+					TYPE = "Loyalist Mountaineers"
+				}
+				create_unit = {
+					division = "name = \"1st Loyalist Elite Division\" division_template = \"Loyalist Mountaineers\" start_experience_factor = 1.0"
+					owner = PREV
+					prioritize_location = 131
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"2nd Loyalist Elite Division\" division_template = \"Loyalist Mountaineers\" start_experience_factor = 1.0"
+					owner = PREV
+					prioritize_location = 9090
+					allow_spawning_on_enemy_provs = yes
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_units
+					COUNT = 5
+					TYPE = "Loyalist Rebels"
+				}
+				create_unit = {
+					division = "name = \"1st Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 3159
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"2nd Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 9090
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"3rd Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 6205
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"4th Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 3159
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"5th Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 131
+					allow_spawning_on_enemy_provs = yes
+				}
+			}
+		}
+	}
+	else = {
+		128 = { #West Midlands
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_units
+					COUNT = 2
+					TYPE = "Loyalist Mountaineers"
+				}
+				create_unit = {
+					division = "name = \"1st Loyalist Elite Division\" division_template = \"Loyalist Mountaineers\" start_experience_factor = 1.0"
+					owner = PREV
+					prioritize_location = 3301
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"2nd Loyalist Elite Division\" division_template = \"Loyalist Mountaineers\" start_experience_factor = 1.0"
+					owner = PREV
+					prioritize_location = 3241
+					allow_spawning_on_enemy_provs = yes
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_units
+					COUNT = 4
+					TYPE = "Loyalist Rebels"
+				}
+				create_unit = {
+					division = "name = \"1st Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 6301
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"2nd Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 3241
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"3rd Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 6301
+					allow_spawning_on_enemy_provs = yes
+				}
+				create_unit = {
+					division = "name = \"4th Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 3301
+					allow_spawning_on_enemy_provs = yes
+				}
+			}
+		}
+		338 = { #Gloucestershire
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_unit
+					TYPE = "Loyalist Rebels"
+				}
+				create_unit = {
+					division = "name = \"5th Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+					owner = PREV
+					prioritize_location = 6378
+					allow_spawning_on_enemy_provs = yes
+				}
+			}
+		}
+	}
+	event_target:invasion_state = {
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_spawn_unit
+				TYPE = "Loyalist Mountaineers"
+			}
+			create_unit = {
+				division = "name = \"3rd Loyalist Elite Division\" division_template = \"Loyalist Mountaineers\" start_experience_factor = 1.0"
+				owner = ROOT
+			}
+		}
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_spawn_unit
+				TYPE = "Loyalist Rebels"
+			}
+			create_unit = {
+				division = "name = \"6th Loyalist Volunteers\" division_template = \"Loyalist Rebels\" start_experience_factor = 0.1"
+				owner = ROOT
+			}
+		}
+	}
+}
+
+CAN_set_republic_party_names = {
+	effect_tooltip = {
+		set_party_name = {
+			ideology = paternal_autocrat
+			name = CAN_united_empire_loyalist_party
+			long_name = CAN_united_empire_loyalist_party
+		}
+		set_party_name = {
+			ideology = authoritarian_democrat
+			name = CAN_authoritarian_democrat_party
+			long_name = CAN_authoritarian_democrat_party
+		}
+		set_party_name = {
+			ideology = social_conservative
+			name = CAN_social_conservative_party
+			long_name = CAN_social_conservative_party
+		}
+		set_party_name = {
+			ideology = market_liberal
+			name = CAN_market_liberal_party
+			long_name = CAN_market_liberal_party
+		}
+	}
+	hidden_effect = {
+		set_party_name = {
+			ideology = paternal_autocrat
+			long_name = CAN_united_empire_loyalist_party_long
+			name = CAN_united_empire_loyalist_party
+		}
+		set_party_name = {
+			ideology = authoritarian_democrat
+			long_name = CAN_authoritarian_democrat_party_long
+			name = CAN_authoritarian_democrat_party
+		}
+		set_party_name = {
+			ideology = social_conservative
+			long_name = CAN_social_conservative_party_long
+			name = CAN_social_conservative_party
+		}
+		set_party_name = {
+			ideology = market_liberal
+			long_name = CAN_market_liberal_party_long
+			name = CAN_market_liberal_party
+		}
+	}
+}
+
+CAN_add_to_ISAC = {
+	country_event = entente_events.15
+	hidden_effect = {
+		# adding to Entente Air Training Program
+		if = {
+			limit = {
+				ENT = { has_idea = CAN_air_training_plan_idea }
+			}
+			country_event = entente_events.211
+		}
+		# adding to GBR Five Eyes program
+		if = {
+			limit = {
+				GBR = {
+					exists = yes
+					has_completed_focus = GBR_five_eyes_program
+				}
+				num_of_civilian_factories > 5
+			}
+			country_event = united_kingdom_events.62
+		}
+		# adding to GBR Imperial Preference program
+		if = {
+			limit = {
+				GBR = {
+					exists = yes
+					has_completed_focus = GBR_imperial_preference
+				}
+				OR = {
+					CAN_is_commonwealth_tag = yes
+					is_subject_of = GBR
+				}
+			}
+			country_event = united_kingdom_events.64
+		}
+	}
+}
+
+CAN_temporarily_disable_annexations_britain_france = {
+	if = {
+		limit = {
+			FROM = { original_tag = FRA }
+			is_ally_with = GER
+			has_global_flag = GER_stay_out_france_uk
+			country_exists = ENT
+		}
+		every_owned_state = {
+			limit = {
+				is_mainland_france = yes
+				is_claim_or_core_of_ROOT = no
+			}
+			temporarily_disable_annexation = yes
+		}
+	}
+	if = {
+		limit = {
+			FROM = { original_tag = ENG }
+			is_ally_with = GER
+			has_global_flag = GER_stay_out_france_uk
+			country_exists = ENT
+		}
+		every_owned_state = {
+			limit = {
+				is_great_britain = yes
+				is_claim_or_core_of_ROOT = no
+			}
+			temporarily_disable_annexation = yes
+		}
+	}
+}

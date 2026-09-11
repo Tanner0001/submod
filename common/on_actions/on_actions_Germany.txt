@@ -1,0 +1,560 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			every_state = {
+				limit = { is_full_germany = yes }
+				if = {
+					limit = {
+						OR = {
+							is_germany = yes
+							state = 5 #East Prussia
+						}
+					}
+					GRU = { PREV = { enable_state_integration_50_compliance = yes } }
+					RHI = { PREV = { enable_state_integration_50_compliance = yes } }
+					PRE = { PREV = { enable_state_integration_50_compliance = yes } }
+					NGF = { PREV = { enable_state_integration_50_compliance = yes } }
+					BAY = { PREV = { enable_state_integration_50_compliance = yes } }
+				}
+				else = {
+					GRU = { PREV = { enable_state_integration_80_compliance = yes } }
+					RHI = { PREV = { enable_state_integration_80_compliance = yes } }
+					PRE = { PREV = { enable_state_integration_80_compliance = yes } }
+					NGF = { PREV = { enable_state_integration_80_compliance = yes } }
+					BAY = { PREV = { enable_state_integration_80_compliance = yes } }
+				}
+			}
+			GER = {
+				### Coalition ###
+				set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+				add_to_coalition = yes
+				set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+				add_to_coalition = yes
+				set_temp_variable = { coalition_partner_var = token:market_liberal }
+				add_to_coalition = yes
+
+				if = {
+					limit = { is_ai = no }
+					country_event = { id = germany_mitteleuropa_events.1000 days = 365 } #Mitteleuropa mechanics
+				}
+				else = {
+					country_event = germany_mitteleuropa_events.1000 #Mitteleuropa mechanics
+					every_country = {
+						limit = {
+							GER_is_in_mitteleuropa = yes
+							is_ai = no
+						}
+						country_event = { id = germany_mitteleuropa_events.1001 months = 3 random_days = 60 }
+					}
+				}
+				if = { #If NSB is active, replace starting heavy tanks with mediums
+					limit = { has_dlc_nsb = yes }
+					delete_unit_template_and_units = { division_template = "Panzer-Division" disband = no }
+					division_template = {
+						name = "Panzer-Division"
+						division_names_group = GER_TNK_01
+						regiments = {
+							medium_armor = { x = 0 y = 0 }
+							medium_armor = { x = 0 y = 1 }
+							medium_armor = { x = 0 y = 2 }
+							light_armor = { x = 1 y = 0 }
+							light_armor = { x = 1 y = 1 }
+							light_armor = { x = 1 y = 2 }
+							motorized = { x = 2 y = 0 }
+							motorized = { x = 2 y = 1 }
+							motorized = { x = 2 y = 2 }
+						}
+						support = {
+							mot_recon = { x = 0 y = 0 }
+						}
+					}
+					64 = {
+						create_unit = {
+							division = "name = \"1. Panzer-Division\" division_template = \"Panzer-Division\" start_experience_factor = 0.3"
+							owner = GER prioritize_location = 3499
+						}
+						create_unit = {
+							division = "name = \"2. Panzer-Division\" division_template = \"Panzer-Division\" start_experience_factor = 0.3"
+							owner = GER prioritize_location = 3499
+						}
+					}
+				}
+			}
+			every_country = {
+				limit = { has_socialist_government = yes }
+				every_other_country = {
+					limit = { is_ally_with = GER }
+					embargo_PREV = yes
+				}
+			}
+			every_country = {
+				limit = { is_ally_with = GER }
+				add_to_tech_sharing_group = german_research
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			if = {
+				limit = { is_germany_or_splinter_tag = yes }
+				country_event = { id = germany_puppet_events.1 days = 3 } #Rename Hindenburg
+				country_event = { id = germany_puppet_events.2 days = 3 } #Restore Hindenburg name
+			}
+
+			FROM = {
+				if = {
+					limit = {
+						tag = ENG
+						has_global_flag = GER_stay_out_france_uk
+					}
+					GER = { country_event = entente_events.323 }
+				}
+				if = {
+					limit = { tag = FRA }
+					GER = { country_event = { id = germany_events.56 days = 3 } }
+					if = {
+						limit = { has_global_flag = GER_stay_out_france_uk }
+						GER = { country_event = entente_events.322 }
+					}
+				}
+
+				if = {
+					limit = { original_tag = GER }
+					if = {
+						limit = { GER_is_in_mitteleuropa = yes }
+						every_country = { GER_remove_from_mitteleuropa = yes }
+					}
+					if = {
+						limit = { is_in_tech_sharing_group = german_research }
+						every_country = {
+							limit = { is_in_tech_sharing_group = german_research }
+							remove_from_tech_sharing_group = german_research
+						}
+					}
+					MAF = {
+						if = {
+							limit = { has_idea = GER_financing_colonies_received }
+							remove_ideas = GER_financing_colonies_received
+						}
+					}
+					GEA = {
+						if = {
+							limit = { has_idea = GER_financing_colonies_received }
+							remove_ideas = GER_financing_colonies_received
+						}
+					}
+				}
+				else = {
+					GER_remove_from_mitteleuropa = yes
+					if = {
+						limit = { is_in_tech_sharing_group = german_research }
+						remove_from_tech_sharing_group = german_research
+					}
+				}
+
+				if = {
+					limit = {
+						OR = {
+							tag = GER
+							tag = GEA
+						}
+					}
+					GER = {
+						every_controlled_state = {
+							limit = { has_dynamic_modifier = { modifier = GER_east_asian_naval_yards } }
+							remove_dynamic_modifier = { modifier = GER_east_asian_naval_yards }
+							add_to_temp_variable = { GEA_dockyards = GER_east_asian_slots }
+
+							set_temp_variable = { state_dockyards = GER_east_asian_slots }
+							multiply_temp_variable = { state_dockyards = -1 }
+							add_building_construction = { type = dockyard level = state_dockyards }
+
+							clear_variable = GER_east_asian_slots
+						}
+					}
+					GEA = { add_offsite_building = { type = dockyard level = GEA_dockyards } }
+					every_state = {
+						limit = { has_variable = GER_east_asian_slots }
+						clear_variable = GER_east_asian_slots #remove from non-controlled states
+					}
+				}
+
+				#ifs are needed to prevent on_remove from firing regardless of the idea being there
+				if = {
+					limit = { has_idea = GER_banned_tanks_planes }
+					remove_ideas = GER_banned_tanks_planes
+				}
+				if = {
+					limit = { has_idea = GER_light_industry_idea }
+					remove_ideas = GER_light_industry_idea
+				}
+				if = {
+					limit = { has_idea = GER_military_occupation }
+					remove_ideas = GER_military_occupation
+				}
+				if = {
+					limit = { has_idea = GER_military_occupation_2 }
+					remove_ideas = GER_military_occupation_2
+				}
+				if = {
+					limit = { has_idea = GER_military_occupation_3 }
+					remove_ideas = GER_military_occupation_3
+				}
+				if = {
+					limit = { has_idea = GER_military_occupation_4 }
+					remove_ideas = GER_military_occupation_4
+				}
+				if = {
+					limit = { has_idea = GER_military_occupation_5 }
+					remove_ideas = GER_military_occupation_5
+				}
+			}
+		}
+	}
+
+	# ROOT is the new faction leader FROM is the old faction leader
+	on_assume_faction_leadership = {
+		effect = {
+			FROM = {
+				if = {
+					limit = { original_tag = GER }
+					set_country_flag = was_faction_leader
+				}
+			}
+		}
+	}
+
+	on_ruling_party_change = {
+		effect = {
+			if = {
+				limit = { has_socialist_government = yes }
+				GER_remove_from_mitteleuropa = yes
+				every_other_country = {
+					limit = { is_ally_with = GER }
+					embargo_ROOT = yes
+				}
+			}
+			else = {
+				every_other_country = {
+					limit = { is_ally_with = GER }
+					clear_embargo_ROOT = yes
+				}
+				if = {
+					limit = {
+						has_country_flag = MIT_was_in_mitteleuropa
+						is_ally_with = GER
+						GER = { GER_is_in_mitteleuropa = yes }
+					}
+					GER_add_to_mitteleuropa = yes
+				}
+			}
+			if = {
+				limit = { is_germany_or_splinter_tag = yes }
+				country_event = { id = germany_puppet_events.1 days = 3 } #Rename Hindenburg
+				country_event = { id = germany_puppet_events.2 days = 3 } #Restore Hindenburg name
+			}
+		}
+	}
+
+	on_new_term_election = {
+		effect = {
+			### Germany ###
+			if = {
+				limit = { tag = GER }
+				if = {
+					limit = {
+						NOT = { has_completed_focus = GER_von_schleicher_cabinet }
+					}
+					country_event = germany_schleicher_events.1
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_war_with = INT
+							has_war_with = RUS
+						}
+					}
+					country_event = germany_flavour_events.28 #Election delayed by one year
+				}
+				else = {
+					country_event = germany_flavour_events.25 #Generic
+				}
+			}
+		}
+	}
+
+	#FROM is country getting invited.
+	on_offer_join_faction = {
+		effect = {
+			#Add embargoes
+			if = {
+				limit = { is_ally_with = GER }
+				every_country = {
+					limit = { has_socialist_government = yes }
+					embargo_FROM = yes
+				}
+			}
+
+			#Readd country that was previously in Mitteleuropa if they left and rejoined
+			if = {
+				limit = {
+					is_ally_with = GER
+					GER_is_in_mitteleuropa = yes
+					FROM = { has_country_flag = MIT_was_in_mitteleuropa }
+				}
+				FROM = { GER_add_to_mitteleuropa = yes }
+			}
+			#Country kicked out of Mitteleuropa if allied to a hostile faction
+			if = {
+				limit = {
+					FROM = {
+						NOT = { is_ally_with = GER } #just in case
+						is_country_in_faction_hostile_to_germany = yes
+					}
+				}
+				FROM = { GER_remove_from_mitteleuropa = yes }
+			}
+
+			### Remove Trade-War from SWE if rejoins Mitteleuropa
+			if = {
+				limit = {
+					FROM = { tag = SWE }
+					GER_is_in_mitteleuropa = yes
+				}
+				SWE = {
+					remove_opinion_modifier = {
+						target = GER
+						modifier = SWE_trade_war
+					}
+				}
+				GER = {
+					remove_opinion_modifier = {
+						target = SWE
+						modifier = SWE_trade_war
+					}
+				}
+			}
+		}
+	}
+
+	# FROM = faction leader
+	on_leave_faction = {
+		effect = {
+			if = {
+				limit = { FROM = { is_ally_with = GER } }
+				every_other_country = {
+					limit = { has_socialist_government = yes }
+					clear_embargo_ROOT = yes
+				}
+			}
+		}
+	}
+
+	#ROOT = attacking side
+	#FROM = defending side
+	#fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					GER = { GER_is_swr_path = yes }
+					OR = {
+						tag = FRA
+						tag = GER
+					}
+					FROM = {
+						OR = {
+							tag = FRA
+							tag = GER
+						}
+					}
+				}
+				GER = { country_event = { id = germany_flavour_events.97 days = 30 } }
+			}
+			if = {
+				limit = {
+					OR = {
+						is_ally_with = GER #== attacked by the Reichspakt
+						is_ally_with = MIT
+					}
+				}
+				FROM = { GER_kick_from_mitteleuropa = yes }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						FROM = { is_ally_with = GER } #== attacked the Reichspakt
+						FROM = { is_ally_with = MIT }
+					}
+				}
+				GER_kick_from_mitteleuropa = yes
+			}
+		}
+	}
+
+	on_state_control_changed = {
+		effect = {
+			# Add/remove GEA dockyards
+			if = {
+				limit = { FROM.FROM = { has_variable = GER_east_asian_slots } }
+				set_temp_variable = { GER_dockyards = FROM.FROM.GER_east_asian_slots }
+				multiply_temp_variable = { GER_dockyards = -1 }
+				if = {
+					limit = { tag = GER }
+					FROM.FROM = {
+						remove_building = { type = dockyard level = GER_dockyards }
+						add_dynamic_modifier = { modifier = GER_east_asian_naval_yards }
+					}
+					GEA = { add_offsite_building = { type = dockyard level = GER_dockyards } }
+				}
+				else = {
+					FROM.FROM = {
+						remove_dynamic_modifier = { modifier = GER_east_asian_naval_yards }
+						add_building_construction = { type = dockyard level = GER_dockyards }
+					}
+					multiply_temp_variable = { GER_dockyards = -1 }
+					GEA = { add_offsite_building = { type = dockyard level = GER_dockyards } }
+				}
+			}
+			# Liechtenstein reference
+			if = {
+				limit = {
+					tag = GER
+					FROM.FROM = { state = 942 }
+					owns_state = 942
+					OR = {
+						NOT = {
+							country_exists = SWI
+						}
+						SWI = {
+							has_socialist_government = yes
+						}
+						SWI = {
+							has_completed_focus = SWI_black_spot_of_europe
+						}
+					}
+				}
+				GER = {
+					country_event = { id = germany_flavour_events.85 days = 10 }
+				}
+			}
+			# secret
+			if = {
+				limit = {
+					tag = RUS
+					FROM.FROM = { state = 63 }
+					GER = { owns_state = 63 }
+				}
+				GER = { country_event = germany_flavour_events.69 }
+			}
+			# Deploy Operation Jacobus units
+			if = {
+				limit = {
+					OR = {
+						tag = GER
+						tag = ENT
+					}
+					has_war_with = ENG
+					FROM.FROM = { state = 121 }
+					GER = {
+						has_completed_focus = GER_operation_jacobus
+					}
+					NOT = {
+						has_global_flag = GER_jacobus_units_deployed
+					}
+				}
+				country_event = germany_foreign_events_new.71
+				set_global_flag = GER_jacobus_units_deployed
+			}
+			if = {
+				limit = {
+					tag = GER
+					has_war_with = FRA
+					surrender_progress > 0.4
+				}
+				country_event = germany_flavour_events.80
+			}
+			# German capitulation check
+			if = {
+				limit = {
+					FROM = {
+						is_ally_with = GER
+						is_major = yes
+						has_war_with = ROOT
+					}
+				}
+				GER = { country_event = capitulation_events.1 }
+			}
+		}
+	}
+
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = { is_germany_or_splinter_tag = yes }
+				country_event = { id = germany_puppet_events.1 days = 3 } #Rename Hindenburg
+				country_event = { id = germany_puppet_events.2 days = 3 } #Restore Hindenburg name
+			}
+			else_if = {
+				limit = { FROM = { is_germany_or_splinter_tag = yes } }
+				FROM = {
+					country_event = { id = germany_puppet_events.1 days = 3 } #Rename Hindenburg
+					country_event = { id = germany_puppet_events.2 days = 3 } #Restore Hindenburg name
+				}
+			}
+		}
+	}
+
+	on_peace = {
+		effect = {
+			### Remove GEA-INC war ideas
+			if = {
+				limit = { tag = GEA }
+				remove_ideas = {
+					GEA_vietcong_killer_idea
+					GEA_harassed_by_vc_idea
+				}
+			}
+
+			if = {
+				limit = { has_socialist_government = yes }
+				every_other_country = {
+					limit = { is_ally_with = GER }
+					embargo_ROOT = yes
+				}
+			}
+			else = {
+				every_other_country = {
+					limit = { is_ally_with = GER }
+					clear_embargo_ROOT = yes
+				}
+			}
+		}
+	}
+
+	on_daily_GER = {
+		effect = {
+			#Update Mitteleuropa GUI
+			if = {
+				limit = { MIT_is_active = yes }
+				MIT_recalculate_all_agenda_scores = yes
+				MIT_resort_agendas_based_on_score = yes
+				MIT_update_gui = yes
+			}
+		}
+	}
+
+	# called when a country activates its active cipher bonuses against a target
+	# scope is the target country
+	# from scope is the country that activates its bonuses
+	on_activated_active_decryption_bonuses = {
+		effect = {
+			if = {
+				limit = { has_idea = GER_enigma_rotors }
+				remove_ideas = GER_enigma_rotors # might add an event
+			}
+		}
+	}
+}

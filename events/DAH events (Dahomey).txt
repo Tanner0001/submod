@@ -1,0 +1,158 @@
+###########################
+# Dahomey Events
+###########################
+# By Dr. Njitram
+###########################
+
+add_namespace = dahomey_events
+
+country_event = { # Ask for French expertise
+	id = dahomey_events.001
+	title = dahomey_events.001.t
+	desc = dahomey_events.001.d
+
+	is_triggered_only = yes
+
+	option = { #Help feeding our country
+		log = "[GetLogInfo]: event dahomey_events.001 option dahomey_events.001.a"
+		name = dahomey_events.001.a
+		add_ideas = DAH_french_food
+	}
+	option = { #Help building civil production
+		log = "[GetLogInfo]: event dahomey_events.001 option dahomey_events.001.b"
+		name = dahomey_events.001.b
+		add_ideas = DAH_french_civil
+	}
+	option = { #Help building war machines
+		log = "[GetLogInfo]: event dahomey_events.001 option dahomey_events.001.c"
+		name = dahomey_events.001.c
+		add_ideas = DAH_french_war
+	}
+}
+
+country_event = { #French Opinion
+	id = dahomey_events.005
+	title = dahomey_events.005.t
+	desc = dahomey_events.005.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dahomey_events.005 option dahomey_events.005.a"
+		name = dahomey_events.005.a
+		add_political_power = 100
+	}
+}
+
+country_event = { #Getting Asked for Guns
+	id = dahomey_events.006
+	title = dahomey_events.006.t
+	desc = dahomey_events.006.d
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event dahomey_events.006 option dahomey_events.006.a"
+		name = dahomey_events.006.a
+		trigger = {
+			has_equipment = { infantry_equipment > 999 }
+		}
+		ai_chance = { base = 20 }
+		send_equipment = {
+			target = DAH
+			type = infantry_equipment
+			amount = 1000
+		}
+		FROM = { country_event = dahomey_events.007 }
+	}
+	option = { #meh
+		log = "[GetLogInfo]: event dahomey_events.006 option dahomey_events.006.b"
+		name = dahomey_events.006.b
+		trigger = {
+			has_equipment = { infantry_equipment > 499 }
+		}
+		ai_chance = { base = 50 }
+		send_equipment = {
+			target = DAH
+			type = infantry_equipment
+			amount = 500
+		}
+		FROM = { country_event = dahomey_events.008 }
+	}
+	option = { #no
+		log = "[GetLogInfo]: event dahomey_events.006 option dahomey_events.006.c"
+		name = dahomey_events.006.c
+		ai_chance = { base = 30 }
+		FROM = { country_event = dahomey_events.009 }
+	}
+}
+
+country_event = { #Their response - 1000 Guns
+	id = dahomey_events.007
+	title = dahomey_events.007.t
+	desc = dahomey_events.007.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dahomey_events.007 option dahomey_events.007.a"
+		name = dahomey_events.007.a
+		effect_tooltip = {
+			FROM = {
+				send_equipment = {
+					target = DAH
+					type = infantry_equipment
+					amount = 1000
+				}
+			}
+		}
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_approves_of_govt
+		}
+	}
+}
+
+country_event = { #Their response - 500 Guns
+	id = dahomey_events.008
+	title = dahomey_events.007.t
+	desc = dahomey_events.007.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dahomey_events.008 option dahomey_events.007.a"
+		name = dahomey_events.007.a
+		effect_tooltip = {
+			FROM = {
+				send_equipment = {
+					target = DAH
+					type = infantry_equipment
+					amount = 500
+				}
+			}
+		}
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_approves_of_govt
+		}
+	}
+}
+
+country_event = { #Their response - No Guns
+	id = dahomey_events.009
+	title = dahomey_events.007.t
+	desc = dahomey_events.009.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dahomey_events.009 option dahomey_events.009.a"
+		name = dahomey_events.009.a
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_displeased
+		}
+	}
+}
+

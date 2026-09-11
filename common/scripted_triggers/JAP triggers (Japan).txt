@@ -1,0 +1,305 @@
+#####################################
+# Triggers for Japan
+#####################################
+
+JAP_owns_korea = {
+	KOR = { all_core_state = { is_owned_and_controlled_by = ROOT } }
+}
+
+is_working_with_JAP = {
+	if = {
+		limit = {
+			FNG_JAP_hostile = no
+			FNG = { china_is_aligned_with_fengtian = yes }
+		}
+		OR = {
+			AND = {
+				china_is_aligned_with_fengtian = yes
+				is_subject = no
+			}
+			is_subject_of = FNG
+		}
+	}
+	else = {
+		is_in_faction_with = JAP
+	}
+}
+
+JAP_chinese_enemy_exists = {
+	country_exists = CHN
+	CHN = {
+		has_capitulated = no
+		NOT = { is_subject_of = JAP }
+		if = {
+			limit = { is_subject = yes }
+			overlord = { is_working_with_JAP = no }
+		}
+	}
+}
+
+is_co_prosperity_candidate = {
+	OR = {
+		tag = SIA
+		tag = BRM
+		AND = {
+			tag = PHI
+			OR = {
+				is_ally_with = JAP
+				NOT = { JAP = { has_completed_focus = JAP_philippines } }
+			}
+		}
+		tag = MAL
+		tag = INS
+		tag = INC
+		tag = VIN
+		tag = LAO
+		tag = CAM
+		tag = KAC
+		tag = SHA
+		tag = CEY
+		#tag = NEP #commenting out Nepal for now to avoid war with India
+		tag = SAR
+		AND = {
+			tag = HAW
+			OR = {
+				is_ally_with = JAP
+				NOT = { 629 = { is_claimed_by = JAP } }
+			}
+		}
+		AND = {
+			tag = KOR
+			is_ally_with = JAP
+		}
+		AND = {
+			is_indian_tag = yes
+			NOT = {
+				tag = RAJ
+				tag = PRF
+				tag = HND
+			}
+		}
+	}
+	exists = yes
+	has_socialist_government = no
+	NOT = { has_war_with = JAP }
+	OR = {
+		is_subject = no
+		is_subject_of = JAP
+	}
+}
+
+japan_tag_can_be_invited_to_economic_sphere = {
+	exists = yes
+	has_socialist_government = no
+	NOT = { has_war_with = ROOT }
+	is_in_same_economic_sphere_as_ROOT = no
+	NOT = { has_country_flag = JAP_was_invited_into_sphere }
+	OR = {
+		is_in_faction = no
+		is_in_faction_with = ROOT
+	}
+	OR = {
+		is_subject = no
+		is_subject_of = ROOT
+		overlord = { is_in_same_economic_sphere_as_ROOT = yes }
+	}
+	if = {
+		limit = {
+			OR = {
+				has_country_flag = JAP_refused_tokyo_conference
+				has_country_flag = JAP_refused_sphere_invitation
+			}
+		}
+		is_subject_of = ROOT
+	}
+	else_if = {
+		limit = { original_tag = AST }
+		OR = {
+			has_country_flag = AST_has_ties_with_japan
+			is_ally_with = ROOT
+		}
+	}
+	else_if = {
+		limit = { original_tag = NZL }
+		is_ally_with = ROOT
+	}
+	else_if = {
+		limit = { original_tag = PHI }
+		#PHI can only join JAP's economic sphere if they have cast their lot with Japan during the minigame (or got conquered)
+		is_ally_with = ROOT
+	}
+	else_if = {
+		limit = { original_tag = HAW }
+		OR = {
+			NOT = { 629 = { is_claimed_by = ROOT } }
+			is_ally_with = ROOT
+		}
+	}
+	else_if = {
+		limit = { original_tag = FNG }
+		has_idea = FNG_mantetsu_influence_idea
+	}
+	else_if = {
+		limit = {
+			OR = {
+				original_tag = NEP
+				original_tag = AFG
+				is_central_asian_tag = yes
+			}
+		}
+		any_neighbor_country = { is_ally_with = ROOT }
+	}
+	else_if = {
+		limit = { is_tag_in_china_area = yes }
+		OR = {
+			is_ally_with = ROOT
+			has_country_flag = tokyo_conference_trade_ally
+		}
+	}
+	else_if = {
+		limit = { is_indian_tag = yes }
+		is_ally_with = ROOT
+	}
+	else_if = {
+		limit = { has_country_flag = attended_tokyo_conference }
+		OR = {
+			has_country_flag = tokyo_conference_trade_ally
+			is_ally_with = ROOT
+		}
+	}
+	else = {
+		is_ally_with = ROOT
+		is_actual_major = no
+	}
+}
+
+JAP_can_join_rikagaku_kenkyusho = {
+	faction_leader = {
+		original_tag = JAP
+		is_in_tech_sharing_group = japan_research
+	}
+	NOT = { is_in_tech_sharing_group = japan_research }
+}
+
+### Focus available for democracy
+
+JAP_marlib_focus_available = {
+	OR = {
+		has_country_flag = JAP_elected_marlib
+		AND = {
+			has_country_flag = JAP_elected_autdem
+			custom_override_tooltip = {
+				tooltip = JAP_autdem_limit_tt
+				NOT = {
+					check_variable = { JAP_autdem_focus_variable > 3 }
+				}
+			}
+		}
+	}
+}
+
+JAP_soccon_focus_available = {
+	OR = {
+		has_country_flag = JAP_elected_soccon
+		AND = {
+			has_country_flag = JAP_elected_autdem
+			custom_override_tooltip = {
+				tooltip = JAP_autdem_limit_tt
+				NOT = {
+					check_variable = { JAP_autdem_focus_variable > 3 }
+				}
+			}
+		}
+	}
+}
+
+JAP_is_eligible_target_for_continental_warfare_trigger = {
+	NOT = {
+		AND = {
+			tag = FNG
+			FNG_JAP_hostile = no
+		}
+		AND = {
+			is_subject_of = FNG
+			FNG_JAP_hostile = no
+		}
+		is_ally_with = JAP
+		has_war_with = JAP #If they are already at war with Japan, this focus will unlock another front +/- trigger the united front.
+		is_working_with_JAP = yes #tags with this trigger are friendly to Japan and also can't join the United Front
+	}
+}
+
+JAP_war_planning_decision_target_trigger = {
+	can_declare_war_on = FROM
+	FROM = {
+		naval_base > 0
+		has_capitulated = no
+	}
+}
+
+JAP_war_planning_decision_cancel_trigger = {
+	OR = {
+		NOT = { can_declare_war_on = FROM }
+		FROM = { has_capitulated = yes }
+	}
+}
+
+JAP_war_planning_decision_cost = {
+	NOT = { command_power < var:JAP_CP_cost?50 }
+}
+
+JAP_fading_sun_korea_fully_controlled = {
+	custom_override_tooltip = {
+		tooltip = JAP_fading_sun_korea_fully_controlled_tt
+		KOR = { all_core_state = { controller = { is_ally_with = JAP } } }
+	}
+}
+
+JAP_fading_sun_manchuria_not_capitulated = {
+	if = {
+		limit = { MAN = { is_ally_with = JAP } }
+		MAN = { has_capitulated = no }
+	}
+	else_if = {
+		limit = { FNG = { is_ally_with = JAP } }
+		FNG = { has_capitulated = no }
+	}
+	else = {
+		hidden_trigger = { always = no }
+	}
+}
+
+JAP_fading_sun_far_eastern_republic_not_capitulated = {
+	if = {
+		limit = { FER = { is_ally_with = JAP } }
+		FER = { has_capitulated = no }
+	}
+	else = {
+		hidden_trigger = { always = no }
+	}
+}
+
+JAP_fading_sun_controls_major_chinese_city = {
+	custom_override_tooltip = {
+		tooltip = JAP_fading_sun_controls_major_chinese_city_tt
+		any_state_of = {
+			target = { 592 608 613 716 } #Guangzhou, Beijing, Nanjing, Shenyang
+			controller = { is_ally_with = JAP }
+		}
+	}
+}
+
+JAP_fading_sun_any_chinese_ally_not_capitulated = {
+	custom_override_tooltip = {
+		tooltip = JAP_fading_sun_any_chinese_ally_not_capitulated_tt
+		JAP = {
+			any_allied_country = {
+				custom_override_tooltip = {
+					tooltip = is_chinese_tag
+					is_tag_in_china_area = yes
+				}
+				has_capitulated = no
+			}
+		}
+	}
+}

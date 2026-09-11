@@ -1,0 +1,4803 @@
+###########################
+# Canada Decisions
+###########################
+
+CAN_political_decisions = {
+	CAN_enact_full_conscription = {
+		icon = GFX_decision_soldierly_discipline
+
+		allowed = { always = no } #activated by canada_events.59 or canada_events.68
+
+		available = {
+			has_war = yes
+			has_capitulated = no
+			enemies_strength_ratio > 0.75
+			NOT = { has_completed_focus = CAN_negotiate_with_duplessis }
+		}
+
+		visible = {
+			OR = {
+				has_idea = volunteer_only
+				has_idea = limited_conscription
+			}
+		}
+
+		target_trigger = {
+			OR = {
+				has_idea = volunteer_only
+				has_idea = limited_conscription
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_enact_full_conscription"
+			add_ideas = extensive_conscription
+			if = {
+				limit = { has_idea = volunteer_only }
+				set_temp_variable = { ideology_change_var = -0.1 }
+				change_ruling_party_popularity = yes
+			}
+			else = {
+				set_temp_variable = { ideology_change_var = -0.05 }
+				change_ruling_party_popularity = yes
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_enact_full_conscription target = FROM }
+			}
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 200
+				OR = {
+					has_war_with_major = yes
+					surrender_progress > 0.5
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_war_measures_act = {
+		icon = generic_civil_support
+
+		allowed = { always = no } #activated by canada_events.100
+
+		available = {
+			OR = {
+				has_idea = CAN_quebec_in_flames_idea
+				has_war_with_major = yes
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_war_measures_act"
+			add_ideas = CAN_war_measures_act_idea
+			if = {
+				limit = { has_war_with_major = no }
+				custom_effect_tooltip = tooltip_white_line
+				add_stability = -0.05
+				add_war_support = -0.05
+				set_temp_variable = { ideology_change_var = -0.05 }
+				change_ruling_party_popularity = yes
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = CAN_war_measures_act_war_tt
+			}
+		}
+
+		ai_will_do = {
+			factor = 200
+			modifier = {
+				factor = 0
+				has_war_with_major = no
+				has_elected_government = yes
+			}
+			modifier = { #Don't lock off last focus in Unionist tree by reducing party popularity
+				factor = 0
+				has_country_flag = CAN_unionist_ai
+				has_completed_focus = CAN_quell_regionalist_unrest
+				NOT = { has_completed_focus = CAN_consolidate_the_national_government }
+			}
+			modifier = {
+				factor = 4
+				has_country_flag = CAN_unionist_ai
+			}
+		}
+
+		fixed_random_seed = no
+	}
+
+	CAN_suppress_quebecois_state = {
+		icon = oppression
+
+		allowed = { always = no } #activated by canada_events.106 or canada_events.108
+
+		available = {
+			controls_state = FROM
+			NOT = { has_country_flag = CAN_suppress_in_progress }
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = { has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier } }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { owns_state = FROM }
+				NOT = { FROM = { has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier } } }
+			}
+		}
+
+		state_target = yes
+		target_trigger = {
+			owns_state = FROM
+			FROM = { has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier } }
+		}
+
+		modifier = {
+			stability_weekly = 0.005
+			political_power_cost = 0.10
+			conscription_factor = -0.10
+		}
+
+		days_remove = 30
+		priority = 10
+
+		ai_hint_pp_cost = 30
+		custom_cost_text = PP_30_infantry_equipment_500
+		custom_cost_trigger = {
+			NOT = { has_political_power < 30 }
+			NOT = { has_equipment = { infantry_equipment < 500 } }
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_suppress_quebecois_state"
+			clr_country_flag = CAN_suppress_in_progress
+			hidden_effect = {
+				add_political_power = 30
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 500
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_suppress_quebecois_state"
+			set_country_flag = { flag = CAN_suppress_in_progress days = 30 value = 1 }
+			hidden_effect = {
+				add_political_power = -30
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -500
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_suppress_quebecois_state"
+			clr_country_flag = CAN_suppress_in_progress
+			FROM = { CAN_reduce_quebecois_resistance = yes }
+		}
+
+		ai_will_do = { factor = 500 }
+		fixed_random_seed = no
+	}
+
+	CAN_emergency_draft = {
+		icon = generic_army_support
+		priority = 5
+
+		allowed = { always = no } #activated by CAN_a_second_unionist_government focus
+
+		available = {
+			has_war = yes
+		}
+
+		visible = {
+			has_authoritarian_government = yes
+			NOT = { country_exists = GBR }
+		}
+
+		cancel_trigger = {
+			OR = {
+				has_authoritarian_government = no
+				country_exists = GBR
+			}
+		}
+
+		target_trigger = {
+			has_authoritarian_government = yes
+			NOT = { country_exists = GBR }
+		}
+
+		cost = 25
+		days_remove = 30
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_emergency_draft"
+			hidden_effect = { add_political_power = 25 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_emergency_draft"
+			if = {
+				limit = { NOT = { has_idea = CAN_exiles_active_idea } }
+				add_ideas = CAN_exiles_active_idea
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_emergency_draft"
+			add_manpower = 50000
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				NOT = {
+					any_enemy_country = { is_actual_major = yes }
+					surrender_progress > 0.05
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_expand_conscription_policies = {
+		icon = GFX_decision_soldierly_discipline
+		priority = 5
+
+		allowed = { always = no } #activated by CAN_a_second_unionist_government focus
+
+		available = {
+			has_war = yes
+			OR = {
+				has_idea = extensive_conscription
+				has_idea = service_by_requirement
+				has_idea = all_adults_serve
+				has_idea = scraping_the_barrel
+			}
+		}
+
+		visible = {
+			has_authoritarian_government = yes
+			NOT = { has_idea = CAN_expanded_conscription_idea }
+			NOT = { tag = GBR }
+		}
+
+		target_trigger = {
+			has_authoritarian_government = yes
+		}
+
+		cost = 50
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_expand_conscription_policies"
+			add_ideas = CAN_expanded_conscription_idea
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				NOT = {
+					any_enemy_country = { is_actual_major = yes }
+					surrender_progress > 0.10
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					has_idea = CAN_all_hands_on_deck_idea
+					surrender_progress > 0.10
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_expand_secret_police = {
+		icon = oppression
+		priority = 5
+
+		allowed = { always = no } #activated by CAN_a_second_unionist_government focus
+
+		available = {
+			has_war = yes
+		}
+
+		visible = {
+			has_authoritarian_government = yes
+		}
+
+		target_trigger = {
+			has_authoritarian_government = yes
+		}
+
+		cost = 25
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_expand_secret_police"
+			if = {
+				limit = { has_idea = CAN_mounties_1 }
+				add_stability = 0.10
+				set_temp_variable = { ideology_change_var = -0.05 }
+				change_ruling_party_popularity = yes
+			}
+			else_if = {
+				limit = { has_idea = CAN_mounties_2 }
+				add_stability = 0.05
+				swap_ideas = {
+					remove_idea = CAN_mounties_2
+					add_idea = CAN_mounties_1
+				}
+				set_temp_variable = { ideology_change_var = -0.05 }
+				change_ruling_party_popularity = yes
+			}
+			else = {
+				add_ideas = CAN_mounties_1
+				set_temp_variable = { ideology_change_var = -0.1 }
+				change_ruling_party_popularity = yes
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_expand_secret_police target = FROM }
+			}
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				has_stability > 0.75
+			}
+			modifier = {
+				factor = 0.5
+				has_stability > 0.5
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_consolidate_power = {
+		icon = generic_civil_support
+
+		allowed = { always = no } #activated by CAN_assert_royal_prerogatives focus
+
+		available = {
+			hidden_trigger = {
+				NOT = { has_country_flag = CAN_royal_prerogative_active }
+			}
+		}
+
+		visible = {
+			has_government = paternal_autocrat
+			has_country_flag = KR_british_king_base
+		}
+
+		cancel_trigger = {
+			OR = {
+				has_authoritarian_government = no
+				NOT = { has_country_flag = KR_british_king_base }
+			}
+		}
+
+		target_trigger = {
+			has_government = paternal_autocrat
+			has_country_flag = KR_british_king_base
+		}
+
+		modifier = {
+			stability_weekly = -0.002
+			political_power_gain = 0.25
+		}
+
+		cost = 0
+		days_remove = 120
+		days_re_enable = 240
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_consolidate_power"
+			clr_country_flag = CAN_royal_prerogative_active
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_consolidate_power"
+			set_country_flag = { flag = CAN_royal_prerogative_active days = 120 value = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_consolidate_power"
+			clr_country_flag = CAN_royal_prerogative_active
+		}
+
+		ai_will_do = {
+			factor = 200
+			modifier = {
+				factor = 0
+				has_political_power > 100
+			}
+			modifier = {
+				factor = 0.2
+				has_political_power > 50
+			}
+			modifier = {
+				factor = 2
+				has_political_power < 0
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_increase_factory_prod = {
+		icon = generic_construction
+
+		allowed = { always = no } #activated by CAN_assert_royal_prerogatives focus
+
+		available = {
+			hidden_trigger = {
+				NOT = { has_country_flag = CAN_royal_prerogative_active }
+			}
+		}
+
+		visible = {
+			has_government = paternal_autocrat
+			has_country_flag = KR_british_king_base
+		}
+
+		cancel_trigger = {
+			OR = {
+				has_authoritarian_government = no
+				NOT = { has_country_flag = KR_british_king_base }
+			}
+		}
+
+		target_trigger = {
+			has_government = paternal_autocrat
+			has_country_flag = KR_british_king_base
+		}
+
+		modifier = {
+			stability_weekly = -0.002
+			industrial_capacity_factory = 0.15
+			industrial_capacity_dockyard = 0.15
+			repair_speed_factor = 0.15
+		}
+
+		cost = 50
+		days_remove = 120
+		days_re_enable = 240
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_increase_factory_prod"
+			clr_country_flag = CAN_royal_prerogative_active
+			hidden_effect = { add_political_power = 50 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_increase_factory_prod"
+			set_country_flag = { flag = CAN_royal_prerogative_active days = 120 value = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_increase_factory_prod"
+			clr_country_flag = CAN_royal_prerogative_active
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 2
+				has_war = yes
+				any_enemy_country = { is_actual_major = yes }
+			}
+			modifier = {
+				factor = 0
+				has_stability < 0.50
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_fund_the_military = {
+		icon = generic_tank
+
+		allowed = { always = no } #activated by CAN_assert_royal_prerogatives focus
+
+		available = {
+			hidden_trigger = {
+				NOT = { has_country_flag = CAN_royal_prerogative_active }
+			}
+		}
+
+		visible = {
+			has_government = paternal_autocrat
+			has_country_flag = KR_british_king_base
+			NOT = { tag = GBR }
+		}
+
+		cancel_trigger = {
+			OR = {
+				has_authoritarian_government = no
+				NOT = { has_country_flag = KR_british_king_base }
+			}
+		}
+
+		modifier = {
+			consumer_goods_factor = 0.2
+			command_power_gain = 0.5
+			training_time_army_factor = -0.10
+			army_morale_factor = 0.10
+			land_reinforce_rate = 0.10
+		}
+
+		cost = 50
+		days_remove = 120
+		days_re_enable = 240
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel CAN_fund_the_military"
+			clr_country_flag = CAN_royal_prerogative_active
+			hidden_effect = { add_political_power = 50 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_fund_the_military"
+			set_country_flag = { flag = CAN_royal_prerogative_active days = 120 value = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CAN_fund_the_military"
+			clr_country_flag = CAN_royal_prerogative_active
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_war = no
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+				any_enemy_country = { is_actual_major = yes }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_call_emergency_reserves = {
+		icon = GFX_decision_soldierly_discipline
+		priority = 10
+
+		allowed = { always = no } #activated by CAN_rally_the_country/CAN_darkest_hour idea on_add
+
+		available = {
+			surrender_progress > 0.4
+		}
+
+		visible = {
+			has_capitulated = no
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_call_emergency_reserves"
+			set_global_flag = CAN_call_emergency_reserves_completed
+			add_manpower = 50000
+			add_equipment_to_stockpile = { type = infantry_equipment_1 amount = 2500 producer = CAN }
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Reserve Division"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 6 }
+				}
+				if = {
+					limit = { has_template = "Reserve Division" }
+					delete_unit_template_and_units = { division_template = "Reserve Division" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Reserve Division"
+					division_names_group = CAN_INF_01
+					is_locked = yes
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+					}
+				}
+			}
+			random_core_state = {
+				limit = {
+					is_owned_and_controlled_by = ROOT
+					valid_state_for_spawning_friendly_unit = yes
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 5
+						TYPE = "Reserve Division"
+					}
+					create_unit = {
+						division = "name = \"1st Reserve Division\" division_template = \"Reserve Division\""
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2nd Reserve Division\" division_template = \"Reserve Division\""
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"3rd Reserve Division\" division_template = \"Reserve Division\""
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"4th Reserve Division\" division_template = \"Reserve Division\""
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"5th Reserve Division\" division_template = \"Reserve Division\""
+						owner = ROOT
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_call_emergency_reserves target = FROM }
+			}
+		}
+
+		ai_will_do = { factor = 300 }
+		fixed_random_seed = no
+	}
+
+	CAN_claim_alaska = {
+		icon = generic_nationalism
+
+		allowed = { always = no } #activated by canada_events.322
+
+		available = {
+			owns_state = 471 #Yukon
+			controls_all_owned_states = yes
+			is_in_faction = no
+		}
+
+		visible = {
+			FROM = { is_claim_or_core_of_ROOT = no }
+			is_subject = no
+		}
+
+		state_target = yes
+		target_trigger = {
+			FROM = { is_claim_or_core_of_ROOT = no }
+			is_subject = no
+		}
+
+		cost = 50
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10
+				OR = {
+					owns_state = FROM
+					has_subject = FROM.owner
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_claim_alaska"
+			add_state_claim = FROM
+			if = {
+				limit = { NOT = { owns_state = FROM } }
+				if = {
+					limit = { has_subject = FROM.owner }
+					transfer_state = FROM
+					FROM = { save_event_target_as = claimed_state }
+					var:FROM.owner = {
+						country_event = canada_events.324
+						add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+					}
+				}
+				else = {
+					var:FROM.owner = {
+						add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_claim_alaska target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_claim_washington = {
+		icon = generic_nationalism
+
+		allowed = { always = no } #activated by canada_events.322
+
+		available = {
+			owns_state = 473 #British Columbia
+			controls_all_owned_states = yes
+			is_in_faction = no
+		}
+
+		visible = {
+			FROM = { is_claim_or_core_of_ROOT = no }
+			is_subject = no
+		}
+
+		state_target = yes
+		target_trigger = {
+			FROM = { is_claim_or_core_of_ROOT = no }
+			is_subject = no
+		}
+
+		cost = 100
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10
+				OR = {
+					owns_state = FROM
+					has_subject = FROM.owner
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_claim_washington"
+			add_state_claim = FROM
+			if = {
+				limit = { NOT = { owns_state = FROM } }
+				if = {
+					limit = { var:FROM.owner = { is_american_tag = yes } }
+					var:FROM.owner = { add_state_claim = 473 } #British Columbia
+				}
+				if = {
+					limit = { has_subject = FROM.owner }
+					transfer_state = FROM
+					FROM = { save_event_target_as = claimed_state }
+					var:FROM.owner = {
+						country_event = canada_events.324
+						add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+					}
+				}
+				else = {
+					var:FROM.owner = {
+						add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_claim_washington target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_claim_maine = {
+		icon = generic_nationalism
+
+		allowed = { always = no } #activated by canada_events.322
+
+		available = {
+			owns_state = 465 #New Brunswick
+			controls_all_owned_states = yes
+			is_in_faction = no
+		}
+
+		visible = {
+			FROM = { is_claim_or_core_of_ROOT = no }
+			is_subject = no
+		}
+
+		state_target = yes
+		target_trigger = {
+			FROM = { is_claim_or_core_of_ROOT = no }
+			is_subject = no
+		}
+
+		cost = 100
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10
+				OR = {
+					owns_state = FROM
+					has_subject = FROM.owner
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_claim_maine"
+			add_state_claim = FROM
+			if = {
+				limit = { NOT = { owns_state = FROM } }
+				if = {
+					limit = { has_subject = FROM.owner }
+					transfer_state = FROM
+					FROM = { save_event_target_as = claimed_state }
+					var:FROM.owner = {
+						country_event = canada_events.324
+						add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+					}
+				}
+				else = {
+					var:FROM.owner = {
+						add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_claim_maine target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+economy_decisions = {
+	CAN_construct_1_civ_decision = { # 464, 468, 470, 473, activated by CAN_cn_rail_expansion/CAN_cp_rail_expansion
+		icon = GFX_decision_generic_factory
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		cost = 25
+		days_remove = 90
+		state_target = yes
+		ai_will_do = { factor = 200 }
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_construct_1_civ_decision"
+			add_political_power = 25
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_construct_1_civ_decision"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_construct_1_civ_decision"
+			FROM = {
+				clr_state_flag = CAN_construct_1_civ_decision
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_construct_1_civ_decision target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	CAN_construct_2_civ_decision = { # 276, 832, activated by CAN_crown_corporations
+		icon = GFX_decision_factories
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		cost = 50
+		days_remove = 90
+		state_target = yes
+		ai_will_do = { factor = 200 }
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_construct_2_civ_decision"
+			add_political_power = 50
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_construct_2_civ_decision"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_construct_2_civ_decision"
+			FROM = {
+				clr_state_flag = CAN_construct_2_civ_decision
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_construct_2_civ_decision target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	CAN_construct_1_mil_decision = { # 466, 467, 465, 331, 682 activated by CAN_new_munitions_plants/CAN_munitions_industry
+		icon = GFX_decision_ger_military_buildup
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		cost = 25
+		days_remove = 90
+		state_target = yes
+		ai_will_do = { factor = 200 }
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_construct_1_mil_decision"
+			add_political_power = 25
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_construct_1_mil_decision"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_construct_1_mil_decision"
+			FROM = {
+				clr_state_flag = CAN_construct_1_mil_decision
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_construct_1_mil_decision target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	CAN_construct_2_mil_decision = { # 739, activated by CAN_crown_corporations
+		icon = GFX_decision_ger_military_buildup
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		cost = 50
+		days_remove = 90
+		state_target = yes
+		ai_will_do = { factor = 200 }
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_construct_2_mil_decision"
+			add_political_power = 50
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_construct_2_mil_decision"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_construct_2_mil_decision"
+			FROM = {
+				clr_state_flag = CAN_construct_2_mil_decision
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_construct_2_mil_decision target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	CAN_construct_dockyard_decision = { # 466, 331, 740, 473, 464, activated by CAN_davie_shipbuilding
+		icon = GFX_decision_generic_merge_plant_ship
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		cost = 25
+		days_remove = 90
+		state_target = yes
+		ai_will_do = { factor = 200 }
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_construct_dockyard_decision"
+			add_political_power = 25
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_construct_dockyard_decision"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_construct_dockyard_decision"
+			FROM = {
+				clr_state_flag = CAN_construct_dockyard_decision
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_construct_dockyard_decision target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+foreign_support = {
+	CAN_meet_with_germany = {
+		icon = generic_agreement
+
+		allowed = {
+			OR = {
+				original_tag = IMP
+				tag = NFA
+			}
+		}
+
+		available = {
+			has_war_with = FRA
+			has_capitulated = no
+		}
+
+		visible = {
+			is_faction_leader = yes
+			INT = {
+				is_faction_leader = yes
+				has_war_with = ROOT
+			}
+			FROM = {
+				is_faction_leader = yes
+				has_war_with = INT
+			}
+			OR = {
+				is_in_faction_with = IMP
+				is_in_faction_with = NFA
+			}
+			NOT = {
+				has_global_flag = CAN_met_with_germany
+				has_war_with = FROM
+			}
+		}
+
+		priority = 10
+		cost = 0
+		fire_only_once = yes
+
+		target_root_trigger = { is_faction_leader = yes }
+		targets = { GER }
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				has_war_with = INT
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_meet_with_germany"
+			set_global_flag = CAN_met_with_germany
+			FROM = { country_event = entente_events.300 }
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_access_to_portugal = {
+		icon = generic_naval
+		allowed = { tag = ENT }
+
+		available = {
+			any_state_of = {
+				target = { 540 544 }
+				is_owned_and_controlled_by = FROM
+			}
+		}
+
+		visible = {
+			has_war_with = SAF
+			is_monarchy = yes
+			is_subject = no
+			is_in_faction = yes
+			FROM = {
+				owns_any_state_of = {
+					540 #Loanda
+					544 #Moçambique
+				}
+				is_subject = no
+				NOT = {
+					tag = ROOT
+					is_in_faction_with = ROOT
+					gives_military_access_to = ROOT
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		priority = 5
+		cost = 0
+		fire_only_once = yes
+
+		target_root_trigger = { has_war_with = SAF }
+		targets = { POR }
+		target_trigger = {
+			FROM = {
+				owns_any_state_of = {
+					540 #Loanda
+					544 #Moçambique
+				}
+				is_subject = no
+				NOT = {
+					tag = ROOT
+					is_in_faction_with = ROOT
+					gives_military_access_to = ROOT
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_access_to_portugal"
+			FROM = { country_event = entente_events.275 }
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+}
+
+CAN_returning_home_decisions = {
+	CAN_attack_uob = {
+		icon = generic_tank
+		priority = 100
+
+		available = {
+			has_completed_focus = CAN_project_plough
+			OR = {
+				threat > 0.75
+				FROM = { has_war_with = GER }
+				NOT = { country_exists = GER }
+			}
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_truce_with = FROM }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			NOT = { has_wargoal_against = FROM }
+			is_monarchy = yes
+			is_subject = no
+			NOT = { country_exists = GBR }
+		}
+
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		targets = { ENG GBP }
+		target_trigger = {
+			can_declare_war_on = FROM
+			NOT = { has_wargoal_against = FROM }
+			is_monarchy = yes
+			is_subject = no
+		}
+
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger = yes }
+				if = {
+					limit = { FROM = { original_tag = ENG } }
+					date < 1941.1.1
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					original_tag = ENG
+					has_war_with_major = no
+					surrender_progress < 0.5
+				}
+				OR = {
+					NOT = { has_completed_focus = CAN_economic_recovery }
+					NOT = { has_completed_focus = CAN_deal_with_admiralty }
+					NOT = { has_completed_focus = CAN_new_munitions_plants }
+					NOT = { has_completed_focus = CAN_contact_loyalists }
+					NOT = { has_tech = mtg_transport }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					original_tag = ENG
+					surrender_progress < 0.5
+				}
+				OR = {
+					#help NEE unite America first
+					AND = {
+						is_ally_with = NEE
+						OR = {
+							has_global_flag = CAN_supports_NEE
+							NEE = { has_country_flag = NEE_claimed_america }
+						}
+						NOT = { has_country_flag = CAN_white_peaced_ACW }
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+					#help USA unite America first
+					AND = {
+						has_global_flag = CAN_supports_USA
+						country_exists = USA
+						NOT = { has_country_flag = CAN_white_peaced_ACW }
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+					#help ACC unite America first
+					AND = {
+						has_global_flag = CAN_supports_ACC
+						country_exists = ACC
+						NOT = { has_country_flag = CAN_white_peaced_ACW }
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+					#help APG unite America first
+					AND = {
+						has_global_flag = CAN_supports_APG
+						country_exists = APG
+						NOT = { has_country_flag = CAN_white_peaced_ACW }
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { is_ally_with = GER }
+				has_game_rule = { rule = RSA_forpol option = RSA_FORPOL_ENT }
+				NOT = { is_in_faction_with = RSA }
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = tilsit_peace_success
+				RUS = { NOT = { has_war_with = INT } }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_attack_uob"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_attack_uob"
+			add_war_support = 0.05
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_attack_uob"
+			log = "KR_Event_Logging;ENTENTE ENTERS 2WK"
+			clear_decision_attack_AI = yes
+			set_global_flag = entente_reclamation_wars_threat
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			add_named_threat = {
+				threat = 15
+				name = CAN_return_home_war_threat
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						FROM = {
+							tag = ENG
+							has_war_with = GER
+						}
+					}
+					news_event = { id = world_news_events.471 days = 1 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_all_hands_on_deck = {
+		icon = GFX_decision_soldierly_discipline
+
+		available = {
+			has_war_with = ENG
+			OR = {
+				has_idea = extensive_conscription
+				has_idea = service_by_requirement
+				has_idea = all_adults_serve
+				has_idea = scraping_the_barrel
+			}
+		}
+
+		visible = {
+			is_monarchy = yes
+			NOT = {
+				country_exists = GBR
+				has_idea = CAN_rally_the_country
+				has_idea = CAN_all_hands_on_deck_idea
+			}
+		}
+
+		fire_only_once = no
+		cost = 50
+		priority = 10
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_all_hands_on_deck"
+			add_ideas = CAN_all_hands_on_deck_idea
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_manpower > 100000
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_contact_british_loyalists = {
+		icon = eng_support_imperialist_coup
+		priority = 9
+
+		allowed = { always = no } #activated by CAN_contact_loyalists focus
+
+		available = {
+			has_war_with = FROM
+			has_capitulated = no
+			custom_override_tooltip = {
+				tooltip = CAN_controls_state_uob
+				FROM = {
+					any_core_state = {
+						is_controlled_by = ROOT
+						is_coastal = yes
+						is_island_state = no
+					}
+				}
+			}
+		}
+
+		visible = {
+			is_monarchy = yes
+			FROM = {
+				exists = yes
+				has_socialist_government = yes
+			}
+		}
+
+		target_trigger = {
+			FROM = { has_socialist_government = yes }
+		}
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_contact_british_loyalists"
+			add_manpower = 125000
+			country_event = canada_events.175
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_contact_northern_irish_loyalists = {
+		icon = eng_support_imperialist_coup
+		priority = 8
+
+		allowed = { always = no } #activated by CAN_contact_loyalists focus
+
+		available = {
+			has_war_with = FROM
+			has_capitulated = no
+			FROM = { controls_state = 119 }
+		}
+
+		visible = {
+			FROM = { owns_state = 119 }
+			is_monarchy = yes
+			is_subject = no
+			NOT = { country_exists = GBR }
+		}
+
+		target_trigger = {
+			has_country_flag = CAN_contacting_northern_loyalists
+			FROM = { has_socialist_government = yes }
+			is_monarchy = yes
+			is_subject = no
+			NOT = { country_exists = GBR }
+		}
+
+		custom_cost_text = 2000_guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 2000 } }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_contact_northern_irish_loyalists"
+			clr_country_flag = CAN_contacting_northern_loyalists
+			effect_tooltip = {
+				NIR = {
+					declare_war_on = {
+						target = IRE
+						type = annex_everything
+					}
+				}
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -2000
+			}
+			hidden_effect = {
+				country_event = { id = canada_events.177 days = 1 }
+			}
+		}
+
+		ai_will_do = { factor = 0 }
+		fixed_random_seed = no
+	}
+
+	CAN_approach_ireland = {
+		icon = generic_agreement
+		priority = 5
+
+		allowed = { always = no } #activated by CAN_enable_returning_home_decisions scripted effect
+
+		available = {
+			surrender_progress < 0.20
+		}
+
+		visible = {
+			is_monarchy = yes
+			is_subject = no
+			is_in_faction = yes
+			NOT = { country_exists = GBR }
+			FROM = {
+				is_in_faction_with = GER
+				is_subject = no
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+				NOT = { gives_military_access_to = ROOT }
+			}
+		}
+
+		cost = 50
+
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = GER
+				is_subject = no
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+				NOT = { gives_military_access_to = ROOT }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_approach_ireland"
+			FROM = { country_event = { id = canada_events.155 days = 3 } }
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_approach_ireland target = FROM }
+			}
+		}
+
+		ai_will_do = { factor = 25 }
+		fixed_random_seed = no
+	}
+
+	CAN_reconcile_with_ireland = {
+		icon = generic_agreement
+		priority = 5
+
+		allowed = { always = no } #activated by CAN_enable_returning_home_decisions scripted effect
+
+		available = {
+			surrender_progress < 0.20
+			threat > 0.65
+		}
+
+		visible = {
+			has_completed_focus = CAN_within_arms_reach
+			has_country_flag = CAN_considering_alliance_ireland
+			is_monarchy = yes
+			is_subject = no
+			is_in_faction = yes
+			NOT = { country_exists = GBR }
+			FROM = {
+				exists = yes
+				IRE_has_parliamentary_govt = yes
+				is_subject = no
+				is_in_faction = no
+				has_socialist_government = no
+				at_peace_or_same_enemies_as_ROOT = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		target_trigger = {
+			FROM = {
+				is_subject = no
+				is_in_faction = no
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_reconcile_with_ireland"
+			FROM = { country_event = { id = canada_events.151 days = 3 } }
+			custom_effect_tooltip = if_they_accept_tt
+			custom_effect_tooltip = IRE_join_entente_tt
+			effect_tooltip = {
+				ROOT = { add_to_faction = FROM }
+			}
+			hidden_effect = {
+				IRE = { set_country_flag = IRE_joining_faction }
+				remove_targeted_decision = { decision = CAN_reconcile_with_ireland target = FROM }
+			}
+		}
+
+		### Only for human-led CAN, since IRE can join ENT through its own content anyway
+		ai_will_do = { factor = 0 }
+		fixed_random_seed = no
+	}
+
+	CAN_bailout_iceland = {
+		icon = generic_agreement
+		priority = 5
+
+		allowed = { always = no } #activated by CAN_enable_returning_home_decisions scripted effect or CAN_within_arms_reach focus
+
+		available = {
+			has_completed_focus = CAN_economic_recovery
+			surrender_progress < 0.20
+			FROM = { has_war = no }
+		}
+
+		visible = {
+			FROM = {
+				exists = yes
+				is_subject = no
+				is_in_faction = no
+				has_socialist_government = no
+				OR = {
+					has_idea = ICE_failing_economy
+					has_idea = ICE_recovering_economy_1
+					has_idea = ICE_recovering_economy_2
+					has_idea = ICE_recovering_economy_3
+					has_idea = ICE_recovering_economy_4
+					has_idea = ICE_recovering_economy_5
+					has_idea = ICE_recovering_economy_6
+				}
+				NOT = {
+					has_country_flag = ICE_expanded_fishing
+					gives_military_access_to = ROOT
+					has_war_with = ROOT
+				}
+			}
+			is_in_faction = yes
+			is_monarchy = yes
+			is_subject = no
+			NOT = { country_exists = GBR }
+		}
+
+		cost = 100
+
+		target_trigger = {
+			FROM = {
+				is_subject = no
+				is_in_faction = no
+				has_socialist_government = no
+				OR = {
+					has_idea = ICE_failing_economy
+					has_idea = ICE_recovering_economy_1
+					has_idea = ICE_recovering_economy_2
+					has_idea = ICE_recovering_economy_3
+					has_idea = ICE_recovering_economy_4
+					has_idea = ICE_recovering_economy_5
+					has_idea = ICE_recovering_economy_6
+				}
+				NOT = {
+					has_country_flag = ICE_expanded_fishing
+					gives_military_access_to = ROOT
+					has_war_with = ROOT
+				}
+			}
+			is_in_faction = yes
+			is_monarchy = yes
+			is_subject = no
+			NOT = { country_exists = GBR }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_bailout_iceland"
+			FROM = { country_event = canada_events.170 }
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_bailout_iceland target = FROM }
+			}
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				IRE = {
+					OR = {
+						is_in_faction_with = ROOT
+						gives_military_access_to = ROOT
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_fund_icelandic_resistance = {
+		icon = generic_agreement
+
+		allowed = { always = no } #activated by CAN_enable_returning_home_decisions scripted effect or CAN_within_arms_reach focus
+
+		visible = {
+			FROM = {
+				is_subject_of = ENG
+				is_ai = yes
+			}
+			is_monarchy = yes
+			is_subject = no
+			NOT = { country_exists = GBR }
+		}
+
+		priority = 5
+		cost = 50
+		days_re_enable = 120
+
+		target_trigger = {
+			FROM = {
+				is_subject_of = ENG
+				is_ai = yes
+			}
+			is_monarchy = yes
+			is_subject = no
+			NOT = { country_exists = GBR }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_fund_icelandic_resistance"
+			FROM = { country_event = canada_events.173 }
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_fund_icelandic_resistance target = FROM }
+			}
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				IRE = {
+					OR = {
+						is_in_faction_with = ROOT
+						gives_military_access_to = ROOT
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_seize_greenland = {
+		icon = generic_tank
+
+		allowed = { always = no } #activated by CAN_enable_returning_home_decisions scripted effect
+
+		available = {
+			controls_all_owned_states = yes
+			FROM = {
+				OR = {
+					has_socialist_government = yes
+					has_war_with = GER
+					has_capitulated = yes
+				}
+			}
+		}
+
+		visible = {
+			is_monarchy = yes
+			is_subject = no
+			can_declare_war_on = FROM
+			FROM = { owns_state = 101 } #Coastal Greenland
+		}
+
+		targets = { DEN }
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = { owns_state = 101 } #Coastal Greenland
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_seize_greenland"
+			FROM = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							state = 100 #Iceland
+							state = 101 #Greenland
+							state = 337 #Faroe Islands
+							state = 926 #Humboldt Glacier
+						}
+					}
+					transfer_state_to = ROOT
+				}
+				country_event = canada_events.231
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_seize_greenland target = FROM }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_build_base_greenland = {
+		icon = generic_naval
+
+		allowed = { always = no } #activated by CAN_enable_returning_home_decisions scripted effect
+
+		available = {
+			controls_state = FROM
+		}
+
+		visible = {
+			FROM = {
+				is_owned_by = ROOT
+				naval_base < 8
+			}
+			is_monarchy = yes
+			is_subject = no
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { FROM = { is_owned_and_controlled_by = ROOT } }
+				is_monarchy = no
+				is_subject = yes
+			}
+		}
+
+		target_trigger = {
+			FROM = {
+				is_owned_by = ROOT
+				naval_base < 8
+			}
+			is_monarchy = yes
+			is_subject = no
+		}
+
+		cost = 40
+		days_remove = 90
+		state_target = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_build_base_greenland"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_build_base_greenland"
+			FROM = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 3
+						province = 13601
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 3
+						VP = 13601
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_build_base_greenland target = FROM }
+			}
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				OR = {
+					owns_state = 100
+					is_ally_with = ICE
+					is_ally_with = IRE
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CAN_kings_influence_decisions = {
+	CAN_royal_speech = {
+		icon = hol_radio_oranje
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = CAN_king_not_busy
+				NOT = { has_global_flag = { flag = CAN_king_busy value > 0 } }
+			}
+			custom_override_tooltip = {
+				tooltip = CAN_king_speech_one_year
+				OR = {
+					NOT = { has_global_flag = CAN_gave_royal_speech }
+					has_global_flag = { flag = CAN_gave_royal_speech days > 364 }
+				}
+			}
+			if = {
+				limit = { has_war = yes }
+				has_capitulated = no
+			}
+		}
+
+		visible = {
+			is_in_faction_with = ENT
+		}
+
+		cancel_trigger = {
+			has_country_flag = CAN_visit_cancel
+		}
+
+		cost = 25
+		days_remove = 30
+		fire_only_once = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_royal_speech"
+			clr_global_flag = CAN_king_busy
+			clr_country_flag = CAN_visit_cancel
+			set_global_flag = { flag = CAN_king_busy days = 31 value = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CAN_royal_speech"
+			if = {
+				limit = { has_country_flag = KR_british_king_base }
+				custom_effect_tooltip = CAN_adds_ws_based_on_pop
+				clr_global_flag = CAN_gave_royal_speech
+				set_global_flag = CAN_gave_royal_speech
+				hidden_effect = { country_event = entente_events.20 }
+			}
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					AND = {
+						tag = GBR
+						NOT = { has_country_flag = CAN_speech_home_isles }
+					}
+					AND = {
+						has_war_with = ENG
+						NOT = { has_country_flag = CAN_speech_war_eng }
+					}
+					AND = {
+						has_war_with = GER
+						NOT = { has_country_flag = CAN_speech_war_ger }
+					}
+					AND = {
+						OR = {
+							has_war_with = USA
+							has_war_with = WCA
+							has_war_with = APG
+							has_war_with = ACC
+						}
+						NOT = { has_country_flag = CAN_speech_war_acw }
+					}
+					AND = {
+						NFA = {
+							owns_state = 16
+							is_in_faction_with = ROOT
+						}
+						NOT = { has_country_flag = CAN_speech_france_taken }
+					}
+					AND = {
+						NFA = {
+							owns_state = 21
+							NOT = { owns_state = 16 }
+							is_in_faction_with = ROOT
+						}
+						NOT = { has_country_flag = CAN_speech_france_mainland }
+					}
+					AND = {
+						RAJ = {
+							is_in_faction_with = ROOT
+							owns_state = 431
+							owns_state = 427
+						}
+						NOT = { has_country_flag = CAN_speech_india_united }
+					}
+					AND = {
+						SRD = {
+							is_in_faction_with = ROOT
+							owns_state = 158
+						}
+						NOT = { country_exists = SRI }
+						NOT = { has_country_flag = CAN_speech_italy_united }
+					}
+					AND = {
+						NOT = { country_exists = RAJ }
+						NOT = { has_country_flag = CAN_speech_india_defeated }
+					}
+					AND = {
+						AST = { has_socialist_government = yes }
+						NOT = { has_country_flag = CAN_speech_aus_syndicalist }
+					}
+					AND = {
+						WIF = { has_socialist_government = yes }
+						NOT = { has_country_flag = CAN_speech_wif_syndicalist }
+					}
+					AND = {
+						WCA = {
+							has_war_with = USA
+							NOT = { has_war_with = ROOT }
+						}
+						NOT = { has_country_flag = CAN_speech_acw_begins }
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_direct_exiles = {
+		icon = eng_support_imperialist_coup
+
+		available = {
+			if = {
+				limit = { has_war = yes }
+				surrender_progress < 0.40
+			}
+		}
+
+		visible = {
+			NOT = { tag = GBR }
+			check_variable = { king_influence > 0 }
+			is_in_faction_with = ENT
+		}
+
+		cancel_trigger = {
+			NOT = { tag = event_target:KR_king_base }
+		}
+
+		cost = 0
+		fire_only_once = no
+		days_remove = 365
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_direct_exiles"
+			custom_effect_tooltip = CAN_direct_exiles_tt
+			hidden_effect = {
+				country_event = entente_events.30
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CAN_direct_exiles"
+			if = {
+				limit = { NOT = { tag = event_target:KR_king_base } }
+				clr_country_flag = CAN_exile_inc_influence
+				clr_country_flag = CAN_exile_inc_industry
+				clr_country_flag = CAN_exile_inc_popularity
+				#break = yes
+			}
+			if = {
+				limit = { has_country_flag = CAN_exile_inc_influence }
+				clr_country_flag = CAN_exile_inc_influence
+				custom_effect_tooltip = CAN_exile_influence_increase
+				add_to_variable = { king_influence = 1 }
+				CAN_calc_exile_influence_effects = yes
+			}
+			else_if = {
+				limit = { has_country_flag = CAN_exile_inc_popularity }
+				clr_country_flag = CAN_exile_inc_popularity
+				custom_effect_tooltip = CAN_exile_influence_decrease
+				custom_effect_tooltip = CAN_king_popularity_increase
+				add_to_variable = { king_popularity = 1 }
+				subtract_from_variable = { king_influence = 1 }
+				CAN_calc_exile_influence_effects = yes
+				CAN_calc_royal_visit_effects = yes
+			}
+			else_if = {
+				limit = { has_country_flag = CAN_exile_inc_industry }
+				clr_country_flag = CAN_exile_inc_industry
+				custom_effect_tooltip = CAN_exile_influence_decrease
+				subtract_from_variable = { king_influence = 1 }
+				CAN_calc_exile_influence_effects = yes
+				country_event = entente_events.31
+			}
+			else = {
+				custom_effect_tooltip = CAN_exile_influence_decrease
+				subtract_from_variable = { king_influence = 1 }
+				CAN_calc_exile_influence_effects = yes
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_suppress_exiles = {
+		icon = oppression
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = CAN_suppress_exiles_one_year
+				OR = {
+					NOT = { has_country_flag = CAN_suppressed_exiles }
+					has_country_flag = { flag = CAN_suppressed_exiles days > 364 }
+				}
+			}
+			if = {
+				limit = { has_war = yes }
+				surrender_progress < 0.40
+			}
+		}
+
+		visible = {
+			NOT = { tag = GBR }
+			has_authdem_or_pataut_government = no
+			check_variable = { king_influence > 0 }
+			is_in_faction_with = ENT
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_remove = 180
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_suppress_exiles"
+			add_war_support = -0.05
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CAN_suppress_exiles"
+			if = {
+				limit = {
+					has_country_flag = KR_british_king_base
+					check_variable = { king_influence > 0 }
+				}
+				clr_country_flag = CAN_suppressed_exiles
+				set_country_flag = CAN_suppressed_exiles
+				custom_effect_tooltip = CAN_exile_influence_decrease
+				subtract_from_variable = { king_influence = 1 }
+				CAN_calc_exile_influence_effects = yes
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_soclib_or_socdem_government = no
+				NOT = { has_government = national_populist }
+			}
+			modifier = {
+				factor = 0
+				check_variable = { king_influence < 2 }
+			}
+			modifier = {
+				factor = 0
+				has_political_power < 101
+				check_variable = { king_influence < 4 }
+			}
+			modifier = {
+				factor = 0
+				has_political_power < 150
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_support_government = {
+		icon = generic_flags
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = CAN_king_not_busy
+				NOT = { has_global_flag = { flag = CAN_king_busy value > 0 } }
+			}
+			custom_override_tooltip = {
+				tooltip = CAN_support_government_one_year
+				OR = {
+					NOT = { has_country_flag = CAN_supported_government }
+					has_country_flag = { flag = CAN_supported_government days > 364 }
+				}
+			}
+			check_variable = {
+				tooltip = CAN_has_high_popularity
+				king_popularity > 3
+			}
+			if = {
+				limit = { has_war = yes }
+				has_capitulated = no
+			}
+		}
+
+		visible = {
+			OR = {
+				has_marlib_or_soclib_government = yes
+				has_conservative_government = yes
+				has_government = paternal_autocrat
+			}
+			check_variable = { party_popularity@ruling_party < 0.90 tooltip = KR_party_pop_less_than }
+		}
+
+		cancel_trigger = {
+			has_country_flag = CAN_visit_cancel
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_remove = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_support_government"
+			clr_global_flag = CAN_king_busy
+			clr_country_flag = CAN_visit_cancel
+			set_global_flag = { flag = CAN_king_busy days = 31 value = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CAN_support_government"
+			if = {
+				limit = {
+					has_country_flag = KR_british_king_base
+					check_variable = { king_popularity < 5 }
+				}
+				clr_country_flag = CAN_supported_government
+				set_country_flag = CAN_supported_government
+				set_temp_variable = { ideology_change_var = 0.05 }
+				change_ruling_party_popularity = yes
+			}
+			else_if = {
+				limit = {
+					has_country_flag = KR_british_king_base
+					check_variable = { king_popularity > 4 }
+				}
+				clr_country_flag = CAN_supported_government
+				set_country_flag = CAN_supported_government
+				set_temp_variable = { ideology_change_var = 0.1 }
+				change_ruling_party_popularity = yes
+			}
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				has_marlib_or_soclib_government = yes
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_conservative_government = yes
+					has_government = paternal_autocrat
+				}
+				check_variable = { party_popularity@ruling_party > 0.50 }
+			}
+			modifier = {
+				factor = 0
+				has_political_power < 100
+				OR = {
+					has_conservative_government = yes
+					has_government = paternal_autocrat
+				}
+				check_variable = { party_popularity@ruling_party > 0.30 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_tour_home_country = {
+		icon = eng_propaganda_campaigns
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = CAN_king_not_busy
+				NOT = { has_global_flag = { flag = CAN_king_busy value > 0 } }
+			}
+			custom_override_tooltip = {
+				tooltip = CAN_tour_three_years
+				OR = {
+					NOT = { has_country_flag = CAN_king_toured }
+					has_country_flag = { flag = CAN_king_toured days > 1094 }
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = CAN_on_tour_last_year
+				OR = {
+					NOT = { has_country_flag = CAN_king_was_on_tour }
+					has_country_flag = { flag = CAN_king_was_on_tour days > 269 }
+				}
+			}
+			if = {
+				limit = { has_war = yes }
+				controls_all_owned_states = yes
+			}
+		}
+
+		visible = {
+			is_in_faction_with = ENT
+		}
+
+		cancel_trigger = {
+			has_country_flag = CAN_visit_cancel
+		}
+
+		cost = 50
+		days_remove = 90
+		fire_only_once = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_tour_home_country"
+			clr_global_flag = CAN_king_busy
+			clr_country_flag = CAN_visit_cancel
+			set_global_flag = { flag = CAN_king_busy days = 91 value = 1 }
+			set_global_flag = { flag = CAN_king_on_tour days = 91 value = 1 }
+			custom_effect_tooltip = CAN_tour_effect_ROOT_tt
+			hidden_effect = {
+				country_event = entente_events.21
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CAN_tour_home_country"
+			clr_global_flag = CAN_king_busy
+			clr_global_flag = CAN_king_on_tour
+			clr_country_flag = CAN_king_was_on_tour
+			set_country_flag = CAN_king_was_on_tour
+			if = {
+				limit = {
+					has_country_flag = KR_british_king_base
+					NOT = { has_country_flag = CAN_visit_cancel }
+				}
+				custom_effect_tooltip = CAN_king_popularity_increase
+				add_to_variable = { king_popularity = 1 }
+				CAN_calc_royal_visit_effects = yes
+			}
+			else_if = {
+				limit = { has_country_flag = CAN_visit_cancel }
+				clr_country_flag = CAN_visit_cancel
+			}
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0.5
+				date < 1939.1.1
+			}
+			modifier = {
+				factor = 0
+				has_political_power < 150
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_royal_visit = {
+		icon = eng_abdication_crisis
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = CAN_king_not_busy
+				NOT = { has_global_flag = { flag = CAN_king_busy value > 0 } }
+			}
+			custom_override_tooltip = {
+				tooltip = CAN_visit_three_years
+				FROM = {
+					OR = {
+						NOT = { has_country_flag = CAN_king_toured }
+						has_country_flag = { flag = CAN_king_toured days > 1094 }
+					}
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = CAN_on_tour_last_year
+				OR = {
+					NOT = { has_country_flag = CAN_king_was_on_tour }
+					has_country_flag = { flag = CAN_king_was_on_tour days > 269 }
+				}
+			}
+			if = {
+				limit = { has_war = yes }
+				ROOT = { controls_all_owned_states = yes }
+				FROM = { controls_all_owned_states = yes }
+			}
+		}
+
+		visible = {
+			is_in_faction_with = FROM
+			is_in_faction_with = ENT
+		}
+
+		cancel_trigger = {
+			has_country_flag = CAN_visit_cancel
+		}
+
+		cost = 50
+		days_remove = 90
+		fire_only_once = no
+
+		target_root_trigger = {
+			has_country_flag = KR_british_king_base
+		}
+
+		target_array = faction_members
+
+		target_trigger = {
+			is_in_faction_with = FROM
+			is_in_faction_with = ENT
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_royal_visit"
+			clr_country_flag = CAN_visit_cancel
+			clr_global_flag = CAN_king_busy
+			set_global_flag = { flag = CAN_king_busy days = 91 value = 1 }
+			set_global_flag = { flag = CAN_king_on_tour days = 91 value = 1 }
+			custom_effect_tooltip = CAN_tour_effect_FROM_tt
+			hidden_effect = {
+				FROM = { country_event = entente_events.21 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_royal_visit"
+			clr_global_flag = CAN_king_busy
+			clr_global_flag = CAN_king_on_tour
+			clr_country_flag = CAN_king_was_on_tour
+			set_country_flag = CAN_king_was_on_tour
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0.5
+				FROM = {
+					NOT = {
+						tag = NFA
+						tag = GEX
+					}
+					OR = {
+						is_in_asia = yes
+						is_in_africa = yes
+						is_in_south_america = yes
+					}
+				}
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { num_of_factories < 15 }
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { is_subject = yes }
+			}
+			modifier = {
+				factor = 2
+				FROM = { is_actual_major = yes }
+				has_war = yes
+			}
+			modifier = {
+				factor = 1.5
+				FROM = { has_war_support < 0.50 }
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				FROM = { NOT = { has_country_flag = CAN_king_toured } }
+				date > 1939.1.1
+			}
+			modifier = {
+				factor = 0.5
+				date < 1939.1.1
+			}
+			modifier = {
+				factor = 0
+				has_political_power < 150
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CAN_iedc_decisions = {
+	CAN_invite_into_iedc = {
+		icon = generic_agreement
+		priority = 5
+
+		available = {
+			has_capitulated = no
+			FROM = {
+				has_capitulated = no
+				OR = {
+					is_subject = no
+					overlord = { is_in_economic_sphere_led_by_ROOT = yes }
+				}
+			}
+		}
+
+		visible = {
+			has_socialist_government = no
+			is_in_faction_with = FROM
+			FROM = {
+				has_socialist_government = no
+				is_in_economic_sphere = no
+				NOT = { has_country_flag = CAN_refused_iedc }
+				NOT = { has_country_flag = CAN_invited_to_iedc }
+			}
+		}
+
+		target_array = faction_members
+		target_root_trigger = {
+			has_idea = CAN_iedc_main
+		}
+		target_trigger = {
+			is_in_faction_with = FROM
+			FROM = {
+				has_socialist_government = no
+				is_in_economic_sphere = no
+				NOT = { has_country_flag = CAN_refused_iedc }
+				NOT = { has_country_flag = CAN_invited_to_iedc }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_invite_into_iedc"
+			FROM = { country_event = entente_events.2 }
+		}
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				add = FROM.num_of_factories
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_iedc_economic_investment_home = {
+		icon = generic_industry
+		available = {
+			custom_override_tooltip = {
+				tooltip = CAN_iedc_invest_year
+				OR = {
+					NOT = { has_country_flag = CAN_iedc_investment }
+					has_country_flag = { flag = CAN_iedc_investment days > 364 }
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = CAN_iedc_can_invest
+				check_expr = {
+					value = FROM.iedc_civ_factories
+					add = FROM.iedc_mil_factories
+					add = FROM.iedc_nav_factories
+					multiply = 10
+					subtract = FROM.num_of_controlled_factories
+					less_than = { value = 1 }
+				}
+			}
+		}
+
+		custom_cost_text = CAN_iedc_100pp
+		custom_cost_trigger = {
+			NOT = { check_variable = { global.iedc_pp < 100 } }
+		}
+
+		fire_only_once = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CAN_iedc_economic_investment_home"
+			subtract_from_variable = { global.iedc_pp = 100 }
+			country_event = entente_events.6
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				# don't start spending until all new members recruited
+				any_allied_country = {
+					is_in_economic_sphere = no
+					NOT = { has_country_flag = CAN_refused_iedc }
+					NOT = { has_country_flag = CAN_invited_to_iedc }
+				}
+			}
+			modifier = {
+				factor = 0.9
+				# spend on other members
+				NOT = { check_variable = { global.iedc_pp < 200 } }
+			}
+			modifier = {
+				factor = 1.2
+				# spend on self
+				check_variable = { global.iedc_pp < 200 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_iedc_economic_investment = {
+		icon = generic_industry
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = CAN_iedc_invest_year_FROM
+				FROM = {
+					OR = {
+						NOT = { has_country_flag = CAN_iedc_investment }
+						has_country_flag = { flag = CAN_iedc_investment days > 364 }
+					}
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = CAN_iedc_can_invest_FROM
+				check_expr = {
+					value = FROM.iedc_civ_factories
+					add = FROM.iedc_mil_factories
+					add = FROM.iedc_nav_factories
+					multiply = 10
+					subtract = FROM.num_of_controlled_factories
+					less_than = { value = 1 }
+				}
+			}
+		}
+
+		visible = {
+			FROM = { is_in_economic_sphere_led_by_ROOT = yes }
+		}
+
+		custom_cost_text = CAN_iedc_100pp
+		custom_cost_trigger = {
+			NOT = { check_variable = { global.iedc_pp < 100 } }
+		}
+
+		fire_only_once = no
+
+		target_array = economic_sphere:members
+		target_root_trigger = {
+			has_idea = CAN_iedc_main
+		}
+		target_trigger = {
+			FROM = { is_in_economic_sphere_led_by_ROOT = yes }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_iedc_economic_investment"
+			subtract_from_variable = { global.iedc_pp = 100 }
+			FROM = { country_event = entente_events.6 }
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				# don't start spending until all new members recruited
+				any_allied_country = {
+					is_in_economic_sphere = no
+					NOT = { has_country_flag = CAN_refused_iedc }
+					NOT = { has_country_flag = CAN_invited_to_iedc }
+				}
+			}
+			modifier = {
+				factor = 1.2
+				FROM = { num_of_factories > 10 }
+			}
+			modifier = {
+				factor = 0.5
+				check_variable = { FROM.iedc_contribution < 25 }
+			}
+			modifier = {
+				factor = 0.5
+				check_variable = { FROM.iedc_contribution < 50 }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CAN_entente_decisions = {
+	CAN_request_brooklyn_yard_lease = {
+		icon = GFX_decision_generic_naval
+
+		allowed = { always = no }
+
+		available = {
+			is_in_faction_with = FROM
+		}
+
+		cost = 75
+		days_re_enable = 180
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				add = 300
+				NOT = { country_exists = GBR }
+			}
+			modifier = {
+				factor = 0
+				has_navy_size = { size > 100 }
+				country_exists = GBR
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_request_brooklyn_yard_lease"
+			FROM = { country_event = entente_events.279 }
+		}
+		fixed_random_seed = no
+	}
+	CAN_cancel_brooklyn_yard_lease = {
+		icon = GFX_decision_generic_naval
+
+		allowed = { always = no }
+
+		cost = 0
+		days_re_enable = 180
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				add = 300
+				has_navy_size = { size > 100 }
+				country_exists = GBR
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_cancel_brooklyn_yard_lease"
+			effect_tooltip = { add_offsite_building = { type = dockyard level = -7 } }
+			FROM = {
+				country_event = entente_events.282
+				hidden_effect = { remove_ideas = CAN_backed_rebuilding }
+			}
+		}
+		fixed_random_seed = no
+	}
+	CAN_ACW_cancel_brooklyn_yard_lease = {
+		icon = GFX_decision_generic_naval
+
+		allowed = { always = no }
+
+		cost = 25
+		days_re_enable = 180
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				add = 300
+				has_navy_size = { size < 75 }
+				enemies_naval_strength_ratio > 0.8 #we need all the dockyards we can get
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_ACW_cancel_brooklyn_yard_lease"
+			remove_ideas = CAN_backed_rebuilding
+			effect_tooltip = {
+				358 = {
+					remove_dynamic_modifier = { modifier = CAN_leased_brooklyn_yard }
+					add_building_construction = { type = dockyard level = 7 }
+				}
+			}
+			FROM = { country_event = entente_events.283 }
+		}
+		fixed_random_seed = no
+	}
+	CAN_create_naval_research_group = {
+		icon = GFX_decision_generic_research
+
+		allowed = { always = no }
+
+		available = {
+			is_in_faction_with = FROM
+		}
+
+		cost = 50
+
+		ai_will_do = { factor = 200 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_create_naval_research_group"
+			add_to_tech_sharing_group = joint_north_american_naval_programme
+			FROM = {
+				country_event = entente_events.284
+				hidden_effect = { remove_targeted_decision = { target = ROOT decision = CAN_create_naval_research_group } }
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = CAN_create_naval_research_group }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CAN_american_civil_war_decisions = {
+	CAN_reinforce_ottawa = {
+		icon = fortress
+
+		allowed = { always = no } #activated by CAN_eyes_to_the_south focus
+
+		available = {
+			has_full_control_of_state = FROM
+		}
+
+		visible = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_full_control_of_state = FROM }
+				has_global_flag = USA_civil_war_over_flag
+			}
+		}
+
+		cost = 40
+		days_remove = 60
+
+		state_target = yes
+		target_trigger = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				NOT = {
+					country_exists = WCA
+					AND = {
+						has_global_flag = CAN_supports_USA
+						country_exists = USA
+						OR = {
+							country_exists = ACC
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_ACC
+						country_exists = ACC
+						OR = {
+							country_exists = USA
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_APG
+						country_exists = APG
+						OR = {
+							country_exists = ACC
+							country_exists = USA
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_idea = CAN_quebec_in_flames_idea
+			}
+			modifier = {
+				factor = 5
+				has_war_with = WCA
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_reinforce_ottawa"
+			add_manpower = 25000
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_reinforce_ottawa"
+			FROM = {
+				clr_state_flag = CAN_reinforce_state
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 3778
+						level = 4
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 4
+						VP = 3778
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = {
+							all_provinces = yes
+							limit_to_border = yes
+						}
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_border_provinces
+						BUILDING = bunker
+						NUMBER = 1
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_reinforce_ottawa target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_reinforce_montreal = {
+		icon = fortress
+
+		allowed = { always = no } #activated by CAN_eyes_to_the_south focus
+
+		available = {
+			has_full_control_of_state = FROM
+			has_full_control_of_state = 468 #Saint Lawrence
+		}
+
+		visible = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_full_control_of_state = FROM }
+				NOT = { has_full_control_of_state = 468 } #Saint Lawrence
+				has_global_flag = USA_civil_war_over_flag
+			}
+		}
+
+		cost = 40
+		days_remove = 60
+
+		state_target = yes
+		target_trigger = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				NOT = {
+					country_exists = WCA
+					AND = {
+						has_global_flag = CAN_supports_USA
+						country_exists = USA
+						OR = {
+							country_exists = ACC
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_ACC
+						country_exists = ACC
+						OR = {
+							country_exists = USA
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_APG
+						country_exists = APG
+						OR = {
+							country_exists = ACC
+							country_exists = USA
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_idea = CAN_quebec_in_flames_idea
+			}
+			modifier = {
+				factor = 5
+				has_war_with = WCA
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_reinforce_montreal"
+			add_manpower = 25000
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_reinforce_montreal"
+			FROM = {
+				clr_state_flag = CAN_reinforce_state
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 4345
+						level = 4
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 4
+						VP = 4345
+					}
+				}
+			}
+			468 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = {
+							all_provinces = yes
+							limit_to_border = yes
+						}
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_border_provinces
+						BUILDING = bunker
+						NUMBER = 1
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_reinforce_montreal target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_reinforce_vancouver = {
+		icon = fortress
+
+		allowed = { always = no } #activated by CAN_eyes_to_the_south focus
+
+		available = {
+			has_full_control_of_state = FROM
+		}
+
+		visible = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_full_control_of_state = FROM }
+				has_global_flag = USA_civil_war_over_flag
+			}
+		}
+
+		cost = 40
+		days_remove = 60
+
+		state_target = yes
+		target_trigger = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				NOT = {
+					country_exists = WCA
+					AND = {
+						has_global_flag = CAN_supports_USA
+						country_exists = USA
+						OR = {
+							country_exists = ACC
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_ACC
+						country_exists = ACC
+						OR = {
+							country_exists = USA
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_APG
+						country_exists = APG
+						OR = {
+							country_exists = ACC
+							country_exists = USA
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_idea = CAN_quebec_in_flames_idea
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_reinforce_vancouver"
+			add_manpower = 25000
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_reinforce_vancouver"
+			FROM = {
+				clr_state_flag = CAN_reinforce_state
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 1408
+						level = 4
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 4
+						VP = 1408
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = {
+							all_provinces = yes
+							limit_to_border = yes
+						}
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_border_provinces
+						BUILDING = bunker
+						NUMBER = 1
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_reinforce_vancouver target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_reinforce_winnipeg = {
+		icon = fortress
+
+		allowed = { always = no } #activated by CAN_eyes_to_the_south focus
+
+		available = {
+			has_full_control_of_state = FROM
+		}
+
+		visible = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_full_control_of_state = FROM }
+				has_global_flag = USA_civil_war_over_flag
+			}
+		}
+
+		cost = 40
+		days_remove = 60
+
+		state_target = yes
+		target_trigger = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				NOT = {
+					country_exists = WCA
+					AND = {
+						has_global_flag = CAN_supports_USA
+						country_exists = USA
+						OR = {
+							country_exists = ACC
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_ACC
+						country_exists = ACC
+						OR = {
+							country_exists = USA
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_APG
+						country_exists = APG
+						OR = {
+							country_exists = ACC
+							country_exists = USA
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_idea = CAN_quebec_in_flames_idea
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_reinforce_winnipeg"
+			add_manpower = 25000
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_reinforce_winnipeg"
+			FROM = {
+				clr_state_flag = CAN_reinforce_state
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 4872
+						level = 4
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 4
+						VP = 4872
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = {
+							all_provinces = yes
+							limit_to_border = yes
+						}
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_border_provinces
+						BUILDING = bunker
+						NUMBER = 1
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_reinforce_winnipeg target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_reinforce_halifax = {
+		icon = fortress
+
+		allowed = { always = no } #activated by CAN_eyes_to_the_south focus
+
+		available = {
+			has_full_control_of_state = FROM
+			has_full_control_of_state = 465 #New Brunswick
+		}
+
+		visible = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_full_control_of_state = FROM }
+				NOT = { has_full_control_of_state = 465 } #New Brunswick
+				has_global_flag = USA_civil_war_over_flag
+			}
+		}
+
+		cost = 40
+		days_remove = 90
+
+		state_target = yes
+		target_trigger = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				NOT = {
+					country_exists = WCA
+					AND = {
+						has_global_flag = CAN_supports_USA
+						country_exists = USA
+						OR = {
+							country_exists = ACC
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_ACC
+						country_exists = ACC
+						OR = {
+							country_exists = USA
+							country_exists = APG
+						}
+					}
+					AND = {
+						has_global_flag = CAN_supports_APG
+						country_exists = APG
+						OR = {
+							country_exists = ACC
+							country_exists = USA
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_idea = CAN_quebec_in_flames_idea
+			}
+			modifier = {
+				factor = 5
+				has_war_with = WCA
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_reinforce_halifax"
+			add_manpower = 25000
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_reinforce_halifax"
+			FROM = {
+				clr_state_flag = CAN_reinforce_state
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 7361
+						level = 4
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 4
+						VP = 7361
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						province = 7361
+						level = 4
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 4
+						VP = 7361
+					}
+				}
+			}
+			465 = { #New Brunswick
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = {
+							all_provinces = yes
+							limit_to_border = yes
+						}
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_border_provinces
+						BUILDING = bunker
+						NUMBER = 1
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_reinforce_halifax target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_intervene_in_ACW = {
+		icon = generic_ignite_civil_war
+
+		allowed = { always = no } #activated by CAN_americans_at_war focus
+
+		available = {
+			has_completed_focus = CAN_crossing_the_border
+			NOT = { has_idea = CAN_divided_nation }
+			NOT = { has_idea = CAN_crippling_strikes }
+			OR = {
+				NOT = { is_in_faction_with = NEE }
+				FROM = {
+					surrender_progress > 0.5
+					custom_override_tooltip = {
+						tooltip = CAN_not_winning_ACW
+						any_enemy_country = {
+							is_american_tag = yes
+							surrender_progress < var:PREV.surrender_progress
+						}
+					}
+				}
+			}
+		}
+
+		visible = {
+			has_global_flag = CAN_supports_@FROM
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+			NOT = { has_war_with = USA }
+			NOT = { has_war_with = WCA }
+			NOT = { has_war_with = APG }
+			NOT = { has_war_with = ACC }
+			NOT = { has_war_with = NEE }
+			NOT = { has_country_flag = CAN_white_peaced_ACW }
+			NOT = { has_country_flag = CAN_joined_the_ACW }
+			FROM = {
+				has_war_with = WCA
+				is_subject = no
+				is_in_faction = no
+			}
+		}
+
+		target_trigger = {
+			NOT = { has_war_with = FROM }
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+			NOT = { has_country_flag = CAN_white_peaced_ACW }
+			NOT = { has_country_flag = CAN_joined_the_ACW }
+			FROM = {
+				has_war_with = WCA
+				is_subject = no
+				is_in_faction = no
+			}
+		}
+
+		days_remove = 30
+		war_with_on_remove = WCA
+
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			OR = {
+				has_idea = CAN_divided_nation
+				has_idea = CAN_crippling_strikes
+				NOT = { has_global_flag = CAN_supports_@FROM }
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_intervene_in_ACW"
+			clr_country_flag = CAN_prepare_war_WCA
+			hidden_effect = {
+				every_possible_country = {
+					limit = { has_country_flag = CAN_intervene_in_ACW_AI_strategy_active }
+					clr_country_flag = CAN_intervene_in_ACW_AI_strategy_active
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = ROOT
+						value = -100
+					}
+					ROOT = {
+						add_ai_strategy = {
+							type = prepare_for_war
+							id = PREV
+							value = -100
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				factor = 0
+				surrender_progress > 0
+			}
+			modifier = {
+				factor = 0
+				is_in_faction_with = NFA
+				NFA = { surrender_progress > 0.10 }
+			}
+			modifier = {
+				factor = 0
+				has_war_with = INT
+			}
+			#not if the Deal with the Devil is active
+			modifier = {
+				factor = 0
+				has_global_flag = ACW_deal_with_devil
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_acw_intervene option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_acw_intervene option = CAN_ACW_INTERVENE_DIRECT } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = USA_ceasefire option = USA_CEASEFIRE_YES }
+				ACC = { exists = yes }
+				NOT = { has_global_flag = USA_ceasefire_happened }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE }
+					has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE_PRISON }
+				}
+				USA = { exists = yes }
+				ACC = { exists = yes }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_intervene_in_ACW"
+			set_country_flag = { flag = CAN_prepare_war_WCA days = 31 value = 1 }
+			hidden_effect = {
+				every_other_country = {
+					limit = {
+						is_american_tag = yes
+						NOT = { tag = FROM }
+						NOT = { has_war_with = ROOT }
+					}
+					set_country_flag = CAN_intervene_in_ACW_AI_strategy_active
+					incoming_war_notification_effect = yes
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = ROOT
+						value = 100
+					}
+					ROOT = {
+						add_ai_strategy = {
+							type = prepare_for_war
+							id = PREV
+							value = 100
+						}
+					}
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_intervene_in_ACW"
+			log = "KR_Event_Logging;CANADA INTERVENES IN ACW - Sided with [FROM.GetTag]"
+			set_country_flag = CAN_joined_the_ACW
+			FROM = { country_event = canada_events.222 }
+			effect_tooltip = {
+				every_other_country = {
+					limit = {
+						has_country_flag = CAN_intervene_in_ACW_AI_strategy_active
+						ROOT = { can_declare_war_on = PREV }
+					}
+					ROOT = { add_to_war = { targeted_alliance = FROM enemy = PREV } }
+				}
+			}
+			hidden_effect = {
+				every_possible_country = {
+					limit = { has_country_flag = CAN_intervene_in_ACW_AI_strategy_active }
+					clr_country_flag = CAN_intervene_in_ACW_AI_strategy_active
+					if = {
+						limit = { ROOT = { can_declare_war_on = PREV } }
+						ROOT = { add_to_war = { targeted_alliance = FROM enemy = PREV } }
+					}
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = ROOT
+						value = -100
+					}
+					ROOT = {
+						add_ai_strategy = {
+							type = prepare_for_war
+							id = PREV
+							value = -100
+						}
+					}
+				}
+			}
+			if = {
+				limit = { FROM = { has_country_flag = ACW_has_deal_with_devil } }
+				set_country_flag = CAN_deal_with_devil_@FROM
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_declare_war_on_WCA = {
+		icon = generic_ignite_civil_war
+
+		allowed = { always = no } #activated by CAN_crossing_the_border focus
+
+		available = {
+			has_completed_focus = CAN_crossing_the_border
+			NOT = { has_idea = CAN_divided_nation }
+			NOT = { has_idea = CAN_crippling_strikes }
+			OR = {
+				has_global_flag = USA_civil_war_over_flag
+				WCA = { has_army_manpower = { size > 800000 } }
+				WCA = { enemies_strength_ratio < 1.5 }
+				AND = {
+					has_global_flag = CAN_supports_USA
+					NOT = { country_exists = USA }
+				}
+				AND = {
+					has_global_flag = CAN_supports_ACC
+					NOT = { country_exists = ACC }
+				}
+				AND = {
+					has_global_flag = CAN_supports_APG
+					NOT = { country_exists = APG }
+				}
+			}
+		}
+
+		visible = {
+			NOT = {
+				has_war_with = USA
+				has_war_with = ACC
+				has_war_with = APG
+				has_war_with = NEE
+				has_country_flag = CAN_white_peaced_ACW
+				has_country_flag = CAN_joined_the_ACW
+			}
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 50
+		days_remove = 30
+		war_with_on_remove = WCA
+
+		cancel_trigger = {
+			OR = {
+				has_idea = CAN_crippling_strikes
+				has_war_with = USA
+				has_war_with = ACC
+				has_war_with = APG
+				has_war_with = NEE
+				has_country_flag = CAN_white_peaced_ACW
+				has_country_flag = CAN_joined_the_ACW
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_declare_war_on_WCA"
+			add_political_power = 50
+			clr_country_flag = CAN_prepare_war_WCA
+			clear_decision_attack_AI = yes
+		}
+
+		ai_will_do = {
+			base = 1000
+			# don't go to war if ACC is in a position to be invited into the Entente
+			modifier = {
+				factor = 0
+				has_global_flag = ACC_rockies_ceasefire
+				NOT = { has_country_flag = CAN_ACC_refused_join }
+				ACC = {
+					exists = yes
+					is_in_faction = no
+					NOT = {
+						has_war_with = WCA
+						has_war_with = ROOT
+					}
+				}
+			}
+			# don't go to war if ACC is in the faction and the ceasefire is holding
+			modifier = {
+				factor = 0
+				has_global_flag = ACC_rockies_ceasefire
+				is_in_faction_with = ACC
+			}
+			modifier = {
+				factor = 0
+				has_war_with = INT
+			}
+			modifier = {
+				factor = 0
+				surrender_progress > 0
+			}
+			modifier = {
+				factor = 0
+				is_in_faction_with = NFA
+				NFA = { surrender_progress > 0.10 }
+			}
+			# let's not go to war unless WCA is sufficiently flanked or the civil war is over
+			modifier = {
+				factor = 0
+				has_global_flag = USA_civil_war_over_flag
+				FROM = { default_attack_AI_trigger = yes }
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = USA_civil_war_over_flag
+				strength_ratio = { tag = WCA ratio < 3 }
+				WCA = { surrender_progress < 0.15 }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_acw_intervene option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_acw_intervene option = CAN_ACW_INTERVENE_DECLARE_WCA } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = USA_ceasefire option = USA_CEASEFIRE_YES }
+				ACC = { exists = yes }
+				NOT = { has_global_flag = USA_ceasefire_happened }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE }
+					has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE_PRISON }
+				}
+				USA = { exists = yes }
+				ACC = { exists = yes }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_declare_war_on_WCA"
+			set_country_flag = { flag = CAN_prepare_war_WCA days = 31 value = 1 }
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_declare_war_on_WCA"
+			log = "KR_Event_Logging;CANADA INTERVENES IN ACW - Attacked WCA"
+			set_country_flag = CAN_joined_the_ACW
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = WCA
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_invite_ACC_ceasefire = {
+		icon = generic_agreement
+
+		allowed = { always = no } #activated by CAN_americans_at_war focus
+
+		available = {
+			has_completed_focus = CAN_crossing_the_border
+			NOT = { has_idea = CAN_divided_nation }
+			NOT = { has_idea = CAN_crippling_strikes }
+			FROM = { is_in_faction = no }
+		}
+
+		visible = {
+			has_global_flag = ACC_rockies_ceasefire
+			NOT = { country_exists = USA }
+			NOT = { country_exists = APG }
+			NOT = { has_country_flag = CAN_white_peaced_ACW }
+			WCA = {
+				exists = yes
+				is_subject = no
+				has_socialist_government = yes
+				NOT = { has_war_with = ROOT }
+			}
+			FROM = {
+				is_subject = no
+				has_capitulated = no
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+				NOT = { has_war_with = WCA }
+			}
+		}
+
+		target_trigger = {
+			NOT = { has_global_flag = USA_civil_war_over_flag }
+			NOT = { has_country_flag = CAN_white_peaced_ACW }
+			FROM = {
+				is_subject = no
+				has_capitulated = no
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_acw_intervene option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_acw_intervene option = CAN_ACW_INTERVENE_DECLARE_WCA } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ACC_WCA_peace option = ACC_WCA_PEACE_YES }
+				ACC = {
+					OR = {
+						has_government = social_democrat
+						NOT = { has_country_flag = NEE_had_1940_election }
+					}
+				}
+				WCA = {
+					NOT = { has_government = totalist }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_invite_ACC_ceasefire"
+			FROM = { country_event = american_civil_war_events.166 }
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_invite_ACC_ceasefire target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CAN_new_england_decisions = {
+	CAN_put_down_rebellion = {
+		icon = us_flag
+
+		allowed = { always = no }
+
+		available = {
+			controls_state = FROM
+			NOT = { has_country_flag = CAN_is_suppressing_NEE }
+			NOT = { FROM = { has_state_flag = CAN_encouraged_rebellion } }
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = { has_dynamic_modifier = { modifier = CAN_nee_resistance } }
+		}
+
+		cancel_trigger = {
+			FROM = {
+				OR = {
+					NOT = { is_owned_and_controlled_by = ROOT }
+					has_state_flag = CAN_encouraged_rebellion
+				}
+			}
+		}
+
+		target_trigger = {
+			has_global_flag = CAN_yankee_rebellion
+			FROM = { has_dynamic_modifier = { modifier = CAN_nee_resistance } }
+		}
+
+		modifier = {
+			political_power_cost = 0.075
+			army_morale_factor = -0.05
+		}
+
+		cost = 25
+		days_remove = 20
+		state_target = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_put_down_rebellion"
+			clr_country_flag = CAN_is_suppressing_NEE
+			hidden_effect = { add_political_power = 25 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_put_down_rebellion"
+			set_country_flag = { flag = CAN_is_suppressing_NEE days = 20 value = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_put_down_rebellion"
+			clr_country_flag = CAN_is_suppressing_NEE
+			add_to_variable = { var = global.CAN_yankee_rebellion value = -1 }
+			FROM = {
+				remove_dynamic_modifier = { modifier = CAN_nee_resistance }
+				custom_effect_tooltip = tooltip_white_line
+				set_resistance = 0
+				add_compliance = 25
+			}
+		}
+
+		ai_will_do = { base = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_nee_recruitment1 = {
+		icon = generic_agreement
+
+		allowed = { always = no }
+
+		available = {
+			controls_state = FROM
+			if = {
+				limit = { has_global_flag = CAN_yankee_rebellion }
+				has_global_flag = CAN_yankee_rebellion_over
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		cancel_trigger = {
+			NOT = { FROM = { is_owned_and_controlled_by = ROOT } }
+		}
+
+		target_trigger = {
+			owns_state = FROM
+		}
+
+		cost = 50
+		days_remove = 90
+		state_target = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_nee_recruitment1"
+			hidden_effect = { add_political_power = 50 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_nee_recruitment1"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_nee_recruitment1"
+			every_owned_state = {
+				limit = { is_new_england = yes }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_add_dynmod
+						DYNMOD = CAN_nee_recruitment_modifier
+					}
+					add_dynamic_modifier = { modifier = CAN_nee_recruitment_modifier }
+				}
+				add_to_variable = {
+					CAN_neerec_local_non_core_manpower = 0.1
+					tooltip = local_non_core_manpower_tooltip
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { global.CAN_neerec_local_non_core_manpower = 0.1 }
+				remove_targeted_decision = { decision = CAN_nee_recruitment1 target = FROM }
+				activate_targeted_decision = { decision = CAN_nee_recruitment2 target = FROM }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_nee_recruitment2 = {
+		icon = generic_agreement
+		name = CAN_nee_recruitment1
+		desc = CAN_nee_recruitment1_desc
+
+		allowed = { always = no }
+
+		available = {
+			controls_state = FROM
+			OR = {
+				has_idea = extensive_conscription
+				has_idea = service_by_requirement
+				has_idea = all_adults_serve
+				has_idea = scraping_the_barrel
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		cancel_trigger = {
+			NOT = { FROM = { is_owned_and_controlled_by = ROOT } }
+		}
+
+		target_trigger = {
+			owns_state = FROM
+		}
+
+		cost = 50
+		days_remove = 90
+		state_target = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_nee_recruitment2"
+			hidden_effect = { add_political_power = 50 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_nee_recruitment2"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_nee_recruitment2"
+			every_owned_state = {
+				limit = { has_dynamic_modifier = { modifier = CAN_nee_recruitment_modifier } }
+				custom_effect_tooltip = {
+					localization_key = tooltip_modify_dynmod
+					DYNMOD = CAN_nee_recruitment_modifier
+				}
+				set_temp_variable = {
+					CAN_neerec_local_non_core_manpower = 0.1
+					tooltip = local_non_core_manpower_tooltip
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { global.CAN_neerec_local_non_core_manpower = 0.1 }
+				remove_targeted_decision = { decision = CAN_nee_recruitment2 target = FROM }
+				activate_targeted_decision = { decision = CAN_nee_recruitment3 target = FROM }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_nee_recruitment3 = {
+		icon = generic_agreement
+		name = CAN_nee_recruitment1
+		desc = CAN_nee_recruitment1_desc
+
+		allowed = { always = no }
+
+		available = {
+			controls_state = FROM
+			OR = {
+				has_idea = all_adults_serve
+				has_idea = scraping_the_barrel
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		cancel_trigger = {
+			NOT = { FROM = { is_owned_and_controlled_by = ROOT } }
+		}
+
+		target_trigger = {
+			owns_state = FROM
+		}
+
+		cost = 50
+		days_remove = 90
+		state_target = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_nee_recruitment3"
+			hidden_effect = { add_political_power = 50 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_nee_recruitment3"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_nee_recruitment3"
+			every_owned_state = {
+				limit = { has_dynamic_modifier = { modifier = CAN_nee_recruitment_modifier } }
+				custom_effect_tooltip = {
+					localization_key = tooltip_modify_dynmod
+					DYNMOD = CAN_nee_recruitment_modifier
+				}
+				set_temp_variable = {
+					CAN_neerec_local_non_core_manpower = 0.1
+					tooltip = local_non_core_manpower_tooltip
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { global.CAN_neerec_local_non_core_manpower = 0.1 }
+				remove_targeted_decision = { decision = CAN_nee_recruitment3 target = FROM }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_maine_steel = {
+		icon = steel
+
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 3
+			controls_state = FROM
+			FROM = { resistance < 10 }
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { FROM = { is_owned_and_controlled_by = ROOT } }
+				NOT = { FROM = { resistance < 10 } }
+			}
+		}
+
+		target_trigger = {
+			owns_state = FROM
+			NOT = { FROM = { has_state_flag = CAN_steel_developed } }
+		}
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_develop_maine_steel"
+			hidden_effect = { add_political_power = 25 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_maine_steel"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_maine_steel"
+			FROM = {
+				set_state_flag = CAN_steel_developed
+				add_resource = {
+					type = steel
+					amount = 16
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_develop_maine_steel target = FROM }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_boston_synth = {
+		icon = oil
+		allowed = { always = no }
+		available = {
+			has_tech = synth_oil_experiments
+			num_of_civilian_factories_available_for_projects > 3
+			controls_state = FROM
+			FROM = { resistance < 10 }
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { FROM = { is_owned_and_controlled_by = ROOT } }
+				NOT = { FROM = { resistance < 10 } }
+			}
+		}
+
+		target_trigger = {
+			owns_state = FROM
+			NOT = { FROM = { has_state_flag = CAN_synth_developed } }
+		}
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_develop_boston_synth"
+			hidden_effect = { add_political_power = 25 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_boston_synth"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_boston_synth"
+			FROM = {
+				set_state_flag = CAN_synth_developed
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 1
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = CAN_develop_boston_synth target = FROM }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+}
+
+prospect_for_resources = {
+	CAN_develop_ontario_coal_mines = {
+		icon = coal
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation2
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_ontario_coal_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_ontario_coal_mines"
+			FROM = {
+				set_state_flag = CAN_coal_mines_developed
+				add_resource = {
+					type = coal
+					amount = 8
+				}
+			}
+		}
+
+		ai_will_do = { factor = 200 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_alberta_oil_wells = {
+		icon = oil
+		allowed = { always = no }
+
+		highlight_states = {
+			highlight_state_targets = { state = 470 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+			has_tech = excavation2
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_alberta_oil_wells"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_alberta_oil_wells"
+			FROM = {
+				set_state_flag = CAN_oil_wells_developed
+				add_resource = {
+					type = oil
+					amount = 8
+				}
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_ontario_aluminium_mines = {
+		icon = aluminium
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation2
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_ontario_aluminium_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_ontario_aluminium_mines"
+			FROM = {
+				set_state_flag = CAN_aluminium_mines_developed
+				add_resource = {
+					type = aluminium
+					amount = 16
+				}
+			}
+		}
+
+		ai_will_do = { factor = 300 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_alberta_oil_wells2 = {
+		icon = oil
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = oil_processing
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_alberta_oil_wells2"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_alberta_oil_wells2"
+			FROM = {
+				set_state_flag = CAN_oil_wells_developed2
+				add_resource = {
+					type = oil
+					amount = 24
+				}
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_sask_oil_wells = {
+		icon = oil
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation2
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_sask_oil_wells"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_sask_oil_wells"
+			FROM = {
+				set_state_flag = CAN_oil_wells_developed
+				add_resource = {
+					type = oil
+					amount = 6
+				}
+			}
+		}
+
+		ai_will_do = { factor = 200 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_yukon_oil_wells = {
+		icon = oil
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+			has_tech = excavation2
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_yukon_oil_wells"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_yukon_oil_wells"
+			FROM = {
+				set_state_flag = CAN_oil_wells_developed
+				add_resource = {
+					type = oil
+					amount = 2
+				}
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_quebec_tungsten_mines = {
+		icon = tungsten
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation3
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_quebec_tungsten_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_quebec_tungsten_mines"
+			FROM = {
+				set_state_flag = CAN_tungsten_mines_developed
+				add_resource = {
+					type = tungsten
+					amount = 16
+				}
+			}
+		}
+
+		ai_will_do = { factor = 300 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_newbrun_tungsten_mines = {
+		icon = tungsten
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation3
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_newbrun_tungsten_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_newbrun_tungsten_mines"
+			FROM = {
+				set_state_flag = CAN_tungsten_mines_developed
+				add_resource = {
+					type = tungsten
+					amount = 4
+				}
+			}
+		}
+
+		ai_will_do = { factor = 200 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_labrador_iron_mines = {
+		icon = steel
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation3
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_labrador_iron_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_labrador_iron_mines"
+			FROM = {
+				set_state_flag = CAN_iron_mines_developed
+				add_resource = {
+					type = steel
+					amount = 8
+				}
+			}
+		}
+
+		ai_will_do = { factor = 300 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_quebec_aluminium_mines = {
+		icon = aluminium
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation3
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_quebec_aluminium_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_quebec_aluminium_mines"
+			FROM = {
+				set_state_flag = CAN_aluminium_mines_developed
+				add_resource = {
+					type = aluminium
+					amount = 8
+				}
+			}
+		}
+
+		ai_will_do = { factor = 300 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_ontario_chromium_mines = {
+		icon = chromium
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation3
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_ontario_chromium_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_ontario_chromium_mines"
+			FROM = {
+				set_state_flag = CAN_chromium_mines_developed
+				add_resource = {
+					type = chromium
+					amount = 12
+				}
+			}
+		}
+
+		ai_will_do = { factor = 300 }
+		fixed_random_seed = no
+	}
+
+	CAN_develop_quebec_chromium_mines = {
+		icon = chromium
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation3
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_develop_quebec_chromium_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_develop_quebec_chromium_mines"
+			FROM = {
+				set_state_flag = CAN_chromium_mines_developed
+				add_resource = {
+					type = chromium
+					amount = 8
+				}
+			}
+		}
+
+		ai_will_do = { factor = 200 }
+		fixed_random_seed = no
+	}
+}
+
+foreign_politics = {
+	CAN_delay_canadian_intervention = {
+		icon = generic_civil_support
+		priority = 5
+
+		allowed = { always = no } #activated by canada_events.223
+
+		available = {
+			NOT = { has_war_with = FROM }
+		}
+
+		visible = {
+			FROM = {
+				is_faction_leader = yes
+				can_declare_war_on = ROOT
+				NOT = { has_country_flag = CAN_white_peaced_ACW }
+			}
+			is_subject = no
+		}
+
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = ENT
+				can_declare_war_on = ROOT
+				NOT = { has_country_flag = CAN_white_peaced_ACW }
+			}
+		}
+
+		cost = CAN_strike_cost?10
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_delay_canadian_intervention"
+			FROM = {
+				country_event = canada_events.224
+				event_option_tooltip = canada_events.224.a
+			}
+			if = {
+				limit = { NOT = { has_variable = CAN_strike_cost } }
+				set_variable = { CAN_strike_cost = 10 }
+			}
+			add_to_variable = { CAN_strike_cost = 10 }
+		}
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				factor = 0
+				check_variable = { CAN_strike_cost > 40 } #AI will only take the decision a max of 5 times
+			}
+			modifier = {
+				add = 5000
+				FROM = { has_country_flag = CAN_prepare_war_WCA }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CAN_extend_yankee_rebellion = {
+		icon = generic_civil_support
+		priority = 5
+
+		allowed = { always = no }
+
+		visible = {
+			FROM = { has_dynamic_modifier = { modifier = CAN_nee_resistance } }
+			is_subject = no
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_subject = yes
+				NOT = { FROM = { has_dynamic_modifier = { modifier = CAN_nee_resistance } } }
+			}
+		}
+
+		target_trigger = {
+			has_global_flag = CAN_yankee_rebellion
+			FROM = { has_dynamic_modifier = { modifier = CAN_nee_resistance } }
+			is_subject = no
+		}
+
+		cost = CAN_extend_yankee_rebellion_cost?50
+		days_remove = 90
+		state_target = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CAN_extend_yankee_rebellion"
+			FROM = { clr_state_flag = CAN_encouraged_rebellion }
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CAN_extend_yankee_rebellion"
+			FROM = { set_state_flag = { flag = CAN_encouraged_rebellion days = 90 value = 1 } }
+			if = {
+				limit = { NOT = { has_variable = CAN_extend_yankee_rebellion_cost } }
+				set_variable = { CAN_extend_yankee_rebellion_cost = 50 }
+			}
+			add_to_variable = {
+				CAN_extend_yankee_rebellion_cost = 5
+				tooltip = CAN_increase_pp_cost
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CAN_extend_yankee_rebellion"
+			FROM = { clr_state_flag = CAN_encouraged_rebellion }
+		}
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				add = 1000
+				has_global_flag = USA_civil_war_over_flag
+			}
+			modifier = {
+				factor = 2
+				has_political_power > 200
+			}
+			modifier = {
+				factor = 2
+				has_political_power > 300
+			}
+			modifier = {
+				factor = 2
+				has_political_power > 400
+			}
+			modifier = {
+				set_temp_variable = { CAN_strike_cost_factor = { value = CAN_extend_yankee_rebellion_cost?50 multiply = -10 } }
+				add = CAN_strike_cost_factor
+			}
+		}
+		fixed_random_seed = no
+	}
+}

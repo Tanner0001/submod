@@ -1,0 +1,6214 @@
+###########################
+# Greece Events
+###########################
+
+add_namespace = greece_events
+
+### Political Events
+
+# Greek Independence Day
+country_event = {
+	id = greece_events.3
+	title = greece_events.3.t
+	desc = greece_events.3.d
+	picture = GFX_report_event_GRE_crowd2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.3 option greece_events.3.a"
+		name = greece_events.3.a
+		add_political_power = 20
+		hidden_effect = {
+			country_event = { id = greece_events.4 days = 365 }
+		}
+	}
+}
+
+# Greek Independence Day (subsequent years)
+country_event = {
+	id = greece_events.4
+	title = greece_events.3.t
+	desc = greece_events.4.d
+	picture = GFX_report_event_GRE_crowd2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.4 option greece_events.4.a"
+		name = greece_events.4.a
+		add_political_power = 20
+		hidden_effect = {
+			country_event = { id = greece_events.4 days = 365 }
+		}
+	}
+}
+
+# Black Monday hits Greece
+country_event = {
+	id = greece_events.5
+	title = greece_events.5.t
+	desc = greece_events.5.d
+	picture = GFX_report_event_HOL_black_monday
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = GRE_black_monday_1 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.5 option greece_events.5.a"
+		name = greece_events.5.a
+		add_stability = -0.1
+		effect_tooltip = { add_ideas = GRE_black_monday_1 }
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 2 }
+		hidden_effect = {
+			country_event = { id = greece_events.154 days = 10 random_days = 30 }
+		}
+	}
+}
+
+# Agricultural crisis (fired by focus)
+country_event = {
+	id = greece_events.6
+	title = greece_events.6.t
+	desc = greece_events.6.d
+	picture = GFX_report_event_SRI_italian_farmers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.6 option greece_events.6.a"
+		name = greece_events.6.a #Help them out as much as we can
+		ai_chance = { base = 60 }
+		add_political_power = -25
+		add_stability = -0.05
+		custom_effect_tooltip = GRE_increase_monarchist
+		if = {
+			limit = {
+				NOT = {
+					has_government = radical_socialist
+				}
+			}
+			add_popularity = {
+				ideology = radical_socialist
+				popularity = 0.05
+			}
+			else = {
+				add_popularity = {
+					ideology = radical_socialist
+					popularity = -0.05
+				}
+			}
+		}
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.6 option greece_events.6.b"
+		name = greece_events.6.b #Dig deep - they're the backbone of Greece
+		ai_chance = { base = 40 }
+		add_political_power = -75
+		add_stability = 0.05
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -1 }
+	}
+}
+
+# Foreign Industry Question (fired by focus)
+country_event = {
+	id = greece_events.7
+	title = greece_events.7.t
+	desc = greece_events.7.d
+	picture = GFX_report_event_NOR_black_monday
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.7 option greece_events.7.a"
+		name = greece_events.7.a #Seize it all, no matter the repercussions
+		ai_chance = { base = 75 }
+		custom_effect_tooltip = GRE_germany_austria_tt
+		custom_effect_tooltip = tooltip_white_line
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = { has_idea = GRE_foreign_industry_GER1 }
+			remove_ideas = GRE_foreign_industry_GER1
+			GER = {
+				country_event = greece_events.8
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = GRE_stole_industry1
+				}
+				custom_effect_tooltip = tooltip_white_line
+				set_country_flag = { flag = GRE_stole_industry days = 1095 value = 1 }
+			}
+		}
+		if = {
+			limit = { has_idea = GRE_foreign_industry_AUS1 }
+			remove_ideas = GRE_foreign_industry_AUS1
+			AUS = {
+				country_event = greece_events.8
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = GRE_stole_industry1
+				}
+				custom_effect_tooltip = tooltip_white_line
+				set_country_flag = { flag = GRE_stole_industry days = 1095 value = 1 }
+			}
+		}
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.7 option greece_events.7.b"
+		name = greece_events.7.b #Deal with the worst cases only
+		ai_chance = { base = 20 }
+		custom_effect_tooltip = GRE_germany_austria_maybe_tt
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = { has_idea = GRE_foreign_industry_GER1 }
+			swap_ideas = {
+				remove_idea = GRE_foreign_industry_GER1
+				add_idea = GRE_foreign_industry_GER2
+			}
+			GER = {
+				country_event = greece_events.11
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = GRE_stole_industry2
+				}
+				set_country_flag = { flag = GRE_stole_industry days = 540 value = 1 }
+			}
+		}
+		if = {
+			limit = { has_idea = GRE_foreign_industry_AUS1 }
+			swap_ideas = {
+				remove_idea = GRE_foreign_industry_AUS1
+				add_idea = GRE_foreign_industry_AUS2
+			}
+			AUS = {
+				country_event = greece_events.11
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = GRE_stole_industry2
+				}
+				set_country_flag = { flag = GRE_stole_industry days = 540 value = 1 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.7 option greece_events.7.c"
+		name = greece_events.7.c #Subsidize the investors ourselves - they'd better be grateful
+		ai_chance = { base = 5 }
+		add_political_power = -100
+		set_temp_variable = { ideology_change_var = -0.1 }
+		change_ruling_party_popularity = yes
+		custom_effect_tooltip = GRE_increase_monarchist
+		if = {
+			limit = { has_idea = GRE_foreign_industry_GER1 }
+			swap_ideas = {
+				remove_idea = GRE_foreign_industry_GER1
+				add_idea = GRE_foreign_industry_GER3
+			}
+			reverse_add_opinion_modifier = {
+				target = GER
+				modifier = GRE_aided_industry
+			}
+		}
+		if = {
+			limit = { has_idea = GRE_foreign_industry_AUS1 }
+			swap_ideas = {
+				remove_idea = GRE_foreign_industry_AUS1
+				add_idea = GRE_foreign_industry_AUS3
+			}
+			reverse_add_opinion_modifier = {
+				target = AUS
+				modifier = GRE_aided_industry
+			}
+		}
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 2 }
+	}
+}
+
+# Germany or Austria reacts to full nationalization
+country_event = {
+	id = greece_events.8
+	title = greece_events.8.t
+	desc = greece_events.8.d
+	picture = GFX_report_event_NOR_black_monday
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.8 option greece_events.8.a"
+		name = greece_events.8.a #Apply sanctions and pull all business out at once
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.5
+				tag = AUS
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					AND = {
+						tag = AUS
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					}
+					AND = {
+						tag = GER
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					}
+				}
+			}
+		}
+		if = { limit = { tag = AUS }
+			custom_effect_tooltip = GRE_sanction_tt
+		}
+		if = { limit = { tag = GER }
+			custom_effect_tooltip = GRE_sanction_tt
+		}
+		custom_effect_tooltip = tooltip_white_line
+		set_country_flag = GRE_economic_sanctions
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = GRE_they_applied_sanctions1
+		}
+		FROM = {
+			country_event = { id = greece_events.9 days = 3 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.8 option greece_events.8.b"
+		name = greece_events.8.b #Just apply the sanctions and express our outrage
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 1.5
+				tag = GER
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					AND = {
+						tag = AUS
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					}
+					AND = {
+						tag = GER
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					}
+				}
+			}
+		}
+		if = { limit = { tag = AUS }
+			custom_effect_tooltip = GRE_sanction_tt
+		}
+		if = { limit = { tag = GER }
+			custom_effect_tooltip = GRE_sanction_tt
+		}
+		custom_effect_tooltip = tooltip_white_line
+		set_country_flag = GRE_economic_sanctions
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = GRE_they_applied_sanctions2
+		}
+		FROM = {
+			country_event = { id = greece_events.10 days = 3 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.8 option greece_events.8.c"
+		name = greece_events.8.c #Leave them be - we're all trying to cope
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 2.0
+				tag = AUS
+			}
+		}
+	}
+}
+
+# Germany or Austria has_responded with full sanctions
+country_event = {
+	id = greece_events.9
+	title = greece_events.9.t
+	desc = greece_events.9.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.9 option greece_events.9.a"
+		name = greece_events.9.a
+		if = {
+			limit = { FROM = { tag = GER } }
+			add_timed_idea = {
+				idea = GRE_german_sanctions
+				days = 1095
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = GRE_austrian_sanctions
+				days = 1095
+			}
+		}
+		every_country = {
+			limit = { is_ally_with = FROM }
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = GRE_applied_sanctions
+			}
+		}
+	}
+}
+
+# Germany or Austria has_responded with partial sanctions
+country_event = {
+	id = greece_events.10
+	title = greece_events.10.t
+	desc = greece_events.10.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.10 option greece_events.9.a"
+		name = greece_events.9.a
+		every_country = {
+			limit = { is_ally_with = FROM }
+			add_opinion_modifier = {
+				target = FROM
+				modifier = GRE_applied_sanctions
+			}
+		}
+	}
+}
+
+# Germany or Austria reacts to partial nationalization
+country_event = {
+	id = greece_events.11
+	title = greece_events.11.t
+	desc = greece_events.11.d
+	picture = GFX_report_event_NOR_black_monday
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.11 option greece_events.11.a"
+		name = greece_events.11.a #Apply sanctions and express our outrage
+		ai_chance = {
+			base = 65
+			modifier = {
+				factor = 0
+				OR = {
+					AND = {
+						tag = AUS
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					}
+					AND = {
+						tag = GER
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					}
+				}
+			}
+		}
+		if = { limit = { tag = AUS }
+			custom_effect_tooltip = GRE_sanction_tt
+		}
+		if = { limit = { tag = GER }
+			custom_effect_tooltip = GRE_sanction_tt
+		}
+		custom_effect_tooltip = tooltip_white_line
+		set_country_flag = GRE_economic_sanctions
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = GRE_they_applied_sanctions2
+		}
+		FROM = {
+			country_event = { id = greece_events.10 days = 3 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.11 option greece_events.8.c"
+		name = greece_events.8.c #Leave them be - we're all trying to cope
+		ai_chance = {
+			base = 35
+			modifier = {
+				factor = 2
+				tag = AUS
+			}
+		}
+	}
+}
+
+# Government waits too long to start referendum
+country_event = {
+	id = greece_events.12
+	title = greece_events.12.t
+	desc = greece_events.12.d
+	picture = GFX_report_event_GRE_metaxas
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_global_flag = GRE_1938_elections_happened
+		NOT = { focus_progress = { focus = GRE_monarchy_referendum progress > 0 } }
+		has_idea = GRE_memories_of_king
+		has_elected_government = yes
+		has_war = no
+		OR = {
+			has_stability > 0.60
+			has_global_flag = GRE_balkan_war_loss
+			AND = {
+				owns_state = 731 #Florina
+				owns_state = 769 #Serres
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 6
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.12 option greece_events.12.a"
+		name = greece_events.12.a
+		set_temp_variable = { ideology_change_var = -0.05 }
+		change_ruling_party_popularity = yes
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 1 }
+	}
+}
+
+# Greece asks to join faction (fired by decision)
+country_event = {
+	id = greece_events.14
+	title = greece_events.14.t
+	desc = greece_events.14.d
+	picture = GFX_report_event_GRE_athens
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_faction_leader = yes
+		country_exists = FROM
+		NOT = { has_war_with = FROM }
+		FROM = { is_in_faction = no }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.14 option greece_events.14.a"
+		name = greece_events.14.a #Of course!
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				FROM = { has_country_flag = GRE_may_start_megali }
+				OR = {
+					GRE_allied_country_is_target_of_greek_claim = yes
+					GRE_status_quo_factions_country_is_target_of_greek_claim = yes
+				}
+			}
+		}
+		set_temp_variable = { new_faction_leader = ROOT }
+		FROM = { AUS_flag_country_as_austrian_ally = yes }
+		faction_leader = { add_to_faction = FROM }
+		FROM = { country_event = { id = greece_events.15 hours = 3 } }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.14 option greece_events.14.b"
+		name = greece_events.14.b #They will be more trouble than they're worth
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				FROM = { has_country_flag = GRE_may_start_megali }
+				OR = {
+					GRE_allied_country_is_target_of_greek_claim = yes
+					GRE_status_quo_factions_country_is_target_of_greek_claim = yes
+				}
+			}
+		}
+		FROM = {
+			country_event = { id = greece_events.16 hours = 3 }
+		}
+	}
+}
+
+# Faction accepts Greece
+country_event = {
+	id = greece_events.15
+	title = greece_events.15.t
+	desc = greece_events.15.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.15 option greece_events.15.a"
+		name = greece_events.15.a
+		add_political_power = 50
+		if = {
+			limit = {
+				is_in_faction_with = SER
+				has_global_flag = SER_IMRO_victory
+				SER = { has_war_with = BUL }
+			}
+			country_event = serbia_events.31
+		}
+		else_if = {
+			limit = {
+				is_in_faction_with = SER
+				SER = { has_war_with = BUL }
+				BUL = { has_completed_focus = BUL_macedonia_intervention }
+			}
+			country_event = serbia_events.310
+		}
+	}
+}
+
+# Faction refuses Greece
+country_event = {
+	id = greece_events.16
+	title = greece_events.16.t
+	desc = greece_events.16.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.16 option greece_events.16.a"
+		name = greece_events.16.a
+		add_political_power = -25
+	}
+}
+
+# Massive demonstrations after Balkan War loss
+country_event = {
+	id = greece_events.17
+	title = greece_events.17.t
+	desc = greece_events.17.d
+	picture = GFX_report_event_GRE_protest
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.17 option greece_events.17.a"
+		name = greece_events.17.a
+		set_global_flag = GRE_balkan_war_loss
+		add_stability = -0.20
+		set_temp_variable = { ideology_change_var = -0.2 }
+		change_ruling_party_popularity = yes
+	}
+}
+
+# The government nears collapse
+country_event = {
+	id = greece_events.18
+	title = greece_events.18.t
+	desc = greece_events.18.d
+	picture = GFX_report_event_SPA_civwar3
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_global_flag = GRE_balkan_war_loss
+		if = {
+			limit = { has_civil_war = yes }
+			NOT = {
+				any_country_with_original_tag = {
+					original_tag_to_check = ROOT
+					civilwar_target = ROOT
+					surrender_progress > ROOT.surrender_progress
+				}
+			}
+		}
+		else = {
+			controls_all_owned_states = yes
+		}
+		is_subject = no
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	immediate = {
+		hidden_effect = {
+			random_country_with_original_tag = {
+				original_tag_to_check = ROOT
+				limit = { civilwar_target = ROOT }
+				save_event_target_as = GRE_civil_war_target
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.18 option greece_events.18.a"
+		name = greece_events.18.a #Forces loyal to Metaxas take over
+		trigger = {
+			has_character = GRE_ioannis_metaxas
+			NOT = { has_government = paternal_autocrat }
+			has_civil_war = no
+		}
+		ai_chance = {
+			base = 35
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_REP }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+			}
+		}
+		clr_country_flag = GRE_republicans_win_referendum
+		clr_country_flag = GRE_monarchists_win_referendum
+		add_stability = -0.10
+		add_political_power = -200
+		if = {
+			limit = { has_socialist_government = yes }
+			GRE_stop_being_syndicalist = yes
+		}
+		if = {
+			limit = {
+				is_in_faction = yes
+				NOT = { faction_leader = { tag = BPL } }
+			}
+			leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.10
+		}
+		hidden_effect = { news_event = greece_events.500 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.18 option greece_events.18.b"
+		name = greece_events.18.b #Athanasios Klaras wrests control in a coup
+		trigger = {
+			has_socialist_government = no
+			has_civil_war = no
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_REP }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+				}
+			}
+		}
+		clr_country_flag = GRE_republicans_win_referendum
+		clr_country_flag = GRE_monarchists_win_referendum
+		add_stability = -0.10
+		add_political_power = -200
+		leave_faction = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+		set_politics = {
+			ruling_party = syndicalist
+			elections_allowed = no
+		}
+		GRE_become_syndicalist = yes
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.10
+		}
+		hidden_effect = { news_event = greece_events.501 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.18 option greece_events.18.c"
+		name = greece_events.18.c #The army takes control, promising free and democratic elections
+		trigger = {
+			has_democratic_government = no
+			NOT = { has_cosmetic_tag = GRE_kingdom }
+			has_civil_war = no
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+				}
+			}
+		}
+		add_stability = -0.10
+		add_political_power = -200
+		if = {
+			limit = { has_socialist_government = yes }
+			GRE_stop_being_syndicalist = yes
+		}
+		if = {
+			limit = {
+				is_in_faction = yes
+				NOT = { faction_leader = { tag = BPL } }
+			}
+			leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+		separate_peace_all_wars = yes
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.10
+		}
+		hidden_effect = {
+			news_event = greece_events.502
+			country_event = { id = greece_events.53 days = 60 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.18 option greece_events.18.e"
+		name = greece_events.18.e #The King abdicates the throne, restoring the republic
+		trigger = {
+			has_cosmetic_tag = GRE_kingdom
+			has_civil_war = no
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { has_completed_focus = GRE_monarchy_referendum } }
+			custom_effect_tooltip = GRE_decrease_monarchist
+			modify_country_flag = { flag = gre_monarchist_sympathies value = -4 }
+		}
+		if = {
+			limit = { has_country_flag = GRE_monarchists_win_referendum }
+			set_country_flag = GRE_republicans_win_referendum
+			clr_country_flag = GRE_monarchists_win_referendum
+		}
+		add_stability = -0.10
+		add_political_power = -200
+		GRE_restore_republic = yes
+		if = {
+			limit = {
+				has_government = social_conservative
+			}
+			set_country_flag = GRE_was_soccon
+		}
+		else_if = {
+			limit = {
+				has_government = social_liberal
+			}
+			set_country_flag = GRE_was_soclib
+		}
+		else_if = {
+			limit = {
+				has_government = market_liberal
+			}
+			set_country_flag = GRE_was_marklib
+		}
+		else_if = {
+			limit = {
+				has_government = social_democrat
+			}
+			set_country_flag = GRE_was_socdem
+		}
+		country_event = { id = greece_events.54 days = 1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.18 option greece_events.18.f"
+		name = greece_events.18.f #The government steps down, promising immediate elections
+		trigger = {
+			has_elected_government = yes
+			NOT = { has_cosmetic_tag = GRE_kingdom }
+			has_civil_war = no
+		}
+		ai_chance = {
+			base = 15
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+				}
+			}
+		}
+		add_stability = -0.10
+		add_political_power = -200
+		if = {
+			limit = { NOT = { has_completed_focus = GRE_monarchy_referendum } }
+			custom_effect_tooltip = GRE_increase_monarchist
+			modify_country_flag = { flag = gre_monarchist_sympathies value = 4 }
+		}
+		if = {
+			limit = {
+				has_government = social_conservative
+			}
+			set_country_flag = GRE_was_soccon
+		}
+		else_if = {
+			limit = {
+				has_government = social_liberal
+			}
+			set_country_flag = GRE_was_soclib
+		}
+		else_if = {
+			limit = {
+				has_government = market_liberal
+			}
+			set_country_flag = GRE_was_marklib
+		}
+		else_if = {
+			limit = {
+				has_government = social_democrat
+			}
+			set_country_flag = GRE_was_socdem
+		}
+		country_event = { id = greece_events.54 days = 1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.18 option greece_events.18.g"
+		name = greece_events.18.g #The government surrenders to the rebels
+		trigger = {
+			has_civil_war = yes
+		}
+		if = {
+			limit = { is_ai = no }
+			add_stability = -0.10
+			add_political_power = -200
+			hidden_effect = { clear_all_relations = yes }
+			clear_variable = GRE_previous_faction_leader
+			clr_country_flag = GRE_republicans_win_referendum
+			clr_country_flag = GRE_monarchists_win_referendum
+			if = {
+				limit = { has_socialist_government = yes }
+				GRE_stop_being_syndicalist = yes
+			}
+			else = {
+				GRE_become_syndicalist = yes
+			}
+			event_target:GRE_civil_war_target = {
+				ROOT = { copy_government_of_PREV = yes }
+				var:country_leader = {
+					hidden_effect = { set_nationality = ROOT }
+					promote_character = yes
+				}
+				effect_tooltip = {
+					annex_country = {
+						target = ROOT
+						transfer_troops = yes
+					}
+				}
+				hidden_effect = {
+					ROOT = {
+						annex_country = {
+							target = PREV
+							transfer_troops = yes
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						has_cosmetic_tag = GRE_civil_war
+						has_cosmetic_tag = GRE_civil_war_socialist
+					}
+				}
+				drop_cosmetic_tag = yes
+			}
+		}
+		else = {
+			event_target:GRE_civil_war_target = {
+				start_peace_conference = {
+					tag = ROOT
+					score_factor = 1
+					winner_scope = LIMITED
+					loser_scope = LIMITED
+				}
+			}
+		}
+	}
+}
+
+# The Death of Ioannis Metaxas
+country_event = {
+	id = greece_events.19
+	title = greece_events.19.t
+	picture = GFX_report_event_GRE_metaxas
+
+	desc = {
+		text = greece_events.19.d.ishos
+		trigger = {
+			has_country_leader = { character = GRE_ioannis_metaxas }
+		}
+	}
+	desc = {
+		text = greece_events.19.d.nothos
+		trigger = {
+			NOT = { has_country_leader = { character = GRE_ioannis_metaxas } }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.19 option greece_events.19.a"
+		name = greece_events.19.a
+		GRE_ioannis_metaxas = { kill_character = yes }
+	}
+}
+
+# Papanastasiou dies shortly after 1938 election
+country_event = {
+	id = greece_events.20
+	title = greece_events.20.t
+	picture = GFX_report_event_europe_funeral
+
+	desc = {
+		text = greece_events.20.d.ishos
+		trigger = {
+			has_country_leader = { character = GRE_alexandros_papanastasiou }
+		}
+	}
+	desc = {
+		text = greece_events.20.d.nothos
+		trigger = {
+			NOT = { has_country_leader = { character = GRE_alexandros_papanastasiou } }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.20 option greece_events.20.a"
+		name = greece_events.20.a
+		if = {
+			limit = { has_cosmetic_tag = GRE_kingdom }
+			add_country_leader_role = {
+				character = GRE_nikolaos_plastiras
+				country_leader = {
+					desc = GRE_nikolaos_plastiras_advisor_desc
+					ideology = social_democrat_subtype
+				}
+			}
+		}
+		else = {
+			add_country_leader_role = {
+				character = GRE_nikolaos_plastiras
+				country_leader = {
+					desc = GRE_nikolaos_plastiras_advisor_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		GRE_alexandros_papanastasiou = { kill_character = yes }
+	}
+}
+
+# Gavrillides steps down in 1940
+country_event = {
+	id = greece_events.21
+	title = greece_events.21.t
+	picture = GFX_report_event_GRE_parliament
+
+	desc = {
+		text = greece_events.21.d.ishos
+		trigger = {
+			has_country_leader = { character = GRE_kostas_gavriilides }
+		}
+	}
+	desc = {
+		text = greece_events.21.d.nothos
+		trigger = {
+			NOT = { has_country_leader = { character = GRE_kostas_gavriilides } }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.21 option greece_events.21.a"
+		name = greece_events.21.a
+		add_country_leader_role = {
+			character = GRE_nikos_ploumpidis
+			country_leader = {
+				desc = GRE_nikos_ploumpidis_leader_desc
+				ideology = radical_socialist_subtype
+			}
+			promote_leader = yes
+		}
+		retire_character = GRE_kostas_gavriilides
+	}
+}
+
+# George Papandreou is challenged for leadership
+country_event = {
+	id = greece_events.22
+	title = greece_events.22.t
+	desc = greece_events.22.d
+	picture = GFX_report_event_GRE_papandreou
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		date > 1940.10.10
+		has_country_leader = { character = GRE_georgios_papandreou }
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.22 option greece_events.22.a"
+		name = greece_events.22.a #Kanellopoulos wrests controls of the party
+		ai_chance = { base = 70 }
+		add_political_power = -50
+		if = {
+			limit = { has_cosmetic_tag = GRE_kingdom }
+			add_country_leader_role = {
+				character = GRE_panagiotis_kanellopoulos
+				country_leader = {
+					desc = GRE_panagiotis_kanellopoulos_leader_desc
+					ideology = social_liberal_subtype
+				}
+			}
+		}
+		else = {
+			add_country_leader_role = {
+				character = GRE_panagiotis_kanellopoulos
+				country_leader = {
+					desc = GRE_panagiotis_kanellopoulos_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.22 option greece_events.22.b"
+		name = greece_events.22.b #Papandreou holds onto leadership after a narrow vote
+		ai_chance = { base = 30 }
+		add_popularity = {
+			ideology = social_liberal
+			popularity = -0.10
+		}
+	}
+}
+
+# Themistoklis Sofoulis dies in 1949
+country_event = {
+	id = greece_events.23
+	title = greece_events.23.t
+	picture = GFX_report_event_europe_funeral
+
+	desc = {
+		text = greece_events.23.d.ishos
+		trigger = {
+			has_country_leader = { character = GRE_themistoklis_sofoulis }
+		}
+	}
+	desc = {
+		text = greece_events.23.d.nothos
+		trigger = {
+			NOT = { has_country_leader = { character = GRE_themistoklis_sofoulis } }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.23 option greece_events.23.a"
+		name = greece_events.23.a
+		if = {
+			limit = { has_cosmetic_tag = GRE_kingdom }
+			add_country_leader_role = {
+				character = GRE_konstantinos_tsatsos
+				country_leader = {
+					desc = GRE_konstantinos_tsatsos_leader_desc
+					ideology = market_liberal_subtype
+				}
+			}
+		}
+		else = {
+			add_country_leader_role = {
+				character = GRE_konstantinos_tsatsos
+				country_leader = {
+					desc = GRE_konstantinos_tsatsos_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		GRE_themistoklis_sofoulis = { kill_character = yes }
+	}
+}
+
+# Panagis Tsaldaris dies in 1936
+country_event = {
+	id = greece_events.24
+	title = greece_events.24.t
+	desc = greece_events.24.d
+	picture = GFX_report_event_europe_funeral
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.24 option greece_events.24.a"
+		name = greece_events.24.a
+		if = {
+			limit = { has_cosmetic_tag = GRE_kingdom }
+			add_country_leader_role = {
+				character = GRE_konstantinos_tsaldaris
+				country_leader = {
+					desc = GRE_konstantinos_tsaldaris_leader_desc
+					ideology = social_conservative_subtype
+				}
+			}
+		}
+		else = {
+			add_country_leader_role = {
+				character = GRE_konstantinos_tsaldaris
+				country_leader = {
+					desc = GRE_konstantinos_tsaldaris_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		GRE_panagis_tsaldaris = { kill_character = yes }
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.03
+		}
+	}
+}
+
+### Election Events
+
+# Elections prior to monarchy referendum
+country_event = {
+	id = greece_events.50
+	title = greece_events.50.t
+	desc = greece_events.50.d
+	picture = GFX_report_event_AST_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+		NOT = { has_completed_focus = GRE_monarchy_referendum }
+		has_capitulated = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.50 option greece_events.50.a"
+		name = greece_events.50.a #Social Conservative
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_conservative
+			}
+		}
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 1 }
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.20
+		}
+		unlock_national_focus = GRE_soc_conservatives
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.50 option greece_events.50.b"
+		name = greece_events.50.b #Social Liberal
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_liberal
+			}
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.20
+		}
+		unlock_national_focus = GRE_soc_liberals
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.50 option greece_events.50.c"
+		name = greece_events.50.c #Market Liberal
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+			modifier = {
+				factor = 3
+				date > 1939.1.1
+				has_government = market_liberal
+			}
+		}
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -1 }
+		set_politics = {
+			ruling_party = market_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.20
+		}
+		unlock_national_focus = GRE_market_liberals
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.50 option greece_events.50.e"
+		name = greece_events.50.e #Social Democrats
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+				}
+			}
+			modifier = {
+				factor = 3
+				date > 1939.1.1
+				has_government = social_democrat
+			}
+		}
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -2 }
+		set_politics = {
+			ruling_party = social_democrat
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.20
+		}
+		unlock_national_focus = GRE_soc_dems
+	}
+	after = {
+		if = {
+			limit = {
+				date > 1938.1.1
+				NOT = { has_global_flag = GRE_1938_elections_happened }
+			}
+			set_global_flag = GRE_1938_elections_happened
+			unlock_national_focus = GRE_elections_1938
+		}
+	}
+}
+
+# Elections after a monarchist win
+country_event = {
+	id = greece_events.51
+	title = greece_events.51.t
+	picture = GFX_report_event_AST_election
+
+	desc = {
+		text = greece_events.51.d.noban
+		trigger = {
+			NOT = {
+				has_country_flag = GRE_socialists_banned
+			}
+		}
+	}
+	desc = {
+		text = greece_events.51.d.ban
+		trigger = {
+			has_country_flag = GRE_socialists_banned
+		}
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+		has_completed_focus = GRE_monarchy_referendum
+		has_country_flag = GRE_monarchists_win_referendum
+		has_capitulated = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.51 option greece_events.51.a"
+		name = greece_events.51.a #Social Conservative
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.20
+		}
+		unlock_national_focus = GRE_soc_conservatives
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.51 option greece_events.51.b"
+		name = greece_events.51.b #Radical Socialists
+		trigger = {
+			compare_autonomy_state > occupied_puppet
+			NOT = { has_country_flag = GRE_socialists_banned }
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					AND = {
+						OR = {
+							has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP }
+							has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN }
+							has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN }
+						}
+						SER = { has_socialist_government = no }
+					}
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+				}
+				NOT = { has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC } }
+			}
+		}
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.20
+		}
+		GRE_become_syndicalist = yes
+		unlock_national_focus = GRE_radical_socialists
+		hidden_effect = { news_event = greece_events.503 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.51 option greece_events.51.c"
+		name = greece_events.51.c #Social Liberal-Social Democrat coalition
+		trigger = {
+			NOT = {
+				has_country_flag = GRE_socialists_banned
+			}
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				OR = {
+					has_government = social_liberal
+					has_government = social_democrat
+				}
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.10
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.10
+		}
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		unlock_national_focus = GRE_soc_dems
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.51 option greece_events.50.b"
+		name = greece_events.50.b #Social Liberal
+		trigger = {
+			has_country_flag = GRE_socialists_banned
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_liberal
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.20
+		}
+		unlock_national_focus = GRE_soc_liberals
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.51 option greece_events.50.c"
+		name = greece_events.50.c #Market Liberal
+		trigger = {
+			has_country_flag = GRE_socialists_banned
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				date > 1939.1.1
+				has_government = market_liberal
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = market_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.20
+		}
+		unlock_national_focus = GRE_market_liberals
+	}
+	after = {
+		if = {
+			limit = {
+				date > 1938.1.1
+				NOT = { has_global_flag = GRE_1938_elections_happened }
+			}
+			set_global_flag = GRE_1938_elections_happened
+			unlock_national_focus = GRE_elections_1938
+		}
+	}
+}
+
+# Elections after a republican win
+country_event = {
+	id = greece_events.52
+	title = greece_events.52.t
+	picture = GFX_report_event_AST_election
+
+	desc = {
+		text = greece_events.52.d.noban
+		trigger = {
+			NOT = {
+				has_country_flag = GRE_socialists_banned
+			}
+		}
+	}
+	desc = {
+		text = greece_events.52.d.ban
+		trigger = {
+			has_country_flag = GRE_socialists_banned
+		}
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+		has_completed_focus = GRE_monarchy_referendum
+		NOT = { has_country_flag = GRE_monarchists_win_referendum }
+		has_capitulated = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.52 option greece_events.52.a"
+		name = greece_events.52.a #Social Conservative
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				date > 1939.1.1
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.20
+		}
+		if = {
+			limit = {
+				date > 1938.1.1
+				NOT = { has_global_flag = GRE_1938_elections_happened }
+			}
+			set_global_flag = GRE_1938_elections_happened
+			unlock_national_focus = GRE_elections_1938
+		}
+		unlock_national_focus = GRE_soc_conservatives
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.52 option greece_events.52.b"
+		name = greece_events.52.b #Social Liberal
+		ai_chance = {
+			base = 35
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_liberal
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.20
+		}
+		if = {
+			limit = {
+				date > 1938.1.1
+				NOT = { has_global_flag = GRE_1938_elections_happened }
+			}
+			set_global_flag = GRE_1938_elections_happened
+			unlock_national_focus = GRE_elections_1938
+		}
+		unlock_national_focus = GRE_soc_liberals
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.52 option greece_events.52.c"
+		name = greece_events.52.c #Market Liberal
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = market_liberal
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = market_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.20
+		}
+		if = {
+			limit = {
+				date > 1938.1.1
+				NOT = { has_global_flag = GRE_1938_elections_happened }
+			}
+			set_global_flag = GRE_1938_elections_happened
+			unlock_national_focus = GRE_elections_1938
+		}
+		unlock_national_focus = GRE_market_liberals
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.52 option greece_events.52.e"
+		name = greece_events.52.e #Syndicalists
+		trigger = {
+			compare_autonomy_state > occupied_puppet
+			NOT = { has_country_flag = GRE_socialists_banned }
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_democrat
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_REP }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					AND = {
+						OR = {
+							has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP }
+							has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN }
+							has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN }
+						}
+						SER = { has_socialist_government = no }
+					}
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+				}
+				NOT = { has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC } }
+			}
+		}
+		set_politics = {
+			ruling_party = syndicalist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.10
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.10
+		}
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		GRE_become_syndicalist = yes
+		unlock_national_focus = GRE_old_order_overthrown
+		hidden_effect = { news_event = greece_events.504 }
+	}
+}
+
+# Elections restoring democracy
+country_event = {
+	id = greece_events.53
+	title = greece_events.53.t
+	desc = greece_events.53.d
+	picture = GFX_report_event_AST_election
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				date > 1938.1.1
+				NOT = { has_global_flag = GRE_1938_elections_happened }
+			}
+			set_global_flag = GRE_1938_elections_happened
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.53 option greece_events.50.a"
+		name = greece_events.50.a #Social Conservative
+		trigger = {
+			OR = {
+				NOT = {
+					has_country_flag = GRE_was_soccon
+				}
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+			}
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { has_completed_focus = GRE_monarchy_referendum } }
+			custom_effect_tooltip = GRE_increase_monarchist
+			modify_country_flag = { flag = gre_monarchist_sympathies value = 1 }
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.20
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.53 option greece_events.50.b"
+		name = greece_events.50.b #Social Liberal
+		trigger = {
+			OR = {
+				NOT = {
+					has_country_flag = GRE_was_soclib
+				}
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+			}
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_liberal
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.20
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.53 option greece_events.50.c"
+		name = greece_events.50.c #Market Liberal
+		trigger = {
+			OR = {
+				NOT = {
+					has_country_flag = GRE_was_marklib
+				}
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+			}
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				date > 1939.1.1
+				has_government = market_liberal
+			}
+		}
+		if = {
+			limit = { NOT = { has_completed_focus = GRE_monarchy_referendum } }
+			custom_effect_tooltip = GRE_decrease_monarchist
+			modify_country_flag = { flag = gre_monarchist_sympathies value = -1 }
+		}
+		set_politics = {
+			ruling_party = market_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.20
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.53 option greece_events.50.e"
+		name = greece_events.50.e #Social Democrats
+		trigger = {
+			OR = {
+				NOT = {
+					has_country_flag = GRE_was_socdem
+				}
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+			}
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 5
+				date > 1939.1.1
+				has_government = social_democrat
+			}
+		}
+		if = {
+			limit = { NOT = { has_completed_focus = GRE_monarchy_referendum } }
+			custom_effect_tooltip = GRE_decrease_monarchist
+			modify_country_flag = { flag = gre_monarchist_sympathies value = -2 }
+		}
+		set_politics = {
+			ruling_party = social_democrat
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.20
+		}
+	}
+	after = {
+		add_political_power = 100
+		add_stability = 0.05
+		clr_country_flag = GRE_was_soccon
+		clr_country_flag = GRE_was_soclib
+		clr_country_flag = GRE_was_marklib
+		clr_country_flag = GRE_was_socdem
+	}
+}
+
+# Elections after a loss in the Balkan War
+country_event = {
+	id = greece_events.54
+	title = greece_events.54.t
+	desc = greece_events.54.d
+	picture = GFX_report_event_AST_election
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = {
+				date > 1938.1.1
+				NOT = { has_global_flag = GRE_1938_elections_happened }
+			}
+			set_global_flag = GRE_1938_elections_happened
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.54 option greece_events.50.a"
+		name = greece_events.50.a #Social Conservative
+		trigger = {
+			OR = {
+				NOT = {
+					has_country_flag = GRE_was_soccon
+				}
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+			}
+		}
+		ai_chance = {
+			base = 35
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { has_completed_focus = GRE_monarchy_referendum } }
+			custom_effect_tooltip = GRE_increase_monarchist
+			modify_country_flag = { flag = gre_monarchist_sympathies value = 1 }
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.20
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.54 option greece_events.50.b"
+		name = greece_events.50.b #Social Liberal
+		trigger = {
+			OR = {
+				NOT = {
+					has_country_flag = GRE_was_soclib
+				}
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+			}
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 2
+				date > 1939.1.1
+				has_government = social_liberal
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.20
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.54 option greece_events.50.c"
+		name = greece_events.50.c #Market Liberal
+		trigger = {
+			OR = {
+				NOT = {
+					has_country_flag = GRE_was_marklib
+				}
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+			}
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				date > 1939.1.1
+				has_government = market_liberal
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { has_completed_focus = GRE_monarchy_referendum } }
+			custom_effect_tooltip = GRE_decrease_monarchist
+			modify_country_flag = { flag = gre_monarchist_sympathies value = -1 }
+		}
+		set_politics = {
+			ruling_party = market_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.20
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.54 option greece_events.50.e"
+		name = greece_events.50.e #Social Democrats
+		trigger = {
+			OR = {
+				NOT = {
+					has_country_flag = GRE_was_socdem
+				}
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+				has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+			}
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 5
+				date > 1939.1.1
+				has_government = social_democrat
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { has_completed_focus = GRE_monarchy_referendum } }
+			custom_effect_tooltip = GRE_decrease_monarchist
+			modify_country_flag = { flag = gre_monarchist_sympathies value = -2 }
+		}
+		set_politics = {
+			ruling_party = social_democrat
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.20
+		}
+	}
+	after = {
+		add_political_power = 100
+		add_stability = 0.05
+		clr_country_flag = GRE_was_soccon
+		clr_country_flag = GRE_was_soclib
+		clr_country_flag = GRE_was_marklib
+		clr_country_flag = GRE_was_socdem
+	}
+}
+
+### Monarchy Referendum Events
+
+# Referendum begins
+country_event = {
+	id = greece_events.100
+	title = greece_events.100.t
+	desc = greece_events.100.d
+	picture = GFX_report_event_GRE_referendum
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.100 option greece_events.100.a"
+		name = greece_events.100.a
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = greece_events.101 days = 5 } #Monarchist pamphlets
+			country_event = { id = greece_events.102 days = 15 } #Republican campaign
+			country_event = { id = greece_events.103 days = 25 } #Aristrocrat lobbying
+			country_event = { id = greece_events.104 days = 35 } #Socialist speech
+			country_event = { id = greece_events.105 days = 45 } #Pro-Monarchist Riot
+			country_event = { id = greece_events.106 days = 45 } #Pro-Republican Riot
+			country_event = { id = greece_events.107 days = 55 } #Monarchists might win?
+			country_event = { id = greece_events.108 days = 55 } #Republicans might win?
+		}
+	}
+}
+
+# Monarchist pamphlets
+country_event = {
+	id = greece_events.101
+	title = greece_events.101.t
+	desc = greece_events.101.d
+	picture = GFX_report_event_generic_rally2
+
+	is_triggered_only = yes
+
+	trigger = {
+		focus_progress = {
+			focus = GRE_monarchy_referendum
+			progress > 0
+		}
+		NOT = {
+			has_completed_focus = GRE_monarchy_referendum
+		}
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.101 option greece_events.101.a"
+		name = greece_events.101.a #Allow them to distribute
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_democrat
+			}
+		}
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 2 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.101 option greece_events.101.b"
+		name = greece_events.101.b #We must suppress this nonsense
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.5
+				has_political_power < 0
+			}
+			modifier = {
+				factor = 0
+				has_political_power < -50
+			}
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 2
+				has_government = market_liberal
+			}
+		}
+		add_political_power = -50
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -1 }
+	}
+}
+
+# Republican campaign
+country_event = {
+	id = greece_events.102
+	title = greece_events.102.t
+	desc = greece_events.102.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		focus_progress = {
+			focus = GRE_monarchy_referendum
+			progress > 0
+		}
+		NOT = {
+			has_completed_focus = GRE_monarchy_referendum
+		}
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.102 option greece_events.102.a"
+		name = greece_events.102.a # Yes, we should fund this
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 2
+				has_government = market_liberal
+			}
+			modifier = {
+				factor = 0.5
+				has_political_power < 0
+			}
+			modifier = {
+				factor = 0
+				has_political_power < -50
+			}
+		}
+		add_political_power = -50
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -3 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.102 option greece_events.102.b"
+		name = greece_events.102.b # No, we should not get involved
+		ai_chance = { base = 50 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.102 option greece_events.102.c"
+		name = greece_events.102.c # Discourage this talk within our government
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_democrat
+			}
+			modifier = {
+				factor = 0.5
+				has_political_power < 0
+			}
+			modifier = {
+				factor = 0
+				has_political_power < -50
+			}
+		}
+		add_political_power = -25
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 1 }
+	}
+}
+
+# Aristocratic lobbying
+country_event = {
+	id = greece_events.103
+	title = greece_events.103.t
+	desc = greece_events.103.d
+	picture = GFX_report_event_GRE_metaxas
+
+	is_triggered_only = yes
+
+	trigger = {
+		focus_progress = {
+			focus = GRE_monarchy_referendum
+			progress > 0
+		}
+		NOT = {
+			has_completed_focus = GRE_monarchy_referendum
+		}
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.103 option greece_events.103.a"
+		name = greece_events.103.a # We'll allow it
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_democrat
+			}
+		}
+		add_political_power = 25
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 2 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.103 option greece_events.103.b"
+		name = greece_events.103.b # Place a moratorium on this lobbying
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.5
+				has_political_power < 0
+			}
+			modifier = {
+				factor = 0
+				has_political_power < -50
+			}
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 2
+				has_government = market_liberal
+			}
+		}
+		add_political_power = -50
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -1 }
+	}
+}
+
+# Socialist speech
+country_event = {
+	id = greece_events.104
+	title = greece_events.104.t
+	desc = greece_events.104.d
+	picture = GFX_report_event_GRE_zachariadis
+
+	is_triggered_only = yes
+
+	trigger = {
+		focus_progress = {
+			focus = GRE_monarchy_referendum
+			progress > 0
+		}
+		NOT = {
+			has_completed_focus = GRE_monarchy_referendum
+		}
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.104 option greece_events.104.a"
+		name = greece_events.104.a # Allow it to proceed
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 2
+				has_government = market_liberal
+			}
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.03
+		}
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -2 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.104 option greece_events.104.b"
+		name = greece_events.104.b # Send in the police to break it up
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_democrat
+			}
+		}
+		add_stability = -0.03
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 1 }
+	}
+}
+
+# Pro-Monarchist riot
+country_event = {
+	id = greece_events.105
+	title = greece_events.105.t
+	desc = greece_events.105.d
+	picture = GFX_report_event_GRE_riot
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = {
+			flag = gre_monarchist_sympathies
+			value < 2
+		}
+		focus_progress = {
+			focus = GRE_monarchy_referendum
+			progress > 0
+		}
+		NOT = {
+			has_completed_focus = GRE_monarchy_referendum
+		}
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.105 option greece_events.105.a"
+		name = greece_events.105.a # Keep it contained, but use leniency
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.2
+				has_government = social_democrat
+			}
+		}
+		add_stability = -0.03
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 2 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.105 option greece_events.105.b"
+		name = greece_events.105.b # Shut this down with extreme prejudice
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_liberal
+			}
+			modifier = {
+				factor = 0.2
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 1.5
+				has_government = market_liberal
+			}
+		}
+		add_stability = -0.06
+		set_temp_variable = { ideology_change_var = -0.1 }
+		change_ruling_party_popularity = yes
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -1 }
+	}
+}
+
+# Pro-Republican riot
+country_event = {
+	id = greece_events.106
+	title = greece_events.106.t
+	desc = greece_events.106.d
+	picture = GFX_report_event_GRE_riot
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = {
+			flag = gre_monarchist_sympathies
+			value > 4
+		}
+		focus_progress = {
+			focus = GRE_monarchy_referendum
+			progress > 0
+		}
+		NOT = {
+			has_completed_focus = GRE_monarchy_referendum
+		}
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.106 option greece_events.105.a"
+		name = greece_events.105.a # Keep it contained, but use leniency
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.2
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 1.5
+				has_government = market_liberal
+			}
+		}
+		add_stability = -0.03
+		custom_effect_tooltip = GRE_decrease_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = -3 }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.106 option greece_events.105.b"
+		name = greece_events.105.b # Shut this down with extreme prejudice
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_liberal
+			}
+			modifier = {
+				factor = 0.2
+				has_government = social_democrat
+			}
+		}
+		add_stability = -0.06
+		set_temp_variable = { ideology_change_var = -0.1 }
+		change_ruling_party_popularity = yes
+		custom_effect_tooltip = GRE_increase_monarchist
+		modify_country_flag = { flag = gre_monarchist_sympathies value = 1 }
+	}
+}
+
+# Monarchists might win?
+country_event = {
+	id = greece_events.107
+	title = greece_events.107.t
+	desc = greece_events.107.d
+	picture = GFX_report_event_GRE_parliament
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_country_flag = { flag = gre_monarchist_sympathies value > 0 }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+		}
+		focus_progress = { focus = GRE_monarchy_referendum progress > 0 }
+		has_elected_government = yes
+		NOT = {
+			has_completed_focus = GRE_monarchy_referendum
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_REP }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.107 option greece_events.107.a"
+		name = greece_events.107.a # We need to rig the outcome in favor of the republic
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+				NOT = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_government = social_liberal
+			}
+			modifier = {
+				factor = 2
+				has_government = social_democrat
+			}
+		}
+		custom_effect_tooltip = GRE_rigged_for_republic
+		set_country_flag = GRE_republic_rig
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.107 option greece_events.107.b"
+		name = greece_events.107.b # Might win? We must rig the referendum to ensure it
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_government = social_democrat
+			}
+			modifier = {
+				factor = 0.5
+				has_marlib_or_soclib_government = yes
+			}
+			modifier = {
+				factor = 2
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 0.5
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 3
+				}
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+				}
+			}
+		}
+		custom_effect_tooltip = GRE_rigged_for_monarchy
+		set_country_flag = GRE_monarchy_rig
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.107 option greece_events.107.c"
+		name = greece_events.107.c # Do nothing - we will accept the legitimate results
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+				}
+			}
+		}
+	}
+}
+
+# Republicans might win?
+country_event = {
+	id = greece_events.108
+	title = greece_events.108.t
+	desc = greece_events.108.d
+	picture = GFX_report_event_GRE_parliament
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_country_flag = { flag = gre_monarchist_sympathies value < 1 }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+		}
+		focus_progress = { focus = GRE_monarchy_referendum progress > 0 }
+		has_elected_government = yes
+		NOT = {
+			has_completed_focus = GRE_monarchy_referendum
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+			has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_REP }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.108 option greece_events.108.a"
+		name = greece_events.108.a # We need to rig the outcome in favor of the monarchy
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_government = social_democrat
+				NOT = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_marlib_or_soclib_government = yes
+				NOT = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+			}
+			modifier = {
+				factor = 2
+				has_government = social_conservative
+			}
+		}
+		custom_effect_tooltip = GRE_rigged_for_monarchy
+		set_country_flag = GRE_monarchy_rig
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.108 option greece_events.107.b"
+		name = greece_events.107.b # Might win? We must rig the referendum to ensure it
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 0.5
+				has_government = social_liberal
+			}
+			modifier = {
+				factor = 2
+				has_government = social_democrat
+			}
+			modifier = {
+				factor = 0.5
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -2
+				}
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+			}
+		}
+		custom_effect_tooltip = GRE_rigged_for_republic
+		set_country_flag = GRE_republic_rig
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.108 option greece_events.107.c"
+		name = greece_events.107.c # Do nothing - we will accept the legitimate results
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+			}
+		}
+	}
+}
+
+# Referendum occurs
+country_event = {
+	id = greece_events.109
+	title = greece_events.109.t
+	desc = greece_events.109.d
+	picture = GFX_report_event_GRE_referendum
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+		NOT = {
+			has_country_flag = GRE_republicans_win_referendum
+			has_country_flag = GRE_monarchists_win_referendum
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.109 option greece_events.109.a"
+		name = greece_events.109.a
+		if = {
+			limit = {
+				OR = {
+					has_country_flag = GRE_republic_rig
+					has_country_flag = GRE_monarchy_rig
+				}
+			}
+			custom_effect_tooltip = GRE_referendum_is_rigged
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_country_flag = GRE_republic_rig
+				}
+				OR = {
+					has_country_flag = GRE_monarchy_rig
+					has_country_flag = {
+						flag = gre_monarchist_sympathies
+						value > 5
+					}
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+				}
+			}
+			custom_effect_tooltip = GRE_monarchy_guaranteed
+		}
+		else_if = {
+			limit = {
+				NOT = {
+					has_country_flag = GRE_monarchy_rig
+				}
+				OR = {
+					has_country_flag = GRE_republic_rig
+					has_country_flag = {
+						flag = gre_monarchist_sympathies
+						value < -5
+					}
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_REP }
+				}
+			}
+			custom_effect_tooltip = GRE_republic_guaranteed
+		}
+		else_if = {
+			limit = {
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 2
+				}
+			}
+			custom_effect_tooltip = GRE_monarchy_likely
+		}
+		else_if = {
+			limit = {
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -1
+				}
+			}
+			custom_effect_tooltip = GRE_republic_likely
+		}
+		else = {
+			custom_effect_tooltip = GRE_referendum_close
+		}
+		hidden_effect = {
+			country_event = { id = greece_events.110 days = 3 }
+		}
+	}
+}
+
+# Bounce event to determine victor
+country_event = {
+	id = greece_events.110
+	hidden = yes
+	is_triggered_only = yes
+
+	option = { #Republicans win
+		log = "[GetLogInfo]: event greece_events.110 option 1"
+		trigger = {
+			NOT = {
+				AND = {
+					is_ai = yes
+					OR = {
+						has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+						has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+						has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+						has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+						has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+					}
+				}
+			}
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_country_flag = GRE_monarchy_rig
+					has_country_flag = {
+						flag = gre_monarchist_sympathies
+						value > 5
+					}
+				}
+			}
+			modifier = {
+				factor = 1.2
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < 0
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > -2
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -1
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > -3
+				}
+			}
+			modifier = {
+				factor = 2.0
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -2
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > -4
+				}
+			}
+			modifier = {
+				factor = 2.5
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -3
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > -5
+				}
+			}
+			modifier = {
+				factor = 3.0
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -4
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > -6
+				}
+			}
+		}
+		country_event = greece_events.111
+	}
+	option = { #Monarchists win
+		log = "[GetLogInfo]: event greece_events.110 option 2"
+		trigger = {
+			NOT = {
+				AND = {
+					is_ai = yes
+					OR = {
+						has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_REP }
+						has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+						has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+					}
+				}
+			}
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_country_flag = GRE_republic_rig
+					has_country_flag = {
+						flag = gre_monarchist_sympathies
+						value < -5
+					}
+				}
+			}
+			modifier = {
+				factor = 1.2
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 0
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < 2
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 1
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < 3
+				}
+			}
+			modifier = {
+				factor = 2.0
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 2
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < 4
+				}
+			}
+			modifier = {
+				factor = 2.5
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 3
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < 5
+				}
+			}
+			modifier = {
+				factor = 3.0
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 4
+				}
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < 6
+				}
+			}
+		}
+		country_event = greece_events.112
+	}
+}
+
+# Republican victory
+country_event = {
+	id = greece_events.111
+	title = greece_events.111.t
+	desc = greece_events.111.d
+	picture = GFX_report_event_GRE_crowd2
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+		NOT = {
+			has_country_flag = GRE_republicans_win_referendum
+			has_country_flag = GRE_monarchists_win_referendum
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.111 option greece_events.111.a"
+		name = greece_events.111.a
+		set_country_flag = GRE_republicans_win_referendum
+		add_stability = 0.05
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = GRE_republic_rig
+					has_character = GRE_ioannis_metaxas
+				}
+				country_event = { id = greece_events.113 days = 3 }
+			}
+			news_event = greece_events.509
+		}
+	}
+}
+
+# Monarchist victory
+country_event = {
+	id = greece_events.112
+	title = greece_events.112.t
+	desc = greece_events.112.d
+	picture = GFX_report_event_GRE_royal
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+		NOT = {
+			has_country_flag = GRE_republicans_win_referendum
+			has_country_flag = GRE_monarchists_win_referendum
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.112 option greece_events.112.a"
+		name = greece_events.112.a
+		set_country_flag = GRE_monarchists_win_referendum
+		add_stability = 0.05
+		hidden_effect = {
+			if = {
+				limit = { has_country_flag = GRE_monarchy_rig }
+				country_event = { id = greece_events.113 days = 3 }
+			}
+		}
+	}
+}
+
+# Bounce effect to determine whether rig was discovered
+country_event = {
+	id = greece_events.113
+	title = greece_events.113.t
+	picture = GFX_report_event_GRE_crowd2
+
+	desc = {
+		text = greece_events.113.d.monarchist
+		trigger = {
+			has_country_flag = GRE_monarchists_win_referendum
+		}
+	}
+	desc = {
+		text = greece_events.113.d.republican
+		trigger = {
+			has_country_flag = GRE_republicans_win_referendum
+		}
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.113 option greece_events.113.a"
+		name = greece_events.113.a # The rigging is discovered!
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_war = yes
+				NOT = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = GRE_republic_rig
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 2
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = GRE_republic_rig
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 3
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = GRE_republic_rig
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 4
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = GRE_republic_rig
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value > 5
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = GRE_monarchy_rig
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -2
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = GRE_monarchy_rig
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -3
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = GRE_monarchy_rig
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -4
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = GRE_monarchy_rig
+				has_country_flag = {
+					flag = gre_monarchist_sympathies
+					value < -5
+				}
+			}
+		}
+		if = {
+			limit = { has_country_flag = GRE_republic_rig }
+			country_event = { id = greece_events.114 hours = 3 }
+			else = {
+				country_event = { id = greece_events.115 hours = 3 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.113 option greece_events.113.b"
+		name = greece_events.113.b # No evidence is uncovered and the protests die down
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				has_country_flag = GRE_republic_rig
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+				}
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = GRE_monarchy_rig
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+			}
+		}
+		add_political_power = -100
+		add_stability = -0.05
+	}
+}
+
+# Metaxas overthrows a rigged republic vote
+country_event = {
+	id = greece_events.114
+	title = greece_events.114.t
+	desc = greece_events.114.d
+	picture = GFX_report_event_GRE_metaxas
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_character = GRE_ioannis_metaxas
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.114 option greece_events.114.a"
+		name = greece_events.114.a
+		clr_country_flag = GRE_republicans_win_referendum
+		add_stability = -0.10
+		add_political_power = -200
+		if = {
+			limit = { is_subject = yes }
+			overlord = {
+				country_event = { id = greece_events.116 days = 1 }
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_free
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction = yes
+				NOT = { is_in_faction_with = BPL }
+			}
+			leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.10
+		}
+		hidden_effect = {
+			news_event = greece_events.505
+		}
+	}
+}
+
+# Syndicalists overthrow a rigged monarchy vote
+country_event = {
+	id = greece_events.115
+	title = greece_events.115.t
+	desc = greece_events.115.d
+	picture = GFX_report_event_GRE_aris
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.115 option greece_events.114.a"
+		name = greece_events.114.a
+		clr_country_flag = GRE_monarchists_win_referendum
+		add_stability = -0.10
+		add_political_power = -200
+		set_politics = {
+			ruling_party = syndicalist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.10
+		}
+		GRE_become_syndicalist = yes
+		hidden_effect = {
+			news_event = greece_events.506
+		}
+	}
+}
+
+# Greece breaks puppet status after coup
+country_event = {
+	id = greece_events.116
+	title = greece_events.116.t
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	trigger = {
+		can_declare_war_on = FROM
+	}
+
+	desc = {
+		text = greece_events.116.d.metaxas
+		trigger = {
+			FROM = { has_government = paternal_autocrat }
+		}
+	}
+	desc = {
+		text = greece_events.116.d.syndicalist
+		trigger = {
+			FROM = { has_government = syndicalist }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.116 option greece_events.116.a"
+		name = greece_events.116.a #They cannot escape so easily
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+			modifier = {
+				factor = 0
+				has_elected_government = yes
+			}
+		}
+		create_wargoal = {
+			type = annex_everything
+			target = FROM
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.116 option greece_events.116.b"
+		name = greece_events.116.b #We have little choice but to let them be
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0.5
+				has_authoritarian_government = yes
+			}
+		}
+		add_political_power = -50
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_outraged
+		}
+	}
+}
+
+# Question of Monarchists (fired by focus)
+country_event = {
+	id = greece_events.117
+	title = greece_events.117.t
+	desc = greece_events.117.d
+	picture = GFX_report_event_GRE_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.117 option greece_events.117.a"
+		name = greece_events.117.a #Purging them is the only way
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 2
+				has_government = social_democrat
+			}
+		}
+		add_stability = -0.05
+		add_political_power = 50
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.10
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.10
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.117 option greece_events.117.b"
+		name = greece_events.117.b #Let them remain - the question is settled
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				has_government = social_liberal
+			}
+		}
+		add_stability = 0.05
+		add_political_power = -100
+	}
+}
+
+# Question of Republicans (fired by focus)
+country_event = {
+	id = greece_events.118
+	title = greece_events.118.t
+	desc = greece_events.118.d
+	picture = GFX_report_event_GRE_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.118 option greece_events.118.a"
+		name = greece_events.118.a #Purging them is the only way
+		ai_chance = { base = 50 }
+		add_stability = -0.05
+		add_political_power = 50
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.10
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.118 option greece_events.118.b"
+		name = greece_events.118.b #Let them remain - the question is settled
+		ai_chance = { base = 50 }
+		add_stability = 0.05
+		add_political_power = -100
+	}
+}
+
+# Rise of the radical socialists after monarchist win
+country_event = {
+	id = greece_events.119
+	title = greece_events.119.t
+	desc = greece_events.119.d
+	picture = GFX_report_event_GRE_zachariadis
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_country_flag = GRE_monarchists_win_referendum
+		has_completed_focus = GRE_monarchy_referendum
+		has_elected_government = yes
+	}
+
+	mean_time_to_happen = {
+		days = 15
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.119 option greece_events.119.a"
+		name = greece_events.119.a #Rather worrying...
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+				NOT = { has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC } }
+			}
+		}
+		add_stability = -0.05
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.10
+		}
+		hidden_effect = {
+			country_event = { id = greece_events.120 days = 10 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.119 option greece_events.119.b"
+		name = greece_events.119.b #Ban them from the election
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN }
+				}
+			}
+		}
+		custom_effect_tooltip = GRE_socialists_banned_elections
+		set_country_flag = GRE_socialists_banned
+		add_stability = -0.10
+	}
+}
+
+# Liberals and moderate socialists form coalition
+country_event = {
+	id = greece_events.120
+	title = greece_events.120.t
+	desc = greece_events.120.d
+	picture = GFX_report_event_GRE_papandreou
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.120 option greece_events.120.a"
+		name = greece_events.120.a
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.03
+		}
+	}
+}
+
+# Left unites after republican win
+country_event = {
+	id = greece_events.121
+	title = greece_events.121.t
+	desc = greece_events.121.d
+	picture = GFX_report_event_GRE_zachariadis
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_country_flag = GRE_republicans_win_referendum
+		has_completed_focus = GRE_monarchy_referendum
+		has_elected_government = yes
+	}
+
+	mean_time_to_happen = {
+		days = 15
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.121 option greece_events.121.a"
+		name = greece_events.121.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+				}
+				NOT = { has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC } }
+			}
+		}
+		add_stability = -0.05
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.10
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.121 option greece_events.121.b"
+		name = greece_events.121.b #Ban them from the election
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCCON }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_MARLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCLIB }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOCDEM }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_DEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_ALEXANDROS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_GEORGIOS_AUTDEM }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT }
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN }
+				}
+			}
+		}
+		custom_effect_tooltip = GRE_socialists_banned_elections
+		set_country_flag = GRE_socialists_banned
+		add_stability = -0.10
+	}
+}
+
+# Civil war begins after socialists are banned from the elections
+country_event = {
+	id = greece_events.122
+	title = greece_events.122.t
+	desc = greece_events.122.d
+	picture = GFX_report_event_GRE_aris
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_country_flag = GRE_socialists_banned
+		has_socialist_government = no
+		is_subject = no
+		num_divisions > 4
+		surrender_progress < 0.01
+		owns_state = 768 #Thessaly
+		NOT = { has_global_flag = GRE_had_civil_war }
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	immediate = {
+		set_global_flag = GRE_had_civil_war
+		hidden_effect = { country_lock_all_division_template = yes }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.122 option greece_events.122.a"
+		name = greece_events.122.a
+		hidden_effect = { country_lock_all_division_template = no }
+		if = {
+			limit = {
+				is_in_faction = yes
+				is_subject = no
+			}
+			set_variable = { GRE_previous_faction_leader = faction_leader }
+			leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+		add_named_threat = {
+			threat = 3
+			name = GRE_civil_war_threat
+		}
+		civil_war_set_flag_to_restore_elections = yes
+		start_civil_war = {
+			### basics ###
+			ideology = syndicalist
+			size = 0.5
+			navy_ratio = 0
+
+			### states ###
+			capital = 768
+			states = { 185 731 768 1076 }
+
+			### characters ###
+			keep_all_characters = yes
+		}
+		hidden_effect = {
+			random_other_country = {
+				limit = {
+					original_tag = ROOT
+					civilwar_target = ROOT
+				}
+				set_cosmetic_tag = GRE_civil_war_socialist
+				GRE_become_syndicalist = yes
+				GRE_uncomplete_expansion_focuses = yes
+
+				ROOT = { GRE_nikos_zachariadis = { set_nationality = PREV.PREV } }
+				GRE_nikos_zachariadis = { promote_character = yes }
+				GRE_uncomplete_focuses = yes
+
+				copy_popularities_of_ROOT = yes
+				add_popularity = { ideology = syndicalist popularity = 0.35 }
+
+				GRE_naval_variants = yes
+				transfer_navy = { target = ROOT }
+			}
+			if = {
+				limit = { has_variable = GRE_previous_faction_leader }
+				if = {
+					limit = { var:GRE_previous_faction_leader = { both_socialist_or_both_not_socialist = yes } }
+					var:GRE_previous_faction_leader = {
+						give_guarantee = ROOT
+						diplomatic_relation = { country = ROOT relation = non_aggression_pact }
+						ROOT = { give_military_access = PREV }
+					}
+				}
+				else = {
+					random_other_country = {
+						limit = {
+							original_tag = ROOT
+							civilwar_target = ROOT
+						}
+						set_variable = { GRE_previous_faction_leader = ROOT.GRE_previous_faction_leader }
+						var:GRE_previous_faction_leader = {
+							give_guarantee = PREV
+							diplomatic_relation = { country = PREV relation = non_aggression_pact }
+							PREV = { give_military_access = PREV }
+						}
+					}
+					clear_variable = GRE_previous_faction_leader
+				}
+			}
+			country_event = { id = greece_events.159 days = 7 }
+		}
+		if = {
+			limit = { has_war_with = BUL }
+			BUL = { country_event = bulgaria_foreign_events.38 }
+		}
+	}
+}
+
+### SYNDICALIST EVENTS
+
+# First Hellenic Congress (fired by focus)
+country_event = {
+	id = greece_events.150
+	title = greece_events.150.t
+	desc = greece_events.150.d
+	picture = GFX_report_event_GRE_aris
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.150 option greece_events.150.a"
+		name = greece_events.150.a # Zachariadis remains in control
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+			}
+		}
+		add_stability = 0.05
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = syndicalist
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.10
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.150 option greece_events.150.b"
+		name = greece_events.150.b # Athanasios Klaras commands the room, in the end
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+					has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = totalist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.10
+		}
+	}
+}
+
+# Establishing the Communes (fired by focus)
+country_event = {
+	id = greece_events.151
+	title = greece_events.151.t
+	desc = greece_events.151.d
+	picture = GFX_report_event_GRE_demonstration
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.151 option greece_events.151.a"
+		name = greece_events.151.a #Expand the industrial base, regardless of the cost
+		add_stability = -0.10
+		add_one_random_military_factory = yes
+		add_one_random_military_factory = yes
+		add_one_random_civilian_factory = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.151 option greece_events.151.b"
+		name = greece_events.151.b #Ease the country into this, with incentives
+		add_stability = 0.10
+		add_political_power = -50
+		add_one_random_civilian_factory = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.151 option greece_events.151.c"
+		name = greece_events.151.c #The unions must drive this change - let them take charge
+		add_stability = 0.05
+		add_political_power = 50
+		add_ideas = GRE_unions_in_charge
+	}
+}
+
+# Rebuilding the Nation (fired by focus)
+country_event = {
+	id = greece_events.152
+	title = greece_events.152.t
+	desc = greece_events.152.d
+	picture = GFX_report_event_GRE_aris
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.152 option greece_events.152.a"
+		name = greece_events.152.a #We must build our military power
+		add_one_random_military_factory = yes
+		add_one_random_military_factory = yes
+		add_one_random_military_factory = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.152 option greece_events.152.b"
+		name = greece_events.152.b #A strong civilian industry will be our foundation
+		add_ideas = GRE_totalist_industry
+		add_one_random_civilian_factory = yes
+		add_one_random_civilian_factory = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.152 option greece_events.152.c"
+		name = greece_events.152.c #Unity is more important than the economy
+		add_ideas = GRE_secret_police
+		add_one_random_military_factory = yes
+		add_one_random_civilian_factory = yes
+	}
+}
+
+# Syndicalists march after Black Friday
+country_event = {
+	id = greece_events.153
+	title = greece_events.153.t
+	desc = greece_events.153.d
+	picture = GFX_report_event_GRE_riot
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.153 option greece_events.153.a"
+		name = greece_events.153.a #Crack down on these rabble-rousers
+		add_stability = -0.08
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.153 option greece_events.153.b"
+		name = greece_events.153.b #Keep them contained, but we want no violence
+		add_political_power = -50
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.06
+		}
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.03
+		}
+	}
+}
+
+# Farmers march after Black Friday
+country_event = {
+	id = greece_events.154
+	title = greece_events.154.t
+	desc = greece_events.154.d
+	picture = GFX_report_event_GRE_riot
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.154 option greece_events.154.a"
+		name = greece_events.154.a
+		add_stability = -0.03
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.03
+		}
+		hidden_effect = {
+			country_event = { id = greece_events.153 days = 15 }
+		}
+	}
+}
+
+# Plot to replace Athanasios Klaras
+country_event = {
+	id = greece_events.155
+	title = greece_events.155.t
+	desc = greece_events.155.d
+	picture = GFX_report_event_GRE_aris
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_country_leader = { character = GRE_athanasios_klaras }
+		date > 1941.1.1
+	}
+
+	mean_time_to_happen = {
+		months = 10
+	}
+
+	immediate = {
+		hidden_effect = {
+			event_target:original_greece = { GRE_georgios_siantos = { set_nationality = PREV.PREV } }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.155 option greece_events.155.a"
+		name = greece_events.155.a #Georgios Santos takes over party leadership
+		ai_chance = { base = 75 }
+		add_stability = -0.10
+		promote_character = GRE_georgios_siantos
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.155 option greece_events.155.b"
+		name = greece_events.155.b #Siantos is executed - Athanasios Klaras rules
+		ai_chance = { base = 25 }
+		GRE_georgios_siantos = { kill_character = yes }
+		add_political_power = -100
+	}
+}
+
+# Second Hellenic Congress
+country_event = {
+	id = greece_events.156
+	title = greece_events.156.t
+	desc = greece_events.156.d
+	picture = GFX_report_event_AST_federationalist
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = syndicalist
+		NOT = { has_global_flag = GRE_had_second_congress }
+	}
+
+	immediate = {
+		hidden_effect = {
+			event_target:original_greece = { GRE_konstantinos_speras = { set_nationality = PREV.PREV } }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.156 option greece_events.156.a"
+		name = greece_events.156.a #Zachariadis ushers in a new cabinet and retains control
+		add_stability = 0.05
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.156 option greece_events.156.b"
+		name = greece_events.156.b #Konstantinos Speras wins the most votes and becomes chairman
+		add_political_power = 75
+		promote_character = GRE_konstantinos_speras
+	}
+	after = {
+		set_global_flag = GRE_had_second_congress
+	}
+}
+
+# Third Hellenic Congress
+country_event = {
+	id = greece_events.157
+	title = greece_events.157.t
+	picture = GFX_report_event_AST_federationalist
+
+	desc = {
+		text = greece_events.157.d.zach
+		trigger = {
+			has_country_leader = { character = GRE_nikos_zachariadis }
+		}
+	}
+	desc = {
+		text = greece_events.157.d.notzach
+		trigger = {
+			NOT = { has_country_leader = { character = GRE_nikos_zachariadis } }
+		}
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = syndicalist
+		has_global_flag = GRE_had_second_congress
+	}
+
+	immediate = {
+		hidden_effect = {
+			event_target:original_greece = {
+				GRE_konstantinos_speras = { set_nationality = PREV.PREV }
+				GRE_nikos_beloyannis = { set_nationality = PREV.PREV }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.157 option greece_events.157.a"
+		name = greece_events.157.a #Konstantinos Speras maintains control
+		trigger = {
+			NOT = { has_country_leader = { character = GRE_nikos_zachariadis } }
+		}
+		ai_chance = { base = 40 }
+		add_stability = 0.05
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.157 option greece_events.157.b"
+		name = greece_events.157.b #Konstantinos Speras wins the majority of the vote
+		trigger = {
+			has_country_leader = { character = GRE_nikos_zachariadis }
+		}
+		ai_chance = { base = 40 }
+		add_political_power = 50
+		promote_character = GRE_konstantinos_speras
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.157 option greece_events.157.c"
+		name = greece_events.157.c #Upstart Nikos Beloyannis wins over the council
+		ai_chance = { base = 60 }
+		add_political_power = 75
+		add_country_leader_role = {
+			character = GRE_nikos_beloyannis
+			country_leader = {
+				desc = GRE_nikos_beloyannis_leader_desc
+				ideology = syndicalist_subtype
+			}
+			promote_leader = yes
+		}
+	}
+}
+
+# Metaxas tries to overthrow the syndicalists not long after they take power
+country_event = {
+	id = greece_events.158
+	title = greece_events.158.t
+	desc = greece_events.158.d
+	picture = GFX_report_event_GRE_metaxas
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_character = GRE_ioannis_metaxas
+		has_socialist_government = yes
+		is_subject = no
+		surrender_progress < 0.01
+		num_divisions > 4
+		owns_state = 768 #Thessaly
+		NOT = { has_global_flag = GRE_had_civil_war }
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	immediate = {
+		set_global_flag = GRE_had_civil_war
+		hidden_effect = { country_lock_all_division_template = yes }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.158 option greece_events.158.a"
+		name = greece_events.158.a
+		hidden_effect = {
+			country_lock_all_division_template = no
+			set_cosmetic_tag = GRE_civil_war_socialist
+		}
+		if = {
+			limit = {
+				is_in_faction = yes
+				is_subject = no
+			}
+			set_variable = { GRE_previous_faction_leader = faction_leader }
+			leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+		add_named_threat = {
+			threat = 3
+			name = GRE_civil_war_threat
+		}
+		civil_war_set_flag_to_restore_elections = yes
+		start_civil_war = {
+			### basics ###
+			ideology = paternal_autocrat
+			size = 0.5
+			navy_ratio = 0
+
+			### states ###
+			capital = 768
+			states = { 185 731 768 1076 }
+
+			### characters ###
+			keep_all_characters = yes
+		}
+		hidden_effect = {
+			random_other_country = {
+				limit = {
+					original_tag = ROOT
+					civilwar_target = ROOT
+				}
+				set_cosmetic_tag = GRE_civil_war
+				GRE_stop_being_syndicalist = yes
+				GRE_uncomplete_expansion_focuses = yes
+
+				ROOT = { GRE_ioannis_metaxas = { set_nationality = PREV.PREV } }
+				GRE_ioannis_metaxas = { promote_character = yes }
+				GRE_uncomplete_focuses = yes
+
+				copy_popularities_of_ROOT = yes
+				add_popularity = { ideology = paternal_autocrat popularity = 0.35 }
+
+				GRE_naval_variants = yes
+				transfer_navy = { target = ROOT }
+			}
+			if = {
+				limit = { has_variable = GRE_previous_faction_leader }
+				if = {
+					limit = { var:GRE_previous_faction_leader = { both_socialist_or_both_not_socialist = yes } }
+					var:GRE_previous_faction_leader = {
+						give_guarantee = ROOT
+						diplomatic_relation = { country = ROOT relation = non_aggression_pact }
+						ROOT = { give_military_access = PREV }
+					}
+				}
+				else = {
+					random_other_country = {
+						limit = {
+							original_tag = ROOT
+							civilwar_target = ROOT
+						}
+						set_variable = { GRE_previous_faction_leader = ROOT.GRE_previous_faction_leader }
+						var:GRE_previous_faction_leader = {
+							give_guarantee = PREV
+							diplomatic_relation = { country = PREV relation = non_aggression_pact }
+							PREV = { give_military_access = PREV }
+						}
+					}
+					clear_variable = GRE_previous_faction_leader
+				}
+			}
+			country_event = { id = greece_events.159 days = 7 }
+		}
+		if = {
+			limit = { has_war_with = BUL }
+			BUL = { country_event = bulgaria_foreign_events.38 }
+		}
+	}
+}
+
+# hidden event to collapse the rebels if they've been exiled to Thessalonica or Crete
+country_event = {
+	id = greece_events.159
+
+	trigger = {
+		has_civil_war = yes
+	}
+
+	hidden = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.159 option 1"
+		random_country_with_original_tag = {
+			original_tag_to_check = ROOT
+			limit = {
+				civilwar_target = ROOT
+				NOT = { is_neighbor_of = ROOT }
+				is_ai = yes
+			}
+			set_temp_variable = { GRE_civil_war_target = THIS }
+		}
+		if = {
+			limit = { has_variable = GRE_civil_war_target }
+			var:GRE_civil_war_target = {
+				if = {
+					limit = { check_variable = { num_controlled_states > ROOT.num_controlled_states } }
+					start_peace_conference = {
+						tag = ROOT
+						score_factor = 1
+						winner_scope = LIMITED
+						loser_scope = LIMITED
+					}
+				}
+				else = {
+					ROOT = {
+						start_peace_conference = {
+							tag = PREV
+							score_factor = 1
+							winner_scope = LIMITED
+							loser_scope = LIMITED
+						}
+					}
+				}
+			}
+		}
+		else = {
+			country_event = { id = greece_events.159 days = 7 }
+		}
+	}
+}
+
+### DIPLOMATIC PATH EVENTS
+
+# Greek Overtures to the Turks (fired by focus)
+country_event = {
+	id = greece_events.200
+	title = greece_events.200.t
+	desc = greece_events.200.d
+	picture = GFX_report_event_GRE_athens
+
+	is_triggered_only = yes #fired by focus GRE_Turkish_Thaw
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.200 option greece_events.200.a"
+		name = greece_events.200.a #We welcome better relations with the Greeks
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0.5
+				FROM = {
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+		}
+		add_political_power = 25
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = KR_diplomatic_mission
+		}
+		FROM = {
+			country_event = { id = greece_events.202 days = 3 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.200 option greece_events.200.b"
+		name = greece_events.200.b #Reject peaceful intent
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.5
+				is_neighbor_of = GRE
+			}
+			modifier = {
+				factor = 0
+				has_elected_government = yes
+				FROM = { has_elected_government = yes }
+			}
+		}
+		add_war_support = 0.05
+		if = {
+			limit = { original_tag = TUR }
+			custom_effect_tooltip = ott_gre_dealing_hurdle
+		}
+		FROM = {
+			country_event = { id = greece_events.201 days = 3 }
+		}
+	}
+}
+
+# Talks Stall
+country_event = {
+	id = greece_events.201
+	title = greece_events.201.t
+	desc = greece_events.201.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = {
+			exists = yes
+			NOT = { has_war_with = ROOT }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.201 option greece_events.201.a"
+		name = greece_events.201.a
+		GRE = { set_country_flag = greco_tur_deal_failed }
+		TUR = { set_country_flag = greco_tur_deal_failed }
+		add_war_support = 0.05
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = GRE_no_peace
+		}
+	}
+}
+
+# The Turks embrace further talks
+country_event = {
+	id = greece_events.202
+	title = greece_events.202.t
+	desc = greece_events.202.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = GRE
+		NOT = { GRE = { has_war_with = TUR } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.202 option greece_events.202.a"
+		name = greece_events.202.a
+		add_political_power = 75
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = KR_diplomatic_mission
+		}
+	}
+}
+
+# Greeks seek treaty of cooperation with the Turks
+country_event = {
+	id = greece_events.203
+	title = greece_events.203.t
+	desc = greece_events.203.d
+	picture = GFX_report_event_GRE_athens
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.203 option greece_events.203.a"
+		name = greece_events.203.a #Full Alliance for the Aegean
+		trigger = {
+			has_country_flag = alliance_aus
+			OR = {
+				GRE = { is_in_faction = no }
+				AND = {
+					GRE = { is_in_faction_with = AUS }
+					AUS = { is_faction_leader = yes }
+				}
+			}
+		}
+		ai_chance = {
+			base = 500
+			modifier = {
+				factor = 0
+				has_government = national_populist
+			}
+		}
+		GRE = { country_event = { id = greece_events.205 days = 3 } }
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			if = {
+				limit = { is_in_faction_with = AUS }
+				AUS = { add_to_faction = GRE }
+			}
+			else_if = {
+				limit = { GRE = { is_in_faction_with = AUS } }
+				GRE = { custom_effect_tooltip = OTT_country_will_be_amenable_tt }
+				custom_effect_tooltip = tooltip_white_line
+			}
+			else = {
+				custom_effect_tooltip = ott_gre_will_join_sarajevo
+			}
+			add_political_power = 100
+			if = {
+				limit = { TUR = { owns_state = 164 } } #Dodecanese
+				remove_state_core = 164
+				GRE = { transfer_state = 164 }
+			}
+			if = {
+				limit = { TUR = { owns_state = 187 } } #Aegean Islands
+				remove_state_core = 187
+				GRE = { transfer_state = 187 }
+			}
+			add_ideas = ott_greco_turkish_accord
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.203 option greece_events.203.b"
+		name = greece_events.203.b #Dodecanese Deal
+		trigger = {
+			NOT = {
+				AND = {
+					has_country_flag = alliance_aus
+					GRE = { is_in_faction_with = AUS }
+					AUS = { is_faction_leader = yes }
+				}
+			}
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 5
+				OR = {
+					GRE = { is_in_faction = yes }
+					TUR = { is_in_faction = no }
+				}
+			}
+			modifier = {
+				factor = 0
+				has_government = national_populist
+			}
+			modifier = {
+				factor = 0.5
+				tag = TUR
+				surrender_progress < 0.10
+			}
+		}
+		GRE = {
+			country_event = { id = greece_events.204 days = 3 }
+		}
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			add_political_power = 100
+			diplomatic_relation = {
+				country = GRE
+				relation = non_aggression_pact
+			}
+			if = {
+				limit = { owns_state = 164 } #Dodecanese
+				remove_state_core = 164
+				GRE = { transfer_state = 164 }
+			}
+			add_ideas = ott_greco_turkish_accord
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.203 option greece_events.203.c"
+		name = greece_events.203.c #We agree to everything but surrendering land
+		trigger = {
+			NOT = {
+				AND = {
+					has_country_flag = alliance_aus
+					GRE = { is_in_faction_with = AUS }
+					AUS = { is_faction_leader = yes }
+				}
+			}
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 5
+				GRE = {
+					is_in_faction = no
+				}
+				TUR = {
+					is_in_faction = yes
+				}
+			}
+			modifier = {
+				factor = 0.5
+				tag = TUR
+				surrender_progress > 0.10
+			}
+			modifier = {
+				factor = 0
+				has_government = national_populist
+			}
+		}
+		GRE = { country_event = { id = greece_events.206 days = 3 } }
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			add_political_power = 100
+			diplomatic_relation = {
+				country = GRE
+				relation = non_aggression_pact
+			}
+			add_ideas = ott_greco_turkish_accord
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.203 option greece_events.203.e"
+		name = greece_events.203.e #No deals
+		trigger = {
+			GRE = {
+				NOT = {
+					is_subject_of = TUR
+					is_ally_of_ROOT = yes
+				}
+			}
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 5
+				GRE = {
+					any_owned_state = { is_core_of = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0
+				TUR = {
+					surrender_progress > 0.10
+				}
+			}
+		}
+		add_war_support = 0.1
+		GRE = { country_event = { id = greece_events.201 days = 3 } }
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = ott_gre_dealing_hurdle
+		set_country_flag = ott_gre_dealing_hurdle
+	}
+}
+
+# The Dodecanese Deal
+country_event = {
+	id = greece_events.204
+	title = greece_events.204.t
+	desc = greece_events.204.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = GRE
+		NOT = { GRE = { has_war_with = TUR } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.204 option greece_events.204.a"
+		name = greece_events.204.a #We accept this deal
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0.25
+				TUR = { has_country_flag = ott_gre_dealing_hurdle }
+			}
+			modifier = {
+				factor = 2
+				has_opinion = { target = TUR value > 124 }
+			}
+			modifier = {
+				factor = 2
+				has_opinion = { target = TUR value > 149 }
+			}
+			modifier = {
+				factor = 2
+				has_opinion = { target = TUR value > 174 }
+			}
+		}
+		country_event = greece_events.208
+		TUR = { set_country_flag = tur_gives_rhodes }
+		custom_effect_tooltip = tooltip_white_line
+		effect_tooltip = {
+			diplomatic_relation = {
+				country = FROM
+				relation = non_aggression_pact
+			}
+			if = {
+				limit = { TUR = { owns_state = 164 } } #Dodecanese
+				TUR = { remove_state_core = 164 }
+				GRE = { transfer_state = 164 }
+			}
+		}
+		hidden_effect = {
+			add_ideas = ott_greco_turkish_accord
+			FROM = {
+				add_ideas = ott_greco_turkish_accord
+				country_event = greece_events.208
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.204 option greece_events.204.b"
+		name = greece_events.204.b #Demand the Entire Aegean
+		trigger = {
+			original_tag = GRE
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				TUR = { has_country_flag = ott_gre_dealing_hurdle }
+			}
+		}
+		FROM = {
+			country_event = { id = greece_events.207 days = 3 }
+		}
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			diplomatic_relation = {
+				country = FROM
+				relation = non_aggression_pact
+			}
+			add_political_power = 100
+			if = {
+				limit = { TUR = { owns_state = 164 } } #Dodecanese
+				TUR = { remove_state_core = 164 }
+				GRE = { transfer_state = 164 }
+			}
+			if = {
+				limit = { TUR = { owns_state = 187 } } #Aegean Islands
+				TUR = { remove_state_core = 187 }
+				GRE = { transfer_state = 187 }
+			}
+			add_ideas = ott_greco_turkish_accord
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.204 option greece_events.204.c"
+		name = greece_events.204.c #They consider these concessions?
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				has_completed_focus = GRE_new_expansionism
+			}
+		}
+		add_war_support = 0.1
+		FROM = { country_event = { id = greece_events.201 days = 3 } }
+	}
+}
+
+# The Aegean Alliance
+country_event = { #activated by greece_events.203.a
+	id = greece_events.205
+	title = greece_events.205.t
+	desc = greece_events.205.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = GRE
+		NOT = { GRE = { has_war_with = TUR } }
+	}
+
+	option = { #Accept the Alliance and the Aegean transfer
+		log = "[GetLogInfo]: event greece_events.205 option greece_events.205.a"
+		name = greece_events.205.a
+		ai_chance = { base = 1000 }
+		country_event = greece_events.208
+		if = {
+			limit = { FROM = { is_in_faction_with = AUS } }
+			effect_tooltip = { AUS = { add_to_faction = GRE } }
+		}
+		else = {
+			custom_effect_tooltip = ott_gre_will_join_sarajevo
+		}
+		if = {
+			limit = { TUR = { owns_state = 164 } } #Dodecanese
+			effect_tooltip = {
+				TUR = { remove_state_core = 164 }
+				GRE = { transfer_state = 164 }
+			}
+		}
+		if = {
+			limit = { TUR = { owns_state = 187 } } #Aegean Islands
+			effect_tooltip = {
+				TUR = { remove_state_core = 187 }
+				GRE = { transfer_state = 187 }
+			}
+		}
+		hidden_effect = {
+			add_ideas = ott_greco_turkish_accord
+			set_country_flag = alliance_aus_accepted
+			FROM = {
+				country_event = greece_events.208
+				add_ideas = ott_greco_turkish_accord
+				set_country_flag = tur_gives_all_aegean
+			}
+		}
+	}
+	option = { #We need the Aegean for just neutrality
+		log = "[GetLogInfo]: event greece_events.205 option greece_events.205.b"
+		name = greece_events.205.b
+		trigger = {
+			TUR = {
+				OR = {
+					has_war = yes
+					is_in_faction = no
+				}
+			}
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					TUR = {
+						surrender_progress > 0.3
+					}
+					AND = {
+						RUS = { is_faction_leader = yes }
+						GER = {
+							surrender_progress > 0.2
+						}
+					}
+				}
+			}
+			modifier = {
+				add = 100
+				TUR = { has_country_flag = ott_gre_dealing_hurdle }
+			}
+		}
+		FROM = { country_event = greece_events.207 }
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			diplomatic_relation = {
+				country = FROM
+				relation = non_aggression_pact
+			}
+			add_political_power = 100
+			if = {
+				limit = { TUR = { owns_state = 164 } } #Dodecanese
+				TUR = { remove_state_core = 164 }
+				GRE = { transfer_state = 164 }
+			}
+			if = {
+				limit = { TUR = { owns_state = 187 } } #Aegean Islands
+				TUR = { remove_state_core = 187 }
+				GRE = { transfer_state = 187 }
+			}
+			add_ideas = ott_greco_turkish_accord
+		}
+	}
+	option = { #the Dodecanese for neutrality is all we need
+		log = "[GetLogInfo]: event greece_events.205 option greece_events.205.c"
+		name = greece_events.205.c
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					AND = {
+						is_in_faction = yes
+						NOT = { is_in_faction_with = TUR }
+					}
+					AND = {
+						TUR = { is_in_faction_with = GER }
+						TUR = { is_in_faction_with = AUS }
+					}
+					AND = {
+						RUS = { is_faction_leader = yes }
+						RUS = {
+							surrender_progress < 0.3
+						}
+					}
+				}
+			}
+		}
+		FROM = { country_event = greece_events.204 }
+		add_political_power = -50
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = KR_diplomatic_mission
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.205 option greece_events.205.e"
+		name = greece_events.205.e
+		ai_chance = { base = 0 }
+		add_war_support = 0.1
+		FROM = { country_event = greece_events.201 }
+	}
+}
+
+# The No Land Deal
+country_event = {
+	id = greece_events.206
+	title = greece_events.206.t
+	desc = greece_events.206.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = GRE
+		NOT = { GRE = { has_war_with = TUR } }
+	}
+
+	option = { #Reluctant Yes
+		log = "[GetLogInfo]: event greece_events.206 option greece_events.206.a"
+		name = greece_events.206.a
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					is_in_faction = no
+					RUS = { is_faction_leader = no }
+					AND = {
+						TUR = { is_in_faction_with = GER }
+						TUR = { is_in_faction_with = AUS }
+					}
+					AND = {
+						RUS = {
+							surrender_progress > 0.4
+						}
+						TUR = { is_in_faction = yes }
+					}
+				}
+			}
+		}
+		country_event = greece_events.208
+		effect_tooltip = {
+			diplomatic_relation = {
+				country = TUR
+				relation = non_aggression_pact
+			}
+		}
+		hidden_effect = {
+			add_ideas = ott_greco_turkish_accord
+			FROM = {
+				country_event = greece_events.208
+				add_ideas = ott_greco_turkish_accord
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.206 option greece_events.206.b"
+		name = greece_events.206.b
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0.1
+				is_in_faction = no
+				TUR = { has_completed_focus = OTT_Abolish_Full_Neutrality }
+			}
+			modifier = {
+				factor = 10
+				TUR = { has_country_flag = ott_gre_dealing_hurdle }
+			}
+		}
+		add_war_support = 0.1
+		FROM = { country_event = greece_events.201 }
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = GRE_no_peace
+		}
+	}
+}
+
+# The Greeks Demand the Aegean just for neutrality!
+country_event = {
+	id = greece_events.207
+	title = greece_events.207.t
+	desc = greece_events.207.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = GRE
+		NOT = { GRE = { has_war_with = TUR } }
+	}
+
+	option = { #We will give the whole Aegean for Neutrality
+		log = "[GetLogInfo]: event greece_events.207 option greece_events.207.a"
+		name = greece_events.207.a
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				NOT = { is_in_faction_with = 361.owner }
+				NOT = { is_in_faction_with = AUS }
+				GER = { is_faction_leader = no }
+			}
+		}
+		country_event = greece_events.208
+		set_country_flag = tur_gives_all_aegean
+		effect_tooltip = {
+			diplomatic_relation = {
+				country = FROM
+				relation = non_aggression_pact
+			}
+			add_political_power = 100
+			if = {
+				limit = { TUR = { owns_state = 164 } } #Dodecanese
+				TUR = { remove_state_core = 164 }
+				GRE = { transfer_state = 164 }
+			}
+			if = {
+				limit = { TUR = { owns_state = 187 } } #Aegean Islands
+				TUR = { remove_state_core = 187 }
+				GRE = { transfer_state = 187 }
+			}
+			add_ideas = ott_greco_turkish_accord
+		}
+		hidden_effect = {
+			add_ideas = ott_greco_turkish_accord
+			FROM = {
+				country_event = greece_events.208
+				add_ideas = ott_greco_turkish_accord
+			}
+		}
+	}
+	option = { #we will not cede the whole aegean
+		log = "[GetLogInfo]: event greece_events.207 option greece_events.207.b"
+		name = greece_events.207.b
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0.5
+				is_in_faction = no
+			}
+			modifier = {
+				factor = 0.5
+				GER = { is_faction_leader = no }
+			}
+		}
+		add_war_support = 0.15
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = GRE_no_peace
+		}
+	}
+}
+
+# The Treaty of Smyrna is Signed
+country_event = {
+	id = greece_events.208
+	title = greece_events.208.t
+	desc = greece_events.208.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = GRE
+		NOT = { GRE = { has_war_with = TUR } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.208 option greece_events.208.a"
+		name = greece_events.208.a
+		trigger = {
+			original_tag = TUR
+		}
+		add_political_power = 100
+		effect_tooltip = { add_ideas = ott_greco_turkish_accord }
+		if = {
+			limit = {
+				TUR = {
+					owns_state = 187
+					owns_state = 164
+					has_country_flag = tur_gives_all_aegean
+				}
+			}
+			TUR = {
+				remove_state_core = 187
+				remove_state_core = 164
+				if = {
+					limit = {
+						OR = {
+							owns_state = 184
+							owns_state = 1089
+						}
+					}
+					remove_state_claim = 989
+					if = {
+						limit = { GRE = { owns_state = 769 } }
+						remove_state_claim = 769
+					}
+				}
+			}
+			GRE = {
+				transfer_state = 187
+				transfer_state = 164
+			}
+		}
+		else_if = {
+			limit = {
+				TUR = {
+					owns_state = 164
+					has_country_flag = tur_gives_rhodes
+				}
+			}
+			TUR = { remove_state_core = 164 }
+			GRE = { transfer_state = 164 }
+		}
+		if = {
+			limit = {
+				NOT = { TUR = { is_in_faction_with = AUS } }
+				GRE = { has_country_flag = alliance_aus_accepted }
+			}
+			custom_effect_tooltip = ott_gre_will_join_sarajevo
+		}
+		else_if = {
+			limit = {
+				TUR = { is_in_faction_with = AUS }
+				GRE = {
+					has_country_flag = alliance_aus_accepted
+					NOT = { is_in_faction_with = AUS }
+				}
+			}
+			AUS = { add_to_faction = GRE }
+		}
+		else = {
+			GRE = {
+				diplomatic_relation = {
+					country = TUR
+					relation = non_aggression_pact
+				}
+			}
+		}
+		340 = { #Bursa
+			ott_decrease_revolt_risk = yes
+		}
+		355 = { #Trebizond
+			ott_decrease_revolt_risk = yes
+		}
+		if = {
+			limit = {
+				GRE = {
+					owns_state = 769 #Serres
+					owns_state = 184 #Komotini
+				}
+			}
+			769 = { #Serres
+				add_manpower = -1000
+			}
+			184 = { #Komotini
+				add_manpower = -1000
+			}
+			341 = { #Edirne
+				add_manpower = 2000
+				ott_decrease_revolt_risk = yes
+			}
+		}
+		else_if = {
+			limit = { GRE = { owns_state = 769 } }
+			769 = { #Serres
+				add_manpower = -1000
+			}
+			341 = { #Edirne
+				add_manpower = 1000
+				ott_decrease_revolt_risk = yes
+			}
+		}
+		else = {
+			341 = { #Edirne
+				ott_decrease_revolt_risk = yes
+			}
+		}
+		if = {
+			limit = { GRE = { owns_state = 989 } }
+			989 = { #Salonica
+				add_manpower = -1000
+			}
+			773 = { #Constantinople
+				add_manpower = 1000
+				ott_decrease_revolt_risk = yes
+			}
+		}
+		else = {
+			773 = { #Constantinople
+				ott_decrease_revolt_risk = yes
+			}
+		}
+		183 = { #Cyprus
+			add_manpower = -2500
+			ott_decrease_revolt_risk = yes
+		}
+		339 = { #Smyrna
+			add_manpower = -5000
+			ott_decrease_revolt_risk = yes
+		}
+		47 = { #Athens
+			add_manpower = 7500
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.208 option greece_events.208.a"
+		name = greece_events.208.a
+		trigger = {
+			original_tag = GRE
+		}
+		add_political_power = 100
+		if = {
+			limit = {
+				TUR = {
+					owns_state = 187
+					owns_state = 164
+					has_country_flag = tur_gives_all_aegean
+				}
+				GRE = { NOT = { has_country_flag = alliance_aus_accepted } }
+			}
+			effect_tooltip = {
+				TUR = {
+					remove_state_core = 187
+					remove_state_core = 164
+					if = {
+						limit = {
+							OR = {
+								owns_state = 184
+								owns_state = 1089
+							}
+						}
+						remove_state_claim = 989
+						if = {
+							limit = { GRE = { owns_state = 769 } }
+							remove_state_claim = 769
+						}
+					}
+				}
+				GRE = {
+					transfer_state = 187
+					transfer_state = 164
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				TUR = {
+					owns_state = 164
+					has_country_flag = tur_gives_rhodes
+				}
+			}
+			effect_tooltip = {
+				TUR = { remove_state_core = 164 }
+				GRE = { transfer_state = 164 }
+			}
+		}
+		if = {
+			limit = {
+				GRE = {
+					has_country_flag = alliance_aus_accepted
+					NOT = { is_in_faction_with = AUS }
+				}
+			}
+			custom_effect_tooltip = ott_gre_will_join_sarajevo
+		}
+		else_if = {
+			limit = {
+				TUR = {
+					is_in_faction_with = AUS
+				}
+				GRE = {
+					has_country_flag = alliance_aus_accepted
+					NOT = { is_in_faction_with = AUS }
+				}
+			}
+			effect_tooltip = { AUS = { add_to_faction = GRE } }
+		}
+		else = {
+			effect_tooltip = {
+				GRE = {
+					diplomatic_relation = {
+						country = TUR
+						relation = non_aggression_pact
+					}
+				}
+			}
+		}
+		effect_tooltip = {
+			add_ideas = ott_greco_turkish_accord
+			if = {
+				limit = {
+					GRE = { owns_state = 184 } #Komotini
+				}
+				184 = { #Komotini
+					add_manpower = -1000
+				}
+				341 = { #Edirne
+					add_manpower = 1000
+				}
+			}
+			if = {
+				limit = { GRE = { owns_state = 769 } }
+				769 = { #Serres
+					add_manpower = -1000
+				}
+				341 = { #Edirne
+					add_manpower = 1000
+				}
+			}
+			183 = { #Cyprus
+				add_manpower = -2500
+			}
+			339 = { #Smyrna
+				add_manpower = -5000
+			}
+			47 = { #Athens
+				add_manpower = 7500
+			}
+		}
+	}
+}
+
+# Greece sends diplomatic mission to Balkans country (fired by focus)
+country_event = {
+	id = greece_events.213
+	title = greece_events.213.t
+	desc = greece_events.213.d
+	picture = GFX_report_event_GRE_athens
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.213 option greece_events.213.a"
+		name = greece_events.213.a #Yes, let's work more closely with the Greeks
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0.5
+				FROM = { any_owned_state = { is_claim_or_core_of_ROOT = yes } }
+			}
+		}
+		add_political_power = 50
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = KR_diplomatic_mission
+		}
+		effect_tooltip = {
+			if = {
+				limit = { NOT = { is_in_faction_with = FROM } }
+				diplomatic_relation = {
+					country = FROM
+					relation = non_aggression_pact
+				}
+			}
+		}
+		FROM = { country_event = { id = greece_events.214 days = 3 } }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.213 option greece_events.213.b"
+		name = greece_events.213.b #No, there's no need for this
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 4
+				FROM = { any_owned_state = { is_claim_or_core_of_ROOT = yes } }
+			}
+		}
+		FROM = { country_event = { id = greece_events.215 days = 3 } }
+	}
+}
+
+# The Balkans country agrees
+country_event = {
+	id = greece_events.214
+	title = greece_events.214.t
+	desc = greece_events.214.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = FROM
+		NOT = { has_war_with = FROM }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.214 option greece_events.214.a"
+		name = greece_events.214.a
+		add_political_power = 50
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = KR_diplomatic_mission
+		}
+		if = {
+			limit = { NOT = { is_in_faction_with = FROM } }
+			diplomatic_relation = {
+				country = FROM
+				relation = non_aggression_pact
+			}
+		}
+		modify_country_flag = { flag = gre_balkans_coop value = 1 }
+	}
+}
+
+# The Balkans country refuses
+country_event = {
+	id = greece_events.215
+	title = greece_events.215.t
+	desc = greece_events.215.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = FROM
+		NOT = { has_war_with = FROM }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.215 option greece_events.215.a"
+		name = greece_events.215.a
+		add_political_power = -25
+	}
+}
+
+# Greater stability from Balkans cooperation
+country_event = {
+	id = greece_events.216
+	title = greece_events.216.t
+	desc = greece_events.216.d
+	picture = GFX_report_event_GRE_athens
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_country_flag = { flag = gre_balkans_coop value > 1 }
+		is_subject = no
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.216 option greece_events.216.a"
+		name = greece_events.216.a
+		add_stability = 0.05
+		add_political_power = 50
+	}
+}
+
+# Greater investment from Balkans cooperation
+country_event = {
+	id = greece_events.217
+	title = greece_events.216.t
+	desc = greece_events.216.d
+	picture = GFX_report_event_GRE_athens
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		has_country_flag = { flag = gre_balkans_coop value > 3 }
+		is_subject = no
+		any_core_state = {
+			is_owned_and_controlled_by = ROOT
+			free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 3
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.217 option greece_events.216.a"
+		name = greece_events.216.a
+		add_one_random_civilian_factory = yes
+	}
+}
+
+### EXPANSIONISM EVENTS
+
+# Faction leader warned of Megali (fired by focus)
+country_event = {
+	id = greece_events.250
+	title = greece_events.250.t
+	picture = GFX_report_event_GRE_athens
+
+	desc = {
+		text = greece_events.250.d
+		trigger = {
+			FROM = { NOT = { has_country_flag = GRE_chose_megali } }
+		}
+	}
+	desc = {
+		text = greece_events.250.d.full
+		trigger = {
+			FROM = { has_country_flag = GRE_chose_megali }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.250 option greece_events.250.a"
+		name = greece_events.250.a #We support them, no matter what
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					GRE_allied_country_is_target_of_greek_claim = yes
+					GRE_status_quo_factions_country_is_target_of_greek_claim = yes
+				}
+			}
+		}
+		FROM = {
+			country_event = greece_events.251
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.250 option greece_events.250.b"
+		name = greece_events.250.b #This is unacceptable - they either desist, or they go
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					GRE_allied_country_is_target_of_greek_claim = yes
+					GRE_status_quo_factions_country_is_target_of_greek_claim = yes
+				}
+			}
+		}
+		FROM = {
+			add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+			country_event = greece_events.252
+		}
+	}
+}
+
+# Faction leader supports Greece
+country_event = {
+	id = greece_events.251
+	title = greece_events.251.t
+	desc = greece_events.251.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_in_faction_with = FROM
+		FROM = { is_faction_leader = yes }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.251 option greece_events.251.a"
+		name = greece_events.251.a
+		set_country_flag = GRE_may_start_megali
+		unlock_decision_tooltip = GRE_megali_war
+	}
+}
+
+# Faction leader won't support Greece
+country_event = {
+	id = greece_events.252
+	title = greece_events.252.t
+	desc = greece_events.252.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_in_faction_with = FROM
+		FROM = { is_faction_leader = yes }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.252 option greece_events.252.a"
+		name = greece_events.252.a #Then Megali dies here
+		ai_chance = { base = 0 }
+		clr_country_flag = GRE_chose_megali
+		add_political_power = 100
+		add_stability = 0.05
+		every_state = {
+			limit = {
+				is_claimed_by = ROOT
+				NOT = { is_owned_by = ROOT }
+				OR = {
+					state = 766 #Northern Epirus
+					state = 164 #Dodecanese Islands
+					state = 183 #Cyprus
+					state = 187 #Aegean Islands
+					state = 184 #Komotini
+					state = 341 #Adrianople
+					state = 773 #Constantinople
+					state = 340 #Bursa
+					state = 339 #Smyrna
+				}
+			}
+			remove_claim_by = ROOT
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.252 option greece_events.252.b"
+		name = greece_events.252.b #Then we are on our own
+		leave_faction = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+		FROM = { country_event = greece_events.253 }
+		if = {
+			limit = { tag = ENT }
+			set_global_flag = GRE_kicked_from_ENT
+		}
+		else_if = {
+			limit = { tag = INT }
+			set_global_flag = GRE_kicked_from_INT
+		}
+		else = {
+			if = {
+				limit = {
+					is_in_faction_with = AUS
+					AUS = {
+						is_faction_leader = no
+						has_country_flag = AUS_intervened_in_weltkrieg
+					}
+				}
+				AUS = { set_country_flag = GRE_kicked_greece_out_of_faction }
+			}
+			FROM = { set_country_flag = GRE_kicked_greece_out_of_faction }
+		}
+		set_country_flag = GRE_may_start_megali
+		unlock_decision_tooltip = GRE_megali_war
+	}
+}
+
+# Greece withdrew from faction
+country_event = {
+	id = greece_events.253
+	title = greece_events.253.t
+	picture = GFX_report_event_GRE_athens
+
+	desc = {
+		text = greece_events.253.d.allies
+		trigger = {
+			any_allied_country = {
+				any_owned_state = {
+					OR = {
+						is_core_of = FROM
+						is_claimed_by = FROM
+					}
+				}
+			}
+		}
+	}
+	desc = {
+		text = greece_events.253.d.noallies
+		trigger = {
+			NOT = {
+				any_allied_country = {
+					any_owned_state = {
+						OR = {
+							is_core_of = FROM
+							is_claimed_by = FROM
+						}
+					}
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.253 option greece_events.253.a"
+		name = greece_events.253.a
+		add_political_power = -25
+	}
+}
+
+# Greece offers peace to get claims (fired by decision)
+country_event = {
+	id = greece_events.254
+	title = greece_events.254.t
+	desc = greece_events.254.d
+	picture = GFX_report_event_GRE_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.254 option greece_events.254.a"
+		name = greece_events.254.a #We must make peace while we can
+		if = {
+			limit = {
+				tag = TUR
+				FROM = { has_country_flag = GRE_chose_megali }
+			}
+			add_political_power = -200
+			add_stability = -0.20
+		}
+		else = {
+			add_political_power = -100
+			add_stability = -0.10
+		}
+
+		every_state = {
+			limit = {
+				OR = {
+					is_owned_by = ROOT
+					owner = { is_subject_of = ROOT }
+					AND = {
+						ROOT = { is_faction_leader = yes }
+						owner = { is_in_faction_with = ROOT }
+					}
+				}
+				OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
+					state = 183 #Cyprus
+					state = 164 #Dodecanese Islands
+					AND = {
+						state = 1089 #Kardzhali
+						is_owned_by = TUR
+					}
+					any_of = {
+						array = FROM.subjects
+						OR = {
+							is_core_of = var:v
+							is_claimed_by = var:v
+						}
+					}
+					AND = {
+						FROM = { is_faction_leader = yes }
+						any_of = {
+							array = FROM.faction_members
+							OR = {
+								is_core_of = var:v
+								is_claimed_by = var:v
+							}
+						}
+					}
+				}
+			}
+			FROM = { transfer_state = PREV }
+		}
+		FROM = { white_peace_with_ROOT = yes }
+		event_target:peace_country = {
+			set_truce = { target = FROM days = 730 }
+			diplomatic_relation = {
+				country = FROM
+				relation = non_aggression_pact
+			}
+		}
+		remove_from_array = { FROM.GRE_megali_enemies = event_target:peace_country }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.254 option greece_events.254.b"
+		name = greece_events.254.b #No - they will have to fight us to the last man
+		ai_chance = { base = 0 }
+		event_target:peace_country = { set_country_flag = { flag = GRE_megali_refused_peace days = 365 value = 1 } }
+		add_stability = -0.05
+		add_war_support = -0.1
+		FROM = { country_event = greece_events.255 }
+	}
+}
+
+# They refuse to make peace
+country_event = {
+	id = greece_events.255
+	title = greece_events.255.t
+	desc = greece_events.255.d
+	picture = GFX_report_event_GRE_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.255 option greece_events.255.a"
+		name = greece_events.255.a
+		add_war_support = 0.10
+		remove_from_array = { GRE_megali_enemies = event_target:peace_country }
+	}
+}
+
+# Move the capital to Constantinople?
+country_event = {
+	id = greece_events.256
+	title = greece_events.256.t
+	desc = greece_events.256.d
+	picture = GFX_report_event_GRE_athens
+
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = GRE
+		773 = { is_owned_and_controlled_by = ROOT } #Constantinople
+		has_war = no
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.256 option greece_events.256.a"
+		name = greece_events.256.a #Yes, this is the proper capital of our nation
+		add_political_power = 50
+		add_stability = -0.03
+		set_capital = { state = 773 remember_old_capital = no }
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.256 option greece_events.256.b"
+		name = greece_events.256.b #No, we remain in Athens as always
+		ai_chance = { base = 0 }
+		add_stability = 0.05
+	}
+}
+
+# Greece considers extent of claims
+country_event = {
+	id = greece_events.261
+	title = greece_events.261.t
+	picture = GFX_report_event_GRE_army
+
+	desc = {
+		text = greece_events.261.d.faction
+		trigger = {
+			is_in_faction = yes
+			is_faction_leader = no
+		}
+	}
+	desc = {
+		text = greece_events.261.d.nofaction
+		trigger = {
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event greece_events.261 option greece_events.261.a"
+		name = greece_events.261.a #We will keep our claims to traditional territory
+		trigger = {
+			OR = {
+				NOT = { owns_state = 766 } #Northern Epirus
+				NOT = { owns_state = 164 } #Dodecanese Islands
+				NOT = { owns_state = 183 } #Cyprus
+				NOT = { owns_state = 187 } #Aegean Islands
+				NOT = { owns_state = 184 } #Komotini
+			}
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GRE_expansionism option = GRE_EXPANSIONISM_MEGALI_BIG }
+			}
+		}
+		add_political_power = -100
+		add_stability = -0.05
+		every_other_country = {
+			limit = {
+				any_state_of = {
+					target = { 164 183 184 187 766 } #Dodecanese Islands, Cyprus, Komotini, Aegean Islands, Northern Epirus
+					is_owned_by = PREV
+					is_core_of = PREV
+				}
+			}
+			add_opinion_modifier = { target = ROOT modifier = GRE_claimed_my_state }
+		}
+		every_state = {
+			display_individual_scopes = yes
+			limit = {
+				OR = {
+					state = 766 #Northern Epirus
+					state = 164 #Dodecanese Islands
+					state = 183 #Cyprus
+					state = 187 #Aegean Islands
+					state = 184 #Komotini
+				}
+				is_claim_or_core_of_ROOT = no
+			}
+			add_claim_by = ROOT
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event greece_events.261 option greece_events.261.b"
+		name = greece_events.261.b #Resurrect the Megali Idea!
+		trigger = {
+			OR = {
+				NOT = { owns_state = 339 } #Smyrna
+				NOT = { owns_state = 340 } #Bursa
+				NOT = { owns_state = 341 } #Adrianople
+				NOT = { owns_state = 342 } #Mugla
+				NOT = { owns_state = 773 } #Constantinople
+			}
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GRE_expansionism option = GRE_EXPANSIONISM_MEGALI_SMALL }
+			}
+		}
+		add_political_power = -300
+		add_stability = -0.15
+		set_country_flag = GRE_chose_megali
+		every_other_country = {
+			limit = {
+				any_state_of = {
+					#Dodecanese Islands, Cyprus, Komotini, Aegean Islands, Smyrna, Bursa, Adrianople, Mugla, Northern Epirus, Constantinople
+					target = { 164 183 184 187 339 340 341 342 766 773 }
+					is_owned_by = PREV
+					is_core_of = PREV
+				}
+			}
+			add_opinion_modifier = { target = ROOT modifier = GRE_claimed_my_state }
+		}
+		every_state = {
+			display_individual_scopes = yes
+			limit = {
+				OR = {
+					state = 164 #Dodecanese
+					state = 183 #Cyprus
+					state = 184 #Komotini
+					state = 187 #Aegean Islands
+					state = 339 #Smyrna
+					state = 340 #Bursa
+					state = 341 #Adrianople
+					state = 342 #Mugla
+					state = 766 #Northern Epirus
+					state = 773 #Constantinople
+				}
+				is_claim_or_core_of_ROOT = no
+			}
+			add_claim_by = ROOT
+		}
+	}
+	after = {
+		if = {
+			limit = {
+				is_in_faction = yes
+				is_faction_leader = no
+			}
+			faction_leader = { country_event = greece_events.250 }
+		}
+		else = {
+			set_country_flag = GRE_may_start_megali
+			unlock_decision_tooltip = GRE_megali_war
+		}
+	}
+}
+
+### News Events ###
+# Greece: Metaxas takes over after Balkan War loss
+news_event = {
+	id = greece_events.500
+	immediate = { log = "[GetLogInfo]: event greece_events.500" }
+	title = greece_events.500.t
+	desc = greece_events.500.d
+	picture = GFX_news_event_GRE_metaxas
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = greece_events.500.a
+	}
+}
+
+# Greece: Syndicalists take over after Balkan War loss
+news_event = {
+	id = greece_events.501
+	immediate = { log = "[GetLogInfo]: event greece_events.501" }
+	title = greece_events.501.t
+	desc = greece_events.501.d
+	picture = GFX_news_event_GRE_aris
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		name = greece_events.501.a
+	}
+}
+
+# Greece: army takes over after Balkan War loss
+news_event = {
+	id = greece_events.502
+	immediate = { log = "[GetLogInfo]: event greece_events.502" }
+	title = greece_events.502.t
+	desc = greece_events.502.d
+	picture = GFX_news_event_GRE_papagos
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = greece_events.502.a
+	}
+}
+
+# Greece: radical socialists win elections
+news_event = {
+	id = greece_events.503
+	immediate = { log = "[GetLogInfo]: event greece_events.503" }
+	title = greece_events.503.t
+	desc = greece_events.503.d
+	picture = GFX_news_event_GRE_gavriilides
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		name = greece_events.503.a
+	}
+}
+
+# Greece: syndicalists win elections
+news_event = {
+	id = greece_events.504
+	immediate = { log = "[GetLogInfo]: event greece_events.504" }
+	title = greece_events.504.t
+	desc = greece_events.504.d
+	picture = GFX_news_event_GRE_zachariadis
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		name = greece_events.504.a
+	}
+}
+
+# Greece: Metaxas overthrows rigged republican vote
+news_event = {
+	id = greece_events.505
+	immediate = { log = "[GetLogInfo]: event greece_events.505" }
+	title = greece_events.505.t
+	desc = greece_events.505.d
+	picture = GFX_news_event_GRE_metaxas
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = greece_events.505.a
+	}
+}
+
+# Greece: syndicalists overthrow rigged republican vote
+news_event = {
+	id = greece_events.506
+	immediate = { log = "[GetLogInfo]: event greece_events.506" }
+	title = greece_events.506.t
+	desc = greece_events.506.d
+	picture = GFX_news_event_GRE_zachariadis
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		name = greece_events.506.a
+	}
+}
+
+# Greece: syndicalists win civil war
+news_event = {
+	id = greece_events.507
+	immediate = { log = "[GetLogInfo]: event greece_events.507" }
+	title = greece_events.507.t
+	desc = greece_events.507.d
+	picture = GFX_news_event_GRE_civilwar
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		name = greece_events.507.a
+	}
+}
+
+# Greece: Metaxas wins civil war
+news_event = {
+	id = greece_events.508
+	immediate = { log = "[GetLogInfo]: event greece_events.508" }
+	title = greece_events.508.t
+	desc = greece_events.508.d
+	picture = GFX_news_event_GRE_civilwar
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = greece_events.508.a
+	}
+}
+
+# Greece: republicans win referendum
+news_event = {
+	id = greece_events.509
+	immediate = { log = "[GetLogInfo]: event greece_events.509" }
+	title = greece_events.509.t
+	desc = greece_events.509.d
+	picture = GFX_news_event_GRE_parliament
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = greece_events.509.a
+	}
+}
+
+# Greece: Alexander crowned as king
+news_event = {
+	id = greece_events.510
+	immediate = { log = "[GetLogInfo]: event greece_events.510" }
+	title = greece_events.510.t
+	desc = greece_events.510.d
+	picture = GFX_news_event_GRE_celebrate
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = greece_events.510.a
+	}
+}
+
+# Greece: George crowned as king
+news_event = {
+	id = greece_events.511
+	immediate = { log = "[GetLogInfo]: event greece_events.511" }
+	title = greece_events.511.t
+	desc = greece_events.511.d
+	picture = GFX_news_event_GRE_celebrate
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = greece_events.511.a
+	}
+}
+
+# Greece: monarchy restored - Paul crowned as king
+news_event = {
+	id = greece_events.512
+	immediate = { log = "[GetLogInfo]: event greece_events.512" }
+	title = greece_events.512.t
+	desc = greece_events.512.d
+	picture = GFX_news_event_GRE_celebrate
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = greece_events.512.a
+	}
+}

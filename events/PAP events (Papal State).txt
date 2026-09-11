@@ -1,0 +1,1902 @@
+###########################
+# Papal State Events
+###########################
+
+add_namespace = papal_state_events
+
+# Black Monday Hits the Papal State!
+country_event = {
+	id = papal_state_events.1
+	title = papal_state_events.1.t
+	desc = papal_state_events.1.d
+	picture = GFX_report_event_generic_run_on_the_banks
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = PAP_black_monday_1 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.1 option papal_state_events.1.a"
+		name = papal_state_events.1.a
+		add_stability = -0.10
+		effect_tooltip = { add_ideas = PAP_black_monday_1 }
+	}
+}
+
+# Quadragesimo Quinto Anno
+country_event = {
+	id = papal_state_events.3
+	title = papal_state_events.3.t
+	desc = papal_state_events.3.d
+	picture = GFX_report_event_PAP_vatican
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.3 option papal_state_events.3.a"
+		name = papal_state_events.3.a
+		add_stability = 0.04
+	}
+}
+
+# Donations from the Faithful
+country_event = {
+	id = papal_state_events.4
+	title = papal_state_events.4.t
+	desc = papal_state_events.4.d
+	picture = GFX_report_event_PAP_vatican
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = PAP
+		has_war_with = SRI
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.4 option papal_state_events.4.a"
+		name = papal_state_events.4.a
+		add_stability = 0.05
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_1
+			amount = 1000
+			producer = PAP
+		}
+	}
+}
+
+# The Pontine Marshes begin to be cleared (This takes a year)
+country_event = {
+	id = papal_state_events.5
+	title = papal_state_events.5.t
+	desc = papal_state_events.5.d
+	picture = GFX_report_event_PAP_marshes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.5 option papal_state_events.5.a"
+		name = papal_state_events.5.a
+		activate_targeted_decision = { target = THIS decision = PAP_clear_march_quicker }
+		set_global_flag = PAP_pontine_marshes
+	}
+}
+
+# The clearing of the Pontine Marshes is finished
+country_event = {
+	id = papal_state_events.6
+	title = papal_state_events.6.t
+	desc = papal_state_events.6.d
+	picture = GFX_report_event_PAP_marshes
+
+	fire_only_once = yes
+
+	trigger = {
+		OR = {
+			tag = PAP
+			tag = SIC
+			tag = ITA
+			tag = SRD
+		}
+		2 = { is_owned_and_controlled_by = ROOT }
+		OR = {
+			has_global_flag = { flag = PAP_pontine_marshes days > 365 }
+			has_country_flag = PAP_pontine_marshes_cleared
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.6 option papal_state_events.6.a"
+		name = papal_state_events.6.a
+		add_manpower = 30000
+		if = {
+			limit = { tag = PAP }
+			add_stability = 0.10
+		}
+		else = {
+			add_stability = 0.05
+		}
+		2 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		clr_country_flag = PAP_pontine_marshes_cleared
+	}
+}
+
+# Death of Pius XI (triggered from history)
+country_event = {
+	id = papal_state_events.7
+	title = papal_state_events.7.t
+	desc = papal_state_events.7.d
+	picture = GFX_report_event_ITA_pope_death
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.7 option papal_state_events.7.a"
+		name = papal_state_events.7.a
+		PAP_pius_xi = { kill_character = yes }
+		promote_character = PAP_college_of_cardinals
+		hidden_effect = {
+			country_event = { id = papal_state_events.39 days = 4 }
+			news_event = { id = papal_state_events.66 hours = 5 }
+		}
+	}
+}
+
+# The Successor to St. Peter (triggered by focus)
+country_event = {
+	id = papal_state_events.8
+	title = papal_state_events.8.t
+	desc = papal_state_events.8.d
+	picture = GFX_report_event_PAP_papal_conclave
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.8 option papal_state_events.8.a"
+		name = papal_state_events.8.a #Elect the pious and popular Eugenio Cardinal Pacelli as Pius XII
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PAP_path option = PAP_PATH_SOCCON }
+					has_game_rule = { rule = PAP_path option = PAP_PATH_SOCDEM }
+					has_game_rule = { rule = PAP_path option = PAP_PATH_NATPOP }
+				}
+			}
+		}
+		retire_character = PAP_college_of_cardinals
+		PAP_eugenio_pacelli = {
+			set_character_name = PAP_pius_xii
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_pius_xii_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_pius_xii_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_pius_xii_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_pius_xii_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_pius_xii_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_pius_xii_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_pius_xii_leader_desc
+					ideology = national_populist_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		unlock_national_focus = PAP_pius_xii_focus
+		set_politics = {
+			ruling_party = paternal_autocrat
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.2
+		}
+		activate_advisor = PAP_giuseppe_pizzardo_sic
+		hidden_effect = {
+			PAP_eugenio_pacelli = { remove_second_in_command_role = yes }
+			news_event = { id = papal_state_events.67 days = 1 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.8 option papal_state_events.8.b"
+		name = papal_state_events.8.b #Elect the charitable Elia Cardinal dalla Costa as Stephen X
+		ai_chance = {
+			base = 18
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PAP_path option = PAP_PATH_PATAUT }
+					has_game_rule = { rule = PAP_path option = PAP_PATH_SOCDEM }
+					has_game_rule = { rule = PAP_path option = PAP_PATH_NATPOP }
+				}
+			}
+		}
+		retire_character = PAP_college_of_cardinals
+		PAP_elia_dalla_costa = {
+			set_character_name = PAP_stephen_x
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_stephen_x_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_stephen_x_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_stephen_x_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_stephen_x_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_stephen_x_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_stephen_x_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_stephen_x_leader_desc
+					ideology = national_populist_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		unlock_national_focus = PAP_stephen_x_focus
+		set_politics = {
+			ruling_party = authoritarian_democrat
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.2
+		}
+		activate_advisor = PAP_eugene_tisserant_sic
+		hidden_effect = {
+			PAP_eugenio_pacelli = { remove_second_in_command_role = yes }
+			add_advisor_role = {
+				character = PAP_eugenio_pacelli
+				advisor = {
+					slot = political_advisor
+					idea_token = PAP_eugenio_pacelli_advisor
+					desc = PAP_eugenio_pacelli_sic_desc
+					traits = { KR_master_diplomat }
+				}
+			}
+			news_event = { id = papal_state_events.68 days = 1 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.8 option papal_state_events.8.c"
+		name = papal_state_events.8.c #Elect the socialist cardinal, Achille Liènart, as John XXIII
+		ai_chance = {
+			base = 2
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PAP_path option = PAP_PATH_PATAUT }
+					has_game_rule = { rule = PAP_path option = PAP_PATH_SOCCON }
+					has_game_rule = { rule = PAP_path option = PAP_PATH_NATPOP }
+				}
+			}
+		}
+		retire_character = PAP_college_of_cardinals
+		PAP_achille_liennart = {
+			set_character_name = PAP_john_xxiii
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_john_xxiii_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_john_xxiii_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_john_xxiii_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_john_xxiii_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_john_xxiii_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_john_xxiii_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_john_xxiii_leader_desc
+					ideology = national_populist_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		unlock_national_focus = PAP_john_xxiii_focus
+		set_politics = {
+			ruling_party = authoritarian_democrat
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.2
+		}
+		reverse_add_opinion_modifier = { target = AUS modifier = KR_hates_govt }
+		reverse_add_opinion_modifier = { target = HUN modifier = KR_hates_govt }
+		reverse_add_opinion_modifier = { target = GER modifier = KR_disapproves_of_govt }
+		activate_advisor = PAP_eugene_tisserant_sic
+		hidden_effect = {
+			PAP_eugenio_pacelli = { remove_second_in_command_role = yes }
+			add_advisor_role = {
+				character = PAP_eugenio_pacelli
+				advisor = {
+					slot = political_advisor
+					idea_token = PAP_eugenio_pacelli_advisor
+					desc = PAP_eugenio_pacelli_sic_desc
+					traits = { KR_master_diplomat }
+				}
+			}
+			news_event = { id = papal_state_events.69 days = 1 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.8 option papal_state_events.8.e"
+		name = papal_state_events.8.e #Elect the hardline cardinal Alfredo Schuster as Julius IV
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PAP_path option = PAP_PATH_PATAUT }
+					has_game_rule = { rule = PAP_path option = PAP_PATH_SOCCON }
+					has_game_rule = { rule = PAP_path option = PAP_PATH_SOCDEM }
+				}
+			}
+		}
+		retire_character = PAP_college_of_cardinals
+		PAP_alfredo_schuster = {
+			set_character_name = PAP_julius_iv
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_julius_iv_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_julius_iv_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_julius_iv_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_julius_iv_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_julius_iv_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_julius_iv_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = PAP_julius_iv_leader_desc
+					ideology = national_populist_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		unlock_national_focus = PAP_julius_iv_focus
+		set_politics = {
+			ruling_party = national_populist
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.2
+		}
+		reverse_add_opinion_modifier = { target = GER modifier = KR_disapproves_of_govt }
+		reverse_add_opinion_modifier = { target = CRO modifier = KR_approves_of_govt }
+		reverse_add_opinion_modifier = { target = HUN modifier = KR_approves_of_govt }
+		reverse_add_opinion_modifier = { target = SIC modifier = KR_approves_of_govt }
+		activate_advisor = PAP_eugene_tisserant_sic
+		hidden_effect = {
+			PAP_eugenio_pacelli = { remove_second_in_command_role = yes }
+			add_advisor_role = {
+				character = PAP_eugenio_pacelli
+				advisor = {
+					slot = political_advisor
+					idea_token = PAP_eugenio_pacelli_advisor
+					desc = PAP_eugenio_pacelli_sic_desc
+					traits = { KR_master_diplomat }
+				}
+			}
+			news_event = { id = papal_state_events.70 days = 1 }
+			activate_targeted_decision = { target = SRI decision = PAP_attack_sri }
+		}
+	}
+}
+
+# The First Roman Elections (triggered by focus)
+country_event = {
+	id = papal_state_events.9
+	title = papal_state_events.9.t
+	desc = papal_state_events.9.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.9 option papal_state_events.9.a"
+		name = papal_state_events.9.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = PAP_path option = PAP_PATH_SOCDEM }
+			}
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 60
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.2
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.9 option papal_state_events.9.b"
+		name = papal_state_events.9.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = PAP_path option = PAP_PATH_SOCCON }
+			}
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_democrat
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 60
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.2
+		}
+	}
+}
+
+# Regular Election Event
+country_event = {
+	id = papal_state_events.10
+	title = papal_state_events.10.t
+	desc = papal_state_events.10.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.10 option papal_state_events.10.a"
+		name = papal_state_events.10.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = PAP_path option = PAP_PATH_SOCDEM }
+			}
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.2
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.10 option papal_state_events.10.b"
+		name = papal_state_events.10.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				has_government = social_democrat
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = PAP_path option = PAP_PATH_SOCCON }
+			}
+		}
+		set_politics = {
+			ruling_party = social_democrat
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.2
+		}
+	}
+}
+
+# Financial Aid from the Two Sicilies?
+country_event = {
+	id = papal_state_events.11
+	title = papal_state_events.11.t
+	desc = papal_state_events.11.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.11 option papal_state_events.11.a"
+		name = papal_state_events.11.a #Ask the Sicilians to take our whole debt
+		ai_chance = { base = 40 }
+		if = {
+			limit = { is_subject = no }
+			custom_effect_tooltip = PAP_warning_puppet
+		}
+		if = {
+			limit = { is_subject_of = SIC }
+			custom_effect_tooltip = PAP_warning_annex
+		}
+		add_political_power = -25
+		SIC = {
+			country_event = { id = papal_state_events.12 days = 1 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.11 option papal_state_events.11.b"
+		name = papal_state_events.11.b #Only ask them to take some of our debt
+		ai_chance = { base = 60 }
+		SIC = {
+			country_event = { id = papal_state_events.16 days = 1 }
+		}
+	}
+}
+
+# Asking Sicily to take the whole debt - Sicily decides
+country_event = {
+	id = papal_state_events.12
+	title = papal_state_events.12.t
+	desc = papal_state_events.12.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.12 option papal_state_events.12.a"
+		name = papal_state_events.12.a #Accept their request
+		ai_chance = { base = 70 }
+		add_political_power = -200
+		add_stability = -0.05
+		set_country_flag = PAP_all_debts
+		if = {
+			limit = { PAP = { is_subject = no } }
+			set_temp_variable = { target = PAP }
+			puppet_country_without_changing_government = yes
+		}
+		else = {
+			effect_tooltip = {
+				annex_country = { target = PAP }
+			}
+		}
+		PAP = {
+			add_opinion_modifier = { target = SIC modifier = KR_approves_of_govt }
+			country_event = papal_state_events.13
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.12 option papal_state_events.12.b"
+		name = papal_state_events.12.b #Take on some of their debts
+		ai_chance = { base = 20 }
+		add_political_power = -100
+		add_tech_bonus = {
+			name = PAP_financial_aid
+			bonus = 1
+			uses = 1
+			category = industry
+		}
+		set_country_flag = PAP_some_debts
+		PAP = {
+			add_opinion_modifier = { target = SIC modifier = KR_approves_of_govt }
+			country_event = papal_state_events.14
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.12 option papal_state_events.12.c"
+		name = papal_state_events.12.c #Refuse - our own nation must come first
+		ai_chance = { base = 10 }
+		PAP = {
+			add_opinion_modifier = { target = SIC modifier = KR_hates_govt }
+			country_event = papal_state_events.15
+		}
+	}
+}
+
+# Sicily accepted the whole debt
+country_event = {
+	id = papal_state_events.13
+	title = papal_state_events.13.t
+	desc = papal_state_events.13.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.13 option papal_state_events.13.a"
+		name = papal_state_events.13.a
+		add_stability = 0.05
+		remove_ideas = PAP_black_monday_1
+		if = {
+			limit = { is_subject_of = FROM }
+			every_state = {
+				limit = { is_claimed_by = PAP }
+				remove_claim_by = PAP
+			}
+			every_state = {
+				limit = { is_core_of = PAP }
+				if = {
+					limit = { is_claimed_by = SIC }
+					remove_claim_by = SIC
+				}
+				if = {
+					limit = { NOT = { is_core_of = SIC } }
+					add_core_of = SIC
+				}
+			}
+			FROM = {
+				annex_country = { target = PAP transfer_troops = yes }
+				change_tag_from = PAP
+			}
+		}
+	}
+}
+
+# Sicily accepted some of the debt
+country_event = {
+	id = papal_state_events.14
+	title = papal_state_events.14.t
+	desc = papal_state_events.14.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.14 option papal_state_events.14.a"
+		name = papal_state_events.14.a
+		add_stability = 0.025
+		if = {
+			limit = { has_idea = PAP_black_monday_1 }
+			swap_ideas = {
+				remove_idea = PAP_black_monday_1
+				add_idea = PAP_black_monday_2
+			}
+		}
+	}
+}
+
+# Sicily refused to take any debt
+country_event = {
+	id = papal_state_events.15
+	title = papal_state_events.15.t
+	desc = papal_state_events.15.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.15 option papal_state_events.15.a"
+		name = papal_state_events.15.a
+		add_stability = -0.03
+	}
+}
+
+# Sicily asked to take some of the debt - Sicily decides
+country_event = {
+	id = papal_state_events.16
+	title = papal_state_events.16.t
+	desc = papal_state_events.16.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.16 option papal_state_events.16.a"
+		name = papal_state_events.16.a #Accept their request
+		ai_chance = { base = 90 }
+		add_political_power = -100
+		add_tech_bonus = {
+			name = PAP_financial_aid
+			bonus = 1
+			uses = 1
+			category = industry
+		}
+		set_country_flag = PAP_some_debts
+		PAP = {
+			add_opinion_modifier = { target = SIC modifier = KR_approves_of_govt }
+			country_event = papal_state_events.17
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.16 option papal_state_events.16.b"
+		name = papal_state_events.16.b #Refuse
+		ai_chance = { base = 10 }
+		PAP = {
+			add_opinion_modifier = { target = SIC modifier = KR_hates_govt }
+			country_event = papal_state_events.15
+		}
+	}
+}
+
+# Sicily accepted some of the debt
+country_event = {
+	id = papal_state_events.17
+	title = papal_state_events.17.t
+	desc = papal_state_events.17.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.17 option papal_state_events.17.a"
+		name = papal_state_events.17.a
+		add_stability = 0.025
+		if = {
+			limit = { has_idea = PAP_black_monday_1 }
+			swap_ideas = {
+				remove_idea = PAP_black_monday_1
+				add_idea = PAP_black_monday_2
+			}
+		}
+	}
+}
+
+# Asking SIC for military aid (from focus)
+country_event = {
+	id = papal_state_events.18
+	title = papal_state_events.18.t
+	desc = papal_state_events.18.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	trigger = {
+		PAP = {
+			exists = yes
+			OR = {
+				is_subject_of = SIC
+				is_in_faction_with = SIC
+				is_guaranteed_by = SIC
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.18 option papal_state_events.18.a"
+		name = papal_state_events.18.a #Assist them as much as possible
+		ai_chance = { base = 60 }
+		set_country_flag = PAP_all_military_aid
+		add_political_power = -100
+		add_stability = -0.050
+		army_experience = 50
+		navy_experience = 50
+		air_experience = 50
+		add_tech_bonus = {
+			name = PAP_military_aid
+			bonus = 1
+			uses = 1
+			category = infantry_weapons
+			category = artillery
+		}
+		add_doctrine_cost_reduction = {
+			name = PAP_military_aid
+			cost_reduction = 0.75
+			uses = 1
+			category = land_doctrine
+		}
+		PAP = {
+			add_opinion_modifier = { target = SIC modifier = KR_approves_of_govt }
+			country_event = papal_state_events.19
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.18 option papal_state_events.18.b"
+		name = papal_state_events.18.b #We can spare them some help
+		ai_chance = { base = 30 }
+		set_country_flag = PAP_some_military_aid
+		add_political_power = -50
+		add_stability = -0.025
+		army_experience = 20
+		navy_experience = 20
+		air_experience = 20
+		add_doctrine_cost_reduction = {
+			name = PAP_military_aid
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+		PAP = {
+			country_event = papal_state_events.20
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.18 option papal_state_events.18.c"
+		name = papal_state_events.18.c #No need - we can protect them ourselves
+		ai_chance = { base = 10 }
+		PAP = {
+			add_opinion_modifier = { target = SIC modifier = KR_disapproves_of_govt }
+			country_event = papal_state_events.21
+		}
+	}
+}
+
+# SIC grants aid
+country_event = {
+	id = papal_state_events.19
+	title = papal_state_events.19.t
+	desc = papal_state_events.19.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.19 option papal_state_events.19.a"
+		name = papal_state_events.19.a
+		army_experience = 50
+		navy_experience = 50
+		air_experience = 50
+		add_tech_bonus = {
+			name = PAP_military_aid
+			bonus = 1
+			uses = 1
+			category = infantry_weapons
+			category = artillery
+		}
+		add_doctrine_cost_reduction = {
+			name = PAP_military_aid
+			cost_reduction = 0.75
+			uses = 1
+			category = land_doctrine
+		}
+	}
+}
+
+# SIC grants some aid
+country_event = {
+	id = papal_state_events.20
+	title = papal_state_events.20.t
+	desc = papal_state_events.20.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.20 option papal_state_events.20.a"
+		name = papal_state_events.20.a
+		army_experience = 20
+		navy_experience = 20
+		air_experience = 20
+		add_doctrine_cost_reduction = {
+			name = PAP_military_aid
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+	}
+}
+
+# SIC refuses
+country_event = {
+	id = papal_state_events.21
+	title = papal_state_events.21.t
+	desc = papal_state_events.21.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.21 option papal_state_events.21.a"
+		name = papal_state_events.21.a
+	}
+}
+
+# Syndicalist Guerrilla Campaign
+country_event = {
+	id = papal_state_events.22
+	title = papal_state_events.22.t
+	desc = papal_state_events.22.d
+	picture = GFX_report_event_GRE_army
+
+	trigger = {
+		tag = PAP
+		NOT = { country_exists = SRI }
+		owns_any_state_of = {
+			157 #Marches
+			161 #Romagna
+			764 #Viterbo
+			1005 #Umbria
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 5
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.22 option papal_state_events.22.a"
+		name = papal_state_events.22.a #These subversives must be brought to justice!
+		add_stability = -0.2
+		add_ideas = PAP_resistance
+	}
+}
+
+# Syndicalist Riots
+country_event = {
+	id = papal_state_events.23
+	title = papal_state_events.23.t
+	desc = papal_state_events.23.d
+	picture = GFX_report_event_generic_civil_war2
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = PAP
+		has_idea = PAP_resistance
+		any_state_of = {
+			target = { 157 161 764 1005 } #Marches, Romagna, Viterbo, Umbria
+			is_owned_and_controlled_by = PAP
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.23 option papal_state_events.23.a"
+		name = papal_state_events.23.a
+		add_stability = -0.05
+		set_country_flag = PAP_had_riots
+	}
+}
+
+# Syndicalist Ambushes
+country_event = {
+	id = papal_state_events.24
+	title = papal_state_events.24.t
+	desc = papal_state_events.24.d
+	picture = GFX_report_event_generic_civil_war
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = PAP
+		has_idea = PAP_resistance
+		has_country_flag = PAP_had_riots
+		any_state_of = {
+			target = { 157 161 764 1005 } #Marches, Romagna, Viterbo, Umbria
+			is_owned_and_controlled_by = PAP
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.24 option papal_state_events.24.a"
+		name = papal_state_events.24.a
+		add_stability = -0.05
+		add_manpower = -250
+		clr_country_flag = PAP_had_riots
+		set_country_flag = PAP_had_ambushes
+	}
+}
+
+# Syndicalist Bombing
+country_event = {
+	id = papal_state_events.25
+	title = papal_state_events.25.t
+	desc = papal_state_events.25.d
+	picture = GFX_report_event_generic_bombing
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = PAP
+		has_idea = PAP_resistance
+		has_country_flag = PAP_had_ambushes
+		any_state_of = {
+			target = { 157 161 764 1005 } #Marches, Romagna, Viterbo, Umbria
+			is_owned_and_controlled_by = PAP
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.25 option papal_state_events.25.a"
+		name = papal_state_events.25.a
+		clr_country_flag = PAP_had_ambushes
+		set_country_flag = PAP_had_bombing
+		add_stability = -0.05
+		add_manpower = -500
+		random_owned_controlled_state = {
+			limit = {
+				OR = {
+					state = 2 #Latium
+					state = 157 #Marches
+					state = 161 #Romagna
+					state = 764 #Viterbo
+					state = 1005 #Umbria
+				}
+				non_damaged_building_level = { building = infrastructure level > 0 }
+			}
+			damage_building = {
+				type = infrastructure
+				damage = 0.9
+			}
+		}
+	}
+}
+
+# Syndicalist Sabotage
+country_event = {
+	id = papal_state_events.26
+	title = papal_state_events.26.t
+	desc = papal_state_events.26.d
+	picture = GFX_report_event_generic_fire
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = PAP
+		has_idea = PAP_resistance
+		has_country_flag = PAP_had_bombing
+		any_state_of = {
+			target = { 157 161 764 1005 } #Marches, Romagna, Viterbo, Umbria
+			is_owned_and_controlled_by = PAP
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.26 option papal_state_events.26.a"
+		name = papal_state_events.26.a
+		clr_country_flag = PAP_had_bombing
+		set_country_flag = PAP_had_sabotage
+		add_stability = -0.02
+		random_owned_controlled_state = {
+			limit = {
+				OR = {
+					state = 2 #Latium
+					state = 157 #Marches
+					state = 161 #Romagna
+					state = 764 #Viterbo
+					state = 1005 #Umbria
+				}
+				non_damaged_building_level = { building = industrial_complex level > 0 }
+			}
+			damage_building = {
+				type = industrial_complex
+				damage = 0.8
+			}
+		}
+		add_manpower = -500
+	}
+}
+
+# End of the syndicalist resistance
+country_event = {
+	id = papal_state_events.27
+	title = papal_state_events.27.t
+	desc = papal_state_events.27.d
+	picture = GFX_report_event_SRI_arrests
+
+	trigger = {
+		tag = PAP
+		has_idea = PAP_resistance
+		has_country_flag = PAP_had_sabotage
+		any_state_of = {
+			target = { 157 161 764 1005 } #Marches, Romagna, Viterbo, Umbria
+			is_owned_and_controlled_by = PAP
+		}
+	}
+
+	mean_time_to_happen = {
+		months = 3
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.27 option papal_state_events.27.a"
+		name = papal_state_events.27.a
+		add_stability = 0.10
+		remove_ideas = PAP_resistance
+		clr_country_flag = PAP_had_sabotage
+		every_owned_state = {
+			limit = {
+				is_italy = yes
+				NOT = { is_core_of = PAP }
+			}
+			add_resistance = -10
+			add_compliance = 10
+		}
+	}
+}
+
+# Effects of Black Monday end!
+country_event = {
+	id = papal_state_events.38
+	title = papal_state_events.38.t
+	desc = papal_state_events.38.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.38 option papal_state_events.38.a"
+		name = papal_state_events.38.a
+		add_stability = 0.05
+	}
+}
+
+# The Papal Conclave
+country_event = {
+	id = papal_state_events.39
+	title = papal_state_events.39.t
+	desc = papal_state_events.39.d
+	picture = GFX_report_event_PAP_papal_conclave
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.39 option papal_state_events.39.a"
+		name = papal_state_events.39.a #Godspeed
+	}
+}
+
+# The Siculo-Papal Joint Planning Staff
+country_event = {
+	id = papal_state_events.41
+	title = papal_state_events.41.t
+	desc = papal_state_events.41.d
+	picture = GFX_report_event_GRE_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.41 option papal_state_events.41.a"
+		name = papal_state_events.41.a #Neato
+		add_ideas = PAP_jointstaff
+	}
+}
+
+# PAP declares independence from SIC
+country_event = {
+	id = papal_state_events.50
+	title = papal_state_events.50.t
+	picture = GFX_report_event_PAP_vatican
+
+	desc = {
+		text = papal_state_events.50.SRIhelped
+		trigger = {
+			country_exists = SRI
+			OR = {
+				has_country_flag = PAP_all_debts
+				has_country_flag = PAP_some_debts
+				has_country_flag = PAP_all_military_aid
+				has_country_flag = PAP_some_military_aid
+			}
+		}
+	}
+	desc = {
+		text = papal_state_events.50.SRInothelped
+		trigger = {
+			country_exists = SRI
+			NOT = {
+				has_country_flag = PAP_all_debts
+				has_country_flag = PAP_some_debts
+				has_country_flag = PAP_all_military_aid
+				has_country_flag = PAP_some_military_aid
+			}
+		}
+	}
+	desc = {
+		text = papal_state_events.50.noSRIhelped
+		trigger = {
+			NOT = { country_exists = SRI }
+			OR = {
+				has_country_flag = PAP_all_debts
+				has_country_flag = PAP_some_debts
+				has_country_flag = PAP_all_military_aid
+				has_country_flag = PAP_some_military_aid
+			}
+		}
+	}
+	desc = {
+		text = papal_state_events.50.noSRInothelped
+		trigger = {
+			NOT = { country_exists = SRI }
+			NOT = {
+				has_country_flag = PAP_all_debts
+				has_country_flag = PAP_some_debts
+				has_country_flag = PAP_all_military_aid
+				has_country_flag = PAP_some_military_aid
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.50 option papal_state_events.50.a"
+		name = papal_state_events.50.a # They must repay the aid we've given
+		trigger = {
+			OR = {
+				has_country_flag = PAP_all_debts
+				has_country_flag = PAP_some_debts
+				has_country_flag = PAP_all_military_aid
+				has_country_flag = PAP_some_military_aid
+			}
+		}
+		ai_chance = { base = 30 }
+		PAP = { country_event = papal_state_events.51 }
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.50 option papal_state_events.50.b"
+		name = papal_state_events.50.b # No, it can't be permitted
+		trigger = { has_government = national_populist }
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 5
+				has_country_flag = SIC_confed
+			}
+			modifier = {
+				factor = 0.5
+				has_war = yes
+			}
+			modifier = {
+				factor = 0
+				surrender_progress > 0.05
+			}
+		}
+		PAP = { country_event = papal_state_events.54 }
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.50 option papal_state_events.50.c"
+		name = papal_state_events.50.c # We still offer protection
+		trigger = { country_exists = SRI }
+		ai_chance = { base = 50 }
+		PAP = { country_event = papal_state_events.55 }
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.50 option papal_state_events.50.e"
+		name = papal_state_events.50.e # We wish them well
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.5
+				has_government = national_populist
+			}
+			modifier = {
+				factor = 0.5
+				has_government = social_conservative
+			}
+		}
+		PAP = { country_event = papal_state_events.58 }
+	}
+}
+
+# SIC demands repayment of debt
+country_event = {
+	id = papal_state_events.51
+	title = papal_state_events.51.t
+	picture = GFX_report_event_SRI_palace
+
+	desc = {
+		text = papal_state_events.51.d.all
+		trigger = {
+			OR = {
+				SIC = { has_country_flag = PAP_all_debts }
+				SIC = { has_country_flag = PAP_some_debts }
+			}
+			OR = {
+				SIC = { has_country_flag = PAP_all_military_aid }
+				SIC = { has_country_flag = PAP_some_military_aid }
+			}
+		}
+	}
+	desc = {
+		text = papal_state_events.51.d.debts
+		trigger = {
+			OR = {
+				SIC = { has_country_flag = PAP_all_debts }
+				SIC = { has_country_flag = PAP_some_debts }
+			}
+			NOT = {
+				SIC = { has_country_flag = PAP_all_military_aid }
+				SIC = { has_country_flag = PAP_some_military_aid }
+			}
+		}
+	}
+	desc = {
+		text = papal_state_events.51.d.military
+		trigger = {
+			NOT = {
+				SIC = { has_country_flag = PAP_all_debts }
+				SIC = { has_country_flag = PAP_some_debts }
+			}
+			OR = {
+				SIC = { has_country_flag = PAP_all_military_aid }
+				SIC = { has_country_flag = PAP_some_military_aid }
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			set_variable = { repaypp = 0 }
+			set_variable = { repaystab = 0 }
+			if = {
+				limit = { SIC = { has_country_flag = PAP_all_debts } }
+				add_to_variable = { repaypp = -200 }
+				add_to_variable = { repaystab = -0.1 }
+			}
+			if = {
+				limit = { SIC = { has_country_flag = PAP_some_debts } }
+				add_to_variable = { repaypp = -100 }
+				add_to_variable = { repaystab = -0.05 }
+			}
+			if = {
+				limit = { SIC = { has_country_flag = PAP_all_military_aid } }
+				add_to_variable = { repaypp = -100 }
+				add_to_variable = { repaystab = -0.05 }
+			}
+			if = {
+				limit = { SIC = { has_country_flag = PAP_some_military_aid } }
+				add_to_variable = { repaypp = -50 }
+				add_to_variable = { repaystab = -0.03 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.51 option papal_state_events.51.a"
+		name = papal_state_events.51.a #We will repay what we can
+		add_political_power = var:repaypp
+		add_stability = var:repaystab
+		SIC = {
+			add_opinion_modifier = { target = PAP modifier = KR_disapproves_of_govt }
+			country_event = { id = papal_state_events.52 days = 1 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.51 option papal_state_events.51.b"
+		name = papal_state_events.51.b #We thank them for their contribution
+		SIC = {
+			add_opinion_modifier = { target = PAP modifier = KR_outraged }
+			country_event = { id = papal_state_events.53 days = 1 }
+		}
+	}
+}
+
+# Papacy repays debt
+country_event = {
+	id = papal_state_events.52
+	title = papal_state_events.52.t
+	desc = papal_state_events.52.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			PAP = {
+				multiply_variable = { var = repaypp value = -1 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.52 option papal_state_events.52.a"
+		name = papal_state_events.52.a
+		add_political_power = var:PAP.repaypp
+		PAP = {
+			clear_variable = repaypp
+			clear_variable = repaystab
+		}
+	}
+}
+
+# Papacy refuses to pay debt
+country_event = {
+	id = papal_state_events.53
+	title = papal_state_events.53.t
+	desc = papal_state_events.53.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.53 option papal_state_events.53.a"
+		name = papal_state_events.53.a #So be it
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_government = national_populist
+			}
+		}
+		add_political_power = -50
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.53 option papal_state_events.53.b"
+		name = papal_state_events.53.b #Then their land is forfeit
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.5
+				has_government = social_conservative
+			}
+		}
+		PAP = {
+			every_core_state = {
+				limit = { NOT = { is_core_of = ROOT } }
+				add_claim_by = SIC
+			}
+		}
+	}
+}
+
+# Sicily refuses to let Papacy go
+country_event = {
+	id = papal_state_events.54
+	title = papal_state_events.54.t
+	desc = papal_state_events.54.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.54 option papal_state_events.54.a"
+		name = papal_state_events.54.a #Fine, have it your way
+		ai_chance = { base = 25 }
+		add_political_power = -200
+		set_temp_variable = { target = ROOT }
+		SIC = { puppet_country_without_changing_government = yes }
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.54 option papal_state_events.54.b"
+		name = papal_state_events.54.b #War it is!
+		ai_chance = { base = 75 }
+		add_war_support = 0.20
+		SIC = {
+			create_wargoal = {
+				target = PAP
+				type = annex_everything
+			}
+		}
+	}
+}
+
+# Sicily offers protection
+country_event = {
+	id = papal_state_events.55
+	title = papal_state_events.55.t
+	desc = papal_state_events.55.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.55 option papal_state_events.55.a"
+		name = papal_state_events.55.a #Very well
+		SIC = {
+			give_guarantee = PAP
+			country_event = { id = papal_state_events.57 days = 1 }
+		}
+		give_military_access = SIC
+	}
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.55 option papal_state_events.55.b"
+		name = papal_state_events.55.b #Not necessary
+		SIC = {
+			country_event = { id = papal_state_events.56 days = 1 }
+		}
+	}
+	after = {
+		diplomatic_relation = {
+			country = SIC
+			relation = non_aggression_pact
+			active = yes
+		}
+	}
+}
+
+# Papacy refuses protection
+country_event = {
+	id = papal_state_events.56
+	title = papal_state_events.56.t
+	desc = papal_state_events.56.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.56 option papal_state_events.56.a"
+		name = papal_state_events.56.a
+	}
+}
+
+# Papacy agrees to protection
+country_event = {
+	id = papal_state_events.57
+	title = papal_state_events.57.t
+	desc = papal_state_events.57.d
+	picture = GFX_report_event_PAP_vatican
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.57 option papal_state_events.57.a"
+		name = papal_state_events.57.a
+	}
+}
+
+# Sicily wishes the Papacy well
+country_event = {
+	id = papal_state_events.58
+	title = papal_state_events.58.t
+	desc = papal_state_events.58.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.58 option papal_state_events.58.a"
+		name = papal_state_events.58.a
+	}
+}
+
+# Pope rallies the faithful in the SRI
+country_event = {
+	id = papal_state_events.64
+	title = papal_state_events.64.t
+	desc = papal_state_events.64.d
+	picture = GFX_report_event_GRE_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event papal_state_events.64 option papal_state_events.64.a"
+		name = papal_state_events.64.a
+		add_stability = -0.05
+	}
+}
+
+# Deleting partisan units
+country_event = {
+	id = papal_state_events.65
+
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_template = "Partigiani Neosanfedisti"
+			has_template = "Partigiani Cattolici"
+			has_template = "Fanteria Cattolica"
+		}
+	}
+
+	immediate = {
+		if = {
+			limit = { has_template = "Partigiani Neosanfedisti" }
+			delete_unit_template_and_units = { division_template = "Partigiani Neosanfedisti" }
+		}
+		if = {
+			limit = { has_template = "Partigiani Cattolici" }
+			delete_unit_template_and_units = { division_template = "Partigiani Cattolici" }
+		}
+		if = {
+			limit = { has_template = "Fanteria Cattolica" }
+			delete_unit_template_and_units = { division_template = "Fanteria Cattolica" }
+		}
+	}
+}
+
+# Pope Pius Dies
+news_event = {
+	id = papal_state_events.66
+	immediate = { log = "[GetLogInfo]: event papal_state_events.66" }
+	title = papal_state_events.66.t
+	desc = papal_state_events.66.d
+	picture = GFX_news_event_ITA_pius
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			is_catholic_tag = yes
+		}
+	}
+
+	option = {
+		name = papal_state_events.66.a
+	}
+}
+
+# Papal Conclave elects PiusXII
+news_event = {
+	id = papal_state_events.67
+	immediate = { log = "[GetLogInfo]: event papal_state_events.67" }
+	title = papal_state_events.67.t
+	desc = papal_state_events.67.d
+	picture = GFX_news_event_PAP_history_pope
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = papal_state_events.67.a
+		trigger = { has_socialist_government = no }
+	}
+	option = {
+		name = papal_state_events.67.b
+		trigger = { has_socialist_government = yes }
+	}
+}
+
+# Papal Conclave elects StephenX
+news_event = {
+	id = papal_state_events.68
+	immediate = { log = "[GetLogInfo]: event papal_state_events.68" }
+	title = papal_state_events.68.t
+	desc = papal_state_events.68.d
+	picture = GFX_news_event_PAP_charity_pope
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = papal_state_events.68.a
+		trigger = { has_socialist_government = no }
+	}
+	option = {
+		name = papal_state_events.68.b
+		trigger = { has_socialist_government = yes }
+	}
+}
+
+# Papal Conclave elects John XXIII
+news_event = {
+	id = papal_state_events.69
+	immediate = { log = "[GetLogInfo]: event papal_state_events.69" }
+	title = papal_state_events.69.t
+	desc = papal_state_events.69.d
+	picture = GFX_news_event_PAP_red_pope
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = papal_state_events.69.a
+		trigger = { has_socialist_government = no }
+	}
+	option = {
+		name = papal_state_events.69.b
+		trigger = { has_socialist_government = yes }
+	}
+}
+
+# Papal Conclave elects Julius IV
+news_event = {
+	id = papal_state_events.70
+	immediate = { log = "[GetLogInfo]: event papal_state_events.70" }
+	title = papal_state_events.70.t
+	desc = papal_state_events.70.d
+	picture = GFX_news_event_PAP_natpope
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = papal_state_events.70.a
+		trigger = { has_socialist_government = no }
+	}
+	option = {
+		name = papal_state_events.70.b
+		trigger = { has_socialist_government = yes }
+	}
+}
+
+# Pope Exiled
+news_event = {
+	id = papal_state_events.71
+	immediate = { log = "[GetLogInfo]: event papal_state_events.71" }
+	title = papal_state_events.71.t
+	desc = papal_state_events.71.d
+	picture = GFX_news_event_ITA_vatican
+
+	major = yes
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		NOT = { tag = event_target:refuge }
+		regional_europe_news = yes
+	}
+
+	option = {
+		name = papal_state_events.71.a
+		trigger = { has_socialist_government = no }
+	}
+	option = {
+		name = papal_state_events.71.b
+		trigger = { has_socialist_government = yes }
+	}
+}
+

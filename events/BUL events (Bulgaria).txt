@@ -1,0 +1,5343 @@
+###########################
+# Bulgaria Events
+###########################
+# Older Events by Jak
+###########################
+# Old Events by VirtualHummingbird
+###########################
+# New Events by Augenis & Leaf
+###########################
+
+add_namespace = bulgaria_events
+add_namespace = bulgaria_foreign_events
+add_namespace = bulgaria_flavour_events
+
+country_event = { # Operation Nishava
+	id = bulgaria_events.2
+	title = bulgaria_events.2.t
+	desc = bulgaria_events.2.d
+	picture = GFX_report_event_BUL_Operation_Nishava
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.2 option bulgaria_events.2.a"
+		name = bulgaria_events.2.a
+		add_stability = -0.05
+		767 = {
+			add_compliance = 5
+			add_resistance = 5
+		}
+		hidden_effect = { set_country_flag = BUL_AI_wait_until_mission_start } #there to prevent
+	}
+}
+country_event = { # Fate of the State Protection Act
+	id = bulgaria_events.3
+	title = bulgaria_events.3.t
+	desc = bulgaria_events.3.d
+	picture = GFX_report_event_BUL_assembly
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.3 option bulgaria_events.3.a"
+		name = bulgaria_events.3.a
+		set_variable = { BUL_tsar_perception = 70 } # 100 is max positive, 0 is max negative
+		set_variable = { BUL_parliamentary_support = 100 } # 280 is max positive, 0 is max negative
+		set_variable = { BUL_coup_success_chance = 0 } # 0-100
+		set_variable = { BUL_curtail_focus_amount_var = 0 } #how many times you took BUL_curtail_military_league focus
+		activate_mission = BUL_operation_nishava_fallout
+		custom_effect_tooltip = BUL_operation_nishava_fallout_tt
+		hidden_effect = {
+			activate_mission = BUL_prince_monthly_check
+			country_event = { id = bulgaria_events.4 days = 7 }
+		}
+	}
+}
+country_event = { # Will you support the abolition?
+	id = bulgaria_events.4
+	title = bulgaria_events.4.t
+	desc = bulgaria_events.4.d
+	picture = GFX_report_event_BUL_assembly
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.4 option bulgaria_events.4.a"
+		name = bulgaria_events.4.a
+		ai_chance = {
+			base = 55
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM }
+					has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT }
+				}
+			}
+		}
+		set_country_flag = BUL_stands_with_opposition
+		custom_effect_tooltip = BUL_change_allegiance_opposition_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.4 option bulgaria_events.4.b"
+		name = bulgaria_events.4.b
+		ai_chance = {
+			base = 45
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT } }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = bulgaria_events.5 days = 7 }
+		}
+	}
+}
+country_event = { # Will you support the coup?
+	id = bulgaria_events.5
+	title = bulgaria_events.5.t
+	desc = bulgaria_events.5.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.5 option bulgaria_events.5.a"
+		name = bulgaria_events.5.a
+		ai_chance = {
+			base = 33
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM }
+			}
+		}
+		set_country_flag = BUL_stands_with_zveno
+		custom_effect_tooltip = BUL_change_allegiance_zveno_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.5 option bulgaria_events.5.b"
+		name = bulgaria_events.5.b
+		ai_chance = {
+			base = 66
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = bulgaria_events.6 days = 7 }
+		}
+	}
+}
+country_event = { # Neither, huh...
+	id = bulgaria_events.6
+	title = bulgaria_events.6.t
+	desc = bulgaria_events.6.d
+	picture = GFX_report_event_BUL_boris
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.6 option bulgaria_events.6.a"
+		name = bulgaria_events.6.a
+		set_country_flag = BUL_stands_with_prince
+		custom_effect_tooltip = BUL_change_allegiance_prince_tt
+	}
+}
+
+### Various events to fire during the fallout, with a 60 day pulse
+country_event = { # UPPP wants to switch sides
+	id = bulgaria_events.7
+	title = bulgaria_events.7.t
+	desc = bulgaria_events.7.d
+	picture = GFX_report_event_BUL_assembly
+
+	fire_only_once = yes
+	trigger = {
+		NOT = {
+			has_country_flag = BUL_stands_with_opposition
+		}
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.7 option bulgaria_events.7.a"
+		name = bulgaria_events.7.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT } }
+			}
+		}
+		end_coalition = yes
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.05
+		}
+		set_party_name = {
+			ideology = market_liberal
+			long_name = BUL_six_party_long
+			name = BUL_six_party
+		}
+		set_party_name = {
+			ideology = social_conservative
+			long_name = BUL_six_party_long
+			name = BUL_six_party
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+		}
+		set_temp_variable = { BUL_deputies = 20 }
+		custom_effect_tooltip = BUL_increase_deputy_support_tt
+		add_to_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.7 option bulgaria_events.7.b"
+		name = bulgaria_events.7.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM }
+					has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT }
+				}
+			}
+		}
+		clr_country_flag = BUL_stands_with_prince
+		clr_country_flag = BUL_stands_with_zveno
+		set_country_flag = BUL_stands_with_opposition
+		custom_effect_tooltip = BUL_change_allegiance_opposition_tt
+	}
+}
+country_event = { # Zlatev offers agreement
+	id = bulgaria_events.8
+	title = bulgaria_events.8.t
+	desc = bulgaria_events.8.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	trigger = {
+		NOT = {
+			has_country_flag = BUL_stands_with_zveno
+		}
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.8 option bulgaria_events.8.a"
+		name = bulgaria_events.8.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT }
+			}
+		}
+		add_to_variable = { BUL_coup_success_chance = 20 }
+		clamp_variable = { var = BUL_coup_success_chance max = 100 min = 0 }
+		custom_effect_tooltip = BUL_increase_coup_chance_tt
+		add_timed_idea = {
+			idea = BUL_angry_military
+			days = 100
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.8 option bulgaria_events.8.b"
+		name = bulgaria_events.8.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT } }
+			}
+		}
+		clr_country_flag = BUL_stands_with_prince
+		set_country_flag = BUL_stands_with_zveno
+		clr_country_flag = BUL_stands_with_opposition
+		custom_effect_tooltip = BUL_change_allegiance_zveno_tt
+	}
+}
+
+# We interrupt your current programming to bring you worldwide economic devastation
+country_event = {
+	id = bulgaria_events.9
+	title = bulgaria_events.9.t
+	desc = bulgaria_events.9.d
+	picture = GFX_report_event_BUL_crowd
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = BUL_ailing_economy_idea }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.9 option bulgaria_events.9.a"
+		name = bulgaria_events.9.a
+		effect_tooltip = { add_ideas = BUL_ailing_economy_idea }
+		set_temp_variable = { BUL_tsar_change = 10 }
+		custom_effect_tooltip = BUL_boris_perception_worsen_tt
+		subtract_from_variable = { BUL_tsar_perception = BUL_tsar_change }
+		clamp_variable = { var = BUL_tsar_perception max = 100 min = 0 }
+		hidden_effect = {
+			country_event = { id = bulgaria_events.10 days = 14 }
+			country_event = { id = bulgaria_events.12 days = 20 random_days = 20 }
+		}
+	}
+}
+country_event = {
+	id = bulgaria_events.10
+	title = bulgaria_events.10.t
+	desc = bulgaria_events.10.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			activate_mission = BUL_buklovi_bankruptcy_fallout
+			country_event = { id = bulgaria_events.21 days = 21 }
+			clr_country_flag = BUL_AI_wait_until_mission_start
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.10 option bulgaria_events.10.a"
+		name = bulgaria_events.10.a
+		swap_ideas = {
+			remove_idea = BUL_ailing_economy_idea
+			add_idea = BUL_black_monday_idea
+		}
+		effect_tooltip = { activate_mission = BUL_buklovi_bankruptcy_fallout }
+	}
+}
+#We return to your scheduled programming (various events to fire during the fallout)
+
+country_event = {
+	id = bulgaria_events.11
+	title = bulgaria_events.11.t
+	desc = bulgaria_events.11.d
+	picture = GFX_report_event_BUL_assembly
+
+	immediate = {
+		set_country_flag = { flag = BUL_prevented_removing_act_flag days = 3 value = 1 }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.11 option bulgaria_events.11.a"
+		name = bulgaria_events.11.a
+		set_temp_variable = { BUL_deputies = 10 }
+		custom_effect_tooltip = BUL_reduce_deputy_support_tt
+		subtract_from_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+	}
+}
+country_event = { # National Legions
+	id = bulgaria_events.12
+	title = bulgaria_events.12.t
+	desc = bulgaria_events.12.d
+	picture = GFX_report_event_BUL_National_Legions
+
+	fire_only_once = yes
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.12 option bulgaria_events.12.a"
+		name = bulgaria_events.12.a
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.04
+		}
+		add_to_variable = { BUL_coup_success_chance = party_popularity_100@national_populist }
+		clamp_variable = { var = BUL_coup_success_chance max = 100 min = 0 }
+		custom_effect_tooltip = BUL_increase_coup_chance_tt
+		hidden_effect = {
+			country_event = { id = bulgaria_events.13 days = 40 random_days = 40 }
+		}
+	}
+}
+country_event = { # Lukov and Zhekov endorse SBNL
+	id = bulgaria_events.13
+	title = bulgaria_events.13.t
+	desc = bulgaria_events.13.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	trigger = {
+		NOT = {
+			has_country_flag = BUL_stands_with_zveno
+		}
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.13 option bulgaria_events.13.a"
+		name = bulgaria_events.13.a
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT }
+			}
+		}
+		add_to_variable = { BUL_coup_success_chance = 20 }
+		clamp_variable = { var = BUL_coup_success_chance max = 100 min = 0 }
+		custom_effect_tooltip = BUL_increase_coup_chance_tt
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.06
+		}
+		add_political_power = -50
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.13 option bulgaria_events.13.b"
+		name = bulgaria_events.13.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT } }
+			}
+		}
+		clr_country_flag = BUL_stands_with_prince
+		clr_country_flag = BUL_stands_with_opposition
+		set_country_flag = BUL_stands_with_zveno
+		custom_effect_tooltip = BUL_change_allegiance_zveno_tt
+	}
+}
+country_event = { # Stamboliyski in cahoots with Petorka
+	id = bulgaria_events.14
+	title = bulgaria_events.14.t
+	desc = bulgaria_events.14.d
+	picture = GFX_report_event_BUL_Stamboliyski
+
+	fire_only_once = yes
+	trigger = {
+		NOT = {
+			has_country_flag = BUL_stands_with_opposition
+		}
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	is_triggered_only = yes
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					SER = {
+						is_ai = no
+					}
+				}
+				SER = {
+					country_event = { id = bulgaria_events.15 days = 1 }
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.14 option bulgaria_events.14.a"
+		name = bulgaria_events.14.a
+		ai_chance = { base = 10 }
+		add_popularity = {
+			ideology = social_liberal
+			popularity = -0.06
+		}
+		add_stability = -0.1
+		set_temp_variable = { BUL_deputies = 30 }
+		custom_effect_tooltip = BUL_reduce_deputy_support_tt
+		subtract_from_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.14 option bulgaria_events.14.b"
+		name = bulgaria_events.14.b
+		ai_chance = { base = 90 }
+	}
+}
+country_event = { # Serbian collusion
+	id = bulgaria_events.15
+	title = bulgaria_events.15.t
+	desc = bulgaria_events.15.d
+	picture = GFX_report_event_BUL_Stamboliyski
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.15 option bulgaria_events.15.a"
+		name = bulgaria_events.15.a
+		BUL = {
+			set_temp_variable = { BUL_deputies = 20 }
+			custom_effect_tooltip = BUL_increase_deputy_support_tt
+			add_to_variable = { BUL_parliamentary_support = BUL_deputies }
+			clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.15 option bulgaria_events.15.b"
+		name = bulgaria_events.15.b
+		767 = {
+			add_resistance = 15
+		}
+		BUL = { add_stability = -0.05 }
+	}
+}
+country_event = { # Zveno coup - You are allied with Zveno
+	id = bulgaria_events.16
+	title = bulgaria_events.16.t
+	picture = GFX_report_event_BUL_Zveno_Coup
+	desc = {
+		text = bulgaria_events.16.d1
+		trigger = {
+			has_country_flag = BUL_coup_success
+		}
+	}
+	desc = {
+		text = bulgaria_events.16.d2
+		trigger = {
+			has_country_flag = BUL_coup_failure
+		}
+	}
+
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { has_country_flag = BUL_coup_success }
+				remove_mission = BUL_operation_nishava_fallout
+			}
+			else_if = {
+				# To prevent the ultimate edge case and funny exploit
+				limit = {
+					focus_progress = { focus = BUL_abolish_state_protection_act progress > 0.84 }
+					is_ai = no
+				}
+				reduce_focus_completion_cost = {
+					focus = BUL_abolish_state_protection_act
+					cost = -4
+				}
+			}
+		}
+	}
+
+	timeout_days = 3
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.16 option bulgaria_events.16.a"
+		name = bulgaria_events.16.a
+		trigger = {
+			has_country_flag = BUL_coup_success
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		add_stability = -0.1
+		effect_tooltip = { remove_mission = BUL_operation_nishava_fallout }
+		clear_variable = BUL_curtail_focus_amount_var #clear the var as the focus isn't relevent anymore
+		remove_ideas = BUL_angry_military
+		if = {
+			limit = { NOT = { has_idea = BUL_state_protection_act } }
+			add_ideas = BUL_state_protection_act
+		}
+		hidden_effect = {
+			end_coalition = yes
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_royal_authoritarian_democrat_party_long
+				name = BUL_royal_authoritarian_democrat_party
+			}
+			country_event = { id = bulgaria_flavour_events.5 days = 3 }
+			BUL_pencho_zlatev = { set_nationality = ROOT }
+			BUL_kimon_georgiev = { set_nationality = ROOT }
+		}
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		mark_focus_tree_layout_dirty = yes
+		news_event = bulgaria_flavour_events.29
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.16 option bulgaria_events.16.b"
+		name = bulgaria_events.16.b
+		trigger = {
+			has_country_flag = BUL_coup_failure
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.1
+		}
+		add_stability = -0.1
+		add_war_support = -0.1
+		add_to_variable = { BUL_coup_success_chance = -15 }
+		clamp_variable = { var = BUL_coup_success_chance max = 100 min = 0 }
+		custom_effect_tooltip = BUL_decrease_coup_chance_tt
+		set_temp_variable = { BUL_tsar_change = 20 }
+		custom_effect_tooltip = BUL_boris_perception_improve_tt
+		add_to_variable = { BUL_tsar_perception = BUL_tsar_change }
+		clamp_variable = { var = BUL_tsar_perception max = 100 min = 0 }
+		clr_country_flag = BUL_coup_failure
+		clr_country_flag = BUL_stands_with_zveno
+		set_country_flag = BUL_stands_with_prince
+		custom_effect_tooltip = BUL_change_allegiance_prince_tt
+		hidden_effect = {
+			BUL_pencho_zlatev = { retire = yes }
+			BUL_kimon_georgiev = { retire = yes }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.16 option bulgaria_events.16.c"
+		name = bulgaria_events.16.c
+		trigger = {
+			has_country_flag = BUL_coup_failure
+			NOT = { check_variable = { BUL_coup_success_chance < 75 } }
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		add_stability = -0.2
+		remove_mission = BUL_operation_nishava_fallout
+		clear_variable = BUL_curtail_focus_amount_var #clear the var as the focus isn't relevent anymore
+		remove_ideas = BUL_angry_military
+		if = {
+			limit = { NOT = { has_idea = BUL_state_protection_act } }
+			add_ideas = BUL_state_protection_act
+		}
+		hidden_effect = {
+			end_coalition = yes
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_royal_authoritarian_democrat_party_long
+				name = BUL_royal_authoritarian_democrat_party
+			}
+			country_event = { id = bulgaria_flavour_events.5 days = 3 }
+			BUL_pencho_zlatev = { set_nationality = ROOT }
+			BUL_kimon_georgiev = { set_nationality = ROOT }
+		}
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		mark_focus_tree_layout_dirty = yes
+		add_timed_idea = {
+			idea = BUL_vast_resistance
+			days = 200
+		}
+		news_event = bulgaria_flavour_events.29
+	}
+}
+country_event = { # Zveno coup - You are not allied with Zveno
+	id = bulgaria_events.17
+	title = bulgaria_events.17.t
+	picture = GFX_report_event_BUL_Zveno_Coup
+	desc = {
+		text = bulgaria_events.17.d1
+		trigger = {
+			has_country_flag = BUL_coup_success
+		}
+	}
+	desc = {
+		text = bulgaria_events.17.d2
+		trigger = {
+			has_country_flag = BUL_coup_failure
+		}
+	}
+
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { has_country_flag = BUL_coup_success }
+				remove_mission = BUL_operation_nishava_fallout
+			}
+		}
+	}
+
+	timeout_days = 3
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.17 option bulgaria_events.17.a"
+		name = bulgaria_events.17.a
+		trigger = {
+			has_country_flag = BUL_coup_success
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		add_stability = -0.2
+		effect_tooltip = { remove_mission = BUL_operation_nishava_fallout }
+		clear_variable = BUL_curtail_focus_amount_var #clear the var as the focus isn't relevent anymore
+		clr_country_flag = BUL_stands_with_opposition
+		clr_country_flag = BUL_stands_with_prince
+		remove_ideas = BUL_angry_military
+		if = {
+			limit = { NOT = { has_idea = BUL_state_protection_act } }
+			add_ideas = BUL_state_protection_act
+		}
+		hidden_effect = {
+			end_coalition = yes
+			activate_advisor = BUL_petur_todorov_sic
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_royal_authoritarian_democrat_party_long
+				name = BUL_royal_authoritarian_democrat_party
+			}
+			country_event = { id = bulgaria_flavour_events.5 days = 3 }
+			BUL_pencho_zlatev = { set_nationality = ROOT }
+			BUL_kimon_georgiev = { set_nationality = ROOT }
+		}
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		mark_focus_tree_layout_dirty = yes
+		add_timed_idea = {
+			idea = BUL_vast_resistance
+			days = 200
+		}
+		clr_country_flag = BUL_coup_success
+		news_event = bulgaria_flavour_events.29
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.17 option bulgaria_events.17.b"
+		name = bulgaria_events.17.b
+		trigger = {
+			has_country_flag = BUL_coup_failure
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.1
+		}
+		add_stability = -0.05
+		add_to_variable = { BUL_coup_success_chance = -15 }
+		clamp_variable = { var = BUL_coup_success_chance max = 100 min = 0 }
+		custom_effect_tooltip = BUL_decrease_coup_chance_tt
+		hidden_effect = {
+			BUL_pencho_zlatev = { retire = yes }
+			BUL_kimon_georgiev = { retire = yes }
+		}
+		clr_country_flag = BUL_coup_failure
+	}
+}
+country_event = { # The Non-Partisan Regime
+	id = bulgaria_events.18
+	title = bulgaria_events.18.t
+	picture = GFX_report_event_BUL_boris
+	desc = {
+		text = bulgaria_events.18.d1
+		trigger = {
+			has_country_flag = BUL_stands_with_prince
+		}
+	}
+	desc = {
+		text = bulgaria_events.18.d2
+		trigger = {
+			NOT = {
+				has_country_flag = BUL_stands_with_prince
+			}
+		}
+	}
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			is_ai = no
+			has_game_rule = { rule = BUL_path option = DEFAULT }
+			has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.18 option bulgaria_events.18.a"
+		name = bulgaria_events.18.a
+		trigger = {
+			has_country_flag = BUL_stands_with_prince
+		}
+		add_stability = 0.1
+		clr_country_flag = BUL_stands_with_prince
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.1
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.18 option bulgaria_events.18.b"
+		name = bulgaria_events.18.b
+		trigger = {
+			NOT = { has_country_flag = BUL_stands_with_prince }
+		}
+		add_stability = -0.1
+		clr_country_flag = BUL_stands_with_zveno
+		clr_country_flag = BUL_stands_with_opposition
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.1
+		}
+		activate_advisor = BUL_georgi_kyoseivanov_sic
+	}
+	after = {
+		news_event = bulgaria_flavour_events.30
+		clear_variable = BUL_curtail_focus_amount_var #clear the var as the focus isn't relevent anymore
+	}
+}
+country_event = { # Democracy back on track
+	id = bulgaria_events.19
+	title = bulgaria_events.19.t
+	picture = GFX_report_event_BUL_assembly
+	desc = {
+		text = bulgaria_events.19.d1
+		trigger = {
+			has_country_flag = BUL_stands_with_opposition
+		}
+	}
+	desc = {
+		text = bulgaria_events.19.d2
+		trigger = {
+			NOT = {
+				has_country_flag = BUL_stands_with_opposition
+			}
+		}
+	}
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.19 option bulgaria_events.19.a"
+		name = bulgaria_events.19.a
+		trigger = {
+			has_country_flag = BUL_stands_with_opposition
+		}
+		add_stability = 0.1
+		clr_country_flag = BUL_stands_with_opposition
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		end_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.19 option bulgaria_events.19.b"
+		name = bulgaria_events.19.b
+		trigger = {
+			NOT = { has_country_flag = BUL_stands_with_opposition }
+		}
+		add_stability = -0.1
+		clr_country_flag = BUL_stands_with_zveno
+		clr_country_flag = BUL_stands_with_prince
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		end_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		activate_advisor = BUL_atanas_burov_sic
+	}
+	after = {
+		hidden_effect = {
+			set_party_name = {
+				ideology = market_liberal
+				long_name = BUL_six_party_long
+				name = BUL_six_party
+			}
+			set_party_name = {
+				ideology = social_conservative
+				long_name = BUL_six_party_long
+				name = BUL_six_party
+			}
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+		}
+		mark_focus_tree_layout_dirty = yes
+		news_event = bulgaria_flavour_events.31
+		clear_variable = BUL_curtail_focus_amount_var #clear the var as the focus isn't relevent anymore
+	}
+}
+country_event = { # Vidovdan Speech event
+	id = bulgaria_events.20
+	title = bulgaria_events.20.t
+	desc = bulgaria_events.20.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.20 option bulgaria_events.20.a"
+		name = bulgaria_events.20.a
+		add_war_support = 0.04
+		if = {
+			limit = {
+				has_active_mission = BUL_operation_nishava_fallout
+			}
+			activate_mission = BUL_vidovdan_speech_fallout
+		}
+	}
+}
+country_event = { # Quick resolution to your troubles
+	id = bulgaria_events.21
+	title = bulgaria_events.21.t
+	desc = bulgaria_events.21.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+		has_active_mission = BUL_buklovi_bankruptcy_fallout
+		NOT = {
+			has_country_flag = BUL_stands_with_opposition
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.21 option bulgaria_events.21.a"
+		name = bulgaria_events.21.a
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM }
+					has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT }
+				}
+			}
+		}
+		unlock_national_focus = BUL_bank_consolidation
+		remove_mission = BUL_buklovi_bankruptcy_fallout
+		set_temp_variable = { BUL_deputies = 20 }
+		custom_effect_tooltip = BUL_increase_deputy_support_tt
+		add_to_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		BUL_start_spa_focus = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.21 option bulgaria_events.21.b"
+		name = bulgaria_events.21.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT } }
+			}
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.03
+		}
+		set_temp_variable = { BUL_deputies = 30 }
+		custom_effect_tooltip = BUL_increase_deputy_support_tt
+		add_to_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+	}
+}
+country_event = { # Initiate fighting sequence
+	id = bulgaria_events.22
+	title = bulgaria_events.22.t
+	desc = bulgaria_events.22.d
+	picture = GFX_report_event_BUL_assembly
+
+	is_triggered_only = yes
+	trigger = {
+		NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM } }
+		NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.22 option bulgaria_events.22.a"
+		name = bulgaria_events.22.a
+		BUL_start_spa_focus = yes
+	}
+}
+
+### Events during the State Protection Act focus
+
+country_event = { # Questioning patriotism
+	id = bulgaria_events.23
+	title = bulgaria_events.23.t
+	desc = bulgaria_events.23.d
+	picture = GFX_report_event_BUL_assembly2
+
+	is_triggered_only = yes
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	timeout_days = 5
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.23 option bulgaria_events.23.a"
+		name = bulgaria_events.23.a
+		ai_chance = { base = 95 }
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.1
+		}
+		add_political_power = -75
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.23 option bulgaria_events.23.b"
+		name = bulgaria_events.23.b
+		ai_chance = { base = 5 }
+		set_temp_variable = { BUL_deputies = 40 }
+		custom_effect_tooltip = BUL_reduce_deputy_support_tt
+		subtract_from_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		hidden_effect = {
+			if = {
+				limit = {
+					check_variable = { BUL_parliamentary_support < 141 }
+				}
+				country_event = { id = bulgaria_events.11 days = 4 }
+			}
+		}
+	}
+}
+country_event = { # Georgiev's ultimatum
+	id = bulgaria_events.24
+	title = bulgaria_events.24.t
+	desc = bulgaria_events.24.d
+	picture = GFX_report_event_BUL_Zveno_Announcement
+
+	is_triggered_only = yes
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	timeout_days = 3
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.24 option bulgaria_events.24.a"
+		name = bulgaria_events.24.a
+		trigger = {
+			NOT = {
+				has_country_flag = BUL_stands_with_zveno
+			}
+		}
+		ai_chance = { base = 25 }
+		hidden_effect = {
+			set_variable = { BUL_coup_success_chance = 10 }
+			clamp_variable = { var = BUL_coup_success_chance max = 100 min = 0 }
+			custom_effect_tooltip = BUL_increase_coup_chance_tt
+		}
+		BUL_fire_zveno_coup = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.24 option bulgaria_events.24.c"
+		name = bulgaria_events.24.c
+		trigger = {
+			has_country_flag = BUL_stands_with_zveno
+		}
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			set_variable = { BUL_coup_success_chance = 20 }
+			clamp_variable = { var = BUL_coup_success_chance max = 100 min = 0 }
+			custom_effect_tooltip = BUL_increase_coup_chance_tt
+		}
+		BUL_fire_zveno_coup = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.24 option bulgaria_events.24.b"
+		name = bulgaria_events.24.b
+		ai_chance = { base = 50 }
+		set_temp_variable = { BUL_deputies = 30 }
+		custom_effect_tooltip = BUL_reduce_deputy_support_tt
+		subtract_from_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		custom_effect_tooltip = BUL_cancel_state_protection_act_focus_tt
+		set_country_flag = { flag = BUL_prevented_removing_act_flag days = 3 value = 1 }
+	}
+}
+country_event = { # Protest from the bureaucracy
+	id = bulgaria_events.25
+	title = bulgaria_events.25.t
+	desc = bulgaria_events.25.d
+	picture = GFX_report_event_BUL_assembly2
+
+	is_triggered_only = yes
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	timeout_days = 5
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.25 option bulgaria_events.25.a"
+		name = bulgaria_events.25.a
+		ai_chance = { base = 80 }
+		custom_effect_tooltip = BUL_several_focuses_will_be_disabled_tt
+		set_country_flag = BUL_angry_bureaucracy_flag
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.25 option bulgaria_events.25.b"
+		name = bulgaria_events.25.b
+		ai_chance = { base = 20 }
+		set_temp_variable = { BUL_deputies = 40 }
+		custom_effect_tooltip = BUL_reduce_deputy_support_tt
+		subtract_from_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		hidden_effect = {
+			if = {
+				limit = {
+					check_variable = { BUL_parliamentary_support < 141 }
+				}
+				country_event = { id = bulgaria_events.11 days = 4 }
+			}
+		}
+	}
+}
+country_event = { # The Crown Prince wishes to speak
+	id = bulgaria_events.26
+	title = bulgaria_events.26.t
+	desc = bulgaria_events.26.d
+	picture = GFX_report_event_bul_boris_death
+
+	is_triggered_only = yes
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	timeout_days = 5
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.26 option bulgaria_events.26.a"
+		name = bulgaria_events.26.a
+		ai_chance = { base = 90 }
+		swap_ideas = {
+			remove_idea = BUL_boris_crown_prince
+			add_idea = BUL_boris_crown_prince_bad
+		}
+		add_political_power = -75
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.26 option bulgaria_events.26.b"
+		name = bulgaria_events.26.b
+		ai_chance = { base = 10 }
+		set_temp_variable = { BUL_deputies = 40 }
+		custom_effect_tooltip = BUL_reduce_deputy_support_tt
+		subtract_from_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		hidden_effect = {
+			if = {
+				limit = {
+					check_variable = { BUL_parliamentary_support < 141 }
+				}
+				country_event = { id = bulgaria_events.11 days = 4 }
+			}
+		}
+	}
+}
+country_event = { # Agrarian Strike
+	id = bulgaria_events.27
+	title = bulgaria_events.27.t
+	desc = bulgaria_events.27.d
+	picture = GFX_report_event_BUL_peasant_strike
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+		NOT = {
+			has_completed_focus = BUL_public_works
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.27 option bulgaria_events.27.a"
+		name = bulgaria_events.27.a
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM }
+					has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT }
+				}
+			}
+		}
+		add_stability = -0.15
+		add_timed_idea = {
+			idea = BUL_agrarian_strike
+			days = 50
+		}
+		set_temp_variable = { BUL_deputies = 30 }
+		custom_effect_tooltip = BUL_increase_deputy_support_tt
+		add_to_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		BUL_start_spa_focus = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.27 option bulgaria_events.27.b"
+		name = bulgaria_events.27.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_AUTDEM } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_PATAUT } }
+			}
+		}
+		add_stability = -0.15
+		set_temp_variable = { BUL_deputies = 30 }
+		custom_effect_tooltip = BUL_increase_deputy_support_tt
+		add_to_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.02
+		}
+		add_timed_idea = {
+			idea = BUL_agrarian_strike
+			days = 200
+		}
+	}
+}
+
+#### Continuing other events
+
+country_event = { # Elections
+	id = bulgaria_events.28
+	title = bulgaria_events.28.t
+	desc = bulgaria_events.28.d
+	picture = GFX_report_event_SWE_Elections
+
+	immediate = {
+		set_country_flag = BUL_elections_held
+	}
+
+	is_triggered_only = yes
+	trigger = {
+		has_elected_government = yes
+	}
+	immediate = {
+		hidden_effect = {
+			end_coalition = yes
+			set_party_name = {
+				ideology = social_conservative
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+			set_party_name = {
+				ideology = market_liberal
+				long_name = BUL_democratic_party_long
+				name = BUL_democratic_party
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.28 option bulgaria_events.28.a"
+		name = bulgaria_events.28.a # National Liberals
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_country_flag = BUL_balkan_peace_loss }
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_SOCCON } }
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = BUL_balkan_peace_loss
+				NOT = { has_game_rule = { rule = BUL_loss_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_SOCCON } }
+			}
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		activate_advisor = BUL_atanas_burov_sic
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.28 option bulgaria_events.28.b"
+		name = bulgaria_events.28.b # Democrats
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_country_flag = BUL_balkan_peace_loss }
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_MARLIB } }
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = BUL_balkan_peace_loss
+				NOT = { has_game_rule = { rule = BUL_loss_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_MARLIB } }
+			}
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.15
+		}
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		activate_advisor = BUL_atanas_burov_sic
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.28 option bulgaria_events.28.c"
+		name = bulgaria_events.28.c # BZNS
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_country_flag = BUL_balkan_peace_loss }
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_SOCLIB } }
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = BUL_balkan_peace_loss
+				NOT = { has_game_rule = { rule = BUL_loss_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_SOCLIB } }
+			}
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.15
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		activate_advisor = BUL_dimitar_gichev_sic
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.28 option bulgaria_events.28.e"
+		name = bulgaria_events.28.e # Broad Socialists
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_country_flag = BUL_balkan_peace_loss }
+				NOT = { has_game_rule = { rule = BUL_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_path option = BUL_PATH_SOCDEM } }
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = BUL_balkan_peace_loss
+				NOT = { has_game_rule = { rule = BUL_loss_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_SOCDEM } }
+			}
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.15
+		}
+		set_politics = {
+			ruling_party = social_democrat
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		activate_advisor = BUL_dimo_kazasov_sic
+	}
+}
+country_event = { # Abdication of Ferdinand
+	id = bulgaria_events.29
+	title = bulgaria_events.29.t
+	desc = bulgaria_events.29.d
+	picture = GFX_report_event_BUL_boris
+
+	trigger = {
+		is_subject = no
+		has_country_leader = { character = BUL_ferdinand_sakskoburggotski }
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.29 option bulgaria_events.29.a"
+		name = bulgaria_events.29.a
+		BUL_create_boris = yes
+		effect_tooltip = { retire_character = BUL_ferdinand_sakskoburggotski }
+		custom_effect_tooltip = BUL_units_will_be_demobilised
+		hidden_effect = {
+			BUL_ferdinand_sakskoburggotski = { kill_character = yes }
+			add_ideas = {
+				civilian_economy
+				volunteer_only
+			}
+			disband_twenty_percent_units = yes
+			send_equipment_fraction = { target = event_target:system value = 0.2 }
+			event_target:system = {
+				send_equipment_fraction = { target = ROM value = 0.5 }
+				send_equipment_fraction = { target = SER value = 1 }
+			}
+		}
+		if = {
+			limit = {
+				has_idea = BUL_waning_hegemony
+			}
+			swap_ideas = {
+				remove_idea = BUL_waning_hegemony
+				add_idea = BUL_national_catastrophe
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = BUL_waning_hegemony_2
+			}
+			swap_ideas = {
+				remove_idea = BUL_waning_hegemony_2
+				add_idea = BUL_national_catastrophe
+			}
+		}
+		else = {
+			add_ideas = BUL_national_catastrophe
+		}
+		hidden_effect = { # Events for government changes
+			if = {
+				limit = {
+					has_government = paternal_autocrat
+				}
+				country_event = { id = bulgaria_events.30 days = 4 }
+			}
+			else_if = {
+				limit = {
+					has_government = authoritarian_democrat
+				}
+				country_event = { id = bulgaria_events.41 days = 4 }
+			}
+			else = {
+				country_event = { id = bulgaria_events.45 days = 4 }
+			}
+		}
+	}
+}
+country_event = { # Zveno removes the Tsar
+	id = bulgaria_events.30
+	title = bulgaria_events.30.t
+	desc = bulgaria_events.30.d
+	picture = GFX_report_event_BUL_Zveno_Announcement
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.30 option bulgaria_events.30.a"
+		name = bulgaria_events.30.a
+		set_cosmetic_tag = BUL_rep
+		effect_tooltip = { promote_character = BUL_kimon_georgiev }
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.04
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.04
+		}
+		add_stability = -0.1
+		hidden_effect = {
+			BUL_remove_monarchy = yes
+			country_event = { id = bulgaria_events.31 days = 4 }
+		}
+	}
+}
+country_event = { # National Legionaries
+	id = bulgaria_events.31
+	title = bulgaria_events.31.t
+	desc = bulgaria_events.31.d
+	picture = GFX_report_event_BUL_National_Legions
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.31 option bulgaria_events.31.a"
+		name = bulgaria_events.31.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_MON_AUTDEM }
+			}
+		}
+		end_coalition = yes
+		hidden_effect = {
+			country_event = { id = bulgaria_events.32 days = 2 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.31 option bulgaria_events.31.b"
+		name = bulgaria_events.31.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_NATPOP }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = bulgaria_events.33 days = 2 }
+		}
+	}
+}
+country_event = { # National Legionaries Coup
+	id = bulgaria_events.32
+	title = bulgaria_events.32.t
+	desc = bulgaria_events.32.d
+	picture = GFX_report_event_BUL_National_Legions
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.32 option bulgaria_events.32.a"
+		name = bulgaria_events.32.a
+		add_stability = -0.15
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = national_populist
+			elections_allowed = no
+		}
+		hidden_effect = {
+			activate_advisor = BUL_stefan_klechkov_sic
+			remove_ideas = BUL_btb_dominance
+		}
+		BUL_remove_zveno_ideas = yes
+		if = {
+			limit = {
+				has_idea = BUL_state_protection_act
+			}
+			remove_ideas = BUL_state_protection_act
+		}
+		if = {
+			limit = {
+				has_idea = BUL_military_league
+			}
+			remove_ideas = BUL_military_league
+		}
+		add_ideas = BUL_royalist_resistance
+		mark_focus_tree_layout_dirty = yes
+		hidden_effect = {
+			BUL_pencho_zlatev = { retire = yes }
+			BUL_kimon_georgiev = { retire = yes }
+		}
+		news_event = bulgaria_flavour_events.32
+	}
+}
+country_event = { # Zlatev's Coup
+	id = bulgaria_events.33
+	title = bulgaria_events.33.t
+	desc = bulgaria_events.33.d
+	picture = GFX_report_event_BUL_boris2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.33 option bulgaria_events.33.a"
+		name = bulgaria_events.33.a
+		add_stability = -0.15
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+		}
+		hidden_effect = {
+			BUL_pencho_zlatev = { set_nationality = ROOT }
+			BUL_hristo_lukov = { retire = yes }
+			BUL_kimon_georgiev = { retire = yes }
+		}
+		activate_advisor = BUL_pencho_zlatev_sic
+		mark_focus_tree_layout_dirty = yes
+		drop_cosmetic_tag = yes
+		BUL_remove_zveno_ideas = yes
+		BUL_create_boris = yes
+	}
+}
+country_event = { # Zveno - economic policy
+	id = bulgaria_events.34
+	title = bulgaria_events.34.t
+	desc = bulgaria_events.34.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.34 option bulgaria_events.34.a"
+		name = bulgaria_events.34.a
+		set_country_flag = BUL_velchev_policy_eco
+		add_to_variable = { BUL_velchev_points = 1 }
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_eliminate_parasitic_industry
+		}
+		effect_tooltip = {
+			add_stability = -0.15
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = BUL
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_agricultural_cooperative_bank
+		}
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = BUL_ministry_of_national_economy_idea
+				add_idea = BUL_ministry_of_national_economy_idea_vel
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.34 option bulgaria_events.34.b"
+		name = bulgaria_events.34.b
+		set_country_flag = BUL_zlatev_policy_eco
+		add_to_variable = { BUL_zlatev_points = 1 }
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_eliminate_parasitic_industry
+		}
+		effect_tooltip = {
+			add_one_random_civilian_factory = yes
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_agricultural_cooperative_bank
+		}
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = BUL_ministry_of_national_economy_idea
+				add_idea = BUL_ministry_of_national_economy_idea_zla
+			}
+		}
+	}
+}
+country_event = { # Zveno - cultural policy
+	id = bulgaria_events.35
+	title = bulgaria_events.35.t
+	desc = bulgaria_events.35.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.35 option bulgaria_events.35.a"
+		name = bulgaria_events.35.a
+		set_country_flag = BUL_velchev_policy_cul
+		add_to_variable = { BUL_velchev_points = 1 }
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_new_bulgarian_culture
+		}
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = BUL_general_directorate_of_renewal_idea
+				add_idea = BUL_general_directorate_of_renewal_idea_vel
+			}
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_monopolize_vices
+		}
+		effect_tooltip = {
+			add_stability = 0.05
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = BUL
+				}
+				add_extra_state_shared_building_slots = 1
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = BUL
+				}
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.35 option bulgaria_events.35.b"
+		name = bulgaria_events.35.b
+		set_country_flag = BUL_zlatev_policy_cul
+		add_to_variable = { BUL_zlatev_points = 1 }
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_new_bulgarian_culture
+		}
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = BUL_general_directorate_of_renewal_idea
+				add_idea = BUL_general_directorate_of_renewal_idea_zla
+			}
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_monopolize_vices
+		}
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = BUL_general_directorate_of_renewal_idea_zla
+				add_idea = BUL_general_directorate_of_renewal_idea_zla_2
+			}
+			add_one_random_civilian_factory = yes
+		}
+	}
+}
+country_event = { # Zveno - administrative policy
+	id = bulgaria_events.36
+	title = bulgaria_events.36.t
+	desc = bulgaria_events.36.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.36 option bulgaria_events.36.a"
+		name = bulgaria_events.36.a
+		set_country_flag = BUL_velchev_policy_adm
+		add_to_variable = { BUL_velchev_points = 1 }
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_leader_principle
+		}
+		effect_tooltip = {
+			add_ideas = BUL_new_welded_state_vel
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_technocratic_hierarchy
+		}
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = BUL_new_welded_state_vel
+				add_idea = BUL_new_welded_state_vel_2
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.36 option bulgaria_events.36.b"
+		name = bulgaria_events.36.b
+		set_country_flag = BUL_zlatev_policy_adm
+		add_to_variable = { BUL_zlatev_points = 1 }
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_leader_principle
+		}
+		effect_tooltip = {
+			add_ideas = BUL_new_welded_state_zla
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_technocratic_hierarchy
+		}
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = BUL_new_welded_state_zla
+				add_idea = BUL_new_welded_state_zla_2
+			}
+		}
+	}
+}
+country_event = { # Zveno - political policy
+	id = bulgaria_events.37
+	title = bulgaria_events.37.t
+	desc = bulgaria_events.37.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.37 option bulgaria_events.37.a"
+		name = bulgaria_events.37.a
+		set_country_flag = BUL_velchev_policy_pol
+		add_to_variable = { BUL_velchev_points = 1 }
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_state_labour_unions
+		}
+		effect_tooltip = {
+			add_ideas = BUL_yellow_unions_vel
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_house_of_corporations
+		}
+		effect_tooltip = {
+			add_ideas = BUL_zveno_corporatism
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.37 option bulgaria_events.37.b"
+		name = bulgaria_events.37.b
+		set_country_flag = BUL_zlatev_policy_pol
+		add_to_variable = { BUL_zlatev_points = 1 }
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_state_labour_unions
+		}
+		effect_tooltip = {
+			add_ideas = BUL_yellow_unions_zla
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_set_focus_effects
+			FOCUS = BUL_house_of_corporations
+		}
+		effect_tooltip = {
+			add_ideas = BUL_zveno_corporatism
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+	}
+}
+country_event = { # Legionaries decision
+	id = bulgaria_events.38
+	title = bulgaria_events.38.t
+	desc = bulgaria_events.38.d
+	picture = GFX_report_event_BUL_National_Legions
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.38 option bulgaria_events.38.a"
+		name = bulgaria_events.38.a
+		add_to_variable = { BUL_velchev_points = 1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.38 option bulgaria_events.38.b"
+		name = bulgaria_events.38.b
+		add_to_variable = { BUL_zlatev_points = 1 }
+	}
+	after = {
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.04
+		}
+		add_stability = -0.15
+	}
+}
+country_event = { # Zveno removes the Tsar
+	id = bulgaria_events.39
+	title = bulgaria_events.39.t
+	desc = bulgaria_events.39.d
+	picture = GFX_report_BUL_republic_declared
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.39 option bulgaria_events.39.a"
+		name = bulgaria_events.39.a
+		set_cosmetic_tag = BUL_rep
+		promote_character = BUL_kimon_georgiev
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.05
+		}
+		add_stability = -0.1
+		retire_character = BUL_pencho_zlatev
+		hidden_effect = {
+			BUL_remove_monarchy = yes
+		}
+	}
+}
+country_event = { # Zveno monarchy
+	id = bulgaria_events.40
+	title = bulgaria_events.40.t
+	desc = bulgaria_events.40.d
+	picture = GFX_report_event_BUL_palace
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.40 option bulgaria_events.40.a"
+		name = bulgaria_events.40.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.05
+		}
+		add_stability = -0.05
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_character = BUL_pencho_zlatev } }
+				BUL_pencho_zlatev = { set_nationality = ROOT }
+			}
+		}
+		activate_advisor = BUL_pencho_zlatev_sic
+		retire_character = BUL_kimon_georgiev
+		retire_character = BUL_damyan_velchev
+	}
+}
+
+country_event = { # Realm Duress
+	id = bulgaria_events.41
+	title = bulgaria_events.41.t
+	desc = bulgaria_events.41.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.41 option bulgaria_events.41.a"
+		name = bulgaria_events.41.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.04
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.04
+		}
+		add_stability = -0.1
+		hidden_effect = {
+			country_event = { id = bulgaria_events.42 days = 4 }
+		}
+	}
+}
+country_event = { # Nighttime Meeting
+	id = bulgaria_events.42
+	title = bulgaria_events.42.t
+	desc = bulgaria_events.42.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.42 option bulgaria_events.42.a"
+		name = bulgaria_events.42.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_PATAUT }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = bulgaria_events.43 days = 2 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.42 option bulgaria_events.42.b"
+		name = bulgaria_events.42.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = BUL_loss_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_PATAUT } }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = bulgaria_events.44 days = 2 }
+		}
+	}
+}
+country_event = { # Restored Tarnovo Constitution
+	id = bulgaria_events.43
+	title = bulgaria_events.43.t
+	desc = bulgaria_events.43.d
+	picture = GFX_report_event_BUL_assembly
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.43 option bulgaria_events.43.a"
+		name = bulgaria_events.43.a
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.2
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = market_liberal
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 4
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		BUL_remove_royalist_ideas = yes
+		hidden_effect = {
+			set_party_name = {
+				ideology = social_conservative
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+		}
+		end_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		activate_advisor = BUL_atanas_burov_sic
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+country_event = { # Fall of the Monarchy
+	id = bulgaria_events.44
+	title = bulgaria_events.44.t
+	desc = bulgaria_events.44.d
+	picture = GFX_report_event_BUL_Zveno_Coup
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.44 option bulgaria_events.44.a"
+		name = bulgaria_events.44.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		add_stability = -0.1
+		BUL_remove_royalist_ideas = yes
+		hidden_effect = {
+			end_coalition = yes
+			BUL_remove_monarchy = yes
+			activate_advisor = BUL_petur_todorov_sic
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_royal_authoritarian_democrat_party_long
+				name = BUL_royal_authoritarian_democrat_party
+			}
+			country_event = { id = bulgaria_flavour_events.5 days = 3 }
+			BUL_pencho_zlatev = { set_nationality = ROOT }
+			BUL_kimon_georgiev = {
+				set_nationality = ROOT
+				promote_character = paternal_autocrat_subtype
+			}
+		}
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+country_event = { # Formation of the Fatherland Front
+	id = bulgaria_events.45
+	title = bulgaria_events.45.t
+	desc = bulgaria_events.45.d
+	picture = GFX_report_event_BUL_fatherland_front
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.45 option bulgaria_events.45.a"
+		name = bulgaria_events.45.a
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.08
+		}
+		set_party_name = {
+			ideology = radical_socialist
+			long_name = BUL_fatherland_front_party_long
+			name = BUL_fatherland_front_party
+		}
+		add_stability = -0.1
+		hidden_effect = {
+			country_event = { id = bulgaria_events.46 days = 4 }
+		}
+	}
+}
+country_event = { # Church Attack
+	id = bulgaria_events.46
+	title = bulgaria_events.46.t
+	desc = bulgaria_events.46.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.46 option bulgaria_events.46.a"
+		name = bulgaria_events.46.a
+		trigger = {
+			is_subject = no
+		}
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_MON_AUTDEM }
+			}
+		}
+		add_stability = -0.25
+		BUL_remove_monarchy = yes
+		BUL_boris_sakskoburggotski = { kill_character = yes }
+		hidden_effect = {
+			BUL_alexander_stamboliyski = { promote_character = authoritarian_democrat_subtype }
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_its_just_bzns_party_long
+				name = BUL_its_just_bzns_party
+			}
+			country_event = { id = bulgaria_events.47 days = 2 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.46 option bulgaria_events.46.b"
+		name = bulgaria_events.46.b
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = BUL_loss_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_MON_AUTDEM } }
+			}
+		}
+		add_stability = -0.25
+		hidden_effect = {
+			country_event = { id = bulgaria_events.48 days = 2 }
+		}
+	}
+}
+country_event = { # The Republic
+	id = bulgaria_events.47
+	title = bulgaria_events.47.t
+	desc = bulgaria_events.47.d
+	picture = GFX_report_event_BUL_fatherland_front2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.47 option bulgaria_events.47.a"
+		name = bulgaria_events.47.a
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.05
+		}
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = no
+		}
+		promote_character = BUL_fatherland_front
+		BUL_remove_constitution_ideas = yes
+		hidden_effect = {
+			set_party_name = {
+				ideology = social_conservative
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+			set_party_name = {
+				ideology = market_liberal
+				long_name = BUL_democratic_party_long
+				name = BUL_democratic_party
+			}
+			remove_ideas = BUL_military_league
+			remove_ideas = BUL_state_protection_act
+			remove_ideas = BUL_btb_dominance
+			BUL_pencho_zlatev = { retire = yes }
+			BUL_kimon_georgiev = { retire = yes }
+			BUL_nikola_hadzhipetkov = { retire = yes }
+			BUL_ivan_valkov = { retire = yes }
+			BUL_hristo_lukov = { retire = yes }
+			country_event = { id = bulgaria_events.59 days = 20 random_days = 3 }
+		}
+		end_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:syndicalist }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:totalist }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		activate_advisor = BUL_vasil_kolarov_sic
+		mark_focus_tree_layout_dirty = yes
+		news_event = bulgaria_flavour_events.33
+	}
+}
+country_event = { # Zlatev's Coup
+	id = bulgaria_events.48
+	title = bulgaria_events.48.t
+	desc = bulgaria_events.48.d
+	picture = GFX_report_event_BUL_boris2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.48 option bulgaria_events.48.a"
+		name = bulgaria_events.48.a
+		add_stability = -0.15
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+		}
+		set_party_name = {
+			ideology = authoritarian_democrat
+			long_name = BUL_royal_authoritarian_democrat_party_long
+			name = BUL_royal_authoritarian_democrat_party
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = social_conservative
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+			set_party_name = {
+				ideology = market_liberal
+				long_name = BUL_democratic_party_long
+				name = BUL_democratic_party
+			}
+		}
+		BUL_remove_constitution_ideas = yes
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_character = BUL_pencho_zlatev } }
+				BUL_pencho_zlatev = { set_nationality = ROOT }
+			}
+		}
+		activate_advisor = BUL_pencho_zlatev_sic
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+country_event = { # National Autonomy
+	id = bulgaria_events.49
+	title = bulgaria_events.49.t
+	desc = bulgaria_events.49.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.49 option bulgaria_events.49.a"
+		name = bulgaria_events.49.a
+		trigger = {
+			has_soccon_or_marlib_government = yes
+		}
+		add_stability = 0.04
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.49 option bulgaria_events.49.b"
+		name = bulgaria_events.49.b
+		add_ideas = BUL_territorial_autonomies
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.49 option bulgaria_events.49.c"
+		name = bulgaria_events.49.c
+		trigger = {
+			has_soclib_or_socdem_government = yes
+		}
+		add_ideas = BUL_natper_autonomy
+	}
+}
+country_event = { # Legionaries Fall
+	id = bulgaria_events.50
+	title = bulgaria_events.50.t
+	desc = bulgaria_events.50.d
+	picture = GFX_report_event_BUL_boris2
+
+	fire_only_once = yes
+	trigger = {
+		has_government = national_populist
+		has_idea = BUL_royalist_resistance
+		NOT = {
+			has_completed_focus = BUL_macedonia_intervention
+		}
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.50 option bulgaria_events.50.a"
+		name = bulgaria_events.50.a
+		add_stability = -0.15
+		drop_cosmetic_tag = yes
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+			name = BUL_royal_authoritarian_democrat_party
+			long_name = BUL_royal_authoritarian_democrat_party_long
+		}
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_character = BUL_pencho_zlatev } }
+				BUL_pencho_zlatev = { set_nationality = ROOT }
+			}
+			set_party_name = {
+				ideology = social_conservative
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+			set_party_name = {
+				ideology = market_liberal
+				long_name = BUL_democratic_party_long
+				name = BUL_democratic_party
+			}
+		}
+		BUL_create_boris = yes
+		BUL_remove_legionary_ideas = yes
+		activate_advisor = BUL_pencho_zlatev_sic
+		mark_focus_tree_layout_dirty = yes
+		clear_variable = BUL_Legion_AI_attack_Var
+	}
+}
+country_event = { # Expulsion of the Royal Family
+	id = bulgaria_events.51
+	title = bulgaria_events.51.t
+	desc = bulgaria_events.51.d
+	picture = GFX_report_event_BUL_National_Legions
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.51 option bulgaria_events.51.a"
+		name = bulgaria_events.51.a
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.2
+		}
+	}
+}
+country_event = { # Tsar Kyril
+	id = bulgaria_events.52
+	title = bulgaria_events.52.t
+	desc = bulgaria_events.52.d
+	picture = GFX_report_event_BUL_National_Legions
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.52 option bulgaria_events.52.a"
+		name = bulgaria_events.52.a
+		add_stability = 0.05
+		drop_cosmetic_tag = yes
+		BUL_create_kyril = yes
+	}
+}
+country_event = { # To arms!
+	id = bulgaria_events.53
+	title = bulgaria_events.53.t
+	desc = bulgaria_events.53.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.53 option bulgaria_events.53.a"
+		name = bulgaria_events.53.a
+		unlock_national_focus = BUL_secret_rearmament
+		unlock_national_focus = BUL_third_state_court
+		unlock_national_focus = BUL_national_unity
+		unlock_national_focus = BUL_restore_economic_base
+		complete_national_focus = BUL_greater_bulgaria_monuments
+		unlock_national_focus = BUL_opportunism
+	}
+}
+country_event = { # Chetniks getting ready
+	id = bulgaria_events.54
+	title = bulgaria_events.54.t
+	desc = bulgaria_events.54.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		OR = {
+			has_subject = SER
+			owns_state = 107 #Belgrade
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.54 option bulgaria_events.54.a"
+		name = bulgaria_events.54.a
+		hidden_effect = {
+			country_event = { id = bulgaria_events.5400 days = 90 random_days = 10 }
+		}
+	}
+}
+
+country_event = { #hidden event to check whether to bypass the mechanic due to BUL being at war (donotlog)
+	id = bulgaria_events.5400
+	hidden = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		OR = {
+			has_subject = SER
+			owns_state = 107 #Belgrade
+		}
+	}
+
+	option = {
+		if = {
+			limit = { has_war = yes }
+			random_state = {
+				prioritize = { 105 767 }
+				limit = {
+					is_core_of = SER
+					owner = { is_ally_with = ROOT }
+					is_controlled_by = owner
+				}
+				save_global_event_target_as = BUL_chetnik_headquarters
+			}
+			set_variable = { BUL_chetnik_strength = 5 }
+			country_event = bulgaria_events.57
+		}
+		else = {
+			country_event = bulgaria_events.55
+		}
+	}
+}
+
+country_event = { # First Uprising
+	id = bulgaria_events.55
+	title = bulgaria_events.55.t
+	desc = bulgaria_events.55.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.55 option bulgaria_events.55.a"
+		name = bulgaria_events.55.a
+		set_variable = { BUL_chetnik_strength = 5 }
+		activate_mission = BUL_chetnik_movement
+		106 = {
+			save_global_event_target_as = BUL_chetnik_headquarters
+			add_dynamic_modifier = { modifier = BUL_chetnik_base_modifier }
+		}
+	}
+}
+country_event = { # Chetnik Relocation
+	id = bulgaria_events.56
+	title = bulgaria_events.56.t
+	desc = {
+		text = bulgaria_events.56.d1
+		trigger = {
+			BUL_chetnik_victory = yes
+		}
+	}
+	desc = {
+		text = bulgaria_events.56.d2
+		trigger = {
+			BUL_chetnik_victory = no
+		}
+	}
+	picture = GFX_report_event_BUL_oldguard
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.56 option bulgaria_events.56.a"
+		name = bulgaria_events.56.a
+		trigger = {
+			BUL_chetnik_victory = yes
+		}
+		custom_effect_tooltip = BUL_chetnik_victory_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.56 option bulgaria_events.56.b"
+		name = bulgaria_events.56.b
+		trigger = {
+			BUL_chetnik_victory = no
+		}
+		custom_effect_tooltip = BUL_chetnik_defeat_tt
+	}
+}
+country_event = { # Chetnik Rebellion: Defeat
+	id = bulgaria_events.57
+	title = bulgaria_events.57.t
+	desc = bulgaria_events.57.d
+	picture = GFX_report_event_BUL_oldguard
+
+	trigger = {
+		has_variable = BUL.BUL_chetnik_strength
+		is_subject = no
+		event_target:BUL_chetnik_headquarters = {
+			owner = { is_ally_with = ROOT }
+		}
+	}
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			remove_mission = BUL_chetnik_movement
+			BUL_spawn_chetnik_revolt = yes
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.57 option bulgaria_events.57.a"
+		name = bulgaria_events.57.a
+		effect_tooltip = {
+			event_target:chetnik_state = {
+				declare_war_on = {
+					target = BUL
+					type = annex_everything
+				}
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					event_target:BUL_chetnik_headquarters = {
+						NOT = {
+							state = 107 #Belgrade
+							state = 108 #Kraljevo
+						}
+					}
+					NOT = { has_subject = event_target:original_serbia }
+				}
+			}
+			clear_global_event_target = BUL_chetnik_headquarters
+		}
+	}
+}
+country_event = { # Chetnik Rebellion: Victory
+	id = bulgaria_events.58
+	title = bulgaria_events.58.t
+	desc = bulgaria_events.58.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	immediate = {
+		hidden_effect = {
+			remove_mission = BUL_chetnik_movement
+			clear_variable = BUL.BUL_chetnik_strength
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.58 option bulgaria_events.58.a"
+		name = bulgaria_events.58.a
+		add_stability = 0.1
+		add_political_power = 75
+		event_target:BUL_chetnik_headquarters = {
+			remove_dynamic_modifier = { modifier = BUL_chetnik_base_modifier }
+		}
+		clear_global_event_target = BUL_chetnik_headquarters
+		hidden_effect = {
+			SER = {
+				if = {
+					limit = { has_character = SER_dragoljub_mihailovic }
+					SER_dragoljub_mihailovic = { kill_character = yes }
+				}
+			}
+		}
+	}
+}
+
+country_event = { # Fatherland Front - Resistance
+	id = bulgaria_events.59
+	title = bulgaria_events.59.t
+	desc = bulgaria_events.59.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.59 option bulgaria_events.59.a"
+		name = bulgaria_events.59.a
+		add_ideas = BUL_royalist_resistance_worse
+		hidden_effect = {
+			country_event = { id = bulgaria_events.60 days = 7 }
+		}
+	}
+}
+country_event = { # What do we dooo
+	id = bulgaria_events.60
+	title = bulgaria_events.60.t
+	desc = bulgaria_events.60.d
+	picture = GFX_report_event_BUL_fatherland_front
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.60 option bulgaria_events.60.a"
+		name = bulgaria_events.60.a
+		ai_chance = {
+			base = 35
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_RADSOC }
+					has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_SYNDIE }
+				}
+			}
+		}
+		hidden_effect = {
+			country_event = { id = bulgaria_events.61 days = 7 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.60 option bulgaria_events.60.b"
+		name = bulgaria_events.60.b
+		ai_chance = {
+			base = 65
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_REP_AUTDEM }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = bulgaria_events.62 days = 7 }
+		}
+	}
+}
+country_event = { # Oh no Stamboliyski don't do it!
+	id = bulgaria_events.61
+	title = bulgaria_events.61.t
+	desc = bulgaria_events.61.d
+	picture = GFX_report_event_BUL_Stamboliyski
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.61 option bulgaria_events.61.a"
+		name = bulgaria_events.61.a
+		set_cosmetic_tag = BUL_rep
+		unlock_national_focus = BUL_front_republic
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		hidden_effect = {
+			BUL_fatherland_front = { retire = yes }
+			set_party_name = {
+				ideology = radical_socialist
+				long_name = BUL_radical_socialist_party_long
+				name = BUL_radical_socialist_party
+			}
+			activate_advisor = BUL_raiko_daskalov_sic
+		}
+	}
+}
+country_event = { # RIP Stambo
+	id = bulgaria_events.62
+	title = bulgaria_events.62.t
+	desc = bulgaria_events.62.d
+	picture = GFX_report_event_BUL_fatherland_front2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.62 option bulgaria_events.62.a"
+		name = bulgaria_events.62.a
+		unlock_national_focus = BUL_front_republic
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.1
+		}
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		remove_from_coalition = yes
+		hidden_effect = {
+			BUL_fatherland_front = { retire = yes }
+			set_party_name = {
+				ideology = radical_socialist
+				long_name = BUL_radical_socialist_party_long
+				name = BUL_radical_socialist_party
+			}
+		}
+	}
+}
+country_event = { # What socialist ideology we doin
+	id = bulgaria_events.63
+	title = bulgaria_events.63.t
+	desc = bulgaria_events.63.d
+	picture = GFX_report_event_BUL_fatherland_front2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.63 option bulgaria_events.63.a"
+		name = bulgaria_events.63.a
+		ai_chance = {
+			base = 55
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_SYNDIE }
+			}
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.63 option bulgaria_events.63.b"
+		name = bulgaria_events.63.b
+		ai_chance = {
+			base = 45
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_loss_path option = BUL_LOSS_PATH_RADSOC }
+			}
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.1
+		}
+		set_politics = {
+			ruling_party = syndicalist
+			elections_allowed = no
+		}
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:totalist }
+		add_to_coalition = yes
+	}
+}
+country_event = { # Success of Building for Fatherland program
+	id = bulgaria_events.64
+	title = bulgaria_events.64.t
+	desc = bulgaria_events.64.d
+	picture = GFX_report_event_BUL_fatherland_front
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		is_monarchy = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.64 option bulgaria_events.64.a"
+		name = bulgaria_events.64.a
+		add_ideas = BUL_mass_housing
+		48 = {
+			add_manpower = 7850
+		}
+	}
+}
+country_event = { # FF Falls
+	id = bulgaria_events.65
+	title = bulgaria_events.65.t
+	desc = bulgaria_events.65.d
+	picture = GFX_report_event_BUL_boris2
+
+	fire_only_once = yes
+	trigger = {
+		OR = {
+			has_idea = BUL_royalist_resistance_worse
+			has_idea = BUL_royalist_resistance_worse_2
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.65 option bulgaria_events.65.a"
+		name = bulgaria_events.65.a
+		add_stability = -0.15
+		drop_cosmetic_tag = yes
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+			long_name = BUL_royal_authoritarian_democrat_party_long
+			name = BUL_royal_authoritarian_democrat_party
+		}
+		hidden_effect = {
+			if = {
+				limit = { NOT = { has_character = BUL_pencho_zlatev } }
+				BUL_pencho_zlatev = { set_nationality = ROOT }
+			}
+			activate_advisor = BUL_pencho_zlatev_sic
+			set_party_name = {
+				ideology = social_conservative
+				long_name = BUL_national_liberal_party_long
+				name = BUL_national_liberal_party
+			}
+			set_party_name = {
+				ideology = market_liberal
+				long_name = BUL_democratic_party_long
+				name = BUL_democratic_party
+			}
+		}
+		BUL_create_kyril = yes
+		BUL_remove_front_ideas = yes
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+country_event = { # Royalist resistance is defeated, now get some stability
+	id = bulgaria_events.66
+	title = bulgaria_events.66.t
+	desc = bulgaria_events.66.d
+	picture = GFX_report_event_BUL_oldguard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		is_monarchy = no
+		is_subject = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.66 option bulgaria_events.66.a"
+		name = bulgaria_events.66.a
+		add_stability = 0.3
+		effect_tooltip = {
+			remove_ideas = BUL_royalist_resistance_worse_2
+		}
+	}
+}
+country_event = { # Bulgarian intelligence has some suspicions about clandestine activity of Serbian underground
+	id = bulgaria_events.67
+	title = bulgaria_events.67.t
+	desc = bulgaria_events.67.d
+	picture = GFX_report_event_BUL_soldier
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.67 option bulgaria_events.67.a"
+		name = bulgaria_events.67.a
+		add_stability = -0.02
+	}
+}
+country_event = { # Serbs are rising up
+	id = bulgaria_events.68
+	title = bulgaria_events.68.t
+	desc = bulgaria_events.68.d
+	picture = GFX_report_event_BUL_soldier
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_events.68 option bulgaria_events.68.a"
+		name = bulgaria_events.68.a
+		add_war_support = 0.05
+		effect_tooltip = {
+			end_puppet = SER
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = SER
+			}
+		}
+	}
+}
+
+################################
+###  Bulgarian Other Events  ###
+################################
+
+country_event = {
+	id = bulgaria_foreign_events.1
+	title = bulgaria_foreign_events.1.t
+	desc = bulgaria_foreign_events.1.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.1 option bulgaria_foreign_events.1.a"
+		name = bulgaria_foreign_events.1.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+			}
+		}
+		BUL = {
+			country_event = bulgaria_foreign_events.3
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.1 option bulgaria_foreign_events.1.b"
+		name = bulgaria_foreign_events.1.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+			}
+		}
+		BUL = {
+			country_event = bulgaria_foreign_events.2
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.2
+	title = bulgaria_foreign_events.2.t
+	desc = bulgaria_foreign_events.2.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	trigger = {
+		NOT = {
+			has_country_flag = BUL_no_cancelling_now
+			has_completed_focus = BUL_kostantiniye_diplomacy
+		}
+	}
+	is_triggered_only = yes
+	immediate = {
+		set_country_flag = BUL_OTT_negotiations_failed
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.2 option bulgaria_foreign_events.2.a"
+		name = bulgaria_foreign_events.2.a
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.3
+	title = bulgaria_foreign_events.3.t
+	desc = bulgaria_foreign_events.3.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.3 option bulgaria_foreign_events.3.a"
+		name = bulgaria_foreign_events.3.a
+		custom_effect_tooltip = BUL_conference_begins_tt
+		hidden_effect = {
+			OTT = {
+				country_event = { id = bulgaria_foreign_events.4 days = 3 }
+			}
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.4
+	title = bulgaria_foreign_events.4.t
+	desc = bulgaria_foreign_events.4.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.4 option bulgaria_foreign_events.4.a"
+		name = bulgaria_foreign_events.4.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+			}
+		}
+		BUL = {
+			country_event = bulgaria_foreign_events.5
+			effect_tooltip = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							state = 184 #Komotini
+							state = 1089 #Kardzhali
+						}
+					}
+					add_dynamic_modifier = {
+						modifier = BUL_turkish_autonomy
+					}
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.4 option bulgaria_foreign_events.4.b"
+		name = bulgaria_foreign_events.4.b
+		ai_chance = { base = 0 }
+		country_event = { id = bulgaria_foreign_events.6 days = 3 }
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.4 option bulgaria_foreign_events.14.b"
+		name = bulgaria_foreign_events.14.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+			}
+		}
+		BUL = {
+			country_event = bulgaria_foreign_events.2
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.5
+	title = bulgaria_foreign_events.5.t
+	desc = bulgaria_foreign_events.5.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.5 option bulgaria_foreign_events.5.a"
+		name = bulgaria_foreign_events.5.a
+		ai_chance = { base = 95 }
+		set_country_flag = BUL_OTT_accepted_turkish_autonomy
+		effect_tooltip = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 184 #Komotini
+						state = 1089 #Kardzhali
+					}
+				}
+				add_dynamic_modifier = {
+					modifier = BUL_turkish_autonomy
+				}
+			}
+		}
+		OTT = {
+			country_event = { id = bulgaria_foreign_events.6 days = 3 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.5 option bulgaria_foreign_events.5.b"
+		name = bulgaria_foreign_events.5.b
+		ai_chance = { base = 5 }
+		OTT = {
+			country_event = { id = bulgaria_foreign_events.14 days = 1 }
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.6
+	title = bulgaria_foreign_events.6.t
+	desc = bulgaria_foreign_events.6.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.6 option bulgaria_foreign_events.6.a"
+		name = bulgaria_foreign_events.6.a
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+			}
+		}
+		BUL = {
+			country_event = bulgaria_foreign_events.7
+		}
+		custom_effect_tooltip = if_they_accept_tt
+		add_ideas = BUL_ottoman_trade_OTT
+		custom_effect_tooltip = BUL_setting_up_danube_commission_tt
+		effect_tooltip = {
+			add_ideas = BUL_danube_mouth_commission_1
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.6 option bulgaria_foreign_events.6.b"
+		name = bulgaria_foreign_events.6.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+			}
+		}
+		country_event = { id = bulgaria_foreign_events.8 days = 3 }
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.6 option bulgaria_foreign_events.14.b"
+		name = bulgaria_foreign_events.14.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+			}
+		}
+		BUL = {
+			country_event = bulgaria_foreign_events.2
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.7
+	title = bulgaria_foreign_events.7.t
+	desc = bulgaria_foreign_events.7.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.7 option bulgaria_foreign_events.7.a"
+		name = bulgaria_foreign_events.7.a
+		ai_chance = { base = 95 }
+		effect_tooltip = { add_ideas = BUL_ottoman_trade }
+		custom_effect_tooltip = BUL_setting_up_danube_commission_tt
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = BUL_danube_mouth_commission_1
+				add_idea = BUL_danube_mouth_commission_2
+			}
+			add_ideas = BUL_danube_mouth_commission_2
+		}
+		set_country_flag = BUL_OTT_accepted_danube_commission
+		set_country_flag = BUL_no_cancelling_now
+		custom_effect_tooltip = tooltip_white_line
+		OTT = {
+			country_event = { id = bulgaria_foreign_events.8 days = 3 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.7 option bulgaria_foreign_events.7.b"
+		name = bulgaria_foreign_events.7.b
+		ai_chance = { base = 5 }
+		OTT = {
+			country_event = { id = bulgaria_foreign_events.14 days = 1 }
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.8
+	title = bulgaria_foreign_events.8.t
+	desc = bulgaria_foreign_events.8.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.8 option bulgaria_foreign_events.8.a"
+		name = bulgaria_foreign_events.8.a
+		ai_chance = { base = 40 }
+		BUL = {
+			country_event = { id = bulgaria_foreign_events.9 days = 1 }
+		}
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			TUR = {
+				add_relation_modifier = {
+					target = BUL
+					modifier = volunteer_limit_plus_three
+				}
+			}
+			BUL = {
+				add_relation_modifier = {
+					target = TUR
+					modifier = volunteer_limit_plus_three
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.8 option bulgaria_foreign_events.8.b"
+		name = bulgaria_foreign_events.8.b
+		ai_chance = { base = 60 }
+		country_event = { id = bulgaria_foreign_events.10 days = 3 }
+		hidden_effect = {
+			BUL = { country_event = { id = bulgaria_foreign_events.10 days = 3 } }
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.9
+	title = bulgaria_foreign_events.9.t
+	desc = bulgaria_foreign_events.9.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.9 option bulgaria_foreign_events.9.a"
+		name = bulgaria_foreign_events.9.a
+		ai_chance = { base = 75 }
+		country_event = { id = bulgaria_foreign_events.10 days = 3 }
+		add_relation_modifier = {
+			target = TUR
+			modifier = volunteer_limit_plus_three
+		}
+		custom_effect_tooltip = tooltip_white_line
+		hidden_effect = {
+			OTT = { country_event = { id = bulgaria_foreign_events.10 days = 3 } }
+		}
+		OTT = {
+			effect_tooltip = {
+				add_relation_modifier = {
+					target = BUL
+					modifier = volunteer_limit_plus_three
+				}
+			}
+			country_event = bulgaria_foreign_events.11
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.9 option bulgaria_foreign_events.9.b"
+		name = bulgaria_foreign_events.9.b
+		ai_chance = {
+			base = 25
+			modifier = {
+				add = -25
+				BUL = {
+					has_country_flag = BUL_OTT_accepted_turkish_autonomy
+					has_country_flag = BUL_OTT_accepted_danube_commission
+				}
+			}
+		}
+		country_event = { id = bulgaria_foreign_events.10 days = 3 }
+		custom_effect_tooltip = tooltip_white_line
+		OTT = {
+			country_event = bulgaria_foreign_events.12
+		}
+		hidden_effect = {
+			OTT = { country_event = { id = bulgaria_foreign_events.10 days = 3 } }
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.10
+	title = bulgaria_foreign_events.10.t
+	desc = bulgaria_foreign_events.10.d
+	picture = GFX_report_event_BUL_crowd
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.10 option bulgaria_foreign_events.10.a"
+		name = bulgaria_foreign_events.10.a
+		add_stability = 0.1
+		if = {
+			limit = { NOT = { BUL = { has_completed_focus = BUL_kostantiniye_diplomacy } } }
+			BUL = { complete_national_focus = BUL_kostantiniye_diplomacy }
+			every_other_country = {
+				limit = {
+					OR = {
+						original_tag = SER
+						original_tag = GRE
+						original_tag = ROM
+					}
+				}
+				country_event = bulgaria_foreign_events.13
+			}
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.11
+	title = bulgaria_foreign_events.11.t
+	desc = bulgaria_foreign_events.11.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.11 option bulgaria_foreign_events.11.a"
+		name = bulgaria_foreign_events.11.a
+		add_relation_modifier = {
+			target = BUL
+			modifier = volunteer_limit_plus_three
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.12
+	title = bulgaria_foreign_events.12.t
+	desc = bulgaria_foreign_events.12.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.12 option bulgaria_foreign_events.12.a"
+		name = bulgaria_foreign_events.12.a
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.13
+	title = bulgaria_foreign_events.13.t
+	desc = bulgaria_foreign_events.13.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.13 option bulgaria_foreign_events.13.a"
+		name = bulgaria_foreign_events.13.a
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.14
+	title = bulgaria_foreign_events.14.t
+	desc = bulgaria_foreign_events.14.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.14 option bulgaria_foreign_events.14.a"
+		name = bulgaria_foreign_events.14.a
+		BUL = {
+			country_event = bulgaria_foreign_events.15
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.14 option bulgaria_foreign_events.14.b"
+		name = bulgaria_foreign_events.14.b
+		BUL = {
+			country_event = bulgaria_foreign_events.2
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.15
+	title = bulgaria_foreign_events.15.t
+	desc = bulgaria_foreign_events.15.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.15 option bulgaria_foreign_events.15.a"
+		name = bulgaria_foreign_events.15.a
+		ai_chance = { base = 0 }
+		add_stability = -0.2
+		clr_country_flag = BUL_OTT_accepted_turkish_autonomy
+		clr_country_flag = BUL_OTT_accepted_danube_commission
+		every_owned_state = {
+			limit = {
+				OR = {
+					state = 184 #Komotini
+					state = 1089 #Kardzhali
+				}
+			}
+			teleport_armies = {
+				limit = { is_ally_with = ROOT }
+				to_state_array = owned_controlled_states
+			}
+			transfer_state_to = OTT
+			if = {
+				limit = { 341 = { OTT_is_sovereign_province = yes } } #Adrianople
+				ott_set_authority_vilayet_low = yes
+			}
+			else_if = {
+				limit = { 341 = { OTT_is_autonomous_province = yes } } #Adrianople
+				ott_set_authority_vilayet_medium = yes
+			}
+			else = {
+				ott_set_authority_vilayet_high = yes
+			}
+		}
+		OTT = {
+			country_event = bulgaria_foreign_events.16
+			hidden_effect = {
+				country_event = { id = ottomans_kemalist_events.63 days = 7 }
+				country_event = { id = ottomans_liberal_events.24 days = 10 }
+				country_event = { id = ottomans_kemalist_events.64 days = 60 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.15 option bulgaria_foreign_events.15.b"
+		name = bulgaria_foreign_events.15.b
+		OTT = {
+			country_event = bulgaria_foreign_events.17
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.16
+	title = bulgaria_foreign_events.16.t
+	desc = bulgaria_foreign_events.16.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.16 option bulgaria_foreign_events.16.a"
+		name = bulgaria_foreign_events.16.a
+		hidden_effect = {
+			country_event = { id = bulgaria_foreign_events.10 days = 3 }
+			BUL = { country_event = { id = bulgaria_foreign_events.10 days = 3 } }
+		}
+	}
+}
+country_event = {
+	id = bulgaria_foreign_events.17
+	title = bulgaria_foreign_events.17.t
+	desc = bulgaria_foreign_events.17.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.17 option bulgaria_foreign_events.17.a"
+		name = bulgaria_foreign_events.17.a
+		BUL = {
+			country_event = bulgaria_foreign_events.2
+		}
+	}
+}
+country_event = { #Germany proposes deal with Bulgaria
+	id = bulgaria_foreign_events.18
+	title = bulgaria_foreign_events.18.t
+	desc = bulgaria_foreign_events.18.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.18 option bulgaria_foreign_events.18.a"
+		name = bulgaria_foreign_events.18.a #Support Bulgaria
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BUL_forpol option = BUL_FORPOL_RUS }
+			}
+		}
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -1000
+		}
+		FROM = {
+			event_option_tooltip = bulgaria_foreign_events.19.a
+			country_event = bulgaria_foreign_events.19
+		}
+		set_country_flag = SER_supported_bulgaria
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.18 option bulgaria_foreign_events.18.b"
+		name = bulgaria_foreign_events.18.b #Meh
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					NOT = { FROM = { has_government = paternal_autocrat } }
+					FROM = { is_ai = no }
+				}
+			}
+		}
+		add_war_support = -0.02
+		FROM = { country_event = bulgaria_foreign_events.20 }
+	}
+}
+
+country_event = { #Germany say yes
+	id = bulgaria_foreign_events.19
+	title = bulgaria_foreign_events.19.t
+	desc = bulgaria_foreign_events.19.d
+
+	is_triggered_only = yes
+
+	option = { #Yay
+		log = "[GetLogInfo]: event bulgaria_foreign_events.19 option bulgaria_foreign_events.19.a"
+		name = bulgaria_foreign_events.19.a
+		add_political_power = 50
+		army_experience = 50
+		custom_effect_tooltip = tooltip_white_line
+		add_ideas = GER_mil_support_idea
+		custom_effect_tooltip = tooltip_white_line
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = GER #not FROM because of event_option_tooltip in focus
+		}
+		custom_effect_tooltip = tooltip_white_line
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = BUL_german_diplomacy_template_tt
+				NAME = "Ekspeditsionno Otdelenie"
+			}
+			if = {
+				limit = { has_template = "Ekspeditsionno Otdelenie" }
+				delete_unit_template_and_units = { division_template = "Ekspeditsionno Otdelenie" disband = yes } #no cheating
+			}
+			division_template = {
+				name = "Ekspeditsionno Otdelenie"
+				division_names_group = BUL_INF_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+					infantry = { x = 1 y = 2 }
+					infantry = { x = 2 y = 0 }
+					infantry = { x = 2 y = 1 }
+					infantry = { x = 2 y = 2 }
+					artillery_brigade = { x = 3 y = 0 }
+				}
+				support = {
+					recon = { x = 0 y = 0 }
+					engineer = { x = 0 y = 1 }
+				}
+			}
+		}
+	}
+}
+country_event = { #Germany say no
+	id = bulgaria_foreign_events.20
+	title = bulgaria_foreign_events.20.t
+	desc = bulgaria_foreign_events.20.d
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Damn
+		log = "[GetLogInfo]: event bulgaria_foreign_events.20 option bulgaria_foreign_events.20.a"
+		name = bulgaria_foreign_events.20.a
+		add_war_support = -0.05
+		add_political_power = -25
+	}
+}
+
+country_event = { # Danube Commission restored
+	id = bulgaria_foreign_events.24
+	title = bulgaria_foreign_events.24.t
+	desc = bulgaria_foreign_events.24.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #Nice
+		log = "[GetLogInfo]: event bulgaria_foreign_events.24 option bulgaria_foreign_events.24.a"
+		name = bulgaria_foreign_events.24.a
+		add_stability = 0.04
+		effect_tooltip = {
+			add_offsite_building = {
+				type = industrial_complex
+				level = 1
+			}
+			add_ideas = BUL_danube_mouth_commission_1
+		}
+	}
+}
+
+# Yugoslavia formed
+news_event = {
+	id = bulgaria_foreign_events.27
+	immediate = { log = "[GetLogInfo]: event bulgaria_foreign_events.27" }
+	title = bulgaria_foreign_events.27.t
+	desc = bulgaria_foreign_events.27.d
+	picture = GFX_news_event_ITA_big_crowd
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	option = {
+		name = bulgaria_foreign_events.27.a
+	}
+}
+country_event = { #Renew the 1904 treaties
+	id = bulgaria_foreign_events.28
+	title = bulgaria_foreign_events.28.t
+	desc = bulgaria_foreign_events.28.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event bulgaria_foreign_events.28 option bulgaria_foreign_events.28.a"
+		name = bulgaria_foreign_events.28.a
+		add_offsite_building = { type = industrial_complex level = 1 }
+		BUL = {
+			country_event = bulgaria_foreign_events.29
+		}
+	}
+
+	option = { #Decline
+		log = "[GetLogInfo]: event bulgaria_foreign_events.28 option bulgaria_foreign_events.28.b"
+		name = bulgaria_foreign_events.28.b
+		ai_chance = { base = 0 }
+		BUL = {
+			country_event = bulgaria_foreign_events.30
+		}
+	}
+}
+
+country_event = { #Renew the 1904 treaties
+	id = bulgaria_foreign_events.29
+	title = bulgaria_foreign_events.29.t
+	desc = bulgaria_foreign_events.29.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = FROM
+	}
+
+	option = { #A toast to our Serb friends
+		log = "[GetLogInfo]: event bulgaria_foreign_events.29 option bulgaria_foreign_events.29.a"
+		name = bulgaria_foreign_events.29.a
+		add_offsite_building = { type = industrial_complex level = 1 }
+		diplomatic_relation = {
+			country = SER
+			relation = non_aggression_pact
+		}
+		SER = {
+			if = {
+				limit = { has_opinion_modifier = Belgrade_Pact_anti_bulgaria }
+				remove_opinion_modifier = { target = BUL modifier = Belgrade_Pact_anti_bulgaria }
+			}
+		}
+		if = {
+			limit = { has_opinion_modifier = Belgrade_Pact_joined_against_us }
+			remove_opinion_modifier = { target = SER modifier = Belgrade_Pact_joined_against_us }
+		}
+		add_opinion_modifier = { target = SER modifier = KR_approves_of_govt }
+		reverse_add_opinion_modifier = { target = SER modifier = KR_approves_of_govt }
+	}
+}
+
+country_event = { #Renew the 1904 treaties
+	id = bulgaria_foreign_events.30
+	title = bulgaria_foreign_events.30.t
+	desc = bulgaria_foreign_events.30.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = FROM
+	}
+
+	option = { #A toast to our Serb friends
+		log = "[GetLogInfo]: event bulgaria_foreign_events.30 option bulgaria_foreign_events.30.a"
+		name = bulgaria_foreign_events.30.a
+		add_offsite_building = { type = industrial_complex level = 1 }
+		diplomatic_relation = {
+			country = SER
+			relation = non_aggression_pact
+		}
+		add_opinion_modifier = { target = SER modifier = KR_approves_of_govt }
+		reverse_add_opinion_modifier = { target = SER modifier = KR_approves_of_govt }
+	}
+}
+
+country_event = { #Join the Balkan Customs Union?
+	id = bulgaria_foreign_events.31
+	title = bulgaria_foreign_events.31.t
+	desc = bulgaria_foreign_events.31.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event bulgaria_foreign_events.31 option bulgaria_foreign_events.31.a"
+		name = bulgaria_foreign_events.31.a
+		add_dynamic_modifier = { modifier = BUL_balkan_union }
+		if = {
+			limit = { has_opinion_modifier = Belgrade_Pact_anti_bulgaria }
+			remove_opinion_modifier = { target = BUL modifier = Belgrade_Pact_anti_bulgaria }
+		}
+		BUL = {
+			if = {
+				limit = { has_opinion_modifier = Belgrade_Pact_joined_against_us }
+				remove_opinion_modifier = { target = ROOT modifier = Belgrade_Pact_joined_against_us }
+			}
+			country_event = bulgaria_foreign_events.32
+		}
+	}
+
+	option = { #Decline
+		log = "[GetLogInfo]: event bulgaria_foreign_events.31 option bulgaria_foreign_events.31.b"
+		name = bulgaria_foreign_events.31.b
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #Join the Balkan Customs Union?
+	id = bulgaria_foreign_events.32
+	title = bulgaria_foreign_events.32.t
+	desc = bulgaria_foreign_events.32.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	option = { #A toast to our friends
+		log = "[GetLogInfo]: event bulgaria_foreign_events.32 option bulgaria_foreign_events.32.a"
+		name = bulgaria_foreign_events.32.a
+		effect_tooltip = {
+			FROM = {
+				add_dynamic_modifier = { modifier = BUL_balkan_union }
+			}
+		}
+	}
+}
+
+country_event = { #Join the Balkan Defense Cooperation?
+	id = bulgaria_foreign_events.33
+	title = bulgaria_foreign_events.33.t
+	desc = bulgaria_foreign_events.33.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event bulgaria_foreign_events.33 option bulgaria_foreign_events.33.a"
+		name = bulgaria_foreign_events.33.a
+		FROM = { add_to_faction = ROOT }
+		if = {
+			limit = {
+				original_tag = GRE
+				owns_state = 1076
+				1076 = { is_demilitarized_zone = yes }
+			}
+			1076 = { set_demilitarized_zone = no }
+		}
+		else_if = {
+			limit = {
+				original_tag = ROM
+				owns_state = 81
+				81 = { is_demilitarized_zone = yes }
+			}
+			81 = { set_demilitarized_zone = no }
+		}
+		else_if = {
+			limit = {
+				original_tag = SER
+				owns_state = 765
+				765 = { is_demilitarized_zone = yes }
+			}
+			765 = { set_demilitarized_zone = no }
+		}
+		add_ideas = BUL_defender_of_balkans_oth
+		BUL = {
+			country_event = bulgaria_foreign_events.34
+		}
+	}
+
+	option = { #Decline
+		log = "[GetLogInfo]: event bulgaria_foreign_events.33 option bulgaria_foreign_events.33.b"
+		name = bulgaria_foreign_events.33.b
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #Join the Balkan Defense Cooperation?
+	id = bulgaria_foreign_events.34
+	title = bulgaria_foreign_events.34.t
+	desc = bulgaria_foreign_events.34.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	option = { #A toast to our friends
+		log = "[GetLogInfo]: event bulgaria_foreign_events.34 option bulgaria_foreign_events.34.a"
+		name = bulgaria_foreign_events.34.a
+		effect_tooltip = {
+			BUL = { add_to_faction = FROM }
+		}
+	}
+}
+
+country_event = { #White peace for Bulgaria vs. Ottomans
+	id = bulgaria_foreign_events.35
+	title = bulgaria_foreign_events.35.t
+	picture = GFX_report_event_BUL_army
+
+	desc = {
+		text = bulgaria_foreign_events.35.d.cairo_pact
+		trigger = { has_global_flag = OTT_cairo_pact_war_ongoing }
+	}
+	desc = {
+		text = bulgaria_foreign_events.35.d
+		trigger = { NOT = { has_global_flag = OTT_cairo_pact_war_ongoing } }
+	}
+
+	trigger = {
+		tag = TUR
+		has_war_with = BUL
+		is_valid_peace_target = yes
+		NOT = { has_country_flag = OTT_war_for_thrace }
+		OR = {
+			AND = {
+				owns_state = 341
+				surrender_progress > 0.40
+			}
+			AND = {
+				NOT = { owns_state = 341 }
+				surrender_progress > 0.50
+			}
+		}
+		owns_any_state_of = {
+			341 #Adrianople
+			773 #Constantinople
+		}
+		if = {
+			limit = { owns_state = 341 }
+			341 = { is_controlled_by = BUL }
+		}
+		if = {
+			limit = { owns_state = 773 }
+			773 = { is_controlled_by = BUL }
+		}
+		BUL = {
+			surrender_progress < 0.20
+			is_valid_peace_target = yes
+			NOT = { has_country_flag = BUL_second_war_for_thrace }
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 2
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.35 option bulgaria_foreign_events.35.a"
+		name = bulgaria_foreign_events.35.a
+		BUL = { country_event = bulgaria_foreign_events.36 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.35 option bulgaria_foreign_events.35.b"
+		name = bulgaria_foreign_events.35.b
+		ai_chance = { base = 0 }
+		add_stability = -0.10
+	}
+}
+
+country_event = { #Bulgaria decides on the peace offer
+	id = bulgaria_foreign_events.36
+	title = bulgaria_foreign_events.36.t
+	picture = GFX_report_event_BUL_army
+
+	desc = {
+		text = bulgaria_foreign_events.36.d.cairo_pact
+		trigger = {
+			FROM = { has_global_flag = OTT_cairo_pact_war_ongoing }
+		}
+	}
+	desc = {
+		text = bulgaria_foreign_events.36.d
+		trigger = {
+			NOT = { has_global_flag = OTT_cairo_pact_war_ongoing }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.36 option bulgaria_foreign_events.36.a"
+		name = bulgaria_foreign_events.36.a
+		add_political_power = 50
+		every_state = {
+			limit = {
+				is_owned_by = FROM
+				OR = {
+					is_claim_or_core_of_ROOT = yes
+					state = 341 #Adrianople
+				}
+			}
+			transfer_state_to = BUL
+		}
+		every_subject_country = {
+			limit = { has_war_with = FROM }
+			every_state = {
+				limit = {
+					is_owned_by = FROM
+					OR = {
+						is_claim_or_core_of_PREV = yes
+						state = 341 #Adrianople
+					}
+				}
+				transfer_state_to = PREV
+			}
+		}
+		FROM = { white_peace_with_ROOT = yes }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.36 option bulgaria_foreign_events.36.b"
+		name = bulgaria_foreign_events.36.b
+		ai_chance = { base = 0 }
+		add_war_support = -0.10
+		FROM = { country_event = bulgaria_foreign_events.37 }
+	}
+}
+
+country_event = { #Bulgaria refuses the peace offer
+	id = bulgaria_foreign_events.37
+	title = bulgaria_foreign_events.37.t
+	desc = bulgaria_foreign_events.37.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.37 option bulgaria_foreign_events.37.a"
+		name = bulgaria_foreign_events.37.a
+		add_war_support = 0.10
+	}
+}
+
+country_event = { # Bulgaria gets to declare war on GRR if it spawns
+	id = bulgaria_foreign_events.38
+	title = bulgaria_foreign_events.38.t
+	desc = bulgaria_foreign_events.38.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.38 option bulgaria_foreign_events.38.a"
+		name = bulgaria_foreign_events.38.a
+		every_country_with_original_tag = {
+			original_tag_to_check = FROM
+			limit = { ROOT = { can_declare_war_on = PREV } }
+			display_individual_scopes = yes
+			ROOT = {
+				declare_war_on = {
+					target = PREV
+					type = annex_everything
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.38 option bulgaria_foreign_events.38.b"
+		name = bulgaria_foreign_events.38.b
+		ai_chance = { base = 0 }
+		add_war_support = -0.10
+	}
+}
+
+country_event = { #The Second War for Thrace, Bulgaria/Greece declares war on the other over conflicting claims on Thrace while already at war with the Ottomans
+	id = bulgaria_foreign_events.39
+	title = bulgaria_foreign_events.39.t
+	desc = bulgaria_foreign_events.39.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.39 option bulgaria_foreign_events.39.a"
+		name = bulgaria_foreign_events.39.a
+		GRE = { set_country_flag = GRE_second_war_for_thrace }
+		BUL = { set_country_flag = BUL_second_war_for_thrace }
+		declare_war_on = {
+			target = FROM
+			type = annex_everything
+		}
+	}
+}
+
+country_event = { #We are losing the war for Thrace, sue for peace?
+	id = bulgaria_foreign_events.40
+	title = bulgaria_foreign_events.40.t
+	desc = bulgaria_foreign_events.40.d
+
+	trigger = {
+		OR = {
+			original_tag = BUL
+			original_tag = GRE
+		}
+		BUL = {
+			is_valid_peace_target = yes
+			has_country_flag = BUL_second_war_for_thrace
+		}
+		GRE = {
+			is_valid_peace_target = yes
+			has_country_flag = GRE_second_war_for_thrace
+		}
+		if = {
+			limit = {
+				original_tag = GRE
+			}
+			GRE = {
+				any_owned_state = {
+					is_controlled_by = BUL
+				}
+			}
+		}
+		else = {
+			BUL = {
+				any_owned_state = {
+					is_controlled_by = GRE
+				}
+			}
+		}
+		surrender_progress > 0.1
+	}
+
+	mean_time_to_happen = {
+		days = 2
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.40 option bulgaria_foreign_events.40.a"
+		name = bulgaria_foreign_events.40.a
+		if = {
+			limit = {
+				original_tag = GRE
+			}
+			BUL = { country_event = bulgaria_foreign_events.41 }
+		}
+		else = {
+			GRE = { country_event = bulgaria_foreign_events.41 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_foreign_events.40 option bulgaria_foreign_events.40.b"
+		ai_chance = { base = 0 }
+		name = bulgaria_foreign_events.40.b
+	}
+}
+
+country_event = { #FROM surrenders, do we accept?
+	id = bulgaria_foreign_events.41
+	title = bulgaria_foreign_events.41.t
+	desc = bulgaria_foreign_events.41.d
+
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event bulgaria_foreign_events.41 option bulgaria_foreign_events.41.a"
+		name = bulgaria_foreign_events.41.a
+
+		if = {
+			limit = {
+				original_tag = GRE
+			}
+			FROM = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							is_core_of = GRE
+							is_claimed_by = GRE
+							state = 1089 #Kardzhali
+							state = 341 #Adrianople
+						}
+					}
+					transfer_state_to = ROOT
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				owns_state = 106 #Macedonia
+			}
+			FROM = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							is_core_of = BUL
+							is_claimed_by = BUL
+							state = 1089 #Kardzhali
+							state = 341 #Adrianople
+							state = 731 #Florina
+							state = 989 #Chalcidice
+						}
+					}
+					transfer_state_to = ROOT
+				}
+			}
+		}
+		else = {
+			FROM = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							is_core_of = BUL
+							is_claimed_by = BUL
+							state = 1089 #Kardzhali
+							state = 341 #Adrianople
+						}
+					}
+					transfer_state_to = ROOT
+				}
+			}
+		}
+
+		FROM = { white_peace_with_ROOT = yes }
+
+		if = {
+			limit = {
+				FROM = { has_war_with = TUR }
+			}
+			TUR = {
+				country_event = bulgaria_foreign_events.42
+			}
+		}
+		BUL = { clr_country_flag = BUL_second_war_for_thrace }
+		GRE = { clr_country_flag = GRE_second_war_for_thrace }
+		add_war_support = 0.1
+	}
+
+	option = { #How about I kill you instead how about that
+		log = "[GetLogInfo]: event bulgaria_foreign_events.41 option bulgaria_foreign_events.41.b"
+		ai_chance = { base = 0 }
+		name = bulgaria_foreign_events.41.b
+		add_war_support = -0.1
+	}
+}
+
+country_event = { #TUR: FROM.FROM surrenders, do we peace out with them?
+	id = bulgaria_foreign_events.42
+	title = bulgaria_foreign_events.42.t
+	desc = bulgaria_foreign_events.42.d
+
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event bulgaria_foreign_events.42 option bulgaria_foreign_events.42.a"
+		name = bulgaria_foreign_events.42.a
+		FROM.FROM = { white_peace_with_ROOT = yes }
+	}
+
+	option = { #Nah mate time to die
+		log = "[GetLogInfo]: event bulgaria_foreign_events.42 option bulgaria_foreign_events.42.b"
+		ai_chance = { base = 0 }
+		name = bulgaria_foreign_events.42.b
+		add_war_support = -0.1
+	}
+}
+
+####################################
+### Flavor
+####################################
+
+country_event = {
+	id = bulgaria_flavour_events.1
+	title = bulgaria_flavour_events.1.t
+	desc = bulgaria_flavour_events.1.d
+	picture = GFX_report_event_BUL_boris
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	trigger = {
+		has_country_leader = { character = BUL_ferdinand_sakskoburggotski }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.1 option bulgaria_flavour_events.1.a"
+		name = bulgaria_flavour_events.1.a
+		if = {
+			limit = {
+				has_active_mission = BUL_operation_nishava_fallout
+			}
+			set_temp_variable = { BUL_tsar_change = 10 }
+			custom_effect_tooltip = BUL_boris_perception_improve_tt
+			add_to_variable = { BUL_tsar_perception = BUL_tsar_change }
+			clamp_variable = { var = BUL_tsar_perception max = 100 min = 0 }
+		}
+		else = {
+			add_political_power = 25
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.1 option bulgaria_flavour_events.1.b"
+		name = bulgaria_flavour_events.1.b
+		trigger = {
+			has_active_mission = BUL_operation_nishava_fallout
+			NOT = {
+				has_country_flag = BUL_stands_with_prince
+			}
+		}
+		add_political_power = -50
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.2
+	title = bulgaria_flavour_events.2.t
+	desc = bulgaria_flavour_events.2.d
+	picture = GFX_report_event_ser_election
+
+	fire_only_once = yes
+	trigger = {
+		OR = {
+			has_active_mission = BUL_operation_nishava_fallout
+			has_elected_government = yes
+			tag = SER
+		}
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.2 option bulgaria_flavour_events.2.a"
+		name = bulgaria_flavour_events.2.a
+		trigger = {
+			tag = BUL
+		}
+		if = {
+			limit = {
+				has_active_mission = BUL_operation_nishava_fallout
+			}
+			set_temp_variable = { BUL_deputies = 10 }
+			custom_effect_tooltip = BUL_increase_deputy_support_tt
+			add_to_variable = { BUL_parliamentary_support = BUL_deputies }
+			clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+			add_stability = -0.04
+		}
+		else = {
+			add_stability = -0.03
+		}
+		hidden_effect = {
+			SER = {
+				country_event = bulgaria_flavour_events.2
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.2 option bulgaria_flavour_events.2.b"
+		name = bulgaria_flavour_events.2.b
+		trigger = {
+			tag = SER
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_completed_focus = SER_Victory_for_the_People
+					has_completed_focus = SER_Moralistic_Democracy
+					has_completed_focus = SER_National_Vanguard
+				}
+			}
+			custom_effect_tooltip = SER_republicans_gain
+			add_to_variable = { SER_republican_strength = 10 }
+		}
+		else = {
+			add_popularity = {
+				ideology = social_liberal
+				popularity = 0.02
+			}
+		}
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.3
+	title = bulgaria_flavour_events.3.t
+	desc = bulgaria_flavour_events.3.d
+	picture = GFX_report_event_ROM_legion_salute
+
+	fire_only_once = yes
+	trigger = {
+		OR = {
+			has_idea = BUL_state_protection_act
+			tag = ROM
+		}
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.3 option bulgaria_flavour_events.3.a"
+		name = bulgaria_flavour_events.3.a
+		trigger = {
+			tag = BUL
+		}
+		if = {
+			limit = {
+				has_active_mission = BUL_operation_nishava_fallout
+			}
+			set_temp_variable = { BUL_deputies = 5 }
+			custom_effect_tooltip = BUL_reduce_deputy_support_tt
+			subtract_from_variable = { BUL_parliamentary_support = BUL_deputies }
+			clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		}
+		else = {
+			add_stability = -0.03
+		}
+		hidden_effect = {
+			ROM = {
+				country_event = bulgaria_flavour_events.3
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.3 option bulgaria_flavour_events.3.b"
+		name = bulgaria_flavour_events.3.b
+		trigger = {
+			tag = ROM
+		}
+		add_war_support = 0.02
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.4
+	title = bulgaria_flavour_events.4.t
+	desc = bulgaria_flavour_events.4.d
+	picture = GFX_report_event_generic_economic_policy
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.4 option bulgaria_flavour_events.4.a"
+		name = bulgaria_flavour_events.4.a
+		add_political_power = 20
+		effect_tooltip = {
+			activate_mission = BUL_great_etatist_project_mission
+		}
+		hidden_effect = {
+			country_event = { id = bulgaria_flavour_events.18 days = 90 }
+		}
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.5
+	title = bulgaria_flavour_events.5.t
+	desc = bulgaria_flavour_events.5.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.5 option bulgaria_flavour_events.5.a"
+		name = bulgaria_flavour_events.5.a
+		add_stability = 0.03
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.6
+	title = bulgaria_flavour_events.6.t
+	desc = bulgaria_flavour_events.6.d
+	picture = GFX_report_event_yugoslavian_cavalry
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	trigger = {
+		has_socialist_government = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.6 option bulgaria_flavour_events.6.a"
+		name = bulgaria_flavour_events.6.a
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.02
+		}
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.7
+	title = bulgaria_flavour_events.7.t
+	desc = bulgaria_flavour_events.7.d
+	picture = GFX_report_event_soldiers_marching
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.7 option bulgaria_flavour_events.7.a"
+		name = bulgaria_flavour_events.7.a
+		custom_effect_tooltip = BUL_ITRO_modifier_tt
+		unlock_decision_category_tooltip = BUL_anti_ITRO_decisions
+		hidden_effect = {
+			BUL_enable_ITRO_decisions = yes
+		}
+		if = {
+			limit = { tag = OTT }
+			custom_effect_tooltip = tooltip_white_line
+			184 = { #Western Thrace
+				if = {
+					limit = { is_owned_by = ROOT }
+					ott_increase_revolt_risk = yes
+				}
+			}
+			1089 = { #Kardzhali
+				if = {
+					limit = { is_owned_by = ROOT }
+					ott_increase_revolt_risk = yes
+				}
+			}
+		}
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.8
+	title = bulgaria_flavour_events.8.t
+	desc = bulgaria_flavour_events.8.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.8 option bulgaria_flavour_events.8.a"
+		name = bulgaria_flavour_events.8.a
+		complete_national_focus = BUL_hijack_yugoslavism
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.9
+	title = bulgaria_flavour_events.9.t
+	desc = bulgaria_flavour_events.9.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	trigger = {
+		NOT = {
+			has_completed_focus = BUL_land_socialization
+		}
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.9 option bulgaria_flavour_events.9.a"
+		name = bulgaria_flavour_events.9.a
+		add_stability = -0.2
+		add_manpower = -1500
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.2
+		}
+		set_politics = {
+			ruling_party = totalist
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:syndicalist }
+		add_to_coalition = yes
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.10
+	title = bulgaria_flavour_events.10.t
+	desc = bulgaria_flavour_events.10.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.10 option bulgaria_flavour_events.10.a"
+		name = bulgaria_flavour_events.10.a
+		if = {
+			limit = { BUL_has_national_catastrophe = yes }
+			BUL_reduce_national_catastrophe = yes
+		}
+		retire_character = BUL_rusi_rusev
+		retire_character = BUL_teodosi_daskalov
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.10 option bulgaria_flavour_events.10.b"
+		name = bulgaria_flavour_events.10.b
+		if = {
+			limit = { BUL_has_national_catastrophe = yes }
+			BUL_reduce_national_catastrophe = yes
+		}
+		add_political_power = -150
+		random_owned_controlled_state = {
+			limit = { industrial_complex > 0 }
+			remove_building = { type = industrial_complex level = 1 }
+		}
+		random_owned_controlled_state = {
+			limit = { industrial_complex > 0 }
+			remove_building = { type = industrial_complex level = 1 }
+		}
+		random_owned_controlled_state = {
+			limit = { industrial_complex > 0 }
+			remove_building = { type = industrial_complex level = 1 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.10 option bulgaria_flavour_events.10.c"
+		name = bulgaria_flavour_events.10.c
+		add_stability = -0.15
+		add_war_support = -0.15
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.11
+	title = bulgaria_flavour_events.11.t
+	desc = bulgaria_flavour_events.11.d
+	picture = GFX_report_event_SWE_Elections
+
+	trigger = {
+		has_government = authoritarian_democrat
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.11 option bulgaria_flavour_events.11.a"
+		name = bulgaria_flavour_events.11.a
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.04
+		}
+		add_stability = 0.04
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.12
+	title = bulgaria_flavour_events.12.t
+	desc = bulgaria_flavour_events.12.d
+	picture = GFX_report_event_bul_boris_death
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.12 option bulgaria_flavour_events.12.a"
+		name = bulgaria_flavour_events.12.a
+		add_war_support = 0.1
+		custom_effect_tooltip = unlocks_new_focuses
+		set_country_flag = BUL_unlocked_bulzantium
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.13
+	title = bulgaria_flavour_events.13.t
+	desc = bulgaria_flavour_events.13.d
+	picture = GFX_report_event_soldiers_marching
+
+	trigger = {
+		BUL_nikola_nedev = { is_unit_leader = yes }
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.13 option bulgaria_flavour_events.13.a"
+		name = bulgaria_flavour_events.13.a
+		add_stability = -0.05
+		add_political_power = -20
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.13 option bulgaria_flavour_events.13.b"
+		name = bulgaria_flavour_events.13.b
+		BUL_nikola_nedev = { add_planning = -1 }
+	}
+}
+country_event = { # Death of Ferdinand
+	id = bulgaria_flavour_events.14
+	title = bulgaria_flavour_events.14.t
+	desc = bulgaria_flavour_events.14.d
+	picture = GFX_report_event_BUL_boris
+
+	fire_only_once = yes
+	trigger = {
+		has_country_leader = { character = BUL_ferdinand_sakskoburggotski }
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.14 option bulgaria_flavour_events.14.a"
+		name = bulgaria_flavour_events.14.a
+		BUL_create_boris = yes
+		BUL_ferdinand_sakskoburggotski = { kill_character = yes }
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.15
+	title = bulgaria_flavour_events.15.t
+	desc = bulgaria_flavour_events.15.d
+	picture = GFX_report_event_bul_officers_burgas
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.15 option bulgaria_flavour_events.15.a"
+		name = bulgaria_flavour_events.15.a
+		add_stability = 0.05
+		custom_effect_tooltip = unlocks_new_focuses
+		set_country_flag = BUL_balkan_union
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.16
+	title = bulgaria_flavour_events.16.t
+	desc = {
+		text = bulgaria_flavour_events.16.d1
+		trigger = {
+			has_country_leader = { character = BUL_ferdinand_sakskoburggotski }
+		}
+	}
+	desc = {
+		text = bulgaria_flavour_events.16.d2
+		trigger = {
+			has_country_leader = { character = BUL_boris_sakskoburggotski }
+		}
+	}
+	picture = GFX_report_event_bul_prince_simeon
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	trigger = {
+		OR = {
+			has_country_leader = { character = BUL_ferdinand_sakskoburggotski }
+			has_country_leader = { character = BUL_boris_sakskoburggotski }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.16 option bulgaria_flavour_events.16.a"
+		name = bulgaria_flavour_events.16.a
+		custom_effect_tooltip = BUL_simeon_heir_name_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.16 option bulgaria_flavour_events.16.b"
+		name = bulgaria_flavour_events.16.b
+		custom_effect_tooltip = BUL_kiril_heir_name_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.16 option bulgaria_flavour_events.16.c"
+		name = bulgaria_flavour_events.16.c
+		custom_effect_tooltip = BUL_kubrat_heir_name_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.16 option bulgaria_flavour_events.16.e"
+		name = bulgaria_flavour_events.16.e
+		custom_effect_tooltip = BUL_danail_heir_name_tt
+	}
+	after = {
+		add_stability = 0.02
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.17
+	title = bulgaria_flavour_events.17.t
+	desc = bulgaria_flavour_events.17.d
+	picture = GFX_report_event_BUL_Zveno_Announcement
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.17 option bulgaria_flavour_events.17.a"
+		name = bulgaria_flavour_events.17.a
+		set_party_name = {
+			ideology = paternal_autocrat
+			long_name = BUL_YUG_zveno_party_long
+			name = BUL_YUG_zveno_party
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+		end_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		set_party_name = {
+			ideology = social_conservative
+			long_name = BUL_YUG_democratic_party_long
+			name = BUL_YUG_democratic_party
+		}
+		set_party_name = {
+			ideology = market_liberal
+			long_name = BUL_YUG_democratic_party_long
+			name = BUL_YUG_democratic_party
+		}
+		set_party_name = {
+			ideology = social_democrat
+			long_name = BUL_YUG_social_democrat_party_long
+			name = BUL_YUG_social_democrat_party
+		}
+		set_party_name = {
+			ideology = radical_socialist
+			long_name = BUL_YUG_radical_socialist_party_long
+			name = BUL_YUG_radical_socialist_party
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = syndicalist
+				long_name = BUL_YUG_radical_socialist_party_long
+				name = BUL_YUG_radical_socialist_party
+			}
+			set_party_name = {
+				ideology = totalist
+				long_name = BUL_YUG_radical_socialist_party_long
+				name = BUL_YUG_radical_socialist_party
+			}
+			set_party_name = {
+				ideology = social_liberal
+				long_name = BUL_YUG_democratic_party_long
+				name = BUL_YUG_democratic_party
+			}
+			set_party_name = {
+				ideology = national_populist
+				long_name = BUL_YUG_zveno_party_long
+				name = BUL_YUG_zveno_party
+			}
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = BUL_YUG_zveno_party_long
+				name = BUL_YUG_zveno_party
+			}
+		}
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.18
+	title = bulgaria_flavour_events.18.t
+	desc = bulgaria_flavour_events.18.d
+	picture = GFX_report_event_BUL_crowd
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.18 option bulgaria_flavour_events.18.a"
+		name = bulgaria_flavour_events.18.a
+		add_stability = 0.04
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.19
+	title = bulgaria_flavour_events.19.t
+	desc = bulgaria_flavour_events.19.d
+	picture = GFX_report_event_generic_books
+
+	fire_only_once = yes
+	trigger = {
+		has_active_mission = BUL_operation_nishava_fallout
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.19 option bulgaria_flavour_events.19.a"
+		name = bulgaria_flavour_events.19.a
+		set_temp_variable = { BUL_deputies = 15 }
+		custom_effect_tooltip = BUL_increase_deputy_support_tt
+		add_to_variable = { BUL_parliamentary_support = BUL_deputies }
+		clamp_variable = { var = BUL_parliamentary_support max = 280 min = 0 }
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.02
+		}
+	}
+}
+country_event = {
+	id = bulgaria_flavour_events.27
+	title = bulgaria_flavour_events.27.t
+	desc = bulgaria_flavour_events.27.d
+	picture = GFX_report_event_BUL_oldguard
+
+	trigger = {
+		OR = {
+			has_war_with = SER
+			has_war_with = ROM
+		}
+	}
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.27 option bulgaria_flavour_events.27.a"
+		name = bulgaria_flavour_events.27.a #Of course!
+		ai_chance = { base = 70 }
+		add_war_support = 0.10
+		add_political_power = -50
+		show_unit_leaders_tooltip = BUL_vladimir_vazov
+		hidden_effect = {
+			BUL_vladimir_vazov = { set_nationality = ROOT }
+			country_event = { id = bulgaria_flavour_events.280 days = 150 random_days = 30 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.27 option bulgaria_flavour_events.27.b"
+		name = bulgaria_flavour_events.27.b #Let him train younger leaders instead
+		ai_chance = { base = 30 }
+		add_timed_idea = {
+			idea = BUL_old_guard_training
+			days = 365
+		}
+	}
+}
+
+country_event = {
+	id = bulgaria_flavour_events.28
+	title = bulgaria_flavour_events.28.t
+	desc = bulgaria_flavour_events.28.d
+	picture = GFX_report_event_BUL_oldguard
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.28 option bulgaria_flavour_events.28.a"
+		name = bulgaria_flavour_events.28.a # He served his country well
+		retire_character = BUL_vladimir_vazov
+	}
+}
+
+country_event = {
+	id = bulgaria_flavour_events.280
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_character = BUL_vladimir_vazov
+	}
+
+	immediate = {
+		if = {
+			limit = { has_war = no }
+			country_event = bulgaria_flavour_events.28
+		}
+		else_if = {
+			limit = { date > 1940.1.1 }
+			country_event = { id = bulgaria_flavour_events.280 days = 20 random_days = 10 }
+		}
+		else = {
+			country_event = { id = bulgaria_flavour_events.280 days = 150 random_days = 30 }
+		}
+	}
+}
+
+country_event = { #Formal protest from countries with ITRO problem
+	id = bulgaria_flavour_events.35
+	title = bulgaria_flavour_events.35.t
+	desc = bulgaria_flavour_events.35.d
+	picture = GFX_report_event_BUL_assembly2
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			set_global_flag = BUL_ITRO_diplomatic_protest
+			every_other_country = {
+				limit = { NOT = { has_country_flag = BUL_protesting_itro } } #let the cancel_effect run instead, to recoup the decision cost
+				remove_targeted_decision = { decision = BUL_ITRO_issue_formal_protest target = ROOT }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.35 option bulgaria_flavour_events.35.a"
+		name = bulgaria_flavour_events.35.a
+		ai_chance = { base = 20 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.35 option bulgaria_flavour_events.35.b"
+		name = bulgaria_flavour_events.35.b
+		trigger = {
+			NOT = { has_government = national_populist }
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = 30
+				FROM = {
+					original_tag = GRE
+					OR = {
+						has_completed_focus = GRE_diplomacy_focus
+						NOT = { is_ally_with = SER }
+					}
+				}
+			}
+		}
+		set_country_flag = BUL_ITRO_formally_disbanded
+		add_political_power = -25
+		every_state = {
+			limit = { has_dynamic_modifier = { modifier = BUL_ITRO_modifier } }
+			BUL_decrease_ITRO_strength = yes
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.35 option bulgaria_flavour_events.35.c"
+		name = bulgaria_flavour_events.35.c
+		trigger = {
+			has_government = national_populist
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				add = 25
+				has_war = no
+			}
+		}
+		set_country_flag = BUL_ITRO_strengthened
+		add_war_support = 0.05
+		every_state = {
+			limit = { has_dynamic_modifier = { modifier = BUL_ITRO_modifier } }
+			BUL_increase_ITRO_strength = yes
+		}
+	}
+	after = {
+		every_country = {
+			limit = {
+				any_of_scopes = {
+					array = global.BUL_ITRO_states
+					is_owned_by = PREV
+				}
+			}
+			country_event = { id = bulgaria_flavour_events.36 days = 5 }
+		}
+	}
+}
+
+country_event = { #Bulgarian answer
+	id = bulgaria_flavour_events.36
+	title = bulgaria_flavour_events.36.t
+	picture = GFX_report_event_BUL_assembly2
+	desc = {
+		text = bulgaria_flavour_events.36.d_a
+		trigger = {
+			FROM = { has_country_flag = BUL_ITRO_formally_disbanded }
+		}
+	}
+	desc = {
+		text = bulgaria_flavour_events.36.d_b
+		trigger = {
+			FROM = {
+				NOT = { has_country_flag = BUL_ITRO_formally_disbanded }
+				NOT = { has_country_flag = BUL_ITRO_strengthened }
+			}
+		}
+	}
+	desc = {
+		text = bulgaria_flavour_events.36.d_c
+		trigger = {
+			FROM = { has_country_flag = BUL_ITRO_strengthened }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.36 option bulgaria_flavour_events.36.a"
+		name = bulgaria_flavour_events.36.a
+		trigger = {
+			FROM = { has_country_flag = BUL_ITRO_formally_disbanded }
+		}
+		effect_tooltip = {
+			every_owned_state = {
+				limit = { has_dynamic_modifier = { modifier = BUL_ITRO_modifier } }
+				BUL_decrease_ITRO_strength = yes
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.36 option bulgaria_flavour_events.36.b"
+		name = bulgaria_flavour_events.36.b
+		trigger = {
+			FROM = {
+				NOT = { has_country_flag = BUL_ITRO_formally_disbanded }
+				NOT = { has_country_flag = BUL_ITRO_strengthened }
+			}
+		}
+		add_political_power = 10
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.36 option bulgaria_flavour_events.36.c"
+		name = bulgaria_flavour_events.36.c
+		trigger = {
+			FROM = { has_country_flag = BUL_ITRO_strengthened }
+		}
+		effect_tooltip = {
+			every_owned_state = {
+				limit = { has_dynamic_modifier = { modifier = BUL_ITRO_modifier } }
+				BUL_increase_ITRO_strength = yes
+			}
+		}
+	}
+}
+
+country_event = { #The hunt for Madzharov is unsuccessful
+	id = bulgaria_flavour_events.37
+	title = bulgaria_flavour_events.37.t
+	desc = bulgaria_flavour_events.37.d
+	picture = GFX_report_event_gre_greek_cavalry
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			set_global_flag = BUL_ITRO_madzharov_gone
+			every_other_country = {
+				limit = { NOT = { has_country_flag = BUL_hunting_down_madzharov } } #let the cancel_effect run instead, to recoup the decision cost
+				remove_targeted_decision = { decision = BUL_ITRO_hunt_down_madzharov target = ROOT }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.37 option bulgaria_flavour_events.37.a"
+		name = bulgaria_flavour_events.37.a
+		clr_country_flag = BUL_hunting_down_madzharov
+		army_experience = 5
+		add_days_mission_timeout = {
+			mission = BUL_ITRO_timeout_decrease
+			days = -50
+		}
+	}
+}
+
+country_event = { #The hunt for Madzharov is successful
+	id = bulgaria_flavour_events.38
+	title = bulgaria_flavour_events.38.t
+	desc = bulgaria_flavour_events.38.d
+	picture = GFX_report_event_gre_greek_cavalry
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			set_global_flag = BUL_ITRO_madzharov_gone
+			every_other_country = {
+				limit = { NOT = { has_country_flag = BUL_hunting_down_madzharov } } #let the cancel_effect run instead, to recoup the decision cost
+				remove_targeted_decision = { decision = BUL_ITRO_hunt_down_madzharov target = ROOT }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.38 option bulgaria_flavour_events.38.a"
+		name = bulgaria_flavour_events.38.a
+		clr_country_flag = BUL_hunting_down_madzharov
+		army_experience = 5
+		every_owned_state = {
+			limit = { has_dynamic_modifier = { modifier = BUL_ITRO_modifier } }
+			BUL_decrease_ITRO_strength = yes
+		}
+	}
+}
+
+country_event = { #The hunt for Madzharov is very successful
+	id = bulgaria_flavour_events.39
+	title = bulgaria_flavour_events.39.t
+	desc = bulgaria_flavour_events.39.d
+	picture = GFX_report_event_gre_greek_cavalry
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			set_global_flag = BUL_ITRO_madzharov_gone
+			every_other_country = {
+				limit = { NOT = { has_country_flag = BUL_hunting_down_madzharov } } #let the cancel_effect run instead, to recoup the decision cost
+				remove_targeted_decision = { decision = BUL_ITRO_hunt_down_madzharov target = ROOT }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event bulgaria_flavour_events.39 option bulgaria_flavour_events.39.a"
+		name = bulgaria_flavour_events.39.a
+		clr_country_flag = BUL_hunting_down_madzharov
+		army_experience = 5
+		every_owned_state = {
+			limit = { has_dynamic_modifier = { modifier = BUL_ITRO_modifier } }
+			BUL_decrease_ITRO_strength_2 = yes
+		}
+	}
+}
+
+#Zveno clique coups Bulgaria
+news_event = {
+	id = bulgaria_flavour_events.29
+	immediate = { log = "[GetLogInfo]: event bulgaria_flavour_events.29" }
+	immediate = {
+		log = "KR_Event_Logging;BUL PATH ZVENO"
+	}
+	title = bulgaria_flavour_events.29.t
+	desc = bulgaria_flavour_events.29.d
+	picture = GFX_news_event_bulgarian_soldiers
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	major = yes
+	show_major = {
+		regional_europe_news = yes
+		NOT = { tag = FROM }
+	}
+
+	option = {
+		name = bulgaria_flavour_events.29.a #
+	}
+}
+
+#Tsar Ferdinand establishes a Royal Dictatorship
+news_event = {
+	id = bulgaria_flavour_events.30
+	immediate = { log = "[GetLogInfo]: event bulgaria_flavour_events.30" }
+	immediate = {
+		log = "KR_Event_Logging;BUL PATH DICTATORSHIP"
+	}
+	title = bulgaria_flavour_events.30.t
+	desc = bulgaria_flavour_events.30.d
+	picture = GFX_news_event_tsar_ferdinand_of_bulgaria
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	major = yes
+	show_major = {
+		regional_europe_news = yes
+		NOT = { tag = FROM }
+	}
+
+	option = {
+		name = bulgaria_flavour_events.30.a #
+	}
+}
+
+#Constitutionalists win in Bulgaria and abolish the State Protection Act
+news_event = {
+	id = bulgaria_flavour_events.31
+	immediate = { log = "[GetLogInfo]: event bulgaria_flavour_events.31" }
+	immediate = {
+		log = "KR_Event_Logging;BUL PATH CONSTITUTIONALISM"
+	}
+	title = bulgaria_flavour_events.31.t
+	desc = bulgaria_flavour_events.31.d
+	picture = GFX_news_event_GRE_celebrate
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	major = yes
+	show_major = {
+		regional_europe_news = yes
+		NOT = { tag = FROM }
+	}
+
+	option = {
+		name = bulgaria_flavour_events.31.a #
+	}
+}
+
+#The Union of National Legions takes over Bulgaria
+news_event = {
+	id = bulgaria_flavour_events.32
+	immediate = { log = "[GetLogInfo]: event bulgaria_flavour_events.32" }
+	title = bulgaria_flavour_events.32.t
+	desc = bulgaria_flavour_events.32.d
+	picture = GFX_news_event_BUL_legionaries
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	major = yes
+	show_major = {
+		regional_europe_news = yes
+		NOT = { tag = FROM }
+	}
+
+	option = {
+		name = bulgaria_flavour_events.32.a #
+	}
+}
+
+#The Fatherland Front overthrows the monarchy
+news_event = {
+	id = bulgaria_flavour_events.33
+	immediate = { log = "[GetLogInfo]: event bulgaria_flavour_events.33" }
+	title = bulgaria_flavour_events.33.t
+	desc = bulgaria_flavour_events.33.d
+	picture = GFX_news_event_bulgarian_ff_troops
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	major = yes
+	show_major = {
+		regional_europe_news = yes
+		NOT = { tag = FROM }
+	}
+
+	option = {
+		name = bulgaria_flavour_events.33.a #
+	}
+}
+

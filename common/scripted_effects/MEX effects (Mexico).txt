@@ -1,0 +1,498 @@
+MEX_puppet_setup = {
+	hidden_effect = {
+		var:tag_to_release = {
+			if = {
+				limit = { has_government = totalist }
+				complete_national_focus = MEX_establish_maximato
+			}
+			else_if = {
+				limit = { has_socialist_government = yes }
+				complete_national_focus = MEX_revolutionary_democracy_survives
+			}
+			else_if = {
+				limit = { has_authoritarian_government = yes }
+				complete_national_focus = MEX_military_coup
+				if = {
+					limit = { has_government = authoritarian_democrat }
+					complete_national_focus = MEX_restore_democracy
+				}
+				else_if = {
+					limit = { has_government = paternal_autocrat }
+					complete_national_focus = MEX_junta_holds_on
+				}
+				else_if = {
+					limit = { has_government = national_populist }
+					complete_national_focus = MEX_synarchist_coup
+				}
+			}
+			MEX_end_civil_war = yes
+			if = {
+				limit = { NOT = { has_government = totalist } }
+				MEX_remove_calles = yes
+			}
+			if = {
+				limit = { has_socialist_government = no }
+				remove_ideas = {
+					MEX_toledano_reforms_idea1
+					MEX_toledano_reforms_idea2
+					MEX_toledano_reforms_idea3
+					MEX_toledano_reforms_idea4
+					MEX_ley_federal_de_trabajo1
+					MEX_ley_federal_de_trabajo2
+					MEX_empowered_federalism_idea1
+					MEX_empowered_federalism_idea2
+					MEX_empowered_federalism_idea3
+					MEX_modernist_culture_idea
+					MEX_socialist_warlordism_idea1
+					MEX_socialist_warlordism_idea2
+					MEX_socialist_warlordism_idea3
+					MEX_socialist_warlordism_idea4
+					MEX_socialist_warlordism_idea5
+					MEX_native_land_reform_idea
+					MEX_empowered_peasants_idea
+					MEX_new_schools_idea
+					MEX_social_welfare_idea
+					MEX_agrarian_economy_idea
+					MEX_agrarian_economy_idea2
+					MEX_agrarian_economy_idea3
+					MEX_workers_rights_idea
+					MEX_improve_native_rights_idea
+					MEX_workers_rights_idea2
+					MEX_bread_and_roses_idea1
+					MEX_bread_and_roses_idea2
+					MEX_bread_and_roses_idea3
+					MEX_bread_and_roses_idea4
+					MEX_bread_and_roses_idea5
+				}
+				uncomplete_national_focus = {
+					focus = MEX_revolutionary_democracy_survives
+					uncomplete_children = yes
+				}
+				complete_national_focus = MEX_military_coup
+			}
+			if = {
+				limit = { has_authdem_or_pataut_government = no }
+				#Remove all dictatorship ideas & flags
+				MEX_remove_dictatorship = yes
+				uncomplete_national_focus = {
+					focus = MEX_military_coup
+					uncomplete_children = yes
+				}
+			}
+			if = {
+				limit = { NOT = { has_government = national_populist } }
+				#Remove all Synarquist ideas
+				MEX_clear_synarquist_ideas = yes
+				uncomplete_national_focus = {
+					focus = MEX_synarchist_coup
+					uncomplete_children = yes
+				}
+			}
+		}
+	}
+}
+
+MEX_remove_socialist_generals = {
+	if = {
+		limit = { has_character = MEX_plutarco_elias_calles }
+		retire_character = MEX_plutarco_elias_calles
+	}
+	if = {
+		limit = { has_character = MEX_abelardo_rodriguez_lujan }
+		retire_character = MEX_abelardo_rodriguez_lujan
+	}
+	if = {
+		limit = { has_character = MEX_emiliano_zapata_salazar }
+		retire_character = MEX_emiliano_zapata_salazar
+	}
+	if = {
+		limit = { has_character = MEX_francisco_pancho_villa }
+		retire_character = MEX_francisco_pancho_villa
+	}
+	if = {
+		limit = { has_character = MEX_joaquin_amaro_dominguez }
+		retire_character = MEX_joaquin_amaro_dominguez
+	}
+	if = {
+		limit = { has_character = MEX_pablo_macias_valenzuela }
+		retire_character = MEX_pablo_macias_valenzuela
+	}
+}
+
+MEX_add_socialist_generals = {
+	if = {
+		limit = {
+			NOT = {
+				has_character = MEX_plutarco_elias_calles
+				MEX_plutarco_elias_calles = { is_dead = yes }
+			}
+		}
+		MEX_plutarco_elias_calles = {
+			set_nationality = PREV
+			promote_character = totalist_subtype
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = MEX_abelardo_rodriguez_lujan } }
+		MEX_abelardo_rodriguez_lujan = { set_nationality = PREV }
+	}
+	if = {
+		limit = {
+			NOT = {
+				has_character = MEX_emiliano_zapata_salazar
+				MEX_emiliano_zapata_salazar = { is_dead = yes }
+			}
+		}
+		MEX_emiliano_zapata_salazar = { set_nationality = PREV }
+	}
+	if = {
+		limit = { NOT = { has_character = MEX_francisco_pancho_villa } }
+		MEX_francisco_pancho_villa = {
+			set_nationality = PREV
+			promote_character = radical_socialist_subtype
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = MEX_joaquin_amaro_dominguez } }
+		MEX_joaquin_amaro_dominguez = { set_nationality = PREV }
+	}
+	if = {
+		limit = { NOT = { has_character = MEX_pablo_macias_valenzuela } }
+		MEX_pablo_macias_valenzuela = { set_nationality = PREV }
+	}
+}
+
+MEX_start_civil_war = {
+	add_ideas = MEX_civil_war_idea
+	custom_effect_tooltip = tooltip_white_line
+	#Add decisions and missions
+	activate_mission = MEX_civil_war_raid_mission
+	activate_mission = MEX_imminent_rebel_activity_mission
+	activate_targeted_decision = { target = 277 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 474 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 475 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 476 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 477 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 478 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 479 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 480 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 481 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 482 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 483 decision = MEX_restore_order_to_state }
+	activate_targeted_decision = { target = 485 decision = MEX_restore_order_to_state }
+	#Set starting rebel_strength
+	set_variable = { MEX_rebel_strength_var = 12 }
+}
+
+MEX_end_civil_war = {
+	if = {
+		limit = { is_subject = no }
+		add_war_support = 0.05
+		add_stability = 0.1
+		army_experience = 25
+	}
+	remove_ideas = MEX_civil_war_idea
+	#Remove state-interaction decisions and missions
+	hidden_effect = {
+		remove_targeted_decision = { target = 277 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 474 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 475 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 476 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 477 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 478 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 479 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 480 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 481 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 482 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 483 decision = MEX_restore_order_to_state }
+		remove_targeted_decision = { target = 485 decision = MEX_restore_order_to_state }
+		remove_mission = MEX_civil_war_raid_mission
+		remove_mission = MEX_imminent_rebel_activity_mission
+	}
+	#Clear Rebel variable
+	clear_variable = MEX_rebel_strength_var
+	#Clear flags
+	clr_country_flag = MEX_tepatitlan_fired
+	clr_country_flag = MEX_el_fresnal_fired
+	clr_country_flag = MEX_manzanillo_fired
+	clr_country_flag = MEX_guadalajara_fired
+	clr_country_flag = MEX_celaya_fired
+}
+
+MEX_increase_rebel_power = {
+	#Increases Cristero or Campesino rebel power, used with desired temp_var value
+	add_to_variable = {
+		MEX_rebel_strength_var = MEX_rebel_strength_change
+		tooltip = MEX_rebel_strength_increased
+	}
+	#Lose the minigame if rebel strength reaches 20
+	if = {
+		limit = { check_variable = { MEX_rebel_strength_var > 19 } }
+		country_event = mexican_civil_war_events.2 #Victory for the rebels
+	}
+}
+
+MEX_decrease_rebel_power = {
+	#Lowers Cristero or Campesino rebel power, used with desired temp_var value
+	subtract_from_variable = {
+		MEX_rebel_strength_var = MEX_rebel_strength_change
+		tooltip = MEX_rebel_strength_lowered
+	}
+	#Win the minigame if rebel strength reaches 0
+	if = {
+		limit = { check_variable = { MEX_rebel_strength_var < 1 } }
+		country_event = mexican_civil_war_events.2 #Victory for the Federal Government
+	}
+}
+
+MEX_puppet_teardown_decisions = {
+	MEX = {
+		remove_targeted_decision = { target = ENT decision = MEX_join_entente }
+		remove_targeted_decision = { target = WCA decision = MEX_intervene_WCA }
+		remove_targeted_decision = { target = GUA decision = MEX_support_socialists }
+		remove_targeted_decision = { target = ELS decision = MEX_support_socialists }
+		remove_targeted_decision = { target = HON decision = MEX_support_socialists }
+		remove_targeted_decision = { target = NIC decision = MEX_support_socialists }
+		remove_targeted_decision = { target = CEN decision = MEX_fight_reactionary_central_america }
+		remove_targeted_decision = { target = THIS decision = MEX_claim_central_america }
+		remove_targeted_decision = { target = YUC decision = MEX_fight_central_america }
+		remove_targeted_decision = { target = GUA decision = MEX_fight_central_america }
+		remove_targeted_decision = { target = ELS decision = MEX_fight_central_america }
+		remove_targeted_decision = { target = HON decision = MEX_fight_central_america }
+		remove_targeted_decision = { target = NIC decision = MEX_fight_central_america }
+		remove_targeted_decision = { target = COS decision = MEX_fight_central_america }
+		remove_targeted_decision = { target = CEN decision = MEX_fight_central_america }
+		remove_targeted_decision = { target = PAN decision = MEX_fight_central_america }
+		remove_targeted_decision = { target = THIS decision = MEX_reconquista_decision }
+		remove_targeted_decision = { target = THIS decision = MEX_reconquista_complete_decision }
+	}
+}
+
+MEX_spawn_yucatan_revolt = {
+	474 = {
+		add_core_of = YUC
+		transfer_state_to = YUC
+	}
+	transfer_units_fraction = {
+		target = YUC
+		target_organization = 1
+		source_organization = 1
+		size = 0.1
+		navy_ratio = 0
+		keep_unit_leaders_trigger = { always = yes }
+	}
+	hidden_effect = {
+		YUC = {
+			transfer_navy = { target = MEX }
+			transfer_technology_without_doctrines = yes
+			### Add revolt ideas
+			add_ideas = {
+				YUC_yucatan_rebellion
+				extensive_conscription
+				partial_economic_mobilisation
+			}
+			### Transfer division templates
+			if = {
+				limit = { NOT = { has_template = "División de Infantería" } }
+				division_template = {
+					name = "División de Infantería"
+					division_names_group = MEX_INF_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
+					}
+					support = {
+						artillery = { x = 0 y = 0 }
+					}
+				}
+			}
+			if = {
+				limit = { NOT = { has_template = "Brigada de Infantería" } }
+				division_template = {
+					name = "Brigada de Infantería"
+					division_names_group = MEX_INFB_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+					}
+					priority = 0
+				}
+			}
+			if = {
+				limit = { NOT = { has_template = "División de Caballería" } }
+				division_template = {
+					name = "División de Caballería"
+					division_names_group = MEX_CAV_01
+					regiments = {
+						cavalry = { x = 0 y = 0 }
+						cavalry = { x = 0 y = 1 }
+						cavalry = { x = 0 y = 2 }
+						cavalry = { x = 1 y = 0 }
+						cavalry = { x = 1 y = 1 }
+						cavalry = { x = 1 y = 2 }
+					}
+					support = {
+						artillery = { x = 0 y = 0 }
+					}
+				}
+			}
+			if = {
+				limit = { NOT = { has_template = "División Blindada" } }
+				division_template = {
+					name = "División Blindada"
+					division_names_group = MEX_ARM_01
+					regiments = {
+						light_armor = { x = 0 y = 0 }
+						light_armor = { x = 0 y = 1 }
+						cavalry = { x = 1 y = 0 }
+						cavalry = { x = 1 y = 1 }
+					}
+					priority = 2
+				}
+			}
+			if = {
+				limit = { NOT = { has_template = "División de Montaña" } }
+				division_template = {
+					name = "División de Montaña"
+					division_names_group = MEX_MTN_01
+					regiments = {
+						mountaineers = { x = 0 y = 0 }
+						mountaineers = { x = 0 y = 1 }
+						mountaineers = { x = 0 y = 2 }
+						mountaineers = { x = 1 y = 0 }
+						mountaineers = { x = 1 y = 1 }
+						mountaineers = { x = 1 y = 2 }
+					}
+				}
+			}
+		}
+	}
+	declare_war_on = {
+		target = YUC
+		type = civil_war
+	}
+	activate_mission = MEX_retake_yucatan_mission
+}
+
+MEX_remove_calles = {
+	#Remove Totalist ideas when government changes/annexed
+	remove_ideas = {
+		MEX_new_economic_policy_idea1
+		MEX_new_economic_policy_idea2
+		MEX_mexican_resources_idea1
+		MEX_mexican_resources_idea2
+		MEX_restructured_education_idea
+		MEX_loyal_military_idea1
+		MEX_loyal_military_idea2
+		MEX_anti_clerical_laws_idea
+		MEX_state_atheism_idea1
+		MEX_state_atheism_idea2
+		MEX_direccion_federal_de_seguridad_idea
+		MEX_establishing_the_maximato_idea1
+		MEX_establishing_the_maximato_idea2
+		MEX_establishing_the_maximato_idea3
+		MEX_establishing_the_maximato_idea4
+	}
+	#Clear focus tree
+	uncomplete_national_focus = {
+		focus = MEX_establish_maximato
+		uncomplete_children = yes
+	}
+	remove_targeted_decision = { target = WCA decision = MEX_intervene_WCA }
+}
+
+MEX_remove_dictatorship = {
+	#Remove Right-wing ideas when government changes/annexed
+	remove_ideas = {
+		MEX_garza_junta_idea1
+		MEX_garza_junta_idea2
+		MEX_garza_junta_idea3
+		MEX_garza_junta_idea4
+		MEX_unions_banned_idea
+		MEX_purging_leftists_idea
+		MEX_zealous_military_idea
+		MEX_great_ranches_idea
+		MEX_laissez_faire_economy1
+		MEX_laissez_faire_economy2
+		MEX_LNDLR_idea
+		MEX_restored_mexican_democracy_idea1
+		MEX_restored_mexican_democracy_idea2
+		MEX_restored_mexican_democracy_idea3a
+		MEX_restored_mexican_democracy_idea3b
+		MEX_restored_mexican_democracy_idea4a
+		MEX_restored_mexican_democracy_idea4b
+		MEX_church_support_idea
+		MEX_limited_liberties_idea1
+		MEX_limited_liberties_idea2
+		MEX_military_support_idea
+	}
+	#Remove Decision to join the Entente if active
+	remove_targeted_decision = { target = ENT decision = MEX_join_entente }
+	#Clear flags
+	clr_country_flag = MEX_democracy_restored_flag
+	clr_country_flag = MEX_junta_holds_on_flag
+	clr_country_flag = MEX_junta_goldshirt_alliance
+}
+
+MEX_clear_synarquist_ideas = {
+	#Remove NatPop ideas when government changes/annexed
+	remove_ideas = {
+		MEX_to_restore_mexican_glory_idea1
+		MEX_to_restore_mexican_glory_idea2
+		MEX_to_restore_mexican_glory_idea3
+		MEX_to_restore_mexican_glory_idea4
+		MEX_church_support_idea
+		MEX_hispanidad_idea
+		MEX_corporatism_idea
+		MEX_corporatism_idea2
+		MEX_corporatism_idea3
+		MEX_strikes_outlawed_idea
+		MEX_synarchist_military_reforms_idea
+		MEX_accion_revolucionaria_mexicanista_idea
+		MEX_synarquismo_idea
+		MEX_synarquismo_idea2
+		MEX_reconquista_complete_idea
+	}
+}
+
+MEX_oil_nationalisation_effect = {
+	set_country_flag = MEX_nationalized_oil_industry
+	add_offsite_building = { type = industrial_complex level = 1 }
+	add_resource = { type = oil amount = 12 state = 474 }
+	add_resource = { type = oil amount = 5 state = 475 }
+}
+
+YUC_clear_revolt_ideas = {
+	#Processed when revolt against MEX is over
+	YUC = {
+		remove_ideas = {
+			YUC_yucatan_rebellion
+			YUC_yucatan_rebellion_2
+			YUC_yucatan_rebellion_3_a
+			YUC_yucatan_rebellion_3_b
+			YUC_yucatan_rebellion_4
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_idea = volunteer_only
+					has_idea = limited_conscription
+				}
+			}
+			add_ideas = limited_conscription
+		}
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = { NOT = { has_idea = civilian_economy } }
+			add_ideas = civilian_economy
+		}
+	}
+}

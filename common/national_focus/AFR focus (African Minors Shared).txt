@@ -1,0 +1,778 @@
+####################################
+# African Minors Shared Focus Tree #
+####################################
+
+### ongoing conflict tree ###
+
+shared_focus = {
+	id = AFR_Independence_Conflict
+	icon = GFX_goal_generic_army_mass_assault
+	cost = 4
+
+	x = 2
+	y = 1
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_Independence_Conflict"
+		add_political_power = 100
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = AFR_the_German_Remnants
+	icon = GFX_focus_generic_military_equipment
+	cost = 4
+	dynamic = yes
+
+	relative_position_id = AFR_Independence_Conflict
+	x = -2
+	y = 1
+
+	prerequisite = { focus = AFR_Independence_Conflict }
+
+	ai_will_do = { factor = 60 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_the_German_Remnants"
+		if = {
+			limit = {
+				OR = {
+					original_tag = ANG
+					original_tag = MZB
+					original_tag = GNB
+				}
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = POR
+			}
+		}
+		else = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = GER
+			}
+		}
+	}
+}
+
+shared_focus = {
+	id = AFR_Analyse_their_Equipment
+	icon = GFX_goal_generic_support_equipment
+	cost = 4
+
+	relative_position_id = AFR_Independence_Conflict
+	x = -2
+	y = 2
+
+	prerequisite = { focus = AFR_the_German_Remnants }
+
+	ai_will_do = { factor = 60 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_Analyse_their_Equipment"
+		add_equipment_to_stockpile = {
+			type = support_equipment
+			amount = 200
+			producer = GER
+		}
+		add_tech_bonus = {
+			name = AFR_Analyse_their_Equipment
+			bonus = 1
+			uses = 1
+			category = support_tech
+		}
+	}
+}
+
+shared_focus = {
+	id = AFR_modern_african_army
+	icon = GFX_goal_generic_army_cooperation
+	cost = 4
+
+	relative_position_id = AFR_Independence_Conflict
+	x = -2
+	y = 3
+
+	prerequisite = { focus = AFR_Analyse_their_Equipment }
+
+	ai_will_do = { factor = 60 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_modern_african_army"
+		if = {
+			limit = { has_idea = MAF_post_collapse_army }
+			swap_ideas = {
+				add_idea = MAF_modern_african_army
+				remove_idea = MAF_post_collapse_army
+			}
+		}
+		army_experience = 50
+	}
+}
+
+shared_focus = {
+	id = AFR_Open_Recruitment_Program
+	icon = GFX_ITA_green_shirts
+	cost = 4
+
+	relative_position_id = AFR_Independence_Conflict
+	x = 0
+	y = 1
+
+	prerequisite = { focus = AFR_Independence_Conflict }
+
+	ai_will_do = { factor = 60 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_Open_Recruitment_Program"
+		increase_conscription = yes
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_create_division_template
+				NAME = "Open Recruitment Militia Division"
+				LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 5 }
+			}
+			if = {
+				limit = { has_template = "Open Recruitment Militia Division" }
+				delete_unit_template_and_units = { division_template = "Open Recruitment Militia Division" disband = yes } #no cheating
+			}
+			division_template = {
+				name = "Open Recruitment Militia Division"
+				division_names_group = FREN_MIL_01
+				is_locked = yes
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 0 y = 3 }
+					infantry = { x = 1 y = 0 }
+				}
+				template_counter = 68
+			}
+		}
+		capital_scope = {
+			create_unit = {
+				division = "name = \"1. Open Recruitment Militia Division\" division_template = \"Open Recruitment Militia Division\" start_experience_factor = 0.3"
+				owner = ROOT
+			}
+			create_unit = {
+				division = "name = \"2. Open Recruitment Militia Division\" division_template = \"Open Recruitment Militia Division\" start_experience_factor = 0.3"
+				owner = ROOT
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_MANPOWER }
+}
+
+shared_focus = {
+	id = AFR_independence_push
+	icon = GFX_goal_generic_army_grand_battleplan
+	cost = 4
+
+	relative_position_id = AFR_Independence_Conflict
+	x = 0
+	y = 2
+
+	prerequisite = { focus = AFR_Open_Recruitment_Program }
+
+	available = {
+		is_subject = no
+		has_war = yes
+	}
+
+	ai_will_do = { factor = 20 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_independence_push"
+		add_timed_idea = {
+			idea = GAB_push_independence_idea
+			days = 120
+		}
+	}
+}
+
+### eco tree ###
+
+shared_focus = {
+	id = AFR_a_Homegrown_Industry
+	icon = GFX_focus_SOV_merge_plants
+	cost = 8
+
+	x = 8
+	y = 1
+
+	available = { capital_scope = { is_fully_controlled_by = ROOT } }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_a_Homegrown_Industry"
+		capital_scope = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+shared_focus = {
+	id = AFR_a_Homegrown_Industry_2
+	icon = GFX_goal_generic_road_construction
+	cost = 8
+
+	relative_position_id = AFR_a_Homegrown_Industry
+	x = 0
+	y = 1
+
+	available = { capital_scope = { is_fully_controlled_by = ROOT } }
+
+	prerequisite = { focus = AFR_a_Homegrown_Industry }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_a_Homegrown_Industry_2"
+		capital_scope = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+shared_focus = {
+	id = AFR_a_Homegrown_Industry_3
+	icon = GFX_goal_generic_construct_civ_factory
+	cost = 8
+
+	relative_position_id = AFR_a_Homegrown_Industry
+	x = 0
+	y = 2
+
+	available = { capital_scope = { is_fully_controlled_by = ROOT } }
+
+	prerequisite = { focus = AFR_a_Homegrown_Industry_2 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_a_Homegrown_Industry_3"
+		increase_economic_mobilisation = yes
+	}
+}
+
+shared_focus = {
+	id = AFR_a_Homegrown_Industry_4
+	icon = GFX_goal_generic_improve_industry
+	cost = 8
+
+	relative_position_id = AFR_a_Homegrown_Industry
+	x = 2
+	y = 1
+
+	available = { capital_scope = { is_fully_controlled_by = ROOT } }
+
+	prerequisite = { focus = AFR_a_Homegrown_Industry }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_a_Homegrown_Industry_4"
+		capital_scope = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+shared_focus = {
+	id = AFR_a_Homegrown_Industry_5
+	icon = GFX_goal_generic_artillery_factories
+	cost = 8
+	dynamic = yes
+
+	relative_position_id = AFR_a_Homegrown_Industry
+	x = 2
+	y = 2
+
+	available = { capital_scope = { is_fully_controlled_by = ROOT } }
+
+	prerequisite = { focus = AFR_a_Homegrown_Industry_4 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_a_Homegrown_Industry_5"
+		capital_scope = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+### diplo tree ###
+
+shared_focus = {
+	id = AFR_international_waters
+	icon = GFX_focus_POL_develop_polish_shipbuilding
+	cost = 2
+
+	x = 5
+	y = 0
+
+	available = { any_owned_state = { is_coastal = yes } }
+
+	bypass = {
+		NOT = { any_core_state = { is_coastal = yes } }
+		OR = {
+			is_neighbor_of = NFA
+			is_neighbor_of = SAF
+			is_neighbor_of = POR
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_international_waters"
+		add_political_power = 10
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = 20
+		}
+	}
+}
+
+shared_focus = {
+	id = AFR_join_international_community
+	icon = GFX_goal_generic_debt_negotiations
+	cost = 2
+
+	relative_position_id = AFR_international_waters
+	x = 0
+	y = 1
+
+	prerequisite = { focus = AFR_international_waters }
+
+	available = {
+		if = {
+			limit = {
+				tag = GAB
+				is_subject = no
+			}
+			OR = {
+				has_completed_focus = GAB_Democracy_Remains
+				has_completed_focus = GAB_Socialist_Coup
+			}
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_join_international_community"
+		add_political_power = 10
+		if = {
+			limit = { is_subject = no }
+			country_event = africa_events.1
+		}
+		else = {
+			overlord = { country_event = africa_events.2 }
+		}
+	}
+}
+
+##################################
+###  PETITION FOR FOREIGN AID  ###
+##################################
+
+shared_focus = {
+	id = AFR_materiel_from_benefactor
+	icon = {
+		GFX_goal_BEL_Our_Place_In_The_World = {
+			var:AFR_benefactor_tag = { tag = BEL }
+		}
+		GFX_goal_BRA_army = {
+			var:AFR_benefactor_tag = { tag = BRA }
+		}
+		GFX_goal_CAN_army = {
+			var:AFR_benefactor_tag = { tag = CAN }
+		}
+		GFX_goal_EGY_Army = {
+			var:AFR_benefactor_tag = { tag = EGY }
+		}
+		GFX_goal_ENG_army = {
+			var:AFR_benefactor_tag = { tag = ENG }
+		}
+		GFX_goal_FRA_army = {
+			var:AFR_benefactor_tag = { tag = FRA }
+		}
+		GFX_goal_GER_Mauser_Werke_Contracts = {
+			var:AFR_benefactor_tag = { tag = GER }
+		}
+		GFX_goal_NFA_Army = {
+			var:AFR_benefactor_tag = { tag = NFA }
+		}
+		GFX_goal_POR_Army_Emblem = {
+			var:AFR_benefactor_tag = { tag = POR }
+		}
+		GFX_goal_RAJ_british_india_army = {
+			var:AFR_benefactor_tag = { tag = RAJ }
+		}
+		GFX_goal_SAF_army = {
+			var:AFR_benefactor_tag = { tag = SAF }
+		}
+		GFX_focus_ETH_freedom_at_gunpoint = yes
+	}
+
+	cost = 5
+	dynamic = yes
+
+	relative_position_id = AFR_join_international_community
+	x = -1
+	y = 1
+
+	allow_branch = { has_variable = AFR_benefactor_tag }
+
+	prerequisite = { focus = AFR_join_international_community }
+	prerequisite = { focus = AFR_Independence_Conflict }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_materiel_from_benefactor"
+		var:AFR_benefactor_tag = { country_event = gabon_events.6 }
+	}
+}
+
+shared_focus = {
+	id = AFR_military_advisors_from_benefactor
+	icon = {
+		GFX_goal_BEL_army = {
+			var:AFR_benefactor_tag = { tag = BEL }
+		}
+		GFX_goal_BRA_officers = {
+			var:AFR_benefactor_tag = { tag = BRA }
+		}
+		GFX_goal_CAN_special_forces = {
+			var:AFR_benefactor_tag = { tag = CAN }
+		}
+		GFX_EGY_Palestine_Defence = {
+			var:AFR_benefactor_tag = { tag = EGY }
+		}
+		GFX_goal_ENG_officer_corps = {
+			var:AFR_benefactor_tag = { tag = ENG }
+		}
+		GFX_goal_agrarian_socialism = {
+			var:AFR_benefactor_tag = { tag = FRA }
+		}
+		GFX_goal_GER_Pilots = {
+			var:AFR_benefactor_tag = { tag = GER }
+		}
+		GFX_goal_NFA_Marechal_Cap = {
+			var:AFR_benefactor_tag = { tag = NFA }
+		}
+		GFX_goal_POR_knights_of_portugal = {
+			var:AFR_benefactor_tag = { tag = POR }
+		}
+		GFX_focus_RAJ_indian_gentlemen_offcers = {
+			var:AFR_benefactor_tag = { tag = RAJ }
+		}
+		GFX_goal_SAF_native_2 = {
+			var:AFR_benefactor_tag = { tag = SAF }
+		}
+		GFX_focus_generic_military_mission = yes
+	}
+
+	cost = 8
+	dynamic = yes
+
+	relative_position_id = AFR_materiel_from_benefactor
+	x = 0
+	y = 1
+
+	prerequisite = { focus = AFR_materiel_from_benefactor }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_military_advisors_from_benefactor"
+		if = {
+			limit = { var:AFR_benefactor_tag = { tag = BEL } }
+			add_ideas = AFR_military_advisors_from_BEL
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = CAN } }
+			add_ideas = AFR_military_advisors_from_CAN
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = EGY } }
+			add_ideas = AFR_military_advisors_from_EGY
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = ENG } }
+			add_ideas = AFR_military_advisors_from_ENG
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = FRA } }
+			add_ideas = AFR_military_advisors_from_FRA
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = GER } }
+			add_ideas = AFR_military_advisors_from_GER
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = NFA } }
+			add_ideas = AFR_military_advisors_from_NFA
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = POR } }
+			add_ideas = AFR_military_advisors_from_POR
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = RAJ } }
+			add_ideas = AFR_military_advisors_from_RAJ
+		}
+		else_if = {
+			limit = { var:AFR_benefactor_tag = { tag = SAF } }
+			add_ideas = AFR_military_advisors_from_SAF
+		}
+		army_experience = 50
+	}
+}
+
+shared_focus = {
+	id = AFR_economic_aid_from_benefactor
+	icon = {
+		GFX_BEL_Reinforce_Belgicism = {
+			var:AFR_benefactor_tag = { tag = BEL }
+		}
+		GFX_goal_CAN_iedc = {
+			var:AFR_benefactor_tag = { tag = CAN }
+		}
+		GFX_goal_egypt_coin = {
+			var:AFR_benefactor_tag = { tag = EGY }
+		}
+		GFX_goal_ENG_TUC = {
+			var:AFR_benefactor_tag = { tag = ENG }
+		}
+		GFX_goal_generic_market_socialism = {
+			var:AFR_benefactor_tag = { tag = FRA }
+		}
+		GFX_goal_GER_Master_of_the_World = {
+			var:AFR_benefactor_tag = { tag = GER }
+		}
+		GFX_goal_NFA_deal_with_the_devil = {
+			var:AFR_benefactor_tag = { tag = NFA }
+		}
+		GFX_goal_portugal = {
+			var:AFR_benefactor_tag = { tag = POR }
+		}
+		GFX_goal_RAJ_british_india = {
+			var:AFR_benefactor_tag = { tag = RAJ }
+		}
+		GFX_goal_generic_cash_stimulus_plan = {
+			var:AFR_benefactor_tag = { tag = SAF }
+		}
+		GFX_focus_generic_agricultural_subsidies = yes
+	}
+
+	cost = 5
+	dynamic = yes
+
+	relative_position_id = AFR_join_international_community
+	x = 1
+	y = 1
+
+	allow_branch = { has_variable = AFR_benefactor_tag }
+
+	prerequisite = { focus = AFR_join_international_community }
+	prerequisite = { focus = AFR_a_Homegrown_Industry }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_economic_aid_from_benefactor"
+		add_timed_idea = {
+			idea = AFR_economic_boost
+			days = 120
+		}
+	}
+}
+
+shared_focus = {
+	id = AFR_investments_from_benefactor
+	icon = {
+		GFX_goal_MAF_Support_Belgians = {
+			var:AFR_benefactor_tag = { tag = BEL }
+		}
+		GFX_goal_generic_privatization = {
+			var:AFR_benefactor_tag = { tag = CAN }
+		}
+		GFX_goal_EGY_economic_independence = {
+			var:AFR_benefactor_tag = { tag = EGY }
+		}
+		GFX_goal_FRA_phalanstere = {
+			var:AFR_benefactor_tag = { tag = ENG }
+		}
+		GFX_goal_FRA_phalanstere = {
+			var:AFR_benefactor_tag = { tag = FRA }
+		}
+		GFX_goal_GER_Mitteleuropa_German = {
+			var:AFR_benefactor_tag = { tag = GER }
+		}
+		GFX_goal_generic_privatization = {
+			var:AFR_benefactor_tag = { tag = NFA }
+		}
+		GFX_goal_generic_privatization = {
+			var:AFR_benefactor_tag = { tag = POR }
+		}
+		GFX_goal_generic_privatization = {
+			var:AFR_benefactor_tag = { tag = RAJ }
+		}
+		GFX_goal_generic_privatization = {
+			var:AFR_benefactor_tag = { tag = SAF }
+		}
+		GFX_goal_generic_banking_legislation = yes
+	}
+
+	cost = 5
+	dynamic = yes
+
+	relative_position_id = AFR_economic_aid_from_benefactor
+	x = 0
+	y = 1
+
+	prerequisite = { focus = AFR_economic_aid_from_benefactor }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_investments_from_benefactor"
+		capital_scope = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+### Foreign Diplomacy
+
+ ## From CAN
+
+shared_focus = {
+	id = AFR_join_iedc
+	icon = GFX_goal_CAN_iedc
+	cost = 5
+	dynamic = yes
+
+	relative_position_id = AFR_join_international_community
+	x = 0
+	y = 3
+
+	allow_branch = {
+		has_variable = AFR_benefactor_tag
+		var:AFR_benefactor_tag = { is_ally_with = ENT }
+	}
+
+	prerequisite = { focus = AFR_military_advisors_from_benefactor }
+	prerequisite = { focus = AFR_investments_from_benefactor }
+
+	ai_will_do = { factor = 0 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_join_iedc"
+		country_event = entente_events.2
+	}
+}
+
+ ## From EGY
+
+shared_focus = {
+	id = AFR_join_cairo_pact
+	icon = GFX_goal_EGY_nile_proc
+	cost = 5
+	dynamic = yes
+
+	relative_position_id = AFR_join_international_community
+	x = 0
+	y = 3
+
+	available = {
+		is_subject = no
+		is_in_faction = no
+		has_war = no
+	}
+
+	allow_branch = {
+		has_variable = AFR_benefactor_tag
+		var:AFR_benefactor_tag = { is_ally_with = EGY }
+	}
+
+	prerequisite = { focus = AFR_military_advisors_from_benefactor }
+	prerequisite = { focus = AFR_investments_from_benefactor }
+
+	ai_will_do = { factor = 0 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_join_cairo_pact"
+		EGY = { country_event = ubangi_shari_events.5 }
+	}
+}
+
+ ## From FRA
+
+shared_focus = {
+	id = AFR_join_phalanstere
+	icon = GFX_goal_FRA_phalanstere
+	cost = 5
+	dynamic = yes
+
+	relative_position_id = AFR_join_international_community
+	x = 0
+	y = 3
+
+	allow_branch = {
+		has_variable = AFR_benefactor_tag
+		var:AFR_benefactor_tag = { is_ally_with = INT }
+	}
+
+	prerequisite = { focus = AFR_military_advisors_from_benefactor }
+	prerequisite = { focus = AFR_investments_from_benefactor }
+
+	ai_will_do = { factor = 0 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_join_phalanstere"
+		FRA_add_to_phalanstere = yes
+	}
+}
+
+ ## From GER
+
+shared_focus = {
+	id = AFR_join_mitteleuropa
+	icon = GFX_goal_GER_mitteleuropa
+	cost = 5
+	dynamic = yes
+
+	relative_position_id = AFR_join_international_community
+	x = 0
+	y = 3
+
+	allow_branch = {
+		has_variable = AFR_benefactor_tag
+		var:AFR_benefactor_tag = { is_ally_with = GER }
+	}
+
+	prerequisite = { focus = AFR_military_advisors_from_benefactor }
+	prerequisite = { focus = AFR_investments_from_benefactor }
+
+	ai_will_do = { factor = 0 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed AFR_join_mitteleuropa"
+		GER_add_to_mitteleuropa = yes
+	}
+}
+

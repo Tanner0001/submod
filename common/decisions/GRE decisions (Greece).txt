@@ -1,0 +1,1512 @@
+###########################
+# Greece Decisions
+###########################
+# By Rylock
+###########################
+
+GRE_join_faction_decisions = {
+	GRE_join_internationale = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			has_socialist_government = yes
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+				NOT = { has_global_flag = GRE_kicked_from_INT }
+			}
+		}
+
+		targets = { INT }
+		target_root_trigger = { has_socialist_government = yes }
+		target_trigger = {
+			has_socialist_government = yes
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+				NOT = { has_global_flag = GRE_kicked_from_INT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.20 }
+			}
+			modifier = {
+				factor = 0
+				has_government = radical_socialist
+				NOT = { any_enemy_country = { has_war_with = FROM } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_join_internationale"
+			FROM = { country_event = greece_events.14 }
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_join_entente = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			OR = {
+				has_war = yes
+				threat > 0.6
+			}
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+				NOT = { has_global_flag = GRE_kicked_from_ENT }
+			}
+			has_socialist_government = no
+		}
+
+		targets = { ENT }
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+				NOT = { has_global_flag = GRE_kicked_from_ENT }
+			}
+			has_socialist_government = no
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GRE_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT } }
+			}
+			modifier = {
+				factor = 0
+				has_completed_focus = GRE_new_expansionism
+				if = {
+					limit = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT } }
+					OR = {
+						NOT = { owns_state = 164 } #Dodecanese
+						NOT = { owns_state = 183 } #Cyprus
+						NOT = { owns_state = 184 } #Komotini
+						NOT = { owns_state = 187 } #Aegean Islands
+						NOT = { owns_state = 766 } #Northern Epirus
+						AND = {
+							FROM = { has_country_flag = GRE_chose_megali }
+							OR = {
+								NOT = { owns_state = 339 } #Smyrna
+								NOT = { owns_state = 340 } #Bursa
+								NOT = { owns_state = 341 } #Adrianople
+								NOT = { owns_state = 342 } #Mugla
+								NOT = { owns_state = 773 } #Constantinople
+							}
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { has_war_with = GER }
+				NOT = { has_war_with = GER }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT } }
+				any_neighbor_country = { is_in_faction_with = GER }
+			}
+			modifier = {
+				factor = 0
+				FROM = { has_war_with = AUS }
+				NOT = { has_war_with = AUS }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT } }
+				any_neighbor_country = { is_in_faction_with = AUS }
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.30 }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT } }
+			}
+			modifier = {
+				factor = 0
+				has_completed_focus = GRE_diplomacy_focus
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT } }
+				FROM = { same_government_type_as_ROOT_authoritarian = no }
+			}
+			modifier = {
+				has_game_rule = { rule = GRE_forpol option = DEFAULT }
+				set_temp_variable = {
+					opinion_factor = {
+						value = opinion@ENT
+						multiply = 0.01
+						add = 1
+					}
+				}
+				factor = opinion_factor
+			}
+			modifier = {
+				add = 1000
+				has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+			}
+			modifier = {
+				add = 100
+				has_cosmetic_tag = GRE_kingdom
+			}
+			modifier = {
+				add = 50
+				any_home_area_neighbor_country = {
+					is_owner_neighbor_of = ROOT
+					is_in_faction = yes
+					faction_leader = { has_socialist_government = yes }
+				}
+			}
+			modifier = {
+				add = 50
+				has_completed_focus = GRE_new_expansionism
+				TUR = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = FROM }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+			modifier = {
+				add = 50
+				BUL = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = FROM }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_join_entente"
+			FROM = { country_event = greece_events.14 }
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_join_reichspakt = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			NOT = { has_idea = GRE_german_sanctions }
+			FROM = {
+				custom_override_tooltip = {
+					tooltip = GRE_stole_industry
+					NOT = { has_country_flag = GRE_stole_industry }
+				}
+			}
+			OR = {
+				has_war = yes
+				threat > 0.6
+			}
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+				NOT = { has_country_flag = GRE_kicked_greece_out_of_faction }
+			}
+			has_socialist_government = no
+		}
+
+		targets = { GER }
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+				NOT = { has_country_flag = GRE_kicked_greece_out_of_faction }
+			}
+			has_socialist_government = no
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GRE_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER } }
+			}
+			modifier = {
+				factor = 0
+				has_completed_focus = GRE_new_expansionism
+				if = {
+					limit = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER } }
+					OR = {
+						NOT = { owns_state = 164 } #Dodecanese
+						NOT = { owns_state = 183 } #Cyprus
+						NOT = { owns_state = 184 } #Komotini
+						NOT = { owns_state = 187 } #Aegean Islands
+						NOT = { owns_state = 766 } #Northern Epirus
+						AND = {
+							FROM = { has_country_flag = GRE_chose_megali }
+							OR = {
+								NOT = { owns_state = 339 } #Smyrna
+								NOT = { owns_state = 340 } #Bursa
+								NOT = { owns_state = 341 } #Adrianople
+								NOT = { owns_state = 342 } #Mugla
+								NOT = { owns_state = 773 } #Constantinople
+							}
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { has_country_flag = GRE_economic_sanctions }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER } }
+			}
+			modifier = {
+				factor = 0
+				has_cosmetic_tag = GRE_kingdom
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER } }
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.30 }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER } }
+			}
+			modifier = {
+				factor = 0
+				has_completed_focus = GRE_diplomacy_focus
+				FROM = { same_government_type_as_ROOT_authoritarian = no }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = TUR_forpol option = TUR_FORPOL_GER }
+				has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+				NOT = {
+					TUR = { is_in_faction = no }
+					TUR = { is_subject = no }
+				}
+			}
+			modifier = {
+				has_game_rule = { rule = GRE_forpol option = DEFAULT }
+				set_temp_variable = {
+					opinion_factor = {
+						value = opinion@GER
+						multiply = 0.01
+						add = 1
+					}
+				}
+				factor = opinion_factor
+			}
+			modifier = {
+				add = 1000
+				has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+			}
+			modifier = {
+				add = 100
+				OR = {
+					has_idea = GRE_foreign_industry_GER3
+					has_government = paternal_autocrat
+				}
+			}
+			modifier = {
+				add = 50
+				any_home_area_neighbor_country = {
+					is_owner_neighbor_of = ROOT
+					is_in_faction = yes
+					faction_leader = { has_socialist_government = yes }
+				}
+			}
+			modifier = {
+				add = 50
+				has_completed_focus = GRE_new_expansionism
+				TUR = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = FROM }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+			modifier = {
+				add = 50
+				BUL = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = FROM }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_join_reichspakt"
+			FROM = { country_event = greece_events.14 }
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_join_austria = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			NOT = { has_idea = GRE_austrian_sanctions }
+			FROM = {
+				custom_override_tooltip = {
+					tooltip = GRE_stole_industry
+					NOT = { has_country_flag = GRE_stole_industry }
+				}
+			}
+			AUS_has_completed_ausgleich_path = yes
+			OR = {
+				has_war = yes
+				threat > 0.6
+			}
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			FROM = {
+				OR = {
+					is_faction_leader = yes
+					AND = {
+						is_in_faction = yes
+						has_country_flag = AUS_intervened_in_weltkrieg
+					}
+				}
+				NOT = { has_war_with = ROOT }
+				NOT = { has_country_flag = GRE_kicked_greece_out_of_faction }
+			}
+			has_socialist_government = no
+		}
+
+		targets = { AUS }
+		target_trigger = {
+			FROM = {
+				OR = {
+					is_faction_leader = yes
+					AND = {
+						is_in_faction = yes
+						has_country_flag = AUS_intervened_in_weltkrieg
+					}
+				}
+				NOT = { has_war_with = ROOT }
+				NOT = { has_country_flag = GRE_kicked_greece_out_of_faction }
+			}
+			has_socialist_government = no
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GRE_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS } }
+			}
+			modifier = {
+				factor = 0
+				has_completed_focus = GRE_new_expansionism
+				if = {
+					limit = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS } }
+					OR = {
+						NOT = { owns_state = 164 } #Dodecanese
+						NOT = { owns_state = 183 } #Cyprus
+						NOT = { owns_state = 184 } #Komotini
+						NOT = { owns_state = 187 } #Aegean Islands
+						NOT = { owns_state = 766 } #Northern Epirus
+						AND = {
+							FROM = { has_country_flag = GRE_chose_megali }
+							OR = {
+								NOT = { owns_state = 339 } #Smyrna
+								NOT = { owns_state = 340 } #Bursa
+								NOT = { owns_state = 341 } #Adrianople
+								NOT = { owns_state = 342 } #Mugla
+								NOT = { owns_state = 773 } #Constantinople
+							}
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { has_country_flag = GRE_economic_sanctions }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS } }
+			}
+			modifier = {
+				factor = 0
+				has_cosmetic_tag = GRE_kingdom
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS } }
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.30 }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS } }
+			}
+			modifier = {
+				factor = 0
+				has_completed_focus = GRE_diplomacy_focus
+				FROM = { same_government_type_as_ROOT_authoritarian = no }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS } }
+			}
+			modifier = {
+				has_game_rule = { rule = GRE_forpol option = DEFAULT }
+				set_temp_variable = {
+					opinion_factor = {
+						value = opinion@AUS
+						multiply = 0.01
+						add = 1
+					}
+				}
+				factor = opinion_factor
+			}
+			modifier = {
+				add = 1000
+				has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+			}
+			modifier = {
+				add = 100
+				has_idea = GRE_foreign_industry_AUS3
+			}
+			modifier = {
+				add = 50
+				any_home_area_neighbor_country = {
+					is_owner_neighbor_of = ROOT
+					is_in_faction = yes
+					faction_leader = { has_socialist_government = yes }
+				}
+			}
+			modifier = {
+				add = 50
+				has_completed_focus = GRE_new_expansionism
+				TUR = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = FROM }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+			modifier = {
+				add = 50
+				BUL = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = FROM }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_join_austria"
+			FROM = { country_event = greece_events.14 }
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_join_russia = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			OR = {
+				has_completed_focus = GRE_diplomacy_focus
+				NOT = { TUR = { has_non_aggression_pact_with = FROM } }
+				custom_override_tooltip = {
+					tooltip = GRE_regained_OTT_lands
+					has_completed_focus = GRE_new_expansionism
+					owns_state = 164 #Dodecanese
+					owns_state = 183 #Cyprus
+					owns_state = 184 #Komotini
+					owns_state = 187 #Aegean Islands
+					if = {
+						limit = { has_country_flag = GRE_chose_megali }
+						owns_state = 339 #Smyrna
+						owns_state = 340 #Bursa
+						owns_state = 341 #Adrianople
+						owns_state = 342 #Mugla
+						owns_state = 773 #Constantinople
+					}
+				}
+			}
+			OR = {
+				has_war = yes
+				threat > 0.6
+			}
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			FROM = {
+				is_faction_leader = yes
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+				NOT = { has_country_flag = GRE_kicked_greece_out_of_faction }
+			}
+			has_socialist_government = no
+		}
+
+		targets = { RUS }
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+				NOT = { has_country_flag = GRE_kicked_greece_out_of_faction }
+			}
+			has_socialist_government = no
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GRE_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS } }
+			}
+			modifier = {
+				factor = 0
+				has_cosmetic_tag = GRE_kingdom
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS } }
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.30 }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS } }
+			}
+			modifier = {
+				factor = 0
+				has_completed_focus = GRE_diplomacy_focus
+				FROM = { same_government_type_as_ROOT_authoritarian = yes }
+				NOT = { has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS } }
+			}
+			modifier = {
+				has_game_rule = { rule = GRE_forpol option = DEFAULT }
+				set_temp_variable = {
+					opinion_factor = {
+						value = opinion@RUS
+						multiply = 0.01
+						add = 1
+					}
+				}
+				factor = opinion_factor
+			}
+			modifier = {
+				add = 1000
+				has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+			}
+			modifier = {
+				add = 100
+				has_completed_focus = GRE_megali_idea
+			}
+			modifier = {
+				add = 50
+				has_completed_focus = GRE_new_expansionism
+				TUR = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = FROM }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+			modifier = {
+				add = 50
+				BUL = {
+					is_in_faction = yes
+					NOT = { is_in_faction_with = FROM }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_join_russia"
+			FROM = { country_event = greece_events.14 }
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_rejoin_belgrade_pact = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			OR = {
+				FROM = { at_peace_or_same_enemies_as_ROOT = yes } #Belgrade Pact is at peace or already at war with Bulgaria
+				AND = {
+					has_war = no #Greece is at peace
+					OR = {
+						FROM = { #Belgrade Pact is in a defensive war with ONLY Bulgaria
+							has_defensive_war_with = BUL
+							check_variable = { enemies^num < 2 }
+						}
+						AND = {
+							FROM = { #The IMRO won against Serbia and are at war with ONLY Bulgaria
+								has_war_with = BUL
+								check_variable = { enemies^num < 2 }
+							}
+							has_global_flag = SER_IMRO_victory
+						}
+					}
+				}
+			}
+			if = {
+				limit = { has_civil_war = yes }
+				FROM = { both_socialist_or_both_not_socialist = yes }
+			}
+		}
+
+		visible = {
+			OR = {
+				has_defensive_war_with = BUL #Greece is in a defensive war with Bulgaria
+				FROM = { has_defensive_war_with = BUL } #Belgrade Pact is in a defensive war with Bulgaria and Greece is at peace
+				AND = {
+					has_global_flag = SER_IMRO_victory
+					FROM = { has_war_with = BUL }
+				}
+			}
+			is_in_faction = no
+			is_subject = no
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+			NOT = { has_country_flag = GRE_second_war_for_thrace }
+			NOT = { BUL = { has_country_flag = BUL_second_war_for_thrace } }
+		}
+
+		targets = { BPL }
+		target_root_trigger = {
+			is_in_faction = no
+			is_subject = no
+			NOT = { has_war_with = FROM }
+			NOT = { has_country_flag = GRE_second_war_for_thrace }
+		}
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_rejoin_belgrade_pact"
+			FROM = { country_event = greece_events.14 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+political_actions = {
+	GRE_nationalize_german_industry = {
+		icon = generic_industry
+
+		allowed = { original_tag = GRE }
+
+		available = {
+			has_completed_focus = GRE_recovery
+		}
+
+		visible = {
+			has_completed_focus = GRE_foreign_industry_question
+			OR = {
+				has_idea = GRE_foreign_industry_GER1
+				has_idea = GRE_foreign_industry_GER2
+				has_idea = GRE_foreign_industry_GER3
+			}
+			has_democratic_government = yes
+		}
+
+		cost = 200
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0.1
+				has_government = market_liberal
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+				NOT = { has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_METAXAS_PATAUT } }
+				NOT = { has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_PAVLOS_PATAUT } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GRE_nationalize_german_industry"
+			if = {
+				limit = { has_idea = GRE_foreign_industry_GER1 }
+				remove_ideas = GRE_foreign_industry_GER1
+			}
+			else_if = {
+				limit = { has_idea = GRE_foreign_industry_GER2 }
+				remove_ideas = GRE_foreign_industry_GER2
+			}
+			else = {
+				remove_ideas = GRE_foreign_industry_GER3
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_nationalize_austrian_industry = {
+		icon = generic_industry
+
+		allowed = { original_tag = GRE }
+
+		available = {
+			has_completed_focus = GRE_recovery
+		}
+
+		visible = {
+			has_completed_focus = GRE_foreign_industry_question
+			OR = {
+				has_idea = GRE_foreign_industry_AUS1
+				has_idea = GRE_foreign_industry_AUS2
+				has_idea = GRE_foreign_industry_AUS3
+			}
+			has_democratic_government = yes
+		}
+
+		fire_only_once = yes
+
+		cost = 100
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0.1
+				has_government = market_liberal
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GRE_nationalize_austrian_industry"
+			if = {
+				limit = { has_idea = GRE_foreign_industry_AUS1 }
+				remove_ideas = GRE_foreign_industry_AUS1
+			}
+			else_if = {
+				limit = { has_idea = GRE_foreign_industry_AUS2 }
+				remove_ideas = GRE_foreign_industry_AUS2
+			}
+			else = {
+				remove_ideas = GRE_foreign_industry_AUS3
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_balkans_mission = {
+		icon = generic_agreement
+
+		allowed = { original_tag = GRE }
+
+		available = {
+			controls_all_owned_states = yes
+			NOT = { has_country_flag = GRE_recent_mission }
+			has_completed_focus = GRE_recovery
+		}
+
+		visible = {
+			FROM = {
+				is_subject = no
+				OR = {
+					AND = {
+						has_socialist_government = yes
+						ROOT = { has_socialist_government = yes }
+					}
+					AND = {
+						has_socialist_government = no
+						ROOT = { has_socialist_government = no }
+					}
+				}
+				controls_all_owned_states = yes
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		targets = { BOS BUL ALB CRO SER HUN MNT ROM SLV TRS }
+
+		target_root_trigger = {
+			has_completed_focus = GRE_balkans_trade
+		}
+
+		target_trigger = {
+			FROM = {
+				is_subject = no
+				OR = {
+					AND = {
+						has_socialist_government = yes
+						ROOT = { has_socialist_government = yes }
+					}
+					AND = {
+						has_socialist_government = no
+						ROOT = { has_socialist_government = no }
+					}
+				}
+				controls_all_owned_states = yes
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		days_remove = 90
+		fire_only_once = yes
+		cost = 50
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 20
+				is_in_faction_with = FROM
+			}
+			modifier = {
+				factor = 0
+				FROM = { any_owned_state = { is_claim_or_core_of_ROOT = yes } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_balkans_mission"
+			set_country_flag = GRE_recent_mission
+			FROM = {
+				country_event = greece_events.213
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove GRE_balkans_mission"
+			clr_country_flag = GRE_recent_mission
+		}
+		fixed_random_seed = no
+	}
+}
+
+GRE_regaining_greece = {
+	GRE_fight_for_macedonia = {
+		icon = generic_ignite_civil_war
+
+		available = {
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+			if = {
+				limit = {
+					is_in_faction = yes
+					is_faction_leader = no
+					faction_leader = { is_actual_major = yes }
+				}
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_subject = yes
+				NOT = { can_declare_war_on = FROM }
+			}
+		}
+
+		targets = { 731.owner 769.owner }
+		target_root_trigger = { has_completed_focus = GRE_fight_for_north }
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		days_remove = 30
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel GRE_fight_for_macedonia"
+			add_war_support = -0.05
+			clear_decision_attack_AI = yes
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				is_in_faction_with = BPL
+			}
+			modifier = {
+				factor = 0
+				country_has_any_active_threat = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger = yes }
+			}
+			modifier = {
+				factor = 0
+				FROM = { dont_start_major_faction_wars = yes }
+			}
+			modifier = {
+				factor = 0
+				FROM = { tag = BUL }
+				OR = {
+					AND = {
+						has_game_rule = { rule = BUL_forpol option = BUL_FORPOL_GER }
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					}
+					AND = {
+						has_game_rule = { rule = BUL_forpol option = BUL_FORPOL_AUS }
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					}
+					AND = {
+						has_game_rule = { rule = BUL_forpol option = BUL_FORPOL_RUS }
+						has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					}
+					AND = {
+						has_game_rule = { rule = BUL_forpol option = BUL_FORPOL_INT }
+						OR = {
+							has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_SYNDIE }
+							has_game_rule = { rule = GRE_referendum option = GRE_REFERENDUM_TOTALIST }
+							has_game_rule = { rule = GRE_election option = GRE_ELECTION_SOC }
+						}
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_fight_for_macedonia"
+			add_war_support = 0.05
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove GRE_fight_for_macedonia"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			add_to_array = { GRE_megali_enemies = FROM }
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_megali_war = {
+		icon = generic_ignite_civil_war
+
+		allowed = { original_tag = GRE }
+
+		available = {
+			has_civil_war = no
+			surrender_progress < 0.05
+			if = {
+				limit = {
+					is_in_faction = yes
+					faction_leader = { is_actual_major = yes }
+				}
+				has_global_flag = second_weltkrieg_has_ended
+			}
+			if = {
+				limit = {
+					FROM = { tag = TUR }
+				}
+				OR = {
+					TUR = { has_war_with = EGY }
+					OTT_ottomans_defeated = yes
+					NOT = { country_exists = EGY }
+					EGY = { is_subject = yes }
+				}
+			}
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_subject = yes
+				has_civil_war = yes
+				NOT = { can_declare_war_on = FROM }
+				NOT = { FROM = { any_owned_state = { is_claim_or_core_of_ROOT = yes } } }
+				AND = {
+					is_in_faction = yes
+					hidden_trigger = { faction_leader = { is_actual_major = yes } }
+					second_weltkrieg_has_begun = no
+				}
+			}
+		}
+
+		targets = { TUR BUL ALB }
+		target_root_trigger = { has_country_flag = GRE_may_start_megali }
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = { any_owned_state = { is_claim_or_core_of_ROOT = yes } }
+		}
+
+		days_remove = 30
+		fire_only_once = no
+		war_with_target_on_remove = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel GRE_megali_war"
+			add_war_support = -0.10
+			clear_decision_attack_AI = yes
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+			modifier = {	# Greece won't try to make a Megali war when in the middle of, or preparing for, another one
+				factor = 0
+				OR = {
+					has_country_flag = GRE_about_to_attack_TUR
+					has_country_flag = GRE_about_to_attack_ALB
+					has_war_with = TUR
+					has_war_with = ALB
+				}
+			}
+			modifier = {	# Northern Epirus from factionless Albania is easy pickings before Ottoman lands
+				factor = 0
+				FROM = { tag = TUR }
+				NOT = { owns_state = 776 }
+				var:766.owner = { is_in_faction = no }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_megali_war"
+			add_war_support = 0.10
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+			set_country_flag = { flag = GRE_about_to_attack_@FROM days = 30 value = 1 }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove GRE_megali_war"
+			add_to_array = { GRE_megali_enemies = FROM }
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			if = {
+				limit = {
+					FROM = { tag = TUR }
+					BUL = { has_war_with = TUR }
+					NOT = { has_war_with = BUL }
+					BUL = { is_valid_peace_target = yes }
+				}
+				custom_effect_tooltip = GRE_BUL_will_declare_war
+				hidden_effect = {
+					BUL = { country_event = { id = bulgaria_foreign_events.39 days = 1 } }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_megali_make_peace = {
+		icon = generic_ignite_civil_war
+
+		allowed = { original_tag = GRE }
+
+		available = {
+			surrender_progress < 0.05
+			NOT = { has_country_flag = GRE_second_war_for_thrace }
+			if = {
+				limit = {
+					FROM = {
+						any_owned_state = {
+							is_claim_or_core_of_ROOT = yes
+							is_one_state_island = no
+						}
+					}
+				}
+				OR = {
+					if = {
+						limit = { FROM = { original_tag = TUR } }
+						FROM = { surrender_progress > 0.65 }
+					}
+					else = {
+						FROM = { surrender_progress > 0.5 }
+					}
+					custom_override_tooltip = {
+						tooltip = GRE_controls_claimed_states
+						FROM = { GRE_any_owned_claim_except_islands_not_controlled_by_greece_or_allies = no }
+					}
+				}
+				if = {
+					limit = { FROM = { is_in_faction = yes } }
+					if = {
+						limit = { FROM = { is_faction_leader = yes } }
+						custom_override_tooltip = {
+							tooltip = GRE_allies_capitulated
+							NOT = { FROM = { any_allied_country = { GRE_any_owned_claim_except_islands_not_controlled_by_greece_or_allies = yes } } }
+						}
+					}
+					else = {
+						OR = {
+							FROM = { faction_leader = { surrender_progress > 0.3 } }
+							custom_override_tooltip = {
+								tooltip = GRE_allies_capitulated
+								NOT = { FROM = { any_allied_country = { GRE_any_owned_claim_except_islands_not_controlled_by_greece_or_allies = yes } } }
+							}
+						}
+					}
+				}
+				else_if = {
+					limit = { FROM = { is_subject = yes } }
+					OR = {
+						FROM = { overlord = { surrender_progress > 0.3 } }
+						custom_override_tooltip = {
+							tooltip = GRE_allies_capitulated
+							NOT = {
+								FROM = {
+									overlord = {
+										GRE_any_owned_claim_except_islands_not_controlled_by_greece_or_allies = yes
+										any_subject_country = { GRE_any_owned_claim_except_islands_not_controlled_by_greece_or_allies = yes }
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			else = {
+				OR = {
+					if = {
+						limit = { FROM = { original_tag = TUR } }
+						FROM = { surrender_progress > 0.3 }
+					}
+					else = {
+						FROM = { surrender_progress > 0.2 }
+					}
+					custom_override_tooltip = {
+						tooltip = GRE_controls_claimed_states
+						FROM = { GRE_any_owned_claim_not_controlled_by_greece_or_allies = no }
+					}
+				}
+				if = {
+					limit = { FROM = { is_in_faction = yes } }
+					if = {
+						limit = { FROM = { is_faction_leader = yes } }
+						custom_override_tooltip = {
+							tooltip = GRE_allies_capitulated
+							NOT = { FROM = { any_allied_country = { GRE_any_owned_claim_not_controlled_by_greece_or_allies = yes } } }
+						}
+					}
+					else = {
+						OR = {
+							FROM = { faction_leader = { surrender_progress > 0.3 } }
+							custom_override_tooltip = {
+								tooltip = GRE_allies_capitulated
+								NOT = { FROM = { any_allied_country = { GRE_any_owned_claim_not_controlled_by_greece_or_allies = yes } } }
+							}
+						}
+					}
+				}
+				else_if = {
+					limit = { FROM = { is_subject = yes } }
+					OR = {
+						FROM = { overlord = { surrender_progress > 0.3 } }
+						custom_override_tooltip = {
+							tooltip = GRE_allies_capitulated
+							NOT = {
+								FROM = {
+									overlord = {
+										GRE_any_owned_claim_not_controlled_by_greece_or_allies = yes
+										any_subject_country = { GRE_any_owned_claim_not_controlled_by_greece_or_allies = yes }
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		visible = {
+			is_subject = no
+			has_war_with = FROM
+			has_civil_war = no
+			is_valid_peace_target = yes
+			FROM = { is_valid_peace_target = yes }
+		}
+
+		target_array = ROOT.GRE_megali_enemies
+		target_root_trigger = { has_war = yes }
+		target_trigger = {
+			has_war_with = FROM
+			has_civil_war = no
+			is_valid_peace_target = yes
+			FROM = { is_valid_peace_target = yes }
+			NOT = { FROM = { has_country_flag = GRE_megali_refused_peace } }
+		}
+
+		cost = 0
+		fire_only_once = no
+
+		ai_will_do = { factor = 20 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete GRE_megali_make_peace"
+			FROM = {
+				save_event_target_as = peace_country
+				if = {
+					limit = {
+						is_in_faction = yes
+						is_faction_leader = no
+					}
+					faction_leader = { country_event = greece_events.254 }
+				}
+				else_if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = greece_events.254 }
+				}
+				else = {
+					country_event = greece_events.254
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+###Ship_building
+special_projects = {
+	GRE_shipbuilding_program_1 = {
+		icon = generic_naval
+
+		allowed = { original_tag = GRE }
+
+		available = {
+			has_capitulated = no
+			has_manpower > 2500
+		}
+
+		visible = {
+			has_completed_focus = GRE_purchase_ships
+			owns_state_with_naval_base = yes
+		}
+
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		days_remove = 90
+		cost = 100
+
+		modifier = {
+			industrial_capacity_dockyard = -0.90
+			consumer_goods_factor = 0.2
+			political_power_cost = 0.20
+		}
+
+		ai_will_do = { factor = 40 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GRE_shipbuilding_program_1"
+			create_equipment_variant = {
+				name = "Adrias Class"
+				type = ship_hull_light_1
+				name_group = GRE_DD_HISTORICAL
+				modules = {
+					fixed_ship_battery_slot = ship_light_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = light_ship_engine_2
+					fixed_ship_torpedo_slot = ship_torpedo_1
+					mid_1_custom_slot = empty
+					rear_1_custom_slot = ship_mine_layer_1
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove GRE_shipbuilding_program_1"
+			set_country_flag = GRE_ships_done_1
+			create_ship = { name = "HNS Adrias" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Aigaion" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Astings" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Kanaris" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Kriti" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Miaoulis" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Pindos" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Themistoklis" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Vasilefs Georgios"type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+			create_ship = { name = "HNS Vasilissa Olga" type = ship_hull_light_1 equipment_variant = "Adrias Class" }
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_shipbuilding_program_2 = {
+		icon = generic_naval
+		desc = GRE_shipbuilding_program_1_desc
+
+		allowed = { original_tag = GRE }
+
+		available = {
+			has_capitulated = no
+			has_manpower > 3600
+		}
+
+		visible = {
+			has_country_flag = GRE_ships_done_1
+			owns_state_with_naval_base = yes
+		}
+
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		days_remove = 120
+		cost = 100
+
+		modifier = {
+			industrial_capacity_dockyard = -0.90
+			consumer_goods_factor = 0.2
+			political_power_cost = 0.20
+		}
+
+		ai_will_do = { factor = 40 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GRE_shipbuilding_program_2"
+			if = {
+				limit = { NOT = { is_special_project_completed = sp:sp_naval_armoured_cruiser } }
+				complete_special_project = sp:sp_naval_armoured_cruiser
+			}
+			create_equipment_variant = {
+				name = "Salamis Class"
+				type = ship_hull_armoured_cruiser
+				name_group = GRE_BC_HISTORICAL
+				modules = {
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_battery_slot = ship_heavy_battery_1
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_engine_slot = cruiser_ship_engine_1
+					rear_1_custom_slot = ship_torpedo_1
+					mid_1_custom_slot = ship_airplane_launcher_1
+					mid_2_custom_slot = ship_anti_air_1
+				}
+			}
+			create_equipment_variant = {
+				name = "Elli Class"
+				type = ship_hull_cruiser_1
+				name_group = GRE_CL_HISTORICAL
+				modules = {
+					fixed_ship_battery_slot = ship_light_medium_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_1
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					fixed_ship_secondaries_slot = empty
+					mid_1_custom_slot = ship_torpedo_1
+					mid_2_custom_slot = empty
+					rear_1_custom_slot = ship_mine_layer_1
+				}
+				obsolete = yes
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove GRE_shipbuilding_program_2"
+			set_country_flag = GRE_ships_done_2
+			create_ship = { name = "HNS Feneos" type = ship_hull_armoured_cruiser equipment_variant = "Salamis Class" }
+			create_ship = { name = "HNS Apostolis" type = ship_hull_cruiser_1 equipment_variant = "Elli Class" }
+			create_ship = { name = "HNS Kriezis" type = ship_hull_cruiser_1 equipment_variant = "Elli Class" }
+			create_ship = { name = "HNS Sachtouris" type = ship_hull_cruiser_1 equipment_variant = "Elli Class" }
+		}
+		fixed_random_seed = no
+	}
+
+	GRE_shipbuilding_program_3 = {
+		icon = generic_naval
+		desc = GRE_shipbuilding_program_1_desc
+
+		allowed = { original_tag = GRE }
+
+		available = {
+			has_capitulated = no
+			has_manpower > 3200
+		}
+
+		visible = {
+			has_country_flag = GRE_ships_done_2
+			owns_state_with_naval_base = yes
+		}
+
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		days_remove = 120
+		cost = 150
+
+		modifier = {
+			industrial_capacity_dockyard = -0.90
+			consumer_goods_factor = 0.2
+			political_power_cost = 0.20
+		}
+
+		ai_will_do = { factor = 40 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GRE_shipbuilding_program_3"
+			set_technology = { early_ship_hull_heavy = 1 popup = no }
+			create_equipment_variant = {
+				name = "Tombazis Class"
+				type = ship_hull_heavy_1
+				name_group = GRE_BB_HISTORICAL
+				allow_without_tech = yes
+				modules = {
+					fixed_ship_battery_slot = ship_heavy_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = heavy_ship_engine_1
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					fixed_ship_armor_slot = ship_armor_bb_1
+					front_1_custom_slot = empty
+					mid_1_custom_slot = ship_airplane_launcher_1
+					mid_2_custom_slot = ship_secondaries_1
+					rear_1_custom_slot = ship_heavy_battery_1
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove GRE_shipbuilding_program_3"
+			create_ship = { name = "HNS Tombazis" type = ship_hull_heavy_1 equipment_variant = "Tombazis Class" }
+		}
+		fixed_random_seed = no
+	}
+}

@@ -1,0 +1,518 @@
+# Currency Reserves, with thanks to Thoma for his work on DEI and Indonesia :^)
+
+# default increase is +1 - set a temp_variable LEC_currency_change for different values
+LEC_change_currency_reserves = {
+	if = {
+		limit = { has_variable = LEC.LEC_currency_reserves }
+		set_temp_variable = {
+			LEC_new_currency_value = {
+				value = LEC.LEC_currency_reserves
+				add = LEC_currency_change?1
+				clamp = { min = 1 max = 9 } # avoid going < 1 or > 9
+			}
+		}
+
+		if = {
+			limit = { NOT = { check_variable = { LEC_new_currency_value = LEC.LEC_currency_reserves } } }
+			LEC = {
+				meta_effect = {
+					text = {
+						effect_tooltip = {
+							swap_ideas = {
+								remove_idea = LEC_currency_[OLD_LEVEL]
+								add_idea = LEC_currency_[NEW_LEVEL]
+							}
+						}
+						hidden_effect = {
+							remove_ideas = LEC_currency_[OLD_LEVEL]
+							add_ideas = LEC_currency_[NEW_LEVEL]
+						}
+					}
+					OLD_LEVEL = "[?LEC_currency_reserves]"
+					NEW_LEVEL = "[?LEC_new_currency_value]"
+				}
+			}
+		}
+	}
+}
+
+lec_british_rise = {
+	if = {
+		limit = { has_idea = LEC_british_up }
+		modify_timed_idea = {
+			idea = LEC_british_up
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_british_up
+			days = 50
+		}
+	}
+}
+
+lec_chinese_rise = {
+	if = {
+		limit = { has_idea = LEC_chinese_up }
+		modify_timed_idea = {
+			idea = LEC_chinese_up
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_chinese_up
+			days = 50
+		}
+	}
+}
+
+lec_japanese_rise = {
+	if = {
+		limit = { has_idea = LEC_japanese_up }
+		modify_timed_idea = {
+			idea = LEC_japanese_up
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_japanese_up
+			days = 50
+		}
+	}
+}
+
+lec_american_rise = {
+	if = {
+		limit = { has_idea = LEC_american_up }
+		modify_timed_idea = {
+			idea = LEC_american_up
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_american_up
+			days = 50
+		}
+	}
+}
+
+lec_german_rise = {
+	if = {
+		limit = { has_idea = LEC_german_up }
+		modify_timed_idea = {
+			idea = LEC_german_up
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_german_up
+			days = 50
+		}
+	}
+}
+
+####
+lec_british_fall = {
+	if = {
+		limit = { has_idea = LEC_british_down }
+		modify_timed_idea = {
+			idea = LEC_british_down
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_british_down
+			days = 50
+		}
+	}
+}
+
+lec_chinese_fall = {
+	if = {
+		limit = { has_idea = LEC_chinese_down }
+		modify_timed_idea = {
+			idea = LEC_chinese_down
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_chinese_down
+			days = 50
+		}
+	}
+}
+
+lec_japanese_fall = {
+	if = {
+		limit = { has_idea = LEC_japanese_down }
+		modify_timed_idea = {
+			idea = LEC_japanese_down
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_japanese_down
+			days = 50
+		}
+	}
+}
+
+lec_american_fall = {
+	if = {
+		limit = { has_idea = LEC_american_down }
+		modify_timed_idea = {
+			idea = LEC_american_down
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_american_down
+			days = 50
+		}
+	}
+}
+
+lec_german_fall = {
+	if = {
+		limit = { has_idea = LEC_german_down }
+		modify_timed_idea = {
+			idea = LEC_german_down
+			days = 50
+		}
+	}
+	else = {
+		add_timed_idea = {
+			idea = LEC_german_down
+			days = 50
+		}
+	}
+}
+
+LEC_add_open_door_idea = {
+	if = {
+		limit = { tag = GER }
+		add_ideas = LEC_GER_open_door
+	}
+	else_if = {
+		limit = { is_american_tag = yes }
+		add_ideas = LEC_USA_open_door
+	}
+	else_if = {
+		limit = {
+			LEC = { has_completed_focus = LEC_free_trade_in_china }
+			NOT = { has_idea = LEC_better_open_door }
+		}
+		hidden_effect = { remove_ideas = LEC_generic_open_door }
+		add_ideas = LEC_better_open_door
+	}
+	else_if = {
+		limit = {
+			NOT = { has_idea = LEC_generic_open_door }
+		}
+		add_ideas = LEC_generic_open_door
+	}
+}
+
+LEC_add_to_legation_council_observer = {
+	if = {
+		limit = { LEC_is_legation_council_member = no }
+		set_country_flag = LEC_council_member
+		add_to_array = { global.LEC_council_members = THIS }
+		if = {
+			limit = { NOT = { is_ally_with = LEC } }
+			diplomatic_relation = {
+				country = LEC
+				relation = non_aggression_pact
+			}
+			if = {
+				limit = { is_chinese_tag = no }
+				LEC = { give_military_access = PREV }
+			}
+		}
+	}
+}
+
+LEC_add_to_legation_council = {
+	if = {
+		limit = { LEC_has_legation_council_vote = no }
+		LEC_add_to_legation_council_observer = yes
+		set_country_flag = { flag = LEC_council_member value = 2 }
+		add_to_array = { global.LEC_voters = THIS }
+		if = {
+			limit = { NOT = { is_ally_with = LEC } }
+			give_guarantee = LEC
+		}
+		if = {
+			limit = { date > 1936.1.1 }
+			LEC_add_open_door_idea = yes
+		}
+	}
+}
+
+LEC_remove_from_legation_council = {
+	if = {
+		limit = {
+			LEC_is_legation_council_member = yes
+			NOT = { has_subject = LEC } #LEC's overlord is a permanent member
+			NOT = { is_in_faction_with = LEC } #LEC's faction leader is a permanent member
+		}
+		if = {
+			limit = { LEC_has_legation_council_vote = yes }
+			remove_from_array = { global.LEC_voters = THIS }
+		}
+		remove_from_array = { global.LEC_council_members = THIS }
+		clr_country_flag = LEC_council_member
+		if = {
+			limit = { has_idea = LEC_generic_open_door }
+			remove_ideas = LEC_generic_open_door
+		}
+		else_if = {
+			limit = { has_idea = LEC_better_open_door }
+			remove_ideas = LEC_better_open_door
+		}
+		else_if = {
+			limit = { has_idea = LEC_USA_open_door }
+			remove_ideas = LEC_USA_open_door
+		}
+		else_if = {
+			limit = { has_idea = LEC_GER_open_door }
+			remove_ideas = LEC_GER_open_door
+		}
+		if = {
+			limit = { has_guaranteed = LEC }
+			diplomatic_relation = {
+				country = LEC
+				relation = guarantee
+				active = no
+			}
+		}
+		if = {
+			limit = { has_non_aggression_pact_with = LEC }
+			diplomatic_relation = {
+				country = LEC
+				relation = non_aggression_pact
+				active = no
+			}
+		}
+		if = {
+			limit = { has_military_access_to = LEC }
+			diplomatic_relation = {
+				country = LEC
+				relation = military_access
+				active = no
+			}
+		}
+		if = {
+			limit = { gives_military_access_to = LEC }
+			LEC = {
+				diplomatic_relation = {
+					country = PREV
+					relation = military_access
+					active = no
+				}
+			}
+		}
+	}
+	hidden_effect = {
+		if = {
+			limit = { check_variable = { global.LEC_voters^num = 1 } }
+			LEC = { country_event = { id = legation_cities_events.90 days = 2 random_days = 3 } }
+		}
+		else_if = {
+			limit = { check_variable = { global.LEC_voters^num = 0 } }
+			LEC = { country_event = { id = legation_cities_events.108 days = 2 random_days = 3 } }
+		}
+	}
+}
+
+LEC_is_dismantled = {
+	if = {
+		limit = { owns_state = 747 }
+		if = {
+			limit = {
+				var:1066.controller = { is_chinese_tag = yes }
+			}
+			var:1066.controller = { country_event = legation_cities_events.62 }
+		}
+		else = {
+			var:1066.owner = { country_event = legation_cities_events.62 }
+		}
+	}
+	if = {
+		limit = { owns_state = 746 }
+		if = {
+			limit = {
+				var:1067.controller = { is_chinese_tag = yes }
+			}
+			var:1067.controller = { country_event = legation_cities_events.64 }
+		}
+		else = {
+			var:1067.owner = { country_event = legation_cities_events.64 }
+		}
+	}
+	if = {
+		limit = { owns_state = 801 }
+		if = {
+			limit = {
+				var:1012.controller = { is_chinese_tag = yes }
+			}
+			var:1012.controller = { country_event = legation_cities_events.66 }
+		}
+		else = {
+			var:1012.owner = { country_event = legation_cities_events.66 }
+		}
+	}
+	if = {
+		limit = { owns_state = 609 }
+		if = {
+			limit = {
+				JAP = {
+					is_subject = no
+					var:525.controller = { is_ally_with = JAP }
+					var:527.controller = { is_ally_with = JAP }
+				}
+			}
+			JAP = { country_event = legation_cities_japanese_events.25 }
+		}
+		else_if = {
+			limit = {
+				var:608.controller = { is_chinese_tag = yes }
+			}
+			var:608.controller = { country_event = legation_cities_events.68 }
+		}
+		else = {
+			var:608.owner = { country_event = legation_cities_events.68 }
+		}
+	}
+	if = {
+		limit = { owns_state = 326 }
+		if = {
+			limit = {
+				AST = {
+					tag = event_target:LEC_has_british_vote
+					is_in_faction_with = ENT
+					has_war = no
+				}
+			}
+			AST = { country_event = legation_cities_british_events.31 }
+		}
+		else_if = {
+			limit = {
+				var:593.controller = { is_chinese_tag = yes }
+			}
+			var:593.controller = { country_event = legation_cities_events.70 }
+		}
+		else = {
+			var:593.owner = { country_event = legation_cities_events.70 }
+		}
+	}
+	if = {
+		limit = { owns_state = 729 }
+		if = {
+			limit = {
+				var:593.controller = { is_chinese_tag = yes }
+			}
+			var:593.controller = { country_event = legation_cities_events.98 }
+		}
+		else = {
+			var:593.owner = { country_event = legation_cities_events.98 }
+		}
+	}
+}
+
+LEC_puppet_setup = {
+	hidden_effect = {
+		if = {
+			limit = { tag = GER }
+			LEC = {
+				set_politics = {
+					ruling_party = paternal_autocrat
+				}
+				set_popularities = {
+					totalist = 0
+					radical_socialist = 0
+					syndicalist = 0
+					social_democrat = 2
+					social_liberal = 10
+					market_liberal = 8
+					social_conservative = 3
+					authoritarian_democrat = 12
+					paternal_autocrat = 63
+					national_populist = 2
+				}
+			}
+		}
+		else_if = {
+			limit = { tag = JAP }
+			LEC = {
+				set_politics = {
+					ruling_party = national_populist
+				}
+				set_popularities = {
+					totalist = 0
+					radical_socialist = 0
+					syndicalist = 0
+					social_democrat = 2
+					social_liberal = 10
+					market_liberal = 8
+					social_conservative = 3
+					authoritarian_democrat = 12
+					paternal_autocrat = 3
+					national_populist = 62
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				is_in_faction_with = ENT
+				is_american_tag = no
+			}
+			LEC = {
+				set_politics = {
+					ruling_party = social_conservative
+				}
+				set_popularities = {
+					totalist = 0
+					radical_socialist = 0
+					syndicalist = 0
+					social_democrat = 2
+					social_liberal = 10
+					market_liberal = 8
+					social_conservative = 63
+					authoritarian_democrat = 12
+					paternal_autocrat = 3
+					national_populist = 2
+				}
+			}
+		}
+		else = {
+			LEC = {
+				set_politics = {
+					ruling_party = market_liberal
+				}
+				set_popularities = {
+					totalist = 0
+					radical_socialist = 0
+					syndicalist = 0
+					social_democrat = 2
+					social_liberal = 23
+					market_liberal = 38
+					social_conservative = 13
+					authoritarian_democrat = 12
+					paternal_autocrat = 10
+					national_populist = 2
+				}
+			}
+		}
+		country_event = legation_cities_events.125
+	}
+}

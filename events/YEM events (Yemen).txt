@@ -1,0 +1,1030 @@
+#################################
+# Yemen Events					#
+#################################
+# By Raptor_Jesus and Beelzebub #
+#################################
+
+add_namespace = yemen_events
+
+country_event = { #Black Monday Reaches Yemen
+	id = yemen_events.2
+	title = yemen_events.2.t
+	desc = yemen_events.2.d
+	picture = GFX_report_event_NOR_black_monday_2
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = YEM_black_monday }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.2 option yemen_events.2.a"
+		name = yemen_events.2.a
+		add_stability = -0.05
+		effect_tooltip = { add_ideas = YEM_black_monday }
+		hidden_effect = {
+			country_event = { id = yemen_events.37 days = 13 }
+		}
+	}
+}
+
+country_event = { #Rebel Issue event1
+	id = yemen_events.3
+	title = yemen_events.3.t
+	desc = yemen_events.3.d
+	picture = GFX_report_event_generic_diplomacy3
+	is_triggered_only = yes
+
+	option = { #purge em
+		log = "[GetLogInfo]: event yemen_events.3 option yemen_events.3.a"
+		name = yemen_events.3.a
+		add_stability = .05
+		set_country_flag = { flag = Purges_yes value = 0 }
+		hidden_effect = {
+			country_event = { id = yemen_events.4 days = 30 }
+		}
+	}
+}
+
+country_event = { #Rebels of Asir
+	id = yemen_events.4
+	title = yemen_events.4.t
+	desc = yemen_events.4.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = yemen_events.5 days = 30 }
+		}
+	}
+
+	option = { #"I pray God I do not die before I colour my sword here with the blood of these modernists."
+		log = "[GetLogInfo]: event yemen_events.4 option yemen_events.4.a"
+		name = yemen_events.4.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0.8
+				has_country_flag = YEM_refugees
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = YEM_path option = YEM_PATH_SOCCON }
+					has_game_rule = { rule = YEM_path option = YEM_PATH_SOCLIB }
+				}
+			}
+		}
+		custom_effect_tooltip = YEM_authoritarian_tooltip
+		add_war_support = -0.03
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+		modify_country_flag = {
+			flag = Purges_yes
+			value = 2
+		}
+	}
+
+	option = { #we aren't memri
+		log = "[GetLogInfo]: event yemen_events.4 option yemen_events.4.b"
+		name = yemen_events.4.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = YEM_path option = YEM_PATH_PATAUT }
+			}
+		}
+		custom_effect_tooltip = YEM_democracy_tooltip
+		add_stability = -0.03
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.01
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.01
+		}
+	}
+}
+
+country_event = { #Rebels of Aden
+	id = yemen_events.5
+	title = yemen_events.5.t
+	desc = yemen_events.5.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = yemen_events.6 days = 30 }
+		}
+	}
+
+	option = { #"I pray God I do not die before I colour my sword here with the blood of these modernists."
+		log = "[GetLogInfo]: event yemen_events.5 option yemen_events.5.a"
+		name = yemen_events.5.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0.8
+				has_country_flag = YEM_refugees
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = YEM_path option = YEM_PATH_SOCCON }
+					has_game_rule = { rule = YEM_path option = YEM_PATH_SOCLIB }
+				}
+			}
+		}
+		custom_effect_tooltip = YEM_authoritarian_tooltip
+		modify_country_flag = {
+			flag = Purges_yes
+			value = 2
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.05
+		}
+		add_war_support = -0.05
+	}
+
+	option = { #we aren't memri
+		log = "[GetLogInfo]: event yemen_events.5 option yemen_events.5.b"
+		name = yemen_events.5.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = YEM_path option = YEM_PATH_PATAUT }
+			}
+		}
+		custom_effect_tooltip = YEM_democracy_tooltip
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+	}
+}
+
+country_event = { #Ending Anarchy
+	id = yemen_events.6
+	title = yemen_events.6.t
+	desc = yemen_events.6.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = { #end of purges
+		log = "[GetLogInfo]: event yemen_events.6 option yemen_events.6.a"
+		name = yemen_events.6.a
+		add_stability = 0.1
+		hidden_effect = {
+			country_event = { id = yemen_events.7 days = 8 }
+		}
+	}
+}
+
+country_event = { #Purge results
+	id = yemen_events.7
+	is_triggered_only = yes
+	hidden = yes
+
+	immediate = {
+		if = {
+			limit = {
+				has_country_flag = {
+					flag = Purges_yes
+					value = 0
+				}
+			}
+			country_event = yemen_events.8
+		}
+		else_if = {
+			limit = {
+				has_country_flag = {
+					flag = Purges_yes
+					value = 2
+				}
+			}
+			country_event = yemen_events.9
+		}
+		else = {
+			country_event = yemen_events.10
+		}
+	}
+}
+
+country_event = { #Niceboi
+	id = yemen_events.8
+	title = yemen_events.8.t
+	desc = yemen_events.8.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.8 option yemen_events.8.a"
+		name = yemen_events.8.a
+		add_stability = 0.1
+		set_country_flag = { flag = woke_rebels value = 4 }
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.04
+		}
+	}
+}
+
+country_event = { #half the job
+	id = yemen_events.9
+	title = yemen_events.9.t
+	desc = yemen_events.9.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.9 option yemen_events.9.a"
+		name = yemen_events.9.a
+		set_country_flag = { flag = woke_rebels value = 2 }
+		add_stability = 0.025
+		add_timed_idea = {
+			idea = YEM_Purges
+			days = 25
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.01
+		}
+	}
+}
+
+country_event = { #full purge
+	id = yemen_events.10
+	title = yemen_events.10.t
+	desc = yemen_events.10.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.10 option yemen_events.10.a"
+		name = yemen_events.10.a
+		set_country_flag = { flag = complete_purge value = 4 }
+		add_stability = -0.1
+		add_timed_idea = {
+			idea = YEM_Purges
+			days = 75
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = -0.05
+		}
+	}
+}
+
+country_event = { #Beggining of Rebel Troubles
+	id = yemen_events.12
+	is_triggered_only = yes
+	hidden = yes
+
+	immediate = {
+		if = {
+			limit = {
+				has_country_flag = {
+					flag = woke_rebels
+					value > 3
+				}
+			}
+			country_event = yemen_events.16
+		}
+		if = {
+			limit = {
+				has_country_flag = {
+					flag = woke_rebels
+					value < 3
+				}
+			}
+			country_event = yemen_events.17
+		}
+		if = {
+			limit = {
+				has_country_flag = {
+					flag = complete_purge
+					value > 3
+				}
+			}
+			country_event = yemen_events.14
+		}
+	}
+}
+
+country_event = { #Purged everything, no revolution
+	id = yemen_events.14
+	title = yemen_events.14.t
+	desc = yemen_events.14.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.14 option yemen_events.14.a"
+		name = yemen_events.14.a
+		complete_national_focus = YEM_Rebels_Crushed
+	}
+}
+
+country_event = { #No purge result
+	id = yemen_events.16
+	title = yemen_events.16.t
+	desc = yemen_events.16.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = { #embrace the revolution
+		log = "[GetLogInfo]: event yemen_events.16 option yemen_events.16.a"
+		name = yemen_events.16.a
+		complete_national_focus = YEM_Remove_Imam
+		set_politics = {
+			ruling_party = social_conservative
+			last_election = "1888.6.15"
+			election_frequency = 48
+			elections_allowed = no
+		}
+
+		set_popularities = {
+			totalist = 0
+			radical_socialist = 0
+			syndicalist = 0
+			social_democrat = 0
+			social_liberal = 34
+			market_liberal = 7
+			social_conservative = 38
+			authoritarian_democrat = 13
+			paternal_autocrat = 8
+			national_populist = 0
+		}
+		ai_chance = { base = 40 }
+	}
+
+	option = { #RIP Revolution
+		log = "[GetLogInfo]: event yemen_events.16 option yemen_events.16.b"
+		name = yemen_events.16.b
+		add_stability = -0.20
+		country_event = { id = yemen_events.18 days = 5 }
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = YEM_path option = YEM_PATH_SOCCON }
+					has_game_rule = { rule = YEM_path option = YEM_PATH_SOCLIB }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Moderate Purge result, less likely to fall
+	id = yemen_events.17
+	title = yemen_events.17.t
+	desc = yemen_events.17.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = { #You're a Republic
+		log = "[GetLogInfo]: event yemen_events.17 option yemen_events.17.a"
+		name = yemen_events.17.a
+		complete_national_focus = YEM_Remove_Imam
+		set_politics = {
+			ruling_party = social_conservative
+			last_election = "1888.6.15"
+			election_frequency = 48
+			elections_allowed = no
+		}
+
+		set_popularities = {
+			totalist = 0
+			radical_socialist = 0
+			syndicalist = 0
+			social_democrat = 0
+			social_liberal = 34
+			market_liberal = 7
+			social_conservative = 38
+			authoritarian_democrat = 13
+			paternal_autocrat = 8
+			national_populist = 0
+		}
+
+		ai_chance = { base = 30 }
+	}
+
+	option = { #RIP Revolution
+		log = "[GetLogInfo]: event yemen_events.17 option yemen_events.17.b"
+		name = yemen_events.17.b
+		add_stability = -.15
+		country_event = { id = yemen_events.19 days = 5 }
+		ai_chance = { base = 70 }
+	}
+}
+
+country_event = { #No purge failed revolution
+	id = yemen_events.18
+	title = yemen_events.18.t
+	desc = yemen_events.18.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.18 option yemen_events.18.a"
+		name = yemen_events.18.a #add some other options to expand the chain
+		add_stability = -.05
+		add_timed_idea = {
+			idea = YEM_Purges
+			days = 100
+		}
+		complete_national_focus = YEM_Rebels_Crushed
+	}
+}
+
+country_event = { #Moderate purge failed revolution
+	id = yemen_events.19
+	title = yemen_events.19.t
+	desc = yemen_events.19.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.19 option yemen_events.19.a"
+		name = yemen_events.19.a #add some other options to expand the chain
+		add_stability = -.05
+		add_timed_idea = {
+			idea = YEM_Purges
+			days = 50
+		}
+		complete_national_focus = YEM_Rebels_Crushed
+	}
+}
+
+country_event = { #Elections
+	id = yemen_events.20
+	title = yemen_events.20.t
+	desc = yemen_events.20.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #SocCons
+		log = "[GetLogInfo]: event yemen_events.20 option yemen_events.20.a"
+		name = yemen_events.20.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = YEM_path option = YEM_PATH_SOCLIB }
+			}
+		}
+		complete_national_focus = YEM_Soc_Cons
+		add_political_power = 35
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+	}
+
+	option = { #SocLibs
+		log = "[GetLogInfo]: event yemen_events.20 option yemen_events.20.b"
+		name = yemen_events.20.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = YEM_path option = YEM_PATH_SOCCON }
+			}
+		}
+		complete_national_focus = YEM_Soc_Libs
+		add_political_power = -60
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_liberal
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { #White peace with Oman
+	id = yemen_events.29
+	title = yemen_events.29.t
+	desc = yemen_events.29.d
+	trigger = {
+		tag = YEM
+		is_valid_peace_target = yes
+		has_war_with = OMA
+		OMA = {
+			is_valid_peace_target = yes
+			owns_state = 1024 #Dhofar
+		}
+		controls_state = 1024
+		OR = {
+			controls_state = 294 #Muscat
+			controls_state = 859 #Oman
+		}
+	}
+	fire_only_once = yes
+	mean_time_to_happen = {
+		days = 6
+	}
+
+	option = { #Peace
+		log = "[GetLogInfo]: event yemen_events.29 option yemen_events.29.a"
+		name = yemen_events.29.a
+		ai_chance = { base = 100 }
+		transfer_state = 1024
+		OMA = { white_peace_with_ROOT = yes }
+		hidden_effect = {
+			country_event = { id = yemen_events.30 days = 127 }
+		}
+	}
+	option = { #No peace
+		log = "[GetLogInfo]: event yemen_events.29 option yemen_events.29.b"
+		name = yemen_events.29.b
+		ai_chance = { base = 0 }
+		add_war_support = -0.1
+		hidden_effect = {
+			country_event = { id = yemen_events.31 days = 40 random_days = 40 }
+		}
+	}
+}
+
+country_event = { #Coring Dhofar, peace variant
+	id = yemen_events.30
+	title = yemen_events.30.t
+	desc = yemen_events.30.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.30 option yemen_events.30.a"
+		name = yemen_events.30.a
+		1024 = {
+			add_core_of = YEM
+		}
+	}
+}
+
+country_event = { #Coring Dhofar, war variant
+	id = yemen_events.31
+	title = yemen_events.30.t
+	desc = yemen_events.30.d
+	trigger = {
+		owns_state = 1024
+	}
+	is_triggered_only = yes
+
+	option = { #Peace
+		log = "[GetLogInfo]: event yemen_events.31 option yemen_events.30.a"
+		name = yemen_events.30.a
+		1024 = {
+			add_core_of = YEM
+		}
+	}
+}
+
+country_event = { #Imam being hanged
+	id = yemen_events.32
+	title = yemen_events.32.t
+	desc = yemen_events.32.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.32 option yemen_events.32.a"
+		name = yemen_events.32.a
+		add_political_power = 50
+		promote_character = {
+			character = YEM_ahmad_bin_yahya
+			ideology = authoritarian_democrat_subtype
+		}
+		promote_character = {
+			character = YEM_ahmad_bin_yahya
+			ideology = paternal_autocrat_subtype
+		}
+		YEM_yahya_al_hamid = { kill_character = yes }
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.03
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.03
+		}
+	}
+}
+
+country_event = { #Killing Sauds
+	id = yemen_events.33
+	title = yemen_events.33.t
+	desc = yemen_events.33.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.33 option yemen_events.33.a"
+		name = yemen_events.33.a
+	}
+}
+
+country_event = { #Rashids in the house
+	id = yemen_events.34
+	title = yemen_events.34.t
+	desc = yemen_events.34.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.34 option yemen_events.34.a"
+		name = yemen_events.34.a
+	}
+}
+
+country_event = { #Killing suspicous rebels
+	id = yemen_events.35
+	title = yemen_events.35.t
+	desc = yemen_events.35.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.35 option yemen_events.35.a"
+		name = yemen_events.35.a
+		add_stability = .03
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = -0.05
+		}
+	}
+}
+
+country_event = { #refugees
+	id = yemen_events.36
+	title = yemen_events.36.t
+	desc = yemen_events.36.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.36 option yemen_events.36.a"
+		name = yemen_events.36.a
+		add_stability = -0.1
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.01
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+		set_country_flag = YEM_refugees
+	}
+}
+
+country_event = { #Black Monday makes Republic popular
+	id = yemen_events.37
+	title = yemen_events.37.t
+	desc = yemen_events.37.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.37 option yemen_events.37.a"
+		name = yemen_events.37.a
+		add_stability = -.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.03
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+	}
+}
+
+country_event = { #Germany, Yemen wants a ship
+	id = yemen_events.38
+	title = yemen_events.38.t
+	desc = yemen_events.38.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.38 option yemen_events.38.a"
+		name = yemen_events.38.a
+		ai_chance = { base = 95 }
+		YEM = {
+			country_event = { id = yemen_events.39 days = 1 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.38 option yemen_events.38.b"
+		name = yemen_events.38.b
+		ai_chance = { base = 5 }
+		YEM = {
+			country_event = { id = yemen_events.40 days = 1 }
+		}
+	}
+}
+
+country_event = { #Germany gives ship
+	id = yemen_events.39
+	title = yemen_events.39.t
+	desc = yemen_events.39.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.39 option yemen_events.39.a"
+		name = yemen_events.39.a
+		set_technology = {
+			early_ship_hull_cruiser = 1
+			basic_torpedo = 1
+			basic_battery = 1
+
+			popup = no
+		}
+		hidden_effect = {
+			set_technology = { coastal_defense_ships = 1 popup = no }
+		}
+		create_equipment_variant = {
+			name = "Yahya Sanaa Aden Arwa Class"
+			type = ship_hull_cruiser_coastal_defense_ship
+			parent_version = 0
+			allow_without_tech = yes
+			modules = {
+				fixed_ship_battery_slot = ship_light_medium_battery_1
+				fixed_ship_anti_air_slot = empty
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = cruiser_ship_engine_1
+				fixed_ship_armor_slot = ship_armor_cruiser_2
+				fixed_ship_secondaries_slot = empty
+				mid_1_custom_slot = ship_airplane_launcher_1
+				mid_2_custom_slot = empty
+				rear_1_custom_slot = ship_torpedo_1
+			}
+		}
+		create_ship = { type = ship_hull_cruiser_coastal_defense_ship equipment_variant = "Yahya Sanaa Aden Arwa Class" }
+	}
+}
+
+country_event = { #Germany no gives ship
+	id = yemen_events.40
+	title = yemen_events.40.t
+	desc = yemen_events.40.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.40 option yemen_events.40.a"
+		name = yemen_events.40.a
+		add_stability = -0.02
+	}
+}
+
+country_event = { #Generic Elections
+	id = yemen_events.41
+	title = yemen_events.41.t
+	desc = yemen_events.41.d
+	picture = GFX_report_event_generic_diplomacy2
+	is_triggered_only = yes
+	trigger = {
+		OR = {
+			has_government = social_conservative
+			has_government = social_liberal
+		}
+	}
+
+	option = { #SocCons
+		log = "[GetLogInfo]: event yemen_events.41 option yemen_events.41.a"
+		name = yemen_events.41.a
+		ai_chance = { base = 70 }
+		add_political_power = 35
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+	}
+
+	option = { #SocLibs
+		log = "[GetLogInfo]: event yemen_events.41 option yemen_events.41.b"
+		name = yemen_events.41.b
+		ai_chance = { base = 30 }
+		add_political_power = -60
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+	}
+}
+
+country_event = { #Saudi peace event
+	id = yemen_events.42
+	title = yemen_events.42.t
+	desc = yemen_events.42.d
+	trigger = {
+		tag = YEM
+		has_war_with = SAU
+		is_valid_peace_target = yes
+		SAU = { is_valid_peace_target = yes }
+		OR = {
+			AND = {
+				owns_state = 981 #Najran
+				SAU = { controls_state = 981 } #Najran
+			}
+			AND = {
+				owns_state = 982 #Asir
+				SAU = { controls_state = 982 } #Asir
+			}
+		}
+	}
+
+	fire_only_once = yes
+
+	mean_time_to_happen = {
+		days = 5
+	}
+
+	option = { #Offer Najd peace
+		log = "[GetLogInfo]: event yemen_events.42 option yemen_events.42.a"
+		name = yemen_events.42.a
+		ai_chance = { base = 100 }
+		add_stability = -0.10
+		add_war_support = -0.05
+		SAU = {
+			country_event = { id = yemen_events.43 days = 1 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.42 option yemen_events.42.b"
+		name = yemen_events.42.b
+		ai_chance = { base = 0 }
+		add_stability = -0.15
+		add_war_support = -0.10
+	}
+}
+
+country_event = { #Najd gets peace offer
+	id = yemen_events.43
+	title = yemen_events.43.t
+	desc = yemen_events.43.d
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event yemen_events.43 option yemen_events.43.a"
+		name = yemen_events.43.a
+		ai_chance = { base = 1 }
+		FROM = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 679 #Mecca
+						state = 754 #Medina
+						state = 981 #Najran
+						state = 982 #Asir
+						is_claim_or_core_of_ROOT = yes
+					}
+				}
+				transfer_state_to = ROOT
+			}
+			white_peace_with_ROOT = yes
+			country_event = { id = yemen_events.44 days = 1 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.43 option yemen_events.43.b"
+		name = yemen_events.43.b
+		ai_chance = { base = 0 }
+		FROM = {
+			country_event = { id = yemen_events.45 days = 1 }
+		}
+	}
+}
+
+country_event = { #Najd accepts peace offer
+	id = yemen_events.44
+	title = yemen_events.44.t
+	desc = yemen_events.44.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.44 option yemen_events.44.a"
+		name = yemen_events.44.a
+	}
+}
+
+country_event = { #Najd denies peace offer
+	id = yemen_events.45
+	title = yemen_events.45.t
+	desc = yemen_events.45.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.45 option yemen_events.45.a"
+		name = yemen_events.45.a
+	}
+}
+
+country_event = { #Imam Yahya Declares His Independence
+	id = yemen_events.46
+	title = yemen_events.46.t
+	desc = yemen_events.46.d
+
+	picture = GFX_report_event_JBS_Horses
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event yemen_events.46 option yemen_events.46.a"
+		name = yemen_events.46.a
+		YEM = {
+			declare_war_on = {
+				target = OTT
+				type = annex_everything
+			}
+		}
+		hidden_effect = {
+			every_state = {
+				limit = { is_core_of = YEM }
+				occupy_state = yes
+			}
+		}
+		if = {
+			limit = {
+				EGY = {
+					is_faction_leader = yes
+					has_war_with = OTT
+				}
+			}
+			EGY = {
+				add_to_faction = YEM
+			}
+		}
+	}
+}
+

@@ -1,0 +1,214 @@
+on_actions = {
+	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = { tag = CHI }
+				if = {
+					limit = {
+						FROM.FROM = { state = 608 } #Beijing
+						CHI_is_phase_three_trigger = no
+					}
+					country_event = { id = CHI.lategame.000 days = 7 } #Liberation of Beijing
+				}
+				if = {
+					limit = {
+						FROM.FROM = { state = 803 } #Wenzhou
+					}
+					country_event = { id = CHI.earlygame.201 days = 10 } #Incidents in Wenzhou
+				}
+				else_if = {
+					limit = {
+						FROM.FROM = { state = 1075 } #Nantong
+					}
+					country_event = { id = CHI.earlygame.202 days = 10 } #Tragedy at Natong
+				}
+				else_if = {
+					limit = {
+						FROM.FROM = { state = 596 } #Hangzhou
+					}
+					country_event = { id = CHI.earlygame.203 days = 10 } #Fujianers at Hangzhou
+				}
+				else_if = {
+					limit = {
+						FROM.FROM = { state = 613 } #Nanjing
+					}
+					country_event = { id = CHI.earlygame.204 days = 10 } #A New Day in Nanjing
+				}
+				if = {
+					limit = {
+						FROM.FROM = { has_state_flag = CHI_peoples_war_flag }
+					}
+					FROM.FROM = { CHI_activate_peoples_war_effect = yes }
+				}
+			}
+		}
+	}
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = { tag = CHI }
+				#Internal Chinese BOP Related Events
+				if = {
+					limit = {
+						OR = {
+							CHI_is_phase_two_trigger = yes
+							CHI_is_phase_three_trigger = yes
+						}
+					}
+					#Clash for Canton - only if Chen Mingshu was not previously leader of GXC
+					if = {
+						limit = {
+							owns_state = 592 #Canton (Guangzhou)
+							NOT = { country_exists = GXC }
+							NOT = { GXC = { has_country_leader = { character = GXC_chen_mingshu } } }
+						}
+						country_event = { id = CHI.midgame.034 days = 21 }
+					}
+					#Reconciling the Gu Brothers
+					if = {
+						limit = {
+							owns_state = 1051 #Guiyang (capital of Guizhou)
+							NOT = { country_exists = YUN }
+						}
+						country_event = { id = CHI.midgame.036 days = 14 }
+					}
+				}
+				#Annexation of Frontiers Related Events
+				if = {
+					limit = {
+						owns_state = 330 #Mongolia
+						NOT = { country_exists = MON }
+					}
+					country_event = { id = CHI.lategame.067 days = 5 } #Developing our Rule in Mongolia
+				}
+				if = {
+					limit = {
+						owns_state = 322 #Lhasa
+						NOT = { country_exists = TIB }
+					}
+					country_event = { id = CHI.lategame.068 days = 10 } #The Situation in Tibet
+				}
+				if = {
+					limit = {
+						owns_state = 617 #Dihua
+						NOT = { country_exists = SIK }
+						NOT = { country_exists = ETS }
+						NOT = { country_exists = KUM }
+					}
+					country_event = { id = CHI.lategame.069 days = 15 } #Intrigues in Xinjiang
+				}
+				if = {
+					limit = {
+						owns_state = 524 #Taiwan
+						NOT = { country_exists = TAI }
+					}
+					country_event = { id = CHI.lategame.070 days = 20 } #The Taiwan Dilemma
+				}
+			}
+		}
+	}
+	#FROM - Country (owner)
+	#ROOT - leader
+	#FROMFROM - original owner for exiled leaders
+	on_unit_leader_level_up = {
+		effect = {
+			if = {
+				limit = {
+					FROM = { tag = CHI }
+					ROOT = { has_trait = war_hero }
+				}
+				unit_leader_event = CHI.midgame.213 #Champion Event
+			}
+			if = {
+				limit = {
+					FROM = {
+						tag = CHI
+						CHI_Hu_victory_trigger = yes
+					}
+				}
+				unit_leader_event = CHI.endgame.634 #Lin Biao's Clique
+			}
+		}
+	}
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					NOT = { CHI = { has_completed_focus = CHI_war_of_resistance } }
+					OR = {
+						AND = {
+							tag = CHI
+							FROM = { is_major = yes }
+						}
+						AND = {
+							is_major = yes
+							FROM = { tag = CHI }
+						}
+					}
+				}
+				CHI = { complete_national_focus = CHI_war_of_resistance } #if CHI at war with major, fire the focus
+			}
+		}
+	}
+
+	on_annex = {
+		effect = {
+			FROM = {
+				# Dismantle the Minsheng econ sphere if its leader gets annexed
+				if = {
+					limit = { has_dynamic_modifier = { modifier = KR_minsheng_partnership_leader_dynamic_mod } }
+
+					remove_dynamic_modifier = { modifier = KR_minsheng_partnership_leader_dynamic_mod }
+					every_possible_country = {
+						limit = { has_country_flag = KMT_minsheng_partnership_flag }
+						clr_country_flag = CHI_was_invited_into_partnership
+						KMT_remove_from_economic_sphere = yes
+					}
+					remove_from_tech_sharing_group = minsheng_partnership_research
+					dismantle_economic_sphere = yes
+
+					clear_variable = KMT_minsheng_number_of_members_var
+					clear_variable = KMT_minsheng_local_resources_var
+					clear_variable = KMT_minsheng_construction_var
+					clear_variable = KMT_minsheng_consumer_goods_var
+					clear_variable = KMT_minsheng_trade_opinion_var
+					clear_variable = KMT_minsheng_research_speed_var
+					clear_variable = global.minsheng_partnership_research_var
+				}
+				# Remove member from Minsheng econ sphere
+				else = {
+					KMT_remove_from_economic_sphere = yes
+				}
+			}
+		}
+	}
+
+	on_declare_war = {
+		effect = {
+			if = {
+				limit = {
+					tag = CHI
+					NOT = { has_country_flag = CHI_second_northern_expedition_started_flag }
+					FROM = { owns_state = 608 } #Beijing
+				}
+				set_country_flag = CHI_second_northern_expedition_started_flag #Can't do fire only once since its a global event
+				hidden_effect = { news_event = { id = CHI.midgame.818 days = 1 } } #The Second Northern Expedition
+			}
+			# Remove tag from Minsheng econ sphere
+			if = {
+				limit = {
+					FROM = { has_dynamic_modifier = { modifier = KR_minsheng_partnership_leader_dynamic_mod } }
+					has_country_flag = KMT_minsheng_partnership_flag
+				}
+				KMT_remove_from_economic_sphere = yes
+			}
+			if = {
+				limit = {
+					has_dynamic_modifier = { modifier = KR_minsheng_partnership_leader_dynamic_mod }
+					FROM = { has_country_flag = KMT_minsheng_partnership_flag }
+				}
+				FROM = { KMT_remove_from_economic_sphere = yes }
+			}
+		}
+	}
+}

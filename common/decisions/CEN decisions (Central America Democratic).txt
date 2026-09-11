@@ -1,0 +1,709 @@
+########################################
+##Democratic Central America Decisions##
+##			By Drozdovite			  ##
+########################################
+
+CEN_foreign_policy_decisions = { # Only used to create the faction, all other decisions are handled from COS decisions file
+	CENdem_form_faction = {
+		icon = GFX_decision_generic_agreement
+		allowed = { always = no } # Activated manually
+
+		available = {
+			NOT = { has_country_flag = CEN_ongoing_diplomatic_efforts }
+			has_war = no
+		}
+
+		visible = {
+			is_subject = no
+			is_faction_leader = no
+			if = {
+				limit = { country_exists = COS }
+				COS = { NOT = { has_country_flag = COS_legion_faction } }
+			}
+		}
+
+		cost = 25
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10000
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_ENT }
+			}
+			modifier = {
+				factor = 0
+				is_in_faction = yes
+				has_game_rule = { rule = CEN_dem_forpol option = DEFAULT }
+			}
+			modifier = {
+				factor = 0
+				USA_has_boosted_loas_game_rule = yes
+				has_game_rule = { rule = CEN_dem_forpol option = DEFAULT }
+			}
+			modifier = {
+				factor = 0
+				COS = { is_ai = no }
+				date < 1940.7.1
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CENdem_form_faction"
+			set_country_flag = COS_legion_faction
+			if = {
+				limit = { is_in_faction = yes }
+				separate_peace_all_wars = yes
+				leave_faction = yes
+			}
+			create_faction_from_template = { template = faction_template_defender_of_democracy name = faction_democratic_alliance_of_the_caribbean }
+			set_faction_manifest = faction_manifest_bastion_of_american_democracy
+			hidden_effect = { set_faction_rule = joining_rule_americas_only }
+			if = {
+				limit = { has_completed_focus = CENdem_pounce_at_the_right_opportunity }
+				if = {
+					limit = { NOT = { owns_state = 316 } }
+					remove_state_claim = 316 #Costa Rica
+				}
+				if = {
+					limit = { NOT = { owns_state = 304 } }
+					remove_state_claim = 304 #Panama
+					remove_state_claim = 685 #Panama Canal
+				}
+			}
+			if = {
+				limit = { owns_state = 316 }
+				add_ideas = CENdem_beacon_democracy
+			}
+			hidden_effect = {
+				country_event = central_america_democratic_events.243
+				CEN_remove_faction_decisions = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+CENdem_expansionism = {
+	CENdem_attack_country = {
+		name = attack_country
+		icon = generic_nationalism
+
+		available = {
+			NOT = { has_country_flag = CEN_ongoing_diplomatic_efforts }
+			is_neighbor_of = FROM
+			minor_faction_member_cannot_start_inter_faction_war_before_wk = yes
+			if = {
+				limit = {
+					FROM = {
+						OR = {
+							is_guaranteed_by = ENT
+							is_in_faction_with = ENT
+							is_guaranteed_by = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+				second_weltkrieg_has_begun = yes
+			}
+			if = {
+				limit = { is_in_faction_with = ENT }
+				custom_override_tooltip = {
+					tooltip = CEN_inter_faction_war_warning
+					FROM = {
+						OR = {
+							is_in_faction_with = GER
+							is_guaranteed_by = GER
+						}
+					}
+					NOT = { GER = { has_war_with = ENT } }
+				}
+				NOT = { FROM = { is_guaranteed_by = ENT } }
+			}
+		}
+		cancel_trigger = {
+			is_in_faction_with = ENT
+			FROM = {
+				OR = {
+					is_in_faction_with = GER
+					is_guaranteed_by = GER
+					is_guaranteed_by = ENT
+				}
+			}
+			GER = { has_war_with = ENT }
+		}
+
+		visible = {
+			is_faction_leader = no
+			is_subject = no
+			can_declare_war_on = FROM
+		}
+
+		targets = { COS PAN }
+		target_root_trigger = {
+			is_faction_leader = no
+			is_subject = no
+			has_completed_focus = CENdem_pounce_at_the_right_opportunity
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 100
+		days_remove = 50
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					is_in_faction_but_not_leader = yes
+					FROM = { dont_start_major_faction_wars = yes }
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_ENT }
+				ENT = {
+					exists = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { tag = PAN }
+				OR = {
+					AND = {
+						NOT = { is_neighbor_of = FROM }
+						has_navy_size = { size < 1 }
+					}
+					FROM = { naval_strength_comparison = { other = ROOT ratio > 1 } }
+					ENT = {
+						OR = {
+							is_in_faction_with = FROM
+							is_guaranteed_by = FROM
+						}
+						surrender_progress < 0.5
+					}
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CENdem_attack_country"
+			add_political_power = 100
+			clear_decision_attack_AI = yes
+			clr_country_flag = CEN_ongoing_diplomatic_efforts
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CENdem_attack_country"
+			add_stability = -0.10
+			setup_decision_attack_AI = yes
+			FROM = { country_event = central_america_democratic_events.242 }	#warning event
+			set_country_flag = { flag = CEN_ongoing_diplomatic_efforts days = 50 value = 1 }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CENdem_attack_country"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CENdem_demand_belize = {
+		name = CEN_demand_belize
+		icon = GFX_decision_generic_nationalism
+		allowed = { tag = CEN }
+
+		available = {
+			NOT = { has_country_flag = CEN_ongoing_diplomatic_efforts }
+			is_neighbor_of = FROM
+			FROM = { has_full_control_of_state = 311 } # Belize
+			if = {
+				limit = {
+					FROM = {
+						OR = {
+							has_guarantor = yes
+							is_subject = yes
+							is_in_faction = yes
+						}
+					}
+				}
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			is_valid_peace_target = yes
+			can_declare_war_on = FROM
+			NOT = { owns_state = 311 } # Belize
+		}
+
+		targets = { 311.OWNER }
+		target_root_trigger = {
+			is_valid_peace_target = yes
+			has_completed_focus = CENdem_pounce_at_the_right_opportunity
+			NOT = { owns_state = 311 } # Belize
+			311 = { is_claim_or_core_of_ROOT = yes }
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_state = 311 # Belize
+				if = {
+					limit = { is_in_faction = yes }
+					NOT = { faction_leader = { has_guaranteed = ROOT } }
+				}
+				if = {
+					limit = { is_in_faction_with = ENT }
+					NOT = { ROOT = { has_country_flag = CEN_negotiated_belize_claims } }
+				}
+			}
+		}
+
+		days_remove = 25
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = { base = 0 } # Player-only for the time being
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CENdem_demand_belize"
+			clear_decision_attack_AI = yes
+			clr_country_flag = CEN_ongoing_diplomatic_efforts
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CENdem_demand_belize"
+			setup_decision_attack_AI = yes
+			CEN_demand_belize_effect = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CENdem_demand_belize"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_claimed_state
+				generator = { 311 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CENdem_continue_integration_of_COS = {
+		icon = GFX_decision_generic_agreement
+
+		visible = {
+			COS = {
+				OR = {
+					has_idea = COS_CEN_ties
+					has_idea = COS_CEN_ties_2
+				}
+				has_capitulated = no
+				hidden_trigger = {
+					has_country_flag = COS_CEN_begun_integration
+				}
+			}
+		}
+
+		cost = 80
+		days_remove = 60
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				COS = { has_war = yes }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CENdem_continue_integration_of_COS"
+			COS = {
+				country_event = central_america_democratic_events.40
+				event_option_tooltip = central_america_democratic_events.40.a
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CENdem_continue_integration_of_PAN = {
+		icon = GFX_decision_generic_agreement
+
+		visible = {
+			PAN = {
+				OR = {
+					has_idea = COS_CEN_ties
+					has_idea = COS_CEN_ties_2
+				}
+				has_capitulated = no
+			}
+		}
+
+		cost = 80
+		days_remove = 60
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				PAN = { has_war = yes }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CENdem_continue_integration_of_PAN"
+			PAN = {
+				country_event = central_america_democratic_events.44
+				event_option_tooltip = central_america_democratic_events.44.a
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CENdem_land_reform_moderate = {
+	CENdem_moderate_land_reform_decision = {
+		icon = GFX_decision_generic_agriculture
+		allowed = { always = no }
+
+		available = {
+			owns_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		ai_will_do = { factor = 10 }
+
+		cost = 80
+		days_remove = 100
+		state_target = yes
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CENdem_moderate_land_reform_decision"
+			add_popularity = { ideology = social_democrat popularity = 0.02 }
+			CENdem_increase_moderate_land_reform_idea = yes
+			if = {
+				limit = { FROM = { state = 313 } }
+				if = {
+					limit = { FROM = { has_state_category = seven } }
+					FROM = {
+						add_extra_state_shared_building_slots = 1
+					}
+				}
+				else = {
+					FROM = {
+						increase_state_category_by_one_level = yes
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { state = 311 } }
+				if = {
+					limit = { FROM = { has_state_category = four } }
+					FROM = {
+						add_extra_state_shared_building_slots = 1
+					}
+				}
+				else = {
+					FROM = {
+						increase_state_category_by_one_level = yes
+					}
+				}
+				FROM = {
+					if = {
+						limit = { has_resistance = yes }
+						add_compliance = 5
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { FROM = { has_state_category = five } }
+					FROM = {
+						add_extra_state_shared_building_slots = 1
+					}
+				}
+				else = {
+					FROM = {
+						increase_state_category_by_one_level = yes
+					}
+				}
+				FROM = {
+					if = {
+						limit = { has_resistance = yes }
+						add_compliance = 5
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CENdem_land_reform_radical = {
+	CENdem_radical_land_reform_decision = {
+		name = CENdem_moderate_land_reform_decision
+		icon = GFX_decision_generic_agriculture
+		allowed = { always = no }
+
+		available = {
+			owns_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		ai_will_do = { factor = 10 }
+
+		cost = 120
+		days_remove = 180
+		state_target = yes
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CENdem_radical_land_reform_decision"
+			add_popularity = { ideology = social_democrat popularity = 0.01 }
+			add_popularity = { ideology = radical_socialist popularity = 0.01 }
+			CENdem_increase_radical_land_reform_idea = yes
+			if = {
+				limit = { FROM = { state = 313 } }
+				if = {
+					limit = { FROM = { has_state_category = seven } }
+					FROM = {
+						add_extra_state_shared_building_slots = 2
+					}
+				}
+				else_if = {
+					limit = { FROM = { has_state_category = six } }
+					FROM = {
+						increase_state_category_by_one_level = yes
+						add_extra_state_shared_building_slots = 1
+					}
+				}
+				else = {
+					FROM = {
+						increase_state_category_by_two_levels = yes
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { state = 311 } }
+				if = {
+					limit = { FROM = { has_state_category = four } }
+					FROM = {
+						add_extra_state_shared_building_slots = 2
+					}
+				}
+				else_if = {
+					limit = { FROM = { has_state_category = three } }
+					FROM = {
+						increase_state_category_by_one_level = yes
+						add_extra_state_shared_building_slots = 1
+					}
+				}
+				else = {
+					FROM = {
+						increase_state_category_by_two_levels = yes
+					}
+				}
+				FROM = {
+					if = {
+						limit = { has_resistance = yes }
+						add_compliance = 5
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { FROM = { has_state_category = six } }
+					FROM = {
+						add_extra_state_shared_building_slots = 2
+					}
+				}
+				else_if = {
+					limit = { FROM = { has_state_category = five } }
+					FROM = {
+						increase_state_category_by_one_level = yes
+						add_extra_state_shared_building_slots = 1
+					}
+				}
+				else = {
+					FROM = {
+						increase_state_category_by_two_levels = yes
+					}
+				}
+				FROM = {
+					if = {
+						limit = { has_resistance = yes }
+						add_compliance = 5
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CENdem_railway_decisions = {
+	CENdem_guatamala_san_salvador_railway = {
+		icon = GFX_decision_railroad
+		available = {
+			owns_state = 313
+			owns_state = 314
+		}
+
+		visible = {
+			owns_state = 313
+			owns_state = 314
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 40
+		days_remove = 60
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CENdem_guatamala_san_salvador_railway"
+			swap_ideas = {
+				remove_idea = CENdem_infrastructure_grants
+				add_idea = CENdem_infrastructure_grants2
+			}
+			build_railway = {
+				fallback = yes
+				path = { 10886 13701 13700 12823 }
+				level = 2
+				start_province = 10886
+				target_province = 12823
+			}
+			set_country_flag = CENdem_1_rail_completed
+		}
+		fixed_random_seed = no
+	}
+	CENdem_san_salvador_tegucigalpa_railway = {
+		icon = GFX_decision_railroad
+		available = {
+			owns_state = 314
+			owns_state = 312
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = CENdem_guatamala_san_salvador_railway }
+				has_country_flag = CENdem_1_rail_completed
+			}
+		}
+
+		visible = {
+			owns_state = 314
+			owns_state = 312
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 50
+		days_remove = 60
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CENdem_san_salvador_tegucigalpa_railway"
+			swap_ideas = {
+				remove_idea = CENdem_infrastructure_grants2
+				add_idea = CENdem_infrastructure_grants3
+			}
+			build_railway = {
+				fallback = yes
+				path = { 12823 13093 13697 13690 13207 }
+				level = 2
+				start_province = 12823
+				target_province = 13207
+			}
+			clr_country_flag = CENdem_1_rail_completed
+			set_country_flag = CENdem_2_rail_completed
+		}
+		fixed_random_seed = no
+	}
+	CENdem_tegucigalpa_managua_railway = {
+		icon = GFX_decision_railroad
+		available = {
+			owns_state = 312
+			owns_state = 317
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = CENdem_san_salvador_tegucigalpa_railway }
+				has_country_flag = CENdem_2_rail_completed
+			}
+		}
+
+		visible = {
+			owns_state = 312
+			owns_state = 317
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 60
+		days_remove = 60
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CENdem_tegucigalpa_managua_railway"
+			swap_ideas = {
+				remove_idea = CENdem_infrastructure_grants3
+				add_idea = CENdem_infrastructure_grants4
+			}
+			build_railway = {
+				fallback = yes
+				path = { 13207 13691 13685 12738 13437 }
+				level = 2
+				start_province = 13207
+				target_province = 13437
+			}
+			clr_country_flag = CENdem_2_rail_completed
+		}
+		fixed_random_seed = no
+	}
+	CENdem_guatamala_belize_railway = {
+		icon = GFX_decision_railroad
+		available = {
+			owns_state = 313
+			owns_state = 311
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = CENdem_guatamala_san_salvador_railway }
+				has_country_flag = CENdem_1_rail_completed
+			}
+		}
+
+		visible = {
+			owns_state = 313
+			owns_state = 311
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 50
+		days_remove = 60
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CENdem_guatamala_belize_railway"
+			build_railway = {
+				fallback = yes
+				path = { 13701 13085 13447 2077 }
+				level = 2
+				start_province = 13701
+				target_province = 2077
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+

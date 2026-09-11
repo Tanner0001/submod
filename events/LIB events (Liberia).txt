@@ -1,0 +1,1392 @@
+###########################
+# Liberia
+###########################
+# By Kraken
+###########################
+
+add_namespace = liberia_events
+
+# Race Relations
+country_event = {
+	id = liberia_events.2
+	title = liberia_events.2.t
+	desc = liberia_events.2.d
+	picture = GFX_report_event_SAF_crowd_1
+
+	is_triggered_only = yes
+
+	option = { #More rights for natives
+		log = "[GetLogInfo]: event liberia_events.2 option liberia_events.2.a"
+		ai_chance = { base = 20 }
+		name = liberia_events.2.a
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		add_stability = 0.03
+	}
+	option = { #No rights for natives
+		log = "[GetLogInfo]: event liberia_events.2 option liberia_events.2.b"
+		ai_chance = { base = 80 }
+		name = liberia_events.2.b
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		add_stability = -0.03
+	}
+}
+
+# Elections - 1939
+country_event = {
+	id = liberia_events.3
+	title = liberia_events.3.t
+	desc = liberia_events.3.d
+	picture = GFX_report_event_SAF_parliament_3
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+		NOT = { has_country_flag = LIB_1939_elections_held }
+	}
+
+	immediate = {
+		set_country_flag = LIB_1939_elections_held
+	}
+
+	option = { #True Whig Party
+		log = "[GetLogInfo]: event liberia_events.3 option liberia_events.3.a"
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = LIB_path option = LIB_PATH_MARLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_RADSOC }
+				}
+			}
+		}
+		name = liberia_events.3.a
+		add_political_power = 50
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+	}
+	option = { #True Republicans
+		log = "[GetLogInfo]: event liberia_events.3 option liberia_events.3.b"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCCON }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_RADSOC }
+				}
+			}
+		}
+		name = liberia_events.3.b
+		add_political_power = 25
+		set_politics = {
+			ruling_party = market_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.15
+		}
+	}
+	option = { #Independent True Whigs
+		log = "[GetLogInfo]: event liberia_events.3 option liberia_events.3.c"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCCON }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_MARLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_RADSOC }
+				}
+			}
+		}
+		name = liberia_events.3.c
+		add_political_power = 25
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 48
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.15
+		}
+	}
+	option = { #Liberia United
+		log = "[GetLogInfo]: event liberia_events.3 option liberia_events.3.e"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCCON }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_MARLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCLIB }
+				}
+			}
+		}
+		name = liberia_events.3.e
+		add_political_power = -25
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.1
+		}
+	}
+}
+
+# Black Monday Hits Liberia
+country_event = {
+	id = liberia_events.5
+	title = liberia_events.5.t
+	desc = liberia_events.5.d
+	picture = GFX_report_event_NOR_black_monday_2
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = LIB_black_monday }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.5 option liberia_events.5.a"
+		name = liberia_events.5.a
+		add_stability = -0.10
+		effect_tooltip = { add_ideas = LIB_black_monday }
+	}
+}
+
+# Patronize Allies? (fired by focus)
+country_event = {
+	id = liberia_events.6
+	title = liberia_events.6.t
+	desc = liberia_events.6.d
+	picture = GFX_report_event_SAF_parliament_3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.6 option liberia_events.6.a"
+		name = liberia_events.6.a
+		add_political_power = 50
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.6 option liberia_events.6.b"
+		name = liberia_events.6.b
+		add_political_power = -25
+		add_ideas = LIB_industrial_investments
+	}
+}
+
+# Status of Secret Societies (fired by focus)
+country_event = {
+	id = liberia_events.7
+	title = liberia_events.7.t
+	desc = liberia_events.7.d
+	picture = GFX_report_event_SAF_parliament_2
+
+	is_triggered_only = yes
+
+	option = { # bring secret societies into the open
+		log = "[GetLogInfo]: event liberia_events.7 option liberia_events.7.a"
+		name = liberia_events.7.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LIB_path option = LIB_PATH_TOTALIST }
+			}
+		}
+		add_stability = -0.03
+		add_political_power = 50
+		hidden_effect = {
+			country_event = { id = liberia_events.10 days = 30 random_days = 180 }
+		}
+	}
+	option = { # ban secret societies
+		log = "[GetLogInfo]: event liberia_events.7 option liberia_events.7.b"
+		name = liberia_events.7.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LIB_path option = LIB_PATH_NATPOP }
+			}
+		}
+		add_stability = 0.03
+		add_political_power = -50
+		hidden_effect = {
+			country_event = { id = liberia_events.11 days = 30 random_days = 180 }
+		}
+	}
+}
+
+# Social liberalism spreads throughout Afrika (fired by focus)
+country_event = {
+	id = liberia_events.9
+	title = liberia_events.9.t
+	desc = liberia_events.9.d
+	picture = GFX_report_event_SAF_black_protest
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.9 option liberia_events.9.a"
+		name = liberia_events.9.a
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.10
+		}
+		add_stability = -0.02
+	}
+}
+
+# The Freemasons attempt a coup
+country_event = {
+	id = liberia_events.10
+	title = liberia_events.10.t
+	desc = liberia_events.10.d
+	picture = GFX_report_event_GER_march
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_country_flag = LIB_1939_elections_held }
+	}
+
+	option = { #coup succeeds
+		log = "[GetLogInfo]: event liberia_events.10 option liberia_events.10.a"
+		name = liberia_events.10.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCCON }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_MARLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_RADSOC }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_AUTDEM }
+				}
+			}
+		}
+		add_stability = -0.10
+		add_ideas = LIB_broken_center
+		set_politics = {
+			ruling_party = national_populist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.20
+		}
+
+		# Remove Overlord & Faction
+		if = {
+			limit = { is_subject = yes }
+			overlord = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_free
+				}
+				country_event = liberia_events.90
+			}
+		}
+		leave_faction = yes
+		separate_peace_all_wars = yes
+		if = {
+			limit = {
+				has_idea = LIB_bailout_usa_2_idea
+			}
+			swap_ideas = {
+				remove_idea = LIB_bailout_usa_2_idea
+				add_idea = LIB_bailout_usa_idea
+			}
+		}
+	}
+	option = { #coup fails
+		log = "[GetLogInfo]: event liberia_events.10 option liberia_events.10.b"
+		name = liberia_events.10.b
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LIB_path option = LIB_PATH_NATPOP }
+			}
+		}
+		add_stability = 0.05
+	}
+}
+
+# Totalists attempt a coup
+country_event = {
+	id = liberia_events.11
+	title = liberia_events.11.t
+	desc = liberia_events.11.d
+	picture = GFX_report_event_WCA_black_militias
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_country_flag = LIB_1939_elections_held }
+	}
+
+	option = { #coup succeeds
+		log = "[GetLogInfo]: event liberia_events.11 option liberia_events.11.a"
+		name = liberia_events.11.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCCON }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_MARLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_RADSOC }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_AUTDEM }
+				}
+			}
+		}
+		add_ideas = LIB_broken_center
+		set_politics = {
+			ruling_party = totalist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.20
+		}
+		add_stability = -0.10
+
+		# Remove Overlord & Faction
+		if = {
+			limit = { is_subject = yes }
+			overlord = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_free
+				}
+				country_event = liberia_events.90
+			}
+		}
+		leave_faction = yes
+		separate_peace_all_wars = yes
+		if = {
+			limit = {
+				has_idea = LIB_bailout_usa_2_idea
+			}
+			swap_ideas = {
+				remove_idea = LIB_bailout_usa_2_idea
+				add_idea = LIB_bailout_usa_idea
+			}
+		}
+	}
+	option = { #coup fails
+		log = "[GetLogInfo]: event liberia_events.11 option liberia_events.11.b"
+		name = liberia_events.11.b
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LIB_path option = LIB_PATH_TOTALIST }
+			}
+		}
+		add_stability = 0.05
+	}
+}
+
+# Freemason purge of foreigners (fired by focus)
+country_event = {
+	id = liberia_events.12
+	title = liberia_events.12.t
+	desc = liberia_events.12.d
+	picture = GFX_report_event_SAF_black_protest
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.12 option liberia_events.12.a"
+		name = liberia_events.12.a
+		add_manpower = -30000
+		add_stability = -0.05
+		every_other_country = {
+			limit = {
+				has_democratic_government = yes
+			}
+			add_opinion_modifier = {
+				target = LIB
+				modifier = LIB_freemason_purge_1
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.12 option liberia_events.12.b"
+		name = liberia_events.12.b
+		add_political_power = -100
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = liberia_events.13 days = 5 }
+		}
+	}
+}
+
+# Freemason purge of socialists
+country_event = {
+	id = liberia_events.13
+	title = liberia_events.13.t
+	desc = liberia_events.13.d
+	picture = GFX_report_event_SAF_black_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.13 option liberia_events.13.a"
+		name = liberia_events.13.a
+		add_manpower = -10000
+		add_stability = -0.05
+		every_other_country = {
+			limit = {
+				has_socialist_government = yes
+			}
+			add_opinion_modifier = {
+				target = LIB
+				modifier = LIB_freemason_purge_2
+			}
+		}
+		capital_scope = {
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.13 option liberia_events.13.b"
+		name = liberia_events.13.b
+		add_political_power = -100
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = liberia_events.14 days = 5 }
+		}
+	}
+}
+
+# Freemason purge of true whigs
+country_event = {
+	id = liberia_events.14
+	title = liberia_events.14.t
+	desc = liberia_events.14.d
+	picture = GFX_report_event_SAF_black_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.14 option liberia_events.14.a"
+		name = liberia_events.14.a
+		add_manpower = -5000
+		add_stability = -0.2
+		every_other_country = {
+			limit = {
+				has_democratic_government = yes
+			}
+			add_opinion_modifier = {
+				target = LIB
+				modifier = LIB_freemason_purge_3
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.14 option liberia_events.14.b"
+		name = liberia_events.14.b
+		add_political_power = -100
+	}
+}
+
+# Liberia demands Sierra Leone
+country_event = {
+	id = liberia_events.51
+	title = liberia_events.51.t
+	desc = liberia_events.51.d
+	picture = GFX_report_event_USA_congress
+
+	is_triggered_only = yes
+
+	option = { #Fine, let them have it
+		log = "[GetLogInfo]: event liberia_events.51 option liberia_events.51.a"
+		name = liberia_events.51.a
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				tag = SIE
+			}
+			modifier = {
+				factor = 3
+				strength_ratio = {
+					tag = FROM
+					ratio < 1.0
+				}
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = {
+					tag = FROM
+					ratio > 2.0
+				}
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = {
+					tag = FROM
+					ratio > 3.0
+				}
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				surrender_progress > 0.20
+			}
+		}
+		if = {
+			limit = { tag = SIE }
+			custom_effect_tooltip = GAME_OVER_TT
+			effect_tooltip = {
+				FROM = { annex_country = { target = ROOT } }
+			}
+		}
+		else = {
+			add_opinion_modifier = {
+				target = FROM
+				modifier = KR_outraged
+			}
+			add_political_power = -50
+			effect_tooltip = {
+				if = {
+					limit = { has_subject = SIE }
+					FROM = { annex_country = { target = SIE } }
+				}
+				else_if = {
+					limit = { 700 = { is_owned_by_ROOT_or_subject = yes } }
+					FROM = { transfer_state = 700 }
+				}
+			}
+		}
+		FROM = { country_event = { id = liberia_events.53 hours = 8 } }
+	}
+	option = { #Absolutely not!
+		log = "[GetLogInfo]: event liberia_events.51 option liberia_events.51.b"
+		name = liberia_events.51.b
+		ai_chance = { base = 75 }
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_outraged
+		}
+		FROM = { country_event = { id = liberia_events.52 hours = 8 } }
+	}
+}
+
+# Sierra Leone has refused the demand
+country_event = {
+	id = liberia_events.52
+	title = liberia_events.52.t
+	desc = liberia_events.52.d
+	picture = GFX_report_event_USA_congress
+
+	is_triggered_only = yes
+
+	option = { #war
+		log = "[GetLogInfo]: event liberia_events.52 option liberia_events.52.a"
+		name = liberia_events.52.a
+		create_wargoal = {
+			target = FROM
+			type = annex_everything
+		}
+	}
+	option = { #get cucked
+		log = "[GetLogInfo]: event liberia_events.52 option liberia_events.52.b"
+		name = liberia_events.52.b
+		ai_chance = { base = 0 }
+		add_political_power = -50
+	}
+}
+
+# the French Republic has surrendered Sierra Leone
+country_event = {
+	id = liberia_events.53
+	title = liberia_events.53.t
+	desc = liberia_events.53.d
+	picture = GFX_report_event_USA_congress
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.53 option liberia_events.53.a"
+		name = liberia_events.53.a
+		if = {
+			limit = { FROM = { is_ally_with = SIE } }
+			annex_country = { target = SIE }
+		}
+		else = {
+			700 = { transfer_state_to = ROOT }
+		}
+	}
+}
+
+# Liberia controls Sierra Leone during war with the French Republic
+country_event = {
+	id = liberia_events.54
+	title = liberia_events.54.t
+	desc = liberia_events.54.d
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = LIB
+		has_war_with = NFA
+		is_valid_peace_target = yes
+		NFA = { surrender_progress > 0.25 }
+		any_state_of = {
+			count = 4
+			#Senegal, Bamako, Mauritania, Sierra Leone, Guinea, Ivory Coast, Upper Volta, Niger
+			target = { 272 556 557 700 806 807 808 809 }
+			is_owned_by = NFA
+			is_controlled_by = ROOT
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.54 option liberia_events.54.a"
+		name = liberia_events.54.a #Send the French the peace proposal
+		NFA = { country_event = liberia_events.55 }
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.54 option liberia_events.54.b"
+		name = liberia_events.54.b #We are not ready for peace yet
+		ai_chance = { base = 0 }
+		add_political_power = -50
+		add_stability = -0.05
+	}
+}
+
+# the French Republic decides whether to accept the Liberian peace offer
+country_event = {
+	id = liberia_events.55
+	title = liberia_events.55.t
+	desc = liberia_events.55.d
+	picture = GFX_report_event_USA_congress
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.55 option liberia_events.55.a"
+		name = liberia_events.55.a #Let them have that backwater countryside
+		add_political_power = -100
+		every_subject_country = {
+			limit = {
+				capital_scope = {
+					OR = {
+						region = 140 #Equatorial Africa
+						region = 182 #Niger Basin
+						region = 243 #West Africa
+						region = 244 #Central Africa
+					}
+				}
+			}
+			overlord = {
+				set_autonomy = {
+					target = PREV
+					autonomy_state = autonomy_free
+				}
+			}
+			leave_faction = yes
+		}
+		every_owned_state = {
+			limit = {
+				OR = {
+					region = 140 #Equatorial Africa
+					region = 182 #Niger Basin
+					region = 243 #West Africa
+					region = 244 #Central Africa
+					state = 967 #Adrar
+					state = 860 #Asawad
+					state = 910 #Air
+					state = 911 #Borku-Ennedi
+				}
+			}
+			transfer_state_to = FROM
+		}
+		FROM = { white_peace_with_ROOT = yes }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.55 option liberia_events.55.b"
+		name = liberia_events.55.b #Never! French Honour is on the line!
+		ai_chance = { base = 0 }
+		add_political_power = 25
+		FROM = { country_event = { id = liberia_events.56 days = 1 } }
+	}
+}
+
+# the French Republic has refused the peace deal
+country_event = {
+	id = liberia_events.56
+	title = liberia_events.56.t
+	desc = liberia_events.56.d
+	picture = GFX_report_event_USA_congress
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.56 option liberia_events.56.a"
+		name = liberia_events.56.a
+	}
+}
+
+# Liberia marches into the Ivory Coast
+country_event = {
+	id = liberia_events.57
+	title = liberia_events.57.t
+	desc = liberia_events.57.d
+	picture = GFX_report_event_USA_congress
+
+	is_triggered_only = yes
+
+	option = { #Fine, if they want it so badly they can have it
+		log = "[GetLogInfo]: event liberia_events.57 option liberia_events.57.a"
+		name = liberia_events.57.a
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				tag = IVO
+			}
+			modifier = {
+				factor = 3
+				strength_ratio = {
+					tag = FROM
+					ratio < 1.0
+				}
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = {
+					tag = FROM
+					ratio > 2.0
+				}
+			}
+			modifier = {
+				factor = 0
+				strength_ratio = {
+					tag = FROM
+					ratio > 3.0
+				}
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				surrender_progress > 0.20
+			}
+		}
+		if = {
+			limit = { tag = IVO }
+			custom_effect_tooltip = GAME_OVER_TT
+			effect_tooltip = {
+				FROM = { annex_country = { target = ROOT } }
+			}
+		}
+		else = {
+			add_opinion_modifier = {
+				target = FROM
+				modifier = KR_outraged
+			}
+			add_political_power = -50
+			effect_tooltip = {
+				if = {
+					limit = { has_subject = IVO }
+					FROM = { annex_country = { target = IVO } }
+				}
+				else_if = {
+					limit = { 807 = { is_owned_by_ROOT_or_subject = yes } }
+					FROM = { transfer_state = 807 }
+				}
+			}
+		}
+		FROM = { country_event = { id = liberia_events.59 hours = 8 } }
+	}
+	option = { #How dare they! We will push them back across the border and beyond!
+		log = "[GetLogInfo]: event liberia_events.57 option liberia_events.57.b"
+		name = liberia_events.57.b
+		ai_chance = { base = 75 }
+		FROM = { country_event = { id = liberia_events.58 hours = 8 } }
+	}
+}
+
+# They have refused the demand
+country_event = {
+	id = liberia_events.58
+	title = liberia_events.58.t
+	desc = liberia_events.58.d
+	picture = GFX_report_event_USA_congress
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.58 option liberia_events.58.a"
+		name = liberia_events.58.a
+		create_wargoal = {
+			target = FROM
+			type = annex_everything
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.58 option liberia_events.58.b"
+		name = liberia_events.58.b
+		ai_chance = { base = 0 }
+		add_political_power = -50
+	}
+}
+
+# They have surrendered the Ivory Coast
+country_event = {
+	id = liberia_events.59
+	title = liberia_events.59.t
+	desc = liberia_events.59.d
+	picture = GFX_report_event_USA_congress
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.59 option liberia_events.53.a"
+		name = liberia_events.53.a
+		if = {
+			limit = { FROM = { is_ally_with = IVO } }
+			annex_country = { target = IVO }
+		}
+		else = {
+			807 = { transfer_state_to = ROOT }
+		}
+	}
+}
+
+### Finding a bailout partner (fired by focus)
+country_event = {
+	id = liberia_events.85
+	title = liberia_events.85.t
+	desc = liberia_events.85.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = { #American Bailout
+		log = "[GetLogInfo]: event liberia_events.85 option liberia_events.85.a"
+		trigger = {
+			country_exists = USA
+			has_socialist_government = no
+			OR = {
+				is_subject_of = USA
+				is_subject = no
+			}
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LIB_path option = LIB_PATH_AUTDEM }
+			}
+		}
+		name = liberia_events.85.a
+		USA = {
+			country_event = liberia_events.86
+		}
+	}
+	option = { #German Bailout
+		log = "[GetLogInfo]: event liberia_events.85 option liberia_events.85.c"
+		trigger = {
+			country_exists = GER
+			has_socialist_government = no
+			NOT = { is_subject_of = NFA }
+		}
+		ai_chance = { base = 25 }
+		name = liberia_events.85.c
+		GER = {
+			country_event = liberia_events.87
+		}
+	}
+	option = { #Firestone Bailout
+		log = "[GetLogInfo]: event liberia_events.85 option liberia_events.85.b"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LIB_path option = LIB_PATH_AUTDEM }
+			}
+		}
+		name = liberia_events.85.b
+		add_ideas = LIB_firestone_bailout_idea
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+	}
+}
+
+# America asked for aid
+country_event = {
+	id = liberia_events.86
+	title = liberia_events.86.t
+	desc = liberia_events.86.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.86 option liberia_events.86.a"
+		name = liberia_events.86.a #Of course we will help
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0.25
+				has_elected_government = no
+			}
+			modifier = {
+				factor = 0.5
+				has_political_power < 0
+			}
+			modifier = {
+				factor = 0.5
+				has_political_power < -200
+			}
+			modifier = {
+				factor = 0.5
+				NOT = { has_subject = LIB }
+			}
+		}
+		LIB = {
+			country_event = { id = liberia_events.89 days = 3 }
+		}
+		add_political_power = -20
+		reverse_add_opinion_modifier = {
+			target = LIB
+			modifier = LIB_foreign_bailout
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.86 option liberia_events.86.b"
+		name = liberia_events.86.b #They are on their own
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0.5
+				has_political_power > 20
+			}
+			modifier = {
+				factor = 3
+				has_war = yes
+			}
+		}
+		set_country_flag = LIB_refused_bailout
+		LIB = {
+			country_event = { id = liberia_events.88 days = 3 }
+		}
+		reverse_add_opinion_modifier = {
+			target = LIB
+			modifier = KR_disapproves_of_govt
+		}
+	}
+}
+
+# Germany asked for aid
+country_event = {
+	id = liberia_events.87
+	title = liberia_events.86.t
+	desc = liberia_events.87.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.87 option liberia_events.86.a"
+		name = liberia_events.86.a #Of course we will help
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCCON }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_MARLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_SOCLIB }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_RADSOC }
+					has_game_rule = { rule = LIB_path option = LIB_PATH_TOTALIST }
+				}
+			}
+			modifier = {
+				factor = 0.25
+				has_democratic_government = no
+			}
+			modifier = {
+				factor = 0.5
+				has_political_power < 0
+			}
+			modifier = {
+				factor = 0.5
+				has_political_power < -200
+			}
+			modifier = {
+				factor = 0.5
+				LIB = { is_subject_of = USA }
+			}
+		}
+		LIB = {
+			country_event = { id = liberia_events.89 days = 3 }
+		}
+		add_political_power = -20
+		reverse_add_opinion_modifier = {
+			target = LIB
+			modifier = LIB_foreign_bailout
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.87 option liberia_events.86.b"
+		name = liberia_events.86.b #They are on their own
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LIB_path option = LIB_PATH_AUTDEM }
+			}
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+			modifier = {
+				factor = 0.5
+				has_political_power > 100
+			}
+		}
+		set_country_flag = LIB_refused_bailout
+		LIB = {
+			country_event = { id = liberia_events.88 days = 3 }
+		}
+		reverse_add_opinion_modifier = {
+			target = LIB
+			modifier = KR_disapproves_of_govt
+		}
+	}
+}
+
+# Aid refused
+country_event = {
+	id = liberia_events.88
+	title = liberia_events.88.t
+	desc = liberia_events.88.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.88 option liberia_events.88.a"
+		name = liberia_events.88.a #America
+		trigger = {
+			NOT = {
+				USA = { has_country_flag = LIB_refused_bailout }
+			}
+			country_exists = USA
+			has_socialist_government = no
+			OR = {
+				is_subject_of = USA
+				is_subject = no
+			}
+		}
+		ai_chance = { base = 50 }
+		USA = { country_event = liberia_events.86 }
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.88 option liberia_events.88.b"
+		name = liberia_events.88.b #Germany
+		trigger = {
+			country_exists = GER
+			has_socialist_government = no
+			NOT = {
+				GER = { has_country_flag = LIB_refused_bailout }
+				is_subject_of = NFA
+			}
+		}
+		ai_chance = { base = 25 }
+		GER = { country_event = liberia_events.87 }
+	}
+	option = {
+		log = "[GetLogInfo]: event liberia_events.88 option liberia_events.88.c"
+		name = liberia_events.88.c #Firestone
+		ai_chance = { base = 20 }
+		USA = { clr_country_flag = LIB_refused_bailout }
+		GER = { clr_country_flag = LIB_refused_bailout }
+		add_ideas = LIB_firestone_bailout_idea
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+	}
+}
+
+# Aid granted
+country_event = {
+	id = liberia_events.89
+	title = liberia_events.89.t
+	desc = liberia_events.89.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.89 option liberia_events.89.a"
+		name = liberia_events.89.a
+		USA = { clr_country_flag = LIB_refused_bailout }
+		GER = { clr_country_flag = LIB_refused_bailout }
+		if = {
+			limit = {
+				FROM = { tag = USA }
+			}
+			add_ideas = LIB_bailout_usa_idea
+			add_popularity = {
+				ideology = social_conservative
+				popularity = 0.1
+			}
+		}
+		else = {
+			add_ideas = LIB_bailout_ger_idea
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.1
+			}
+		}
+	}
+}
+
+# Liberia breaks puppet status
+country_event = {
+	id = liberia_events.90
+	title = liberia_events.90.t
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	desc = {
+		text = liberia_events.90.d.default
+		trigger = {
+			FROM = { is_in_faction = no }
+		}
+	}
+	desc = {
+		text = liberia_events.90.d.faction
+		trigger = {
+			FROM = { is_in_faction = yes }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.90 option liberia_events.90.a"
+		name = liberia_events.90.a #We have little choice but to let them be
+	}
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.90 option liberia_events.90.b"
+		name = liberia_events.90.b #They cannot escape so easily
+		ai_chance = { base = 0 }
+		create_wargoal = {
+			type = annex_everything
+			target = FROM
+		}
+	}
+
+	after = {
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_outraged
+		}
+	}
+}
+
+# Peacing out with ACW victor
+country_event = {
+	id = liberia_events.93
+	title = liberia_events.93.t
+	desc = liberia_events.93.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = LIB
+		NOT = { country_exists = USA }
+		is_subject = no
+		is_in_faction = no
+		has_war = yes
+		OR = {
+			WCA = {
+				has_war_with = ROOT
+				NOT = { is_neighbor_of = ROOT }
+				NOT = { has_war_with_wargoal_against = ROOT }
+				NOT = { ROOT = { has_war_with_wargoal_against = ROOT } }
+				is_valid_peace_target = yes
+			}
+			APG = {
+				has_war_with = ROOT
+				NOT = { is_neighbor_of = ROOT }
+				NOT = { has_war_with_wargoal_against = ROOT }
+				NOT = { ROOT = { has_war_with_wargoal_against = ROOT } }
+				is_valid_peace_target = yes
+			}
+			ACC = {
+				has_war_with = ROOT
+				NOT = { is_neighbor_of = ROOT }
+				NOT = { has_war_with_wargoal_against = ROOT }
+				NOT = { ROOT = { has_war_with_wargoal_against = ROOT } }
+				is_valid_peace_target = yes
+			}
+			NEE = {
+				has_war_with = ROOT
+				NOT = { is_neighbor_of = ROOT }
+				NOT = { has_war_with_wargoal_against = ROOT }
+				NOT = { ROOT = { has_war_with_wargoal_against = ROOT } }
+				is_valid_peace_target = yes
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3
+	}
+
+	option = { #We will go it alone
+		log = "[GetLogInfo]: event liberia_events.93 option liberia_events.93.a"
+		name = liberia_events.93.a
+		ai_chance = { base = 25 }
+		every_enemy_country = {
+			limit = {
+				is_valid_peace_target = yes
+				OR = {
+					is_american_tag = yes
+					tag = ENT
+					tag = CAN
+					original_tag = MEX
+				}
+			}
+			white_peace_with_ROOT = yes
+		}
+		add_war_support = 0.15
+	}
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.93 option liberia_events.93.b"
+		name = liberia_events.93.b #Germany
+		trigger = {
+			has_socialist_government = no
+			country_exists = GER
+			NOT = { has_war_with = GER }
+			GER = {
+				has_socialist_government = no
+				is_subject = no
+				has_capitulated = no
+				NOT = { has_country_flag = LIB_refused_bailout }
+			}
+		}
+		ai_chance = { base = 25 }
+		every_enemy_country = {
+			limit = {
+				is_valid_peace_target = yes
+				OR = {
+					is_american_tag = yes
+					tag = ENT
+					tag = CAN
+					original_tag = MEX
+				}
+			}
+			white_peace_with_ROOT = yes
+		}
+		GER = { country_event = liberia_events.87 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event liberia_events.93 option liberia_events.88.c"
+		name = liberia_events.88.c #Firestone
+		ai_chance = { base = 20 }
+		every_enemy_country = {
+			limit = {
+				is_valid_peace_target = yes
+				OR = {
+					is_american_tag = yes
+					tag = ENT
+					tag = CAN
+					original_tag = MEX
+				}
+			}
+			white_peace_with_ROOT = yes
+		}
+		USA = { clr_country_flag = LIB_refused_bailout }
+		GER = { clr_country_flag = LIB_refused_bailout }
+		add_ideas = LIB_firestone_bailout_idea
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+	}
+
+	after = {
+		if = {
+			limit = {
+				has_idea = LIB_bailout_usa_idea
+			}
+			remove_ideas = LIB_bailout_usa_idea
+		}
+		if = {
+			limit = {
+				has_idea = LIB_bailout_usa_2_idea
+			}
+			remove_ideas = LIB_bailout_usa_2_idea
+		}
+		if = {
+			limit = {
+				has_idea = LIB_tax_exemption_idea
+			}
+			remove_ideas = LIB_tax_exemption_idea
+		}
+	}
+}

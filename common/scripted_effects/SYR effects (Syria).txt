@@ -1,0 +1,175 @@
+SYR_spawn_initial_units = {
+	random_owned_controlled_state = {
+		create_unit = {
+			division = "division_template = \"Infantry Division\" start_experience_factor = 0.3"
+			allow_spawning_on_enemy_provs = yes
+			owner = PREV
+			count = 6
+		}
+		create_unit = {
+			division = "division_template = \"Cavalry Division\" start_experience_factor = 0.3"
+			allow_spawning_on_enemy_provs = yes
+			owner = PREV
+			count = 2
+		}
+	}
+}
+
+SYR_add_initial_ideas = {
+	add_ideas = {
+		syr_sunni_elite_control
+		syr_lebanese_unrest
+		syr_alawite_unrest
+		syr_mudafaa_hukuk
+		syr_ottoman_military
+	}
+}
+
+SYR_puppet_setup = {
+	if = {
+		limit = { #Set up the Arab Kingdom of Syria
+			PREV = {
+				original_tag = EGY
+				is_monarchy = yes
+			}
+		}
+		set_cosmetic_tag = SYR_kingdom
+		EGY = {
+			EGY_abdel_moneim_i = {
+				set_nationality = SYR
+				hidden_effect = { remove_all_country_leader_roles = yes }
+				add_country_leader_role = {
+					country_leader = {
+						desc = EGY_abdel_moneim_i_leader_desc
+						ideology = authoritarian_democrat_subtype
+					}
+					promote_leader = yes
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+			name = SYR_authoritarian_democrat_party_kingdom
+			long_name = SYR_authoritarian_democrat_party_long_kingdom
+		}
+		hidden_effect = {
+			set_popularities = {
+				totalist = 0
+				syndicalist = 5
+				radical_socialist = 2
+				social_democrat = 5
+				social_liberal = 16
+				market_liberal = 20
+				social_conservative = 36
+				authoritarian_democrat = 8
+				paternal_autocrat = 0
+				national_populist = 8
+			}
+		}
+	}
+	hidden_effect = {
+		### Set up political focus branches
+		if = {
+			limit = {
+				has_completed_focus = SYR_republic_of_equals
+				has_marlib_or_soclib_government = no
+			}
+			uncomplete_national_focus = {
+				focus = SYR_republic_of_equals
+				uncomplete_children = yes
+			}
+		}
+		else_if = {
+			limit = {
+				has_completed_focus = SYR_status_quo
+				has_conservative_government = no
+			}
+			uncomplete_national_focus = {
+				focus = SYR_status_quo
+				uncomplete_children = yes
+			}
+		}
+		if = {
+			limit = {
+				has_completed_focus = SYR_army_with_a_state
+				has_dictatorship_government = no
+			}
+			uncomplete_national_focus = {
+				focus = SYR_army_with_a_state
+				uncomplete_children = yes
+			}
+		}
+		else_if = {
+			limit = { has_government = paternal_autocrat }
+			if = {
+				limit = { has_completed_focus = SYR_basic_principles }
+				uncomplete_national_focus = {
+					focus = SYR_basic_principles
+					uncomplete_children = yes
+				}
+			}
+			unlock_national_focus = SYR_army_with_a_state
+			unlock_national_focus = SYR_military_mandate
+		}
+		else_if = {
+			limit = { has_government = national_populist }
+			if = {
+				limit = { has_completed_focus = SYR_military_mandate }
+				uncomplete_national_focus = {
+					focus = SYR_military_mandate
+					uncomplete_children = yes
+				}
+			}
+			unlock_national_focus = SYR_army_with_a_state
+			unlock_national_focus = SYR_basic_principles
+		}
+
+		### Set up forpol focus branches
+		if = {
+			limit = { NOT = { has_completed_focus = SYR_defend_natural_syria } }
+			if = {
+				limit = { has_completed_focus = SYR_arab_leadership }
+				uncomplete_national_focus = {
+					focus = SYR_arab_leadership
+					uncomplete_children = yes
+				}
+			}
+			unlock_national_focus = SYR_defend_natural_syria
+		}
+		else_if = {
+			limit = {
+				has_completed_focus = SYR_reichspakt
+				NOT = { PREV = { is_in_faction_with = GER } }
+			}
+			uncomplete_national_focus = {
+				focus = SYR_reichspakt
+				uncomplete_children = yes
+			}
+		}
+		else_if = {
+			limit = {
+				has_completed_focus = SYR_international
+				NOT = { PREV = { is_in_faction_with = INT } }
+			}
+			uncomplete_national_focus = {
+				focus = SYR_international
+				uncomplete_children = yes
+			}
+		}
+		else_if = {
+			limit = {
+				has_completed_focus = SYR_cairo_pact
+				NOT = {
+					PREV = { is_in_faction_with = EGY }
+					EGY = { is_faction_leader = yes }
+				}
+			}
+			uncomplete_national_focus = {
+				focus = SYR_cairo_pact
+				uncomplete_children = yes
+			}
+		}
+	}
+	LOA_add_to_correct_sphere = yes
+}

@@ -1,0 +1,801 @@
+#	Scripted triggers for Post War events
+#
+#	By Nijato and Rylock
+
+clean_up_african_states = {
+	# French claims
+	if = {
+		limit = {
+			is_ally_with = FRA
+			NOT = { tag = FRA }
+		}
+		every_owned_state = {
+			limit = {
+				has_state_flag = GER_capitulation_transfer
+				is_on_continent = africa
+				OR = {
+					is_core_of = FRA
+					is_claimed_by = FRA
+					has_variable = ambition_area_@FRA
+				}
+				is_claim_or_core_or_ambition_of_PREV = no
+			}
+			clr_state_flag = GER_capitulation_transfer
+			transfer_state_to = FRA
+		}
+	}
+	if = {
+		limit = {
+			is_ally_with = NFA
+			NOT = { tag = NFA }
+		}
+		every_owned_state = {
+			limit = {
+				has_state_flag = GER_capitulation_transfer
+				is_on_continent = africa
+				OR = {
+					is_core_of = NFA
+					is_claimed_by = NFA
+					has_variable = ambition_area_@NFA
+				}
+				is_claim_or_core_or_ambition_of_PREV = no
+			}
+			clr_state_flag = GER_capitulation_transfer
+			transfer_state_to = NFA
+		}
+	}
+	# Portuguese claims
+	if = {
+		limit = {
+			is_ally_with = POR
+			NOT = { tag = POR }
+		}
+		every_owned_state = {
+			limit = {
+				has_state_flag = GER_capitulation_transfer
+				is_on_continent = africa
+				OR = {
+					is_core_of = POR
+					is_claimed_by = POR
+					has_variable = ambition_area_@POR
+				}
+				is_claim_or_core_or_ambition_of_PREV = no
+			}
+			clr_state_flag = GER_capitulation_transfer
+			transfer_state_to = POR
+		}
+	}
+	# South African claims
+	if = {
+		limit = {
+			is_ally_with = SAF
+			NOT = { tag = SAF }
+		}
+		every_owned_state = {
+			limit = {
+				has_state_flag = GER_capitulation_transfer
+				is_on_continent = africa
+				OR = {
+					is_core_of = SAF
+					is_claimed_by = SAF
+					has_variable = ambition_area_@SAF
+				}
+				is_claim_or_core_or_ambition_of_PREV = no
+			}
+			clr_state_flag = GER_capitulation_transfer
+			transfer_state_to = SAF
+		}
+	}
+	# British claims
+	if = {
+		limit = {
+			is_ally_with = ENG
+			NOT = { tag = ENG }
+		}
+		every_owned_state = {
+			limit = {
+				has_state_flag = GER_capitulation_transfer
+				is_on_continent = africa
+				OR = {
+					is_core_of = ENG
+					is_claimed_by = ENG
+					has_variable = ambition_area_@ENG
+				}
+				is_claim_or_core_or_ambition_of_PREV = no
+			}
+			clr_state_flag = GER_capitulation_transfer
+			transfer_state_to = ENG
+		}
+	}
+	if = {
+		limit = {
+			is_ally_with = GBR
+			NOT = { tag = GBR }
+		}
+		every_owned_state = {
+			limit = {
+				has_state_flag = GER_capitulation_transfer
+				is_on_continent = africa
+				OR = {
+					is_core_of = GBR
+					is_claimed_by = GBR
+					has_variable = ambition_area_@GBR
+				}
+				is_claim_or_core_or_ambition_of_PREV = no
+			}
+			clr_state_flag = GER_capitulation_transfer
+			transfer_state_to = GBR
+		}
+	}
+	if = {
+		limit = {
+			is_ally_with = CAN
+			NOT = { tag = CAN }
+		}
+		every_owned_state = {
+			limit = {
+				has_state_flag = GER_capitulation_transfer
+				is_on_continent = africa
+				OR = {
+					is_core_of = CAN
+					is_claimed_by = CAN
+					has_variable = ambition_area_@CAN
+				}
+				is_claim_or_core_or_ambition_of_PREV = no
+			}
+			clr_state_flag = GER_capitulation_transfer
+			transfer_state_to = CAN
+		}
+	}
+	# when all else fails, give it to the faction leader
+	if = {
+		limit = {
+			is_in_faction = yes
+			is_faction_leader = no
+			is_actual_major = no
+		}
+		faction_leader = { save_event_target_as = leader }
+		every_owned_state = {
+			limit = {
+				is_on_continent = africa
+				has_state_flag = GER_capitulation_transfer
+				is_claim_or_core_or_ambition_of_PREV = no
+			}
+			transfer_state_to = event_target:leader
+		}
+	}
+}
+
+take_occupied_states_in_africa = {
+	every_state = {
+		limit = {
+			is_on_continent = africa
+			controller = { has_war_with = GER }
+			OR = {
+				is_coastal = yes
+				any_neighbor_state = {
+					owner = { has_war_with = GER }
+				}
+			}
+			is_owned_by_GER_or_MAF = yes
+			african_state_can_be_taken = yes
+		}
+		set_state_flag = GER_capitulation_transfer
+		controller = {
+			save_event_target_as = new_controller
+			transfer_state = PREV
+		}
+		#Kenya
+		if = {
+			limit = { is_core_of = KEN }
+			KEN = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Mozambique
+		if = {
+			limit = { is_core_of = MZB }
+			MZB = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Angola
+		if = {
+			limit = { is_core_of = ANG }
+			ANG = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Zambia
+		if = {
+			limit = { is_core_of = ZAM }
+			ZAM = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Gabon
+		if = {
+			limit = { is_core_of = GAB }
+			GAB = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Congo
+		if = {
+			limit = { is_core_of = COG }
+			MZB = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Namibia
+		if = {
+			limit = { is_core_of = NMB }
+			NMB = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Nigeria
+		if = {
+			limit = { is_core_of = NGA }
+			NGA = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Ivory Coast
+		if = {
+			limit = { is_core_of = IVO }
+			IVO = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+		#Liberia
+		if = {
+			limit = { is_core_of = LIB }
+			LIB = {
+				every_core_state = {
+					limit = { is_owned_by_GER_or_MAF = yes }
+					set_state_flag = GER_capitulation_transfer
+					transfer_state_to = event_target:new_controller
+				}
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			any_of_scopes = {
+				array = global.africa_states_array
+				controller = { has_war_with = GER }
+				OR = {
+					is_coastal = yes
+					any_neighbor_state = {
+						owner = { has_war_with = GER }
+					}
+				}
+				is_owned_by_GER_or_MAF = yes
+				african_state_can_be_taken = yes
+			}
+		}
+		take_occupied_states_in_africa = yes
+	}
+	else = {
+		every_country = {
+			limit = {
+				has_war_with = GER
+				any_owned_state = {
+					is_on_continent = africa
+					has_state_flag = GER_capitulation_transfer
+				}
+			}
+			clean_up_african_states = yes
+		}
+	}
+}
+
+MAF_free_germany_setup = {
+	# first everyone who's occupying MAF should grab states
+	take_occupied_states_in_africa = yes
+
+	# Turn MAF into GEX
+	set_autonomy = {
+		target = MAF
+		autonomy_state = autonomy_free
+	}
+	GEX = { reserve_dynamic_country = no }
+	MAF = {
+		save_global_event_target_as = MAF_free_germany
+		set_cosmetic_tag = MAF_free_germany
+		set_major = yes
+		transfer_technology = yes
+		transfer_int_upgrade = yes
+
+		set_party_name = {
+			ideology = paternal_autocrat
+			name = MAF_free_germany_paternal_autocrat_party
+			long_name = MAF_free_germany_paternal_autocrat_party_long
+		}
+
+		if = {
+			limit = { owns_state = 965 }
+			set_capital = { state = 965 remember_old_capital = no }
+		}
+		remove_ideas = {
+			MAF_colonial_budget_idea
+			MAF_border_shit_show
+			MAF_Imminent_Collapse
+		}
+		clear_variable = MAF_offmap_civs
+		clear_variable = MAF_offmap_mils
+		clear_variable = MAF_weekly_manpower
+
+		activate_mission = MAF_on_borrowed_time
+		mark_focus_tree_layout_dirty = yes
+
+		if = {
+			limit = { has_country_leader = { character = MAF_karl_ritter } }
+			retire_character = MAF_karl_ritter
+		}
+		else_if = {
+			limit = { has_government = authoritarian_democrat }
+			set_politics = {
+				ruling_party = paternal_autocrat
+				elections_allowed = no
+			}
+		}
+
+		remove_relation_rule_override = {
+			trigger = MAF_can_send_volunteers_to_target
+			can_send_volunteers = yes
+		}
+		set_rule = { can_send_volunteers = yes }
+		if = {
+			limit = { has_dlc_aat = yes }
+			set_rule = { can_access_market = yes }
+		}
+	}
+
+	# Move all African puppets to GEX
+	every_subject_country = {
+		limit = {
+			is_in_africa = yes
+			NOT = {
+				tag = MAF
+				tag = MOR
+				tag = NFA
+				tag = LBA
+				tag = EGY
+				tag = ETH
+				tag = SOM
+				tag = LIB
+				tag = SAF
+			}
+		}
+		get_current_government_type = yes
+		MAF = {
+			set_autonomy = {
+				target = PREV
+				autonomy_state = autonomous_puppet
+				end_wars = no
+			}
+		}
+		restore_previous_government_type = yes
+	}
+
+	# re-puppet GEA to MAF
+	if = {
+		limit = { has_subject = GEA }
+		GEA = { get_current_government_type = yes }
+		MAF = {
+			set_autonomy = {
+				target = GEA
+				autonomy_state = autonomous_puppet
+				end_wars = no
+			}
+		}
+		GEA = { restore_previous_government_type = yes }
+		GEA = {
+			if = {
+				limit = { has_dlc_aat = yes }
+				set_rule = { can_access_market = yes }
+			}
+		}
+	}
+
+	# add GEX to all of GER's current wars
+	every_enemy_country = {
+		MAF = {
+			add_to_war = {
+				targeted_alliance = GER
+				enemy = PREV
+			}
+		}
+	}
+
+	# then transfer all controlled African lands to GEX
+	set_temp_variable = { target = MAF }
+	every_owned_state = {
+		limit = { is_on_continent = africa }
+		transfer_state_during_war = yes
+	}
+
+	# delete the army, then transfer navy and 50% of all German leaders to the GEX tag
+	every_navy_leader = {
+		set_character_flag = GER_character
+		set_nationality = MAF
+	}
+	transfer_navy = { target = MAF }
+	delete_unit = { disband = yes }
+	transfer_units_fraction = {
+		target = MAF
+		target_organization = 1
+		source_organization = 1
+		size = 0.5
+		navy_ratio = 1
+		air_ratio = 0.75
+		keep_unit_leaders_trigger = { always = yes }
+	}
+	every_army_leader = {
+		random = {
+			chance = 50
+			set_character_flag = GER_character
+			set_nationality = MAF
+		}
+	}
+
+	# add GEX cores
+	every_core_state = { add_core_of = MAF }
+	every_state = {
+		limit = { is_claimed_by = GER }
+		add_claim_by = MAF
+	}
+
+	# now do the regular German capitulation
+	germany_capitulates = yes
+}
+
+germany_capitulates = {
+	# free all remaining puppets
+	GER = {
+		every_subject_country = {
+			overlord = {
+				set_autonomy = { target = PREV autonomy_state = autonomy_free }
+			}
+		}
+	}
+
+	# Fire postwar event for IRE before RP dissolves
+	IRE = {
+		clr_country_flag = CAN_refused_iedc
+		clr_country_flag = IRE_got_guarantee_GER
+		if = {
+			limit = { is_in_faction_with = GER }
+			if = {
+				limit = { has_country_flag = IRE_gateway_GER_victory }
+				country_event = { id = ireland_events.2034 days = 2 }		# IRE loses its GER national spirits if GER won the Gateway to the Atlantic
+			}
+			else = {
+				country_event = { id = ireland_events.2007 days = 15 }		# IRE joining ENT?
+			}
+		}
+		else = {
+			country_event = { id = ireland_events.2032 days = 15 }		# IRE joining LoAS?
+			country_event = { id = ireland_events.2008 days = 15 }		# IRE joining MA?
+			if = {
+				limit = {
+					JAP = { is_in_faction_with = var:361.owner }
+				}
+				country_event = { id = ireland_events.2033 days = 15 }		# IRE joining Co-Pro?
+			}
+		}
+	}
+
+	# dissolve the Reichspakt
+	GER = {
+		every_allied_country = {
+			remove_ideas = has_scripted_peace
+			if = {
+				limit = { has_capitulated = no }
+				set_country_flag = former_reichspakt_member
+				add_to_temp_array = { global.former_reichspakt_members = THIS }
+			}
+		}
+		faction_leader = { dismantle_faction = yes }
+	}
+
+	# give Reichspakt members military access to each other
+	for_each_scope_loop = {
+		array = global.former_reichspakt_members
+		for_each_scope_loop = {
+			array = global.former_reichspakt_members
+			if = {
+				limit = { NOT = { tag = PREV } }
+				give_military_access = PREV
+			}
+		}
+	}
+
+	# let Austria reform the Donau-Adriabund, if it's currently in the Reichspakt
+	if = {
+		limit = {
+			NOT = { has_global_flag = AUS_treaty_of_budapest }
+			AUS = {
+				has_country_flag = former_reichspakt_member
+				has_country_flag = AUS_intervened_in_weltkrieg
+				exists = yes
+				has_capitulated = no
+				is_subject = no
+			}
+		}
+		AUS = {
+			create_faction_from_template = { template = faction_template_donau_adriabund name = faction_donau_adriabund }
+			scope:faction = { set_variable = { faction_template_donau_adriabund_var = 1 } }
+			set_country_flag = former_reichspakt_member
+			clr_country_flag = AUS_intervened_in_weltkrieg
+			country_event = { id = austria_foreign_events.4016 hours = 8 }
+		}
+		every_other_country = {
+			limit = {
+				has_country_flag = AUS_former_faction_member
+				has_country_flag = former_reichspakt_member
+				is_subject = no
+			}
+			clr_country_flag = AUS_former_faction_member
+			every_subject_country = { clr_country_flag = AUS_former_faction_member }
+			AUS = { add_to_faction = PREV }
+		}
+	}
+
+	# release Ceylon if still fully controlled upon capitulation
+	if = {
+		limit = {
+			CEY = {
+				capital_scope = {
+					is_owned_by = PREV.PREV
+					is_fully_controlled_by = PREV.PREV
+				}
+			}
+		}
+		release = CEY
+	}
+
+	# get rid of specific states, if Germany still has them
+	744 = { #Qingdao
+		if = {
+			limit = {
+				OR = {
+					is_owned_by = GER
+					is_owned_by = GEA
+				}
+			}
+			if = {
+				limit = { controller = { has_war_with = ROOT } }
+				transfer_state_to = controller
+			}
+			else_if = {
+				limit = {
+					owner = { has_war_with = JAP }
+					NOT = { has_global_flag = JAP_defeated_by_china }
+				}
+				transfer_state_to = JAP
+			}
+			else = {
+				transfer_state_to = var:1065.owner
+			}
+			save_event_target_as = transferred_state
+			state_event = { id = capitulation_events.15 trigger_for = owner }
+		}
+	}
+	728 = { #Guangzhouwan
+		if = {
+			limit = {
+				OR = {
+					is_owned_by = GER
+					is_owned_by = GEA
+				}
+			}
+			if = {
+				limit = { controller = { has_war_with = ROOT } }
+				transfer_state_to = controller
+			}
+			else_if = {
+				limit = {
+					owner = { has_war_with = JAP }
+					NOT = { has_global_flag = JAP_defeated_by_china }
+				}
+				transfer_state_to = JAP
+			}
+			else = {
+				transfer_state_to = var:593.owner
+			}
+			save_event_target_as = transferred_state
+			state_event = { id = capitulation_events.15 trigger_for = owner }
+		}
+	}
+	818 = { #Pondicherry
+		if = {
+			limit = {
+				OR = {
+					is_owned_by = GER
+					is_owned_by = GEA
+				}
+			}
+			if = {
+				limit = { controller = { has_war_with = ROOT } }
+				transfer_state_to = controller
+			}
+			else_if = {
+				limit = {
+					owner = { has_war_with = JAP }
+					NOT = { has_global_flag = JAP_defeated_by_china }
+				}
+				transfer_state_to = JAP
+			}
+			else = {
+				transfer_state_to = var:320.owner
+			}
+			save_event_target_as = transferred_state
+			state_event = { id = capitulation_events.15 trigger_for = owner }
+		}
+	}
+
+	random_country = {
+		limit = { has_war = no }
+		country_event = { id = capitulation_events.20 days = 4 } #clean-up event
+	}
+
+	# peace out with remaining Reichspakt members
+	every_country = {
+		limit = {
+			has_war = yes
+			is_subject = no
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+			}
+			NOT = { has_country_flag = former_reichspakt_member }
+			any_enemy_country = { has_country_flag = former_reichspakt_member }
+		}
+		country_event = capitulation_events.10
+	}
+
+	# fire post-collape events for GEX
+	if = {
+		limit = { country_exists = GEX }
+		GEX = {
+			if = {
+				limit = { has_war_with = JAP }
+				country_event = { id = capitulation_events.7 days = 1 }
+			}
+			else_if = {
+				limit = { has_war_with = SIA }
+				country_event = { id = capitulation_events.5 days = 1 }
+			}
+			if = {
+				limit = { has_war_with = NFA }
+				NFA = { country_event = { id = capitulation_events.12 days = 2 } }
+			}
+		}
+	}
+
+	# Fire postwar event for BAT
+	if = {
+		limit = { country_exists = BAT }
+		BAT = { country_event = { id = united_baltic_duchy_events.116 days = 5 } }
+	}
+}
+
+CAN_give_connected_USA_states_NEE = {
+	CAN = {
+		every_owned_state = {
+			limit = {
+				is_core_of = USA
+				any_neighbor_state = {
+					is_owned_by = NEE
+					NOT = { state = 393 } #Michigan
+				}
+				NOT = {
+					is_core_of = CAN
+					is_claimed_by = CAN
+				}
+			}
+			remove_claim_by = NEE
+			add_core_of = NEE
+			transfer_state_to = NEE
+		}
+	}
+	if = {
+		limit = {
+			CAN = {
+				any_owned_state = {
+					is_core_of = USA
+					any_neighbor_state = {
+						is_owned_by = NEE
+						NOT = { state = 393 } #Michigan
+					}
+					NOT = {
+						is_core_of = CAN
+						is_claimed_by = CAN
+					}
+				}
+			}
+		}
+		CAN_give_connected_USA_states_NEE = yes
+	}
+}
+
+CAN_give_connected_USA_states_ACC = {
+	CAN = {
+		every_owned_state = {
+			limit = {
+				is_core_of = USA
+				any_neighbor_state = {
+					is_owned_by = ACC
+					NOT = { state = 393 } #Michigan
+				}
+				NOT = {
+					is_core_of = CAN
+					is_claimed_by = CAN
+				}
+				is_new_england = no
+			}
+			remove_claim_by = ACC
+			add_core_of = ACC
+			transfer_state_to = ACC
+		}
+	}
+	if = {
+		limit = {
+			CAN = {
+				any_owned_state = {
+					is_core_of = USA
+					any_neighbor_state = {
+						is_owned_by = ACC
+						NOT = { state = 393 } #Michigan
+					}
+					NOT = {
+						is_core_of = CAN
+						is_claimed_by = CAN
+					}
+					is_new_england = no
+				}
+			}
+		}
+		CAN_give_connected_USA_states_ACC = yes
+	}
+}

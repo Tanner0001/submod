@@ -1,0 +1,199 @@
+POL_has_circle = {
+	OR = {
+		has_government = market_liberal
+		has_government = authoritarian_democrat
+		custom_override_tooltip = {
+			tooltip = POL_is_gengov
+			has_cosmetic_tag = POL_gengov
+		}
+	}
+}
+POL_evil_monarchy = {
+	OR = {
+		has_government = authoritarian_democrat
+		custom_override_tooltip = {
+			tooltip = POL_is_gengov
+			has_cosmetic_tag = POL_gengov
+		}
+	}
+}
+POL_has_progressive = {
+	OR = {
+		has_socialist_government = yes
+		has_soclib_or_socdem_government = yes
+	}
+}
+POL_has_nationalist = {
+	OR = {
+		has_government = social_conservative
+		has_dictatorship_government = yes
+	}
+	NOT = { has_cosmetic_tag = POL_gengov }
+}
+POL_rydz = {
+	has_country_leader = {
+		character = POL_edward_rydz_smigly
+		ruling_only = yes
+	}
+}
+POL_dobo = {
+	has_country_leader = {
+		character = POL_adam_doboszynski
+		ruling_only = yes
+	}
+}
+POL_zakr = {
+	has_country_leader = {
+		character = POL_kazimierz_zakrzewski
+		ruling_only = yes
+	}
+}
+POL_polish_influence_check = {
+	custom_override_tooltip = {
+		tooltip = POL_polish_influence_check
+		NOT = { check_variable = { POL_influence < POL_influence_check } }
+	}
+}
+POL_GER_influence_check = {
+	custom_override_tooltip = {
+		tooltip = POL_GER_influence_check
+		NOT = { check_variable = { POL_GER_influence < POL_influence_check } }
+	}
+}
+POL_AUS_influence_check = {
+	custom_override_tooltip = {
+		tooltip = POL_AUS_influence_check
+		NOT = { check_variable = { POL_AUS_influence < POL_influence_check } }
+	}
+}
+POL_EE_capitulation_check = {
+	count_triggers = {
+		amount = 2
+		BAT = {
+			exists = yes
+			has_capitulated = yes
+		}
+		LIT = {
+			OR = {
+				AND = {
+					is_in_faction_with = GER
+					has_capitulated = yes
+				}
+				has_war_with = GER
+			}
+		}
+		BLR = {
+			OR = {
+				AND = {
+					is_in_faction_with = GER
+					has_capitulated = yes
+				}
+				has_war_with = GER
+			}
+		}
+		UKR = {
+			OR = {
+				AND = {
+					has_war_with = RUS
+					has_capitulated = yes
+				}
+				exists = no
+				has_war_with = GER
+			}
+		}
+		EST = {
+			is_in_faction_with = GER
+			has_capitulated = yes
+		}
+		is_neighbor_of = RUS
+	}
+}
+POL_nationalist_uprising_trigger = {
+	OR = {
+		RUS = { has_war_with = GER }
+		NOT = { country_exists = GER }
+	}
+	if = {
+		limit = { is_ai = yes }
+		NOT = { has_game_rule = { rule = POL_revolts option = POL_REVOLTS_TOTALIST } }
+		NOT = { has_game_rule = { rule = POL_revolts option = POL_REVOLTS_SYNDIE } }
+		NOT = { has_game_rule = { rule = POL_revolts option = POL_REVOLTS_RADSOC } }
+		NOT = { has_game_rule = { rule = POL_revolts option = POL_REVOLTS_NO_REVOLT } }
+	}
+	OR = {
+		POL_EE_capitulation_check = yes
+		if = {
+			limit = { is_ai = no }
+			check_variable = { POL_nat_influence > 50 }
+		}
+		else = {
+			OR = {
+				has_game_rule = { rule = POL_revolts option = POL_REVOLTS_NATPOP }
+				has_game_rule = { rule = POL_revolts option = POL_REVOLTS_PATAUT }
+				has_game_rule = { rule = POL_revolts option = POL_REVOLTS_SOCCON }
+			}
+		}
+	}
+}
+POL_syndicalist_revolution_trigger = {
+	OR = {
+		FRA = { has_war_with = GER }
+		RUS = {
+			has_socialist_government = yes
+			has_war_with = GER
+		}
+		NOT = { country_exists = GER }
+	}
+	if = {
+		limit = { is_ai = yes }
+		NOT = { has_game_rule = { rule = POL_revolts option = POL_REVOLTS_NATPOP } }
+		NOT = { has_game_rule = { rule = POL_revolts option = POL_REVOLTS_PATAUT } }
+		NOT = { has_game_rule = { rule = POL_revolts option = POL_REVOLTS_SOCCON } }
+		NOT = { has_game_rule = { rule = POL_revolts option = POL_REVOLTS_NO_REVOLT } }
+	}
+	OR = {
+		any_state_of = {
+			count = 4
+			target = { 780 55 51 56 57 59 } #Baden, Hesse, Eastern Rhineland, Oldenburg, Westphalia, Hannover
+			NOT = { is_fully_controlled_by = GER }
+		}
+		AND = {
+			RUS = {
+				has_socialist_government = yes
+				is_faction_leader = yes
+			}
+			POL_EE_capitulation_check = yes
+		}
+		if = {
+			limit = { is_ai = no }
+			check_variable = { POL_soc_influence > 50 }
+		}
+		else = {
+			OR = {
+				has_game_rule = { rule = POL_revolts option = POL_REVOLTS_TOTALIST }
+				has_game_rule = { rule = POL_revolts option = POL_REVOLTS_SYNDIE }
+				has_game_rule = { rule = POL_revolts option = POL_REVOLTS_RADSOC }
+			}
+		}
+	}
+}
+
+POL_has_black_monday = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_has_national_spirit
+			IDEA = POL_black_monday_modifier
+		}
+		has_dynamic_modifier = { modifier = POL_black_monday_modifier }
+	}
+}
+
+POL_has_issues_at_hand = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_has_national_spirit
+			IDEA = POL_issues_at_hand_modifier
+		}
+		has_dynamic_modifier = { modifier = POL_issues_at_hand_modifier }
+	}
+}

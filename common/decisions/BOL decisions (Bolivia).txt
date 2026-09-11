@@ -1,0 +1,236 @@
+operations = {
+	BOL_kill_CHL = {
+		icon = GFX_decision_generic_nationalism
+		allowed = { always = no }
+		available = {
+			OR = {
+				FROM = { has_war_with = ARG }
+				second_weltkrieg_has_begun = yes
+			}
+			if = {
+				limit = { tag = BOL }
+				1027 = { is_owned_and_controlled_by = ROOT }
+				688 = { is_owned_and_controlled_by = ROOT }
+			}
+		}
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+			if = {
+				limit = { ROOT = { has_socialist_government = yes } }
+				FROM = { has_socialist_government = no }
+			}
+			CHL = {
+				owns_any_state_of = {
+					506 # Antofagasta
+					872 # Arica
+					873 # Tarapaca
+				}
+			}
+		}
+		cost = 0
+		days_remove = 25
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 300
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger = yes }
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					if = {
+						limit = { has_war_with = ARG }
+						OR = {
+							FOP = { has_capitulated = no }
+							surrender_progress < 0.4
+						}
+					}
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel BOL_kill_CHL"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BOL_kill_CHL"
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BOL_kill_CHL"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+	BOL_declare_sa_hegemony_decision = {
+		icon = generic_nationalism
+
+		allowed = {
+			original_tag = BOL
+		}
+
+		visible = {
+			has_completed_focus = BOL_claims_of_the_confederation
+		}
+
+		available = {
+			is_subject = no
+			owns_state = 490
+			owns_state = 854
+			owns_state = 851
+			owns_state = 1031
+			owns_state = 495
+			owns_state = 1030
+			owns_state = 1040
+			owns_state = 855
+			owns_state = 1027
+			owns_state = 845
+			owns_state = 491
+			owns_state = 494
+			owns_state = 903
+			owns_state = 872
+			owns_state = 873
+			owns_state = 506
+			owns_state = 492
+		}
+
+		cost = 0
+		fire_only_once = yes
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BOL_declare_sa_hegemony_decision"
+			event_option_tooltip = bolivia_events.28.a
+			hidden_effect = { country_event = bolivia_events.28 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+foreign_politics = {
+	BOL_Join_Internationale = {
+		icon = GFX_decision_generic_nationalism
+		allowed = { always = no }
+		available = {
+			is_in_faction = no
+			is_subject = no
+			OR = {
+				any_neighbor_country = { is_in_faction_with = INT }
+				any_owned_state = { is_coastal = yes }
+			}
+			at_peace_or_same_enemies_as_INT = yes
+		}
+
+		visible = {
+			has_socialist_government = yes
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FOP_path option = FOP_PATH_UGARTISTAS_BOOSTED_RADSOC }
+				FOP = {
+					exists = yes
+					is_subject = no
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = WCA_forpol option = WCA_FORPOL_BOOSTED_WCA }
+				OR = {
+					NOT = { has_global_flag = USA_civil_war_begun_flag }
+					WCA = {
+						exists = yes
+						is_subject = no
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BOL_Join_Internationale"
+			FROM = {
+				country_event = bolivia_events.27
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+special_projects = {
+	BOL_diverge_resources_for_capital_ship = {
+		icon = generic_naval
+		allowed = { always = no }
+		fire_only_once = yes
+		days_remove = 365
+		cancel_trigger = {
+			has_navy_size = {
+				type = capital_ship
+				size > 0
+			}
+		}
+
+		modifier = {
+			industrial_capacity_dockyard = 0.50
+			consumer_goods_factor = 0.1
+			political_power_cost = 0.20
+		}
+
+		ai_will_do = { base = 300 }
+		fixed_random_seed = no
+	}
+
+	BOL_build_capital_ship = {
+		icon = generic_naval
+		allowed = { always = no } #manually activated
+		fire_only_once = yes
+		days_mission_timeout = 1095
+		is_good = no
+
+		available = {
+			has_navy_size = {
+				type = capital_ship
+				size > 0
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BOL_build_capital_ship"
+			add_war_support = 0.05
+			add_political_power = 50
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout BOL_build_capital_ship"
+			add_stability = -0.2
+			add_war_support = -0.2
+			add_political_power = -100
+		}
+		fixed_random_seed = no
+	}
+}
+

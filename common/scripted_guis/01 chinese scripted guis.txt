@@ -1,0 +1,219 @@
+scripted_gui = {
+	china_league_war_gui = {
+		context_type = decision_category
+		window_name = "china_league_war_gui_window"
+
+		ai_enabled = {
+			always = no
+		}
+
+		properties = {
+			china_league_war_flame = {
+				frame = china_league_war_flame_frame_var
+			}
+
+			china_league_war_collage_icon_chen = {
+				frame = ANQ.LEP_dead_factor?1
+			}
+			china_league_war_collage_icon_qi = {
+				frame = LEP.LEP_dead_factor?1
+			}
+			china_league_war_collage_icon_wang = {
+				frame = CHI.LEP_dead_factor?1
+			}
+			china_league_war_collage_icon_tinaran = {
+				frame = SHD.LEP_dead_factor?1
+			}
+			china_league_war_collage_icon_zongchang = {
+				frame = SHD.LEP_dead_factor?1
+			}
+		}
+
+		triggers = {
+			china_league_war_collage_icon_zongchang_visible = {
+				SHD = { SHD_is_led_by_zongchang = yes }
+			}
+
+			china_league_war_collage_icon_tinaran_visible = {
+				SHD = { SHD_is_led_by_tianran = yes }
+			}
+
+			china_league_war_collage_icon_sun_visible = {
+				SHD = {
+					SHD_is_led_by_zongchang = no
+					SHD_is_led_by_tianran = no
+				}
+			}
+		}
+	}
+
+	### China Alignment Button ###
+	china_alignment_button_gui = {
+		context_type = decision_category
+		window_name = "china_alignment_gui_button_window"
+		parent_window_token = decision_tab
+		dirty = china_alignment_gui_update
+
+		ai_enabled = { always = no }
+
+		visible = {
+			NOT = { has_global_flag = china_united }
+			is_ai = no
+		}
+
+		effects = {
+			china_alignment_gui_button_click = {
+				if = {
+					limit = { has_country_flag = china_alignment_gui_visibility }
+					clr_country_flag = china_alignment_gui_visibility
+					CHN_clear_china_alignment_gui = yes
+				}
+				else = {
+					set_country_flag = china_alignment_gui_visibility
+					CHN_calculate_china_alignment_gui_effect = yes
+				}
+				CHN_update_china_alignment_gui = yes
+			}
+		}
+	}
+
+	### China Alignment Window ###
+	china_alignment_gui = {
+		context_type = player_context
+		window_name = "china_alignment_gui_window"
+		dirty = china_alignment_gui_update
+
+		ai_enabled = { always = no }
+
+		visible = {
+			has_country_flag = china_alignment_gui_visibility
+		}
+
+		effects = {
+			china_alignment_button_close_click = {
+				clr_country_flag = china_alignment_gui_visibility
+				CHN_update_china_alignment_gui = yes
+			}
+		}
+
+		dynamic_lists = {
+			china_alignment_leaders_grid = {
+				array = china_alignment_leaders
+				entry_container = china_alignment_leaders_entry
+				value = china_alignment_leader
+				index = alignment_i
+				change_scope = yes
+			}
+			china_alignment_members = {
+				array = china_alignment_leader:china_alignment_members
+				entry_container = china_alignment_members_entry
+				change_scope = yes
+			}
+		}
+
+		properties = {
+			china_alignment_leaders_flag = {
+				image = "[THIS.GetFlag]"
+			}
+			china_alignment_flag = {
+				image = "[THIS.GetFlag]"
+			}
+			china_alignment_faction_info = {
+				image = "[ChinaGetAlignmentTenetsImage]"
+			}
+		}
+	}
+
+	### UPC Elections GUI ###
+	UPC_election_gui = {
+		context_type = decision_category
+		window_name = "UPC_election_gui_container"
+
+		dynamic_lists = {
+			UPC_election_main_grid = {
+				array = global.UPC_election_party_array
+				index = UPC_election_party_index
+				entry_container = UPC_party_entry
+				change_scope = no
+			}
+		}
+
+		triggers = {
+			UPC_party_ban_status_visible = {
+				meta_trigger = {
+					text = { has_country_flag = UPC_election_ban_[INDEX]_flag }
+					INDEX = "[UPC_GetPartyTag]"
+				}
+			}
+			UPC_party_ban_bg_visible = {
+				meta_trigger = {
+					text = { has_country_flag = UPC_election_ban_[INDEX]_flag }
+					INDEX = "[UPC_GetPartyTag]"
+				}
+			}
+			UPC_party_coalition_bg_visible = {
+				meta_trigger = {
+					text = { has_country_flag = UPC_[INDEX]_in_governing_coalition_flag }
+					INDEX = "[UPC_GetPartyTag]"
+				}
+			}
+			UPC_party_campaigning_as_bg_visible = {
+				UPC = {
+					OR = {
+						AND = {
+							if = {
+								limit = {
+									OR = {
+										NOT = { tag = YUN }
+										AND = {
+											tag = YUN
+											has_country_flag = YUN_UPC_satellite_election_path_flag
+										}
+									}
+								}
+								check_variable = { UPC_election_party_index = 3 }
+							}
+							if = {
+								limit = {
+									tag = YUN
+									NOT = { has_country_flag = YUN_UPC_satellite_election_path_flag }
+								}
+								check_variable = { UPC_election_party_index = 4 }
+							}
+							has_country_flag = UPC_is_campaigning_as_CDL
+						}
+						AND = {
+							if = {
+								limit = {
+									NOT = { tag = YUN }
+								}
+								check_variable = { UPC_election_party_index = 4 }
+							}
+							if = {
+								limit = {
+									tag = YUN
+									has_country_flag = YUN_UPC_satellite_election_path_flag
+								}
+								check_variable = { UPC_election_party_index = 5 }
+							}
+							if = {
+								limit = {
+									tag = YUN
+									NOT = { has_country_flag = YUN_UPC_satellite_election_path_flag }
+								}
+								check_variable = { UPC_election_party_index = 6 }
+							}
+							NOT = { has_country_flag = UPC_is_campaigning_as_CDL }
+						}
+					}
+				}
+			}
+		}
+
+		properties = {
+			UPC_party_leader = {
+				image = "[UPC_GetPartyLeaderPortrait]"
+			}
+		}
+	}
+}

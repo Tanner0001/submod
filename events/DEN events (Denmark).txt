@@ -1,0 +1,5156 @@
+###########################
+# Denmark Events
+###########################
+# Original by Thomahawk2k (Nordic Federation events by Packard and updated by Thomahawk2k) Revamp by Iffy, Blackleaf
+###########################
+
+add_namespace = denmark_events
+
+country_event = { #black monday arrives in Denmark
+	id = denmark_events.2
+	title = denmark_events.2.t
+	desc = denmark_events.2.d
+	picture = GFX_report_event_DEN_black_monday
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = DEN_idea_black_monday }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.2 option denmark_events.2.a"
+		name = denmark_events.2.a
+		add_stability = -0.1
+		effect_tooltip = { add_ideas = DEN_idea_black_monday }
+		complete_national_focus = DEN_black_monday
+		unlock_decision_category_tooltip = DEN_black_monday_category
+		hidden_effect = {
+			country_event = { id = denmark_events.3 days = 14 }
+			activate_mission = DEN_bm_crisis_worsens
+		}
+	}
+}
+country_event = { #strike
+	id = denmark_events.3
+	title = denmark_events.3.t
+	desc = denmark_events.3.d
+	picture = GFX_report_event_DEN_strike
+
+	is_triggered_only = yes
+
+	option = { #K then
+		log = "[GetLogInfo]: event denmark_events.3 option denmark_events.3.a"
+		name = denmark_events.3.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+				}
+			}
+		}
+		add_timed_idea = {
+			idea = DEN_idea_strike
+			days = 180
+		}
+		add_to_variable = {
+			DEN_economic_credits = -1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+		add_to_variable = {
+			DEN_opposition_concessions = 1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+	}
+
+	option = { #Negotiate
+		log = "[GetLogInfo]: event denmark_events.3 option denmark_events.3.b"
+		name = denmark_events.3.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM } }
+			}
+		}
+		add_political_power = -40
+		add_timed_idea = {
+			idea = DEN_idea_strike
+			days = 60
+		}
+		add_to_variable = {
+			DEN_cabinet_policy_support = 1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+	}
+
+	option = { #Have the police drive them back in the workplaces
+		log = "[GetLogInfo]: event denmark_events.3 option denmark_events.3.c"
+		name = denmark_events.3.c
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+				}
+			}
+		}
+		add_stability = -0.05
+		add_political_power = -20
+		add_to_variable = {
+			DEN_economic_credits = 1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+		add_to_variable = {
+			DEN_cabinet_policy_support = -1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = denmark_events.7 days = 20 }
+		}
+	}
+}
+
+country_event = { #The Left stirs trouble
+	id = denmark_events.4
+	title = denmark_events.4.t
+	desc = denmark_events.4.d
+	picture = GFX_report_event_DEN_syndicalists
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.4 option denmark_events.4.a"
+		name = denmark_events.4.a
+		add_popularity = { ideology = syndicalist popularity = 0.05 }
+		add_popularity = { ideology = totalist popularity = 0.02 }
+	}
+}
+
+country_event = { #Dansk Samling and the ND clash
+	id = denmark_events.5
+	title = denmark_events.5.t
+	desc = denmark_events.5.d
+	picture = GFX_report_event_DEN_dansk_samling
+
+	is_triggered_only = yes
+
+	option = { #Samling comes out victorious
+		log = "[GetLogInfo]: event denmark_events.5 option denmark_events.5.a"
+		name = denmark_events.5.a
+		add_stability = -0.02
+		add_popularity = { ideology = paternal_autocrat popularity = 0.01 }
+		add_popularity = { ideology = national_populist popularity = -0.02 }
+	}
+
+	option = { #ND comes out victorious
+		log = "[GetLogInfo]: event denmark_events.5 option denmark_events.5.b"
+		name = denmark_events.5.b
+		add_stability = -0.02
+		add_popularity = { ideology = national_populist popularity = 0.01 }
+		add_popularity = { ideology = paternal_autocrat popularity = -0.02 }
+	}
+}
+
+country_event = { #Arildskov visits Savinkov
+	id = denmark_events.6
+	title = denmark_events.6.t
+	desc = denmark_events.6.d
+	picture = GFX_report_event_DEN_max_arildskov
+
+	is_triggered_only = yes
+
+	option = { #'Fører', it sounds so dumb...
+		log = "[GetLogInfo]: event denmark_events.6 option denmark_events.6.a"
+		name = denmark_events.6.a
+		add_popularity = { ideology = national_populist popularity = 0.03 }
+		add_popularity = { ideology = paternal_autocrat popularity = -0.01 }
+	}
+}
+
+country_event = { #Troubling reports on the farms
+	id = denmark_events.7
+	title = denmark_events.7.t
+	desc = denmark_events.7.d
+	picture = GFX_report_event_DEN_farm
+
+	is_triggered_only = yes
+
+	option = { #Uh oh...
+		log = "[GetLogInfo]: event denmark_events.7 option denmark_events.7.a"
+		name = denmark_events.7.a
+		add_stability = -0.15
+		country_event = { id = denmark_events.9 days = 7 }
+	}
+}
+
+country_event = { #Plans for Economic Recovery
+	id = denmark_events.8
+	title = denmark_events.8.t
+	desc = denmark_events.8.d
+	picture = GFX_report_event_DEN_stauning_cabinet
+
+	is_triggered_only = yes
+
+	option = { #Let's get to work
+		log = "[GetLogInfo]: event denmark_events.8 option denmark_events.8.a"
+		name = denmark_events.8.a
+		set_country_flag = DEN_recovery_preparedness
+		swap_ideas = {
+			remove_idea = DEN_idea_black_monday
+			add_idea = DEN_idea_agricultural_depression_bad
+		}
+	}
+}
+
+country_event = { #Farm Foreclosures
+	id = denmark_events.9
+	title = denmark_events.9.t
+	desc = denmark_events.9.d
+	picture = GFX_report_event_DEN_farm
+
+	is_triggered_only = yes
+
+	option = { #Send relief to them
+		log = "[GetLogInfo]: event denmark_events.9 option denmark_events.9.a"
+		name = denmark_events.9.a
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+				}
+			}
+		}
+		add_to_variable = {
+			DEN_opposition_concessions = 1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		add_to_variable = {
+			DEN_economic_credits = -1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+		add_political_power = -25
+	}
+
+	option = { #Focus on Urban Workers
+		log = "[GetLogInfo]: event denmark_events.9 option denmark_events.9.b"
+		name = denmark_events.9.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM } }
+			}
+		}
+		add_to_variable = {
+			DEN_cabinet_policy_support = 1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+		add_to_variable = {
+			DEN_economic_credits = 1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+		add_political_power = -50
+		add_stability = -0.05
+	}
+
+	after = {
+		hidden_effect = { country_event = { id = denmark_events.11 days = 14 } }
+	}
+}
+
+country_event = { #Farmer's strike
+	id = denmark_events.11
+	title = denmark_events.11.t
+	desc = denmark_events.11.d
+	picture = GFX_report_event_DEN_strike
+
+	trigger = {
+		NOT = { has_completed_focus = DEN_recovery }
+	}
+
+	is_triggered_only = yes
+
+	option = { #Negotiate with the strikers
+		log = "[GetLogInfo]: event denmark_events.11 option denmark_events.11.a"
+		name = denmark_events.11.a
+		ai_chance = { base = 0 }
+		add_to_variable = {
+			DEN_opposition_concessions = 1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		add_political_power = -50
+	}
+
+	option = { #We'll hold out
+		log = "[GetLogInfo]: event denmark_events.11 option denmark_events.11.b"
+		name = denmark_events.11.b
+		ai_chance = { base = 100 }
+		add_ideas = DEN_idea_farmers_strike
+		add_to_variable = {
+			DEN_opposition_concessions = -1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		hidden_effect = {
+			country_event = { id = denmark_events.12 days = 30 }
+		}
+	}
+
+	option = { #Break it
+		log = "[GetLogInfo]: event denmark_events.11 option denmark_events.11.c"
+		name = denmark_events.11.c
+		ai_chance = { base = 0 }
+		add_stability = -0.1
+		add_to_variable = {
+			DEN_opposition_concessions = -1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		add_to_variable = {
+			DEN_economic_credits = 1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+	}
+}
+
+country_event = { #Farmer's strike remains
+	id = denmark_events.12
+	title = denmark_events.12.t
+	desc = denmark_events.12.d
+	picture = GFX_report_event_DEN_strike
+
+	trigger = {
+		NOT = { has_completed_focus = DEN_recovery }
+	}
+
+	is_triggered_only = yes
+
+	option = { #Give these concessions
+		log = "[GetLogInfo]: event denmark_events.12 option denmark_events.12.a"
+		name = denmark_events.12.a
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+				}
+			}
+		}
+		add_political_power = -50
+		add_to_variable = {
+			DEN_opposition_concessions = 2
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		add_to_variable = {
+			DEN_cabinet_policy_support = 1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+		remove_ideas = DEN_idea_farmers_strike
+	}
+
+	option = { #We'll still hold out
+		log = "[GetLogInfo]: event denmark_events.12 option denmark_events.12.b"
+		name = denmark_events.12.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM } }
+			}
+		}
+		add_to_variable = {
+			DEN_opposition_concessions = -1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		hidden_effect = {
+			country_event = { id = denmark_events.13 days = 14 }
+		}
+	}
+}
+
+country_event = { #Farmer's strike remains
+	id = denmark_events.13
+	title = denmark_events.13.t
+	desc = denmark_events.13.d
+	picture = GFX_report_event_DEN_strike
+
+	trigger = {
+		NOT = { has_completed_focus = DEN_recovery }
+	}
+
+	is_triggered_only = yes
+
+	option = { #We won
+		log = "[GetLogInfo]: event denmark_events.13 option denmark_events.13.a"
+		name = denmark_events.13.a
+		remove_ideas = DEN_idea_farmers_strike
+		add_to_variable = {
+			DEN_cabinet_policy_support = 1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+		add_to_variable = {
+			DEN_economic_credits = 1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+	}
+}
+
+country_event = { #Negotiate with KF
+	id = denmark_events.14
+	title = denmark_events.14.t
+	desc = denmark_events.14.d
+
+	is_triggered_only = yes
+
+	option = { #We Will Concede
+		log = "[GetLogInfo]: event denmark_events.14 option denmark_events.14.a"
+		name = denmark_events.14.a
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+				}
+			}
+		}
+		add_to_variable = {
+			DEN_opposition_concessions = 1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		add_to_variable = {
+			DEN_economic_credits = -1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+	}
+
+	option = { #Never!
+		log = "[GetLogInfo]: event denmark_events.14 option denmark_events.14.b"
+		name = denmark_events.14.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM } }
+			}
+		}
+		add_to_variable = {
+			DEN_cabinet_policy_support = 1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+	}
+}
+
+country_event = { #Position of the Krone
+	id = denmark_events.15
+	title = denmark_events.15.t
+	desc = denmark_events.15.d
+
+	is_triggered_only = yes
+
+	option = { #Let us try this new scheme
+		log = "[GetLogInfo]: event denmark_events.15 option denmark_events.15.a"
+		name = denmark_events.15.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM } }
+			}
+		}
+		add_stability = -0.03
+		add_to_variable = {
+			DEN_cabinet_policy_support = 1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+		add_to_variable = {
+			DEN_economic_credits = 1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+		custom_effect_tooltip = DEN_abandoned_gold_standard_tt
+		set_country_flag = DEN_abandoned_gold_standard
+	}
+
+	option = { #The gold standard is kept
+		log = "[GetLogInfo]: event denmark_events.15 option denmark_events.15.b"
+		name = denmark_events.15.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+				}
+			}
+		}
+		add_to_variable = {
+			DEN_opposition_concessions = 1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+	}
+}
+
+country_event = { #A Demand for Decisive Action
+	id = denmark_events.16
+	title = denmark_events.16.t
+	desc = denmark_events.16.d
+
+	is_triggered_only = yes
+
+	option = { #Storm the factories and crush the strikers, lest they bring our industry to its knees
+		log = "[GetLogInfo]: event denmark_events.16 option denmark_events.16.a"
+		name = denmark_events.16.a
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+				}
+			}
+		}
+		add_stability = -0.035
+		add_to_variable = {
+			DEN_opposition_concessions = 1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		add_to_variable = {
+			DEN_cabinet_policy_support = -1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+	}
+
+	option = { #It is their right to strike, but make them come to the negotiating table
+		log = "[GetLogInfo]: event denmark_events.16 option denmark_events.16.b"
+		name = denmark_events.16.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM } }
+			}
+		}
+		add_political_power = -25
+		add_to_variable = {
+			DEN_cabinet_policy_support = 1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+		add_to_variable = {
+			DEN_economic_credits = 1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+	}
+}
+
+country_event = { #Act on Measures for the Protection of the Danish Currency
+	id = denmark_events.17
+	title = denmark_events.17.t
+	desc = denmark_events.17.d
+
+	is_triggered_only = yes
+
+	option = { #Our responsibility is to implement policies that will work for the common Dane
+		log = "[GetLogInfo]: event denmark_events.17 option denmark_events.17.a"
+		name = denmark_events.17.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+				}
+			}
+		}
+		add_to_variable = {
+			DEN_opposition_concessions = -1
+			tooltip = DEN_modify_opposition_concessions_tt
+		}
+		add_to_variable = {
+			DEN_cabinet_policy_support = 1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+	}
+
+	option = { #Let's see how far we can rock this boat
+		log = "[GetLogInfo]: event denmark_events.17 option denmark_events.17.b"
+		name = denmark_events.17.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM } }
+			}
+		}
+		add_stability = -0.035
+		add_to_variable = {
+			DEN_cabinet_policy_support = -1
+			tooltip = DEN_modify_cabinet_policy_support_tt
+		}
+		add_to_variable = {
+			DEN_economic_credits = 1
+			tooltip = DEN_modify_economic_credits_tt
+		}
+	}
+}
+
+country_event = { #Kanslergade Agreement
+	id = denmark_events.18
+	title = denmark_events.18.t
+	desc = denmark_events.18.d
+	picture = GFX_report_event_DEN_kanslergade
+
+	is_triggered_only = yes
+
+	option = { #The Kanslergade agreement is reached
+		log = "[GetLogInfo]: event denmark_events.18 option denmark_events.18.a"
+		name = denmark_events.18.a
+		trigger = {
+			NOT = { check_variable = { DEN_opposition_concessions < DEN_cabinet_policy_support } }
+		}
+		custom_effect_tooltip = den_tt_kanslergade_agreement_successful
+		remove_ideas = DEN_idea_opposition_controlled_landsting
+		set_country_flag = DEN_kanslergade_agreement_success
+	}
+
+	option = { #The Kanslergade agreement fails
+		log = "[GetLogInfo]: event denmark_events.18 option denmark_events.18.b"
+		name = denmark_events.18.b
+		trigger = {
+			check_variable = { DEN_opposition_concessions < DEN_cabinet_policy_support }
+		}
+		custom_effect_tooltip = den_tt_kanslergade_agreement_failure
+		set_country_flag = DEN_kanslergade_agreement_fail
+		hidden_effect = { country_event = { id = denmark_events.19 days = 21 } }
+	}
+
+	after = {
+		clear_variable = DEN_opposition_concessions
+		clear_variable = DEN_cabinet_policy_support
+	}
+}
+
+country_event = { #The [GetMonth] Folketing Elections of [GetYear]
+	id = denmark_events.19
+	title = denmark_events.19.t
+	desc = denmark_events.19.d
+	picture = GFX_report_event_DEN_folketing
+
+	is_triggered_only = yes
+
+	option = { #Madsen-Mygdal leads Venstre to victory.
+		log = "[GetLogInfo]: event denmark_events.19 option denmark_events.19.a"
+		name = denmark_events.19.a
+		set_politics = { ruling_party = market_liberal elections_allowed = yes }
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		activate_advisor = DEN_thomas_madsen_mygdal_sic
+		remove_ideas = DEN_idea_opposition_controlled_landsting
+		hidden_effect = {
+			set_country_leader_description = {
+				desc = DEN_christian_af_glucksborg_ka_failed_leader_desc
+			}
+		}
+	}
+}
+
+country_event = { #Establishment of the rigspolitiet
+	id = denmark_events.20
+	title = denmark_events.20.t
+	desc = denmark_events.20.d
+	picture = GFX_report_event_DEN_rigspolitiet
+
+	is_triggered_only = yes
+
+	option = { #interesting
+		log = "[GetLogInfo]: event denmark_events.20 option denmark_events.20.a"
+		name = denmark_events.20.a
+		add_stability = 0.02
+	}
+}
+
+country_event = { #Birth of Princess Margrethe
+	id = denmark_events.21
+	title = denmark_events.21.t
+	desc = denmark_events.21.d
+	picture = GFX_report_event_DEN_princess_margrethe
+
+	trigger = {
+		is_monarchy = yes
+	}
+
+	is_triggered_only = yes
+
+	option = { #interesting
+		log = "[GetLogInfo]: event denmark_events.21 option denmark_events.21.a"
+		name = denmark_events.21.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Reopening of the Storstrøm bridge
+	id = denmark_events.22
+	title = denmark_events.22.t
+	desc = denmark_events.22.d
+	picture = GFX_report_event_DEN_storstrom_bridge
+
+	is_triggered_only = yes
+
+	option = { #interesting
+		log = "[GetLogInfo]: event denmark_events.22 option denmark_events.22.a"
+		name = denmark_events.22.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Death of Hans Niels Andersen
+	id = denmark_events.23
+	title = denmark_events.23.t
+	desc = denmark_events.23.d
+	picture = GFX_report_event_DEN_funeral
+
+	is_triggered_only = yes
+
+	option = { #rip
+		log = "[GetLogInfo]: event denmark_events.23 option denmark_events.23.a"
+		name = denmark_events.23.a
+	}
+}
+
+country_event = { #Transferral of Norway-related documents to Norway
+	id = denmark_events.24
+	title = denmark_events.24.t
+	desc = denmark_events.24.d
+	picture = GFX_report_event_DEN_black_monday
+
+	trigger = {
+		NOR = { has_democratic_government = yes }
+	}
+
+	is_triggered_only = yes
+
+	option = { #Good luck with it!
+		log = "[GetLogInfo]: event denmark_events.24 option denmark_events.24.a"
+		name = denmark_events.24.a
+		ai_chance = { base = 90 }
+		NOR = { country_event = { id = denmark_events.25 days = 2 } }
+	}
+
+	option = { #Ehm, I just noticed an administrative error
+		log = "[GetLogInfo]: event denmark_events.24 option denmark_events.24.b"
+		name = denmark_events.24.b
+		ai_chance = { base = 90 }
+		#opinion modifier
+	}
+}
+
+country_event = { #Transferral of Norway-related documents to Norway, Norwegian perspective
+	id = denmark_events.25
+	title = denmark_events.25.t
+	desc = denmark_events.25.d
+	picture = GFX_report_event_DEN_black_monday
+
+	is_triggered_only = yes
+
+	option = { #Great!
+		log = "[GetLogInfo]: event denmark_events.25 option denmark_events.25.a"
+		name = denmark_events.25.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Death of Thomas Thrige
+	id = denmark_events.27
+	title = denmark_events.27.t
+	desc = denmark_events.27.d
+	picture = GFX_report_event_DEN_funeral
+
+	is_triggered_only = yes
+
+	option = { #rip
+		log = "[GetLogInfo]: event denmark_events.27 option denmark_events.27.a"
+		name = denmark_events.27.a
+	}
+}
+
+country_event = { #Death of Harald Scavenius
+	id = denmark_events.28
+	title = denmark_events.28.t
+	desc = denmark_events.28.d
+	picture = GFX_report_event_DEN_funeral
+
+	is_triggered_only = yes
+
+	option = { #rip
+		log = "[GetLogInfo]: event denmark_events.28 option denmark_events.28.a"
+		name = denmark_events.28.a
+	}
+}
+
+country_event = { #Death of Peder Oluf Pedersen
+	id = denmark_events.29
+	title = denmark_events.29.t
+	desc = denmark_events.29.d
+	picture = GFX_report_event_DEN_funeral
+
+	is_triggered_only = yes
+
+	option = { #rip
+		log = "[GetLogInfo]: event denmark_events.29 option denmark_events.29.a"
+		name = denmark_events.29.a
+	}
+}
+
+country_event = { #Death of Thorvald Stauning
+	id = denmark_events.30
+	title = denmark_events.30.t
+	desc = denmark_events.30.d
+	picture = GFX_report_event_DEN_funeral
+
+	is_triggered_only = yes
+
+	option = { #rip
+		log = "[GetLogInfo]: event denmark_events.30 option denmark_events.30.a"
+		name = denmark_events.30.a
+		DEN_thorvald_stauning = {
+			kill_character = yes
+		}
+		if = {
+			limit = {
+				is_monarchy = yes
+				OR = {
+					has_government = social_democrat
+					has_government = social_liberal
+				}
+			}
+			activate_advisor = DEN_vilhelm_buhl_sic
+		}
+		else_if = {
+			limit = {
+				is_monarchy = no
+				has_government = social_liberal
+			}
+			activate_advisor = DEN_vilhelm_buhl_sic
+		}
+		else_if = {
+			limit = {
+				is_monarchy = no
+				has_government = social_democrat
+			}
+			DEN_vilhelm_buhl = {
+				promote_character = social_democrat_subtype
+			}
+			activate_advisor = DEN_peter_munch_sic
+		}
+		else_if = {
+			limit = {
+				DEN_sigvald_hellberg = {
+					is_second_in_command = yes
+				}
+				has_government = radical_socialist
+			}
+			DEN_sigvald_hellberg = {
+				promote_character = radical_socialist_subtype
+			}
+			activate_advisor = DEN_frederik_borgbjerg_sic
+		}
+	}
+}
+
+country_event = { #Trouble among the conservatives: Christmas Møller vs Victor Pürschel
+	id = denmark_events.32
+	title = denmark_events.32.t
+	desc = denmark_events.32.d
+	picture = GFX_report_event_DEN_conservatives
+
+	is_triggered_only = yes
+
+	option = { #Worrying..
+		log = "[GetLogInfo]: event denmark_events.32 option denmark_events.32.a"
+		name = denmark_events.32.a
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.03
+		}
+	}
+}
+
+country_event = { #Denmark wants to join the reichspakt
+	id = denmark_events.34
+	title = denmark_events.34.t
+	desc = denmark_events.34.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	option = { #Join the Reichspakt
+		log = "[GetLogInfo]: event denmark_events.34 option denmark_events.34.a"
+		name = denmark_events.34.a
+		ai_chance = { base = 100 }
+		DEN = { country_event = { id = denmark_events.35 days = 2 } }
+		add_to_faction = DEN
+	}
+
+	option = { #Remain Neutral like last time
+		log = "[GetLogInfo]: event denmark_events.34 option denmark_events.34.b"
+		name = denmark_events.34.b
+		ai_chance = { base = 0 }
+		DEN = { country_event = { id = denmark_events.36 days = 2 } }
+	}
+}
+
+country_event = { #Germany says yes
+	id = denmark_events.35
+	title = denmark_events.35.t
+	desc = denmark_events.35.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	option = { #Join the Reichspakt
+		log = "[GetLogInfo]: event denmark_events.35 option denmark_events.35.a"
+		name = denmark_events.35.a
+		effect_tooltip = {
+			GER = { add_to_faction = DEN }
+		}
+	}
+}
+
+country_event = { #Germany says no
+	id = denmark_events.36
+	title = denmark_events.36.t
+	desc = denmark_events.36.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	option = { #Join the Reichspakt
+		log = "[GetLogInfo]: event denmark_events.36 option denmark_events.36.a"
+		name = denmark_events.36.a
+		add_political_power = -25
+	}
+}
+
+country_event = { #The king fires the cabinet Socdem Perspective
+	id = denmark_events.37
+	title = denmark_events.37.t
+	desc = denmark_events.37.d
+	picture = GFX_report_event_DEN_christian_x
+
+	trigger = {
+		is_monarchy = yes
+	}
+
+	is_triggered_only = yes
+
+	option = { #What?
+		log = "[GetLogInfo]: event denmark_events.37 option denmark_events.37.a"
+		name = denmark_events.37.a
+		set_politics = { ruling_party = authoritarian_democrat elections_allowed = no }
+		DEN_thorvald_stauning = { retire = yes }
+		activate_advisor = DEN_victor_puerschel_sic
+		add_ideas = DEN_idea_doubtful_military
+		add_ideas = DEN_idea_KomF_general_strike
+		hidden_effect = {
+			country_event = { id = denmark_events.38 days = 35 }
+			remove_ideas = DEN_idea_opposition_controlled_landsting
+		}
+		GER = { country_event = denmark_events.34 }
+		hidden_effect = {
+			news_event = denmark_events.95
+			set_country_leader_description = {
+				desc = DEN_christian_af_glucksborg_auth_victory_puerschel_leader_desc
+			}
+		}
+	}
+}
+
+country_event = { #The king fires the cabinet MarLib Perspective
+	id = denmark_events.40
+	title = denmark_events.40.t
+	desc = denmark_events.40.d
+	picture = GFX_report_event_DEN_christian_x
+
+	trigger = {
+		is_monarchy = yes
+	}
+
+	is_triggered_only = yes
+
+	option = { #What?
+		log = "[GetLogInfo]: event denmark_events.40 option denmark_events.40.a"
+		name = denmark_events.40.a
+		set_politics = { ruling_party = social_conservative elections_allowed = yes }
+		activate_advisor = DEN_john_christmas_moeller_sic
+		add_popularity = { ideology = social_conservative popularity = 0.1 }
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		add_ideas = DEN_idea_opposition_in_open_protest
+		hidden_effect = {
+			remove_ideas = DEN_idea_opposition_controlled_landsting
+		}
+		GER = { country_event = denmark_events.34 }
+		hidden_effect = {
+			news_event = denmark_events.95
+			set_country_leader_description = {
+				desc = DEN_christian_af_glucksborg_auth_victory_moeller_leader_desc
+			}
+		}
+	}
+}
+
+country_event = { #Stauning Traitor
+	id = denmark_events.38
+	title = denmark_events.38.t
+	desc = denmark_events.38.d
+	picture = GFX_report_event_DEN_ep_christian
+
+	trigger = {
+		has_government = authoritarian_democrat
+	}
+
+	is_triggered_only = yes
+
+	option = { #How dare
+		log = "[GetLogInfo]: event denmark_events.38 option denmark_events.38.a"
+		name = denmark_events.38.a
+		set_party_name = {
+			ideology = radical_socialist
+			long_name = DEN_stauning_defect_radsoc_long
+			name = DEN_stauning_defect_radsoc
+		}
+		add_political_power = -50
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.05
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { #Welfare is bad yo
+	id = denmark_events.39
+	title = denmark_events.39.t
+	desc = denmark_events.39.d
+	picture = GFX_report_event_DEN_ep_christian2
+
+	is_triggered_only = yes
+
+	option = { #Eviscerate it
+		log = "[GetLogInfo]: event denmark_events.39 option denmark_events.39.a"
+		name = denmark_events.39.a
+
+		ai_chance = { base = 0 }
+
+		add_stability = -0.05
+		add_political_power = 50
+		swap_ideas = {
+			remove_idea = DEN_idea_universal_healthcare
+			add_idea = DEN_idea_reform_relics
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.15
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.2
+		}
+	}
+
+	option = { #Partial Removal
+		log = "[GetLogInfo]: event denmark_events.39 option denmark_events.39.b"
+		name = denmark_events.39.b
+		swap_ideas = {
+			remove_idea = DEN_idea_universal_healthcare
+			add_idea = DEN_idea_reform_relics
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.10
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.15
+		}
+	}
+
+	option = { #Leave it be
+		log = "[GetLogInfo]: event denmark_events.39 option denmark_events.39.c"
+		name = denmark_events.39.c
+
+		ai_chance = { base = 0 }
+
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.05
+		}
+		add_stability = 0.05
+	}
+}
+
+country_event = { #Westergaard Begins Moving
+	id = denmark_events.41
+	title = denmark_events.41.t
+	desc = denmark_events.41.d
+	picture = GFX_report_event_DEN_jack_westergaard1
+
+	is_triggered_only = yes
+
+	option = { #oh no
+		log = "[GetLogInfo]: event denmark_events.41 option denmark_events.41.a"
+		name = denmark_events.41.a
+		add_stability = -0.03
+		hidden_effect = {
+			DEN = { country_event = { id = denmark_events.42 days = 20 } }
+		}
+	}
+}
+
+country_event = { #Westergaard Rallies
+	id = denmark_events.42
+	title = denmark_events.42.t
+	desc = denmark_events.42.d
+	picture = GFX_report_event_DEN_jack_westergaard3
+
+	is_triggered_only = yes
+
+	option = { #how could he
+		log = "[GetLogInfo]: event denmark_events.42 option denmark_events.42.a"
+		name = denmark_events.42.a
+		add_political_power = -25
+		hidden_effect = {
+			DEN = { country_event = { id = denmark_events.43 days = 20 } }
+		}
+	}
+}
+
+country_event = { #Westergaard Meets with King
+	id = denmark_events.43
+	title = denmark_events.43.t
+	desc = denmark_events.43.d
+	picture = GFX_report_event_DEN_jack_westergaard2
+
+	is_triggered_only = yes
+
+	option = { #not him
+		log = "[GetLogInfo]: event denmark_events.43 option denmark_events.43.a"
+		name = denmark_events.43.a
+	}
+}
+
+country_event = { #Westergaard Ultimatum
+	id = denmark_events.44
+	title = denmark_events.44.t
+	desc = denmark_events.44.d
+	picture = GFX_report_event_DEN_jack_westergaard1
+
+	is_triggered_only = yes
+
+	option = { #Call on loyal army units in Copenhagen to maintain order at all costs.
+		log = "[GetLogInfo]: event denmark_events.44 option denmark_events.44.a"
+		name = denmark_events.44.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_WESTERGAARD_AUTDEM }
+			}
+		}
+		country_event = denmark_events.45
+	}
+
+	option = { #Resign, there is no other option.
+		log = "[GetLogInfo]: event denmark_events.44 option denmark_events.44.b"
+		name = denmark_events.44.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_SOCCON }
+			}
+		}
+		country_event = denmark_events.46
+	}
+}
+
+country_event = { #Westergaard Loses
+	id = denmark_events.45
+	title = denmark_events.45.t
+	desc = denmark_events.45.d
+	picture = GFX_report_event_DEN_jack_westergaard3
+
+	is_triggered_only = yes
+
+	option = { #Westergaard L
+		log = "[GetLogInfo]: event denmark_events.45 option denmark_events.45.a"
+		name = denmark_events.45.a
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.1
+		}
+		add_stability = 0.05
+		DEN_jack_westergaard = { retire = yes }
+	}
+}
+
+country_event = { #Westergaard Wins
+	id = denmark_events.46
+	title = denmark_events.46.t
+	desc = denmark_events.46.d
+	picture = GFX_report_event_DEN_jack_westergaard2
+
+	is_triggered_only = yes
+
+	option = { #Westergaard W
+		log = "[GetLogInfo]: event denmark_events.46 option denmark_events.46.a"
+		name = denmark_events.46.a
+		set_party_name = {
+			ideology = social_conservative
+			long_name = DEN_westergaard_soccon_long
+			name = DEN_westergaard_soccon
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.05
+		}
+		DEN_john_christmas_moeller = { retire = yes }
+		activate_advisor = DEN_jack_westergaard_sic
+	}
+}
+
+country_event = { #Unicameralism
+	id = denmark_events.47
+	title = denmark_events.47.t
+	desc = denmark_events.47.d
+	picture = GFX_report_event_DEN_ep_moller
+
+	is_triggered_only = yes
+
+	option = { #It passes
+		log = "[GetLogInfo]: event denmark_events.47 option denmark_events.47.a"
+		name = denmark_events.47.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = -0.05
+		}
+		add_stability = 0.15
+		add_political_power = 100
+	}
+}
+
+country_event = { #Possibly Staged Event
+	id = denmark_events.48
+	title = denmark_events.48.t
+	desc = denmark_events.48.d
+	picture = GFX_report_event_DEN_destruction
+
+	is_triggered_only = yes
+
+	option = { #Definitely real
+		log = "[GetLogInfo]: event denmark_events.48 option denmark_events.48.a"
+		name = denmark_events.48.a
+		add_ideas = DEN_idea_chaos_in_copenhagen
+	}
+}
+
+country_event = { #Westergaard Succeeds
+	id = denmark_events.49
+	title = denmark_events.49.t
+	desc = denmark_events.49.d
+	picture = GFX_report_event_DEN_jack_westergaard3
+
+	is_triggered_only = yes
+
+	option = { #Definitely real
+		log = "[GetLogInfo]: event denmark_events.49 option denmark_events.49.a"
+		name = denmark_events.49.a
+		remove_ideas = DEN_idea_chaos_in_copenhagen
+		set_politics = { ruling_party = authoritarian_democrat elections_allowed = no }
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.15
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = -0.15
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = -0.15
+		}
+		set_party_name = {
+			ideology = authoritarian_democrat
+			long_name = DEN_westergaard_authdem_long
+			name = DEN_westergaard_authdem
+		}
+		add_manpower = -100
+		hidden_effect = {
+			if = {
+				limit = {
+					GER = {
+						GER_kurt_von_schleicher = {
+							is_second_in_command = yes
+						}
+					}
+				}
+				GER = { country_event = { id = denmark_events.1006 days = 30 } }
+			}
+			DEN = { country_event = { id = denmark_events.1021 days = 35 } }
+		}
+	}
+}
+
+country_event = { #Restore United Liberals?
+	id = denmark_events.50
+	title = denmark_events.50.t
+	desc = denmark_events.50.d
+	picture = GFX_report_event_DEN_peter_munch1
+
+	is_triggered_only = yes
+
+	option = { #Nah Don't Bother
+		log = "[GetLogInfo]: event denmark_events.50 option denmark_events.50.a"
+		name = denmark_events.50.a
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		add_political_power = 100
+		add_stability = 0.15
+	}
+
+	option = { #On one condition...
+		log = "[GetLogInfo]: event denmark_events.50 option denmark_events.50.b"
+		name = denmark_events.50.b
+		GER = { country_event = { id = denmark_events.150 days = 7 } }
+	}
+}
+
+country_event = { #DEN asks to leave RP
+	id = denmark_events.150
+	title = denmark_events.150.t
+	desc = denmark_events.150.d
+
+	is_triggered_only = yes
+
+	option = { #Make them stay
+		log = "[GetLogInfo]: event denmark_events.150 option denmark_events.150.a"
+		name = denmark_events.150.a
+		ai_chance = { base = 0 }
+		add_political_power = -35
+		add_stability = 0.05
+		DEN = { country_event = { id = denmark_events.250 days = 7 } }
+	}
+
+	option = { #Let them go
+		log = "[GetLogInfo]: event denmark_events.150 option denmark_events.150.b"
+		name = denmark_events.150.b
+		ai_chance = { base = 100 }
+		add_political_power = 50
+		add_stability = -0.05
+		DEN = { country_event = { id = denmark_events.350 days = 7 } }
+	}
+}
+
+country_event = { #GER Denies
+	id = denmark_events.250
+	title = denmark_events.250.t
+	desc = denmark_events.250.d
+
+	is_triggered_only = yes
+
+	option = { #Oh Well
+		log = "[GetLogInfo]: event denmark_events.250 option denmark_events.250.a"
+		name = denmark_events.250.a
+		add_popularity = {
+			ideology = market_liberal
+			popularity = -0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.1
+		}
+		add_political_power = 50
+		add_stability = 0.05
+		add_opinion_modifier = {
+			modifier = KR_outraged
+			target = GER
+		}
+	}
+}
+
+country_event = { #GER Agrees
+	id = denmark_events.350
+	title = denmark_events.350.t
+	desc = denmark_events.350.d
+	picture = GFX_report_event_DEN_ep_mygdal
+
+	is_triggered_only = yes
+
+	option = { #Yay!
+		log = "[GetLogInfo]: event denmark_events.350 option denmark_events.350.a"
+		name = denmark_events.350.a
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.1
+		}
+		swap_ideas = {
+			remove_idea = DEN_idea_liberal_coalition3
+			add_idea = DEN_idea_united_liberals
+		}
+		leave_faction = yes
+		set_party_name = {
+			ideology = market_liberal
+			long_name = DEN_forenede_venstre_marlib_long
+			name = DEN_forenede_venstre_marlib
+		}
+		set_party_name = {
+			ideology = social_liberal
+			long_name = DEN_forenede_venstre_soclib_long
+			name = DEN_forenede_venstre_soclib
+		}
+	}
+}
+
+country_event = { #After Christian is deposed, Germany has choices
+	id = denmark_events.51
+	title = denmark_events.51.t
+	desc = denmark_events.51.d
+	picture = GFX_report_event_DEN_haer
+
+	is_triggered_only = yes
+
+	option = { #Open negotiations of goodwill
+		log = "[GetLogInfo]: event denmark_events.51 option denmark_events.51.a"
+		name = denmark_events.51.a
+		ai_chance = { base = 100 }
+		trigger = { NOT = { GER = { has_war_with = FRA } } }
+		DEN = { country_event = { id = denmark_events.107 days = 4 } }
+	}
+
+	option = { #Yeah, threaten Denmark
+		log = "[GetLogInfo]: event denmark_events.51 option denmark_events.51.b"
+		name = denmark_events.51.b
+		ai_chance = { base = 0 }
+		DEN = { country_event = { id = denmark_events.52 days = 4 } }
+	}
+}
+
+country_event = { #Germany has threatened you
+	id = denmark_events.52
+	title = denmark_events.52.t
+	desc = denmark_events.52.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	option = { #Apply to ally with France and the internationale
+		log = "[GetLogInfo]: event denmark_events.52 option denmark_events.52.a"
+		name = denmark_events.52.a
+		add_political_power = -25
+		INT = { country_event = { id = denmark_events.53 days = 2 } }
+	}
+}
+
+country_event = { #Denmark wants our help
+	id = denmark_events.53
+	title = denmark_events.53.t
+	desc = denmark_events.53.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	option = { #Only if they make substantial reforms to their system
+		log = "[GetLogInfo]: event denmark_events.53 option denmark_events.53.a"
+		name = denmark_events.53.a
+		ai_chance = { base = 100 }
+		FROM = { country_event = { id = denmark_events.54 days = 2 } }
+	}
+
+	option = { #Refuse
+		log = "[GetLogInfo]: event denmark_events.53 option denmark_events.53.b"
+		name = denmark_events.53.b
+		ai_chance = { base = 0 }
+		hidden_effect = {
+			FROM = {
+				DEN_william_prior = { unit_leader_event = { id = denmark_events.141 days = 7 } }
+			}
+		}
+	}
+}
+
+country_event = { #France demands reforms
+	id = denmark_events.54
+	title = denmark_events.54.t
+	desc = denmark_events.54.d
+	picture = GFX_report_event_DEN_stauning_or_chaos
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			set_party_name = {
+				ideology = radical_socialist
+				long_name = DEN_stauning_initial_radsoc_long
+				name = DEN_stauning_initial_radsoc
+			}
+		}
+	}
+
+	option = { #Accept
+		log = "[GetLogInfo]: event denmark_events.54 option denmark_events.54.a"
+		name = denmark_events.54.a
+		set_country_flag = den_statsraad
+		DEN_thorvald_stauning = {
+			promote_character = radical_socialist_subtype
+		}
+		set_politics = { ruling_party = radical_socialist elections_allowed = no }
+		activate_advisor = DEN_sigvald_hellberg_sic
+		DEN_remove_reactionary_generals = yes
+		country_event = { id = denmark_events.56 days = 7 }
+		hidden_effect = {
+			if = {
+				limit = { has_completed_focus = DEN_danish_democracy }
+				uncomplete_national_focus = {
+					focus = DEN_danish_democracy
+					uncomplete_children = yes
+				}
+			}
+			INT = { country_event = denmark_events.55 }
+			news_event = denmark_events.94
+		}
+	}
+}
+
+country_event = { #denmark says K
+	id = denmark_events.55
+	title = denmark_events.55.t
+	desc = denmark_events.55.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event denmark_events.55 option denmark_events.55.a"
+		name = denmark_events.55.a
+		add_to_faction = FROM
+	}
+}
+
+country_event = { #Formation of the new government
+	id = denmark_events.56
+	title = denmark_events.56.t
+	desc = denmark_events.56.d
+	picture = GFX_report_event_DEN_stauning_or_chaos
+
+	is_triggered_only = yes
+
+	option = { #Socialism
+		log = "[GetLogInfo]: event denmark_events.56 option denmark_events.56.a"
+		name = denmark_events.56.a
+		add_stability = -0.1
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.15
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		set_temp_variable = { coalition_partner_var = token:totalist }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:syndicalist }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		set_party_name = {
+			ideology = social_democrat
+			long_name = DEN_KomF_socdem_long
+			name = DEN_KomF_socdem
+		}
+		if = {
+			limit = { has_subject = ICE }
+			ICE = { country_event = denmark_events.144 }
+		}
+		country_event = denmark_events.72
+		hidden_effect = {
+			country_event = { id = denmark_events.57 days = 7 }
+		}
+	}
+}
+
+country_event = { #Reactionary Backlash Begins
+	id = denmark_events.57
+	title = denmark_events.57.t
+	desc = denmark_events.57.d
+	picture = GFX_report_event_DEN_destruction
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event denmark_events.57 option denmark_events.57.a"
+		name = denmark_events.57.a
+		add_ideas = DEN_idea_reactionary_backlash2
+		show_unit_leaders_tooltip = DEN_svend_wagner
+		show_unit_leaders_tooltip = DEN_hans_jorgen_christian_andersen
+		show_unit_leaders_tooltip = DEN_villy_fuglsang
+		DEN_add_socialist_generals = yes
+	}
+}
+
+country_event = { #After the Constitutional Crisis: crown Frederik King or Republic?
+	id = denmark_events.58
+	title = denmark_events.58.t
+	desc = denmark_events.58.d
+	picture = GFX_report_event_DEN_stauning_cabinet
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = denmark_events.1009 days = 365 random_days = 100 }
+		}
+	}
+
+	option = { #Frederik becomes king
+		log = "[GetLogInfo]: event denmark_events.58 option denmark_events.58.a"
+		name = denmark_events.58.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCDEM } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCLIB } }
+			}
+		}
+		DEN_create_frederick = yes
+		activate_advisor = DEN_thorvald_stauning_sic
+		DEN_frederik_af_glucksborg = {
+			set_character_name = DEN_frederik_af_glucksborg_regnal
+		}
+		hidden_effect = {
+			country_event = { id = denmark_events.1010 days = 365 random_days = 30 }
+			country_event = { id = denmark_events.1019 days = 60 }
+		}
+	}
+
+	option = { #A republic is formed
+		log = "[GetLogInfo]: event denmark_events.58 option denmark_events.58.b"
+		name = denmark_events.58.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCDEM } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCLIB } }
+			}
+		}
+		DEN_remove_reactionary_generals = yes
+		country_event = { id = denmark_events.116 days = 7 }
+		hidden_effect = {
+			news_event = denmark_events.940
+		}
+	}
+}
+
+country_event = { #75 years since the loss of Schleswig
+	id = denmark_events.64
+	title = denmark_events.64.t
+	desc = denmark_events.64.d
+	picture = GFX_report_event_SCA_schleswig_holstein
+
+	is_triggered_only = yes
+
+	option = { #Hmm...
+		log = "[GetLogInfo]: event denmark_events.64 option denmark_events.64.a"
+		name = denmark_events.64.a
+		add_popularity = { ideology = totalist popularity = 0.01 }
+		add_popularity = { ideology = paternal_autocrat popularity = 0.01 }
+		add_popularity = { ideology = national_populist popularity = 0.02 }
+	}
+}
+
+country_event = { #20 years Storm at Børsen
+	id = denmark_events.70
+	title = denmark_events.70.t
+	desc = denmark_events.70.d
+	picture = GFX_report_event_DEN_storm_at_borsen
+
+	is_triggered_only = yes
+
+	option = { #Oh no!
+		log = "[GetLogInfo]: event denmark_events.70 option denmark_events.70.a"
+		name = denmark_events.70.a
+		add_stability = -0.02
+	}
+}
+
+country_event = { #Constitution Day
+	id = denmark_events.71
+	title = denmark_events.71.t
+	desc = denmark_events.71.d
+	picture = GFX_report_event_DEN_constitution_day
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = DEN
+		has_elected_government = yes
+		NOT = { has_country_flag = den_statsraad }
+	}
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = denmark_events.71 days = 365 }
+		}
+	}
+
+	option = { #Hurrah!
+		log = "[GetLogInfo]: event denmark_events.71 option denmark_events.71.a"
+		name = denmark_events.71.a
+		add_stability = 0.01
+	}
+}
+
+country_event = { # First Issue: Foreign Outlook
+	id = denmark_events.72
+	title = denmark_events.72.t
+	desc = denmark_events.72.d
+	picture = GFX_report_event_DEN_syndicalists
+
+	is_triggered_only = yes
+
+	option = { #Kommunard
+		log = "[GetLogInfo]: event denmark_events.72 option denmark_events.72.a"
+		name = denmark_events.72.a
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_TOTALIST } }
+			}
+		}
+		add_to_variable = { DEN_congress_kommunarder = 1 }
+		add_popularity = { ideology = totalist popularity = 0.05 }
+	}
+
+	option = { #Enhedspartiet
+		log = "[GetLogInfo]: event denmark_events.72 option denmark_events.72.b"
+		name = denmark_events.72.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_JENSEN_SYNDIE } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_CHRISTIANSEN_SYNDIE } }
+			}
+		}
+		add_to_variable = { DEN_congress_enhedspartiet = 1 }
+		add_popularity = { ideology = syndicalist popularity = 0.05 }
+	}
+
+	option = { #Stauningerne-DVSP
+		log = "[GetLogInfo]: event denmark_events.72 option denmark_events.72.c"
+		name = denmark_events.72.c
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_LARSEN_RADSOC } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_STAUNING_RADSOC } }
+			}
+		}
+		add_to_variable = { DEN_congress_dvsp = 1 }
+		add_to_variable = { DEN_congress_stauninger = 1 }
+		add_popularity = { ideology = radical_socialist popularity = 0.05 }
+		hidden_effect = {
+			country_event = { id = denmark_events.1016 days = 12 }
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = denmark_events.73 days = 8 }
+		}
+	}
+}
+
+country_event = { # Second Issue: Economical Reform
+	id = denmark_events.73
+	title = denmark_events.73.t
+	desc = denmark_events.73.d
+	picture = GFX_report_event_DEN_larsen2
+
+	is_triggered_only = yes
+
+	option = { #DVSP-Enhedspartiet
+		log = "[GetLogInfo]: event denmark_events.73 option denmark_events.73.a"
+		name = denmark_events.73.a
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_JENSEN_SYNDIE } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_CHRISTIANSEN_SYNDIE } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_LARSEN_RADSOC } }
+			}
+		}
+		add_to_variable = { DEN_congress_enhedspartiet = 1 }
+		add_to_variable = { DEN_congress_dvsp = 1 }
+		add_popularity = { ideology = syndicalist popularity = 0.03 }
+		add_popularity = { ideology = radical_socialist popularity = 0.02 }
+	}
+
+	option = { #Kommunarder
+		log = "[GetLogInfo]: event denmark_events.73 option denmark_events.73.b"
+		name = denmark_events.73.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_TOTALIST } }
+			}
+		}
+		add_to_variable = { DEN_congress_kommunarder = 1 }
+		add_popularity = { ideology = totalist popularity = 0.05 }
+	}
+
+	option = { #Stauninger
+		log = "[GetLogInfo]: event denmark_events.73 option denmark_events.73.c"
+		name = denmark_events.73.c
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_STAUNING_RADSOC } }
+			}
+		}
+		add_to_variable = { DEN_congress_stauninger = 1 }
+		add_popularity = { ideology = social_democrat popularity = 0.05 }
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = denmark_events.74 days = 8 }
+		}
+	}
+}
+
+country_event = { # Third Issue: Internal Affairs
+	id = denmark_events.74
+	title = denmark_events.74.t
+	desc = denmark_events.74.d
+	picture = GFX_report_event_DEN_syndicalists
+
+	is_triggered_only = yes
+
+	option = { #Kommunard-Enhedspartiet
+		log = "[GetLogInfo]: event denmark_events.74 option denmark_events.74.a"
+		name = denmark_events.74.a
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_JENSEN_SYNDIE } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_CHRISTIANSEN_SYNDIE } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_TOTALIST } }
+			}
+		}
+		add_to_variable = { DEN_congress_enhedspartiet = 1 }
+		add_to_variable = { DEN_congress_kommunarder = 1 }
+		add_popularity = { ideology = totalist popularity = 0.03 }
+		add_popularity = { ideology = syndicalist popularity = 0.02 }
+	}
+
+	option = { #DVSP
+		log = "[GetLogInfo]: event denmark_events.74 option denmark_events.74.b"
+		name = denmark_events.74.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_LARSEN_RADSOC } }
+			}
+		}
+		add_to_variable = { DEN_congress_dvsp = 1 }
+		add_popularity = { ideology = radical_socialist popularity = 0.05 }
+	}
+
+	option = { #Stauninger
+		log = "[GetLogInfo]: event denmark_events.74 option denmark_events.74.c"
+		name = denmark_events.74.c
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_STAUNING_RADSOC } }
+			}
+		}
+		add_to_variable = { DEN_congress_stauninger = 1 }
+		add_popularity = { ideology = social_democrat popularity = 0.05 }
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = denmark_events.75 days = 8 }
+		}
+	}
+}
+
+country_event = { #Fourth Issue: Power of the PM president
+	id = denmark_events.75
+	title = denmark_events.75.t
+	desc = denmark_events.75.d
+	picture = GFX_report_event_DEN_syndicalists
+
+	is_triggered_only = yes
+
+	option = { #Enhedspartiet-Stauninger
+		log = "[GetLogInfo]: event denmark_events.75 option denmark_events.75.a"
+		name = denmark_events.75.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_JENSEN_SYNDIE } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_CHRISTIANSEN_SYNDIE } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_STAUNING_RADSOC } }
+			}
+		}
+		add_to_variable = { DEN_congress_enhedspartiet = 1 }
+		add_to_variable = { DEN_congress_stauninger = 1 }
+		add_popularity = { ideology = syndicalist popularity = 0.03 }
+		add_popularity = { ideology = social_democrat popularity = 0.02 }
+	}
+
+	option = { #DVSP
+		log = "[GetLogInfo]: event denmark_events.75 option denmark_events.75.b"
+		name = denmark_events.75.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_LARSEN_RADSOC } }
+			}
+		}
+		add_to_variable = { DEN_congress_dvsp = 1 }
+		add_popularity = { ideology = radical_socialist popularity = 0.05 }
+	}
+
+	option = { #Kommunarder
+		log = "[GetLogInfo]: event denmark_events.75 option denmark_events.75.c"
+		name = denmark_events.75.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_TOTALIST } }
+			}
+		}
+		add_to_variable = { DEN_congress_kommunarder = 1 }
+		add_popularity = { ideology = totalist popularity = 0.05 }
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = denmark_events.76 days = 8 }
+		}
+	}
+}
+
+country_event = { # Election Results
+	id = denmark_events.76
+	title = denmark_events.76.t
+	desc = denmark_events.76.d
+	picture = GFX_report_event_DEN_syndicalists
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.76 option denmark_events.76.a"
+		name = denmark_events.76.a
+		if = {
+			limit = {
+				check_variable = { DEN_congress_kommunarder > DEN_congress_enhedspartiet }
+				check_variable = { DEN_congress_kommunarder > DEN_congress_dvsp }
+				check_variable = { DEN_congress_kommunarder > DEN_congress_stauninger }
+			}
+			set_politics = {
+				ruling_party = totalist
+				elections_allowed = no
+			}
+			activate_advisor = DEN_alfred_jensen_sic
+		}
+		else_if = {
+			limit = {
+				check_variable = { DEN_congress_enhedspartiet > DEN_congress_kommunarder }
+				check_variable = { DEN_congress_enhedspartiet > DEN_congress_dvsp }
+				check_variable = { DEN_congress_enhedspartiet > DEN_congress_stauninger }
+			}
+			set_politics = {
+				ruling_party = syndicalist
+				elections_allowed = no
+			}
+			activate_advisor = DEN_richard_jensen_sic
+		}
+		else_if = {
+			limit = {
+				check_variable = { DEN_congress_dvsp > DEN_congress_kommunarder }
+				check_variable = { DEN_congress_dvsp > DEN_congress_enhedspartiet }
+				check_variable = { DEN_congress_dvsp > DEN_congress_stauninger }
+			}
+			DEN_aksel_larsen = {
+				promote_character = radical_socialist_subtype
+			}
+			activate_advisor = DEN_thoger_thogersen_sic
+			hidden_effect = {
+				set_party_name = {
+					ideology = radical_socialist
+					long_name = DEN_radical_socialist_party_long
+					name = DEN_radical_socialist_party
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				check_variable = { DEN_congress_stauninger > DEN_congress_kommunarder }
+				check_variable = { DEN_congress_stauninger > DEN_congress_enhedspartiet }
+				check_variable = { DEN_congress_stauninger > DEN_congress_dvsp }
+			}
+			set_temp_variable = { coalition_partner_var = token:totalist }
+			remove_from_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:syndicalist }
+			remove_from_coalition = yes
+			hidden_effect = {
+				set_party_name = {
+					ideology = radical_socialist
+					long_name = DEN_stauning_radsoc_long
+					name = DEN_stauning_radsoc
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { check_variable = { DEN_congress_enhedspartiet > DEN_congress_kommunarder } }
+				NOT = { check_variable = { DEN_congress_enhedspartiet > DEN_congress_dvsp } }
+				NOT = { check_variable = { DEN_congress_enhedspartiet > DEN_congress_stauninger } }
+				NOT = { check_variable = { DEN_congress_dvsp > DEN_congress_kommunarder } }
+				NOT = { check_variable = { DEN_congress_dvsp > DEN_congress_stauninger } }
+				NOT = { check_variable = { DEN_congress_kommunarder > DEN_congress_stauninger } }
+			}
+			country_event = denmark_events.77
+		}
+		hidden_effect = { complete_national_focus = DEN_the_first_statsraad_congress }
+		clear_variable = DEN_congress_kommunarder
+		clear_variable = DEN_congress_enhedspartiet
+		clear_variable = DEN_congress_dvsp
+		clear_variable = DEN_congress_stauninger
+	}
+}
+
+country_event = { # Stauninger Chooses Coalition
+	id = denmark_events.77
+	title = denmark_events.77.t
+	desc = denmark_events.77.d
+	picture = GFX_report_event_DEN_larsen
+
+	is_triggered_only = yes
+
+	option = { #Coalition with Enhedspartiet
+		log = "[GetLogInfo]: event denmark_events.77 option denmark_events.77.a"
+		name = denmark_events.77.a
+		set_temp_variable = { coalition_partner_var = token:totalist }
+		remove_from_coalition = yes
+		activate_advisor = DEN_richard_jensen_sic
+	}
+
+	option = { #Coalition with DVSP
+		log = "[GetLogInfo]: event denmark_events.77 option denmark_events.77.b"
+		name = denmark_events.77.b
+		set_temp_variable = { coalition_partner_var = token:totalist }
+		remove_from_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:syndicalist }
+		remove_from_coalition = yes
+		activate_advisor = DEN_thoger_thogersen_sic
+	}
+
+	after = {
+		hidden_effect = {
+			set_party_name = {
+				ideology = radical_socialist
+				long_name = DEN_stauning_radsoc_long
+				name = DEN_stauning_radsoc
+			}
+		}
+	}
+}
+
+country_event = { #Death of King Christian X
+	id = denmark_events.80
+	title = denmark_events.80.t
+	desc = denmark_events.80.d
+	picture = GFX_report_event_DEN_ep_christian3
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_leader = { character = DEN_christian_af_glucksborg }
+	}
+
+	option = { #Christian dies and Frederick becomes king
+		log = "[GetLogInfo]: event denmark_events.80 option denmark_events.80.a"
+		name = denmark_events.80.a
+		DEN_christian_af_glucksborg = { kill_character = yes }
+		DEN_create_frederick = yes
+		DEN_frederik_af_glucksborg = {
+			set_character_name = DEN_frederik_af_glucksborg_regnal
+		}
+		hidden_effect = {
+			country_event = { id = denmark_events.1010 days = 365 random_days = 30 }
+			country_event = { id = denmark_events.1019 days = 60 }
+		}
+	}
+}
+
+country_event = { #Death of Thomas Madsen-Mygdal
+	id = denmark_events.85
+	title = denmark_events.85.t
+	desc = denmark_events.85.d
+	picture = GFX_report_event_DEN_funeral
+
+	is_triggered_only = yes
+
+	option = { #rip
+		log = "[GetLogInfo]: event denmark_events.85 option denmark_events.85.a"
+		name = denmark_events.85.a
+		add_political_power = -25
+		if = {
+			limit = { is_monarchy = no }
+			add_country_leader_role = {
+				character = DEN_knud_kristensen
+				country_leader = {
+					desc = DEN_knud_kristensen_sic_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		else_if = {
+			limit = {
+				is_monarchy = yes
+				has_government = market_liberal
+			}
+			activate_advisor = DEN_knud_kristensen_sic
+		}
+		else = {
+			add_country_leader_role = {
+				character = DEN_knud_kristensen
+				country_leader = {
+					desc = DEN_knud_kristensen_sic_desc
+					ideology = market_liberal_subtype
+				}
+			}
+		}
+		DEN_thomas_madsen_mygdal = { kill_character = yes }
+	}
+}
+
+country_event = { #Denmark offers a deal!
+	id = denmark_events.86
+	title = denmark_events.86.t
+	desc = denmark_events.86.d
+	picture = GFX_report_event_DEN_copenhagen
+
+	is_triggered_only = yes
+
+	option = { #We're ok with that
+		log = "[GetLogInfo]: event denmark_events.86 option denmark_events.86.a"
+		name = denmark_events.86.a
+		effect_tooltip = {
+			add_opinion_modifier = {
+				target = FROM
+				modifier = KR_trade_agreement
+			}
+			reverse_add_opinion_modifier = {
+				target = FROM
+				modifier = KR_trade_agreement
+			}
+		}
+		FROM = { country_event = { id = denmark_events.87 days = 2 } }
+		GER = {
+			add_timed_idea = {
+				idea = DEN_ger_trade_returns
+				days = 365
+			}
+		}
+	}
+}
+
+country_event = { #Germany accepts our deal!
+	id = denmark_events.87
+	title = denmark_events.87.t
+	desc = denmark_events.87.d
+	picture = GFX_report_event_DEN_intro
+
+	is_triggered_only = yes
+
+	option = { #Great!
+		log = "[GetLogInfo]: event denmark_events.87 option denmark_events.87.a"
+		name = denmark_events.87.a
+		add_political_power = 25
+		add_timed_idea = {
+			idea = DEN_ger_trade
+			days = 365
+		}
+		effect_tooltip = {
+			add_opinion_modifier = {
+				target = FROM
+				modifier = KR_trade_agreement
+			}
+			reverse_add_opinion_modifier = {
+				target = FROM
+				modifier = KR_trade_agreement
+			}
+		}
+	}
+}
+
+country_event = { #Founding of Lego
+	id = denmark_events.89
+	title = denmark_events.89.t
+	desc = denmark_events.89.d
+	picture = GFX_report_event_DEN_lego
+
+	is_triggered_only = yes
+
+	option = { #interesting
+		log = "[GetLogInfo]: event denmark_events.89 option denmark_events.89.a"
+		name = denmark_events.89.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Sweden and Norway both went socialist - Flavour
+	id = denmark_events.91
+	title = denmark_events.91.t
+	desc = denmark_events.91.d
+	picture = GFX_report_event_DEN_haer
+
+	trigger = {
+		SWE = { has_socialist_government = yes }
+		NOR = { has_socialist_government = yes }
+		is_valid_peace_target = yes
+		GER = {
+			is_faction_leader = yes
+			NOT = { has_war_with = ROOT }
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #King Urges RP Joining
+		log = "[GetLogInfo]: event denmark_events.91 option denmark_events.91.a"
+		name = denmark_events.91.a
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.05
+		}
+		add_stability = -0.05
+	}
+}
+
+country_event = { #August Uproar
+	id = denmark_events.92
+	title = denmark_events.92.t
+	desc = denmark_events.92.d
+	picture = GFX_report_event_DEN_strike
+
+	trigger = {
+		has_war = yes
+		is_in_faction_with = GER
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.92 option denmark_events.92.a"
+		name = denmark_events.92.a
+		add_war_support = -0.05
+	}
+}
+
+country_event = { #Syndikalistloven
+	id = denmark_events.93
+	title = denmark_events.93.t
+	desc = denmark_events.93.d
+	picture = GFX_report_event_DEN_folketing
+
+	trigger = {
+		OR = {
+			has_war_with = FRA
+			has_war_with = ENG
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.93 option denmark_events.93.a"
+		name = denmark_events.93.a
+		ai_chance = { base = 70 }
+		add_political_power = -40
+		add_stability = -0.05
+		add_war_support = 0.05
+		add_popularity = { ideology = totalist popularity = -1 }
+		add_popularity = { ideology = syndicalist popularity = -1 }
+		add_popularity = { ideology = radical_socialist popularity = -1 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.93 option denmark_events.93.b"
+		name = denmark_events.93.b
+		ai_chance = { base = 30 }
+		add_war_support = -0.05
+	}
+}
+
+#Danish Statsraad System
+news_event = {
+	id = denmark_events.94
+	immediate = { log = "[GetLogInfo]: event denmark_events.94" }
+	title = denmark_events.94.t
+	desc = denmark_events.94.d
+	picture = GFX_news_event_DEN_statsraad
+
+	is_triggered_only = yes
+
+	fire_for_sender = no
+
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		name = denmark_events.94.a
+		trigger = {
+			NOT = { original_tag = GER }
+			has_socialist_government = no
+		}
+	}
+
+	option = {
+		name = denmark_events.94.b
+		trigger = {
+			original_tag = GER
+			has_socialist_government = no
+		}
+	}
+
+	option = {
+		name = denmark_events.94.c
+		trigger = {
+			has_socialist_government = yes
+		}
+	}
+}
+
+#Moderate Danish Republic
+news_event = {
+	id = denmark_events.940
+	immediate = { log = "[GetLogInfo]: event denmark_events.940" }
+	title = denmark_events.940.t
+	desc = denmark_events.940.d
+	picture = GFX_news_event_DEN_republic
+
+	is_triggered_only = yes
+
+	fire_for_sender = no
+
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = denmark_events.940.a
+		trigger = {
+			NOT = {
+				AND = {
+					original_tag = UKR
+					UKR = {
+						has_completed_focus = UKR_solidarity_and_compromise
+					}
+				}
+			}
+			has_socialist_government = no
+		}
+	}
+
+	option = {
+		name = denmark_events.940.b
+		trigger = {
+			NOT = {
+				AND = {
+					original_tag = UKR
+					UKR = {
+						has_completed_focus = UKR_solidarity_and_compromise
+					}
+				}
+			}
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		name = denmark_events.940.c
+		trigger = {
+			original_tag = UKR
+			UKR = { has_completed_focus = UKR_solidarity_and_compromise }
+		}
+	}
+}
+
+#Danish Authoritarianism
+news_event = {
+	id = denmark_events.95
+	immediate = { log = "[GetLogInfo]: event denmark_events.95" }
+	title = denmark_events.95.t
+	desc = denmark_events.95.d
+	picture = GFX_news_event_DEN_auth_king
+
+	is_triggered_only = yes
+
+	fire_for_sender = no
+
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_europe_news = yes }
+
+	option = {
+		name = denmark_events.95.a
+		trigger = {
+			has_socialist_government = no
+		}
+	}
+
+	option = {
+		name = denmark_events.95.b
+		trigger = {
+			has_socialist_government = yes
+		}
+	}
+}
+
+country_event = { #Constitutional Crisis Erupts
+	id = denmark_events.96
+	title = denmark_events.96.t
+	desc = denmark_events.96.d
+	picture = GFX_report_event_DEN_folketing
+
+	is_triggered_only = yes
+
+	option = { #Side With King
+		log = "[GetLogInfo]: event denmark_events.96 option denmark_events.96.a"
+		name = denmark_events.96.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+				NOT = {
+					AND = {
+						has_soccon_or_marlib_government = no
+						has_game_rule = { rule = DEN_path option = DEN_PATH_DEM }
+					}
+				}
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCDEM } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_SOCLIB } }
+				NOT = { has_game_rule = { rule = DEN_path option = DEN_PATH_MARLIB } }
+			}
+		}
+
+		set_country_flag = DEN_sided_with_king
+		if = {
+			limit = { has_government = social_democrat }
+			set_variable = { DEN_influence_power = 1 }
+		}
+		else = {
+			set_variable = { DEN_influence_power = 3 }
+		}
+	}
+
+	option = { #Oppose King
+		log = "[GetLogInfo]: event denmark_events.96 option denmark_events.96.b"
+		name = denmark_events.96.b
+		trigger = {
+			NOT = { has_government = market_liberal }
+		}
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_DEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCLIB }
+				}
+			}
+		}
+
+		set_country_flag = DEN_opposed_king
+		set_variable = { DEN_influence_power = 1 }
+	}
+
+	after = {
+		DEN_activate_constitutional_crisis = yes
+	}
+}
+
+country_event = { #Restore Democracy? POV Purschel Authdems
+	id = denmark_events.97
+	title = denmark_events.97.t
+	desc = denmark_events.97.d
+	picture = GFX_report_event_DEN_ep_christian
+
+	is_triggered_only = yes
+
+	option = { #Lmao? No
+		log = "[GetLogInfo]: event denmark_events.97 option denmark_events.97.a"
+		name = denmark_events.97.a
+		ai_chance = { base = 20 }
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.15
+		}
+		add_political_power = -150
+		add_ideas = DEN_idea_intolerable_rule
+	}
+
+	option = { #Sure but only between approved parties
+		log = "[GetLogInfo]: event denmark_events.97 option denmark_events.97.b"
+		name = denmark_events.97.b
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DEN_path option = DEFAULT } }
+			}
+		}
+		custom_effect_tooltip = DEN_tt_restore_democracy
+		hidden_effect = {
+			country_event = { id = denmark_events.98 days = 30 }
+		}
+	}
+
+	after = {
+		set_party_name = {
+			ideology = social_conservative
+			name = DEN_soccon_unified_party
+			long_name = DEN_soccon_unified_party_long
+		}
+		set_party_name = {
+			ideology = authoritarian_democrat
+			name = DEN_autdem_breakaway_party
+			long_name = DEN_autdem_breakaway_party_long
+		}
+	}
+}
+
+country_event = { #Elections of 19xx (Purschel POV)
+	id = denmark_events.98
+	title = denmark_events.98.t
+	desc = denmark_events.98.d
+	picture = GFX_report_event_DEN_ep_christian2
+
+	is_triggered_only = yes
+
+	option = { #Liberals
+		log = "[GetLogInfo]: event denmark_events.98 option denmark_events.98.a"
+		name = denmark_events.98.a
+		ai_chance = { base = 30 }
+		effect_tooltip = {
+			set_politics = {
+				ruling_party = market_liberal
+				elections_allowed = yes
+			}
+		}
+		if = {
+			limit = { has_character = DEN_thomas_madsen_mygdal }
+			activate_advisor = DEN_thomas_madsen_mygdal_sic
+		}
+		else = {
+			activate_advisor = DEN_knud_kristensen_sic
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.15
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		hidden_effect = {
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = market_liberal
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 36
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+		}
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+	}
+
+	option = { #KF Moderates
+		log = "[GetLogInfo]: event denmark_events.98 option denmark_events.98.b"
+		name = denmark_events.98.b
+		ai_chance = { base = 50 }
+		effect_tooltip = {
+			set_politics = {
+				ruling_party = social_conservative
+				elections_allowed = yes
+			}
+		}
+		activate_advisor = DEN_john_christmas_moeller_sic
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.15
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.05
+		}
+		hidden_effect = {
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = social_conservative
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 36
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+		}
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+	}
+
+	option = { #Purschel just wins anyways
+		log = "[GetLogInfo]: event denmark_events.98 option denmark_events.98.c"
+		name = denmark_events.98.c
+		ai_chance = { base = 20 }
+		effect_tooltip = {
+			set_politics = {
+				ruling_party = authoritarian_democrat
+				elections_allowed = yes
+			}
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.15
+		}
+		add_political_power = -100
+		add_stability = -0.1
+		hidden_effect = {
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = authoritarian_democrat
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 36
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+		}
+	}
+}
+
+country_event = { #Stauning Event #1
+	id = denmark_events.99
+	title = denmark_events.99.t
+	desc = denmark_events.99.d
+	picture = GFX_report_event_DEN_stauning_or_chaos
+
+	is_triggered_only = yes
+
+	option = { #Radical Option
+		log = "[GetLogInfo]: event denmark_events.99 option denmark_events.99.a"
+		name = denmark_events.99.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_idea = DEN_idea_opposition_anger3
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCDEM }
+				}
+			}
+		}
+		swap_ideas = {
+			remove_idea = DEN_idea_public_works
+			add_idea = DEN_idea_public_works_radical
+		}
+		DEN_soclib_anger_increase = yes
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.03
+		}
+	}
+
+	option = { #Compromise Option
+		log = "[GetLogInfo]: event denmark_events.99 option denmark_events.99.b"
+		name = denmark_events.99.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCLIB }
+				}
+				has_government = social_democrat
+			}
+		}
+		swap_ideas = {
+			remove_idea = DEN_idea_public_works
+			add_idea = DEN_idea_public_works_compromise
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+	}
+}
+
+country_event = { #Stauning Event #2
+	id = denmark_events.100
+	title = denmark_events.100.t
+	desc = denmark_events.100.d
+	picture = GFX_report_event_DEN_stauning_2
+
+	is_triggered_only = yes
+
+	option = { #Radical Option
+		log = "[GetLogInfo]: event denmark_events.100 option denmark_events.100.a"
+		name = denmark_events.100.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_idea = DEN_idea_opposition_anger3
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCDEM }
+				}
+			}
+		}
+		swap_ideas = {
+			remove_idea = DEN_idea_universal_healthcare
+			add_idea = DEN_idea_universal_healthcare_radical
+		}
+		DEN_soclib_anger_increase = yes
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.03
+		}
+	}
+
+	option = { #Compromise Option
+		log = "[GetLogInfo]: event denmark_events.100 option denmark_events.100.b"
+		name = denmark_events.100.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCLIB }
+				}
+				has_government = social_democrat
+			}
+		}
+		swap_ideas = {
+			remove_idea = DEN_idea_universal_healthcare
+			add_idea = DEN_idea_universal_healthcare_compromise
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+	}
+}
+
+country_event = { #Stauning Event #3
+	id = denmark_events.101
+	title = denmark_events.101.t
+	desc = denmark_events.101.d
+	picture = GFX_report_event_DEN_stauning_3
+
+	is_triggered_only = yes
+
+	option = { #Radical Option
+		log = "[GetLogInfo]: event denmark_events.101 option denmark_events.101.a"
+		name = denmark_events.101.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_idea = DEN_idea_opposition_anger3
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCDEM }
+				}
+			}
+		}
+		add_ideas = DEN_idea_extended_pensions_radical
+		DEN_soclib_anger_increase = yes
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.03
+		}
+		99 = { increase_state_category_by_one_level = yes }
+		37 = { increase_state_category_by_one_level = yes }
+	}
+
+	option = { #Compromise Option
+		log = "[GetLogInfo]: event denmark_events.101 option denmark_events.101.b"
+		name = denmark_events.101.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCLIB }
+				}
+				has_government = social_democrat
+			}
+		}
+		add_ideas = DEN_idea_extended_pensions_compromise
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+		99 = { increase_state_category_by_one_level = yes }
+	}
+}
+
+country_event = { #Stauning Event #4
+	id = denmark_events.102
+	title = denmark_events.102.t
+	desc = denmark_events.102.d
+	picture = GFX_report_event_DEN_stauning_4
+
+	is_triggered_only = yes
+
+	option = { #Radical Option
+		log = "[GetLogInfo]: event denmark_events.102 option denmark_events.102.a"
+		name = denmark_events.102.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_idea = DEN_idea_opposition_anger3
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCDEM }
+				}
+			}
+		}
+		add_ideas = DEN_idea_pacified_antimilitarists_radical
+		DEN_soclib_anger_increase = yes
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.03
+		}
+		37 = { prioritize_state = yes }
+		99 = { prioritize_state = yes }
+		1112 = { prioritize_state = yes }
+		add_one_random_military_factory = yes
+	}
+
+	option = { #Compromise Option
+		log = "[GetLogInfo]: event denmark_events.102 option denmark_events.102.b"
+		name = denmark_events.102.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCLIB }
+				}
+				has_government = social_democrat
+			}
+		}
+		add_ideas = DEN_idea_pacified_antimilitarists_compromise
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+		37 = { prioritize_state = yes }
+		99 = { prioritize_state = yes }
+		1112 = { prioritize_state = yes }
+		add_one_random_civilian_factory = yes
+	}
+}
+
+country_event = { #Stauning Event #5
+	id = denmark_events.103
+	title = denmark_events.103.t
+	desc = denmark_events.103.d
+	picture = GFX_report_event_DEN_stauning_cabinet
+
+	is_triggered_only = yes
+
+	option = { #Radical Option
+		log = "[GetLogInfo]: event denmark_events.103 option denmark_events.103.a"
+		name = denmark_events.103.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_idea = DEN_idea_opposition_anger3
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCDEM }
+				}
+			}
+		}
+		add_ideas = DEN_idea_expanded_welfare_bureaucracy_radical
+		DEN_soclib_anger_increase = yes
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.03
+		}
+	}
+
+	option = { #Compromise Option
+		log = "[GetLogInfo]: event denmark_events.103 option denmark_events.103.b"
+		name = denmark_events.103.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_SOCLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCLIB }
+				}
+				has_government = social_democrat
+			}
+		}
+		add_ideas = DEN_idea_expanded_welfare_bureaucracy_compromise
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+	}
+}
+
+country_event = { #Stauning Collapse Event
+	id = denmark_events.104
+	title = denmark_events.104.t
+	desc = denmark_events.104.d
+	picture = GFX_report_event_DEN_peter_munch2
+
+	is_triggered_only = yes
+
+	option = { #RIP
+		log = "[GetLogInfo]: event denmark_events.104 option denmark_events.104.a"
+		name = denmark_events.104.a
+		remove_ideas = DEN_idea_opposition_anger3
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.15
+		}
+		add_stability = -0.2
+		add_political_power = -100
+		DEN = { country_event = { id = denmark_events.105 days = 3 } }
+	}
+}
+
+country_event = { #Opposition Upset
+	id = denmark_events.105
+	title = denmark_events.105.t
+	desc = denmark_events.105.d
+	picture = GFX_report_event_DEN_peter_munch1
+
+	is_triggered_only = yes
+
+	option = { #Prepare
+		log = "[GetLogInfo]: event denmark_events.105 option denmark_events.105.a"
+		name = denmark_events.105.a
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.05
+		}
+		DEN = { country_event = { id = denmark_events.106 days = 30 } }
+	}
+}
+
+country_event = { #Stauning Resigns; Munch is PM
+	id = denmark_events.106
+	title = denmark_events.106.t
+	desc = denmark_events.106.d
+	picture = GFX_report_event_DEN_peter_munch1
+
+	is_triggered_only = yes
+
+	option = { #Its ok
+		log = "[GetLogInfo]: event denmark_events.106 option denmark_events.106.a"
+		name = denmark_events.106.a
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		activate_advisor = DEN_peter_munch_sic
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.075
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.025
+		}
+		hidden_effect = {
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = social_liberal
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 36
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+		}
+	}
+}
+
+country_event = { #Negotiations Accepted
+	id = denmark_events.107
+	title = denmark_events.107.t
+	desc = denmark_events.107.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.107 option denmark_events.107.a"
+		name = denmark_events.107.a
+		GER = { country_event = { id = denmark_events.108 days = 3 } }
+	}
+}
+
+country_event = { #First Issue: Military Access Ger Pov
+	id = denmark_events.108
+	title = denmark_events.108.t
+	desc = denmark_events.108.d
+
+	is_triggered_only = yes
+
+	option = { #Just mil access
+		log = "[GetLogInfo]: event denmark_events.108 option denmark_events.108.a"
+		name = denmark_events.108.a
+		ai_chance = { base = 100 }
+		DEN = { set_country_flag = DEN_easy_mil_demand }
+	}
+
+	option = { #Full RP Membership
+		log = "[GetLogInfo]: event denmark_events.108 option denmark_events.108.b"
+		name = denmark_events.108.b
+		ai_chance = { base = 0 }
+		custom_effect_tooltip = DEN_tt_hated_demand
+	}
+	after = {
+		DEN = { country_event = { id = denmark_events.109 days = 3 } }
+	}
+}
+
+country_event = { #First Issue: Military Access Den Pov
+	id = denmark_events.109
+	title = denmark_events.109.t
+	desc = denmark_events.109.d
+
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event denmark_events.109 option denmark_events.109.a"
+		name = denmark_events.109.a
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_TOTALIST }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_JENSEN_SYNDIE }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_CHRISTIANSEN_SYNDIE }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_LARSEN_RADSOC }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_STAUNING_RADSOC }
+				}
+			}
+		}
+		trigger = { has_country_flag = DEN_easy_mil_demand }
+		GER = { country_event = { id = denmark_events.110 days = 3 } }
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event denmark_events.109 option denmark_events.109.b"
+		name = denmark_events.109.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCLIB }
+				}
+			}
+		}
+		GER = { country_event = { id = denmark_events.114 days = 3 } }
+	}
+}
+
+country_event = { #Second Issue: Diverted Trade Ger Pov
+	id = denmark_events.110
+	title = denmark_events.110.t
+	desc = denmark_events.110.d
+
+	is_triggered_only = yes
+
+	option = { #Moderate Proposal
+		log = "[GetLogInfo]: event denmark_events.110 option denmark_events.110.a"
+		name = denmark_events.110.a
+		ai_chance = { base = 80 }
+		DEN = { set_country_flag = DEN_easy_eco_demand }
+	}
+
+	option = { #Extreme, demand lease of factories
+		log = "[GetLogInfo]: event denmark_events.110 option denmark_events.110.b"
+		name = denmark_events.110.b
+		ai_chance = { base = 20 }
+	}
+
+	after = {
+		DEN = { country_event = { id = denmark_events.111 days = 3 } }
+	}
+}
+
+country_event = { #Second Issue: Diverted Trade Den Pov
+	id = denmark_events.111
+	title = denmark_events.111.t
+	desc = denmark_events.111.d
+
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event denmark_events.111 option denmark_events.111.a"
+		name = denmark_events.111.a
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_TOTALIST }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_JENSEN_SYNDIE }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_CHRISTIANSEN_SYNDIE }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_LARSEN_RADSOC }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_STAUNING_RADSOC }
+				}
+			}
+		}
+		GER = { country_event = { id = denmark_events.112 days = 3 } }
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event denmark_events.111 option denmark_events.111.b"
+		name = denmark_events.111.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_FREDERIK_SOCLIB }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCDEM }
+					has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCLIB }
+				}
+			}
+		}
+		GER = { country_event = { id = denmark_events.114 days = 3 } }
+	}
+}
+
+country_event = { #Treaty Ratified Ger Pov
+	id = denmark_events.112
+	title = denmark_events.112.t
+	desc = denmark_events.112.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.112 option denmark_events.112.a"
+		name = denmark_events.112.a
+		DEN = { country_event = { id = denmark_events.113 days = 3 } }
+	}
+}
+
+country_event = { #Treaty Ratified Den Pov
+	id = denmark_events.113
+	title = denmark_events.113.t
+	desc = denmark_events.113.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.113 option denmark_events.113.a"
+		name = denmark_events.113.a
+		give_military_access = GER
+		country_event = denmark_events.58
+		if = {
+			limit = { has_country_flag = DEN_easy_eco_demand }
+			add_ideas = DEN_idea_easy_eco_demand
+		}
+		else = {
+			add_ideas = DEN_idea_hard_eco_demand
+		}
+		clr_country_flag = DEN_easy_eco_demand
+		clr_country_flag = DEN_easy_mil_demand
+	}
+}
+
+country_event = { #Negotiations break down
+	id = denmark_events.114
+	title = denmark_events.114.t
+	desc = denmark_events.114.d
+
+	is_triggered_only = yes
+
+	option = { #Threaten Denmark
+		log = "[GetLogInfo]: event denmark_events.114 option denmark_events.114.a"
+		name = denmark_events.114.a
+		DEN = {
+			country_event = { id = denmark_events.52 days = 4 }
+			clr_country_flag = DEN_easy_eco_demand
+			clr_country_flag = DEN_easy_mil_demand
+		}
+	}
+}
+
+country_event = { #Jensen vs Christensen
+	id = denmark_events.115
+	title = denmark_events.115.t
+	desc = denmark_events.115.d
+	picture = GFX_report_event_DEN_jensen_christensen_election
+
+	is_triggered_only = yes
+
+	option = { #Jensen
+		log = "[GetLogInfo]: event denmark_events.115 option denmark_events.115.a"
+		name = denmark_events.115.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_CHRISTIANSEN_SYNDIE }
+			}
+		}
+		promote_character = {
+			character = DEN_richard_jensen
+			ideology = syndicalist_subtype
+		}
+		activate_advisor = DEN_christian_christensen_sic
+		add_war_support = 0.1
+	}
+
+	option = { #Christensen
+		log = "[GetLogInfo]: event denmark_events.115 option denmark_events.115.b"
+		name = denmark_events.115.b
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_JENSEN_SYNDIE }
+			}
+		}
+		add_stability = 0.15
+	}
+}
+
+country_event = { #Opening of Moderate Statsraad Congress
+	id = denmark_events.116
+	title = denmark_events.116.t
+	desc = denmark_events.116.d
+	picture = GFX_report_event_DEN_stauning_cabinet
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.116 option denmark_events.116.a"
+		name = denmark_events.116.a
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		country_event = { id = denmark_events.117 days = 3 }
+	}
+}
+
+country_event = { #Issue 1: Welfare Reforms Extent
+	id = denmark_events.117
+	title = denmark_events.117.t
+	desc = denmark_events.117.d
+	picture = GFX_report_event_DEN_stauning_2
+
+	is_triggered_only = yes
+
+	option = { #Socdem
+		log = "[GetLogInfo]: event denmark_events.117 option denmark_events.117.a"
+		name = denmark_events.117.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCLIB }
+			}
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_to_variable = { DEN_congress_stauninger = 1 }
+	}
+
+	option = { #Soclib
+		log = "[GetLogInfo]: event denmark_events.117 option denmark_events.117.b"
+		name = denmark_events.117.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCDEM }
+			}
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		add_to_variable = { DEN_congress_liberale = 1 }
+	}
+
+	after = {
+		country_event = { id = denmark_events.118 days = 3 }
+	}
+}
+
+country_event = { #Issue 2: Neutrality and Militarism
+	id = denmark_events.118
+	title = denmark_events.118.t
+	desc = denmark_events.118.d
+	picture = GFX_report_event_DEN_stauning_3
+
+	is_triggered_only = yes
+
+	option = { #Socdem
+		log = "[GetLogInfo]: event denmark_events.118 option denmark_events.118.a"
+		name = denmark_events.118.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCLIB }
+			}
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_to_variable = { DEN_congress_stauninger = 1 }
+	}
+
+	option = { #Soclib
+		log = "[GetLogInfo]: event denmark_events.118 option denmark_events.118.b"
+		name = denmark_events.118.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCDEM }
+			}
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		add_to_variable = { DEN_congress_liberale = 1 }
+	}
+
+	after = {
+		country_event = { id = denmark_events.119 days = 3 }
+	}
+}
+
+country_event = { #Issue 3: Role of the PM President
+	id = denmark_events.119
+	title = denmark_events.119.t
+	desc = denmark_events.119.d
+	picture = GFX_report_event_DEN_stauning_cabinet
+
+	is_triggered_only = yes
+
+	option = { #Socdem
+		log = "[GetLogInfo]: event denmark_events.119 option denmark_events.119.a"
+		name = denmark_events.119.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCLIB }
+			}
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_to_variable = { DEN_congress_stauninger = 1 }
+	}
+
+	option = { #Soclib
+		log = "[GetLogInfo]: event denmark_events.119 option denmark_events.119.b"
+		name = denmark_events.119.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DEN_path option = DEN_PATH_REP_SOCDEM }
+			}
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		add_to_variable = { DEN_congress_liberale = 1 }
+	}
+
+	after = {
+		country_event = { id = denmark_events.120 days = 3 }
+	}
+}
+
+country_event = { #The Winner
+	id = denmark_events.120
+	title = denmark_events.120.t
+	desc = denmark_events.120.d
+	picture = GFX_report_event_DEN_stauning_4
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = denmark_events.1014 days = 365 }
+		}
+	}
+
+	option = { #Socdem
+		log = "[GetLogInfo]: event denmark_events.120 option denmark_events.120.a"
+		name = denmark_events.120.a
+		trigger = {
+			check_variable = { DEN_congress_stauninger > DEN_congress_liberale }
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.15
+		}
+		add_stability = 0.05
+		activate_advisor = DEN_peter_munch_sic
+	}
+
+	option = { #Soclib
+		log = "[GetLogInfo]: event denmark_events.120 option denmark_events.120.b"
+		name = denmark_events.120.b
+		trigger = {
+			check_variable = { DEN_congress_liberale > DEN_congress_stauninger }
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.15
+		}
+		add_stability = 0.05
+		DEN_peter_munch = {
+			promote_character = social_liberal_subtype
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		activate_advisor = DEN_thorvald_stauning_sic
+	}
+
+	after = {
+		set_cosmetic_tag = DEN_statsraad_moderate
+		clear_variable = DEN_congress_stauninger
+		clear_variable = DEN_congress_liberale
+	}
+}
+
+country_event = { #Neutral Denmark's Fate
+	id = denmark_events.121
+	title = denmark_events.121.t
+	desc = denmark_events.121.d
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Nobody
+		log = "[GetLogInfo]: event denmark_events.121 option denmark_events.121.a"
+		name = denmark_events.121.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				OR = {
+					FRA = { has_government = totalist }
+					RUS = { has_democratic_government = no }
+				}
+			}
+		}
+		add_ideas = DEN_idea_alone_against_all
+		add_stability = -0.15
+		hidden_effect = {
+			clr_country_flag = DEN_fra_rejection
+			clr_country_flag = DEN_rus_rejection
+			clr_country_flag = DEN_swe_rejection
+		}
+	}
+
+	option = { #French Special Friends
+		log = "[GetLogInfo]: event denmark_events.121 option denmark_events.121.b"
+		name = denmark_events.121.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				FRA = { has_government = totalist }
+			}
+		}
+		trigger = {
+			is_monarchy = no
+			has_soclib_or_socdem_government = yes
+			any_neighbor_country = {
+				has_socialist_government = yes
+			}
+			FRA = { exists = yes }
+			NOT = { has_country_flag = DEN_fra_rejection }
+		}
+		FRA = { country_event = { id = denmark_events.122 days = 3 } }
+	}
+
+	option = { #Join MA
+		log = "[GetLogInfo]: event denmark_events.121 option denmark_events.121.c"
+		name = denmark_events.121.c
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				RUS = { has_democratic_government = no }
+			}
+		}
+		trigger = {
+			RUS = {
+				exists = yes
+				has_socialist_government = no
+				is_faction_leader = yes
+			}
+			NOT = { has_country_flag = DEN_rus_rejection }
+		}
+		RUS = { country_event = { id = denmark_events.124 days = 3 } }
+	}
+
+	option = { #Swedish Defense Pact
+		log = "[GetLogInfo]: event denmark_events.121 option denmark_events.121.e"
+		name = denmark_events.121.e
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				SWE = { has_democratic_government = no }
+			}
+		}
+		trigger = {
+			SWE = {
+				exists = yes
+				is_subject = no
+				has_socialist_government = no
+				has_war = no
+				is_in_faction = no
+			}
+			NOT = { has_country_flag = DEN_swe_rejection }
+		}
+		SWE = { country_event = { id = denmark_events.125 days = 3 } }
+	}
+}
+
+country_event = { #French Special Friends French PoV
+	id = denmark_events.122
+	title = denmark_events.122.t
+	desc = denmark_events.122.d
+
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event denmark_events.122 option denmark_events.122.a"
+		name = denmark_events.122.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_government = totalist
+			}
+		}
+		FRA = {
+			give_guarantee = DEN
+			add_opinion_modifier = {
+				target = DEN
+				modifier = KR_friendly
+			}
+			diplomatic_relation = {
+				country = DEN
+				relation = non_aggression_pact
+			}
+		}
+		ENG = {
+			give_guarantee = DEN
+			add_opinion_modifier = {
+				target = DEN
+				modifier = KR_friendly
+			}
+			diplomatic_relation = {
+				country = DEN
+				relation = non_aggression_pact
+			}
+		}
+		DEN = {
+			give_military_access = FRA
+			give_military_access = ENG
+		}
+		hidden_effect = {
+			DEN = { country_event = denmark_events.1250 }
+		}
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event denmark_events.122 option denmark_events.122.b"
+		name = denmark_events.122.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				has_government = totalist
+			}
+		}
+		DEN = {
+			add_opinion_modifier = {
+				target = FRA
+				modifier = KR_outraged
+			}
+			add_opinion_modifier = {
+				target = ENG
+				modifier = KR_outraged
+			}
+		}
+		set_country_flag = DEN_fra_rejection
+		hidden_effect = {
+			DEN = { country_event = denmark_events.123 }
+		}
+	}
+}
+
+country_event = { #End Loop Event
+	id = denmark_events.123
+	title = denmark_events.123.t
+	desc = denmark_events.123.d
+
+	is_triggered_only = yes
+
+	option = { #Back to Square One
+		log = "[GetLogInfo]: event denmark_events.123 option denmark_events.123.a"
+		name = denmark_events.123.a
+		country_event = denmark_events.121
+	}
+}
+
+country_event = { #Denmark Wants to Join Us RUS Pov
+	id = denmark_events.124
+	title = denmark_events.124.t
+	desc = denmark_events.124.d
+
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event denmark_events.124 option denmark_events.124.a"
+		name = denmark_events.124.a
+		ai_chance = { base = 100 }
+		add_to_faction = DEN
+		hidden_effect = {
+			DEN = { country_event = denmark_events.1251 }
+		}
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event denmark_events.124 option denmark_events.124.b"
+		name = denmark_events.124.b
+		ai_chance = { base = 0 }
+		set_country_flag = DEN_rus_rejection
+		hidden_effect = {
+			DEN = { country_event = denmark_events.123 }
+		}
+	}
+}
+
+country_event = { #Denmark Wants Mutual Defence SWE POV
+	id = denmark_events.125
+	title = denmark_events.125.t
+	desc = denmark_events.125.d
+
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event denmark_events.125 option denmark_events.125.a"
+		name = denmark_events.125.a
+		ai_chance = { base = 100 }
+		SWE = {
+			give_guarantee = DEN
+			add_opinion_modifier = {
+				target = DEN
+				modifier = KR_friendly
+			}
+			diplomatic_relation = {
+				country = DEN
+				relation = non_aggression_pact
+			}
+		}
+		DEN = {
+			give_guarantee = SWE
+			add_opinion_modifier = {
+				target = SWE
+				modifier = KR_friendly
+			}
+			diplomatic_relation = {
+				country = SWE
+				relation = non_aggression_pact
+			}
+		}
+		hidden_effect = {
+			DEN = { country_event = denmark_events.1252 }
+		}
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event denmark_events.125 option denmark_events.125.b"
+		name = denmark_events.125.b
+		ai_chance = { base = 0 }
+		set_country_flag = DEN_swe_rejection
+		hidden_effect = {
+			DEN = { country_event = denmark_events.123 }
+		}
+	}
+}
+
+### Notifier Events for Prior Chain
+
+country_event = { #French Special Friends Notifier
+	id = denmark_events.1250
+	title = denmark_events.1250.t
+	desc = denmark_events.1250.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.1250 option denmark_events.1250.a"
+		name = denmark_events.1250.a
+		effect_tooltip = {
+			FRA = {
+				give_guarantee = DEN
+				add_opinion_modifier = {
+					target = DEN
+					modifier = KR_friendly
+				}
+				diplomatic_relation = {
+					country = DEN
+					relation = non_aggression_pact
+				}
+			}
+			ENG = {
+				give_guarantee = DEN
+				add_opinion_modifier = {
+					target = DEN
+					modifier = KR_friendly
+				}
+				diplomatic_relation = {
+					country = DEN
+					relation = non_aggression_pact
+				}
+			}
+			DEN = {
+				give_military_access = FRA
+				give_military_access = ENG
+			}
+		}
+	}
+}
+
+country_event = { #MA Join Notifier
+	id = denmark_events.1251
+	title = denmark_events.1251.t
+	desc = denmark_events.1251.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.1251 option denmark_events.1251.a"
+		name = denmark_events.1251.a
+	}
+}
+
+country_event = { #Swedish Friends Notifier
+	id = denmark_events.1252
+	title = denmark_events.1252.t
+	desc = denmark_events.1252.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.1252 option denmark_events.1252.a"
+		name = denmark_events.1252.a
+		effect_tooltip = {
+			SWE = {
+				give_guarantee = DEN
+				add_opinion_modifier = {
+					target = DEN
+					modifier = KR_friendly
+				}
+				diplomatic_relation = {
+					country = DEN
+					relation = non_aggression_pact
+				}
+			}
+			DEN = {
+				give_guarantee = SWE
+				add_opinion_modifier = {
+					target = SWE
+					modifier = KR_friendly
+				}
+				diplomatic_relation = {
+					country = SWE
+					relation = non_aggression_pact
+				}
+			}
+		}
+	}
+}
+
+country_event = { #North Slesvig Defects
+	id = denmark_events.126
+	title = denmark_events.126.t
+	desc = denmark_events.126.d
+
+	trigger = {
+		original_tag = DEN
+		GER = {
+			surrender_progress > 0.89
+			owns_state = 782
+			has_full_control_of_state = 782
+			is_subject = no
+		}
+		has_war = no
+		is_subject = no
+		has_soclib_or_socdem_government = yes
+	}
+
+	fire_only_once = yes
+
+	option = { #Rescue Them!
+		log = "[GetLogInfo]: event denmark_events.126 option denmark_events.126.a"
+		name = denmark_events.126.a
+		782 = {
+			transfer_state_to = ROOT
+			add_claim_of_ROOT = yes
+		}
+		if = {
+			limit = { has_idea = DEN_idea_easy_eco_demand }
+			remove_ideas = DEN_idea_easy_eco_demand
+		}
+		else_if = {
+			limit = { has_idea = DEN_idea_hard_eco_demand }
+			remove_ideas = DEN_idea_hard_eco_demand
+		}
+		diplomatic_relation = {
+			country = GER
+			relation = military_access
+			active = no
+		}
+		hidden_effect = {
+			GER = { country_event = { id = denmark_events.127 days = 3 } }
+		}
+	}
+}
+
+country_event = { #North Slesvig Defects Ger POV
+	id = denmark_events.127
+	title = denmark_events.127.t
+	desc = denmark_events.127.d
+
+	is_triggered_only = yes
+
+	option = { #Sad
+		log = "[GetLogInfo]: event denmark_events.127 option denmark_events.127.a"
+		name = denmark_events.127.a
+		add_stability = -0.05
+		add_political_power = -25
+		GER = {
+			add_opinion_modifier = {
+				target = DEN
+				modifier = KR_outraged
+			}
+		}
+	}
+}
+
+country_event = { #BOPA Crisis Begins
+	id = denmark_events.128
+	title = denmark_events.128.t
+	desc = denmark_events.128.d
+	picture = GFX_report_event_DEN_borge_houmann
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Fight!
+		log = "[GetLogInfo]: event denmark_events.128 option denmark_events.128.a"
+		name = denmark_events.128.a
+		add_ideas = DEN_idea_BOPA_intensity1
+		activate_mission = DEN_BOPA_guerilla_activity
+		hidden_effect = {
+			if = {
+				limit = { has_character = DEN_william_prior }
+				DEN_william_prior = { unit_leader_event = denmark_events.129 }
+			}
+			else = { #Fallback for exceptional scenarios
+				set_country_flag = DEN_police_crisis_solution
+				DEN = { country_event = { id = denmark_events.130 days = 100 } }
+			}
+			if = {
+				limit = { DEN_jack_westergaard = { is_second_in_command = no } }
+				country_event = { id = denmark_events.1005 days = 60 random_days = 14 }
+			}
+		}
+	}
+}
+
+unit_leader_event = { #Response to Crisis
+	id = denmark_events.129
+	title = denmark_events.129.t
+	desc = denmark_events.129.d
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			DEN = { country_event = { id = denmark_events.130 days = 100 } }
+		}
+	}
+
+	option = { #Police will Handle it
+		log = "[GetLogInfo]: event denmark_events.129 option denmark_events.129.a"
+		name = denmark_events.129.a
+		set_country_flag = DEN_police_crisis_solution
+	}
+
+	option = { #General Prior Takes Reins
+		log = "[GetLogInfo]: event denmark_events.129 option denmark_events.129.b"
+		name = denmark_events.129.b
+		DEN_william_prior = { retire = yes }
+	}
+}
+
+country_event = { #BOPA Intensity Reduction Event
+	id = denmark_events.130
+	title = denmark_events.130.t
+	desc = denmark_events.130.d
+	picture = GFX_report_event_DEN_haer
+
+	trigger = {
+		has_active_mission = DEN_BOPA_guerilla_activity
+	}
+
+	is_triggered_only = yes
+
+	option = { #Yay!
+		log = "[GetLogInfo]: event denmark_events.130 option denmark_events.130.a"
+		name = denmark_events.130.a
+		DEN_crisis_recovers_effect = yes
+	}
+}
+
+country_event = { #City Centre Attack
+	id = denmark_events.131
+	title = denmark_events.131.t
+	desc = denmark_events.131.d
+	picture = GFX_report_event_DEN_destruction
+
+	is_triggered_only = yes
+
+	option = { #Oh no!
+		log = "[GetLogInfo]: event denmark_events.131 option denmark_events.131.a"
+		name = denmark_events.131.a
+		add_manpower = -100
+		add_stability = -0.02
+	}
+}
+
+country_event = { #Factory Attacked
+	id = denmark_events.132
+	title = denmark_events.132.t
+	desc = denmark_events.132.d
+	picture = GFX_report_event_DEN_destruction
+
+	is_triggered_only = yes
+
+	option = { #Oh no!
+		log = "[GetLogInfo]: event denmark_events.132 option denmark_events.132.a"
+		name = denmark_events.132.a
+		99 = {
+			prioritize_state = yes
+			damage_building = {
+				type = industrial_complex
+				damage = 1
+			}
+		}
+		37 = {
+			prioritize_state = yes
+			damage_building = {
+				type = arms_factory
+				damage = 1
+			}
+		}
+	}
+}
+
+country_event = { #Armoury Raided
+	id = denmark_events.133
+	title = denmark_events.133.t
+	desc = denmark_events.133.d
+	picture = GFX_report_event_DEN_destruction
+
+	is_triggered_only = yes
+
+	option = { #Oh no!
+		log = "[GetLogInfo]: event denmark_events.133 option denmark_events.133.a"
+		name = denmark_events.133.a
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -750
+			producer = DEN
+		}
+	}
+}
+
+country_event = { #BOPA Conflict Ends - Police POV
+	id = denmark_events.134
+	title = denmark_events.134.t
+	desc = denmark_events.134.d
+	picture = GFX_report_event_DEN_haer
+
+	trigger = {
+		has_active_mission = DEN_BOPA_guerilla_activity
+	}
+
+	is_triggered_only = yes
+
+	option = { #Yay!
+		log = "[GetLogInfo]: event denmark_events.134 option denmark_events.134.a"
+		name = denmark_events.134.a
+		DEN_clear_crisis = yes
+		add_stability = 0.1
+	}
+}
+
+country_event = { #BOPA Conflict Ends - Prior POV
+	id = denmark_events.135
+	title = denmark_events.135.t
+	desc = denmark_events.135.d
+	picture = GFX_report_event_DEN_haer
+
+	is_triggered_only = yes
+
+	option = { #Yay!
+		log = "[GetLogInfo]: event denmark_events.135 option denmark_events.135.a"
+		name = denmark_events.135.a
+		DEN_clear_crisis = yes
+		DEN_william_prior = { set_nationality = ROOT }
+		add_stability = 0.05
+	}
+}
+
+country_event = { #FRA POV Send Buisson Option
+	id = denmark_events.137
+	title = denmark_events.137.t
+	desc = denmark_events.137.d
+
+	is_triggered_only = yes
+
+	option = { #Send him
+		log = "[GetLogInfo]: event denmark_events.137 option denmark_events.137.a"
+		name = denmark_events.137.a
+		effect_tooltip = {
+			FRA_louis_buisson = { set_nationality = DEN }
+		}
+		DEN = { country_event = { id = denmark_events.138 days = 3 } }
+	}
+
+	option = { #Let's not
+		log = "[GetLogInfo]: event denmark_events.137 option denmark_events.137.b"
+		name = denmark_events.137.b
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #DEN POV Receive Buisson
+	id = denmark_events.138
+	title = denmark_events.138.t
+	desc = denmark_events.138.d
+
+	is_triggered_only = yes
+
+	option = { #Wonderful!
+		log = "[GetLogInfo]: event denmark_events.138 option denmark_events.138.a"
+		name = denmark_events.138.a
+		FROM = {
+			FRA_louis_buisson = {
+				set_nationality = DEN
+				if = {
+					limit = { NOT = { has_advisor_role = high_command } }
+					add_advisor_role = {
+						advisor = {
+							slot = high_command
+							idea_token = FRA_louis_buisson_high_command
+							desc = FRA_louis_buisson_commander_desc
+							ledger = army
+							traits = { KR_MHC_armoured_1 }
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+unit_leader_event = { #Prior Affair
+	id = denmark_events.141
+	title = denmark_events.141.t
+	desc = denmark_events.141.d
+
+	is_triggered_only = yes
+
+	option = { #Prior Coups; Restores King Christian
+		log = "[GetLogInfo]: event denmark_events.141 option denmark_events.141.a"
+		name = denmark_events.141.a
+		DEN = {
+			DEN_create_christian = yes
+			set_politics = { ruling_party = authoritarian_democrat elections_allowed = no }
+			DEN_thorvald_stauning = { retire = yes }
+			activate_advisor = DEN_victor_puerschel_sic
+			add_ideas = DEN_idea_doubtful_military
+			add_ideas = DEN_idea_KomF_general_strike
+			hidden_effect = {
+				country_event = { id = denmark_events.38 days = 35 }
+				remove_ideas = DEN_idea_opposition_controlled_landsting
+				if = {
+					limit = { has_completed_focus = DEN_danish_democracy }
+					uncomplete_national_focus = {
+						focus = DEN_danish_democracy
+						uncomplete_children = yes
+					}
+				}
+			}
+		}
+		GER = { country_event = denmark_events.34 }
+	}
+}
+
+country_event = { #One Year's Outlook - Leadup to Disarmament Bill
+	id = denmark_events.142
+	title = denmark_events.142.t
+	desc = denmark_events.142.d
+	picture = GFX_report_event_DEN_peter_munch2
+
+	is_triggered_only = yes
+
+	option = { #Buu
+		log = "[GetLogInfo]: event denmark_events.142 option denmark_events.142.a"
+		name = denmark_events.142.a
+		add_political_power = -10
+		activate_mission = DEN_convincing_mission_1
+		hidden_effect = {
+			activate_targeted_decision = { decision = DEN_prior_munch_negotiations target = THIS }
+			activate_targeted_decision = { decision = DEN_threaten_munch target = THIS }
+			if = {
+				limit = { has_government = social_democrat }
+				activate_targeted_decision = { decision = DEN_welfare_compromises target = THIS }
+			}
+			else = {
+				activate_targeted_decision = { decision = DEN_social_spending target = THIS }
+			}
+		}
+	}
+}
+
+country_event = { #Disarmament Bill - Endings
+	id = denmark_events.143
+	title = denmark_events.143.t
+	desc = denmark_events.143.d
+	picture = GFX_report_event_DEN_peter_munch1
+
+	is_triggered_only = yes
+
+	option = { #Yay
+		log = "[GetLogInfo]: event denmark_events.143 option denmark_events.143.a"
+		name = denmark_events.143.a
+		add_stability = 0.1
+		add_political_power = 50
+		hidden_effect = {
+			remove_targeted_decision = { decision = DEN_prior_munch_negotiations target = THIS }
+			remove_targeted_decision = { decision = DEN_threaten_munch target = THIS }
+			remove_targeted_decision = { decision = DEN_welfare_compromises target = THIS }
+			remove_targeted_decision = { decision = DEN_social_spending target = THIS }
+		}
+	}
+}
+
+country_event = { #ICE reaction to Statsraad
+	id = denmark_events.144
+	title = denmark_events.144.t
+	desc = denmark_events.144.d
+
+	is_triggered_only = yes
+
+	option = { #Syndie Swap
+		log = "[GetLogInfo]: event denmark_events.144 option denmark_events.144.a"
+		name = denmark_events.144.a
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ICE_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ICE_path option = ICE_PATH_SYNDIE } }
+				NOT = { has_game_rule = { rule = ICE_path option = ICE_PATH_RADSOC } }
+			}
+		}
+		ICE = {
+			remove_puppet_and_leave_faction = yes
+		}
+		uncomplete_national_focus = {
+			focus = ICE_Status_Quo
+			uncomplete_children = yes
+		}
+		set_politics = {
+			ruling_party = syndicalist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.15
+		}
+		complete_national_focus = ICE_English_Pup
+	}
+
+	option = { #Independence
+		log = "[GetLogInfo]: event denmark_events.144 option denmark_events.144.b"
+		name = denmark_events.144.b
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ICE_path option = ICE_PATH_SYNDIE }
+					has_game_rule = { rule = ICE_path option = ICE_PATH_RADSOC }
+				}
+			}
+		}
+		ICE = {
+			remove_puppet_and_leave_faction = yes
+		}
+		uncomplete_national_focus = {
+			focus = ICE_Status_Quo
+			uncomplete_children = yes
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.15
+		}
+		complete_national_focus = ICE_Independence_Victory
+	}
+
+	after = {
+		drop_cosmetic_tag = yes
+	}
+}
+
+country_event = { #Goals for 1939
+	id = denmark_events.145
+	title = denmark_events.145.t
+	desc = denmark_events.145.d
+	picture = GFX_report_event_DEN_ep_christian2
+
+	is_triggered_only = yes
+
+	option = { #Troubling..
+		log = "[GetLogInfo]: event denmark_events.145 option denmark_events.145.a"
+		name = denmark_events.145.a
+		add_political_power = 10
+		hidden_effect = {
+			country_event = { id = denmark_events.96 days = 7 }
+		}
+	}
+}
+
+country_event = { #King meets with PM
+	id = denmark_events.146
+	title = denmark_events.146.t
+	desc = denmark_events.146.d
+	picture = GFX_report_event_DEN_ep_christian
+
+	trigger = {
+		has_country_flag = DEN_crisis_ongoing
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = denmark_events.147 days = 50 }
+		}
+	}
+
+	option = { #Troubling..
+		log = "[GetLogInfo]: event denmark_events.146 option denmark_events.146.a"
+		name = denmark_events.146.a
+		trigger = { has_country_flag = DEN_sided_with_king }
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.05
+		}
+	}
+
+	option = { #Let's hope he chokes on his words.
+		log = "[GetLogInfo]: event denmark_events.146 option denmark_events.146.b"
+		name = denmark_events.146.b
+		trigger = { has_country_flag = DEN_opposed_king }
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.03
+		}
+	}
+
+	after = {
+		subtract_from_variable = { DEN_influence_power = 2 }
+	}
+}
+
+country_event = { #Westergaard ignites violent protest
+	id = denmark_events.147
+	title = denmark_events.147.t
+	desc = denmark_events.147.d
+	picture = GFX_report_event_DEN_jack_westergaard1
+
+	trigger = {
+		has_country_flag = DEN_crisis_ongoing
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = denmark_events.148 days = 30 }
+		}
+	}
+
+	option = { #Troubling..
+		log = "[GetLogInfo]: event denmark_events.147 option denmark_events.147.a"
+		name = denmark_events.147.a
+		trigger = { has_country_flag = DEN_sided_with_king }
+		subtract_from_variable = { DEN_influence_power = 2 }
+		add_manpower = -10
+		add_war_support = -0.03
+	}
+
+	option = { #Reactionary Rabblerouser!
+		log = "[GetLogInfo]: event denmark_events.147 option denmark_events.147.b"
+		name = denmark_events.147.b
+		trigger = { has_country_flag = DEN_opposed_king }
+		subtract_from_variable = { DEN_influence_power = 3 }
+		add_manpower = -15
+		add_war_support = -0.05
+	}
+}
+
+country_event = { #German Ambassador Applies Pressure
+	id = denmark_events.148
+	title = denmark_events.148.t
+	desc = denmark_events.148.d
+	picture = GFX_report_event_DEN_ep_christian3
+
+	trigger = {
+		has_country_flag = DEN_crisis_ongoing
+	}
+
+	is_triggered_only = yes
+
+	option = { #Troubling..
+		log = "[GetLogInfo]: event denmark_events.148 option denmark_events.148.a"
+		name = denmark_events.148.a
+		trigger = { has_country_flag = DEN_sided_with_king }
+		subtract_from_variable = { DEN_influence_power = 1 }
+	}
+
+	option = { #We bend not to German lapdogs
+		log = "[GetLogInfo]: event denmark_events.148 option denmark_events.148.b"
+		name = denmark_events.148.b
+		trigger = { has_country_flag = DEN_opposed_king }
+		subtract_from_variable = { DEN_influence_power = 2 }
+	}
+}
+
+country_event = { #ConCrisis Victory Event
+	id = denmark_events.149
+	title = denmark_events.149.t
+	desc = denmark_events.149.d
+	picture = GFX_report_event_DEN_ep_christian3
+
+	is_triggered_only = yes
+
+	option = { #Yay
+		log = "[GetLogInfo]: event denmark_events.149 option denmark_events.149.a"
+		name = denmark_events.149.a
+		trigger = {
+			has_government = social_democrat
+			is_monarchy = yes
+		}
+		add_political_power = 100
+		add_stability = 0.15
+		add_popularity = { ideology = social_democrat popularity = 0.15 }
+		hidden_effect = {
+			set_country_leader_description = {
+				desc = DEN_christian_af_glucksborg_democracy_victory_leader_desc
+			}
+		}
+	}
+
+	option = { #Yay
+		log = "[GetLogInfo]: event denmark_events.149 option denmark_events.149.b"
+		name = denmark_events.149.b
+		trigger = {
+			has_government = market_liberal
+		}
+		add_political_power = 100
+		add_stability = 0.15
+		add_popularity = { ideology = market_liberal popularity = 0.15 }
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		remove_from_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		remove_from_coalition = yes
+		hidden_effect = {
+			set_country_leader_description = {
+				desc = DEN_christian_af_glucksborg_democracy_victory_leader_desc
+			}
+		}
+	}
+
+	option = { #Yay
+		log = "[GetLogInfo]: event denmark_events.149 option denmark_events.149.c"
+		name = denmark_events.149.c
+		trigger = {
+			is_monarchy = no
+		}
+		add_political_power = 50
+		add_stability = 0.05
+		add_popularity = { ideology = social_democrat popularity = 0.05 }
+	}
+}
+
+### New Flavour Events
+
+country_event = { #Death of George V
+	id = denmark_events.1000
+	title = denmark_events.1000.t
+	desc = denmark_events.1000.d
+	picture = GFX_report_event_DEN_stauning_cabinet
+
+	is_triggered_only = yes
+
+	option = { #Send A Message
+		log = "[GetLogInfo]: event denmark_events.1000 option denmark_events.1000.a"
+		name = denmark_events.1000.a
+		add_stability = 0.03
+		add_political_power = -15
+		CAN = { country_event = { id = denmark_events.1001 days = 3 } }
+	}
+
+	option = { #Do not do so
+		log = "[GetLogInfo]: event denmark_events.1000 option denmark_events.1000.b"
+		name = denmark_events.1000.b
+		add_stability = -0.03
+		add_political_power = 15
+	}
+}
+
+country_event = { #Message Sent to CAN
+	id = denmark_events.1001
+	title = denmark_events.1001.t
+	desc = denmark_events.1001.d
+	picture = GFX_report_event_DEN_stauning_cabinet
+
+	is_triggered_only = yes
+
+	option = { #TY
+		log = "[GetLogInfo]: event denmark_events.1001 option denmark_events.1001.a"
+		name = denmark_events.1001.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Nexo and Houmann attend charter
+	id = denmark_events.1003
+	title = denmark_events.1003.t
+	desc = denmark_events.1003.d
+	picture = GFX_report_event_DEN_nexo_news
+
+	is_triggered_only = yes
+
+	option = { #Troubling..
+		log = "[GetLogInfo]: event denmark_events.1003 option denmark_events.1003.a"
+		name = denmark_events.1003.a
+		add_popularity = {
+			ideology = Totalist
+			popularity = 0.02
+		}
+		add_stability = -0.01
+	}
+}
+
+country_event = { #Sørensen supports Danish Freedom Council
+	id = denmark_events.1005
+	title = denmark_events.1005.t
+	desc = denmark_events.1005.d
+	picture = GFX_report_event_DEN_ep_arne
+
+	is_triggered_only = yes
+
+	option = { #Traitor!
+		log = "[GetLogInfo]: event denmark_events.1005 option denmark_events.1005.a"
+		name = denmark_events.1005.a
+		add_stability = -0.05
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { #Little Schleicher
+	id = denmark_events.1006
+	title = denmark_events.1006.t
+	desc = denmark_events.1006.d
+	picture = GFX_report_event_DEN_jack_westergaard2
+
+	is_triggered_only = yes
+
+	option = { #How Cute
+		log = "[GetLogInfo]: event denmark_events.1006 option denmark_events.1006.a"
+		name = denmark_events.1006.a
+	}
+}
+
+country_event = { #King Christian X 70th Bday
+	id = denmark_events.1007
+	title = denmark_events.1007.t
+	desc = denmark_events.1007.d
+	picture = GFX_report_event_DEN_ep_christian2
+
+	trigger = {
+		DEN_christian_af_glucksborg = {
+			is_country_leader = yes
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #Congrats
+		log = "[GetLogInfo]: event denmark_events.1007 option denmark_events.1007.a"
+		name = denmark_events.1007.a
+		add_ideas = DEN_idea_kings_mark
+		add_political_power = 25
+	}
+}
+
+country_event = { #Treaty of Vienna Overturned!
+	id = denmark_events.1008
+	title = denmark_events.1008.t
+	desc = denmark_events.1008.d
+	picture = GFX_report_event_DEN_schleswig
+
+	trigger = {
+		original_tag = DEN
+		782 = {
+			is_owned_by = DEN
+		}
+	}
+
+	fire_only_once = yes
+
+	option = { #Yay
+		log = "[GetLogInfo]: event denmark_events.1008 option denmark_events.1008.a"
+		name = denmark_events.1008.a
+		add_political_power = 25
+		782 = {
+			add_compliance = 5
+		}
+	}
+}
+
+country_event = { #Bornholm School of Painters
+	id = denmark_events.1009
+	title = denmark_events.1009.t
+	desc = denmark_events.1009.d
+	picture = GFX_report_event_DEN_ep_rude
+
+	is_triggered_only = yes
+
+	option = { #I love Art
+		log = "[GetLogInfo]: event denmark_events.1009 option denmark_events.1009.a"
+		name = denmark_events.1009.a
+	}
+}
+
+country_event = { #Frederik Supports Music
+	id = denmark_events.1010
+	title = denmark_events.1010.t
+	desc = denmark_events.1010.d
+	picture = GFX_report_event_DEN_frederik_conductor
+
+	is_triggered_only = yes
+
+	option = { #I love Music
+		log = "[GetLogInfo]: event denmark_events.1010 option denmark_events.1010.a"
+		name = denmark_events.1010.a
+		add_stability = 0.03
+	}
+}
+
+country_event = { #BOPA/DFC Flavour
+	id = denmark_events.1011
+	title = denmark_events.1011.t
+	desc = denmark_events.1011.d
+	picture = GFX_report_event_DEN_syndicalists
+
+	is_triggered_only = yes
+
+	option = { #Chaos
+		log = "[GetLogInfo]: event denmark_events.1011 option denmark_events.1011.a"
+		name = denmark_events.1011.a
+		add_stability = -0.01
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.01
+		}
+	}
+}
+
+country_event = { #Carl Nielsen Monument Opens
+	id = denmark_events.1012
+	title = denmark_events.1012.t
+	desc = denmark_events.1012.d
+	picture = GFX_report_event_DEN_nielsen_monument
+
+	is_triggered_only = yes
+
+	option = { #I love Music 2
+		log = "[GetLogInfo]: event denmark_events.1012 option denmark_events.1012.a"
+		name = denmark_events.1012.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Danish Mass Party Organising
+	id = denmark_events.1013
+	title = denmark_events.1013.t
+	desc = denmark_events.1013.d
+	picture = GFX_report_event_DEN_larsen2
+
+	is_triggered_only = yes
+
+	option = { #Lets Do It
+		log = "[GetLogInfo]: event denmark_events.1013 option denmark_events.1013.a"
+		name = denmark_events.1013.a
+		add_popularity = {
+			ideology = syndicalist
+			popularity = -0.05
+		}
+		add_popularity = {
+			ideology = totalist
+			popularity = -0.05
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.15
+		}
+		add_stability = -0.05
+	}
+
+	option = { #Nah its ok
+		log = "[GetLogInfo]: event denmark_events.1013 option denmark_events.1013.b"
+		name = denmark_events.1013.b
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+		add_stability = 0.05
+	}
+}
+
+country_event = { #Reorganisation of the Right
+	id = denmark_events.1014
+	title = denmark_events.1014.t
+	desc = denmark_events.1014.d
+	picture = GFX_report_event_DEN_ep_moller
+
+	is_triggered_only = yes
+
+	option = { #Conservatives Reorganising
+		log = "[GetLogInfo]: event denmark_events.1014 option denmark_events.1014.a"
+		name = denmark_events.1014.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.05
+		}
+		add_stability = 0.03
+		set_party_name = {
+			ideology = social_conservative
+			name = DEN_soccon_unified_party
+			long_name = DEN_soccon_unified_party_long
+		}
+		set_party_name = {
+			ideology = authoritarian_democrat
+			name = DEN_autdem_breakaway_party
+			long_name = DEN_autdem_breakaway_party_long
+		}
+	}
+}
+
+country_event = { #Weltkrieg Begins Flavour Event - Add this to the correct trigger to fire
+	id = denmark_events.1015
+	title = denmark_events.1015.t
+	desc = denmark_events.1015.d
+	picture = GFX_report_event_DEN_destruction
+
+	trigger = {
+		original_tag = DEN
+		GER = {
+			has_war_with = FRA
+			has_war_with = RUS
+		}
+		NOT = { has_idea = SCA_nordic_council_idea }
+	}
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #War is hell
+		log = "[GetLogInfo]: event denmark_events.1015 option denmark_events.1015.a"
+		name = denmark_events.1015.a
+		trigger = {
+			has_war = no
+			is_in_faction = no
+		}
+		add_stability = 0.01
+	}
+
+	option = { #War is hell
+		log = "[GetLogInfo]: event denmark_events.1015 option denmark_events.1015.b"
+		name = denmark_events.1015.b
+		trigger = {
+			is_in_faction_with = GER
+		}
+		add_war_support = 0.01
+	}
+
+	option = { #War is hell
+		log = "[GetLogInfo]: event denmark_events.1015 option denmark_events.1015.c"
+		name = denmark_events.1015.c
+		trigger = {
+			is_in_faction_with = FRA
+		}
+		add_war_support = 0.03
+	}
+}
+
+country_event = { #Unge Pionerer Formation
+	id = denmark_events.1016
+	title = denmark_events.1016.t
+	desc = denmark_events.1016.d
+	picture = GFX_report_event_DEN_ep_petersen
+
+	is_triggered_only = yes
+
+	option = { #Yay
+		log = "[GetLogInfo]: event denmark_events.1016 option denmark_events.1016.a"
+		name = denmark_events.1016.a
+		add_stability = 0.03
+	}
+}
+
+country_event = { #Arildskov Visits Estonia - DEN PoV
+	id = denmark_events.1017
+	title = denmark_events.1017.t
+	desc = denmark_events.1017.d
+
+	is_triggered_only = yes
+
+	option = { #Remember the DBAC
+		log = "[GetLogInfo]: event denmark_events.1017 option denmark_events.1017.a"
+		name = denmark_events.1017.a
+		add_stability = 0.01
+		EST = { country_event = { id = denmark_events.1018 days = 5 } }
+	}
+}
+
+country_event = { #Arildskov Visits Estonia - EST PoV
+	id = denmark_events.1018
+	title = denmark_events.1018.t
+	desc = denmark_events.1018.d
+
+	is_triggered_only = yes
+
+	option = { #Fighters for our Freedom
+		log = "[GetLogInfo]: event denmark_events.1018 option denmark_events.1018.a"
+		name = denmark_events.1018.a
+		add_war_support = 0.01
+	}
+}
+
+country_event = { #Admiral King
+	id = denmark_events.1019
+	title = denmark_events.1019.t
+	desc = denmark_events.1019.d
+
+	is_triggered_only = yes
+
+	option = { #Retire and live long
+		log = "[GetLogInfo]: event denmark_events.1019 option denmark_events.1019.a"
+		name = denmark_events.1019.a
+		DEN_frederik_af_glucksborg = {
+			remove_unit_leader_role = yes
+			effect_tooltip = { add_trait = { trait = DEN_king_admiral } }
+			hidden_effect = {
+				set_temp_variable = { trait_token = token:DEN_king_admiral }
+				add_trait_to_all_country_leader_roles = yes
+			}
+		}
+	}
+
+	option = { #Admiral and King, one and the same
+		log = "[GetLogInfo]: event denmark_events.1019 option denmark_events.1019.b"
+		name = denmark_events.1019.b
+		add_war_support = 0.05
+		add_political_power = -100
+	}
+}
+
+country_event = { #Socialdemokratiet Party Reorganisation Flavour Event
+	id = denmark_events.1020
+	title = denmark_events.1020.t
+	desc = denmark_events.1020.d
+	picture = GFX_report_event_DEN_stauning_or_chaos
+
+	is_triggered_only = yes
+
+	option = { #For Social Democracy!
+		log = "[GetLogInfo]: event denmark_events.1020 option denmark_events.1020.a"
+		name = denmark_events.1020.a
+		add_stability = 0.05
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { #KF Moderates Revolt
+	id = denmark_events.1021
+	title = denmark_events.1021.t
+	desc = denmark_events.1021.d
+	picture = GFX_report_event_DEN_ep_moller2
+
+	is_triggered_only = yes
+
+	option = { #For Democracy!
+		log = "[GetLogInfo]: event denmark_events.1021 option denmark_events.1021.a"
+		name = denmark_events.1021.a
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		set_party_name = {
+			ideology = social_conservative
+			long_name = DEN_soccon_moderates_revolt_party_long
+			name = DEN_soccon_moderates_revolt_party
+		}
+		hidden_effect = {
+			DEN = { country_event = { id = denmark_events.1022 days = 14 } }
+			DEN = { country_event = { id = denmark_events.1024 days = 7 } }
+		}
+	}
+}
+
+country_event = { #Foundation of Ungdomssamvirket
+	id = denmark_events.1022
+	title = denmark_events.1022.t
+	desc = denmark_events.1022.d
+	picture = GFX_report_event_DEN_ep_ungdomssamvirke
+
+	is_triggered_only = yes
+
+	option = { #For Democracy!
+		log = "[GetLogInfo]: event denmark_events.1022 option denmark_events.1022.a"
+		name = denmark_events.1022.a
+		add_war_support = -0.05
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.05
+		}
+	}
+}
+
+country_event = { #Right Wing parties reorganising
+	id = denmark_events.1023
+	title = denmark_events.1023.t
+	desc = denmark_events.1023.d
+	picture = GFX_report_event_DEN_ep_arne
+
+	is_triggered_only = yes
+
+	option = { #NH Expands
+		log = "[GetLogInfo]: event denmark_events.1023 option denmark_events.1023.a"
+		name = denmark_events.1023.a
+		set_party_name = {
+			ideology = paternal_autocrat
+			long_name = DEN_pataut_nh_wing_long
+			name = DEN_pataut_nh_wing
+		}
+		set_party_name = {
+			ideology = national_populist
+			long_name = DEN_natpop_nh_wing_long
+			name = DEN_natpop_nh_wing
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.10
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { #Founding of NH
+	id = denmark_events.1024
+	title = denmark_events.1024.t
+	desc = denmark_events.1024.d
+	picture = GFX_report_event_DEN_jack_westergaard3
+
+	is_triggered_only = yes
+
+	option = { #For NH!
+		log = "[GetLogInfo]: event denmark_events.1024 option denmark_events.1024.a"
+		name = denmark_events.1024.a
+		set_party_name = {
+			ideology = authoritarian_democrat
+			long_name = DEN_autdem_breakaway_party_long
+			name = DEN_autdem_breakaway_party
+		}
+	}
+}
+
+country_event = { #Loop event first fired in March 1939 to check for Constitutional Crisis chain
+	id = denmark_events.5000
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = { #Constitutional Crisis should only happen if DEN is not allied with anyone
+		is_subject = no
+		is_in_faction = no
+		INT = {
+			is_faction_leader = yes
+			NOT = { has_war_with = ROOT }
+		}
+		GER = {
+			is_faction_leader = yes
+			NOT = { has_war_with = ROOT }
+		}
+		NOT = { has_idea = SCA_nordic_council_idea }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event denmark_events.5000 option 1"
+		if = {
+			limit = {
+				NOT = { has_completed_focus = SCANDINAVIA_nordic_council }
+				#^ Just in case focus completed just before denmark_events.5000 fires. This way nordic event chain resolves itself and event denmark_events.5000 loops one more time to wait for said event chain to complete.
+				OR = {
+					threat > 0.64
+					date > 1939.10.1 #Should always start at latest in October 1939
+				}
+			}
+			set_country_flag = DEN_crisis_ongoing
+			country_event = denmark_events.145 #Starts the Constitutional Crisis event chain, ends the loop
+		}
+		else = { country_event = { id = denmark_events.5000 days = 10 } } #Checks again in ten days
+	}
+}

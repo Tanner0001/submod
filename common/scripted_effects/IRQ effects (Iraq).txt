@@ -1,0 +1,164 @@
+IRQ_remove_rampant_corruption = {
+	if = {
+		limit = {
+			has_dynamic_modifier = { modifier = IRQ_Rampant_Corruption }
+			check_variable = { irq_consum = 0 }
+			check_variable = { irq_constr = 0 }
+			check_variable = { irq_pp_gain = 0 }
+			check_variable = { irq_stab_cor = 0 }
+		}
+		remove_dynamic_modifier = { modifier = IRQ_Rampant_Corruption }
+		clear_variable = irq_consum
+		clear_variable = irq_constr
+		clear_variable = irq_pp_gain
+		clear_variable = irq_stab_cor
+	}
+}
+
+IRQ_remove_crippling_poverty = {
+	if = {
+		limit = {
+			has_dynamic_modifier = { modifier = IRQ_Crippling_Poverty }
+			check_variable = { irq_stab_pov = 0 }
+			check_variable = { irq_researc = 0 }
+			check_variable = { irq_factory = 0 }
+			check_variable = { irq_constr_pov = 0 }
+		}
+		remove_dynamic_modifier = { modifier = IRQ_Crippling_Poverty }
+		clear_variable = irq_stab_pov
+		clear_variable = irq_researc
+		clear_variable = irq_factory
+		clear_variable = irq_constr_pov
+	}
+}
+
+IRQ_remove_sectarian_divide = {
+	if = {
+		limit = {
+			has_dynamic_modifier = { modifier = IRQ_Sectarian_Divide }
+			check_variable = { irq_stab_sect > -0.01 }
+			check_variable = { irq_recruit_pop = 0 }
+		}
+		remove_dynamic_modifier = { modifier = IRQ_Sectarian_Divide }
+		clear_variable = irq_stab_sect
+		clear_variable = irq_recruit_pop
+	}
+}
+
+IRQ_spawn_initial_units = {
+	# Needed for tank division
+	if = {
+		limit = { has_dlc_nsb = yes }
+		set_technology = {
+			gwtank_chassis = 1
+			basic_light_tank_chassis = 1
+			engine_tech_1 = 1
+		}
+	}
+	if = {
+		limit = { has_dlc_nsb = no }
+		set_technology = {
+			gwtank = 1
+			basic_light_tank = 1
+		}
+	}
+	create_equipment_variant = {
+		name = "MT-52 'Sekban'"
+		type = light_tank_chassis_1
+		parent_version = 0
+		modules = {
+			main_armament_slot = tank_small_cannon_2
+			turret_type_slot = tank_light_two_man_tank_turret
+			suspension_type_slot = tank_bogie_suspension
+			armor_type_slot = tank_riveted_armor
+			engine_type_slot = tank_gasoline_engine
+			special_type_slot_1 = tank_radio_1
+		}
+		upgrades = {
+			tank_nsb_engine_upgrade = 2
+			tank_nsb_armor_upgrade = 2
+		}
+	}
+
+	random_owned_controlled_state = {
+		create_unit = {
+			division = "division_template = \"Independent Mechanized Brigade\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			prioritize_location = 2097
+			owner = PREV
+		}
+		create_unit = {
+			division = "division_template = \"Infantry Division\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			owner = PREV
+			count = 5
+		}
+	}
+}
+
+IRQ_remove_all_guarantees = {
+	if = {
+		limit = { is_in_faction = yes }
+		leave_faction = yes
+	}
+	EGY = {
+		if = {
+			limit = { has_guaranteed = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = guarantee
+				active = no
+			}
+		}
+	}
+	SAU = {
+		if = {
+			limit = { has_guaranteed = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = guarantee
+				active = no
+			}
+		}
+	}
+	SYR = {
+		if = {
+			limit = { has_guaranteed = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = guarantee
+				active = no
+			}
+		}
+	}
+	JBS = {
+		if = {
+			limit = { has_guaranteed = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = guarantee
+				active = no
+			}
+		}
+	}
+	YEM = {
+		if = {
+			limit = { has_guaranteed = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = guarantee
+				active = no
+			}
+		}
+	}
+	HEJ = {
+		if = {
+			limit = { has_guaranteed = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = guarantee
+				active = no
+			}
+		}
+	}
+}

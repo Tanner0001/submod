@@ -1,0 +1,1020 @@
+###########################################
+# Mexico
+# Decisions by Herkles
+###########################################
+
+foreign_politics = {# Foreign Policy
+	MEX_join_internationale = {# join the international
+		icon = generic_nationalism
+
+		allowed = { original_tag = MEX }
+
+		available = {
+			threat > 0.3
+			OR = {
+				has_completed_focus = MEX_la_dictadura_perfecta
+				has_completed_focus = MEX_revolutionary_democracy_survives
+			}
+			NOT = { has_idea = MEX_civil_war_idea }
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			has_socialist_government = yes
+			FROM = { is_faction_leader = yes }
+			NOT = { has_war_with = FROM }
+			is_in_faction = no
+			is_subject = no
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		targets = { INT }
+		target_trigger = {
+			has_socialist_government = yes
+			FROM = { is_faction_leader = yes }
+			NOT = { has_war_with = FROM }
+			is_in_faction = no
+			is_subject = no
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.30 }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = WCA_forpol option = WCA_FORPOL_BOOSTED_WCA }
+				OR = {
+					NOT = { has_global_flag = USA_civil_war_begun_flag }
+					WCA = {
+						exists = yes
+						is_subject = no
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MEX_join_internationale"
+			FROM = { country_event = mexico_events.200 }
+		}
+		fixed_random_seed = no
+	}
+
+	MEX_join_entente = {# Join the Entente
+		icon = generic_nationalism
+
+		allowed = { always = no }
+
+		available = {
+			threat > 0.3
+			NOT = { has_idea = MEX_civil_war_idea }
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			is_in_faction = no
+			is_subject = no
+			has_socialist_government = no
+			NOT = { has_government = national_populist }
+			NOT = { has_war_with = FROM }
+			FROM = {
+				is_faction_leader = yes
+				has_capitulated = no
+			}
+		}
+
+		cost = 25
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.30 }
+			}
+			modifier = {
+				factor = 0
+				USA_has_boosted_loas_game_rule = yes
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MEX_join_entente"
+			FROM = { country_event = mexico_events.202 }
+		}
+		fixed_random_seed = no
+	}
+
+	MEX_intervene_WCA = {# Intervene on the Side of the WCA
+		icon = generic_ignite_civil_war
+		allowed = { always = no }	# Activated and removed by ACW global flags
+
+		available = {
+			has_war = no
+			is_in_faction = no
+			controls_all_owned_states = yes
+			NOT = {
+				has_idea = MEX_revolution_military
+				has_idea = MEX_revolution_economic
+				has_idea = MEX_civil_war_idea
+			}
+			FROM = {
+				OR = {
+					surrender_progress > 0.50
+					num_of_controlled_states < 5
+					has_war_with = ENT
+				}
+			}
+		}
+		visible = {
+			country_exists = FROM
+			FROM = {
+				OR = {
+					has_war_with = USA
+					has_war_with = APG
+					has_war_with = ACC
+					has_war_with = NEE
+				}
+			}
+			has_socialist_government = yes
+		}
+
+		cancel_trigger = {
+			is_in_faction = yes
+			NOT = { country_exists = WCA }
+		}
+
+		cost = 0
+		days_remove = 20
+		fire_only_once = yes
+
+		war_with_on_remove = USA
+		war_with_on_remove = ACC
+		war_with_on_remove = APG
+		war_with_on_remove = NEE
+
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel MEX_intervene_WCA"
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MEX_intervene_WCA"
+			set_country_flag = { flag = imminent_war days = 25 value = 1 }
+			every_other_country = {
+				limit = {
+					is_american_tag = yes
+					has_war_with = FROM
+				}
+				set_country_flag = MEX_preparing_against_target
+				incoming_war_notification_effect = yes
+				add_ai_strategy = {
+					type = prepare_for_war
+					id = ROOT
+					value = 100
+				}
+				ROOT = {
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = PREV
+						value = 100
+					}
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove MEX_intervene_WCA"
+			every_other_country = {
+				limit = { has_country_flag = MEX_preparing_against_target }
+				add_ai_strategy = {
+					type = prepare_for_war
+					id = ROOT
+					value = -100
+				}
+				ROOT = {
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = PREV
+						value = -100
+					}
+				}
+			}
+			if = {# Fight the USA
+				limit = {
+					WCA = { has_war_with = USA }
+					NOT = { has_war_with = USA }
+				}
+				add_to_war = { targeted_alliance = WCA enemy = USA }
+			}
+			if = {# Fight the ACC
+				limit = {
+					WCA = { has_war_with = ACC }
+					NOT = { has_war_with = ACC }
+				}
+				add_to_war = { targeted_alliance = WCA enemy = ACC }
+			}
+			if = {# Fight the APG
+				limit = {
+					WCA = { has_war_with = APG }
+					NOT = { has_war_with = APG }
+				}
+				add_to_war = { targeted_alliance = WCA enemy = APG }
+			}
+			if = {# Fight NEE
+				limit = {
+					WCA = { has_war_with = NEE }
+					NOT = { has_war_with = NEE }
+				}
+				add_to_war = { targeted_alliance = WCA enemy = NEE }
+			}
+			news_event = { id = mexico_events.501 days = 2 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+MEX_central_american_intervention = {
+	### Socialist Mexico Stuff ###
+	MEX_support_socialists = {
+		icon = generic_civil_support
+
+		allowed = { always = no } # Activated by ACW start global flag
+
+		available = {
+			has_war = no
+			FROM = { has_war = yes }
+		}
+
+		visible = {
+			FROM = { has_socialist_government = yes }
+			has_socialist_government = yes
+			NOT = { has_war_with = FROM }
+			is_subject = no
+		}
+
+		fire_only_once = yes
+		cost = 50
+
+		ai_will_do = { factor = 20 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MEX_support_socialists"
+			send_equipment = {
+				type = infantry_equipment
+				amount = 500
+				target = FROM
+			}
+			send_equipment = {
+				type = support_equipment
+				amount = 500
+				target = FROM
+			}
+			FROM = { country_event = mexico_events.210 }
+		}
+		fixed_random_seed = no
+	}
+	MEX_fight_reactionary_central_america = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } # Activated by ACW start global flag
+
+		available = {
+			NOT = { has_guaranteed = FROM }
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_truce_with = FROM }
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+			NOT = { has_idea = MEX_civil_war_idea }
+		}
+
+		visible = {
+			is_in_faction = no
+			can_declare_war_on = FROM
+			FROM = { has_socialist_government = no }
+			has_socialist_government = yes
+			is_subject = no
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				FROM = { has_socialist_government = yes }
+				has_socialist_government = no
+				is_subject = yes
+				has_guaranteed = FROM
+				has_non_aggression_pact_with = FROM
+			}
+		}
+
+		target_trigger = {
+			has_socialist_government = yes
+			is_subject = no
+		}
+
+		cost = 50
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_idea = MEX_revolution_military
+					has_idea = MEX_revolution_economic
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel MEX_fight_reactionary_central_america"
+			clear_decision_attack_AI = yes
+			add_political_power = 50
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MEX_fight_reactionary_central_america"
+			FROM = { country_event = mexico_events.500 } #warning event
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove MEX_fight_reactionary_central_america"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	### Sinarquista stuff ###
+	MEX_retake_yucatan_mission = {# Retake the yucatan
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			NOT = { country_exists = YUC }
+		}
+
+		cancel_trigger = {
+			has_authoritarian_government = no
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 474 }
+		}
+
+		is_good = no
+		fire_only_once = yes
+		days_mission_timeout = 365
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout MEX_retake_yucatan_mission"
+			country_event = mexico_events.65
+			event_option_tooltip = mexico_events.65.a
+			custom_effect_tooltip = tooltip_white_line
+			YUC = {
+				white_peace_with_ROOT = yes
+				effect_tooltip = { country_event = mexico_events.66 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MEX_retake_yucatan_mission"
+			country_event = mexico_events.67
+			event_option_tooltip = mexico_events.67.a
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel MEX_retake_yucatan_mission"
+			YUC = {
+				country_event = { id = mexico_events.68 days = 4 } #Rejoin Mexico?
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	MEX_claim_central_america = {# Claim the land for Mexico
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } # Activated by ACW start global flag
+
+		visible = {
+			is_subject = no
+		}
+
+		available = {
+			threat > 0.5
+			NOT = { has_idea = MEX_civil_war_idea }
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MEX_claim_central_america"
+			every_state = {
+				limit = { region = 34 } #Central America
+				add_claim_by = ROOT
+			}
+			every_other_country = {
+				limit = { is_central_american_tag = yes }
+				country_event = mexico_events.212
+				ROOT = {
+					add_ai_strategy = {
+						type = ignore_claim
+						id = PREV
+						value = 1
+					}
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = { country_exists = YUC }
+					activate_targeted_decision = { target = YUC decision = MEX_fight_central_america }
+				}
+				activate_targeted_decision = { target = GUA decision = MEX_fight_central_america }
+				activate_targeted_decision = { target = ELS decision = MEX_fight_central_america }
+				activate_targeted_decision = { target = HON decision = MEX_fight_central_america }
+				activate_targeted_decision = { target = NIC decision = MEX_fight_central_america }
+				activate_targeted_decision = { target = COS decision = MEX_fight_central_america }
+				activate_targeted_decision = { target = CEN decision = MEX_fight_central_america }
+				activate_targeted_decision = { target = PAN decision = MEX_fight_central_america }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	MEX_fight_central_america = {# fight CEN tags
+		name = attack_country
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } # Activated by previous decision
+
+		available = {
+			if = {
+				limit = { FROM = { TAG = YUC } }
+				MEX = { owns_state = 313 }
+			}
+			NOT = { has_idea = MEX_civil_war_idea }
+			NOT = { has_guaranteed = FROM }
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_truce_with = FROM }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			has_government = national_populist
+			is_subject = no
+		}
+
+		cost = 20
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_idea = MEX_revolution_military
+					has_idea = MEX_revolution_economic
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+					FROM = { is_actual_neighbor_of_ROOT_or_ally = no }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel MEX_fight_central_america"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MEX_fight_central_america"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove MEX_fight_central_america"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+MEX_reconquista_decisons = {# Reconquistia Decisions
+	MEX_reconquista_decision = {
+		icon = generic_ignite_civil_war
+		allowed = { always = no } # Activated by ACW start global flag
+
+		available = {
+			NOT = { has_idea = MEX_civil_war_idea }
+			NOT = { has_guaranteed = USA }
+			NOT = { has_guaranteed = ACC }
+			NOT = { has_guaranteed = APG }
+			NOT = { has_guaranteed = WCA }
+			NOT = { has_guaranteed = NEE }
+			NOT = { has_non_aggression_pact_with = USA }
+			NOT = { has_non_aggression_pact_with = ACC }
+			NOT = { has_non_aggression_pact_with = APG }
+			NOT = { has_non_aggression_pact_with = WCA }
+			NOT = { has_non_aggression_pact_with = NEE }
+		}
+
+		visible = {
+			has_government = national_populist
+			is_subject = no
+			OR = {
+				can_declare_war_on = USA
+				can_declare_war_on = ACC
+				can_declare_war_on = APG
+				can_declare_war_on = WCA
+				can_declare_war_on = NEE
+			}
+		}
+
+		cost = 25
+		days_remove = 20
+		fire_only_once = yes
+
+		war_with_on_remove = USA
+		war_with_on_remove = ACC
+		war_with_on_remove = WCA
+		war_with_on_remove = APG
+		war_with_on_remove = NEE
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_idea = MEX_revolution_economic
+					has_idea = MEX_revolution_military
+				}
+			}
+			modifier = {
+				factor = 0
+				country_has_any_active_threat = yes
+			}
+			modifier = {
+				factor = 0
+				var:375.owner = { default_attack_AI_trigger = yes } #Texas
+			}
+			modifier = {
+				factor = 0
+				var:378.owner = { default_attack_AI_trigger = yes } #California
+			}
+			modifier = {		# Deal with CEN first
+				factor = 0
+				OR = {
+					can_declare_war_on = GUA
+					can_declare_war_on = ELS
+					can_declare_war_on = HON
+					can_declare_war_on = NIC
+					can_declare_war_on = CEN
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = USA_ceasefire option = USA_CEASEFIRE_YES }
+				ACC = { exists = yes }
+				NOT = { has_global_flag = USA_ceasefire_happened }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE }
+					has_game_rule = { rule = USA_macarthur_path option = USA_MACARTHUR_PATH_CINCINNATUS_PEACE_PRISON }
+				}
+				USA = { exists = yes }
+				ACC = { exists = yes }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MEX_reconquista_decision"
+			hidden_effect = {
+				set_country_flag = { flag = imminent_war days = 25 value = 1 }
+				every_other_country = {
+					limit = {
+						is_american_tag = yes
+						ROOT = { can_declare_war_on = PREV }
+					}
+					incoming_war_notification_effect = yes
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = ROOT
+						value = 100
+					}
+					ROOT = {
+						add_to_array = { MEX_reconquista_targets = PREV }
+						add_ai_strategy = {
+							type = prepare_for_war
+							id = PREV
+							value = 100
+						}
+					}
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove MEX_reconquista_decision"
+			every_state = {
+				limit = {
+					OR = {
+						region = 119 #Southern Rockies
+						region = 118 #Sierra Nevada
+						region = 229 #Gulf Coast
+					}
+				}
+				add_claim_by = ROOT
+			}
+			hidden_effect = {
+				for_each_scope_loop = {
+					array = MEX_reconquista_targets
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = ROOT
+						value = -100
+					}
+					ROOT = {
+						add_ai_strategy = {
+							type = prepare_for_war
+							id = PREV
+							value = -100
+						}
+					}
+				}
+			}
+			if = {
+				limit = { can_declare_war_on = USA }
+				declare_war_on = {
+					target = USA
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = { can_declare_war_on = WCA }
+				declare_war_on = {
+					target = WCA
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = { can_declare_war_on = ACC }
+				declare_war_on = {
+					target = ACC
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = { can_declare_war_on = APG }
+				declare_war_on = {
+					target = APG
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = { can_declare_war_on = NEE }
+				declare_war_on = {
+					target = NEE
+					type = annex_everything
+				}
+			}
+			activate_targeted_decision = { target = THIS decision = MEX_reconquista_complete_decision }
+			news_event = { id = mexico_events.502 days = 2 }
+		}
+		fixed_random_seed = no
+	}
+
+	MEX_reconquista_complete_decision = {
+		icon = generic_nationalism
+
+		allowed = { always = no } #Activated by MEX_reconquista_decision
+
+		available = {
+			is_subject = no
+			owns_state = 833 #Southern Texas
+			owns_state = 375 #Northern Texas
+			owns_state = 376 #New Mexico
+			owns_state = 382 #Colorado
+			owns_state = 377 #Arizona
+			owns_state = 380 #Utah
+			owns_state = 829 #Southern California
+			owns_state = 798 #Los Angeles
+			owns_state = 797 #San Francisco
+			owns_state = 378 #Northern California
+			owns_state = 379 #Nevada
+			owns_state = 374 #Oklahoma
+		}
+
+		visible = {
+			has_government = national_populist
+		}
+
+		cost = 0
+		fire_only_once = yes
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MEX_reconquista_complete_decision"
+			country_event = mexico_events.108 #Completion of the 'Reconquista' Campaign
+		}
+		fixed_random_seed = no
+	}
+}
+
+MEX_economic_decisions = {# Economic Decisions
+	MEX_nationalize_oil = {# nationalize the Oil Industry in Mexico
+		icon = oil
+
+		allowed = { always = no } # Activated by ACW start global flag
+
+		available = {
+			controls_state = 474
+			controls_state = 475
+		}
+
+		visible = {
+			owns_state = 474
+			owns_state = 475
+			NOT = { is_subject_of = CEN }
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 474 state = 475 }
+		}
+
+		cost = 100
+		days_remove = 60
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove MEX_nationalize_oil"
+			MEX_oil_nationalisation_effect = yes
+		}
+		fixed_random_seed = no
+	}
+}
+
+MEX_civil_war_decisions = {# Cristero & Campesino war decisions
+	MEX_restore_order_to_state = {
+		icon = infiltrate_state
+		allowed = { always = no } # Activated by effect MEX_start_civil_war
+		available = {
+			controls_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		custom_cost_text = 200_guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 200 } }
+		}
+
+		state_target = yes
+		days_remove = 35
+		fire_only_once = no
+		days_re_enable = 120
+		ai_will_do = {
+			base = 5000
+			modifier = {
+				factor = 2
+				FROM = { state = 277 } #Mexico
+			}
+			modifier = { #Prioritise MEX_civil_war_raid_mission
+				factor = 0
+				has_equipment = { infantry_equipment < 300 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MEX_restore_order_to_state"
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -200
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove MEX_restore_order_to_state"
+			add_stability = 0.02
+			if = {
+				limit = { FROM = { state = 277 } } #Mexico
+				set_temp_variable = { MEX_rebel_strength_change = 2 }
+				MEX_decrease_rebel_power = yes
+			}
+			else = {
+				set_temp_variable = { MEX_rebel_strength_change = 1 }
+				MEX_decrease_rebel_power = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	MEX_civil_war_raid_mission = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = { always = no } #manually activated
+
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 200 } }
+		}
+		custom_cost_text = 200_guns
+
+		cancel_trigger = {
+			NOT = { has_idea = MEX_civil_war_idea }
+		}
+
+		is_good = no
+		selectable_mission = yes
+		days_mission_timeout = 20
+		fire_only_once = no
+
+		ai_will_do = { base = 10000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MEX_civil_war_raid_mission"
+			set_temp_variable = { MEX_rebel_strength_change = 1 }
+			MEX_decrease_rebel_power = yes
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -200
+				}
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout MEX_civil_war_raid_mission"
+			set_temp_variable = { MEX_rebel_strength_change = 2 }
+			MEX_increase_rebel_power = yes
+			add_political_power = -20
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel MEX_civil_war_raid_mission"
+		}
+		fixed_random_seed = no
+	}
+
+	MEX_imminent_rebel_activity_mission = {
+		icon = GFX_decision_generic_ignite_civil_war
+
+		allowed = { always = no } #manually activated
+
+		available = { hidden_trigger = { always = no } }
+
+		cancel_trigger = {
+			NOT = { has_idea = MEX_civil_war_idea }
+		}
+
+		is_good = no
+		days_mission_timeout = 30
+		fire_only_once = no
+		fixed_random_seed = no
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout MEX_imminent_rebel_activity_mission"
+			custom_effect_tooltip = MEX_imminent_rebel_activity_effect_tooltip
+			hidden_effect = {
+				random_list = {
+					10 = {
+						modifier = {
+							add = -2
+							NOT = { has_government = totalist }
+						}
+						country_event = mexican_civil_war_events.10 #Clashes Throughout the Country
+					}
+					10 = {
+						modifier = {
+							add = -2
+							NOT = { has_government = totalist }
+						}
+						country_event = mexican_civil_war_events.11 #Factory Sabotaged
+					}
+					10 = {
+						modifier = {
+							add = -2
+							NOT = { has_government = totalist }
+						}
+						country_event = mexican_civil_war_events.11 #Arms Factory Sabotaged
+					}
+					10 = {
+						modifier = {
+							add = -2
+							NOT = { has_government = totalist }
+						}
+						country_event = mexican_civil_war_events.13 #Railways Attacked
+					}
+					10 = {
+						modifier = {
+							add = -2
+							NOT = { has_government = totalist }
+						}
+						country_event = mexican_civil_war_events.14 #Skirmishes
+					}
+					#Cristero War exclusive events
+					20 = {
+						modifier = {
+							factor = 0
+							OR = {
+								NOT = { has_government = totalist }
+								has_country_flag = MEX_tepatitlan_fired
+							}
+						}
+						country_event = mexican_civil_war_events.15 #Battle of Tepatitlán
+					}
+					20 = {
+						modifier = {
+							factor = 0
+							OR = {
+								NOT = { has_government = totalist }
+								has_country_flag = MEX_el_fresnal_fired
+							}
+						}
+						country_event = mexican_civil_war_events.16 #Battle of El Fresnal
+					}
+					20 = {
+						modifier = {
+							factor = 0
+							OR = {
+								NOT = { has_government = totalist }
+								has_country_flag = MEX_manzanillo_fired
+							}
+						}
+						country_event = mexican_civil_war_events.17 #Battle of Manzanillo
+					}
+					#Campesino War exclusive events
+					25 = {
+						modifier = {
+							factor = 0
+							OR = {
+								has_government = totalist
+								has_country_flag = MEX_guadalajara_fired
+							}
+						}
+						country_event = mexican_civil_war_events.18 #Battle of Guadalajara
+					}
+					25 = {
+						modifier = {
+							factor = 0
+							OR = {
+								has_government = totalist
+								has_country_flag = MEX_celaya_fired
+							}
+						}
+						country_event = mexican_civil_war_events.19 #Battle of Celaya
+					}
+				}
+			}
+			activate_mission = MEX_imminent_rebel_activity_mission
+			activate_mission = MEX_civil_war_raid_mission
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel MEX_imminent_rebel_activity_mission"
+		}
+	}
+}

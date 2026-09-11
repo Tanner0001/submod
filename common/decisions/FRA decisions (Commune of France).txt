@@ -1,0 +1,605 @@
+###########################
+# Commune of France Decisions
+###########################
+
+FRA_internationale_category = {
+	FRA_Sabotage = {
+		icon = generic_ignite_civil_war
+
+		visible = {
+			has_completed_focus = FRA_arab_committee
+			can_declare_war_on = FROM
+			FROM = {
+				has_socialist_government = no
+			}
+		}
+
+		cost = 80
+		days_remove = FRA_Sabotage_days_remove?0
+		days_re_enable = 240
+
+		targets = { NFA }
+		target_root_trigger = { has_completed_focus = FRA_arab_committee }
+		target_trigger = {
+			country_exists = FROM
+			FROM = {
+				has_socialist_government = no
+			}
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				factor = 0
+				NFA = { is_in_faction = no }
+			}
+			modifier = {
+				factor = 5
+				has_war_with = FROM
+			}
+			modifier = {
+				factor = 20
+				any_owned_state = { is_controlled_by = FROM }
+			}
+			modifier = {
+				add = 2
+				has_political_power > 100
+				amount_taken_ideas = {
+					amount > 0
+					slots = { political_advisor }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete FRA_Sabotage"
+			set_variable = { FRA_Sabotage_days_remove = 120 }
+			country_event = france_events.65
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove FRA_Sabotage"
+			clear_variable = FRA_Sabotage_days_remove
+			if = {
+				limit = { has_country_flag = FRA_rebellion }
+				FROM = { country_event = france_events.67 }
+			}
+			if = {
+				limit = { has_country_flag = FRA_unrest }
+				FROM = { country_event = france_events.68 }
+			}
+			else = {
+				FROM = { country_event = france_events.66 }
+			}
+			clr_country_flag = FRA_rebellion
+			clr_country_flag = FRA_unrest
+		}
+		fixed_random_seed = no
+	}
+
+	FRA_end_the_algiers_regime = {
+		icon = eng_puppet_usa
+
+		available = {
+			can_declare_war_on = FROM
+			FROM = { is_in_faction = no }
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_subject = yes
+				NOT = { can_declare_war_on = FROM }
+				FROM = { is_subject = yes }
+				FROM = { is_in_faction = yes }
+			}
+		}
+
+		targets = { NFA }
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = { is_subject = no }
+		}
+
+		cost = 20
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger = yes }
+			}
+			modifier = {
+				factor = 0
+				any_home_area_neighbor_country = { has_war_with = ROOT }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel FRA_end_the_algiers_regime"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete FRA_end_the_algiers_regime"
+			setup_decision_attack_AI = yes
+			hidden_effect = {
+				FROM = { incoming_war_notification_effect = yes }
+				every_allied_country = {
+					country_event = generic_events.32
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove FRA_end_the_algiers_regime"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	FRA_help_SWF = {
+		icon = generic_industry
+
+		visible = {
+			FROM = { has_civil_war = yes }
+		}
+
+		custom_cost_text = 2000_guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 2000 } }
+		}
+		fire_only_once = yes
+
+		targets = { SWF }
+		target_root_trigger = {
+			has_country_flag = FRA_support_SWF
+		}
+		target_trigger = {
+			FROM = { has_civil_war = yes }
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_equipment = { infantry_equipment < 5000 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete FRA_help_SWF"
+			clr_country_flag = FRA_support_SWF
+			FROM = {
+				country_event = france_events.124
+			}
+			add_manpower = -2000
+			send_equipment = {
+				target = FROM
+				type = infantry_equipment
+				amount = 2000
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	FRA_help_CHL = {
+		icon = generic_industry
+
+		visible = {
+			has_country_flag = FRA_help_chile
+			FROM = {
+				has_socialist_government = yes
+			}
+		}
+
+		cost = 40
+		fire_only_once = yes
+
+		targets = { CHL }
+		target_root_trigger = {
+			has_country_flag = FRA_help_chile
+		}
+		target_trigger = {
+			FROM = {
+				has_socialist_government = yes
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete FRA_help_CHL"
+			clr_country_flag = FRA_help_chile
+			FROM = {
+				country_event = france_events.125
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	FRA_mobilise_the_reserves = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			OR = {
+				surrender_progress > 0.25
+				NOT = { has_full_control_of_state = 16 }
+				AND = {
+					NOT = { 18 = { is_controlled_by = ROOT } }
+					NOT = { 24 = { is_controlled_by = ROOT } }
+				}
+			}
+		}
+
+		visible = {
+			has_war = yes
+			has_capitulated = no
+			any_enemy_country = { is_actual_major = yes }
+		}
+
+		cost = 100
+		fire_only_once = yes
+
+		ai_will_do = { base = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete FRA_mobilise_the_reserves"
+			add_manpower = 100000
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 3000
+			}
+			if = {
+				limit = { controls_province = 11506 } #Paris
+				16 = {
+					custom_override_tooltip = {
+						add_building_construction = {
+							type = bunker
+							level = 4
+							instant_build = yes
+							province = {
+								all_provinces = yes
+								limit_to_border = yes
+							}
+						}
+						tooltip = {
+							localization_key = tooltip_add_building_on_border_provinces
+							BUILDING = bunker
+							NUMBER = 4
+						}
+					}
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Milice Communale"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 9 }
+				}
+				if = {
+					limit = { has_template = "Milice Communale" }
+					delete_unit_template_and_units = { division_template = "Milice Communale" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Milice Communale"
+					division_names_group = FRA_MIL_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
+					}
+					template_counter = 92
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 16 }
+				limit = {
+					is_core_of = ROOT
+					is_in_home_area = yes
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 4
+						TYPE = "Milice Communale"
+					}
+					create_unit = {
+						division = "division_template = \"Milice Communale\" start_experience_factor = 0.3"
+						owner = ROOT
+						count = 4
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 15 }
+				limit = {
+					is_core_of = ROOT
+					is_in_home_area = yes
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 4
+						TYPE = "Milice Communale"
+					}
+					create_unit = {
+						division = "division_template = \"Milice Communale\" start_experience_factor = 0.3"
+						owner = ROOT
+						count = 4
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 33 }
+				limit = {
+					is_core_of = ROOT
+					is_in_home_area = yes
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 4
+						TYPE = "Milice Communale"
+					}
+					create_unit = {
+						division = "division_template = \"Milice Communale\" start_experience_factor = 0.3"
+						owner = ROOT
+						count = 4
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 27 }
+				limit = {
+					is_core_of = ROOT
+					is_in_home_area = yes
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 4
+						TYPE = "Milice Communale"
+					}
+					create_unit = {
+						division = "division_template = \"Milice Communale\" start_experience_factor = 0.3"
+						owner = ROOT
+						count = 4
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+@FRA_phalanstere_decision_cost = 50
+@FRA_phalanstere_decision_time = 50
+
+FRA_phalanstere_category = {
+	FRA_join_phalanstere = {
+		icon = generic_research
+
+		allowed = {
+			NOT = {
+				tag = FRA #added by event
+				tag = ENG
+				tag = GER #can never be socialist
+				tag = GEA
+				tag = MAF
+				tag = NFA
+				tag = SRD
+				tag = SIC
+				tag = ITA
+				tag = PAP
+				tag = ARG
+				tag = USA
+				tag = APG
+				tag = ACC
+				tag = NEE
+				tag = RAJ
+				tag = PRF
+				tag = DEI
+			}
+		}
+
+		visible = {
+			has_socialist_government = yes
+			is_in_economic_sphere = no
+			FROM = {
+				is_economic_sphere_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		targets = { INT }
+		target_trigger = {
+			has_socialist_government = yes
+			is_in_economic_sphere = no
+			FROM = {
+				is_economic_sphere_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete FRA_join_phalanstere"
+			FRA_add_to_phalanstere = yes
+		}
+		fixed_random_seed = no
+	}
+
+	FRA_Develop_Country = {
+		icon = generic_construction
+
+		allowed = { tag = FRA }
+
+		available = {
+			NOT = { has_global_flag = FRA_ongoing_phalanstere_development }
+			FROM = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { country_exists = FROM }
+				has_war_with = FROM
+				FROM = { has_socialist_government = no }
+				is_faction_leader = no
+			}
+		}
+
+		targets = { ENG SRI SWF NOR HND MEX GUA ELS HON NIC COS PAN CEN CUB HAI DOM WIF BRA FOP CHL URG PAR BOL PRU ECU COL VEN }
+		target_root_trigger = { has_event_target = INT_phalanstere_leader }
+		target_trigger = {
+			FROM = {
+				has_socialist_government = yes
+				NOT = { has_war_with = ROOT }
+			}
+			is_faction_leader = yes
+		}
+
+		fire_only_once = yes
+		cost = @FRA_phalanstere_decision_cost
+		days_remove = @FRA_phalanstere_decision_time
+
+		ai_will_do = { factor = 4 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel FRA_Develop_Country"
+			hidden_effect = { add_political_power = @FRA_phalanstere_decision_cost }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete FRA_Develop_Country"
+			set_global_flag = { flag = FRA_ongoing_phalanstere_development days = @FRA_phalanstere_decision_time value = 1 }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove FRA_Develop_Country"
+			set_temp_variable = {
+				FRA_num_target_states = {
+					value = FROM.num_of_factories
+					divide = FRA.num_of_factories
+					multiply = 10
+				}
+			}
+			if = {
+				limit = { ENG = { FRA_is_phalanstere_member = no } }
+				multiply_temp_variable = { FRA_num_target_states = 0.5 }
+			}
+			round_temp_variable = FRA_num_target_states
+			clamp_temp_variable = { var = FRA_num_target_states min = 1 max = 4 }
+			meta_effect = {
+				text = { [STATE] = { save_event_target_as = target_value } }
+				STATE = "[?FRA_num_target_states]"
+			}
+			FROM = {
+				country_event = france_events.129
+				effect_tooltip = { FRA_phalanstere_effect = yes }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+FRA_liberate_europe_category = {
+	FRA_invade_liberation_target = {
+		name = attack_country
+		desc = FRA_invade_liberation_target_desc
+		icon = generic_nationalism
+
+		visible = {
+			can_declare_war_on = FROM
+			FROM = {
+				has_socialist_government = no
+			}
+		}
+
+		target_array = global.european_tags_array
+		target_root_trigger = {
+			has_completed_focus = FRA_european_revolution
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				has_socialist_government = no
+			}
+		}
+
+		cost = 20
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				add = 50
+				is_neighbor_of = FROM
+			}
+			modifier = {
+				add = 10
+				NOT = { is_neighbor_of = FROM }
+				FROM = { any_neighbor_country = { is_in_faction_with = ROOT } }
+			}
+			modifier = {
+				add = 5
+				NOT = { is_neighbor_of = FROM }
+				FROM = {
+					NOT = { any_neighbor_country = { is_in_faction_with = ROOT } }
+					naval_base > 0
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel FRA_invade_liberation_target"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete FRA_invade_liberation_target"
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+			every_allied_country = {
+				country_event = generic_events.32
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove FRA_invade_liberation_target"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+}

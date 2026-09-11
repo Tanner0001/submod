@@ -1,0 +1,3843 @@
+###########################
+# League of Eight Provinces Events
+###########################
+# By Flamefang, Erag, WordZero
+###########################
+# Lore groundwork by Flamefang, Mikus, GP93, and others
+###########################
+
+add_namespace = league_events
+add_namespace = league_war_character_events
+add_namespace = league_german_influence_events
+
+unit_leader_event = {
+	id = league_war_character_events.34 #Sun Liren offers to join CHI
+	title = league_war_character_events.34.t
+	desc = league_war_character_events.34.d
+	picture = GFX_report_event_military_planning
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_war_character_events.34 option league_war_character_events.34.a"
+		name = league_war_character_events.34.a
+		add_political_power = -15
+		CHI_RCF_small_effect = yes
+		custom_effect_tooltip = LEP_recruit_sun_liren_tooltip
+		hidden_effect = {
+			ANQ_sun_liren = {
+				set_character_flag = CHI_RCF_military_loyalist_flag
+				demote_leader = yes
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event league_war_character_events.34 option league_war_character_events.34.b"
+		name = league_war_character_events.34.b
+		ai_chance = { base = 0 }
+		add_political_power = 15
+		custom_effect_tooltip = LEP_arrest_sun_liren_tooltip
+		hidden_effect = { THIS = { retire = yes } }
+	}
+}
+
+unit_leader_event = {
+	id = league_war_character_events.35 #Sun Liren offers to join QIE
+	title = league_war_character_events.35.t
+	desc = league_war_character_events.35.d
+	picture = GFX_report_event_military_planning
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_war_character_events.35 option league_war_character_events.35.a"
+		name = league_war_character_events.35.a
+		add_political_power = -15
+		custom_effect_tooltip = LEP_recruit_sun_liren_tooltip
+		ANQ_sun_liren = { demote_to_general = yes }
+	}
+	option = {
+		log = "[GetLogInfo]: event league_war_character_events.35 option league_war_character_events.35.b"
+		name = league_war_character_events.35.b
+		ai_chance = { base = 0 }
+		add_political_power = 15
+		custom_effect_tooltip = LEP_arrest_sun_liren_tooltip
+		hidden_effect = {
+			THIS = {
+				retire = yes
+			}
+		}
+	}
+}
+
+unit_leader_event = {
+	id = league_war_character_events.36 #Sun Liren offers to join another warlord tag
+	title = league_war_character_events.36.t
+	desc = league_war_character_events.36.d
+	picture = GFX_report_event_military_planning
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_war_character_events.36 option league_war_character_events.36.a"
+		name = league_war_character_events.36.a
+		add_political_power = -15
+		custom_effect_tooltip = LEP_recruit_sun_liren_tooltip
+		ANQ_sun_liren = { demote_to_general = yes }
+	}
+	option = {
+		log = "[GetLogInfo]: event league_war_character_events.36 option league_war_character_events.36.b"
+		name = league_war_character_events.36.b
+		ai_chance = { base = 0 }
+		add_political_power = 15
+		custom_effect_tooltip = LEP_arrest_sun_liren_tooltip
+		hidden_effect = {
+			THIS = {
+				retire = yes
+			}
+		}
+	}
+}
+
+unit_leader_event = {
+	id = league_war_character_events.37 #Ma Dengying offers to join a warlord tag
+	title = league_war_character_events.37.t
+	desc = league_war_character_events.37.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_war_character_events.37 option league_war_character_events.37.a"
+		name = league_war_character_events.37.a
+		add_political_power = -15
+		ANQ_ma_dengying = { demote_to_general = yes }
+	}
+	option = {
+		log = "[GetLogInfo]: event league_war_character_events.37 option league_war_character_events.37.b"
+		name = league_war_character_events.37.b
+		ai_chance = { base = 0 }
+		add_political_power = 15
+		ANQ_ma_dengying = { retire = yes }
+	}
+}
+
+##################################################################### Sun Investigation
+
+country_event = { # Start the Sun investigation: who will lead it?
+	id = league_events.5
+	title = league_events.5.t
+	desc = league_events.5.d
+	picture = GFX_report_event_LEP_sun_desk
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # Close friend of Qi
+		log = "[GetLogInfo]: event league_events.5 option league_events.5.a"
+		name = league_events.5.a
+		set_country_flag = LEP_sun_investigation_qi_loyalist_investigator
+	}
+
+	option = { # Close friend of Sun
+		log = "[GetLogInfo]: event league_events.5 option league_events.5.b"
+		name = league_events.5.b
+		set_country_flag = LEP_sun_investigation_sun_loyalist_investigator
+	}
+
+	option = { # A German Inspector
+		log = "[GetLogInfo]: event league_events.5 option league_events.5.c"
+		name = league_events.5.c
+		set_country_flag = LEP_sun_investigation_german_investigator
+	}
+
+	option = { # Northen Zhili
+		log = "[GetLogInfo]: event league_events.5 option league_events.5.e"
+		name = league_events.5.e
+		set_country_flag = LEP_sun_investigation_northen_zhili_investigator
+	}
+
+	after = {
+		country_event = { id = league_events.6 days = 2 }
+	}
+}
+
+country_event = { # A sense of direction
+	id = league_events.6
+	title = league_events.6.t
+	desc = league_events.6.d
+	picture = GFX_report_event_LEP_sun_uniform
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable_to_random = { var = LEP_random min = 1 max = 6 integer = yes }
+	}
+
+	option = { # Northern Zhili
+		log = "[GetLogInfo]: event league_events.6 option league_events.6.a"
+		name = league_events.6.a
+		trigger = {
+			NOT = { check_variable = { LEP_random = 1 } }
+		}
+		set_country_flag = LEP_sun_investigation_direction_northern_zhili
+	}
+
+	option = { # Kuomintang
+		log = "[GetLogInfo]: event league_events.6 option league_events.6.b"
+		name = league_events.6.b
+		trigger = {
+			NOT = { check_variable = { LEP_random = 2 } }
+		}
+		set_country_flag = LEP_sun_investigation_direction_kuomintang
+	}
+
+	option = { # Nanjing man
+		log = "[GetLogInfo]: event league_events.6 option league_events.6.c"
+		name = league_events.6.c
+		trigger = {
+			NOT = { check_variable = { LEP_random = 3 } }
+		}
+		set_country_flag = LEP_sun_investigation_direction_nanjing_man
+	}
+
+	option = { # Chen man
+		log = "[GetLogInfo]: event league_events.6 option league_events.6.e"
+		name = league_events.6.e
+		trigger = {
+			NOT = { check_variable = { LEP_random = 4 } }
+		}
+		set_country_flag = LEP_sun_investigation_direction_chen_man
+	}
+
+	option = { # Woman wanted revenge
+		log = "[GetLogInfo]: event league_events.6 option league_events.6.f"
+		name = league_events.6.f
+		trigger = {
+			NOT = { check_variable = { LEP_random = 5 } }
+		}
+		set_country_flag = LEP_sun_investigation_direction_woman_wanted_revenge
+	}
+
+	after = {
+		country_event = { id = league_events.7 days = 30 }
+		clear_variable = LEP_random
+	}
+}
+
+country_event = { # The report is almost finished
+	id = league_events.7
+	title = league_events.7.t
+	desc = league_events.7.d
+	picture = GFX_report_event_LEP_sun_smiling
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # lets see the findings
+		log = "[GetLogInfo]: event league_events.7 option league_events.7.a"
+		name = league_events.7.a
+		hidden_effect = {
+			if = { # Qi investigator
+				limit = {
+					has_country_flag = LEP_sun_investigation_qi_loyalist_investigator
+				}
+				if = {
+					limit = {
+						has_country_flag = LEP_sun_investigation_direction_northern_zhili
+					}
+					country_event = { id = league_events.8 days = 3 }
+				}
+				if = {
+					limit = {
+						has_country_flag = LEP_sun_investigation_direction_kuomintang
+					}
+					country_event = { id = league_events.9 days = 3 }
+				}
+				if = {
+					limit = {
+						has_country_flag = LEP_sun_investigation_direction_nanjing_man
+					}
+					country_event = { id = league_events.10 days = 3 }
+				}
+				if = {
+					limit = {
+						has_country_flag = LEP_sun_investigation_direction_chen_man
+					}
+					country_event = { id = league_events.11 days = 3 }
+				}
+				if = {
+					limit = {
+						has_country_flag = LEP_sun_investigation_direction_woman_wanted_revenge
+					}
+					country_event = { id = league_events.12 days = 3 }
+				}
+			}
+			if = { # Sun investigator
+				limit = {
+					has_country_flag = LEP_sun_investigation_sun_loyalist_investigator
+				}
+				random_list = {
+					50 = { # Qi
+						country_event = { id = league_events.14 days = 3 }
+					}
+					20 = { # Germans
+						country_event = { id = league_events.13 days = 3 }
+					}
+					15 = { # Chen
+						country_event = { id = league_events.11 days = 3 }
+					}
+					15 = { # Woman revenge
+						country_event = { id = league_events.12 days = 3 }
+					}
+				}
+			}
+			if = { # German investigator
+				limit = {
+					has_country_flag = LEP_sun_investigation_german_investigator
+				}
+				random_list = {
+					25 = { # Northern Zhili
+						country_event = { id = league_events.8 days = 3 }
+					}
+					25 = { # Kuomintang
+						country_event = { id = league_events.9 days = 3 }
+					}
+					25 = { # Sun associate
+						country_event = { id = league_events.10 days = 3 }
+					}
+					25 = { # Woman getting revenge
+						country_event = { id = league_events.12 days = 3 }
+					}
+				}
+			}
+			if = { # North Zhili investigator
+				limit = {
+					has_country_flag = LEP_sun_investigation_northen_zhili_investigator
+				}
+				random_list = {
+					25 = { # Qi
+						country_event = { id = league_events.14 days = 3 }
+					}
+					20 = { # Sun associate
+						country_event = { id = league_events.10 days = 3 }
+					}
+					20 = { # Kuomintang
+						country_event = { id = league_events.9 days = 3 }
+					}
+					35 = { # Germans
+						country_event = { id = league_events.13 days = 3 }
+					}
+				}
+			}
+		}
+	}
+}
+
+country_event = { # Northern Zhili guilty
+	id = league_events.8
+	title = league_events.8.t
+	desc = league_events.8.d
+	fire_only_once = yes
+	picture = GFX_report_event_QIE_cao_kun_4
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.8 option league_events.8.a"
+		name = league_events.8.a
+		set_country_flag = LEP_sun_investigation_northern_zhili_guilty
+	}
+}
+
+country_event = { # Kuomintang guilty
+	id = league_events.9
+	title = league_events.9.t
+	desc = league_events.9.d
+	picture = GFX_report_event_CHI_dai_chunfeng_smug
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.9 option league_events.9.a"
+		name = league_events.9.a
+		set_country_flag = LEP_sun_investigation_kuomintang_guilty
+	}
+}
+
+country_event = { # Sun's friend guilty
+	id = league_events.10
+	title = league_events.10.t
+	desc = league_events.10.d
+	picture = GFX_report_event_LEP_sun_and_fellows
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.10 option league_events.10.a"
+		name = league_events.10.a
+		set_country_flag = LEP_sun_investigation_suns_associate_guilty
+	}
+}
+
+country_event = { # Chen's guilty
+	id = league_events.11
+	title = league_events.11.t
+	desc = league_events.11.d
+	picture = GFX_report_event_ANQ_chen_tiaoyuan
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.11 option league_events.11.a"
+		name = league_events.11.a
+		set_country_flag = LEP_sun_investigation_chen_man_guilty
+	}
+}
+
+country_event = { # Woman wanted revenge
+	id = league_events.12
+	title = league_events.12.t
+	desc = league_events.12.d
+	picture = GFX_report_event_LEP_sun_time_magazine
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.12 option league_events.12.a"
+		name = league_events.12.a
+		set_country_flag = LEP_sun_investigation_woman_revenge_guilty
+	}
+}
+
+country_event = { # Germans guilty
+	id = league_events.13
+	title = league_events.13.t
+	desc = league_events.13.d
+	picture = GFX_report_event_GEA_falkenhausen
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.13 option league_events.13.a"
+		name = league_events.13.a
+		set_country_flag = LEP_sun_investigation_germans_guilty
+	}
+}
+
+country_event = { # Qi guilty
+	id = league_events.14
+	title = league_events.14.t
+	desc = league_events.14.d
+	picture = GFX_report_event_LEP_qi_xieyuan_arrest
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.14 option league_events.14.a"
+		name = league_events.14.a
+		set_country_flag = LEP_sun_investigation_qi_guilty
+	}
+}
+
+country_event = { # FROM FOCUS - it is time to release the results, maybe should change them?
+	id = league_events.15
+	title = league_events.15.t
+	desc = league_events.15.d
+	picture = GFX_report_event_LEP_qi_xieyuan_suit_2
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # No, the result is good
+		log = "[GetLogInfo]: event league_events.15 option league_events.15.a"
+		name = league_events.15.a
+		trigger = {
+			NOT = {
+				has_country_flag = LEP_sun_investigation_qi_guilty
+			}
+		}
+	}
+
+	option = { # Lets change it to Northern Zhili
+		log = "[GetLogInfo]: event league_events.15 option league_events.15.b"
+		name = league_events.15.b
+		trigger = {
+			NOT = {
+				has_country_flag = LEP_sun_investigation_northern_zhili_guilty
+			}
+		}
+		add_political_power = -50
+		clr_country_flag = LEP_sun_investigation_kuomintang_guilty
+		clr_country_flag = LEP_sun_investigation_suns_associate_guilty
+		clr_country_flag = LEP_sun_investigation_chen_man_guilty
+		clr_country_flag = LEP_sun_investigation_woman_revenge_guilty
+		clr_country_flag = LEP_sun_investigation_germans_guilty
+		clr_country_flag = LEP_sun_investigation_qi_guilty
+		set_country_flag = LEP_sun_investigation_northern_zhili_guilty
+	}
+
+	option = { # Lets change it to Kuomintang
+		log = "[GetLogInfo]: event league_events.15 option league_events.15.c"
+		name = league_events.15.c
+		trigger = {
+			NOT = {
+				has_country_flag = LEP_sun_investigation_kuomintang_guilty
+			}
+		}
+		add_political_power = -50
+		clr_country_flag = LEP_sun_investigation_northern_zhili_guilty
+		clr_country_flag = LEP_sun_investigation_suns_associate_guilty
+		clr_country_flag = LEP_sun_investigation_chen_man_guilty
+		clr_country_flag = LEP_sun_investigation_woman_revenge_guilty
+		clr_country_flag = LEP_sun_investigation_germans_guilty
+		clr_country_flag = LEP_sun_investigation_qi_guilty
+		set_country_flag = LEP_sun_investigation_kuomintang_guilty
+	}
+
+	option = { # Lets change it to Chen's man
+		log = "[GetLogInfo]: event league_events.15 option league_events.15.e"
+		name = league_events.15.e
+		trigger = {
+			NOT = {
+				has_country_flag = LEP_sun_investigation_chen_man_guilty
+			}
+		}
+		add_political_power = -50
+		clr_country_flag = LEP_sun_investigation_northern_zhili_guilty
+		clr_country_flag = LEP_sun_investigation_suns_associate_guilty
+		clr_country_flag = LEP_sun_investigation_kuomintang_guilty
+		clr_country_flag = LEP_sun_investigation_woman_revenge_guilty
+		clr_country_flag = LEP_sun_investigation_germans_guilty
+		clr_country_flag = LEP_sun_investigation_qi_guilty
+		set_country_flag = LEP_sun_investigation_chen_man_guilty
+	}
+
+	after = {
+		country_event = { id = league_events.16 days = 7 }
+	}
+}
+
+country_event = { # Results released
+	id = league_events.16
+	title = league_events.16.t
+	desc = { # Northern Zhili guilty
+		text = league_events.16.d_cao_kun
+		trigger = {
+			has_country_flag = LEP_sun_investigation_northern_zhili_guilty
+		}
+	}
+	desc = { # Sun's associate guilty
+		text = league_events.16.d_sun
+		trigger = {
+			has_country_flag = LEP_sun_investigation_suns_associate_guilty
+		}
+	}
+	desc = { # Kuomintang guilty
+		text = league_events.16.d_kuo
+		trigger = {
+			has_country_flag = LEP_sun_investigation_kuomintang_guilty
+		}
+	}
+	desc = { # Woman's revenge
+		text = league_events.16.d_wom
+		trigger = {
+			has_country_flag = LEP_sun_investigation_woman_revenge_guilty
+		}
+	}
+	desc = { # Germans guilty
+		text = league_events.16.d_ger
+		trigger = {
+			has_country_flag = LEP_sun_investigation_germans_guilty
+		}
+	}
+	desc = { # Chen guilty
+		text = league_events.16.d_chen
+		trigger = {
+			has_country_flag = LEP_sun_investigation_chen_man_guilty
+		}
+	}
+	picture = GFX_report_event_LEP_sun_sitting
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.16 option league_events.16.a"
+		name = league_events.16.a
+		add_stability = 0.05
+		if = {
+			limit = {
+				has_country_flag = LEP_sun_investigation_germans_guilty
+			}
+			add_political_power = -75
+		}
+	}
+}
+
+### Other events
+
+country_event = { # Qi's forces have control of Nanjing arsenal
+	id = league_events.17
+	title = league_events.17.t
+	desc = league_events.17.d
+	picture = GFX_report_event_LEP_qi_xieyuan_3
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.17 option league_events.17.a"
+		name = league_events.17.a
+		add_stability = 0.02
+		add_war_support = 0.02
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = 800
+			producer = LEP
+		}
+		hidden_effect = {
+			country_event = { id = league_events.18 days = 4 }
+		}
+	}
+}
+
+country_event = { # Qi puts down riots in Nanjing, peace there
+	id = league_events.18
+	title = league_events.18.t
+	desc = league_events.18.d
+	picture = GFX_report_event_LEP_qi_xieyuan_dress_uniform
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.18 option league_events.18.a"
+		name = league_events.18.a
+		add_stability = 0.05
+		country_event = { id = league_events.218 days = 2 }
+	}
+}
+
+country_event = { # North, South, or West?
+	id = league_events.19
+	title = {
+		text = league_events.19.t_1
+		trigger = { has_war_with = SHD }
+	}
+	title = {
+		text = league_events.19.t_2
+		trigger = { NOT = { has_war_with = SHD } }
+	}
+	desc = {
+		text = league_events.19.d_1
+		trigger = { has_war_with = SHD }
+	}
+	desc = {
+		text = league_events.19.d_2
+		trigger = { NOT = { has_war_with = SHD } }
+	}
+	picture = GFX_report_event_LEP_qi_xieyuan_coat
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # North
+		log = "[GetLogInfo]: event league_events.19 option league_events.19.a"
+		name = league_events.19.a
+		trigger = {
+			SHD = {
+				has_war_with = LEP
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 100
+				QIE = { has_country_flag = wu_intervenes_proANQ }
+			}
+		}
+		add_timed_idea = {
+			idea = LEP_aim_north_idea
+			days = 60
+		}
+	}
+
+	option = { # South
+		log = "[GetLogInfo]: event league_events.19 option league_events.19.b"
+		name = league_events.19.b
+		trigger = {
+			CHI = {
+				has_war_with = LEP
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 100
+				QIE = { has_country_flag = wu_intervenes_proANQ }
+				SHD = { has_government = authoritarian_democrat }
+			}
+		}
+		add_timed_idea = {
+			idea = LEP_aim_south_idea
+			days = 60
+		}
+	}
+
+	option = { # West
+		log = "[GetLogInfo]: event league_events.19 option league_events.19.c"
+		name = league_events.19.c
+		trigger = {
+			ANQ = {
+				has_war_with = LEP
+			}
+		}
+		ai_chance = {
+			base = 98
+			modifier = {
+				factor = 0
+				QIE = { has_country_flag = wu_intervenes_proANQ }
+			}
+		}
+		add_timed_idea = {
+			idea = LEP_aim_west_idea
+			days = 60
+		}
+	}
+
+	after = {
+		add_political_power = 25
+		add_stability = 0.05
+		add_war_support = 0.05
+	}
+}
+
+country_event = { # Officers are now loyal
+	id = league_events.20
+	title = league_events.20.t
+	desc = league_events.20.d
+	picture = GFX_report_event_LEP_march
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.20 option league_events.20.a"
+		name = league_events.20.a
+		add_war_support = -0.05
+		add_political_power = 75
+	}
+}
+
+country_event = { # Enforcing Media Controls
+	id = league_events.21
+	title = league_events.21.t
+	desc = league_events.21.d
+	picture = GFX_report_event_YUN_intellectuals
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.21 option league_events.21.a"
+		name = league_events.21.a
+		add_stability = -0.02
+		add_political_power = 30
+	}
+}
+
+country_event = { # Start of the purge: who?
+	id = league_events.22
+	title = league_events.22.t
+	desc = league_events.22.d
+	picture = GFX_report_event_LEP_qi_xieyuan_suit
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # students
+		log = "[GetLogInfo]: event league_events.22 option league_events.22.a"
+		name = league_events.22.a
+		set_country_flag = LEP_purge_students_flag
+	}
+
+	option = { # KMT
+		log = "[GetLogInfo]: event league_events.22 option league_events.22.b"
+		name = league_events.22.b
+		set_country_flag = LEP_purge_kmt_flag
+	}
+
+	option = { # Bandits
+		log = "[GetLogInfo]: event league_events.22 option league_events.22.c"
+		name = league_events.22.c
+		set_country_flag = LEP_purge_bandits_flag
+	}
+
+	option = { # sun loyalists
+		log = "[GetLogInfo]: event league_events.22 option league_events.22.e"
+		name = league_events.22.e
+		set_country_flag = LEP_purge_sun_loyalists_flag
+		ai_chance = { base = 0 }
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = league_events.23 days = 3 }
+		}
+	}
+}
+
+country_event = { # how to approach
+	id = league_events.23
+	title = league_events.23.t
+	desc = league_events.23.d
+	picture = GFX_report_event_CHN_riot_police
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # lock them up
+		log = "[GetLogInfo]: event league_events.23 option league_events.23.a"
+		name = league_events.23.a
+		set_country_flag = LEP_purge_jail_them_flag
+	}
+
+	option = { # harsh treatment
+		log = "[GetLogInfo]: event league_events.23 option league_events.23.b"
+		name = league_events.23.b
+		set_country_flag = LEP_purge_harsh_treatment_flag
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = league_events.24 days = 14 }
+		}
+	}
+}
+
+country_event = { # Purge complete
+	id = league_events.24
+	title = league_events.24.t
+	desc = league_events.24.d
+	picture = GFX_report_event_LEP_qi_xieyuan_dress_uniform
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.24 option league_events.24.a"
+		name = league_events.24.a
+		if = {
+			limit = {
+				has_country_flag = LEP_purge_students_flag
+			}
+			if = {
+				limit = {
+					has_country_flag = LEP_purge_jail_them_flag
+				}
+				add_political_power = 50
+				add_timed_idea = {
+					idea = LEP_purged_students_idea
+					days = 365
+				}
+			}
+			if = {
+				limit = {
+					has_country_flag = LEP_purge_harsh_treatment_flag
+				}
+				add_political_power = 100
+				add_timed_idea = {
+					idea = LEP_purged_students_idea2
+					days = 365
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_country_flag = LEP_purge_kmt_flag
+			}
+			if = {
+				limit = {
+					has_country_flag = LEP_purge_jail_them_flag
+				}
+				add_stability = -0.05
+				add_political_power = 50
+			}
+			if = {
+				limit = {
+					has_country_flag = LEP_purge_harsh_treatment_flag
+				}
+				add_stability = -0.10
+				add_political_power = 100
+			}
+		}
+		if = {
+			limit = {
+				has_country_flag = LEP_purge_bandits_flag
+			}
+			if = {
+				limit = {
+					has_country_flag = LEP_purge_jail_them_flag
+				}
+				add_war_support = -0.05
+				add_political_power = 50
+			}
+			if = {
+				limit = {
+					has_country_flag = LEP_purge_harsh_treatment_flag
+				}
+				add_war_support = -0.10
+				add_political_power = 100
+			}
+		}
+		if = {
+			limit = {
+				has_country_flag = LEP_purge_sun_loyalists_flag
+			}
+			if = {
+				limit = {
+					has_country_flag = LEP_purge_jail_them_flag
+				}
+				add_political_power = -75
+				add_war_support = 0.03
+				add_stability = 0.03
+			}
+			if = {
+				limit = {
+					has_country_flag = LEP_purge_harsh_treatment_flag
+				}
+				add_political_power = -125
+				add_war_support = 0.03
+				add_stability = 0.03
+			}
+		}
+	}
+}
+
+#25-26 open
+
+country_event = { # green gang dealings
+	id = league_events.27
+	title = league_events.27.t
+	desc = league_events.27.d
+	picture = GFX_report_event_LEC_xiangshen
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.27 option league_events.27.a"
+		name = league_events.27.a
+		add_political_power = -50
+		add_ideas = LEP_green_gang_dealings_idea
+		LEC = {
+			country_event = league_events.28
+		}
+	}
+}
+
+country_event = { # influence from nanjing
+	id = league_events.28
+	title = league_events.28.t
+	desc = league_events.28.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.28 option league_events.28.a"
+		name = league_events.28.a
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+		hidden_effect = {
+			LEP = {
+				country_event = { id = league_events.29 days = 42 }
+			}
+		}
+	}
+}
+
+country_event = { # Green Gang grows in Nanjing
+	id = league_events.29
+	title = league_events.29.t
+	desc = league_events.29.d
+	picture = GFX_report_event_LEC_xiangshen
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.29 option league_events.29.a"
+		name = league_events.29.a
+		add_stability = -0.01
+		LEP = {
+			country_event = { id = league_events.30 days = 28 }
+		}
+	}
+}
+
+country_event = { # anti-Qi activist holds speech in Nanjing
+	id = league_events.30
+	title = league_events.30.t
+	desc = league_events.30.d
+
+	picture = GFX_report_event_LEP_qi_xieyuan_suit_2
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.30 option league_events.30.a"
+		name = league_events.30.a
+		add_stability = -0.02
+		hidden_effect = {
+			country_event = { id = league_events.31 days = 4 }
+		}
+	}
+}
+
+country_event = { # anti-Qi activist group leaders killed
+	id = league_events.31
+	title = league_events.31.t
+	desc = league_events.31.d
+
+	picture = GFX_report_event_LEP_qi_xieyuan
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.31 option league_events.31.a"
+		name = league_events.31.a
+		add_political_power = 30
+		hidden_effect = {
+			country_event = { id = league_events.32 days = 40 }
+		}
+	}
+}
+
+country_event = { # business investments in Nanjing
+	id = league_events.32
+	title = league_events.32.t
+	desc = league_events.32.d
+	picture = GFX_report_event_LEC_shanghai_river
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.32 option league_events.32.a"
+		name = league_events.32.a
+		add_political_power = 75
+		if = {
+			limit = {
+				has_full_control_of_state = 613
+			}
+			613 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+}
+
+#29-40 open
+
+#Many of these following events have been adapted from WordZero's LEP KMT/Bandit events
+country_event = { #ambush
+	id = league_events.41
+	title = league_events.41.t
+	desc = league_events.41.d
+	picture = GFX_report_event_CHI_guerillas
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.41 option league_events.41.a"
+		name = league_events.41.a
+		custom_effect_tooltip = lep_kmt_unrest_triggered_by_decision_tt
+		add_war_support = -0.05
+	}
+}
+
+country_event = { # railway bomb
+	id = league_events.42
+	title = league_events.42.t
+	desc = league_events.42.d
+	picture = GFX_report_event_CHN_china_abandoned
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_events.42 option league_events.42.a"
+		name = league_events.42.a
+		custom_effect_tooltip = lep_kmt_unrest_triggered_by_decision_tt
+		var:LEP_KMT_attack_location = {
+			damage_building = {
+				type = infrastructure
+				damage = 0.5
+			}
+		}
+	}
+}
+
+country_event = { # assassination
+	id = league_events.43
+	title = league_events.43.t
+	desc = league_events.43.d
+	picture = GFX_report_event_CHN_machinegun_fighting
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.43 option league_events.43.a"
+		name = league_events.43.a
+		custom_effect_tooltip = lep_kmt_unrest_triggered_by_decision_tt
+
+		add_war_support = -0.05
+		add_stability = -0.03
+	}
+}
+
+country_event = { # factory bomb
+	id = league_events.44
+	title = league_events.44.t
+	desc = league_events.44.d
+	picture = GFX_report_event_CHN_riot
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.44 option league_events.44.a"
+		name = league_events.44.a
+		custom_effect_tooltip = lep_kmt_unrest_triggered_by_decision_tt
+		var:LEP_KMT_attack_location = {
+			if = {
+				limit = { industrial_complex > 0 }
+				damage_building = {
+					type = industrial_complex
+					damage = 0.5
+				}
+			}
+		}
+	}
+}
+
+country_event = { # gunfight
+	id = league_events.45
+	title = league_events.45.t
+	desc = league_events.45.d
+	picture = GFX_report_event_CHI_french_army
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.45 option league_events.45.a"
+		name = league_events.45.a
+		custom_effect_tooltip = lep_kmt_unrest_triggered_by_decision_tt
+		add_stability = -0.05
+		add_manpower = -579
+	}
+}
+
+country_event = { # heavy factory bombing
+	id = league_events.46
+	title = league_events.46.t
+	desc = league_events.46.d
+	picture = GFX_report_event_CHN_riot
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.46 option league_events.46.a"
+		name = league_events.46.a
+		custom_effect_tooltip = lep_kmt_unrest_triggered_by_decision_tt
+		var:LEP_KMT_attack_location = {
+			if = {
+				limit = { industrial_complex > 0 }
+				damage_building = {
+					type = industrial_complex
+					damage = 0.8
+				}
+			}
+		}
+	}
+}
+
+country_event = { # battle
+	id = league_events.47
+	title = league_events.47.t
+	desc = league_events.47.d
+	picture = GFX_report_event_CHN_riot_police
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.47 option league_events.47.a"
+		name = league_events.47.a
+		custom_effect_tooltip = lep_kmt_unrest_triggered_by_decision_tt
+		add_stability = -0.08
+		add_manpower = -1746
+	}
+}
+
+country_event = { #  mountain ambushes
+	id = league_events.48
+	title = league_events.48.t
+	desc = league_events.48.d
+	picture = GFX_report_event_CHI_guerillas
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = { #When will it end?
+		log = "[GetLogInfo]: event league_events.48 option league_events.48.a"
+		name = league_events.48.a
+		custom_effect_tooltip = lep_kmt_unrest_triggered_by_decision_tt
+		add_manpower = -1000
+		every_owned_state = {
+			limit = { region = 217 } #Dongnan
+			random_select_amount = 3
+			damage_building = {
+				type = infrastructure
+				damage = 0.6
+			}
+		}
+	}
+}
+
+country_event = { # multiple factory bombings
+	id = league_events.49
+	title = league_events.49.t
+	desc = league_events.49.d
+	picture = GFX_report_event_CHN_riot
+	trigger = {
+		has_idea = LEP_kuomintang
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.49 option league_events.49.a"
+		name = league_events.49.a
+		every_owned_state = {
+			limit = {
+				industrial_complex > 0
+				region = 217 #Dongnan
+			}
+			random_select_amount = 3
+			damage_building = {
+				type = industrial_complex
+				damage = 0.6
+			}
+		}
+	}
+}
+
+country_event = { # KMT destroyed
+	id = league_events.50
+	title = league_events.50.t
+	desc = league_events.50.d
+	picture = GFX_report_event_CHI_deng_yanda_arrested
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.50 option league_events.50.a"
+		name = league_events.50.a
+		add_stability = 0.05
+		clear_variable = LEP_KMT_attack_location
+		clear_variable = lep_kmt_suppress_remove
+		clear_variable = lep_suppress_kmt_mission_timeout
+	}
+}
+
+country_event = { # opium storage attack
+	id = league_events.51
+	title = league_events.51.t
+	desc = league_events.51.d
+	picture = GFX_report_event_SHD_zongchang_military_1
+	trigger = {
+		has_idea = LEP_rural_banditry
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.51 option league_events.51.a"
+		name = league_events.51.a
+		custom_effect_tooltip = lep_rural_banditry_unrest_triggered_by_decision_tt
+		add_stability = -0.01
+	}
+}
+
+country_event = { # assault on caravan
+	id = league_events.52
+	title = league_events.52.t
+	desc = league_events.52.d
+	picture = GFX_report_event_SHD_zongchang_military_2
+	trigger = {
+		has_idea = LEP_rural_banditry
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.52 option league_events.52.a"
+		name = league_events.52.a
+		custom_effect_tooltip = lep_rural_banditry_unrest_triggered_by_decision_tt
+		add_stability = -0.015
+	}
+}
+
+country_event = { # patrol attack
+	id = league_events.53
+	title = league_events.53.t
+	desc = league_events.53.d
+	picture = GFX_report_event_SHD_red_spears_2
+	trigger = {
+		has_idea = LEP_rural_banditry
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.53 option league_events.53.a"
+		name = league_events.53.a
+		custom_effect_tooltip = lep_rural_banditry_unrest_triggered_by_decision_tt
+		add_stability = -0.015
+		add_manpower = -31
+	}
+}
+
+country_event = { # barracks attack
+	id = league_events.54
+	title = league_events.54.t
+	desc = league_events.54.d
+	picture = GFX_report_event_SHD_red_spears_3
+	trigger = {
+		has_idea = LEP_rural_banditry
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.54 option league_events.54.a"
+		name = league_events.54.a
+		custom_effect_tooltip = lep_rural_banditry_unrest_triggered_by_decision_tt
+		add_stability = -0.025
+		add_manpower = -140
+	}
+}
+
+country_event = { #town assault
+	id = league_events.55
+	title = league_events.55.t
+	desc = league_events.55.d
+	picture = GFX_report_event_LEP_march
+	trigger = {
+		has_idea = LEP_rural_banditry
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.55 option league_events.55.a"
+		name = league_events.55.a
+		custom_effect_tooltip = lep_rural_banditry_unrest_triggered_by_decision_tt
+		add_stability = -0.03
+		add_manpower = -198
+	}
+}
+
+country_event = { #railway occupation
+	id = league_events.56
+	title = league_events.56.t
+	desc = league_events.56.d
+	picture = GFX_report_event_SHX_tongpu_railway
+	trigger = {
+		has_idea = LEP_rural_banditry
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.56 option league_events.56.a"
+		name = league_events.56.a
+		custom_effect_tooltip = lep_rural_banditry_unrest_triggered_by_decision_tt
+		add_stability = -0.03
+		1047 = {
+			damage_building = {
+				type = rail_way
+				damage = 0.4
+				province = 7200
+			}
+			damage_building = {
+				type = rail_way
+				damage = 0.4
+				province = 7025
+			}
+		}
+	}
+}
+
+country_event = { #Massacre of Bandit Members
+	id = league_events.57
+	title = league_events.57.t
+	desc = league_events.57.d
+	picture = GFX_report_event_CHN_china_red_spears
+	trigger = {
+		has_idea = LEP_rural_banditry
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.57 option league_events.57.a"
+		name = league_events.57.a
+		custom_effect_tooltip = lep_rural_banditry_unrest_triggered_by_decision_tt
+		add_stability = -0.05
+		add_manpower = -1123
+	}
+}
+
+country_event = { # Bandits destroyed
+	id = league_events.58
+	title = league_events.58.t
+	desc = league_events.58.d
+	picture = GFX_report_event_LEP_qi_xieyuan_dress_uniform_3
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.58 option league_events.58.a"
+		name = league_events.58.a
+		add_stability = 0.05
+		clear_variable = LEP_rural_banditry_suppress_remove
+		clear_variable = lep_suppress_rural_banditry_mission_timeout
+	}
+}
+
+country_event = { # meeting with the Jiangzhe Caifa
+	id = league_events.59
+	title = league_events.59.t
+	desc = league_events.59.d
+	picture = GFX_report_event_LEP_qi_xieyuan_suit_2
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.59 option league_events.59.a"
+		name = league_events.59.a
+		hidden_effect = {
+			country_event = league_events.60
+		}
+	}
+}
+
+country_event = { # resources from the Jiangzhe Caifa
+	id = league_events.60
+	title = league_events.60.t
+	desc = league_events.60.d
+	picture = GFX_report_event_LEP_qi_xieyuan_coat
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event league_events.60 option league_events.60.a"
+		name = league_events.60.a
+		add_political_power = 100
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = LEP
+		}
+	}
+}
+
+###
+
+country_event = {
+	id = league_events.100
+	immediate = {
+		log = "KR_Event_Logging;Nanjing Clique WINS LEP WAR"
+	}
+	title = league_events.100.t
+	desc = league_events.100.d
+	picture = GFX_report_event_LEP_qi_xieyuan_3
+	trigger = {
+		is_subject = no
+		#in case somehow GER released LEP and this event got triggered accidentally
+	}
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			clr_global_flag = LEP_collapse
+			set_global_flag = LEP_victory
+			clr_country_flag = LEP_league_war_flag
+
+			# Close LEP_collapse_war_decisions
+			remove_targeted_decision = { target = THIS decision = LEP_emergency_troop_training_decision }
+			remove_targeted_decision = { target = THIS decision = LEP_emergency_evaluate_doctrines_decision }
+			remove_targeted_decision = { target = THIS decision = LEP_seize_the_heartland_decision }
+			remove_targeted_decision = { target = THIS decision = LEP_relocate_important_facilities_decision }
+
+			# Open LEP_reconstruction_decisions
+			activate_targeted_decision = { target = THIS decision = LEP_road_reconstruction_decision }
+			activate_targeted_decision = { target = THIS decision = LEP_invest_in_armaments_industry_decision }
+			activate_targeted_decision = { target = THIS decision = LEP_repair_the_machinery_decision }
+			activate_targeted_decision = { target = THIS decision = LEP_factory_repair_teams_decision }
+			activate_targeted_decision = { target = THIS decision = LEP_new_industrial_investments_decision }
+			activate_targeted_decision = { target = THIS decision = LEP_village_reconstruction_decision }
+
+			remove_ideas = {
+				LEP_Crippled_Industrym3
+				LEP_Crippled_Industrym2b
+				LEP_Crippled_Industrym2a
+				LEP_Crippled_Industrym1
+				LEP_Crippled_Industry
+			}
+
+			LEP_remove_collapse_dm = yes
+
+			add_ideas = LEP_Damaged_Industry
+			if = {
+				limit = { date < 1936.5.1 }
+				add_ideas = LEP_Widespread_Destruction4
+				set_country_flag = LEP_in_destruction_lvl4
+				add_political_power = 70
+			}
+			else_if = {
+				limit = { date < 1936.7.1 }
+				add_ideas = LEP_Widespread_Destruction4
+				set_country_flag = LEP_in_destruction_lvl4
+				add_political_power = 50
+			}
+			else_if = {
+				limit = { date < 1936.11.1 }
+				add_ideas = LEP_Widespread_Destruction3
+				set_country_flag = LEP_in_destruction_lvl3
+			}
+			else_if = {
+				limit = { date < 1937.3.1 }
+				add_ideas = LEP_Widespread_Destruction2
+				set_country_flag = LEP_in_destruction_lvl2
+			}
+			else_if = {
+				limit = { date < 1937.7.1 }
+				add_ideas = LEP_Widespread_Destruction1
+			}
+			else = {
+				add_ideas = LEP_Widespread_Destruction
+			}
+
+			add_ideas = LEP_kuomintang
+			add_ideas = LEP_rural_banditry
+
+			set_variable = { lep_kmt_unrest_level = 2 }
+			set_variable = { lep_rural_unrest_level = 2 }
+			set_variable = { lep_suppress_kmt_mission_timeout = 70 }
+			set_variable = { lep_suppress_rural_banditry_mission_timeout = 70 }
+
+			set_temp_variable = { lep_kmt_random_delay = random }
+			subtract_from_temp_variable = { lep_kmt_random_delay = -0.5 }
+			multiply_temp_variable = { lep_kmt_random_delay = 15 }
+			add_to_variable = { lep_suppress_kmt_mission_timeout = lep_kmt_random_delay }
+			activate_mission = LEP_temp_suppress_kmt
+
+			set_temp_variable = { LEP_rural_banditry_random_delay = random }
+			subtract_from_temp_variable = { LEP_rural_banditry_random_delay = -0.5 }
+			multiply_temp_variable = { LEP_rural_banditry_random_delay = 15 }
+			add_to_variable = { lep_suppress_rural_banditry_mission_timeout = LEP_rural_banditry_random_delay }
+			activate_mission = LEP_temp_suppress_rural_banditry
+
+			LEC = { country_event = { id = legation_cities_events.92 days = 1 random_days = 3 } }
+			GER = { country_event = { id = germany_foreign_events_new.88 days = 1 } }
+		}
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_events.100 option league_events.100.a"
+		name = league_events.100.a
+
+		if = {
+			limit = { QIE = { has_country_flag = wu_intervenes_proLEP } }
+			set_cosmetic_tag = LSEP_QIE
+		}
+		else = {
+			set_cosmetic_tag = LSEP_REP
+		}
+
+		if = {
+			limit = {
+				has_idea = LEP_Questionable_Authority2
+			}
+			remove_ideas = LEP_Questionable_Authority2
+		}
+		else_if = {
+			limit = {
+				has_idea = LEP_Questionable_Authority1
+			}
+			remove_ideas = LEP_Questionable_Authority1
+		}
+		else_if = {
+			limit = {
+				has_idea = LEP_Questionable_Authority
+			}
+			remove_ideas = LEP_Questionable_Authority
+		}
+
+		if = {
+			limit = {
+				has_idea = LEP_Rampant_Disorder3
+			}
+			remove_ideas = LEP_Rampant_Disorder3
+		}
+		else_if = {
+			limit = {
+				has_idea = LEP_Rampant_Disorder2
+			}
+			remove_ideas = LEP_Rampant_Disorder2
+		}
+		else_if = {
+			limit = {
+				has_idea = LEP_Rampant_Disorder1
+			}
+			remove_ideas = LEP_Rampant_Disorder1
+		}
+		else_if = {
+			limit = {
+				has_idea = LEP_Rampant_Disorder
+			}
+			remove_ideas = LEP_Rampant_Disorder
+		}
+
+		add_ideas = LEP_Chaotic_Order
+		complete_national_focus = LEP_the_marshal_stands_triumphant
+		QIE = {
+			if = {
+				limit = { has_country_flag = wu_intervenes_proLEP }
+				custom_effect_tooltip = anq_qing_guarantee_tt
+				country_event = { id = league_war_events.11 hours = 6 }
+			}
+		}
+	}
+}
+
+#For future Governor Question Event
+country_event = {
+	id = league_events.102
+	title = league_events.102.t
+	desc = {
+		text = league_events.102.d_1
+		trigger = {
+			NOT = { has_country_flag = LEP_Shangguan_Yunxiang_is_our_boy_flag }
+		}
+	}
+	desc = {
+		text = league_events.102.d_2
+		trigger = { has_country_flag = LEP_Shangguan_Yunxiang_is_our_boy_flag }
+	}
+	picture = GFX_report_event_LEP_qi_xieyuan
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_events.102 option league_events.102.a"
+		name = league_events.102.a
+	}
+
+	option = {
+		log = "[GetLogInfo]: event league_events.102 option league_events.102.b"
+		name = league_events.102.b
+		add_political_power = 50
+		add_stability = -0.05
+	}
+
+	option = {
+		log = "[GetLogInfo]: event league_events.102 option league_events.102.c"
+		name = league_events.102.c
+		trigger = { has_country_flag = LEP_Shangguan_Yunxiang_is_our_boy_flag }
+		add_political_power = -50
+		add_stability = 0.05
+	}
+
+	after = {
+		custom_effect_tooltip = LEP_unlock_governor_decisions
+		if = {
+			limit = {
+				has_idea = LEP_Chaotic_Order1a
+			}
+			swap_ideas = {
+				remove_idea = LEP_Chaotic_Order1a
+				add_idea = LEP_Chaotic_Order2ac
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = LEP_Chaotic_Order1b
+			}
+			swap_ideas = {
+				remove_idea = LEP_Chaotic_Order1b
+				add_idea = LEP_Chaotic_Order2bc
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = LEP_Chaotic_Order2ab
+			}
+			swap_ideas = {
+				remove_idea = LEP_Chaotic_Order2ab
+				add_idea = LEP_Chaotic_Order3
+			}
+		}
+		else = {
+			swap_ideas = {
+				remove_idea = LEP_Chaotic_Order
+				add_idea = LEP_Chaotic_Order1c
+			}
+		}
+	}
+}
+
+country_event = {
+	id = league_events.112
+	title = league_events.112.t
+	desc = league_events.112.d
+	picture = GFX_report_event_CHN_militia
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_events.112 option league_events.112.a"
+		name = league_events.112.a
+		effect_tooltip = {
+			send_equipment = {
+				target = LEP
+				type = infantry_equipment
+				amount = 1000
+			}
+		}
+		hidden_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -1000
+			}
+		}
+		LEP = {
+			country_event = { id = league_events.113 days = 3 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event league_events.112 option league_events.112.b"
+		name = league_events.112.b
+		ai_chance = { base = 0 }
+		add_political_power = -25
+	}
+}
+
+country_event = {
+	id = league_events.113
+	title = league_events.113.t
+	desc = league_events.113.d
+	picture = GFX_report_event_LEP_sun_chuanfang_troops
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_events.113 option league_events.113.a"
+		name = league_events.113.a
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = 1000
+			producer = GER
+		}
+		add_war_support = 0.05
+	}
+}
+
+country_event = { #new Zhejiang governor
+	id = league_events.114
+	title = league_events.114.t
+	desc = league_events.114.d
+	picture = GFX_report_event_LEP_sun_zhejiang
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #zhou fengqi
+		log = "[GetLogInfo]: event league_events.114 option league_events.114.a"
+		name = league_events.114.a
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		add_war_support = 0.05
+	}
+	option = { #Meng Zhaoyue
+		log = "[GetLogInfo]: event league_events.114 option league_events.114.b"
+		name = league_events.114.b
+		add_stability = 0.05
+	}
+	after = {
+		set_country_flag = LEP_zhejiang_gov_done
+	}
+}
+
+country_event = { #new fujian governor
+	id = league_events.115
+	title = league_events.115.t
+	desc = league_events.115.d
+	picture = GFX_report_event_LEP_sun_desk
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # keep Zhou Yinren
+		log = "[GetLogInfo]: event league_events.115 option league_events.115.a"
+		name = league_events.115.a
+		add_stability = 0.05
+	}
+	option = { #  Kong Zhaotong
+		log = "[GetLogInfo]: event league_events.115 option league_events.115.b"
+		name = league_events.115.b
+		add_stability = -0.05
+		add_political_power = 25
+	}
+}
+
+country_event = { #new jiangxi governor (ruzhou dead so its gotta be fang benren
+	id = league_events.116
+	title = league_events.116.t
+	desc = league_events.116.d
+	picture = GFX_report_event_LEP_fang_benren_2
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # fang benren
+		log = "[GetLogInfo]: event league_events.116 option league_events.116.a"
+		name = league_events.116.a
+		add_war_support = 0.05
+	}
+}
+
+country_event = { #new jiangxi governor
+	id = league_events.117
+	title = league_events.117.t
+	desc = league_events.117.d
+	picture = GFX_report_event_LEP_fang_benren_1
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # fang benren
+		log = "[GetLogInfo]: event league_events.117 option league_events.117.a"
+		name = league_events.117.a
+		add_war_support = 0.05
+	}
+	option = { # deng
+		log = "[GetLogInfo]: event league_events.117 option league_events.117.b"
+		name = league_events.117.b
+		if = {
+			limit = { has_character = LEP_fang_benren }
+			custom_effect_tooltip = LEP_fang_benren_will_be_upset
+			hidden_effect = { country_event = { id = league_events.216 days = 3 } }
+		}
+	}
+}
+
+### Foreign Policy Events
+
+country_event = {
+	id = league_events.200 #QIE is losing to FNG, Germans ask us to support them
+	title = league_events.200.t
+	desc = league_events.200.d
+	picture = GFX_report_event_GEA_falkenhausen
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_war = no
+		QIE = {
+			has_country_flag = wu_intervenes_proLEP
+			has_war_with = FNG
+			NOT = { controls_state = 608 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event league_events.200 option league_events.200.a"
+		name = league_events.200.a #yes
+		ai_chance = { base = 100 }
+		add_political_power = 100
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = GER
+		}
+		add_to_war = {
+			targeted_alliance = QIE
+			enemy = FNG
+			hostility_reason = asked_to_join
+			single_target_only = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event league_events.200 option league_events.200.b"
+		name = league_events.200.b #no
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		add_stability = -0.10
+	}
+}
+
+country_event = {
+	id = league_events.201 #QIE asks for help
+	title = league_events.201.t
+	desc = league_events.201.d
+	picture = GFX_report_event_QIE_cao_kun_filmed
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_events.201 option league_events.201.a"
+		name = league_events.201.a #yes
+		add_to_war = {
+			targeted_alliance = FROM
+			enemy = FNG
+			hostility_reason = asked_to_join
+			single_target_only = yes
+		}
+		diplomatic_relation = {
+			country = FROM
+			relation = non_aggression_pact
+		}
+		give_military_access = FROM
+		FROM = {
+			give_military_access = ROOT
+			country_event = qing_foreign_policy_events.22
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event league_events.201 option league_events.201.b"
+		name = league_events.201.b #no
+		ai_chance = { base = 0 }
+		add_stability = -0.025
+		FROM = {
+			country_event = qing_foreign_policy_events.23
+		}
+	}
+}
+
+country_event = { #Heads up to Fengtian of LEP intervention to support QIE
+	id = league_events.205
+	title = league_events.205.t
+	desc = { #German has asked for intervention for QIE
+		text = league_events.205.d_ger
+		trigger = {
+			has_country_flag = ger_intervention_ask
+		}
+	}
+	desc = { #QIE has asked for intervention directly
+		text = league_events.205.d_noger
+		trigger = {
+			NOT = {
+				has_country_flag = ger_intervention_ask
+			}
+		}
+	}
+
+	picture = GFX_report_event_LEP_qi_xieyuan_coat
+
+	trigger = {
+		country_exists = LEP
+		LEP = {
+			is_subject = no
+			NOT = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		QIE = {
+			has_country_flag = wu_intervenes_proLEP
+		}
+	}
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_events.205 option league_events.205.a"
+		name = league_events.205.a
+		if = {
+			limit = { has_country_flag = ger_intervention_ask }
+			clr_country_flag = ger_intervention_ask
+		}
+	}
+}
+
+country_event = { # meeting with the nanking kommission
+	id = league_german_influence_events.1
+	title = league_german_influence_events.1.t
+	desc = league_german_influence_events.1.d
+	picture = GFX_report_event_LEP_qi_xieyuan_suit_2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			LEP = { country_event = { id = league_german_influence_events.2 days = 14 } }
+		}
+	}
+
+	option = { # pp bonus
+		log = "[GetLogInfo]: event league_german_influence_events.1 option league_german_influence_events.1.a"
+		name = league_german_influence_events.1.a
+		add_political_power = 35
+	}
+}
+
+country_event = { # new offices
+	id = league_german_influence_events.2
+	title = league_german_influence_events.2.t
+	desc = league_german_influence_events.2.d
+	picture = GFX_report_event_LEP_sun_time_magazine
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # new factory in nanking
+		log = "[GetLogInfo]: event league_german_influence_events.2 option league_german_influence_events.2.a"
+		name = league_german_influence_events.2.a
+		613 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+#country_event = { # german factory director
+#	id = league_german_influence_events.3
+#	title = league_german_influence_events.3.t
+#	desc = league_german_influence_events.3.d
+#	#picture = GFX_report_event_CHN_warlords
+#
+#	is_triggered_only = yes
+#
+#	fire_only_once = yes
+#
+#
+#	option = { # let it slide
+#		name = league_german_influence_events.3.a
+#		set_temp_variable = { LEP_market_liberal_pp_change = 0.03 }
+#		LEP_modify_tsingtau_spirit = yes
+#	}
+#	option = { # prosecute
+#		name = league_german_influence_events.3.b
+#		add_political_power = -50
+#	}
+#}
+
+country_event = { # rebuilding railway
+	id = league_german_influence_events.4
+	title = league_german_influence_events.4.t
+	desc = league_german_influence_events.4.d
+	picture = GFX_report_event_SHX_zhengtai_railway
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			LEP = { country_event = { id = league_german_influence_events.5 days = 14 } }
+		}
+	}
+
+	option = { # money to repair
+		log = "[GetLogInfo]: event league_german_influence_events.4 option league_german_influence_events.4.a"
+		name = league_german_influence_events.4.a
+		add_timed_idea = {
+			idea = lep_aog_money_idea
+			days = 120
+		}
+	}
+	option = { # repair it
+		log = "[GetLogInfo]: event league_german_influence_events.4 option league_german_influence_events.4.b"
+		name = league_german_influence_events.4.b
+		add_timed_idea = {
+			idea = lep_aog_repair_idea
+			days = 240
+		}
+	}
+}
+
+country_event = { # leases
+	id = league_german_influence_events.5
+	title = league_german_influence_events.5.t
+	desc = league_german_influence_events.5.d
+	picture = GFX_report_event_CHN_industry
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			LEP = { country_event = { id = league_german_influence_events.6 days = 14 } }
+		}
+	}
+
+	option = { # let them be
+		log = "[GetLogInfo]: event league_german_influence_events.5 option league_german_influence_events.5.a"
+		name = league_german_influence_events.5.a
+		add_political_power = 75
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.02 }
+		LEP_modify_tsingtau_spirit = yes
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal < 0.40
+			}
+		}
+	}
+
+	option = { # demand payment
+		log = "[GetLogInfo]: event league_german_influence_events.5 option league_german_influence_events.5.b"
+		name = league_german_influence_events.5.b
+		add_political_power = -35
+		add_timed_idea = {
+			idea = lep_aog_payment_idea
+			days = 120
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal > 0.40
+			}
+		}
+		set_temp_variable = { LEP_market_liberal_pp_change = -0.01 }
+		LEP_modify_tsingtau_spirit = yes
+	}
+}
+
+country_event = { # factory control
+	id = league_german_influence_events.6
+	title = league_german_influence_events.6.t
+	desc = league_german_influence_events.6.d
+	picture = GFX_report_event_FNG_paper_factory
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			LEP = { country_event = { id = league_german_influence_events.7 days = 14 } }
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event league_german_influence_events.6 option league_german_influence_events.6.a"
+		name = league_german_influence_events.6.a
+		every_owned_state = {
+			limit = {
+				OR = {
+					state = 802
+					state = 803
+					state = 1075
+					state = 592
+				}
+			}
+			add_dynamic_modifier = { modifier = LEP_AOG_ports }
+		}
+	}
+}
+
+country_event = { # investment council
+	id = league_german_influence_events.7
+	title = league_german_influence_events.7.t
+	desc = league_german_influence_events.7.d
+	picture = GFX_report_event_CHN_china_five_colour_confrence
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			LEP = { country_event = { id = league_german_influence_events.8 days = 14 } }
+		}
+	}
+
+	option = { # yes
+		log = "[GetLogInfo]: event league_german_influence_events.7 option league_german_influence_events.7.a"
+		name = league_german_influence_events.7.a
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.025 }
+		LEP_modify_tsingtau_spirit = yes
+		add_offsite_building = { type = industrial_complex level = 2 }
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal < 0.40
+			}
+		}
+	}
+	option = { # no
+		log = "[GetLogInfo]: event league_german_influence_events.7 option league_german_influence_events.7.b"
+		name = league_german_influence_events.7.b
+		add_political_power = -35
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal > 0.40
+			}
+		}
+	}
+}
+
+country_event = { # reconstruction imports
+	id = league_german_influence_events.8
+	title = league_german_influence_events.8.t
+	desc = league_german_influence_events.8.d
+	picture = GFX_report_event_FNG_industry2
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			LEP = { country_event = { id = league_german_influence_events.9 days = 14 } }
+		}
+	}
+
+	option = { # relax imports
+		log = "[GetLogInfo]: event league_german_influence_events.8 option league_german_influence_events.8.a"
+		name = league_german_influence_events.8.a
+		add_timed_idea = {
+			idea = lep_aog_german_imports_idea
+			days = 365
+		}
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.01 }
+		LEP_modify_tsingtau_spirit = yes
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal < 0.30
+			}
+		}
+	}
+	option = { # no deal
+		log = "[GetLogInfo]: event league_german_influence_events.8 option league_german_influence_events.8.b"
+		name = league_german_influence_events.8.b
+		add_political_power = -75
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal > 0.30
+			}
+		}
+	}
+}
+
+country_event = { # inflation
+	id = league_german_influence_events.9
+	title = league_german_influence_events.9.t
+	desc = league_german_influence_events.9.d
+	picture = GFX_report_event_FNG_industry
+
+	is_triggered_only = yes #
+
+	option = { # AOG help
+		log = "[GetLogInfo]: event league_german_influence_events.9 option league_german_influence_events.9.a"
+		name = league_german_influence_events.9.a
+		add_timed_idea = {
+			idea = lep_aog_inflation_idea
+			days = 365
+		}
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.02 }
+		LEP_modify_tsingtau_spirit = yes
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal < 0.30
+			}
+		}
+	}
+
+	option = { # go it alone
+		log = "[GetLogInfo]: event league_german_influence_events.9 option league_german_influence_events.9.b"
+		name = league_german_influence_events.9.b
+		add_political_power = 35
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal > 0.30
+			}
+		}
+	}
+}
+
+#loan events
+country_event = { # introduction
+	id = league_german_influence_events.10
+	title = league_german_influence_events.10.t
+	desc = league_german_influence_events.10.d
+	picture = GFX_report_event_SHX_shanxi_provincal_bank
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # add idea?
+		log = "[GetLogInfo]: event league_german_influence_events.10 option league_german_influence_events.10.a"
+		name = league_german_influence_events.10.a
+		add_political_power = 35
+		country_event = { id = league_german_influence_events.11 days = 5 }
+	}
+}
+
+country_event = { # loan size
+	id = league_german_influence_events.11
+	title = league_german_influence_events.11.t
+	desc = league_german_influence_events.11.d
+	picture = GFX_report_event_SHX_shanxi_provincal_bank
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	option = { # big
+		log = "[GetLogInfo]: event league_german_influence_events.11 option league_german_influence_events.11.a"
+		name = league_german_influence_events.11.a
+		set_country_flag = lepaog_loan_big
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				NOT = { is_guaranteed_by = QIE }
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+			modifier = {
+				factor = 5
+				QIE = { has_completed_focus = QIE_purge_zhili }
+			}
+			modifier = {
+				factor = 2
+				SHD = { is_neighbor_of = QIE }
+			}
+		}
+	}
+	option = { # medium
+		log = "[GetLogInfo]: event league_german_influence_events.11 option league_german_influence_events.11.b"
+		name = league_german_influence_events.11.b
+		set_country_flag = lepaog_loan_medium
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 1.5
+				NOT = { is_guaranteed_by = QIE }
+			}
+			modifier = {
+				factor = 1.2
+				SHD = { is_neighbor_of = QIE }
+			}
+		}
+	}
+	option = { # small
+		log = "[GetLogInfo]: event league_german_influence_events.11 option league_german_influence_events.11.c"
+		name = league_german_influence_events.11.c
+		set_country_flag = lepaog_loan_small
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.5
+				NOT = { is_guaranteed_by = QIE }
+			}
+		}
+	}
+	after = {
+		country_event = { id = league_german_influence_events.12 days = 12 }
+	}
+}
+
+country_event = { # loan location
+	id = league_german_influence_events.12
+	title = league_german_influence_events.12.t
+	desc = league_german_influence_events.12.d
+	picture = GFX_report_event_SHX_shanxi_provincal_bank
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			random_list = {
+				33 = {
+					country_event = { id = league_german_influence_events.13 days = 365 }
+				}
+				33 = {
+					country_event = { id = league_german_influence_events.13 days = 500 }
+				}
+				34 = {
+					country_event = { id = league_german_influence_events.13 days = 750 }
+				}
+			}
+		}
+	}
+	option = { # production
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.5
+				NOT = { is_guaranteed_by = QIE }
+			}
+		}
+		log = "[GetLogInfo]: event league_german_influence_events.12 option league_german_influence_events.12.a"
+		name = league_german_influence_events.12.a
+		if = {
+			limit = {
+				has_country_flag = lepaog_loan_big
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_production_3
+				days = 900
+			}
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lepaog_loan_medium
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_production_2
+				days = 900
+			}
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lepaog_loan_small
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_production_1
+				days = 900
+			}
+		}
+	}
+
+	option = { # construction
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				NOT = { is_guaranteed_by = QIE }
+			}
+		}
+		log = "[GetLogInfo]: event league_german_influence_events.12 option league_german_influence_events.12.b"
+		name = league_german_influence_events.12.b
+		if = {
+			limit = {
+				has_country_flag = lepaog_loan_big
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_construction_3
+				days = 900
+			}
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lepaog_loan_medium
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_construction_2
+				days = 900
+			}
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lepaog_loan_small
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_construction_1
+				days = 900
+			}
+		}
+	}
+
+	option = { # military
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				NOT = { is_guaranteed_by = QIE }
+			}
+		}
+		log = "[GetLogInfo]: event league_german_influence_events.12 option league_german_influence_events.12.c"
+		name = league_german_influence_events.12.c
+		if = {
+			limit = {
+				has_country_flag = lepaog_loan_big
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_military_3
+				days = 900
+			}
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lepaog_loan_medium
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_military_2
+				days = 900
+			}
+		}
+		else_if = {
+			limit = {
+				has_country_flag = lepaog_loan_small
+			}
+			add_timed_idea = {
+				idea = lep_aog_loan_military_1
+				days = 900
+			}
+		}
+	}
+}
+
+country_event = { # aog wants early repayment, maybe make this a chance based?
+	id = league_german_influence_events.13
+	title = league_german_influence_events.13.t
+	desc = league_german_influence_events.13.d
+	picture = GFX_report_event_SIK_banknotes
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	option = { # agree
+		log = "[GetLogInfo]: event league_german_influence_events.13 option league_german_influence_events.13.a"
+		name = league_german_influence_events.13.a
+		remove_ideas = lep_aog_loan_production_3
+		remove_ideas = lep_aog_loan_production_2
+		remove_ideas = lep_aog_loan_production_1
+		remove_ideas = lep_aog_loan_construction_3
+		remove_ideas = lep_aog_loan_construction_2
+		remove_ideas = lep_aog_loan_construction_1
+		remove_ideas = lep_aog_loan_military_3
+		remove_ideas = lep_aog_loan_military_2
+		remove_ideas = lep_aog_loan_military_1
+		add_timed_idea = {
+			idea = lep_aog_loan_repayment
+			days = 250
+		}
+	}
+}
+
+country_event = { # aog bank expansion, variable boost based on aog opinion/influence?
+	id = league_german_influence_events.14
+	title = league_german_influence_events.14.t
+	desc = league_german_influence_events.14.d
+	picture = GFX_report_event_CHN_china_five_colour_speech
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = league_german_influence_events.15 days = 55 }
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event league_german_influence_events.14 option league_german_influence_events.14.a"
+		name = league_german_influence_events.14.a
+		1075 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+country_event = { # aog bank expansion 2
+	id = league_german_influence_events.15
+	title = league_german_influence_events.15.t
+	desc = league_german_influence_events.15.d
+	picture = GFX_report_event_CHN_china_five_colour_speech
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	option = { # agree
+		log = "[GetLogInfo]: event league_german_influence_events.15 option league_german_influence_events.15.a"
+		name = league_german_influence_events.15.a
+		613 = {
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+		744 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_political_power = 75
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.01 }
+		LEP_modify_tsingtau_spirit = yes
+	}
+
+	option = { # disagree
+		log = "[GetLogInfo]: event league_german_influence_events.15 option league_german_influence_events.15.b"
+		name = league_german_influence_events.15.b
+		add_political_power = -50
+	}
+}
+
+#aog inland expansion
+
+country_event = { # introduction
+	id = league_german_influence_events.16
+	title = league_german_influence_events.16.t
+	desc = league_german_influence_events.16.d
+	picture = GFX_report_event_CHN_china_generic_train_1
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = league_german_influence_events.17 days = 5 }
+		}
+	}
+
+	option = { # agree
+		log = "[GetLogInfo]: event league_german_influence_events.16 option league_german_influence_events.16.a"
+		name = league_german_influence_events.16.a
+	}
+}
+
+country_event = { # interior: chinese rights
+	id = league_german_influence_events.17
+	title = league_german_influence_events.17.t
+	desc = league_german_influence_events.17.d
+	picture = GFX_report_event_CHN_economic
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = league_german_influence_events.18 days = 5 }
+		}
+	}
+
+	option = { # chinese dominance
+		log = "[GetLogInfo]: event league_german_influence_events.17 option league_german_influence_events.17.a"
+		name = league_german_influence_events.17.a
+		set_country_flag = lep_aog_interior_chinese_3
+		ai_chance = { base = 20 }
+	}
+
+	option = { # even
+		log = "[GetLogInfo]: event league_german_influence_events.17 option league_german_influence_events.17.b"
+		name = league_german_influence_events.17.b
+		set_country_flag = lep_aog_interior_chinese_2
+		ai_chance = { base = 30 }
+	}
+
+	option = { # german dominance
+		log = "[GetLogInfo]: event league_german_influence_events.17 option league_german_influence_events.17.c"
+		name = league_german_influence_events.17.c
+		set_country_flag = lep_aog_interior_chinese_1
+		ai_chance = { base = 50 }
+	}
+}
+
+country_event = { # rights of germans in the interior
+	id = league_german_influence_events.18
+	title = league_german_influence_events.18.t
+	desc = league_german_influence_events.18.d
+	picture = GFX_report_event_GER_hungry_people
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = league_german_influence_events.19 days = 15 }
+		}
+	}
+
+	option = { # new law for germans
+		log = "[GetLogInfo]: event league_german_influence_events.18 option league_german_influence_events.18.a"
+		name = league_german_influence_events.18.a
+		set_country_flag = lep_aog_interior_german_3
+		ai_chance = { base = 60 }
+	}
+
+	option = { # equality
+		log = "[GetLogInfo]: event league_german_influence_events.18 option league_german_influence_events.18.b"
+		name = league_german_influence_events.18.b
+		set_country_flag = lep_aog_interior_german_2
+		ai_chance = { base = 20 }
+	}
+
+	option = { # priviledged guests
+		log = "[GetLogInfo]: event league_german_influence_events.18 option league_german_influence_events.18.c"
+		name = league_german_influence_events.18.c
+		set_country_flag = lep_aog_interior_german_1
+		ai_chance = { base = 20 }
+	}
+}
+
+country_event = { # germans set up shop: get idea based on previous choices
+	id = league_german_influence_events.19
+	title = league_german_influence_events.19.t
+	desc = league_german_influence_events.19.d
+	picture = GFX_report_event_LEP_qi_xieyuan_2
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = league_german_influence_events.20 days = 45 }
+			country_event = { id = league_german_influence_events.21 days = 121 }
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event league_german_influence_events.19 option league_german_influence_events.19.a"
+		name = league_german_influence_events.19.a
+		add_timed_idea = {
+			idea = lep_aog_interior_development
+			days = 120
+		}
+	}
+}
+
+country_event = { # chinese vs german business interests
+	id = league_german_influence_events.20
+	title = league_german_influence_events.20.t
+	desc = league_german_influence_events.20.d
+	picture = GFX_report_event_CHN_china_five_colour_flag_crowd
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	option = { # favour the chinese
+		log = "[GetLogInfo]: event league_german_influence_events.20 option league_german_influence_events.20.a"
+		name = league_german_influence_events.20.a
+		add_stability = 0.01
+		add_political_power = -85
+		ai_chance = { base = 20 }
+	}
+
+	option = { # favour the germans
+		log = "[GetLogInfo]: event league_german_influence_events.20 option league_german_influence_events.20.b"
+		name = league_german_influence_events.20.b
+		add_political_power = 25
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.005 }
+		LEP_modify_tsingtau_spirit = yes
+		ai_chance = { base = 60 }
+	}
+
+	option = { # who's to say
+		log = "[GetLogInfo]: event league_german_influence_events.20 option league_german_influence_events.20.c"
+		name = league_german_influence_events.20.c
+		add_stability = -0.01
+		add_political_power = -50
+		ai_chance = { base = 20 }
+	}
+}
+
+country_event = { # open the interior: results
+	id = league_german_influence_events.21
+	title = league_german_influence_events.21.t
+	desc = league_german_influence_events.21.d
+	picture = GFX_report_event_LEP_qi_xieyuan_suit_2
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_german_influence_events.21 option league_german_influence_events.21.a"
+		name = league_german_influence_events.21.a
+		if = {
+			limit = {
+				OR = {
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_3
+						has_country_flag = lep_aog_interior_german_3
+					}
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_2
+						has_country_flag = lep_aog_interior_german_2
+					}
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_1
+						has_country_flag = lep_aog_interior_german_1
+					}
+				}
+			}
+			add_ideas = lep_aog_interior_even
+		}
+		if = {
+			limit = {
+				OR = {
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_3
+						has_country_flag = lep_aog_interior_german_1
+					}
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_3
+						has_country_flag = lep_aog_interior_german_2
+					}
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_2
+						has_country_flag = lep_aog_interior_german_1
+					}
+				}
+			}
+			add_ideas = lep_aog_interior_chinese_dominant
+		}
+
+		if = {
+			limit = {
+				OR = {
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_1
+						has_country_flag = lep_aog_interior_german_3
+					}
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_2
+						has_country_flag = lep_aog_interior_german_3
+					}
+					AND = {
+						has_country_flag = lep_aog_interior_chinese_1
+						has_country_flag = lep_aog_interior_german_2
+					}
+				}
+			}
+			add_ideas = lep_aog_interior_german_dominant
+		}
+	}
+}
+
+#new german railroads
+
+country_event = { # railroad ownership
+	id = league_german_influence_events.22
+	title = league_german_influence_events.22.t
+	desc = league_german_influence_events.22.d
+	picture = GFX_report_event_SHX_tongpu_railway
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = league_german_influence_events.23 days = 12 }
+		}
+	}
+
+	option = { # respect german buyout
+		log = "[GetLogInfo]: event league_german_influence_events.22 option league_german_influence_events.22.a"
+		name = league_german_influence_events.22.a
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.015 }
+		LEP_modify_tsingtau_spirit = yes
+	}
+
+	option = { # demand equal ownership
+		log = "[GetLogInfo]: event league_german_influence_events.22 option league_german_influence_events.22.b"
+		name = league_german_influence_events.22.b
+		add_timed_idea = {
+			idea = lep_aog_railroads_ownership
+			days = 180
+		}
+	}
+}
+
+country_event = { # railroad reimbursement
+	id = league_german_influence_events.23
+	title = league_german_influence_events.23.t
+	desc = league_german_influence_events.23.d
+	picture = GFX_report_event_CHN_china_generic_train_3
+
+	is_triggered_only = yes #
+
+	fire_only_once = yes
+
+	option = { # repay with money
+		log = "[GetLogInfo]: event league_german_influence_events.23 option league_german_influence_events.23.a"
+		name = league_german_influence_events.23.a
+		if = {
+			limit = {
+				has_idea = lep_aog_railroads_ownership
+			}
+			remove_ideas = lep_aog_railroads_ownership
+		}
+		add_timed_idea = {
+			idea = lep_aog_railroads_ownership_2
+			days = 220
+		}
+		country_event = { id = league_german_influence_events.24 days = 5 }
+	}
+
+	option = { # repay with influence
+		log = "[GetLogInfo]: event league_german_influence_events.23 option league_german_influence_events.23.b"
+		name = league_german_influence_events.23.b
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.035 }
+		LEP_modify_tsingtau_spirit = yes
+		country_event = { id = league_german_influence_events.24 days = 5 }
+	}
+
+	option = { # what payment?
+		log = "[GetLogInfo]: event league_german_influence_events.23 option league_german_influence_events.23.c"
+		name = league_german_influence_events.23.c
+		add_political_power = -150
+	}
+}
+
+country_event = { # railroad construction (optional only if you pay up)
+	id = league_german_influence_events.24
+	title = league_german_influence_events.24.t
+	desc = league_german_influence_events.24.d
+	picture = GFX_report_event_CHN_china_generic_train_3
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					OR = {
+						has_idea = lep_aog_railroads_ownership
+						has_idea = lep_aog_railroads_ownership_2
+					}
+				}
+				country_event = { id = league_german_influence_events.25 days = 7 }
+			}
+		}
+	}
+
+	option = { # germans help
+		log = "[GetLogInfo]: event league_german_influence_events.24 option league_german_influence_events.24.a"
+		name = league_german_influence_events.24.a
+		every_owned_state = {
+			limit = {
+				state = 613
+				state = 1014
+				state = 1044
+				state = 596
+				state = 1067
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = {
+				market_liberal > 0.30
+			}
+			every_owned_state = {
+				limit = {
+					state = 1044
+					state = 600
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		if = {
+			limit = {
+				market_liberal > 0.40
+			}
+			every_owned_state = {
+				limit = {
+					state = 595
+					state = 1066
+					state = 1046
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+}
+
+country_event = { # rail tax?
+	id = league_german_influence_events.25
+	title = league_german_influence_events.25.t
+	desc = league_german_influence_events.25.d
+	picture = GFX_report_event_FNG_railway_construction_2
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	option = { # yes
+		log = "[GetLogInfo]: event league_german_influence_events.25 option league_german_influence_events.25.a"
+		name = league_german_influence_events.25.a
+		if = {
+			limit = {
+				has_idea = lep_aog_railroads_ownership
+			}
+			modify_timed_idea = {
+				idea = lep_aog_railroads_ownership
+				days = -80
+			}
+			add_stability = -0.02
+		}
+
+		if = {
+			limit = {
+				has_idea = lep_aog_railroads_ownership_2
+			}
+			modify_timed_idea = {
+				idea = lep_aog_railroads_ownership_2
+				days = -80
+			}
+			add_stability = -0.05
+		}
+		hidden_effect = {
+			country_event = { id = league_german_influence_events.26 days = 4 }
+		}
+	}
+
+	option = { # no
+		log = "[GetLogInfo]: event league_german_influence_events.25 option league_german_influence_events.25.b"
+		name = league_german_influence_events.25.b
+	}
+}
+
+country_event = { # germans ask for exemption from tax
+	id = league_german_influence_events.26
+	title = league_german_influence_events.26.t
+	desc = league_german_influence_events.26.d
+	picture = GFX_report_event_FNG_railway_construction_1
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	option = { # fine
+		log = "[GetLogInfo]: event league_german_influence_events.26 option league_german_influence_events.26.a"
+		name = league_german_influence_events.26.a
+		if = {
+			limit = {
+				has_idea = lep_aog_railroads_ownership
+			}
+			modify_timed_idea = {
+				idea = lep_aog_railroads_ownership
+				days = 35
+			}
+		}
+
+		if = {
+			limit = {
+				has_idea = lep_aog_railroads_ownership_2
+			}
+			modify_timed_idea = {
+				idea = lep_aog_railroads_ownership_2
+				days = 35
+			}
+		}
+	}
+
+	option = { # hell no
+		log = "[GetLogInfo]: event league_german_influence_events.26 option league_german_influence_events.26.b"
+		name = league_german_influence_events.26.b
+		add_political_power = -50
+	}
+}
+
+#resources
+country_event = { # introduction
+	id = league_german_influence_events.27
+	title = league_german_influence_events.27.t
+	desc = league_german_influence_events.27.d
+	picture = GFX_report_event_LEP_qi_xieyuan_suit
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = league_german_influence_events.28 days = 7 }
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event league_german_influence_events.27 option league_german_influence_events.27.a"
+		name = league_german_influence_events.27.a
+	}
+}
+
+country_event = { # german control of commission
+	id = league_german_influence_events.28
+	title = league_german_influence_events.28.t
+	desc = league_german_influence_events.28.d
+	picture = GFX_report_event_CHN_china_five_colour_confrence
+
+	is_triggered_only = yes #
+	fire_only_once = yes
+
+	option = { # major
+		log = "[GetLogInfo]: event league_german_influence_events.28 option league_german_influence_events.28.a"
+		name = league_german_influence_events.28.a
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.015 }
+		LEP_modify_tsingtau_spirit = yes
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal < 0.30
+			}
+		}
+	}
+
+	option = { # minimal
+		log = "[GetLogInfo]: event league_german_influence_events.28 option league_german_influence_events.28.b"
+		name = league_german_influence_events.28.b
+		add_political_power = -35
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal > 0.30
+			}
+		}
+	}
+}
+
+#interior expansion 2
+
+country_event = { # renegotiate german rights
+	id = league_german_influence_events.29
+	title = league_german_influence_events.29.t
+	desc = league_german_influence_events.29.d
+	picture = GFX_report_event_CHN_china_five_colour_confrence
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # agree
+		log = "[GetLogInfo]: event league_german_influence_events.29 option league_german_influence_events.29.a"
+		name = league_german_influence_events.29.a
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.03 }
+		LEP_modify_tsingtau_spirit = yes
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal < 0.30
+			}
+		}
+	}
+
+	option = { # stay as they are
+		log = "[GetLogInfo]: event league_german_influence_events.29 option league_german_influence_events.29.b"
+		name = league_german_influence_events.29.b
+		add_political_power = -125
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				market_liberal > 0.30
+			}
+		}
+	}
+}
+
+country_event = { # german exclusive economic zones
+	id = league_german_influence_events.31
+	title = league_german_influence_events.31.t
+	desc = league_german_influence_events.31.d
+	picture = GFX_report_event_CHN_china_five_colour_confrence
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # oh no
+		log = "[GetLogInfo]: event league_german_influence_events.31 option league_german_influence_events.31.a"
+		name = league_german_influence_events.31.a
+		add_opinion_modifier = {
+			target = GER
+			modifier = KR_trade_agreement
+		}
+	}
+}
+
+country_event = { # complete german freedom
+	id = league_german_influence_events.33
+	title = league_german_influence_events.33.t
+	desc = league_german_influence_events.33.d
+	picture = GFX_report_event_LEP_qi_xieyuan_arrest
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # oh no
+		log = "[GetLogInfo]: event league_german_influence_events.33 option league_german_influence_events.33.a"
+		name = league_german_influence_events.33.a
+	}
+}
+
+#gea events
+
+country_event = { # gea relations improvement
+	id = league_german_influence_events.50
+	title = league_german_influence_events.50.t
+	desc = league_german_influence_events.50.d
+	picture = GFX_report_event_GEA_falkenhausen
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # yes
+		log = "[GetLogInfo]: event league_german_influence_events.50 option league_german_influence_events.50.a"
+		name = league_german_influence_events.50.a
+		add_opinion_modifier = {
+			target = GEA
+			modifier = KR_trade_agreement
+		}
+		reverse_add_opinion_modifier = {
+			target = GEA
+			modifier = KR_trade_agreement
+		}
+	}
+}
+
+country_event = { # support GEA in indo-china war
+	id = league_german_influence_events.51
+	title = league_german_influence_events.51.t
+	desc = league_german_influence_events.51.d
+	picture = GFX_report_event_GEA_coltroops
+
+	is_triggered_only = yes
+
+	option = { # volunteers idea
+		log = "[GetLogInfo]: event league_german_influence_events.51 option league_german_influence_events.51.a"
+		name = league_german_influence_events.51.a
+		trigger = {
+			has_war = no
+		}
+		add_political_power = 35
+		add_ideas = lep_aog_volunteers_idea
+		set_temp_variable = { LEP_market_liberal_pp_change = 0.005 }
+		LEP_modify_tsingtau_spirit = yes
+	}
+
+	option = { # send equipment
+		log = "[GetLogInfo]: event league_german_influence_events.51 option league_german_influence_events.51.b"
+		name = league_german_influence_events.51.b
+		send_equipment = {
+			equipment = infantry_equipment
+			amount = 750
+			target = GEA
+		}
+	}
+
+	option = { # nothing
+		log = "[GetLogInfo]: event league_german_influence_events.51 option league_german_influence_events.51.c"
+		name = league_german_influence_events.51.c
+		add_political_power = -25
+	}
+}
+
+country_event = { # GEA upgrade relations
+	id = league_german_influence_events.53
+	title = league_german_influence_events.53.t
+	desc = league_german_influence_events.53.d
+	picture = GFX_report_event_LEP_qi_xieyuan_suit_2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # yes
+		log = "[GetLogInfo]: event league_german_influence_events.53 option league_german_influence_events.53.a"
+		name = league_german_influence_events.53.a
+		add_opinion_modifier = {
+			target = GEA
+			modifier = KR_trade_agreement
+		}
+		reverse_add_opinion_modifier = {
+			target = GEA
+			modifier = KR_trade_agreement
+		}
+	}
+}
+
+country_event = { # gea docking rights
+	id = league_german_influence_events.54
+	title = league_german_influence_events.54.t
+	desc = league_german_influence_events.54.d
+	picture = GFX_report_event_GEA_carrier
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # yes
+		log = "[GetLogInfo]: event league_german_influence_events.54 option league_german_influence_events.54.a"
+		name = league_german_influence_events.54.a
+
+		diplomatic_relation = {
+			country = GEA
+			relation = docking_rights
+			active = yes
+		}
+	}
+
+	option = { # no
+		log = "[GetLogInfo]: event league_german_influence_events.54 option league_german_influence_events.54.b"
+		name = league_german_influence_events.54.b
+		add_political_power = -50
+	}
+}
+
+country_event = { # gea military access
+	id = league_german_influence_events.55
+	title = league_german_influence_events.55.t
+	desc = league_german_influence_events.55.d
+	picture = GFX_report_event_GER_march
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # yes
+		log = "[GetLogInfo]: event league_german_influence_events.55 option league_german_influence_events.55.a"
+		name = league_german_influence_events.55.a
+		diplomatic_relation = {
+			country = GEA
+			relation = military_access
+			active = yes
+		}
+	}
+
+	option = { # no
+		log = "[GetLogInfo]: event league_german_influence_events.55 option league_german_influence_events.55.b"
+		name = league_german_influence_events.55.b
+		add_political_power = -25
+	}
+}
+
+country_event = { # gea military guarantees
+	id = league_german_influence_events.56
+	title = league_german_influence_events.56.t
+	desc = league_german_influence_events.56.d
+	picture = GFX_report_event_JAP_coup
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # yes
+		log = "[GetLogInfo]: event league_german_influence_events.56 option league_german_influence_events.56.a"
+		name = league_german_influence_events.56.a
+	}
+
+	option = { # no
+		log = "[GetLogInfo]: event league_german_influence_events.56 option league_german_influence_events.56.b"
+		name = league_german_influence_events.56.b
+		add_political_power = -40
+	}
+}
+
+country_event = { # transferring the concessions
+	id = league_german_influence_events.57
+	title = league_german_influence_events.57.t
+	desc = league_german_influence_events.57.d
+	picture = GFX_report_event_LEP_qi_xieyuan_arrest
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # yes
+		log = "[GetLogInfo]: event league_german_influence_events.57 option league_german_influence_events.57.a"
+		name = league_german_influence_events.57.a
+		add_political_power = -100
+		every_owned_state = {
+			limit = {
+				OR = {
+					state = 802 #Xiamen
+					state = 803 #Wenzhou
+					state = 1075 #Nantong
+				}
+			}
+			GEA = { transfer_state = PREV }
+			add_claim_by = GEA
+		}
+	}
+}
+
+country_event = { #Chen Xuezhao
+	id = league_events.206
+	title = league_events.206.t
+	desc = league_events.206.d
+	picture = GFX_report_event_chen_xuezhao
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event league_events.206 option league_events.206.a"
+		name = league_events.206.a #What harm can come out of this?
+		add_popularity = {
+			ideology = Syndicalist
+			popularity = 0.05
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event league_events.206 option league_events.206.b"
+		name = league_events.206.b #Enough of this! Silence her!
+		add_stability = -0.03
+	}
+}
+country_event = { #Ju Péon
+	id = league_events.207
+	title = league_events.207.t
+	desc = league_events.207.d
+	picture = GFX_report_event_LEP_flavour1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		log = "[GetLogInfo]: event league_events.207 option league_events.207.a"
+		name = league_events.207.a #Truly a master painter!
+		reverse_add_opinion_modifier = { target = GER modifier = small_increase }
+		reverse_add_opinion_modifier = { target = FRA modifier = small_increase }
+	}
+}
+country_event = { #Tsen's Theorem
+	id = league_events.208
+	title = league_events.208.t
+	desc = league_events.208.d
+	picture = GFX_report_event_LEP_chiungtze_tsen
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		log = "[GetLogInfo]: event league_events.208 option league_events.208.a"
+		name = league_events.208.a #His work will be helpful!
+		add_tech_bonus = {
+			name = league_events.208.t
+			bonus = 0.5
+			uses = 1
+			category = electronics
+		}
+	}
+}
+country_event = { #The Golden Voice of China
+	id = league_events.209
+	title = league_events.209.t
+	desc = league_events.209.d
+	picture = GFX_report_event_zhou_xuan
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		log = "[GetLogInfo]: event league_events.209 option league_events.209.a"
+		name = league_events.209.a #Our own Lil Marlene!
+		add_political_power = 10
+	}
+}
+country_event = { #Dummy Zhou Xuan
+	id = league_events.210
+	is_triggered_only = yes
+	fire_only_once = yes
+	hidden = yes
+	option = {
+		log = "[GetLogInfo]: event league_events.210 option 1"
+		if = {
+			limit = {
+				NOT = {
+					country_exists = LEP
+				}
+			}
+			LEC = {
+				country_event = { id = league_events.209 days = 285 }
+			}
+		}
+		else = {
+			LEP = {
+				country_event = { id = league_events.209 days = 285 }
+			}
+		}
+	}
+}
+
+country_event = { #Recovering the Lost Provinces
+	id = league_events.211
+	title = league_events.211.t
+	desc = league_events.211.d
+
+	picture = GFX_report_event_LEP_qi_xieyuan
+	is_triggered_only = yes
+
+	option = { #Surely Beijing will accept...
+		log = "[GetLogInfo]: event league_events.211 option league_events.211.a"
+		name = league_events.211.a
+		overlord = { country_event = { id = league_events.212 days = 3 } }
+	}
+}
+
+country_event = { #Expansion of the Southern Zhili?
+	id = league_events.212
+	title = league_events.212.t
+	desc = league_events.212.d
+
+	picture = GFX_report_event_LEP_qi_xieyuan_4
+	is_triggered_only = yes
+
+	option = { #The bastard is too troublesome, toss him a bone.
+		log = "[GetLogInfo]: event league_events.212 option league_events.212.a"
+		name = league_events.212.a
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = -40
+				LEP = { is_ai = no }
+			}
+		}
+		custom_effect_tooltip = LEP_war_for_the_southwest_tt
+		LEP = { country_event = { id = league_events.213 days = 3 } }
+	}
+
+	option = { #And play us like Sun in 1929?
+		log = "[GetLogInfo]: event league_events.212 option league_events.212.b"
+		name = league_events.212.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LEP_forpol option = LEP_FORPOL_LEP }
+			}
+		}
+		custom_effect_tooltip = LEP_deny_league_marshal_tt
+		LEP = { country_event = { id = league_events.214 days = 3 } }
+	}
+}
+
+country_event = { #Glories of the League Marshal
+	id = league_events.213
+	title = league_events.213.t
+	desc = league_events.213.d
+
+	picture = GFX_report_event_LEP_qi_xieyuan_dress_uniform
+	is_triggered_only = yes
+
+	option = { #We told them we'd be back...
+		log = "[GetLogInfo]: event league_events.213 option league_events.213.a"
+		name = league_events.213.a
+		if = {
+			limit = {
+				can_declare_war_on = 602.owner
+				NOT = { is_ally_with = 602.owner }
+			}
+			declare_war_on = { target = 602.owner type = annex_everything }
+			QIE = { declare_war_on = { target = 602.owner type = annex_everything } }
+		}
+		if = {
+			limit = {
+				can_declare_war_on = 592.owner
+				NOT = { is_ally_with = 592.owner }
+			}
+			declare_war_on = { target = 592.owner type = annex_everything }
+			QIE = { declare_war_on = { target = 592.owner type = annex_everything } }
+		}
+	}
+}
+
+country_event = { #Betrayal by the Northern Zhili
+	id = league_events.214
+	title = league_events.214.t
+	desc = league_events.214.d
+
+	picture = GFX_report_event_QIE_wu_desk
+	is_triggered_only = yes
+
+	option = { #I've killed Sun, what's one more Marshal?
+		log = "[GetLogInfo]: event league_events.214 option league_events.214.a"
+		name = league_events.214.a
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LEP_forpol option = LEP_FORPOL_QIE }
+			}
+		}
+		set_country_flag = china_revolted_against_@var:overlord
+		create_wargoal = {
+			target = overlord
+			type = topple_government
+		}
+		custom_effect_tooltip = tooltip_white_line
+		overlord = {
+			if = {
+				limit = { is_in_array = { china_possible_allies_array = ROOT } }
+				remove_from_array = { china_possible_allies_array = ROOT }
+			}
+			if = {
+				limit = { is_in_array = { china_possible_allies_array_northwest = ROOT } }
+				remove_from_array = { china_possible_allies_array_northwest = ROOT }
+			}
+			effect_tooltip = {
+				create_wargoal = {
+					target = ROOT
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = { NOT = { any_other_country = { has_country_flag = china_revolted_against_@FROM } } }
+				country_event = china_events.13
+			}
+			else = {
+				country_event = china_events.15
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		china_break_puppet_effect = yes
+		custom_effect_tooltip = tooltip_white_line
+		uncomplete_national_focus = {
+			focus = LEP_two_marshals_under_the_sky
+		}
+		hidden_effect = {
+			uncomplete_national_focus = {
+				focus = LEP_joint_training_with_beijing
+				uncomplete_children = yes
+			}
+			uncomplete_national_focus = {
+				focus = LEP_end_southern_intransigence
+			}
+		}
+		complete_national_focus = LEP_deepen_the_zhili_schism
+	}
+	option = { #Damn the Marshals! Damn the cabinet! Damn it all!
+		log = "[GetLogInfo]: event league_events.214 option league_events.214.b"
+		name = league_events.214.b
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LEP_forpol option = LEP_FORPOL_LEP }
+			}
+			modifier = {
+				add = -24
+				strength_ratio = {
+					tag = QIE
+					ratio > 1
+				}
+			}
+		}
+		add_political_power = 50
+		add_war_support = 0.05
+		add_opinion_modifier = {
+			target = QIE
+			modifier = KR_diplomatic_row
+		}
+	}
+}
+
+country_event = { #A Message from Fang Benren
+	id = league_events.215
+	title = league_events.215.t
+	desc = league_events.215.d
+	picture = GFX_report_event_LEP_fang_benren_1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = { #Of course we can strike an accord!
+		log = "[GetLogInfo]: event league_events.215 option league_events.215.a"
+		name = league_events.215.a
+		LEP = { LEP_fang_benren = { set_nationality = PREV.PREV } }
+		add_command_power = 25
+		add_manpower = 10000
+		if = {
+			limit = { has_character = LEP_deng_ruzhuo }
+			custom_effect_tooltip = LEP_deng_ruzhuo_will_be_upset
+			add_political_power = -25
+		}
+	}
+	option = { #Your petty baggage has no place in the League.
+		log = "[GetLogInfo]: event league_events.215 option league_events.215.b"
+		name = league_events.215.b
+	}
+}
+
+country_event = { #Wrath of Fang
+	id = league_events.216
+	title = league_events.216.t
+	desc = league_events.216.d
+	picture = GFX_report_event_LEP_fang_benren_2
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = { #That bastard!
+		log = "[GetLogInfo]: event league_events.216 option league_events.216.a"
+		name = league_events.216.a
+		retire_character = LEP_fang_benren
+		add_political_power = -55
+		add_manpower = -10000
+		600 = {
+			add_compliance = -15
+			add_resistance = 20
+			add_resistance_target = {
+				id = 762
+				amount = 20
+				occupier = ROOT
+				days = 365
+				tooltip = LEP_feng_benren_non_cooporation
+			}
+		}
+		1044 = {
+			add_compliance = -15
+			add_resistance = 20
+			add_resistance_target = {
+				id = 762
+				amount = 20
+				occupier = ROOT
+				days = 365
+				tooltip = LEP_feng_benren_non_cooporation
+			}
+		}
+	}
+}
+
+country_event = { #The Much Maligned Jade Marshal
+	id = league_events.217
+	title = league_events.217.t
+	desc = league_events.217.d
+	picture = GFX_report_event_LEP_fang_benren_3
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = { #Off to obscurity then!
+		log = "[GetLogInfo]: event league_events.217 option league_events.217.a"
+		name = league_events.217.a
+		add_political_power = -35
+		add_manpower = -10000
+		retire_character = LEP_fang_benren
+	}
+}
+
+country_event = { #Qi speech flavour event
+	id = league_events.218
+	title = league_events.218.t
+	desc = league_events.218.d
+	picture = GFX_report_event_LEP_qi_xieyuan_dress_uniform_2
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = { #
+		log = "[GetLogInfo]: event league_events.218 option league_events.218.a"
+		name = league_events.218.a
+	}
+}

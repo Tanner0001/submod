@@ -1,0 +1,778 @@
+
+###################
+#
+# West Indies
+#
+###################
+
+# Empire Tensions
+
+WIF_increase_empire_tensions = { # Use only before change socialist tension effect
+	add_to_variable = {
+		var = WIF_empire_tensions_var
+		value = WIF_empire_tensions_change_var
+		tooltip = WIF_increase_empire_tensions_tt
+	}
+}
+
+WIF_increase_empire_tensions_and_update = { # Use alone to avoid doubling WIF_evaluate_tensions
+	WIF_increase_empire_tensions = yes
+	WIF_evaluate_tensions = yes
+}
+
+WIF_decrease_empire_tensions = { # Use only before change socialist tension effect
+	subtract_from_variable = {
+		var = WIF_empire_tensions_var
+		value = WIF_empire_tensions_change_var
+		tooltip = WIF_decrease_empire_tensions_tt
+	}
+	clamp_variable = { var = WIF_empire_tensions_var min = 0 }
+}
+
+WIF_decrease_empire_tensions_and_update = { # Use alone to avoid doubling WIF_evaluate_tensions
+	WIF_decrease_empire_tensions = yes
+	WIF_evaluate_tensions = yes
+}
+
+# Socialist Tensions
+
+WIF_increase_socialist_tensions = {
+	add_to_variable = {
+		var = WIF_socialist_tensions_var
+		value = WIF_socialist_tensions_change_var
+		tooltip = WIF_increase_socialist_tensions_tt
+	}
+	WIF_evaluate_tensions = yes
+}
+
+WIF_decrease_socialist_tensions = {
+	subtract_from_variable = {
+		var = WIF_socialist_tensions_var
+		value = WIF_socialist_tensions_change_var
+		tooltip = WIF_decrease_socialist_tensions_tt
+	}
+	clamp_variable = { var = WIF_socialist_tensions_var min = 0 }
+	WIF_evaluate_tensions = yes
+}
+
+# NCP path - Integration Process Mechanic
+
+WIF_increase_integration = {
+	add_to_variable = {
+		var = WIF_integration_var
+		value = WIF_integration_change_var
+		tooltip = WIF_increase_integration_tt
+	}
+	clamp_variable = { var = WIF_integration_var max = 100 }
+}
+
+WIF_decrease_integration = {
+	subtract_from_variable = {
+		var = WIF_integration_var
+		value = WIF_integration_change_var
+		tooltip = WIF_decrease_integration_tt
+	}
+	clamp_variable = { var = WIF_integration_var min = 0 }
+}
+
+# NCP path - Constitution Vote Mechanic
+
+WIF_constitution_vote_decision_effect = {
+	hidden_effect = {
+		if = {
+			limit = { check_variable = { WIF_constitution_vote_decisions_taken = 3 } }
+			country_event = { id = west_indies_federation_politics_events.530 days = 15 random_days = 10 } # Polishing our New Constitution
+		}
+		else_if = {
+			limit = { check_variable = { WIF_constitution_vote_decisions_taken = 4 } }
+			country_event = { id = west_indies_federation_politics_events.531 days = 20 random_days = 10 } # Try to Secure New Votes
+		}
+	}
+}
+
+WIF_gain_constitution_votes_for = {
+	add_to_variable = {
+		var = WIF_constitution_votes_for_var
+		value = WIF_constitution_votes_for_change_var
+		tooltip = WIF_gain_constitution_votes_for_tt
+	}
+}
+
+WIF_gain_constitution_votes_against = {
+	add_to_variable = {
+		var = WIF_constitution_votes_against_var
+		value = WIF_constitution_votes_against_change_var
+		tooltip = WIF_gain_constitution_votes_against_tt
+	}
+}
+
+WIF_increase_constitution_quality = {
+	add_to_variable = {
+		var = WIF_constitution_quality_var
+		value = WIF_constitution_quality_change_var
+		tooltip = WIF_increase_constitution_quality_tt
+	}
+}
+
+WIF_increase_constitution_values_option_a = {
+	set_temp_variable = { WIF_constitution_votes_for_change_var = 4 }
+	WIF_gain_constitution_votes_for = yes
+	set_temp_variable = { WIF_constitution_votes_against_change_var = 11 }
+	WIF_gain_constitution_votes_against = yes
+	set_temp_variable = { WIF_constitution_quality_change_var = 15 }
+	WIF_increase_constitution_quality = yes
+}
+
+WIF_increase_constitution_values_option_b = {
+	set_temp_variable = { WIF_constitution_votes_for_change_var = 7 }
+	WIF_gain_constitution_votes_for = yes
+	set_temp_variable = { WIF_constitution_votes_against_change_var = 8 }
+	WIF_gain_constitution_votes_against = yes
+	set_temp_variable = { WIF_constitution_quality_change_var = 8 }
+	WIF_increase_constitution_quality = yes
+}
+
+WIF_increase_constitution_values_option_c = {
+	set_temp_variable = { WIF_constitution_votes_for_change_var = 10 }
+	WIF_gain_constitution_votes_for = yes
+	set_temp_variable = { WIF_constitution_votes_against_change_var = 5 }
+	WIF_gain_constitution_votes_against = yes
+	set_temp_variable = { WIF_constitution_quality_change_var = 5 }
+	WIF_increase_constitution_quality = yes
+}
+
+# PA-LP path - Coalition Stability mechanic
+
+WIF_increase_coalition_stability = {
+	add_to_variable = {
+		var = WIF_coalition_stability_var
+		value = 1
+		tooltip = WIF_increase_coalition_stability_tt
+	}
+	clamp_variable = { var = WIF_coalition_stability_var max = 4 }
+}
+
+WIF_decrease_coalition_stability = {
+	subtract_from_variable = {
+		var = WIF_coalition_stability_var
+		value = 1
+		tooltip = WIF_decrease_coalition_stability_tt
+	}
+	clamp_variable = { var = WIF_coalition_stability_var min = 1 }
+	if = {
+		limit = { check_variable = { WIF_coalition_stability_var < 2 } }
+		activate_mission = WIF_collapsing_coalition_penalties
+	}
+}
+
+### Other WIF Scripted Effects
+
+WIF_remove_entente_commanders = {
+	if = {
+		limit = {
+			IMP = { is_monarchy = yes }
+			NOT = { country_exists = GBR }
+		}
+		WIF = {
+			every_unit_leader = {
+				limit = {
+					OR = {
+						is_character = WIF_thomas_cubitt
+						is_character = WIF_reginald_hildyard
+						is_character = WIF_geoffrey_archer
+						is_character = WIF_bede_clifford
+						is_character = WIF_felix_eboue
+						is_character = WIF_ralph_leatham
+						is_character = WIF_andrew_cunningham
+						has_character_flag = GBR_character
+					}
+				}
+				set_nationality = IMP
+				set_character_flag = GBR_character
+				add_unit_leader_trait = GBR_british_exile_trait
+			}
+		}
+	}
+	else = {
+		WIF = {
+			every_unit_leader = {
+				limit = {
+					OR = {
+						is_character = WIF_thomas_cubitt
+						is_character = WIF_reginald_hildyard
+						is_character = WIF_geoffrey_archer
+						is_character = WIF_bede_clifford
+						is_character = WIF_felix_eboue
+						is_character = WIF_ralph_leatham
+						is_character = WIF_andrew_cunningham
+						has_character_flag = GBR_character
+					}
+				}
+				set_nationality = GBR
+				set_character_flag = GBR_character
+			}
+		}
+	}
+}
+
+WIF_add_entente_commanders = {
+	GBR = {
+		every_unit_leader = {
+			limit = {
+				OR = {
+					is_character = WIF_thomas_cubitt
+					is_character = WIF_reginald_hildyard
+					is_character = WIF_geoffrey_archer
+					is_character = WIF_bede_clifford
+					is_character = WIF_felix_eboue
+					is_character = WIF_ralph_leatham
+					is_character = WIF_andrew_cunningham
+				}
+			}
+			set_nationality = WIF
+			clr_character_flag = GBR_character
+			hidden_effect = { remove_unit_leader_trait = GBR_british_exile_trait }
+		}
+	}
+	IMP = {
+		every_unit_leader = {
+			limit = {
+				OR = {
+					is_character = WIF_thomas_cubitt
+					is_character = WIF_reginald_hildyard
+					is_character = WIF_geoffrey_archer
+					is_character = WIF_bede_clifford
+					is_character = WIF_felix_eboue
+					is_character = WIF_ralph_leatham
+					is_character = WIF_andrew_cunningham
+				}
+			}
+			set_nationality = WIF
+			clr_character_flag = GBR_character
+			hidden_effect = { remove_unit_leader_trait = GBR_british_exile_trait }
+		}
+	}
+	if = {
+		limit = { country_exists = GBR }
+		GBR = { country_event = west_indies_federation_politics_events.3101 }
+	}
+	else_if = {
+		limit = { IMP = { is_monarchy = yes } }
+		IMP = { country_event = west_indies_federation_politics_events.3101 }
+	}
+}
+
+WIF_add_caribbean_commanders = {
+	if = {
+		limit = { NOT = { has_character = WIF_arthur_andrew_cipriani } }
+		TRI = {
+			WIF_arthur_andrew_cipriani = {
+				remove_all_country_leader_roles = yes
+				set_nationality = WIF
+			}
+		}
+	}
+}
+
+WIF_remove_caribbean_commanders = {
+	if = {
+		limit = { has_character = WIF_arthur_andrew_cipriani }
+		WIF_arthur_andrew_cipriani = { set_nationality = TRI }
+		TRI = {
+			add_country_leader_role = {
+				character = WIF_arthur_andrew_cipriani
+				country_leader = {
+					desc = WIF_arthur_andrew_cipriani_army_chief_desc
+					ideology = totalist_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				character = WIF_arthur_andrew_cipriani
+				country_leader = {
+					desc = WIF_arthur_andrew_cipriani_army_chief_desc
+					ideology = syndicalist_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				character = WIF_arthur_andrew_cipriani
+				country_leader = {
+					desc = WIF_arthur_andrew_cipriani_army_chief_desc
+					ideology = radical_socialist_subtype
+				}
+				promote_leader = yes
+			}
+		}
+	}
+}
+
+WIF_evaluate_tensions = {
+	hidden_effect = {
+		WIF = {
+			set_variable = { WIF_social_turmoil_stability = 0 }
+			set_variable = { WIF_social_turmoil_war_support = 0 }
+			set_variable = { WIF_social_turmoil_political_power = 0 }
+
+			#Socialist baseline
+			if = {
+				limit = { has_socialist_government = no }
+				if = {
+					limit = { check_variable = { WIF_socialist_tensions_var > 80 } }
+					subtract_from_variable = { WIF_social_turmoil_stability = 0.2 }
+					subtract_from_variable = { WIF_social_turmoil_war_support = 0.15 }
+					country_event = { id = west_indies_federation_politics_events.31 days = 2 random_days = 3 } # The Socialist Revolution
+				}
+				else_if = {
+					limit = { check_variable = { WIF_socialist_tensions_var > 60 } }
+					subtract_from_variable = { WIF_social_turmoil_stability = 0.15 }
+					subtract_from_variable = { WIF_social_turmoil_war_support = 0.1 }
+				}
+				else_if = {
+					limit = { check_variable = { WIF_socialist_tensions_var > 40 } }
+					subtract_from_variable = { WIF_social_turmoil_stability = 0.1 }
+					subtract_from_variable = { WIF_social_turmoil_war_support = 0.05 }
+				}
+				else_if = {
+					limit = { check_variable = { WIF_socialist_tensions_var > 20 } }
+					subtract_from_variable = { WIF_social_turmoil_stability = 0.05 }
+				}
+			}
+
+			#Imperial baseline
+			if = {
+				limit = { WIF_patriotic_union_path = no }
+				if = {
+					limit = { check_variable = { WIF_empire_tensions_var > 80 } }
+					subtract_from_variable = { WIF_social_turmoil_political_power = 0.2 }
+					subtract_from_variable = { WIF_social_turmoil_war_support = 0.15 }
+					country_event = { id = west_indies_federation_politics_events.32 days = 2 random_days = 3 } # The Governor-General's Coup
+				}
+				else_if = {
+					limit = { check_variable = { WIF_empire_tensions_var > 60 } }
+					subtract_from_variable = { WIF_social_turmoil_political_power = 0.15 }
+					subtract_from_variable = { WIF_social_turmoil_war_support = 0.1 }
+				}
+				else_if = {
+					limit = { check_variable = { WIF_empire_tensions_var > 40 } }
+					subtract_from_variable = { WIF_social_turmoil_political_power = 0.1 }
+					subtract_from_variable = { WIF_social_turmoil_war_support = 0.05 }
+				}
+				else_if = {
+					limit = { check_variable = { WIF_empire_tensions_var > 20 } }
+					subtract_from_variable = { WIF_social_turmoil_political_power = 0.05 }
+				}
+			}
+
+			if = {
+				limit = { WIF_patriotic_union_path = yes }
+				multiply_variable = { WIF_social_turmoil_political_power = 0 }
+				multiply_variable = { WIF_social_turmoil_stability = 1.5 } #not two in order to make up for initial hit after a soc/imp coup
+			}
+			else_if = {
+				limit = { has_socialist_government = yes }
+				multiply_variable = { WIF_social_turmoil_political_power = 1.5 } #not two in order to make up for initial hit after a soc/imp coup
+				multiply_variable = { WIF_social_turmoil_stability = 0 }
+			}
+			force_update_dynamic_modifier = yes
+		}
+	}
+}
+
+WIF_puppet_setup = {
+	hidden_effect = {
+		if = {
+			limit = { has_socialist_government = yes }
+			var:tag_to_release = {
+				set_politics = { ruling_party = syndicalist }
+				set_popularities = {
+					totalist = 4
+					syndicalist = 33
+					radical_socialist = 24
+					social_democrat = 27
+					social_liberal = 0
+					market_liberal = 5
+					social_conservative = 4
+					authoritarian_democrat = 0
+					paternal_autocrat = 3
+					national_populist = 0
+				}
+				WIF_remove_PA_LP_ideas = yes
+				WIF_remove_NCP_ideas = yes
+				complete_national_focus = WIF_syndicalist_revolution
+				set_party_name = {
+					ideology = social_democrat
+					long_name = WIF_social_democrat_party_syndie_long
+					name = WIF_social_democrat_party_syndie
+				}
+				set_party_name = {
+					ideology = syndicalist
+					long_name = WIF_syndicalist_party_after_revolt_long
+					name = WIF_syndicalist_party_after_revolt
+				}
+				set_party_name = {
+					ideology = radical_socialist
+					long_name = WIF_radical_socialist_party_after_revolt_long
+					name = WIF_radical_socialist_party_after_revolt
+				}
+				WIF_grantley_herbert_adams = { promote_character = yes }
+				WIF_norman_manley = { promote_character = yes }
+				WIF_victor_severe = { promote_character = yes }
+				WIF_joseph_trounsell_gilbert = { promote_character = yes }
+				WIF_solomon_hochoy = { promote_character = yes }
+				WIF_georges_robert = { promote_character = yes }
+			}
+		}
+		else = {
+			var:tag_to_release = {
+				set_party_name = {
+					ideology = social_democrat
+					long_name = WIF_social_democrat_party_long
+					name = WIF_social_democrat_party
+				}
+				set_party_name = {
+					ideology = syndicalist
+					long_name = WIF_syndicalist_party_long
+					name = WIF_syndicalist_party
+				}
+				set_party_name = {
+					ideology = radical_socialist
+					long_name = WIF_radical_socialist_party_long
+					name = WIF_radical_socialist_party
+				}
+				country_event = { id = west_indies_federation_politics_events.835 days = 20 random_days = 15 } # The End of French Influence
+			}
+			if = {
+				limit = {
+					OR = {
+						original_tag = IMP
+						is_commonwealth_tag = yes
+					}
+				}
+				set_autonomy = {
+					target = var:tag_to_release
+					autonomy_state = federated_colony
+					end_wars = no
+				}
+				var:tag_to_release = {
+					set_cosmetic_tag = WIF_entente
+					set_politics = { ruling_party = authoritarian_democrat }
+					set_political_party = { ideology = authoritarian_democrat popularity = 60 }
+					unlock_national_focus = WIF_governor_push
+					if = {
+						limit = { has_character = WIF_eustace_fiennes }
+						WIF_eustace_fiennes = {
+							remove_all_country_leader_roles = yes
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = social_democrat_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = social_liberal_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = market_liberal_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = social_conservative_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = authoritarian_democrat_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = paternal_autocrat_subtype
+								}
+								promote_leader = yes
+							}
+						}
+					}
+					else = {
+						WIF_gordon_james_lethem = {
+							set_nationality = PREV
+							remove_all_country_leader_roles = yes
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = social_democrat_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = social_liberal_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = market_liberal_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = social_conservative_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = authoritarian_democrat_subtype
+								}
+								promote_leader = yes
+							}
+							add_country_leader_role = {
+								country_leader = {
+									desc = WIF_eustace_fiennes_leader_desc
+									ideology = paternal_autocrat_subtype
+								}
+								promote_leader = yes
+							}
+						}
+					}
+				}
+			}
+			else = {
+				var:tag_to_release = {
+					if = {
+						limit = { has_character = WIF_eustace_fiennes }
+						WIF_eustace_fiennes = { remove_all_country_leader_roles = yes }
+					}
+					if = {
+						limit = { has_character = WIF_gordon_james_lethem }
+						WIF_gordon_james_lethem = { remove_all_country_leader_roles = yes }
+					}
+				}
+			}
+		}
+		var:tag_to_release = { WIF_evaluate_tensions = yes }
+	}
+}
+
+WIF_start_integration_process_timer_NCP = {
+	## Start integration mechanic when completing Royal Assistance decision after one of the two Autonomy focuses, or vice-versa
+	if = {
+		limit = { has_country_flag = WIF_start_integration_process_timer }
+		custom_effect_tooltip = tooltip_white_line
+		activate_mission = WIF_integration_process_NCP_timer
+		activate_mission = WIF_integration_process_NCP_judiciary_unification
+		activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_meetings }
+		activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_guyana_trials }
+		activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_french_conscription }
+		activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_universal_rights }
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.511 days = 150 random_days = 50 }
+		}
+		clr_country_flag = WIF_start_integration_process_timer
+	}
+	else = {
+		set_country_flag = WIF_start_integration_process_timer
+	}
+}
+
+WIF_teardown_integration_process_NCP = {
+	hidden_effect = {
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_send_police }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_aluminium }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_unity_propaganda }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_federal_institute }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_royal_assistance }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_guyana_trials }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_french_conscription }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_universal_rights }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_meetings }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_flyer }
+		remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_francophonie }
+		remove_mission = WIF_integration_process_NCP_timer
+		remove_mission = WIF_integration_process_NCP_judiciary_unification
+
+		clr_country_flag = WIF_start_integration_process_timer
+		clr_country_flag = WIF_propaganda_campaign_flag
+		clr_country_flag = WIF_guyana_trials_have_started
+		clr_country_flag = WIF_flyer_economic_integration
+		clr_country_flag = WIF_flyer_great_exhibition
+		clr_country_flag = WIF_flyer_mount_pelee
+		clr_country_flag = WIF_ottawa_pledge_assistance_provided
+
+		clear_variable = WIF_integration_var
+		clear_variable = WIF_flyer_effects_cost
+		clear_variable = WIF_flyer_effects_odds
+
+		remove_opinion_modifier = {
+			target = FRA
+			modifier = WIF_FRA_exchange
+		}
+		FRA = {
+			remove_opinion_modifier = {
+				target = WIF
+				modifier = WIF_FRA_exchange
+			}
+		}
+
+		310 = { set_demilitarized_zone = no }
+		WIF_reset_guyana_aluminium = yes
+	}
+}
+
+WIF_teardown_constitution_process_NCP = {
+	hidden_effect = {
+		remove_targeted_decision = { target = THIS decision = WIF_NCP_new_constitution_free_trade }
+		remove_targeted_decision = { target = THIS decision = WIF_NCP_new_constitution_personal_liberties }
+		remove_targeted_decision = { target = THIS decision = WIF_NCP_new_constitution_political_system }
+		remove_targeted_decision = { target = THIS decision = WIF_NCP_new_constitution_rule_of_law }
+		remove_targeted_decision = { target = THIS decision = WIF_NCP_new_constitution_canada }
+		remove_targeted_decision = { target = THIS decision = WIF_NCP_final_voting }
+		remove_targeted_decision = { target = THIS decision = WIF_NCP_final_voting_gain_votes }
+
+		clear_variable = WIF_constitution_vote_decisions_taken
+		clear_variable = WIF_constitution_votes_for_var
+		clear_variable = WIF_constitution_votes_against_var
+		clear_variable = WIF_constitution_quality_var
+	}
+}
+
+WIF_reset_guyana_aluminium = {
+	# Removes the resource modifiers on Cayenne/Saguenay states before NCP mechanics are finished
+	hidden_effect = {
+		if = {
+			limit = { 310 = { has_dynamic_modifier = { modifier = WIF_bauxite_mine_strike } } }
+			310 = { remove_dynamic_modifier = { modifier = WIF_bauxite_mine_strike } }
+		}
+		if = {
+			limit = { 310 = { has_state_flag = WIF_NCP_royal_assistance_aluminium } }
+			310 = { clr_state_flag = WIF_NCP_royal_assistance_aluminium }
+			add_resource = {
+				type = aluminium
+				amount = 50
+				state = 310
+			}
+			add_resource = {
+				type = aluminium
+				amount = -10
+				state = 466
+			}
+		}
+	}
+}
+
+WIF_restore_french_caribbean_cores = {
+	custom_effect_tooltip = tooltip_white_line
+	every_owned_state = {
+		limit = { is_core_of = ANT }
+		remove_claim_and_add_core_of_ROOT = yes
+	}
+}
+
+WIF_teardown_2nd_cayenne_agreement_PA_LP = {
+	# Clear SocLib Second Cayenne Conference mechanic
+	hidden_effect = {
+		remove_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_organise_meeting }
+		remove_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_voting }
+		remove_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_gain_votes_NCP }
+		remove_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_gain_votes_unity }
+		remove_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_gain_votes_social_democrat }
+
+		clr_country_flag = WIF_2nd_cayenne_conference_organised
+		clr_country_flag = WIF_2nd_cayenne_rejected_concessions_once
+
+		clear_variable = WIF_2nd_cayenne_conference_for
+		clear_variable = WIF_2nd_cayenne_conference_against
+		clear_variable = WIF_2nd_cayenne_conference_undecided
+	}
+}
+
+WIF_teardown_coalition_PA_LP = {
+	# Clear SocLib coalition stability mechanic
+	hidden_effect = {
+		remove_targeted_decision = { target = THIS decision = WIF_stabilise_coalition_with_LP }
+		remove_targeted_decision = { target = THIS decision = WIF_form_a_coalition }
+		remove_targeted_decision = { target = THIS decision = WIF_form_majority_government }
+		remove_mission = WIF_report_on_the_party_status
+		remove_mission = WIF_collapsing_coalition_penalties
+		remove_mission = WIF_minority_government_penalties
+
+		clr_country_flag = WIF_coalition_majority_government
+
+		clear_variable = WIF_coalition_stability_var
+		clear_variable = WIF_stabilise_coalition_cost
+	}
+}
+
+WIF_remove_NCP_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			WIF_cracked_down_unions
+			WIF_ended_labour_movement
+			WIF_federal_institute
+			WIF_consolidation_idea_1
+			WIF_consolidation_idea_2
+			WIF_consolidation_idea_3
+			WIF_consolidation_idea_4
+			WIF_new_const_bad
+			WIF_new_const_good
+			WIF_mending_language_divide_idea
+			WIF_french_in_school_costs
+			WIF_cayenne_agreement_ncp1
+			WIF_cayenne_agreement_ncp2
+			WIF_french_conscription_ncp
+		}
+	}
+}
+
+WIF_remove_PA_LP_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			WIF_sangster_bill
+			WIF_pacifism
+			WIF_increased_soldier_wages
+			WIF_NCP_concessions_2nd_Cayenne
+			WIF_SocDem_concessions_2nd_Cayenne
+			WIF_Unity_concessions_2nd_Cayenne
+		}
+	}
+}
+
+WIF_remove_CAN_ideas = {
+	CAN = { remove_ideas = WIF_CAN_gib_monies }
+	WIF = {
+		remove_ideas = {
+			WIF_canadian_academy
+			WIF_CAN_get_monies
+		}
+	}
+}
+
+WIF_disable_revolts = {
+	if = {
+		limit = { has_country_flag = WIF_can_revolt }
+		clr_country_flag = WIF_can_revolt
+		clr_country_flag = WIF_socialist_ai
+		clr_country_flag = WIF_autdem_ai
+		custom_effect_tooltip = WIF_nomorerevolt
+	}
+}

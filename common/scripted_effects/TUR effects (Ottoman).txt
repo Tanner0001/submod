@@ -1,0 +1,2522 @@
+ott_increase_revolt_risk = {
+	add_to_variable = { OTT_revolt_risk = 1 }
+	clamp_variable = {
+		var = OTT_revolt_risk
+		min = 0
+		max = 5
+	}
+	if = {
+		limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+		custom_effect_tooltip = ott_increase_revolt_risk_tt
+		if = {
+			limit = {
+				is_owned_and_controlled_by = OTT
+				is_core_of = OTT
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						check_variable = { OTT_revolt_risk > 2 }
+						has_resistance = no
+						OTT_is_turkish_state = no
+					}
+					force_enable_resistance = { occupier = TUR }
+					start_resistance = yes
+					set_compliance = 15
+				}
+				if = {
+					limit = { check_variable = { OTT_revolt_risk = 5 } }
+					if = {
+						limit = { has_dynamic_modifier = { modifier = high_revolt_risk } }
+						remove_dynamic_modifier = { modifier = high_revolt_risk }
+					}
+					if = {
+						limit = { NOT = { has_dynamic_modifier = { modifier = very_high_revolt_risk } } }
+						add_dynamic_modifier = { modifier = very_high_revolt_risk }
+					}
+				}
+				else_if = {
+					limit = { check_variable = { OTT_revolt_risk = 4 } }
+					if = {
+						limit = { NOT = { has_dynamic_modifier = { modifier = high_revolt_risk } } }
+						add_dynamic_modifier = { modifier = high_revolt_risk }
+					}
+				}
+				OTT_evaluate_stability_modifier = yes
+			}
+		}
+	}
+}
+
+ott_decrease_revolt_risk = {
+	add_to_variable = { OTT_revolt_risk = -1 }
+	clamp_variable = {
+		var = OTT_revolt_risk
+		min = 0
+		max = 5
+	}
+	if = {
+		limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+		custom_effect_tooltip = ott_decrease_revolt_risk_tt
+		if = {
+			limit = {
+				is_owned_and_controlled_by = OTT
+				is_core_of = OTT
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						check_variable = { OTT_revolt_risk < 3 }
+						has_resistance = yes
+						OTT_is_turkish_state = no
+					}
+					cancel_resistance = yes
+					force_enable_resistance = { occupier = TUR clear = yes }
+				}
+				if = {
+					limit = { check_variable = { OTT_revolt_risk = 4 } }
+					if = {
+						limit = { has_dynamic_modifier = { modifier = very_high_revolt_risk } }
+						remove_dynamic_modifier = { modifier = very_high_revolt_risk }
+					}
+					if = {
+						limit = { NOT = { has_dynamic_modifier = { modifier = high_revolt_risk } } }
+						add_dynamic_modifier = { modifier = high_revolt_risk }
+					}
+				}
+				else_if = {
+					limit = { check_variable = { OTT_revolt_risk = 3 } }
+					if = {
+						limit = { has_dynamic_modifier = { modifier = high_revolt_risk } }
+						remove_dynamic_modifier = { modifier = high_revolt_risk }
+					}
+				}
+				OTT_evaluate_stability_modifier = yes
+			}
+		}
+	}
+}
+
+ott_set_authority_vilayet_low = {
+	set_variable = { OTT_authority_level = 1 }
+	if = {
+		limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+		custom_effect_tooltip = ott_authority_low
+		if = {
+			limit = {
+				is_owned_and_controlled_by = OTT
+				is_core_of = OTT
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_dynamic_modifier = { modifier = OTT_Medium_Authority } }
+					remove_dynamic_modifier = { modifier = OTT_Medium_Authority }
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = OTT_High_Authority } }
+					remove_dynamic_modifier = { modifier = OTT_High_Authority }
+				}
+				if = {
+					limit = { NOT = { has_dynamic_modifier = { modifier = OTT_Low_Authority } } }
+					add_dynamic_modifier = { modifier = OTT_Low_Authority }
+				}
+			}
+		}
+	}
+	hidden_effect = {
+		OTT_evaluate_centralisation = yes
+	}
+}
+
+ott_set_authority_vilayet_medium = {
+	set_variable = { OTT_authority_level = 2 }
+	if = {
+		limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+		custom_effect_tooltip = ott_authority_medium
+		if = {
+			limit = {
+				is_owned_and_controlled_by = OTT
+				is_core_of = OTT
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_dynamic_modifier = { modifier = OTT_Low_Authority } }
+					remove_dynamic_modifier = { modifier = OTT_Low_Authority }
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = OTT_High_Authority } }
+					remove_dynamic_modifier = { modifier = OTT_High_Authority }
+				}
+				if = {
+					limit = { NOT = { has_dynamic_modifier = { modifier = OTT_Medium_Authority } } }
+					add_dynamic_modifier = { modifier = OTT_Medium_Authority }
+				}
+			}
+		}
+	}
+	hidden_effect = {
+		OTT_evaluate_centralisation = yes
+	}
+}
+
+ott_set_authority_vilayet_high = {
+	set_variable = { OTT_authority_level = 3 }
+	if = {
+		limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+		custom_effect_tooltip = ott_authority_high
+		if = {
+			limit = {
+				is_owned_and_controlled_by = OTT
+				is_core_of = OTT
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_dynamic_modifier = { modifier = OTT_Low_Authority } }
+					remove_dynamic_modifier = { modifier = OTT_Low_Authority }
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = OTT_Medium_Authority } }
+					remove_dynamic_modifier = { modifier = OTT_Medium_Authority }
+				}
+				if = {
+					limit = { NOT = { has_dynamic_modifier = { modifier = OTT_High_Authority } } }
+					add_dynamic_modifier = { modifier = OTT_High_Authority }
+				}
+			}
+		}
+	}
+	hidden_effect = {
+		OTT_evaluate_centralisation = yes
+	}
+}
+
+ott_increase_authority_vilayet = {
+	if = {
+		limit = { OTT_is_sovereign_province = yes }
+		ott_set_authority_vilayet_medium = yes
+	}
+	else = {
+		ott_set_authority_vilayet_high = yes
+	}
+	OTT_evaluate_centralisation = yes
+}
+
+ott_decrease_authority_vilayet = {
+	if = {
+		limit = { OTT_is_integrated_province = yes }
+		ott_set_authority_vilayet_medium = yes
+	}
+	else = {
+		ott_set_authority_vilayet_low = yes
+	}
+	OTT_evaluate_centralisation = yes
+}
+
+ott_set_revolt_risk_none = {
+	set_variable = { OTT_revolt_risk = 0 }
+	hidden_effect = {
+		if = {
+			limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+			if = {
+				limit = {
+					is_owned_and_controlled_by = OTT
+					is_core_of = OTT
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = high_revolt_risk }
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = very_high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = very_high_revolt_risk }
+				}
+				if = {
+					limit = {
+						has_resistance = yes
+						OTT_is_turkish_state = no
+					}
+					cancel_resistance = yes
+					force_enable_resistance = { occupier = TUR clear = yes }
+				}
+				OTT_evaluate_stability_modifier = yes
+			}
+		}
+	}
+}
+
+ott_set_revolt_risk_very_low = {
+	set_variable = { OTT_revolt_risk = 1 }
+	hidden_effect = {
+		if = {
+			limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+			if = {
+				limit = {
+					is_owned_and_controlled_by = OTT
+					is_core_of = OTT
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = high_revolt_risk }
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = very_high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = very_high_revolt_risk }
+				}
+				if = {
+					limit = {
+						has_resistance = yes
+						OTT_is_turkish_state = no
+					}
+					cancel_resistance = yes
+					force_enable_resistance = { occupier = TUR clear = yes }
+				}
+				OTT_evaluate_stability_modifier = yes
+			}
+		}
+	}
+}
+
+ott_set_revolt_risk_low = {
+	set_variable = { OTT_revolt_risk = 2 }
+	hidden_effect = {
+		if = {
+			limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+			if = {
+				limit = {
+					is_owned_and_controlled_by = OTT
+					is_core_of = OTT
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = high_revolt_risk }
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = very_high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = very_high_revolt_risk }
+				}
+				if = {
+					limit = {
+						has_resistance = yes
+						OTT_is_turkish_state = no
+					}
+					cancel_resistance = yes
+					force_enable_resistance = { occupier = TUR clear = yes }
+				}
+				OTT_evaluate_stability_modifier = yes
+			}
+		}
+	}
+}
+
+ott_set_revolt_risk_medium = {
+	set_variable = { OTT_revolt_risk = 3 }
+	hidden_effect = {
+		if = {
+			limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+			if = {
+				limit = {
+					is_owned_and_controlled_by = OTT
+					is_core_of = OTT
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = high_revolt_risk }
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = very_high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = very_high_revolt_risk }
+				}
+				if = {
+					limit = {
+						has_resistance = no
+						OTT_is_turkish_state = no
+					}
+					force_enable_resistance = { occupier = TUR }
+					start_resistance = yes
+					set_compliance = 15
+				}
+				OTT_evaluate_stability_modifier = yes
+			}
+		}
+	}
+}
+
+ott_set_revolt_risk_high = {
+	set_variable = { OTT_revolt_risk = 4 }
+	hidden_effect = {
+		if = {
+			limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+			if = {
+				limit = {
+					is_owned_and_controlled_by = OTT
+					is_core_of = OTT
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = very_high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = very_high_revolt_risk }
+				}
+				if = {
+					limit = { NOT = { has_dynamic_modifier = { modifier = high_revolt_risk } } }
+					add_dynamic_modifier = { modifier = high_revolt_risk }
+				}
+				if = {
+					limit = {
+						has_resistance = no
+						OTT_is_turkish_state = no
+					}
+					force_enable_resistance = { occupier = TUR }
+					start_resistance = yes
+					set_compliance = 5
+				}
+				OTT_evaluate_stability_modifier = yes
+			}
+		}
+	}
+}
+
+ott_set_revolt_risk_very_high = {
+	set_variable = { OTT_revolt_risk = 5 }
+	hidden_effect = {
+		if = {
+			limit = { OTT = { has_idea = ott_vilayet_stability_idea } }
+			if = {
+				limit = {
+					is_owned_and_controlled_by = OTT
+					is_core_of = OTT
+				}
+				if = {
+					limit = { has_dynamic_modifier = { modifier = high_revolt_risk } }
+					remove_dynamic_modifier = { modifier = high_revolt_risk }
+				}
+				if = {
+					limit = { NOT = { has_dynamic_modifier = { modifier = very_high_revolt_risk } } }
+					add_dynamic_modifier = { modifier = very_high_revolt_risk }
+				}
+				if = {
+					limit = {
+						has_resistance = no
+						OTT_is_turkish_state = no
+					}
+					force_enable_resistance = { occupier = TUR }
+					start_resistance = yes
+					set_resistance = 40
+				}
+				OTT_evaluate_stability_modifier = yes
+			}
+		}
+	}
+}
+
+OTT_add_stability_of_the_realm_state_dynmods = {
+	if = {
+		limit = { check_variable = { OTT_authority_level = 3 } }
+		ott_set_authority_vilayet_high = yes
+	}
+	else_if = {
+		limit = { check_variable = { OTT_authority_level = 2 } }
+		ott_set_authority_vilayet_medium = yes
+	}
+	else = {
+		ott_set_authority_vilayet_low = yes
+	}
+	if = {
+		limit = { check_variable = { OTT_revolt_risk = 5 } }
+		ott_set_revolt_risk_very_high = yes
+	}
+	else_if = {
+		limit = { check_variable = { OTT_revolt_risk = 4 } }
+		ott_set_revolt_risk_high = yes
+	}
+	else_if = {
+		limit = { check_variable = { OTT_revolt_risk = 3 } }
+		ott_set_revolt_risk_medium = yes
+	}
+	else_if = {
+		limit = { check_variable = { OTT_revolt_risk = 2 } }
+		ott_set_revolt_risk_low = yes
+	}
+	else_if = {
+		limit = { check_variable = { OTT_revolt_risk = 1 } }
+		ott_set_revolt_risk_very_low = yes
+	}
+	else_if = {
+		limit = { check_variable = { OTT_revolt_risk = 0 } }
+		ott_set_revolt_risk_none = yes
+	}
+}
+
+OTT_remove_stability_of_the_realm_state_dynmods = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = OTT_Low_Authority } }
+		remove_dynamic_modifier = { modifier = OTT_Low_Authority }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = OTT_Medium_Authority } }
+		remove_dynamic_modifier = { modifier = OTT_Medium_Authority }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = OTT_High_Authority } }
+		remove_dynamic_modifier = { modifier = OTT_High_Authority }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = high_revolt_risk } }
+		remove_dynamic_modifier = { modifier = high_revolt_risk }
+	}
+	if = {
+		limit = { has_dynamic_modifier = { modifier = very_high_revolt_risk } }
+		remove_dynamic_modifier = { modifier = very_high_revolt_risk }
+	}
+}
+
+OTT_evaluate_stability_modifier = {
+	OTT = {
+		if = {
+			limit = { has_idea = ott_vilayet_stability_idea }
+			set_variable = { OTT_state_stability = 0 }
+			clear_array = TUR.OTT_unrest_states
+			hidden_effect = {
+				every_owned_state = {
+					limit = { has_variable = OTT_revolt_risk }
+					if = {
+						limit = {
+							check_variable = { OTT_revolt_risk = 5 }
+						}
+						add_to_variable = { OTT.OTT_state_stability = -0.02 }
+					}
+					else_if = {
+						limit = {
+							check_variable = { OTT_revolt_risk = 4 }
+						}
+						add_to_variable = { OTT.OTT_state_stability = -0.015 }
+					}
+					else_if = {
+						limit = {
+							check_variable = { OTT_revolt_risk = 3 }
+						}
+						add_to_variable = { OTT.OTT_state_stability = -0.01 }
+					}
+					else_if = {
+						limit = {
+							check_variable = { OTT_revolt_risk = 2 }
+						}
+						add_to_variable = { OTT.OTT_state_stability = -0.005 }
+					}
+					if = {
+						limit = { check_variable = { OTT_revolt_risk > 0 } }
+						add_to_array = { TUR.OTT_unrest_states = THIS }
+					}
+				}
+			}
+			force_update_dynamic_modifier = yes
+		}
+		else = {
+			clear_variable = OTT_state_stability
+		}
+	}
+}
+
+OTT_evaluate_centralisation = {
+	OTT = {
+		clear_array = TUR.OTT_centralisation_states
+		every_core_state = {
+			limit = {
+				OTT_cannot_centralise_state = no
+				OTT_is_integrated_province = no
+			}
+			add_to_array = { TUR.OTT_centralisation_states = THIS }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = OTT_centralisation_modifier } }
+			set_variable = { OTT_centralisation = 0 }
+			every_core_state = {
+				limit = {
+					OTT_is_turkish_state = no
+					OTT_is_integrated_province = yes
+				}
+				add_to_variable = { OTT.OTT_centralisation = 1 }
+			}
+			multiply_variable = { OTT_centralisation = 0.01 }
+			force_update_dynamic_modifier = yes
+		}
+		else = {
+			clear_variable = OTT_centralisation
+		}
+	}
+}
+
+OTT_evaluate_parliament_support = {
+	OTT = {
+		if = {
+			limit = { has_dynamic_modifier = { modifier = OTT_parliament_modifier } }
+			set_variable = {
+				OTT_parliament = {
+					value = representatives_support
+					multiply = 0.05
+					round = yes
+					multiply = 0.01
+				}
+			}
+			force_update_dynamic_modifier = yes
+			if = {
+				limit = {
+					is_ai = yes
+					check_variable = { representatives_support < 250 }
+					is_in_coalition_with_market_liberal = yes
+				}
+				country_event = ottomans_gui_events.3
+			}
+			hidden_effect = {
+				country_event = { id = ottomans_liberal_events.20 days = 30 }
+			}
+		}
+		else = {
+			clear_variable = OTT_parliament
+		}
+	}
+}
+
+OTT_recalc_congress_icon_frames = {
+	OTT = {
+		if = {
+			limit = { has_dynamic_modifier = { modifier = OTT_parliament_modifier } }
+			set_variable = {
+				current_house_icon_frame = {
+					value = representatives_support
+					divide = representatives_total
+					multiply = 21
+					round = yes
+					clamp = { min = 1 max = 21 }
+				}
+			}
+		}
+		else = {
+			clear_variable = current_house_icon_frame
+		}
+	}
+}
+
+OTT_calc_coalition_strength = {
+	OTT = {
+		if = {
+			limit = { has_dynamic_modifier = { modifier = OTT_parliament_modifier } }
+			clamp_variable = {
+				var = nat_tur_sup_deputies
+				min = 0
+				max = nat_tur_deputies
+			}
+			clamp_variable = {
+				var = nat_ara_sup_deputies
+				min = 0
+				max = nat_ara_deputies
+			}
+			clamp_variable = {
+				var = con_sup_deputies
+				min = 0
+				max = con_deputies
+			}
+			clamp_variable = {
+				var = ind_sup_deputies
+				min = 0
+				max = ind_deputies
+			}
+			set_variable = {
+				var = representatives_support
+				value = 0
+			}
+			add_to_variable = { representatives_support = nat_ara_sup_deputies }
+			add_to_variable = { representatives_support = nat_tur_sup_deputies }
+			add_to_variable = { representatives_support = con_sup_deputies }
+			add_to_variable = { representatives_support = ind_sup_deputies }
+
+			if = {
+				limit = {
+					OR = {
+						is_part_of_government_market_liberal = yes
+						is_part_of_government_social_conservative = yes
+					}
+				}
+				add_to_variable = { representatives_support = hif_deputies }
+			}
+			if = {
+				limit = {
+					is_part_of_government_social_liberal = yes
+				}
+				add_to_variable = { representatives_support = odf_deputies }
+			}
+			clamp_variable = {
+				var = representatives_support
+				min = 0
+				max = representatives_total
+			}
+			OTT_recalc_congress_icon_frames = yes
+			OTT_evaluate_parliament_support = yes
+
+			### Fire conservative take-over event chain
+			hidden_effect = {
+				country_event = { id = ottomans_sabahaddin_events.26 days = 30 }
+			}
+		}
+	}
+}
+
+OTT_parliament_low_support_penalty = {
+	if = {
+		limit = { check_variable = { representatives_support < 250 } }
+		custom_effect_tooltip = ott_plurality_congress_deficit_tt
+
+		set_temp_variable = {
+			OTT_pp_loss = {
+				value = 250
+				subtract = representatives_support
+				multiply = -1
+			}
+		}
+		add_political_power = OTT_pp_loss
+
+		set_temp_variable = {
+			OTT_stab_loss = {
+				value = 250
+				subtract = representatives_support
+				multiply = -0.003
+			}
+		}
+		add_stability = OTT_stab_loss
+
+		custom_effect_tooltip = tooltip_white_line
+	}
+}
+
+OTT_parliament_very_low_support_penalty = {
+	if = {
+		limit = { check_variable = { representatives_support < 125 } }
+		custom_effect_tooltip = ott_small_support_congress_deficit_tt
+
+		set_temp_variable = {
+			OTT_pp_loss = {
+				value = 125
+				subtract = representatives_support
+				multiply = -1
+			}
+		}
+		add_political_power = OTT_pp_loss
+
+		set_temp_variable = {
+			OTT_stab_loss = {
+				value = 125
+				subtract = representatives_support
+				multiply = -0.003
+			}
+		}
+		add_stability = OTT_stab_loss
+
+		custom_effect_tooltip = tooltip_white_line
+	}
+}
+
+TUR_calculate_deputy_change_effect = {
+	if = {
+		limit = { TUR_calculate_deputy_change_trigger = yes }
+		set_temp_variable = { OTT_deputy_pp_cost = { value = OTT_deputy_change multiply = -1 } }
+	}
+}
+
+OTT_launch_revolts = {
+	### Syria
+	if = {
+		limit = {
+			OR = {
+				state = 554
+				state = 455
+				state = 677
+				state = 995
+				state = 992
+			}
+		}
+		custom_effect_tooltip = { localization_key = OTT_resistance_tt TAG = "[SYR.GetTag]" }
+		if = {
+			limit = {
+				state = 554
+			}
+			OTT = {
+				country_event = syrian_revolution_events.2
+			}
+		}
+		else_if = {
+			limit = {
+				state = 455
+			}
+			OTT = {
+				country_event = syrian_revolution_events.3
+			}
+		}
+		else_if = {
+			limit = {
+				state = 677
+			}
+			OTT = {
+				country_event = syrian_revolution_events.5
+			}
+		}
+		else_if = {
+			limit = {
+				state = 995
+			}
+			OTT = {
+				country_event = syrian_revolution_events.6
+			}
+		}
+		else_if = {
+			limit = {
+				state = 992
+			}
+			OTT = {
+				country_event = syrian_revolution_events.7
+			}
+		}
+	}
+
+	### Cyrenaica
+	else_if = {
+		limit = {
+			OR = {
+				state = 448
+				state = 273
+				state = 450
+				state = 663
+				state = 451
+				state = 1009
+			}
+		}
+		custom_effect_tooltip = { localization_key = OTT_resistance_tt TAG = "[LBA.GetTag]" }
+		if = {
+			limit = {
+				state = 448
+			}
+			OTT = {
+				country_event = libya_revolt_events.2
+			}
+		}
+		else_if = {
+			limit = {
+				state = 273
+			}
+			OTT = {
+				country_event = libya_revolt_events.1
+			}
+		}
+		else_if = {
+			limit = {
+				state = 450
+			}
+			OTT = {
+				country_event = libya_revolt_events.3
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					state = 663
+					state = 451
+					state = 1009
+				}
+			}
+			OTT = {
+				country_event = libya_revolt_events.4
+			}
+		}
+	}
+
+	### Greek Isles
+	else_if = {
+		limit = {
+			OR = {
+				state = 183
+				state = 164
+				state = 187
+			}
+		}
+		custom_effect_tooltip = { localization_key = OTT_resistance_tt TAG = "[CYP.GetTag]" }
+		if = {
+			limit = {
+				state = 183
+			}
+			OTT = {
+				country_event = cyprus_events.1
+			}
+		}
+		else_if = {
+			limit = {
+				state = 164
+			}
+			OTT = {
+				country_event = cyprus_events.2
+			}
+		}
+		else_if = {
+			limit = {
+				state = 187
+			}
+			OTT = {
+				country_event = cyprus_events.3
+			}
+		}
+	}
+
+	### Hejaz
+	else_if = {
+		limit = {
+			OR = {
+				state = 754
+				state = 679
+			}
+		}
+		custom_effect_tooltip = { localization_key = OTT_resistance_tt TAG = "[HEJ.GetTag]" }
+		if = {
+			limit = {
+				state = 754
+			}
+			OTT = {
+				country_event = hejaz_events.2
+			}
+		}
+		else_if = {
+			limit = {
+				state = 679
+			}
+			OTT = {
+				country_event = hejaz_events.1
+			}
+		}
+	}
+
+	### Iraq
+	else_if = {
+		limit = {
+			state = 291
+		}
+		custom_effect_tooltip = { localization_key = OTT_resistance_tt TAG = "[IRQ.GetTag]" }
+		OTT = {
+			country_event = iraq_revolt_events.1
+		}
+	}
+}
+
+OTT_set_up_suez_canal_zone = {
+	set_global_flag = SUEZ_SUCCESS
+	hidden_effect = {
+		set_temp_variable = { tag_to_release = PAL }
+		753 = {
+			remove_claim_and_add_core_of_target = yes
+			transfer_state_without_overriding_occupation = yes
+		}
+		puppet_released_tag = yes
+	}
+	var:tag_to_release = {
+		set_cosmetic_tag = PAL_suez
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = no
+		}
+		set_political_party = {
+			ideology = market_liberal
+			popularity = 60
+		}
+		promote_character = PAL_francois_charles_roux
+		hidden_effect = {
+			load_focus_tree = Suez_Focus
+			if = {
+				limit = { has_completed_focus = SUE_The_Port_Said_Convention }
+				uncomplete_national_focus = {
+					focus = SUE_The_Port_Said_Convention
+					uncomplete_children = yes
+				}
+			}
+			if = {
+				limit = { NOT = { has_idea = pal_moj } }
+				add_ideas = pal_moj
+			}
+			remove_ideas = {
+				pal_alijah
+				pal_alijah_US
+				pal_alijah_EE
+				pal_black_monday
+				pal_black_monday2
+				pal_foreign_backing
+				pal_ottoman_reintegration
+				pal_shortage_of_goods
+				pal_sectarian_divide
+				pal_immigration_stopped
+				pal_arab_strike
+				pal_arab_strike2
+				pal_arab_broadcasts
+			}
+		}
+	}
+	if = {
+		limit = { tag = OTT }
+		every_country = {
+			limit = {
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+				OR = {
+					tag = ROOT
+					tag = GER
+					tag = AUS
+					tag = NFA
+					tag = CAN
+					tag = GBR
+					tag = ENT
+					tag = SIC
+					tag = HOL
+					tag = BEL
+					tag = GRE
+				}
+			}
+			country_event = ottomans_foreign_policy_events.49
+		}
+		activate_decision = Axis_Suez_Commence_Reparations_OTT
+	}
+	else = {
+		clr_global_flag = SUEZ_CANAL_BLOCKED
+		every_country = {
+			limit = {
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+				OR = {
+					tag = ROOT
+					tag = GER
+					tag = AUS
+					tag = NFA
+					tag = CAN
+					tag = GBR
+					tag = ENT
+					tag = SIC
+					tag = HOL
+					tag = BEL
+					tag = GRE
+					tag = TUR
+				}
+			}
+			country_event = ottomans_foreign_policy_events.491
+		}
+	}
+}
+
+PAL_remove_from_convention = {
+	if = {
+		limit = { has_country_flag = PAL_convention_member }
+		clr_country_flag = PAL_convention_member
+		if = {
+			limit = { has_guaranteed = PAL }
+			diplomatic_relation = {
+				country = PAL
+				relation = guarantee
+				active = no
+			}
+		}
+		if = {
+			limit = { has_non_aggression_pact_with = PAL }
+			diplomatic_relation = {
+				country = PAL
+				relation = non_aggression_pact
+				active = no
+			}
+		}
+		if = {
+			limit = { has_military_access_to = PAL }
+			PAL = {
+				diplomatic_relation = {
+					country = PREV
+					relation = military_access
+					active = no
+				}
+			}
+		}
+		if = {
+			limit = { has_idea = pal_dividends }
+			remove_ideas = pal_dividends
+		}
+		if = {
+			limit = { has_idea = pal_red_cross_port_said }
+			remove_ideas = pal_red_cross_port_said
+		}
+	}
+}
+
+OTT_russo_ottoman_convention_effect = {
+	### News Event
+	news_event = world_news_events.442
+
+	### NAP
+	diplomatic_relation = {
+		country = OTT
+		relation = non_aggression_pact
+	}
+
+	### Georgia
+	if = {
+		limit = {
+			GEO = { has_completed_focus = GEO_kept_pipeline } #GEO is pro-German
+			has_global_flag = RUSSIAN_OTTOMAN_DEAL_GEO_PUPPET
+			can_declare_war_on = GEO
+		}
+		GEO = {
+			country_event = { id = ottomans_foreign_policy_events.78 hours = 12 }
+		}
+	}
+
+	### Afghanistan
+	if = {
+		limit = {
+			can_declare_war_on = AFG
+			AFG = {
+				OR = {
+					is_subject = no
+					is_subject_of = OTT
+				}
+			}
+		}
+		AFG = {
+			if = {
+				limit = { is_subject = yes }
+				overlord = {
+					set_autonomy = {
+						target = AFG
+						autonomy_state = autonomy_free
+					}
+				}
+			}
+			if = {
+				limit = { is_in_faction = yes }
+				leave_faction = yes
+			}
+		}
+		if = {
+			limit = {
+				has_global_flag = RUSSIAN_OTTOMAN_DEAL_AFG_PUPPET
+			}
+			set_country_flag = RUS_will_attack_afghanistan
+			RUS = { activate_targeted_decision = { decision = RUS_attack target = AFG } }
+		}
+	}
+
+	### Persia
+	if = {
+		limit = {
+			can_declare_war_on = PER
+			PER = {
+				OR = {
+					is_subject = no
+					is_subject_of = OTT
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_BUFFER
+				PER = { has_war_with = TUR }
+			}
+			PER = {
+				country_event = { id = ottomans_foreign_policy_events.79 hours = 12 }
+			}
+		}
+		else_if = {
+			limit = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_SPLIT }
+			if = {
+				limit = {
+					PER = { is_subject = yes }
+				}
+				PER = {
+					overlord = {
+						set_autonomy = {
+							target = PER
+							autonomy_state = autonomy_free
+						}
+					}
+					separate_peace_all_wars = yes
+					leave_faction = yes
+					every_owned_state = {
+						limit = {
+							OR = {
+								state = 413 #Khuzestan
+								state = 417 #Urmia
+								state = 419 #Tabriz
+								state = 421 #Kermanshah
+							}
+						}
+						transfer_state_to = OTT
+					}
+				}
+				puppet = PER
+			}
+			else = {
+				set_country_flag = RUS_will_attack_persia
+				RUS = { activate_targeted_decision = { decision = RUS_attack target = PER } }
+				OTT = {
+					add_state_claim = 413 #Khuzestan
+					add_state_claim = 417 #Urmia
+					add_state_claim = 419 #Tabriz
+					add_state_claim = 421 #Kermanshah
+				}
+				hidden_effect = {
+					for_each_scope_loop = {
+						array = PER.core_states
+						if = {
+							limit = { NOT = { is_claimed_by = OTT } }
+							set_variable = { ambition_area_@ROOT = 1 }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	### Azerbaijan
+	if = {
+		limit = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_AZR_BUFFER }
+		AZR = {
+			if = {
+				limit = { is_in_faction_with = OTT }
+				leave_faction = yes
+				peace_out_non_neighbours_after_leaving_faction = yes
+			}
+			country_event = { id = ottomans_foreign_policy_events.80 hours = 12 }
+		}
+	}
+
+	### London Straits Convention
+	if = {
+		limit = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_STRAITS }
+		OTT = { give_military_access = ROOT }
+	}
+
+	### Armenia
+	if = {
+		limit = { has_global_flag = RUSSIAN_OTTOMAN_DEAL_ARMENIA }
+		if = {
+			limit = {
+				can_declare_war_on = ARM
+				ARM = {
+					OR = {
+						is_subject = no
+						is_subject_of = OTT
+					}
+				}
+			}
+			if = {
+				limit = {
+					ARM = { is_subject = yes }
+				}
+				annex_country = {
+					target = ARM
+					transfer_troops = no
+				}
+			}
+			else = {
+				ARM = {
+					country_event = { id = ottomans_foreign_policy_events.78 hours = 12 }
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OTT = { controls_state = 230 } #Yerevan
+			}
+			OTT = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							state = 230
+							state = 585
+							state = 1000
+							state = 1001
+						}
+					}
+					transfer_state_to = ROOT
+				}
+			}
+		}
+	}
+}
+
+OTT_clear_russo_ottoman_convention_effect = { #Clears all flags if the convention fails while ongoing or is annulled later
+	clr_global_flag = OTT_baku_conference_ongoing
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_GEO_ANNEX
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_GEO_PUPPET
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_BATUMI
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_AFG_PUPPET
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_BUFFER
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_PER_SPLIT
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_STRAITS
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_ARMENIA
+	clr_global_flag = RUSSIAN_OTTOMAN_DEAL_AZR_BUFFER
+}
+
+OTT_remove_kemalist_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			ott_4_years_progress
+			ott_4_years_progress_2
+			ott_railroad_effort
+			ott_model_farm
+			ott_autarky
+		}
+	}
+}
+
+OTT_remove_ottoman_ambitions_claims = {
+	#effects are separate to make a clearer tooltip
+	every_core_state = {
+		limit = {
+			NOT = {
+				is_owned_by = TUR
+				region = 129 #Anatolia
+				state = 184 #Komotini
+				state = 341 #Adrianople
+				state = 350 #Diyarbekir
+				state = 352 #Van
+				state = 773 #Constantinople
+				state = 1000 #Kars
+				state = 1089 #Kardzhali
+				check_variable = { core_countries^num = 1 }
+			}
+		}
+		remove_core_of = TUR
+		clear_variable = ambition_area_TUR
+	}
+	every_state = {
+		limit = {
+			is_claimed_by = TUR
+			NOT = {
+				is_owned_by = TUR
+				region = 129 #Anatolia
+				state = 184 #Komotini
+				state = 341 #Adrianople
+				state = 350 #Diyarbekir
+				state = 352 #Van
+				state = 773 #Constantinople
+				state = 1000 #Kars
+				state = 1089 #Kardzhali
+			}
+		}
+		remove_claim_by = TUR
+		clear_variable = ambition_area_TUR
+	}
+}
+
+OTT_post_defeat_setup = {
+	if = {
+		limit = { has_country_flag = TUR_is_ottomans }
+		every_state = { clear_occupy_state = yes }
+
+		#the following ideas are tied to dynamic modifiers, thus causing errors if removed improperly
+		if = {
+			limit = { has_idea = ott_vilayet_stability_idea }
+			remove_ideas = ott_vilayet_stability_idea
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = OTT_centralisation_modifier } }
+			remove_dynamic_modifier = { modifier = OTT_centralisation_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = OTT_parliament_modifier } }
+			remove_dynamic_modifier = { modifier = OTT_parliament_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = OTT_AMN_member_modifier scope = OTT } }
+			remove_dynamic_modifier = { modifier = OTT_AMN_member_modifier scope = OTT }
+			every_other_country = {
+				limit = { has_dynamic_modifier = { modifier = OTT_AMN_member_modifier scope = OTT } }
+				remove_dynamic_modifier = { modifier = OTT_AMN_member_modifier scope = OTT }
+			}
+			clear_variable = OTT.OTT_AMN_members
+		}
+		TUR_disable_millet_mektepleri = yes
+		hidden_effect = {
+			remove_ideas = {
+				OTT_Ottoman_Stand
+				OTT_Mobilisation
+				OTT_national_defense_organization
+				OTT_cypriot_invasion
+				ott_armed_neutrality
+				ott_armed_neutrality_2
+				ott_institutionalised_islam
+				ott_institutionalised_islam_spd
+				ott_institutionalised_islam_millet
+				ott_reformed_conscription
+				ott_reformed_conscription_2
+				ott_reformed_conscription_3
+				ott_pluralist_constitution
+				ott_authoritarian_constitution
+				ott_receding_tide
+				ott_reorganised_vilayet_system
+				ott_military_loyalty
+				ott_universal_suffrage
+				ott_varlik_vargisi
+				ott_privy_purse_nationalised
+				ott_fevzi_cult_of_personality
+				ott_national_pacification_campaign
+				ott_renaissance
+				ott_gendarmerie_idea
+				ott_bloated_administration
+				ott_broken_monopolies
+				ott_private_initiative
+				ott_economic_recession
+				ott_miri_land_distribution
+				ott_sublime_federation
+				ott_mosque_cost
+				ott_military_purge
+				ott_endeavour_front
+				ott_basic_industries
+				ott_social_nationalism
+				ott_union_party_state
+				ott_principles_people
+				ott_egyptian_resistance_1
+				ott_egyptian_resistance_2
+				ott_egyptian_resistance_3
+				ott_egyptian_resistance_4
+				ott_egyptian_resistance_5
+				ott_egyptian_resistance_6
+				ott_egyptian_resistance_7
+				ott_seeds_of_destruction
+				ott_seeds_of_peace
+				ott_troops_in_egypt
+				TUR_garrison_Vasif
+				TUR_garrison_Naci
+				TUR_garrison_Rustu
+				TUR_garrison_Nuri
+				ott_indemnity_reprieve
+				ott_egy_repair
+				ott_rebel_interrogations
+				ott_zayidi_resistance
+				ott_egy_indemnity
+				ott_statutes_of_autonomy
+				ott_statutes_of_autonomy2
+				ott_statutes_of_autonomy_fev
+				ott_black_monday
+				ott_black_monday_2
+				ott_black_monday_3
+				ott_black_monday_4
+				ott_autarky
+				ott_actually_loosened_national_protection_law
+				ott_repealed_national_protection_law
+				ott_repealed_national_protection_law_2
+				ott_foreign_investment
+				ott_army_training
+				ott_joint_command
+				ott_armed_by_ger_1
+				ott_armed_by_ger_2
+				ott_armed_by_ger_3
+				ott_balkan_military_accords
+				ott_balkan_military_accords_2
+				ott_greco_turkish_accord
+				ott_air_warfare_academy_idea
+				ott_mass_production_idea
+			}
+			remove_mission = OTT_suppression_of_society
+			EGY = {
+				OTT_clear_puppet_EGY = yes
+			}
+			if = {
+				limit = { NOT = { has_character = TUR_fevzi_cakmak } } #was sent to event_target:system from ottomans_sabahaddin_events.21
+				TUR_fevzi_cakmak = { set_nationality = PREV }
+			}
+			country_event = { id = ottomans_kemalist_events.51 days = 20 random_days = 100 }
+			clr_country_flag = TUR_is_ottomans
+			set_cosmetic_tag = TUR_ottoman_turkey
+			create_dynamic_country = {
+				original_tag = TUR
+				set_country_flag = TUR_is_ottomans
+				set_cosmetic_tag = TUR_ottoman_empire
+				set_politics = { ruling_party = var:TUR.current_party_ideology_group }
+				reserve_dynamic_country = yes
+				set_temp_variable = { dummy_turkey = THIS }
+			}
+			every_core_state = { remove_core_of = var:dummy_turkey }
+		}
+		every_other_country = {
+			limit = { is_guaranteed_by = PREV }
+			PREV = {
+				diplomatic_relation = {
+					country = PREV
+					relation = guarantee
+					active = no
+				}
+			}
+		}
+		every_other_country = {
+			limit = { has_non_aggression_pact_with = PREV }
+			diplomatic_relation = {
+				country = PREV
+				relation = non_aggression_pact
+				active = no
+			}
+		}
+		every_other_country = {
+			limit = { has_military_access_to = PREV }
+			diplomatic_relation = {
+				country = PREV
+				relation = military_access
+				active = no
+			}
+		}
+		every_other_country = {
+			limit = { gives_military_access_to = PREV }
+			PREV = {
+				diplomatic_relation = {
+					country = PREV
+					relation = military_access
+					active = no
+				}
+			}
+		}
+	}
+}
+
+OTT_clear_puppet_EGY = { #Clear all OTT-puppet/scripted peace ideas on EGY side
+	hidden_effect = {
+		remove_ideas = {
+			EGY_levant_crisis_reparations
+			generic_neutral_foreign_policy
+			ott_integrating_egypt
+			ott_military_restrictions
+			ott_restrictions_lifted
+			ott_united_again
+			ott_absorbed_state_monopolies_1
+			ott_absorbed_state_monopolies_2
+			ott_absorbed_state_monopolies_3
+			ott_absorbed_state_monopolies_4
+			ott_absorbed_state_monopolies_5
+			ott_industrial_inspectorate_idea
+		}
+	}
+	TUR = { #Clear looping resistance mission if ongoing
+		remove_mission = OTT_egyptian_resistance_decay
+	}
+}
+
+OTT_clear_puppet_SUD = { #Clear all OTT-puppet ideas on SUD side
+	hidden_effect = {
+		remove_ideas = {
+			ott_sudan_puppet_1
+			ott_sudan_puppet_2
+			ott_sudan_puppet_3
+		}
+	}
+}
+
+OTT_create_abdulmecid = {
+	if = {
+		limit = {
+			event_target:original_turkey = {
+				TUR_abdulmecid_osmanoglu = {
+					is_dead = no
+					set_temp_variable = { abdulmecid = THIS }
+				}
+			}
+		}
+		var:abdulmecid = {
+			effect_tooltip = {
+				meta_effect = {
+					text = {
+						add_country_leader_role = {
+							country_leader = {
+								# Tooltip only, doesn't need desc
+								ideology = [IDEOLOGY]
+								traits = { TUR_sultan_of_the_arts }
+							}
+							promote_leader = yes
+						}
+					}
+					IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+				}
+			}
+			hidden_effect = {
+				set_nationality = PREV
+				set_variable = { global.TUR_ottoman_sultan = THIS }
+				remove_all_country_leader_roles = yes
+				for_each_loop = {
+					array = global.ideology_groups
+					if = {
+						limit = { ideology_group_is_socialist = no }
+						meta_effect = {
+							text = {
+								add_country_leader_role = {
+									country_leader = {
+										desc = TUR_abdulmecid_osmanoglu_leader_desc
+										ideology = [IDEOLOGY]
+										traits = { TUR_sultan_of_the_arts }
+									}
+									promote_leader = yes
+								}
+							}
+							IDEOLOGY = "[?v.GetTokenKey]_subtype"
+						}
+					}
+				}
+			}
+		}
+	}
+	else = {
+		OTT_create_mehmed_ziyaeddin = yes
+	}
+}
+
+OTT_create_mehmed_ziyaeddin = {
+	if = {
+		limit = { event_target:original_turkey = { TUR_mehmed_ziyaeddin_osmanoglu = { is_dead = no } } }
+		event_target:original_turkey = {
+			TUR_mehmed_ziyaeddin_osmanoglu = {
+				effect_tooltip = {
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									ideology = [IDEOLOGY]
+									traits = { TUR_sultan_of_the_poor }
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+					}
+				}
+				hidden_effect = {
+					set_nationality = PREV.PREV
+					set_variable = { global.TUR_ottoman_sultan = THIS }
+					set_character_name = TUR_mehmed_ziyaeddin_osmanoglu_regnal
+					remove_all_country_leader_roles = yes
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_ziyaeddin_osmanoglu_leader_desc
+							ideology = social_democrat_subtype
+							traits = { TUR_sultan_of_the_poor }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_ziyaeddin_osmanoglu_leader_desc
+							ideology = social_liberal_subtype
+							traits = { TUR_sultan_of_the_poor }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_ziyaeddin_osmanoglu_leader_desc
+							ideology = market_liberal_subtype
+							traits = { TUR_sultan_of_the_poor }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_ziyaeddin_osmanoglu_leader_desc
+							ideology = social_conservative_subtype
+							traits = { TUR_sultan_of_the_poor }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_ziyaeddin_osmanoglu_leader_desc
+							ideology = authoritarian_democrat_subtype
+							traits = { TUR_sultan_of_the_poor }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_ziyaeddin_osmanoglu_leader_desc
+							ideology = paternal_autocrat_subtype
+							traits = { TUR_sultan_of_the_poor }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_ziyaeddin_osmanoglu_leader_desc
+							ideology = national_populist_subtype
+							traits = { TUR_sultan_of_the_poor }
+						}
+						promote_leader = yes
+					}
+				}
+			}
+		}
+	}
+	else = {
+		OTT_create_mehmed_abdulkadir = yes
+	}
+}
+
+OTT_create_mehmed_abdulkadir = {
+	if = {
+		limit = { event_target:original_turkey = { TUR_mehmed_abdulkadir_osmanoglu = { is_dead = no } } }
+		event_target:original_turkey = {
+			TUR_mehmed_abdulkadir_osmanoglu = {
+				effect_tooltip = {
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									ideology = [IDEOLOGY]
+									traits = { TUR_sultan_of_the_music }
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+					}
+				}
+				hidden_effect = {
+					set_nationality = PREV.PREV
+					set_variable = { global.TUR_ottoman_sultan = THIS }
+					if = {
+						limit = { OTT = { has_country_leader = { character = TUR_mehmed_ziyaeddin_osmanoglu } } }
+						set_character_name = TUR_mehmed_abdulkadir_osmanoglu_regnal_VIII
+					}
+					else = {
+						set_character_name = TUR_mehmed_abdulkadir_osmanoglu_regnal
+					}
+					remove_all_country_leader_roles = yes
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_abdulkadir_osmanoglu_leader_desc
+							ideology = social_democrat_subtype
+							traits = { TUR_sultan_of_the_music }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_abdulkadir_osmanoglu_leader_desc
+							ideology = social_liberal_subtype
+							traits = { TUR_sultan_of_the_music }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_abdulkadir_osmanoglu_leader_desc
+							ideology = market_liberal_subtype
+							traits = { TUR_sultan_of_the_music }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_abdulkadir_osmanoglu_leader_desc
+							ideology = social_conservative_subtype
+							traits = { TUR_sultan_of_the_music }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_abdulkadir_osmanoglu_leader_desc
+							ideology = authoritarian_democrat_subtype
+							traits = { TUR_sultan_of_the_music }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_abdulkadir_osmanoglu_leader_desc
+							ideology = paternal_autocrat_subtype
+							traits = { TUR_sultan_of_the_music }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_mehmed_abdulkadir_osmanoglu_leader_desc
+							ideology = national_populist_subtype
+							traits = { TUR_sultan_of_the_music }
+						}
+						promote_leader = yes
+					}
+				}
+			}
+		}
+	}
+	else = {
+		OTT_create_ahmed_nuri = yes
+	}
+}
+
+OTT_create_ahmed_nuri = {
+	if = {
+		limit = { event_target:original_turkey = { TUR_ahmed_nuri_osmanoglu = { is_dead = no } } }
+		event_target:original_turkey = {
+			TUR_ahmed_nuri_osmanoglu = {
+				effect_tooltip = {
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									ideology = [IDEOLOGY]
+									traits = { TUR_sultan_of_chemistry }
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+					}
+				}
+				hidden_effect = {
+					set_nationality = PREV.PREV
+					set_variable = { global.TUR_ottoman_sultan = THIS }
+					set_character_name = TUR_ahmed_nuri_osmanoglu_regnal
+					remove_all_country_leader_roles = yes
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_ahmed_nuri_osmanoglu_leader_desc
+							ideology = social_democrat_subtype
+							traits = { TUR_sultan_of_chemistry }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_ahmed_nuri_osmanoglu_leader_desc
+							ideology = social_liberal_subtype
+							traits = { TUR_sultan_of_chemistry }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_ahmed_nuri_osmanoglu_leader_desc
+							ideology = market_liberal_subtype
+							traits = { TUR_sultan_of_chemistry }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_ahmed_nuri_osmanoglu_leader_desc
+							ideology = social_conservative_subtype
+							traits = { TUR_sultan_of_chemistry }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_ahmed_nuri_osmanoglu_leader_desc
+							ideology = authoritarian_democrat_subtype
+							traits = { TUR_sultan_of_chemistry }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_ahmed_nuri_osmanoglu_leader_desc
+							ideology = paternal_autocrat_subtype
+							traits = { TUR_sultan_of_chemistry }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = TUR_ahmed_nuri_osmanoglu_leader_desc
+							ideology = national_populist_subtype
+							traits = { TUR_sultan_of_chemistry }
+						}
+						promote_leader = yes
+					}
+				}
+			}
+		}
+	}
+	else = {
+		OTT_create_ahmed_nihad = yes
+	}
+}
+
+OTT_create_ahmed_nihad = {
+	if = {
+		limit = {
+			event_target:original_turkey = {
+				TUR_ahmed_nihad_osmanoglu = {
+					is_dead = no
+					set_temp_variable = { ahmed = THIS }
+				}
+			}
+		}
+		var:ahmed = {
+			effect_tooltip = {
+				meta_effect = {
+					text = {
+						add_country_leader_role = {
+							country_leader = {
+								# Tooltip only, doesn't need desc
+								ideology = [IDEOLOGY]
+								traits = { TUR_sultan_of_architecture }
+							}
+							promote_leader = yes
+						}
+					}
+					IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+				}
+			}
+			hidden_effect = {
+				set_nationality = PREV
+				set_variable = { global.TUR_ottoman_sultan = THIS }
+				if = {
+					limit = { OTT = { has_country_leader = { character = TUR_ahmed_nuri_osmanoglu } } }
+					set_character_name = TUR_ahmed_nihad_osmanoglu_regnal_V
+				}
+				else = {
+					set_character_name = TUR_ahmed_nihad_osmanoglu_regnal_IV
+				}
+				remove_all_country_leader_roles = yes
+				for_each_loop = {
+					array = global.ideology_groups
+					if = {
+						limit = { ideology_group_is_socialist = no }
+						meta_effect = {
+							text = {
+								add_country_leader_role = {
+									country_leader = {
+										desc = TUR_ahmed_nihad_osmanoglu_leader_desc
+										ideology = [IDEOLOGY]
+										traits = { TUR_sultan_of_architecture }
+									}
+									promote_leader = yes
+								}
+							}
+							IDEOLOGY = "[?v.GetTokenKey]_subtype"
+						}
+					}
+				}
+			}
+		}
+	}
+	else = {
+		OTT_create_osman = yes
+	}
+}
+
+OTT_create_osman = {
+	if = {
+		limit = {
+			event_target:original_turkey = {
+				TUR_osman_fuad_osmanoglu = {
+					is_dead = no
+					set_temp_variable = { osman_fuad = THIS }
+				}
+			}
+		}
+		var:osman_fuad = {
+			effect_tooltip = {
+				meta_effect = {
+					text = {
+						add_country_leader_role = {
+							country_leader = {
+								# Tooltip only, doesn't need desc
+								ideology = [IDEOLOGY]
+								traits = { TUR_the_warrior_sultan }
+							}
+							promote_leader = yes
+						}
+					}
+					IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+				}
+			}
+			hidden_effect = {
+				set_nationality = PREV
+				set_variable = { global.TUR_ottoman_sultan = THIS }
+				set_character_name = TUR_osman_fuad_osmanoglu_regnal
+				remove_all_country_leader_roles = yes
+				for_each_loop = {
+					array = global.ideology_groups
+					if = {
+						limit = { ideology_group_is_socialist = no }
+						meta_effect = {
+							text = {
+								add_country_leader_role = {
+									country_leader = {
+										desc = TUR_osman_fuad_osmanoglu_leader_desc
+										ideology = [IDEOLOGY]
+										traits = { TUR_the_warrior_sultan }
+									}
+									promote_leader = yes
+								}
+							}
+							IDEOLOGY = "[?v.GetTokenKey]_subtype"
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+OTT_create_omer = {
+	if = {
+		limit = {
+			event_target:original_turkey = {
+				TUR_omer_faruk_osmanoglu = {
+					is_dead = no
+					set_temp_variable = { omer = THIS }
+				}
+			}
+		}
+		var:omer = {
+			effect_tooltip = {
+				if = {
+					limit = { has_character_flag = TUR_saviour_of_the_empire }
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									# Tooltip only, doesn't need desc
+									ideology = [IDEOLOGY]
+									traits = { TUR_saviour_of_the_empire }
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+					}
+				}
+				else = {
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									# Tooltip only, doesn't need desc
+									ideology = [IDEOLOGY]
+									traits = { TUR_the_young_sultan }
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+					}
+				}
+			}
+			hidden_effect = {
+				set_nationality = PREV
+				set_variable = { global.TUR_ottoman_sultan = THIS }
+				set_character_name = TUR_omer_faruk_osmanoglu_regnal
+				remove_all_country_leader_roles = yes
+				for_each_loop = {
+					array = global.ideology_groups
+					if = {
+						limit = { ideology_group_is_socialist = no }
+						meta_effect = {
+							text = {
+								add_country_leader_role = {
+									country_leader = {
+										desc = TUR_omer_faruk_osmanoglu_leader_desc
+										ideology = [IDEOLOGY]
+									}
+									promote_leader = yes
+								}
+							}
+							IDEOLOGY = "[?v.GetTokenKey]_subtype"
+						}
+					}
+				}
+				if = {
+					limit = { has_character_flag = TUR_saviour_of_the_empire }
+					set_temp_variable = { trait_token = token:TUR_saviour_of_the_empire }
+					add_trait_to_all_country_leader_roles = yes
+				}
+				else = {
+					set_temp_variable = { trait_token = token:TUR_the_young_sultan }
+					add_trait_to_all_country_leader_roles = yes
+				}
+			}
+		}
+	}
+}
+
+OTT_create_sultan = {
+	if = {
+		limit = { event_target:original_turkey = { var:global.TUR_ottoman_sultan = { is_character = TUR_omer_faruk_osmanoglu } } }
+		OTT_create_omer = yes
+	}
+	else_if = {
+		limit = { event_target:original_turkey = { var:global.TUR_ottoman_sultan = { is_character = TUR_osman_fuad_osmanoglu } } }
+		OTT_create_osman = yes
+	}
+	else_if = {
+		limit = { event_target:original_turkey = { var:global.TUR_ottoman_sultan = { is_character = TUR_ahmed_nihad_osmanoglu } } }
+		OTT_create_ahmed_nihad = yes
+	}
+	else_if = {
+		limit = { event_target:original_turkey = { var:global.TUR_ottoman_sultan = { is_character = TUR_ahmed_nuri_osmanoglu } } }
+		OTT_create_ahmed_nuri = yes
+	}
+	else_if = {
+		limit = { event_target:original_turkey = { var:global.TUR_ottoman_sultan = { is_character = TUR_mehmed_abdulkadir_osmanoglu } } }
+		OTT_create_mehmed_abdulkadir = yes
+	}
+	else_if = {
+		limit = { event_target:original_turkey = { var:global.TUR_ottoman_sultan = { is_character = TUR_mehmed_ziyaeddin_osmanoglu } } }
+		OTT_create_mehmed_ziyaeddin = yes
+	}
+	else = {
+		OTT_create_abdulmecid = yes
+	}
+}
+
+OTT_remove_sultan = {
+	if = {
+		limit = { has_character = TUR_abdulmecid_osmanoglu }
+		effect_tooltip = { retire_character = TUR_abdulmecid_osmanoglu }
+	}
+	if = {
+		limit = { has_character = TUR_mehmed_ziyaeddin_osmanoglu }
+		effect_tooltip = { retire_character = TUR_mehmed_ziyaeddin_osmanoglu }
+	}
+	if = {
+		limit = { has_character = TUR_mehmed_abdulkadir_osmanoglu }
+		effect_tooltip = { retire_character = TUR_mehmed_abdulkadir_osmanoglu }
+	}
+	if = {
+		limit = { has_character = TUR_ahmed_nuri_osmanoglu }
+		effect_tooltip = { retire_character = TUR_ahmed_nuri_osmanoglu }
+	}
+	if = {
+		limit = { has_character = TUR_ahmed_nihad_osmanoglu }
+		effect_tooltip = { retire_character = TUR_ahmed_nihad_osmanoglu }
+	}
+	if = {
+		limit = { has_character = TUR_osman_fuad_osmanoglu }
+		effect_tooltip = { retire_character = TUR_osman_fuad_osmanoglu }
+	}
+	if = {
+		limit = { has_character = TUR_omer_faruk_osmanoglu }
+		effect_tooltip = { retire_character = TUR_omer_faruk_osmanoglu }
+	}
+	hidden_effect = {
+		event_target:original_turkey = {
+			TUR_abdulmecid_osmanoglu = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = PREV
+					remove_all_country_leader_roles = yes
+					set_nationality = event_target:system
+				}
+			}
+			TUR_mehmed_ziyaeddin_osmanoglu = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = PREV
+					remove_all_country_leader_roles = yes
+					set_nationality = event_target:system
+				}
+			}
+			TUR_mehmed_abdulkadir_osmanoglu = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = PREV
+					remove_all_country_leader_roles = yes
+					set_nationality = event_target:system
+				}
+			}
+			TUR_ahmed_nuri_osmanoglu = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = PREV
+					remove_all_country_leader_roles = yes
+					set_nationality = event_target:system
+				}
+			}
+			TUR_ahmed_nihad_osmanoglu = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = PREV
+					remove_all_country_leader_roles = yes
+					set_nationality = event_target:system
+				}
+			}
+			TUR_osman_fuad_osmanoglu = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = PREV
+					remove_all_country_leader_roles = yes
+					set_nationality = event_target:system
+				}
+			}
+			TUR_omer_faruk_osmanoglu = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = PREV
+					remove_all_country_leader_roles = yes
+					set_nationality = event_target:system
+				}
+			}
+		}
+	}
+}
+
+OTT_create_halide_edip_advisor = {
+	if = {
+		limit = { NOT = { TUR_halide_edip_adivar = { has_advisor_role = political_advisor } } }
+		custom_effect_tooltip = tooltip_white_line
+		add_advisor_role = {
+			character = TUR_halide_edip_adivar
+			advisor = {
+				slot = political_advisor
+				idea_token = TUR_halide_edip_adivar_advisor
+				traits = { KR_feminist_ultranationalist }
+			}
+		}
+	}
+	else = {
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = TUR_halide_edip_adivar_advisor
+	}
+}
+
+OTT_wins_levantine_war = {
+	if = {
+		limit = {
+			country_exists = OTT
+			OTT = { is_subject = no }
+			OTT_cairo_pact_defeated = yes
+			NOT = { has_global_flag = OTT_wins_levantine_war_fired }
+		}
+		set_global_flag = OTT_wins_levantine_war_fired
+		clr_global_flag = OTT_cairo_pact_war_ongoing
+		log = "KR_Event_Logging;The Ottoman Empire WINS IN THE LEVANT"
+		OTT = {
+			country_event = { id = levant_crisis_events.14 days = 30 }
+			if = {
+				limit = {
+					OTT_has_centralist_government = yes
+					has_dictatorship_government = no
+				}
+				activate_mission = ott_suppression_of_society
+			}
+		}
+	}
+}
+
+TUR_modify_literacy_effect = {
+	## set up temp var to check whether modified value crosses zero
+	set_temp_variable = { TUR_illiteracy_compare_temp = { value = TUR_literacy_research_speed multiply = -1 } }
+
+	if = {
+		limit = { has_dynamic_modifier = { modifier = OTT_literacy_negative_dynamic_modifier } }
+		if = {
+			limit = { ## check whether modified value crosses zero
+				NOT = { check_variable = { TUR_modify_literacy_value < TUR_illiteracy_compare_temp } }
+			}
+			custom_override_tooltip = { ## replace with positive modifier
+				tooltip = {
+					localization_key = tooltip_replace_dynmod
+					DYNMOD1 = OTT_literacy_negative_dynamic_modifier
+					DYNMOD2 = OTT_literacy_positive_dynamic_modifier
+				}
+				remove_dynamic_modifier = { modifier = OTT_literacy_negative_dynamic_modifier }
+				add_dynamic_modifier = { modifier = OTT_literacy_positive_dynamic_modifier }
+			}
+		}
+		else = { ## tooltip for negative modifier
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = OTT_literacy_negative_dynamic_modifier
+			}
+		}
+	}
+	else_if = { ## tooltip for positive modifier
+		limit = { has_dynamic_modifier = { modifier = OTT_literacy_positive_dynamic_modifier } }
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = OTT_literacy_positive_dynamic_modifier
+		}
+	}
+
+	## modify the variable and display value change as tooltip
+	add_to_variable = {
+		TUR_literacy_research_speed = TUR_modify_literacy_value
+		tooltip = research_speed_factor_tooltip
+	}
+	force_update_dynamic_modifier = yes
+}
+
+TUR_enable_millet_mektepleri = {
+	activate_targeted_decision = { decision = OTT_MME_Anatolian_Expansion target = 49 }
+	activate_targeted_decision = { decision = OTT_MME_Kurdish_Expansion target = 352 }
+	activate_targeted_decision = { decision = OTT_MME_Syrian_Expansion target = 554 }
+	activate_targeted_decision = { decision = OTT_MME_Mesopotamian_Expansion target = 291 }
+	activate_targeted_decision = { decision = OTT_MME_Hejazi_Expansion target = 679 }
+}
+
+TUR_disable_millet_mektepleri = {
+	hidden_effect = {
+		remove_targeted_decision = { decision = OTT_MME_Anatolian_Expansion target = 49 }
+		remove_targeted_decision = { decision = OTT_MME_Kurdish_Expansion target = 352 }
+		remove_targeted_decision = { decision = OTT_MME_Syrian_Expansion target = 554 }
+		remove_targeted_decision = { decision = OTT_MME_Mesopotamian_Expansion target = 291 }
+		remove_targeted_decision = { decision = OTT_MME_Hejazi_Expansion target = 679 }
+	}
+}
+
+OTT_mutasarrifate_abolishment_effect = {
+	set_global_flag = SUEZ_CANAL_BLOCKED
+	every_owned_state = {
+		limit = { is_demilitarized_zone = yes }
+		set_demilitarized_zone = no
+	}
+	453 = { clr_state_flag = jerusalem_mutasarrifate_state }
+	454 = { clr_state_flag = jerusalem_mutasarrifate_state }
+	753 = { clr_state_flag = jerusalem_mutasarrifate_state }
+	overlord = {
+		annex_country = {
+			target = PREV
+			transfer_troops = no
+		}
+	}
+}
+
+OTT_puppet_azerbaijan_effect = {
+	AZR = {
+		if = {
+			limit = { NOT = { GER = { has_resources_rights = { state = 229 resources = { oil } } } } }
+			give_resource_rights = {
+				receiver = GER
+				state = 229
+			}
+		}
+		if = {
+			limit = { is_subject = yes }
+			overlord = {
+				set_autonomy = {
+					target = PREV
+					autonomy_state = autonomy_free
+				}
+			}
+		}
+		get_current_government_type = yes
+	}
+	every_country = {
+		limit = { has_guaranteed = AZR }
+		diplomatic_relation = {
+			country = AZR
+			relation = guarantee
+			active = no
+		}
+	}
+	set_autonomy = {
+		target = AZR
+		autonomy_state = autonomous_puppet
+		end_wars = no
+	}
+	AZR = { restore_previous_government_type = yes }
+}
+
+OTT_increase_conscription_bonus = {
+	if = {
+		limit = { has_idea = ott_reformed_conscription_2 }
+		swap_ideas = {
+			remove_idea = ott_reformed_conscription_2
+			add_idea = ott_reformed_conscription_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = ott_reformed_conscription }
+		swap_ideas = {
+			remove_idea = ott_reformed_conscription
+			add_idea = ott_reformed_conscription_2
+		}
+	}
+	else = {
+		custom_effect_tooltip = ott_has_not_reformed_conscription_system_tt
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = ott_reformed_conscription
+				add_idea = ott_reformed_conscription_2
+			}
+		}
+	}
+}
+OTT_change_egyptian_anger_level = {
+	if = {
+		limit = { has_variable = OTT.OTT_egyptian_anger }
+		OTT = {
+			set_temp_variable = { OTT_new_anger_level = { value = OTT_egyptian_anger add = OTT_anger_change?1 } }
+
+			# apply threshold-based effects
+			if = {
+				limit = { check_variable = { OTT_new_anger_level < 1 } }
+				add_stability = 0.10
+			}
+			else_if = {
+				limit = {
+					has_country_flag = ott_egy_abortive_revolt
+					check_variable = { OTT_new_anger_level < 3 }
+				}
+				add_command_power = 5
+			}
+			else_if = {
+				limit = {
+					check_variable = { OTT_new_anger_level > 5 }
+					OR = {
+						has_country_flag = ott_landowners_angry
+						has_country_flag = ott_armed_forces_reduced
+					}
+				}
+				hidden_effect = {
+					country_event = { id = ottomans_foreign_policy_events.112 days = 10 }
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { OTT_new_anger_level > 4 }
+					has_country_flag = ott_landowners_angry
+					has_country_flag = ott_armed_forces_reduced
+				}
+				hidden_effect = {
+					country_event = { id = ottomans_foreign_policy_events.112 days = 10 }
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_active_mission = OTT_egyptian_resistance_decay } }
+					hidden_effect = {
+						activate_mission = OTT_egyptian_resistance_decay
+					}
+				}
+				if = {
+					limit = {
+						OR = {
+							check_variable = { OTT_new_anger_level > 7 }
+							AND = {
+								has_country_flag = ott_egy_abortive_revolt
+								check_variable = { OTT_new_anger_level > 6 }
+							}
+						}
+					}
+					custom_effect_tooltip = tooltip_white_line
+					add_stability = -0.05
+					add_days_mission_timeout = {
+						mission = OTT_egyptian_resistance_decay
+						days = 200
+					}
+					country_event = { id = ottomans_foreign_policy_events.112 days = 200 random_days = 150 }
+				}
+			}
+
+			# avoid going < 1 or > 7
+			if = {
+				limit = { has_country_flag = ott_egy_abortive_revolt }
+				clamp_temp_variable = {
+					var = OTT_new_anger_level
+					min = 3
+					max = 6
+				}
+			}
+			else = {
+				clamp_temp_variable = {
+					var = OTT_new_anger_level
+					min = 1
+					max = 7
+				}
+			}
+
+			# add new idea if applicable
+			if = {
+				limit = { NOT = { check_variable = { OTT_new_anger_level = OTT_egyptian_anger } } }
+				meta_effect = {
+					text = {
+						if = {
+							limit = { has_idea = OTT_egyptian_resistance_[OLD_LEVEL] }
+							effect_tooltip = {
+								swap_ideas = {
+									remove_idea = OTT_egyptian_resistance_[OLD_LEVEL]
+									add_idea = OTT_egyptian_resistance_[NEW_LEVEL]
+								}
+							}
+							hidden_effect = {
+								remove_ideas = OTT_egyptian_resistance_[OLD_LEVEL]
+								add_ideas = OTT_egyptian_resistance_[NEW_LEVEL]
+							}
+						}
+						else = {
+							add_ideas = OTT_egyptian_resistance_[NEW_LEVEL]
+						}
+					}
+					OLD_LEVEL = "[?OTT_egyptian_anger?1]"
+					NEW_LEVEL = "[?OTT_new_anger_level]"
+				}
+			}
+		}
+	}
+}
+
+OTT_change_egyptian_monopolies_level = {
+	if = {
+		limit = { has_variable = OTT.OTT_egyptian_monopolies }
+		EGY = {
+			set_temp_variable = {
+				OTT_new_monopoly_level = {
+					value = OTT.OTT_egyptian_monopolies
+					add = OTT_monopoly_change?1
+					clamp = { min = 0 max = 5 } # avoid going < 0 or > 5
+				}
+			}
+
+			if = {
+				limit = { NOT = { check_variable = { OTT_new_monopoly_level = OTT.OTT_egyptian_monopolies } } }
+				if = {
+					limit = { check_variable = { OTT.OTT_egyptian_monopolies = 0 } }
+					meta_effect = {
+						text = {
+							if = {
+								limit = { NOT = { has_idea = ott_absorbed_state_monopolies_[LEVEL] } }
+								add_ideas = ott_absorbed_state_monopolies_[LEVEL]
+							}
+						}
+						LEVEL = "[?OTT_new_monopoly_level]"
+					}
+				}
+				else_if = {
+					limit = { check_variable = { OTT_new_monopoly_level = 0 } }
+					meta_effect = {
+						text = {
+							if = {
+								limit = { has_idea = ott_absorbed_state_monopolies_[LEVEL] }
+								remove_ideas = ott_absorbed_state_monopolies_[LEVEL]
+							}
+						}
+						LEVEL = "[?OTT.OTT_egyptian_monopolies]"
+					}
+					set_variable = { OTT.OTT_egyptian_monopolies = 0 }
+				}
+				else = {
+					meta_effect = {
+						text = {
+							if = {
+								limit = { has_idea = ott_absorbed_state_monopolies_[OLD_LEVEL] }
+								effect_tooltip = {
+									swap_ideas = {
+										remove_idea = ott_absorbed_state_monopolies_[OLD_LEVEL]
+										add_idea = ott_absorbed_state_monopolies_[NEW_LEVEL]
+									}
+								}
+								hidden_effect = {
+									remove_ideas = ott_absorbed_state_monopolies_[OLD_LEVEL]
+									add_ideas = ott_absorbed_state_monopolies_[NEW_LEVEL]
+								}
+							}
+							else = {
+								add_ideas = ott_absorbed_state_monopolies_[NEW_LEVEL]
+							}
+						}
+						OLD_LEVEL = "[?OTT.OTT_egyptian_monopolies]"
+						NEW_LEVEL = "[?OTT_new_monopoly_level]"
+					}
+				}
+			}
+		}
+	}
+}

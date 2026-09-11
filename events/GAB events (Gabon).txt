@@ -1,0 +1,274 @@
+###########################
+# Gabon
+###########################
+# Gary was here, Ash is a loser
+###########################
+
+add_namespace = gabon_events
+
+country_event = {
+	id = gabon_events.1
+	title = gabon_events.1.t
+	desc = gabon_events.1.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event gabon_events.1 option gabon_events.1.a"
+		name = gabon_events.1.a
+		ai_chance = {
+			base = 85
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GAB_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_RADSOC } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_SYNDIE } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_TOTALIST } }
+			}
+		}
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.4
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event gabon_events.1 option gabon_events.1.b"
+		name = gabon_events.1.b
+		ai_chance = {
+			base = 15
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GAB_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_SOCLIB } }
+			}
+		}
+		add_political_power = 50
+	}
+}
+
+country_event = { # Petition Benefactor for guns
+	id = gabon_events.6
+	title = gabon_events.6.t
+	desc = gabon_events.6.d
+
+	is_triggered_only = yes
+
+	option = { #Give them what they want
+		log = "[GetLogInfo]: event gabon_events.6 option gabon_events.6.a"
+		name = gabon_events.6.a
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -500
+		}
+		FROM = {
+			country_event = { id = gabon_events.7 days = 1 }
+		}
+	}
+	option = { #Refuse
+		log = "[GetLogInfo]: event gabon_events.6 option gabon_events.6.b"
+		name = gabon_events.6.b
+		ai_chance = { base = 0 }
+		add_political_power = -20
+		FROM = {
+			country_event = { id = gabon_events.8 days = 1 }
+		}
+	}
+}
+
+country_event = { # Benefactor says yes
+	id = gabon_events.7
+	title = gabon_events.7.t
+	desc = gabon_events.7.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event gabon_events.7 option gabon_events.7.a"
+		name = gabon_events.7.a
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 500
+			producer = FROM
+		}
+	}
+}
+
+country_event = { # Benefactor says no
+	id = gabon_events.8
+	title = gabon_events.8.t
+	desc = gabon_events.8.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event gabon_events.8 option gabon_events.8.a"
+		name = gabon_events.8.a
+		add_political_power = -20
+	}
+}
+
+country_event = { # First Gabon Elections Event
+	id = gabon_events.15
+	title = gabon_events.15.t
+	desc = gabon_events.15.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event gabon_events.15 option gabon_events.15.a"
+		name = gabon_events.15.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GAB_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_SOCCON } }
+			}
+		}
+		add_political_power = 50
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event gabon_events.15 option gabon_events.15.b"
+		name = gabon_events.15.b
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GAB_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_MARLIB } }
+			}
+		}
+		add_political_power = 25
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = market_liberal
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = { ideology = market_liberal popularity = 0.3 }
+	}
+	option = {
+		log = "[GetLogInfo]: event gabon_events.15 option gabon_events.15.c"
+		name = gabon_events.15.c
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GAB_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_SOCLIB } }
+			}
+		}
+		add_political_power = 25
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_liberal
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = { ideology = social_liberal popularity = 0.3 }
+	}
+}
+
+country_event = { # First Gabon Syndie Convention
+	id = gabon_events.16
+	title = gabon_events.16.t
+	desc = gabon_events.16.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event gabon_events.16 option gabon_events.16.a"
+		name = gabon_events.16.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GAB_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_RADSOC } }
+			}
+		}
+		add_political_power = 50
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = radical_socialist
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event gabon_events.16 option gabon_events.16.b"
+		name = gabon_events.16.b
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GAB_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_SYNDIE } }
+			}
+		}
+		add_political_power = 25
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = syndicalist
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = { ideology = syndicalist popularity = 0.3 }
+	}
+	option = {
+		log = "[GetLogInfo]: event gabon_events.16 option gabon_events.16.c"
+		name = gabon_events.16.c
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GAB_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GAB_path option = GAB_PATH_TOTALIST } }
+			}
+		}
+		add_political_power = -25
+		set_politics = {
+			ruling_party = totalist
+			elections_allowed = no
+		}
+		add_popularity = { ideology = totalist popularity = 0.25 }
+	}
+}

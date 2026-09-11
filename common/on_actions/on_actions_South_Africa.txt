@@ -1,0 +1,398 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			SAF = {
+				set_temp_variable = { coalition_partner_var = token:market_liberal }
+				add_to_coalition = yes
+				set_temp_variable = { coalition_partner_var = token:social_liberal }
+				add_to_coalition = yes
+			}
+		}
+	}
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			SAF = {
+				if = {
+					limit = { has_country_flag = SAF_antagonise_@FROM }
+					clr_country_flag = SAF_antagonise_@FROM
+					add_ai_strategy = {
+						type = antagonize
+						id = FROM
+						value = -200
+					}
+					add_ai_strategy = {
+						type = declare_war
+						id = FROM
+						value = -2000
+					}
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			if = {
+				limit = {
+					tag = ZIM
+					is_subject_of = NAT
+					NAT = { has_capitulated = no }
+				}
+				ZIM = { become_exiled_in = { target = NAT legitimacy = 100 } }
+			}
+		}
+	}
+
+	#ROOT is winner, FROM is loser (called for all winners against all losers)
+	on_before_peace_conference_start = {
+		effect = {
+			FROM = {
+				if = {
+					limit = {
+						tag = NAT
+						has_civil_war = yes
+						surrender_progress > 0.9
+					}
+					if = {
+						limit = { country_exists = ENT }
+						transfer_navy = { target = ENT }
+					}
+					if = {
+						limit = { has_subject = ZIM }
+						set_autonomy = {
+							target = ZIM
+							autonomy_state = autonomy_free
+						}
+					}
+				}
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = {
+					tag = NAT
+					FROM = { tag = ZAR }
+				}
+				country_event = natal_events.26
+			}
+			else_if = {
+				limit = {
+					tag = ZAR
+					FROM = { tag = NAT }
+				}
+				if = {
+					limit = { has_template = "Reserve Unit" }
+					set_division_template_lock = {
+						division_template = "Reserve Unit"
+						is_locked = no
+					}
+				}
+				if = {
+					limit = { has_template = "Commando Division" }
+					set_division_template_lock = {
+						division_template = "Commando Division"
+						is_locked = no
+					}
+				}
+				if = {
+					limit = { has_template = "Afrikaner Scouts" }
+					set_division_template_lock = {
+						division_template = "Afrikaner Scouts"
+						is_locked = no
+					}
+				}
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - This will also fire on_annex
+	on_civil_war_end = {
+		effect = {
+			if = {
+				limit = {
+					original_tag = SAF
+					FROM = {
+						original_tag = SAF
+						has_socialist_government = yes
+					}
+				}
+				FROM = { drop_cosmetic_tag = yes }
+				if = {
+					limit = { 275 = { is_owned_and_controlled_by = ROOT } } #Transvaal
+					set_capital = { state = 275 remember_old_capital = no }
+				}
+			}
+		}
+	}
+
+	on_new_term_election = {
+		effect = {
+			### South Africa ###
+			if = {
+				limit = { original_tag = SAF }
+				country_event = south_africa_events.71 #1938 no fusion
+				country_event = south_africa_events.73 #1938 fusion
+				country_event = south_africa_events.204 #1943 authdem fusion
+				country_event = south_africa_events.205 #1943 soccon fusion
+				country_event = south_africa_events.206 #1943 soclib fusion
+				country_event = south_africa_events.210 #1948 liberal landslide
+				country_event = south_africa_events.123 #usual generic
+				country_event = south_africa_events.124 #mixed race may vote
+				country_event = natal_events.51 #South African Federation
+				country_event = natal_events.52 #Natal itself
+			}
+			### Rhodesia ###
+			else_if = {
+				limit = { tag = ZIM }
+				country_event = rhodesia_events.13
+			}
+		}
+	}
+
+	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
+	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = { FROM.FROM = { has_state_flag = SAF_protectorate_modifier } }
+				if = {
+					limit = { original_tag = SAF }
+					FROM.FROM = {
+						if = {
+							limit = { NOT = { has_dynamic_modifier = { modifier = SAF_protectorate } } }
+							add_dynamic_modifier = { modifier = SAF_protectorate }
+						}
+					}
+				}
+				else = {
+					FROM.FROM = {
+						if = {
+							limit = { has_dynamic_modifier = { modifier = SAF_protectorate } }
+							remove_dynamic_modifier = { modifier = SAF_protectorate }
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM.FROM = { has_state_flag = SAF_commune_modifier } }
+				if = {
+					limit = { original_tag = SAF }
+					FROM.FROM = {
+						if = {
+							limit = { NOT = { has_dynamic_modifier = { modifier = SAF_autonomous_commune } } }
+							add_dynamic_modifier = { modifier = SAF_autonomous_commune }
+						}
+					}
+				}
+				else = {
+					FROM.FROM = {
+						if = {
+							limit = { has_dynamic_modifier = { modifier = SAF_autonomous_commune } }
+							remove_dynamic_modifier = { modifier = SAF_autonomous_commune }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_ruling_party_change_immediate = {
+		effect = {
+			if = {
+				limit = { original_tag = SAF }
+				if = {
+					limit = { has_socialist_government = yes }
+					SAF_set_socialist_spymaster = yes
+					if = {
+						limit = {
+							has_government = totalist
+							has_character = SAF_albert_thomas_nzula
+						}
+						activate_advisor = SAF_albert_thomas_nzula_sic
+					}
+					else_if = {
+						limit = {
+							has_government = syndicalist
+							has_character = SAF_emil_solomon_sachs
+						}
+						activate_advisor = SAF_emil_solomon_sachs_sic
+					}
+					else_if = {
+						limit = {
+							has_government = radical_socialist
+							has_country_leader = { character = SAF_david_ivon_jones }
+							has_character = SAF_moses_mauane_kotane
+						}
+						activate_advisor = SAF_moses_mauane_kotane_sic
+					}
+					else_if = {
+						limit = {
+							has_government = radical_socialist
+							has_character = SAF_john_stephen_gomas
+						}
+						activate_advisor = SAF_john_stephen_gomas_sic
+					}
+					if = {
+						limit = {
+							owns_state = 545 #Rhodesia
+							ZIM = {
+								has_cosmetic_tag = ZIM_rhodesia
+								exists = no
+							}
+						}
+						ZIM = { drop_cosmetic_tag = yes }
+					}
+				}
+				else_if = {
+					limit = { is_monarchy = yes }
+					SAF_set_british_spymaster = yes
+					if = {
+						limit = {
+							has_government = social_democrat
+							has_character = SAF_walter_bayley_madeley
+						}
+						activate_advisor = SAF_walter_bayley_madeley_sic
+					}
+					else_if = {
+						limit = {
+							OR = {
+								has_government = social_liberal
+								has_government = social_conservative
+							}
+							has_character = SAF_jan_christian_smuts
+						}
+						activate_advisor = SAF_jan_christian_smuts_sic
+					}
+					else_if = {
+						limit = {
+							has_government = authoritarian_democrat
+							has_character = SAF_james_barry_munnik_hertzog
+						}
+						activate_advisor = SAF_james_barry_munnik_hertzog_sic
+					}
+					else_if = {
+						limit = {
+							has_government = authoritarian_democrat
+							has_character = SAF_nicolaas_christiaan_havenga
+						}
+						activate_advisor = SAF_nicolaas_christiaan_havenga_sic
+					}
+					else_if = {
+						limit = {
+							has_government = paternal_autocrat
+							has_character = SAF_daniel_francois_malan
+						}
+						activate_advisor = SAF_daniel_francois_malan_sic
+					}
+					else_if = {
+						limit = { has_character = SAF_south_african_parliament }
+						activate_advisor = SAF_south_african_parliament_sic
+					}
+					if = {
+						limit = {
+							owns_state = 545 #Rhodesia
+							ZIM = {
+								NOT = { has_cosmetic_tag = ZIM_rhodesia }
+								exists = no
+							}
+						}
+						ZIM = { set_cosmetic_tag = ZIM_rhodesia }
+					}
+				}
+				else = {
+					SAF_set_boer_spymaster = yes
+					if = {
+						limit = { has_character = SAF_south_african_parliament }
+						activate_advisor = SAF_south_african_parliament_sic
+					}
+					if = {
+						limit = {
+							owns_state = 545 #Rhodesia
+							ZIM = {
+								NOT = { has_cosmetic_tag = ZIM_rhodesia }
+								exists = no
+							}
+						}
+						ZIM = { set_cosmetic_tag = ZIM_rhodesia }
+					}
+				}
+			}
+		}
+	}
+
+	#ROOT = attacking side
+	#FROM = defending side
+	#fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						original_tag = SAF
+						FROM = { original_tag = SAF }
+					}
+				}
+				SAF = { country_event = { id = south_africa_events.107 days = 10 random_days = 10 } }
+			}
+			if = {
+				limit = {
+					OR = {
+						original_tag = ENG
+						FROM = { original_tag = ENG }
+					}
+					OR = {
+						tag = ENT
+						FROM = { tag = ENT }
+					}
+				}
+				SAF = { country_event = { id = south_africa_events.96 days = 5 random_days = 10 } }
+			}
+		}
+	}
+
+	on_peace = {
+		effect = {
+			if = {
+				limit = { original_tag = SAF }
+				if = {
+					limit = { has_country_flag = SAF_internal_resistance_enabled }
+					clr_country_flag = SAF_internal_resistance_enabled
+					remove_mission = SAF_control_the_icu
+					remove_mission = SAF_control_the_ob
+					SAF_teardown_internal_resistance_decisions = yes
+				}
+				if = {
+					limit = {
+						is_monarchy = yes
+						is_in_faction = no
+						is_subject = no
+						NOT = { has_idea = SAF_neutral_dominion }
+						ENT = {
+							is_faction_leader = yes
+							at_war_with_or_justifying_wargoal_against_ROOT = no
+						}
+					}
+					ENT = { add_to_faction = ROOT }
+				}
+			}
+		}
+	}
+
+	on_weekly_SAF = {
+		effect = {
+			if = {
+				limit = { has_war_with = NAT }
+				NAT = { country_event = natal_events.12 }
+			}
+			if = {
+				limit = { has_war_with = ZIM }
+				ZIM = { country_event = natal_events.12 }
+			}
+		}
+	}
+}

@@ -1,0 +1,92 @@
+on_actions = {
+	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
+	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = {
+					FROM = { tag = POR }
+					FROM.FROM = {
+						OR = {
+							state = 112 #Lisbon
+							state = 179 #Beja
+							state = 180 #Porto
+							state = 181 #Guarda
+						}
+					}
+				}
+				FROM = {
+					country_event = portugal_exile_events.1
+					country_event = portugal_exile_events.2
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			if = {
+				limit = {
+					tag = POR
+					MAF = {
+						has_idea = MAF_border_shit_show
+						exists = yes
+					}
+				}
+				MAF = { country_event = portugal_exile_events.6 }
+			}
+		}
+	}
+
+	#ROOT is winner #FROM is loser
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						tag = POR
+						tag = MAF
+					}
+					FROM = {
+						OR = {
+							tag = POR
+							tag = MAF
+						}
+					}
+				}
+				set_global_flag = MAF_NoAttack_Portugal
+			}
+		}
+	}
+
+	on_ruling_party_change_immediate = {
+		effect = {
+			if = {
+				limit = { original_tag = POR }
+				if = {
+					limit = { is_monarchy = yes }
+					if = {
+						limit = {
+							has_government = national_populist
+							has_character = POR_jose_hipolito_vaz_raposo
+						}
+						activate_advisor = POR_jose_hipolito_vaz_raposo_sic
+					}
+					else_if = {
+						limit = {
+							has_authoritarian_government = yes
+							has_character = POR_domingo_fezas_vidal
+						}
+						activate_advisor = POR_domingo_fezas_vidal_sic
+					}
+					else = {
+						activate_generic_sics = yes
+					}
+				}
+				else = {
+					activate_generic_sics = yes
+				}
+			}
+		}
+	}
+}

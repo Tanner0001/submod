@@ -1,0 +1,5969 @@
+##################################
+#   Federalist China Focus Tree  #
+##################################
+# Initial GXC rework by Vidyaország & Alpinia
+##################################
+# Second South China Rework by Chiang Kai-Shrek, Suzuha, Hazo, Toaster, Clawedash, Festive, and the rest of the Second South China Rework Team
+##################################
+
+#Road to Unification Tee
+shared_focus = {
+	id = UPC_the_road_to_unification
+	icon = GFX_goal_China_Beiyang_Mass_Assault
+	cost = 5
+
+	x = 0
+	y = 0
+
+	allow_branch = {
+		china_is_aligned_with_kmt = no
+		OR = {
+			YUN_is_phase_3_trigger = yes
+			YUN_is_phase_4_trigger = yes
+			YUN_is_phase_5_trigger = yes
+			GXC_is_phase_3_trigger = yes
+			GXC_is_phase_4_trigger = yes
+			GXC_is_phase_5_trigger = yes
+		}
+		OR = {
+			#Prevents satellites from getting this tree
+			tag = UPC
+			AND = {
+				NOT = { original_tag = YUN }
+				tag = NPA
+			}
+		}
+		NOT = {
+			has_country_flag = GXC_NPA_satellite_narrative_flag
+			has_country_flag = YUN_UPC_satellite_narrative_flag
+		}
+	}
+	offset = {
+		x = 13
+		y = 6
+		trigger = {
+			tag = GXC
+			china_is_aligned_with_federalists = yes
+		}
+	}
+	offset = {
+		x = 2
+		y = -4
+		trigger = {
+			tag = GXC
+			china_is_aligned_with_federalists = yes
+			GXC_is_phase_3_trigger = no
+		}
+	}
+	offset = {
+		x = 13
+		y = 7
+		trigger = {
+			tag = GXC
+			china_is_aligned_with_federalists = no #NPA
+		}
+	}
+	offset = {
+		x = 0
+		y = 5
+		trigger = {
+			tag = GXC
+			china_is_aligned_with_federalists = no #NPA
+			GXC_is_phase_3_trigger = no
+		}
+	}
+	offset = {
+		x = 20
+		y = 6
+		trigger = {
+			tag = YUN
+			china_is_aligned_with_federalists = yes
+		}
+	}
+	offset = {
+		x = -7
+		y = -6
+		trigger = {
+			tag = YUN
+			china_is_aligned_with_federalists = yes
+			YUN_is_phase_3_trigger = no
+		}
+	}
+	ai_will_do = {
+		factor = 1000
+
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_the_road_to_unification"
+		activate_mission = UPC_building_the_unifying_army_mission
+		activate_targeted_decision = { target = THIS decision = UPC_build_the_case_for_unification }
+		activate_targeted_decision = { target = THIS decision = UPC_strongarm_the_warlords }
+		activate_targeted_decision = { target = THIS decision = UPC_silence_dissenters }
+		activate_targeted_decision = { target = THIS decision = UPC_reassure_the_moderates }
+		activate_targeted_decision = { target = THIS decision = UPC_sabotage_peace_talks }
+		activate_targeted_decision = { target = THIS decision = UPC_promise_a_new_era }
+		hidden_effect = {
+			country_event = { id = UPC.unificationtree.001 days = 1 } #The Fork in the Road
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT }
+}
+
+shared_focus = {
+	id = UPC_the_march_to_war
+	icon = GFX_goal_mass_concentration_of_army
+	cost = 5
+
+	relative_position_id = UPC_the_road_to_unification
+	x = -2
+	y = 1
+
+	prerequisite = {
+		focus = UPC_the_road_to_unification
+	}
+	mutually_exclusive = {
+		focus = UPC_the_path_of_negotiation
+	}
+
+	available = { is_subject = no }
+	ai_will_do = {
+		factor = 500
+
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_the_march_to_war"
+		custom_effect_tooltip = UPC_chosing_subjugation_tt
+		custom_effect_tooltip = tooltip_white_line
+		activate_mission = UPC_the_march_of_war_mission
+		add_stability = -0.10
+		add_one_random_military_factory = yes
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = UPC_balancing_freedom_and_authority
+	icon = GFX_goal_generic_stable_government
+	cost = 5
+
+	relative_position_id = UPC_the_march_to_war
+	x = -2
+	y = 1
+
+	prerequisite = {
+		focus = UPC_the_march_to_war
+	}
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_balancing_freedom_and_authority"
+		if = {
+			limit = { tag = UPC }
+			UPC_sub_enthusiasm_mega_effect = yes
+		}
+		else = {
+			set_temp_variable = { ideology_change_var = -0.10 }
+			change_ruling_party_popularity = yes
+		}
+		add_war_support = 0.10
+		add_political_power = 100
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT }
+}
+
+shared_focus = {
+	id = UPC_a_warchest_for_national_unification
+	icon = GFX_focus_AUS_raid_military_storages
+	cost = 5
+
+	relative_position_id = UPC_the_march_to_war
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = UPC_the_march_to_war
+	}
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+		modifier = {
+			factor = 3
+			NOT = { has_completed_focus = UPC_a_new_directorate_of_rehabilitation }
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_a_warchest_for_national_unification"
+		custom_effect_tooltip = UPC_a_warchest_for_national_unification_tt
+		add_war_support = 0.15
+		custom_effect_tooltip = tooltip_white_line
+		add_timed_idea = {
+			idea = UPC_the_warchest_of_national_unification_idea
+			days = 365
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					china_is_aligned_with_federalists = yes
+				}
+				country_event = { id = UPC.unificationtree.020 days = 1 } #Paying the Piper
+			}
+			else = {
+				country_event = { id = UPC.unificationtree.021 days = 1 } #The Sinews of War
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT }
+}
+
+shared_focus = {
+	id = UPC_the_path_of_negotiation
+	icon = GFX_goal_china_beiyang_cooporation
+	cost = 8
+
+	relative_position_id = UPC_the_road_to_unification
+	x = 2
+	y = 1
+
+	prerequisite = {
+		focus = UPC_the_road_to_unification
+	}
+	mutually_exclusive = {
+		focus = UPC_the_march_to_war
+	}
+	ai_will_do = { factor = 100 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_the_path_of_negotiation"
+		custom_effect_tooltip = UPC_chosing_negotiation_tt
+		custom_effect_tooltip = tooltip_white_line
+		activate_mission = UPC_exhaust_all_other_options_mission
+		effect_tooltip = {
+			QIE = {
+				activate_targeted_decision = { target = ROOT decision = UPC_manipulate_the_regionalists }
+				activate_targeted_decision = { target = ROOT decision = UPC_appeal_to_the_moderates }
+				activate_targeted_decision = { target = ROOT decision = UPC_intimidate_the_defeatists }
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = UPC_leverage_through_solidarity
+	icon = GFX_goal_generic_solidarity
+	cost = 8
+
+	relative_position_id = UPC_the_path_of_negotiation
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = UPC_the_path_of_negotiation
+	}
+	ai_will_do = { factor = 100 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_leverage_through_solidarity"
+		if = {
+			limit = { NOT = { has_global_flag = china_united } }
+			set_temp_variable = { coalition_partner_var = token:social_democrat }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:social_liberal }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:market_liberal }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:social_conservative }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+			add_to_coalition = yes
+		}
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = UPC_the_third_constitutional_protection_movement_idea_tt
+		add_timed_idea = {
+			idea = UPC_the_third_constitutional_protection_movement_idea
+			days = 1095
+		}
+		every_subject_country = {
+			add_timed_idea = {
+				idea = UPC_the_third_constitutional_protection_movement_idea
+				days = 1095
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = UPC_a_model_for_all_to_see
+	icon = GFX_goal_model_cities
+	cost = 8
+
+	relative_position_id = UPC_the_path_of_negotiation
+	x = 2
+	y = 1
+
+	prerequisite = {
+		focus = UPC_the_path_of_negotiation
+	}
+	ai_will_do = { factor = 100 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_a_model_for_all_to_see"
+		custom_effect_tooltip = UPC_a_model_for_all_to_see_tt
+		add_war_support = -0.10
+		custom_effect_tooltip = tooltip_white_line
+		add_offsite_building = {
+			type = industrial_complex
+			level = 2
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					china_is_aligned_with_federalists = yes
+				}
+				country_event = { id = UPC.unificationtree.030 days = 1 } #Chen's Model Province
+			}
+			else = {
+				country_event = { id = UPC.unificationtree.031 days = 1 } #The Gifts of Peace
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = UPC_a_new_directorate_of_rehabilitation
+	icon = GFX_goal_Centralised_Government
+	cost = 7
+
+	relative_position_id = UPC_the_path_of_negotiation
+	x = -2
+	y = 1
+
+	prerequisite = {
+		focus = UPC_the_path_of_negotiation
+		focus = UPC_the_march_to_war
+	}
+
+	available = {
+		if = {
+			limit = { china_is_aligned_with_federalists = yes }
+			has_war_support > 0.59
+		}
+		else = {
+			has_war_support > 0.79
+		}
+	}
+	ai_will_do = {
+		factor = 500
+
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_a_new_directorate_of_rehabilitation"
+		china_add_research_slots = yes
+		custom_effect_tooltip = china_can_core_through_compliance
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = {
+				tag = GXC
+				china_is_aligned_with_federalists = yes
+			}
+			GXC_weng_shiliang = { custom_effect_tooltip = character_becomes_a_general }
+			GXC_sun_baogang = { custom_effect_tooltip = character_becomes_a_general }
+			hidden_effect = {
+				GXC_weng_shiliang = { CHN_recruit_character_effect = yes }
+				GXC_sun_baogang = { CHN_recruit_character_effect = yes }
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = { has_completed_focus = UPC_the_march_to_war }
+			add_timed_idea = {
+				idea = UPC_directorate_of_rehabliation_subjugation_idea
+				days = 180
+			}
+		}
+		else_if = {
+			limit = { has_completed_focus = UPC_the_path_of_negotiation }
+			add_timed_idea = {
+				idea = UPC_directorate_of_rehabliation_negotiation_idea
+				days = 180
+			}
+		}
+		else = {
+			custom_effect_tooltip = UPC_chosen_subjugation_tt
+			effect_tooltip = {
+				add_timed_idea = {
+					idea = UPC_directorate_of_rehabliation_subjugation_idea
+					days = 180
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = UPC_chosen_negotiation_tt
+			effect_tooltip = {
+				add_timed_idea = {
+					idea = UPC_directorate_of_rehabliation_negotiation_idea
+					days = 180
+				}
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = UPC_fight_for_the_interior
+	icon = GFX_goal_CHI_plan_western
+	cost = 6
+
+	relative_position_id = UPC_a_new_directorate_of_rehabilitation
+	x = -2
+	y = 1
+
+	prerequisite = {
+		focus = UPC_a_new_directorate_of_rehabilitation
+	}
+	ai_will_do = {
+		factor = 500
+
+		modifier = {
+			factor = 0
+			has_game_rule = { rule = ANQ_forpol option = ANQ_FORPOL_UPC }
+			NOT = { has_completed_focus = UPC_smash_the_league }
+			ANQ = {
+				exists = yes
+				is_subject = no
+			}
+		}
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+	}
+
+	will_lead_to_war_with = YUN
+	will_lead_to_war_with = HNN
+	will_lead_to_war_with = SZC
+
+	available = {
+		OR = {
+			country_exists = HNN
+			country_exists = SZC
+			country_exists = YUN
+		}
+	}
+	bypass = {
+		592 = { is_owned_by_ROOT_or_subject = yes } #Canton
+		605 = { is_owned_by_ROOT_or_subject = yes } #Chengdu
+		602 = { is_owned_by_ROOT_or_subject = yes } #Changsha
+		325 = { is_owned_by_ROOT_or_subject = yes } #Kunming
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_fight_for_the_interior"
+		effect_tooltip = {
+			activate_targeted_decision = { decision = china_demand_submission target = YUN }
+			activate_targeted_decision = { decision = china_demand_submission target = HNN }
+			activate_targeted_decision = { decision = china_demand_submission target = SZC }
+		}
+		hidden_effect = {
+			add_to_array = { ROOT.china_possible_targets_array = YUN }
+			add_to_array = { ROOT.china_possible_targets_array = HNN }
+			add_to_array = { ROOT.china_possible_targets_array = SZC }
+			activate_targeted_decision = { target = HNN decision = china_attack_decision }
+			activate_targeted_decision = { target = SZC decision = china_attack_decision }
+			activate_targeted_decision = { target = YUN decision = china_attack_decision }
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ANNEXATION }
+}
+
+shared_focus = {
+	id = UPC_topple_beiyang
+	icon = {
+		GFX_goal_generic_attack_qing = {
+			var:608.owner = { has_country_leader = { character = QIE_aisin_gioro_puyi } } #Beijing
+		}
+		GFX_goal_generic_attack_zhili = {
+			var:613.owner = { tag = QIE } #Zhili Republic
+		}
+		GFX_goal_CHI_northern_expedition = yes
+	}
+	cost = 6
+
+	relative_position_id = UPC_a_new_directorate_of_rehabilitation
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = UPC_a_new_directorate_of_rehabilitation
+	}
+	ai_will_do = {
+		base = 100
+		modifier = {
+			factor = 0
+			OR = {
+				has_country_flag = china_attack_decision_one_month_cooldown
+				country_is_in_dangerous_war = yes
+			}
+		}
+		modifier = {
+			factor = 0
+			has_game_rule = { rule = ANQ_forpol option = ANQ_FORPOL_UPC }
+			NOT = { has_completed_focus = UPC_smash_the_league }
+			ANQ = {
+				exists = yes
+				is_subject = no
+			}
+		}
+		modifier = {
+			factor = 0.5
+			has_army_size = {
+				size < 20
+			}
+		}
+		modifier = {
+			factor = 0.5
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 2
+			QIE = { has_war = yes }
+		}
+		modifier = {
+			factor = 2
+			ic_ratio = {
+				tag = QIE
+				ratio > 0.80
+			}
+		}
+		modifier = {
+			factor = 2
+			strength_ratio = {
+				tag = QIE
+				ratio > 0.80
+			}
+		}
+		modifier = {
+			factor = 2
+			has_army_size = {
+				size > 50
+			}
+		}
+
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+	}
+
+	will_lead_to_war_with = QIE
+	will_lead_to_war_with = SHD
+	will_lead_to_war_with = SHX
+
+	available = {
+		OR = {
+			is_neighbor_of = var:608.owner
+			any_subject_country = { is_neighbor_of = var:608.owner }
+			var:608.owner = { any_subject_country = { is_neighbor_of = ROOT } }
+		}
+	}
+
+	bypass = {
+		608 = { is_owned_by_ROOT_or_subject = yes } #Beijing
+		597 = { is_owned_by_ROOT_or_subject = yes } #Jinan
+		1072 = { is_owned_by_ROOT_or_subject = yes } #Taiyan
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_topple_beiyang"
+		if = {
+			limit = { has_global_flag = allow_sound_events_flag }
+			hidden_effect = { scoped_play_song = I_have_a_gun }
+		}
+		if = {
+			limit = { NOT = { owns_state = 608 } }
+			create_wargoal = {
+				target = 608.owner #Beijing
+				type = annex_everything
+			}
+		}
+		effect_tooltip = {
+			activate_targeted_decision = { decision = china_demand_submission target = SHD }
+			activate_targeted_decision = { decision = china_demand_submission target = SHX }
+		}
+		hidden_effect = {
+			add_to_array = { ROOT.china_possible_targets_array = SHD }
+			add_to_array = { ROOT.china_possible_targets_array = SHX }
+			activate_targeted_decision = { target = SHX decision = china_attack_decision }
+			activate_targeted_decision = { target = SHD decision = china_attack_decision }
+		}
+		unlock_decision_tooltip = CHN_conquer_beijing_fallback_decision
+		unlock_decision_tooltip = CHN_demand_control_of_beijing
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ANNEXATION }
+}
+
+shared_focus = {
+	id = UPC_smash_the_league
+	icon = {
+		GFX_goal_generic_attack_kmt = {
+			var:613.owner = { tag = CHI } #Nanjing
+		}
+		YUN_GFX_Goal_Secure_Coastal_China = yes
+	}
+	cost = 6
+
+	relative_position_id = UPC_a_new_directorate_of_rehabilitation
+	x = 2
+	y = 1
+
+	prerequisite = {
+		focus = UPC_a_new_directorate_of_rehabilitation
+	}
+	ai_will_do = {
+		factor = 500
+
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+	}
+
+	available = {
+		if = {
+			limit = {
+				country_exists = SHD
+				SHD = { owns_state = 613 }
+			}
+			OR = {
+				country_exists = LEP
+				country_exists = ANQ
+				country_exists = CHI
+				country_exists = SHD
+			}
+		}
+		else = {
+			OR = {
+				country_exists = LEP
+				country_exists = ANQ
+				country_exists = CHI
+			}
+		}
+	}
+
+	bypass = {
+		613 = { is_owned_by_ROOT_or_subject = yes } #Nanjing
+	}
+
+	will_lead_to_war_with = LEP
+	will_lead_to_war_with = ANQ
+	will_lead_to_war_with = CHI
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_smash_the_league"
+		effect_tooltip = {
+			activate_targeted_decision = { decision = china_demand_submission target = LEP }
+			activate_targeted_decision = { decision = china_demand_submission target = ANQ }
+			activate_targeted_decision = { decision = china_demand_submission target = CHI }
+			if = {
+				limit = { SHD = { owns_state = 613 } }
+				activate_targeted_decision = { decision = china_demand_submission target = SHD }
+			}
+		}
+		hidden_effect = {
+			add_to_array = { ROOT.china_possible_targets_array = LEP }
+			add_to_array = { ROOT.china_possible_targets_array = ANQ }
+			add_to_array = { ROOT.china_possible_targets_array = CHI }
+			add_to_array = { ROOT.china_possible_targets_array = SHD }
+			activate_targeted_decision = { target = CHI decision = china_attack_decision }
+			activate_targeted_decision = { target = ANQ decision = china_attack_decision }
+			activate_targeted_decision = { target = LEP decision = china_attack_decision }
+			activate_targeted_decision = { target = SHD decision = china_attack_decision }
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ANNEXATION }
+}
+
+shared_focus = {
+	id = UPC_take_on_fengtian
+	icon = {
+		GFX_goal_generic_attack_fengtian = {
+			var:716.owner = { tag = FNG }
+		}
+		YUN_GFX_Goal_Secure_Northern_China = yes
+	}
+	cost = 6
+
+	relative_position_id = UPC_topple_beiyang
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = UPC_topple_beiyang
+	}
+	bypass = {
+		716 = { is_owned_by_ROOT_or_subject = yes }
+	}
+	available = {
+		OR = {
+			is_neighbor_of = var:716.owner
+			any_subject_country = { is_neighbor_of = var:716.owner }
+			var:716.owner = { any_subject_country = { is_neighbor_of = ROOT } }
+		}
+	}
+	will_lead_to_war_with = FNG
+	will_lead_to_war_with = MAN
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			CHN_ai_factor_pressure_to_act_trigger = yes
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_take_on_fengtian"
+		create_wargoal = {
+			target = 716.owner #Shenyang
+			type = annex_everything
+		}
+		unlock_decision_tooltip = CHN_march_to_manchuria
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ANNEXATION }
+}
+
+#Foreign Policy Tree
+shared_focus = {
+	id = CHN_return_to_the_world_stage_focus
+	icon = GFX_focus_chi_one_china_policy
+	cost = 7
+
+	x = 0
+	y = 0
+
+	offset = {
+		x = 2
+		y = 24
+		trigger = {
+			tag = GXC
+		}
+	}
+
+	offset = {
+		x = 0
+		y = -3
+		trigger = {
+			tag = GXC
+			has_completed_focus = GXC_liangguangs_destiny
+		}
+	}
+
+	offset = {
+		x = 13
+		y = 0 #Yeah it looks a little weird for Dem UPC but it works for Auth UPC since Auth is one deeper
+		trigger = {
+			tag = GXC
+			china_is_aligned_with_federalists = yes
+		}
+	}
+
+	offset = {
+		x = 17
+		y = 16
+		trigger = {
+			tag = YUN
+		}
+	}
+
+	offset = {
+		x = -4
+		y = 8
+		trigger = {
+			tag = YUN
+			china_is_aligned_with_federalists = yes
+		}
+	}
+
+	offset = {
+		x = 7 #Looks a bit weird if you manually go to Phase V but if you do it organically it matches up. Must be some sort of offset in the focus tree.
+		y = -1
+		trigger = {
+			tag = YUN
+			china_is_aligned_with_federalists = yes
+			has_country_flag = YUN_UPC_satellite_narrative_flag
+		}
+	}
+
+	offset = {
+		x = 8
+		y = 12
+		trigger = {
+			tag = SZC
+			SZC_federalists_in_exile = yes
+		}
+	}
+
+	offset = {
+		x = -8
+		y = 0
+		trigger = {
+			tag = SZC
+			SZC_federalists_in_exile = no
+		}
+	}
+
+	allow_branch = {
+		CHN_generic_foreign_policy_tree_available = yes
+	}
+	available = {
+		is_subject = no
+		has_war_support > 0.25
+	}
+	ai_will_do = {
+		base = 100
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0.5
+			has_war = yes
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_return_to_the_world_stage_focus"
+		if = {
+			limit = { NOT = { has_idea = CHN_return_to_the_world_stage_idea } }
+			add_ideas = CHN_return_to_the_world_stage_idea
+		}
+		add_political_power = 50
+		add_war_support = 0.10
+		unlock_decision_tooltip = CHN_found_our_faction_decision
+		hidden_effect = {
+			activate_targeted_decision = { decision = CHN_found_our_faction_decision target = ROOT }
+		}
+		if = {
+			limit = { tag = GXC }
+			if = {
+				limit = {
+					OR = {
+						has_country_leader = { character = GXC_shen_hongying }
+						has_country_leader = { character = GXC_li_yaohan }
+						has_country_leader = { character = GXC_zhu_jiahua }
+					}
+				}
+				unlock_decision_tooltip = china_join_the_reichspakt_decision
+			}
+			if = {
+				limit = {
+					OR = {
+						has_country_leader = { character = GXC_chen_lianbo }
+						has_country_leader = { character = GXC_liu_zhenhuan }
+					}
+				}
+				unlock_decision_tooltip = china_join_the_co_pro_decision
+				unlock_decision_tooltip = china_join_the_entente_decision
+			}
+			if = {
+				limit = {
+					OR = {
+						china_alignment_federalists = yes
+						has_country_leader = { character = CHI_li_jishen }
+					}
+				}
+				unlock_decision_tooltip = china_join_america_decision
+			}
+		}
+		if = {
+			limit = { tag = YUN }
+			if = {
+				limit = {
+					OR = {
+						has_country_leader = { character = YUN_hu_ruoyu }
+						has_country_leader = { character = YUN_long_yun }
+					}
+				}
+				unlock_decision_tooltip = china_join_the_reichspakt_decision
+			}
+			if = {
+				limit = {
+					china_alignment_federalists = yes
+				}
+				unlock_decision_tooltip = china_join_america_decision
+			}
+		}
+		if = {
+			limit = { tag = SZC }
+			if = {
+				limit = {
+					OR = {
+						china_is_aligned_with_federalists = yes
+						has_country_leader = { character = SZC_liu_wenhui }
+					}
+				}
+				unlock_decision_tooltip = china_join_america_decision
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = CHN_subjugating_the_frontiers_focus
+	icon = GFX_goal_china_MON_banner
+	cost = 3
+
+	relative_position_id = CHN_return_to_the_world_stage_focus
+	x = -2
+	y = 1
+
+	prerequisite = { focus = CHN_return_to_the_world_stage_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	bypass = {
+		NOT = {
+			country_exists = XSM
+			country_exists = MON
+			country_exists = TIB
+			country_exists = SIK
+			country_exists = KUM
+			country_exists = ETS
+		}
+		owns_state = 617 #Dihua
+		owns_state = 283 #Lanzhou
+		owns_state = 322 #Lhasa
+		owns_state = 330 #Urga
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_subjugating_the_frontiers_focus"
+		china_enable_outskirts_decisions = yes
+		KUM = {
+			every_core_state = { add_claim_by = ROOT }
+		}
+		ETS = {
+			every_core_state = { add_claim_by = ROOT }
+		}
+		SIK = {
+			every_core_state = { add_claim_by = ROOT }
+		}
+		TIB = {
+			every_core_state = { add_claim_by = ROOT }
+		}
+		MON = {
+			every_core_state = { add_claim_by = ROOT }
+		}
+	}
+	search_filters = { FOCUS_FILTER_ANNEXATION }
+}
+
+shared_focus = {
+	id = CHN_end_the_century_of_humiliation_focus
+	icon = GFX_goal_QIE_destroy_LEC
+	cost = 3
+
+	relative_position_id = CHN_return_to_the_world_stage_focus
+	x = 0
+	y = 1
+
+	prerequisite = { focus = CHN_return_to_the_world_stage_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	bypass = {
+		NOT = { country_exists = LEC }
+		326 = { is_owned_by_ROOT_or_subject = yes } #Hong Kong
+		609 = { is_owned_by_ROOT_or_subject = yes } #Tianjin
+		728 = { is_owned_by_ROOT_or_subject = yes } #Guangzhouwan
+		729 = { is_owned_by_ROOT_or_subject = yes } #Macau
+		743 = { is_owned_by_ROOT_or_subject = yes } #Shanghai
+		744 = { is_owned_by_ROOT_or_subject = yes } #Qingdao
+		745 = { is_owned_by_ROOT_or_subject = yes } #Dalian
+		746 = { is_owned_by_ROOT_or_subject = yes } #Ningbo
+		747 = { is_owned_by_ROOT_or_subject = yes } #Fuzhou
+		801 = { is_owned_by_ROOT_or_subject = yes } #Shantou
+		802 = { is_owned_by_ROOT_or_subject = yes } #Xiamen
+		803 = { is_owned_by_ROOT_or_subject = yes } #Wenzhou
+		1075 = { is_owned_by_ROOT_or_subject = yes } #Nantong
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_end_the_century_of_humiliation_focus"
+		china_enable_concession_decisions = yes
+	}
+	search_filters = { FOCUS_FILTER_ANNEXATION }
+}
+
+shared_focus = {
+	id = CHN_the_liberation_of_taiwan_focus
+	icon = GFX_focus_generic_invade_taiwan
+	cost = 3
+	relative_position_id = CHN_return_to_the_world_stage_focus
+	x = 2
+	y = 1
+
+	prerequisite = { focus = CHN_return_to_the_world_stage_focus }
+	bypass = { owns_state = 524 }
+	will_lead_to_war_with = JAP
+
+	available = {
+		NOT = { is_ally_with = JAP }
+	}
+
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+		modifier = {
+			factor = 0
+			AND = {
+				naval_strength_ratio = {
+					tag = JAP
+					ratio < 1
+				}
+				JAP = {
+					has_war_with_major = no
+				}
+			}
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_the_liberation_of_taiwan_focus"
+		if = {
+			limit = { 524 = { is_claim_or_core_of_ROOT = no } } #Taiwan
+			add_state_claim = 524
+		}
+		create_wargoal = {
+			target = var:524.owner #Taiwan
+			type = take_state_focus
+			generator = { 524 }
+		}
+	}
+	search_filters = { FOCUS_FILTER_ANNEXATION }
+}
+
+shared_focus = {
+	id = CHN_the_dragon_awakens_focus
+	icon = {
+		GFX_goal_QIE_glory = {
+			is_monarchy = yes
+		}
+		GFX_goal_China_Beiyang_coat_of_arms = yes
+	}
+	cost = 3
+
+	relative_position_id = CHN_end_the_century_of_humiliation_focus
+	x = 0
+	y = 1
+
+	prerequisite = { focus = CHN_end_the_century_of_humiliation_focus }
+	prerequisite = { focus = CHN_subjugating_the_frontiers_focus }
+	prerequisite = { focus = CHN_the_liberation_of_taiwan_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+
+	available = {
+		330 = { is_owned_by_ROOT_or_subject = yes } #Urga
+		617 = { is_owned_by_ROOT_or_subject = yes } #Dihua
+		322 = { is_owned_by_ROOT_or_subject = yes } #Lhasa
+		524 = { is_owned_by_ROOT_or_subject = yes } #Taiwan
+
+		owns_state = 743 #Shanghai
+		owns_state = 729 #Macau
+		owns_state = 745 #Kwantung
+		owns_state = 744 #Qingdao
+		owns_state = 326 #Hong Kong
+		owns_state = 609 #Tianjin
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_the_dragon_awakens_focus"
+		if = {
+			limit = { has_idea = CHN_return_to_the_world_stage_asia_pacific_treaty_organisation_idea }
+			swap_ideas = {
+				remove_idea = CHN_return_to_the_world_stage_asia_pacific_treaty_organisation_idea
+				add_idea = CHN_return_to_the_world_stage_2_idea
+			}
+		}
+		else = {
+			swap_ideas = {
+				remove_idea = CHN_return_to_the_world_stage_idea
+				add_idea = CHN_return_to_the_world_stage_2_idea
+			}
+		}
+		mark_focus_tree_layout_dirty = yes #For the World in Harmony Focus
+	}
+	search_filters = { FOCUS_FILTER_ANNEXATION }
+}
+
+shared_focus = {
+	id = CHN_pursuing_the_1911_borders_focus
+	icon = GFX_goal_China_Beiyang_soldier
+	cost = 3
+
+	relative_position_id = CHN_the_dragon_awakens_focus
+	x = 0
+	y = 1
+
+	prerequisite = { focus = CHN_the_dragon_awakens_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	will_lead_to_war_with = RUS
+	will_lead_to_war_with = BUK
+	will_lead_to_war_with = KAZ
+	will_lead_to_war_with = KHI
+	will_lead_to_war_with = TRK
+	will_lead_to_war_with = HND
+	will_lead_to_war_with = RAJ
+	will_lead_to_war_with = PRF
+	will_lead_to_war_with = BRM
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_pursuing_the_1911_borders_focus"
+		if = {
+			limit = { 329 = { is_claim_or_core_of_ROOT = no } }
+			add_state_claim = 329 #Tuva
+		}
+		if = {
+			limit = { 897 = { is_claim_or_core_of_ROOT = no } }
+			add_state_claim = 897 #Askai Chin
+		}
+		if = {
+			limit = { 858 = { is_claim_or_core_of_ROOT = no } }
+			add_state_claim = 858 #Tawang
+		}
+		if = {
+			limit = { 858 = { is_owned_by_ROOT_or_ally = no } }
+			activate_targeted_decision = { target = 858.owner decision = himalaya_border_conflict_decision } #There is an option to ultimately have a war at the end of the border conflict
+		}
+		if = {
+			limit = { 897 = { is_owned_by_ROOT_or_ally = no } }
+			activate_targeted_decision = { target = 897.owner decision = himalaya_border_conflict_decision } #There is an option to ultimately have a war at the end of the border conflict
+		}
+		add_state_claim = 1111 #Hukawng Valley
+		add_state_claim = 1042 #Badakhshan
+	}
+	search_filters = { FOCUS_FILTER_ANNEXATION }
+}
+
+#Asia-Pacific Treaty Organisation Foreign Policy Focuses
+shared_focus = {
+	id = CHN_responsibilities_of_the_eldest_sibling_focus
+	icon = GFX_goal_QIE_president_hu
+	cost = 3
+
+	relative_position_id = CHN_return_to_the_world_stage_focus
+	x = 4
+	y = 1
+
+	allow_branch = {
+		CHN_generic_foreign_policy_tree_available = yes
+		CHN_asia_pacific_treaty_organisation_leaders_trigger = yes
+	}
+
+	prerequisite = { focus = CHN_return_to_the_world_stage_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_responsibilities_of_the_eldest_sibling_focus"
+		if = {
+			limit = { NOT = { has_completed_focus = CHN_the_dragon_awakens_focus } }
+			swap_ideas = {
+				remove_idea = CHN_return_to_the_world_stage_idea
+				add_idea = CHN_return_to_the_world_stage_asia_pacific_treaty_organisation_idea
+			}
+		}
+		else = {
+			add_offsite_building = {
+				type = industrial_complex
+				level = 3
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = CHN_an_international_peacekeeping_force_focus
+	icon = GFX_goal_China_Beiyang_training
+	cost = 3
+
+	relative_position_id = CHN_responsibilities_of_the_eldest_sibling_focus
+	x = -1
+	y = 1
+
+	prerequisite = { focus = CHN_responsibilities_of_the_eldest_sibling_focus }
+	prerequisite = { focus = CHN_the_liberation_of_taiwan_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_an_international_peacekeeping_force_focus"
+		add_offsite_building = {
+			type = arms_factory
+			level = 2
+		}
+		add_war_support = 0.10
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = CHN_building_an_asian_superfederation_focus
+	icon = GFX_focus_GER_south_east_asian_natural_wealth
+	cost = 3
+
+	relative_position_id = CHN_responsibilities_of_the_eldest_sibling_focus
+	x = 0
+	y = 2
+
+	prerequisite = { focus = CHN_responsibilities_of_the_eldest_sibling_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_building_an_asian_superfederation_focus"
+		add_political_power = 100
+		add_stability = 0.10
+		every_subject_country = {
+			add_political_power = 50
+			add_stability = 0.05
+		}
+		every_allied_country = {
+			add_political_power = 50
+			add_stability = 0.05
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+#The Asian Federation Foreign Policy Focuses
+shared_focus = {
+	id = CHN_cornerstone_of_the_federation_focus
+	icon = GFX_goal_GXC_federalist_republic
+	cost = 3
+
+	relative_position_id = CHN_return_to_the_world_stage_focus
+	x = 4
+	y = 1
+
+	allow_branch = {
+		CHN_generic_foreign_policy_tree_available = yes
+		CHN_asia_federation_leaders_trigger = yes
+	}
+
+	prerequisite = { focus = CHN_return_to_the_world_stage_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_cornerstone_of_the_federation_focus"
+		add_ideas = CHN_east_asian_community_founder_level_1_idea
+		country_event = CHN.foreignpolicy.201 #The East Asian Community
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = CHN_forging_a_great_commercial_circle_focus
+	icon = GFX_focus_GER_south_east_asian_natural_wealth
+	cost = 3
+
+	relative_position_id = CHN_cornerstone_of_the_federation_focus
+	x = -1
+	y = 1
+
+	prerequisite = { focus = CHN_cornerstone_of_the_federation_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_forging_a_great_commercial_circle_focus"
+		custom_effect_tooltip = CHN_unlock_east_asian_community_decisions_tt
+		for_each_scope_loop = {
+			array = global.asian_tags_array
+			if = {
+				limit = {
+					NOT = {
+						tag = ROOT
+						num_of_controlled_factories > 20
+					}
+				}
+				ROOT = { #Should be the original tags
+					activate_targeted_decision = { target = PREV decision = CHN_invite_into_east_asian_community }
+				}
+			}
+		}
+		for_each_scope_loop = {
+			array = global.indian_tags_array
+			if = {
+				limit = {
+					NOT = {
+						tag = ROOT
+						num_of_controlled_factories > 20
+					}
+				}
+				ROOT = { #Should be the original tags
+					activate_targeted_decision = { target = PREV decision = CHN_invite_into_east_asian_community }
+				}
+			}
+		}
+		for_each_scope_loop = {
+			array = global.oceania_tags_array
+			if = {
+				limit = {
+					NOT = {
+						tag = ROOT
+						num_of_controlled_factories > 20
+					}
+				}
+				ROOT = { #Should be the original tags
+					activate_targeted_decision = { target = PREV decision = CHN_invite_into_east_asian_community }
+				}
+			}
+		}
+		mark_focus_tree_layout_dirty = yes #For the World in Harmony Focus
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = CHN_for_the_evolution_of_humanity_focus
+	icon = GFX_focus_spr_torchbearers_of_tomorrow
+	cost = 3
+
+	relative_position_id = CHN_cornerstone_of_the_federation_focus
+	x = 1
+	y = 1
+
+	prerequisite = { focus = CHN_cornerstone_of_the_federation_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_for_the_evolution_of_humanity_focus"
+		swap_ideas = {
+			remove_idea = CHN_east_asian_community_founder_level_1_idea
+			add_idea = CHN_east_asian_community_founder_level_2_idea
+		}
+		mark_focus_tree_layout_dirty = yes #For the World in Harmony Focus
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = CHN_a_world_in_harmony_focus
+	icon = GFX_goal_generic_globe
+	cost = 3
+
+	relative_position_id = CHN_forging_a_great_commercial_circle_focus
+	x = 0
+	y = 1
+
+	prerequisite = { focus = CHN_forging_a_great_commercial_circle_focus }
+	prerequisite = { focus = CHN_the_dragon_awakens_focus }
+	prerequisite = { focus = CHN_for_the_evolution_of_humanity_focus }
+
+	allow_branch = {
+		is_faction_leader = yes
+		has_completed_focus = CHN_forging_a_great_commercial_circle_focus
+		has_completed_focus = CHN_for_the_evolution_of_humanity_focus
+		has_completed_focus = CHN_the_dragon_awakens_focus
+		CHN_asia_federation_leaders_trigger = yes
+	}
+
+	available = {
+		var:361.owner = { is_ally_with = ROOT } #Washington D.C.
+		var:739.owner = { is_ally_with = ROOT } #Ottawa
+		var:64.owner = { is_ally_with = ROOT } #Berlin
+		var:16.owner = { is_ally_with = ROOT } #Paris
+		var:126.owner = { is_ally_with = ROOT } #London
+		var:4.owner = { is_ally_with = ROOT } #Vienna
+		var:219.owner = { is_ally_with = ROOT } #Moscow
+		var:282.owner = { is_ally_with = ROOT } #Tokyo
+		var:773.owner = { is_ally_with = ROOT } #Constantinople
+		var:439.owner = { is_ally_with = ROOT } #Delhi
+	}
+
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_a_world_in_harmony_focus"
+		if = {
+			limit = {
+				is_faction_leader = yes
+				num_faction_members > 1
+			}
+			set_faction_name = faction_UPC_the_world_federation
+		}
+		swap_ideas = {
+			remove_idea = CHN_east_asian_community_founder_level_2_idea
+			add_idea = CHN_east_asian_community_founder_level_3_idea
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+#Asia-Pacific Security Pact Foreign Policy Tree
+shared_focus = {
+	id = CHN_enforcing_peace_in_asia_focus
+	icon = GFX_goal_generic_taoism
+	cost = 3
+
+	relative_position_id = CHN_return_to_the_world_stage_focus
+	x = 4
+	y = 1
+
+	allow_branch = {
+		CHN_generic_foreign_policy_tree_available = yes
+		CHN_asia_pacific_treaty_organisation_leaders_trigger = no
+		CHN_asia_federation_leaders_trigger = no
+	}
+
+	prerequisite = { focus = CHN_return_to_the_world_stage_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_enforcing_peace_in_asia_focus"
+		add_war_support = 0.10
+		add_political_power = 100
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT }
+}
+
+shared_focus = {
+	id = CHN_building_a_security_zone_focus
+	icon = GFX_goal_syndicalist_workers
+	cost = 3
+
+	relative_position_id = CHN_enforcing_peace_in_asia_focus
+	x = -1
+	y = 2
+
+	prerequisite = { focus = CHN_enforcing_peace_in_asia_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_building_a_security_zone_focus"
+		add_one_random_military_factory = yes
+		add_one_random_military_factory = yes
+		every_subject_country = {
+			add_one_random_military_factory = yes
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = CHN_a_chinese_expeditionary_force_focus
+	icon = GFX_focus_AFG_adopt_nufus
+	cost = 3
+
+	relative_position_id = CHN_enforcing_peace_in_asia_focus
+	x = 1
+	y = 1
+
+	prerequisite = { focus = CHN_enforcing_peace_in_asia_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_a_chinese_expeditionary_force_focus"
+		add_tech_bonus = {
+			name = CHN_a_chinese_expeditionary_force_focus
+			bonus = 1
+			uses = 1
+			category = cat_special_forces_generic
+		}
+		add_tech_bonus = {
+			name = CHN_a_chinese_expeditionary_force_focus
+			bonus = 1
+			uses = 1
+			category = armor
+		}
+		if = {
+			limit = { has_dlc_bba = yes }
+			add_tech_bonus = {
+				name = CHN_a_chinese_expeditionary_force_focus
+				bonus = 1
+				uses = 1
+				category = mio_cat_all_light_aircraft_and_modules
+			}
+		}
+		else = {
+			add_tech_bonus = {
+				name = CHN_a_chinese_expeditionary_force_focus
+				bonus = 1
+				uses = 1
+				category = air_equipment
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_AIRFORCE_BONUS }
+}
+
+#GXC Region Specific Foreign Policy Tree
+shared_focus = {
+	id = CHN_rule_the_south_china_sea_focus
+	icon = GFX_focus_generic_navy_battleship3alt
+	cost = 3
+
+	relative_position_id = CHN_return_to_the_world_stage_focus
+	x = -4
+	y = 1
+
+	allow_branch = {
+		CHN_generic_foreign_policy_tree_available = yes
+		tag = GXC
+	}
+
+	prerequisite = { focus = CHN_return_to_the_world_stage_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_rule_the_south_china_sea_focus"
+		add_tech_bonus = {
+			name = CHN_rule_the_south_china_sea_focus
+			bonus = 0.50
+			uses = 2
+			category = naval_equipment
+		}
+		add_doctrine_cost_reduction = {
+			name = CHN_rule_the_south_china_sea_focus
+			cost_reduction = 0.50
+			uses = 2
+			category = naval_doctrine
+		}
+		add_tech_bonus = {
+			name = CHN_rule_the_south_china_sea_focus
+			bonus = 1
+			uses = 1
+			category = marine_tech
+		}
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_NAVY_BONUS }
+}
+
+shared_focus = {
+	id = CHN_free_the_sinosphere_focus
+	icon = GFX_focus_usa_focus_on_asia
+	cost = 3
+
+	relative_position_id = CHN_rule_the_south_china_sea_focus
+	x = 1
+	y = 1
+
+	prerequisite = { focus = CHN_rule_the_south_china_sea_focus }
+	ai_will_do = { base = 0 }
+	will_lead_to_war_with = JAP
+	will_lead_to_war_with = GEA
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_free_the_sinosphere_focus"
+		custom_effect_tooltip = CHN_free_the_sinosphere_focus_tt
+		if = {
+			limit = { KOR = { is_ally_with = ROOT } } #Korea
+			add_one_random_civilian_factory = yes
+			KOR = { add_one_random_civilian_factory = yes }
+		}
+		else_if = {
+			limit = {
+				var:525.owner = {
+					NOT = {
+						tag = ROOT
+						is_ally_with = ROOT
+					}
+				}
+			}
+			create_wargoal = {
+				type = take_state_focus
+				target = var:525.owner
+				generator = { 525 527 1100 1099 }
+			}
+		}
+		if = {
+			limit = { JAP = { is_ally_with = ROOT } } #Korea
+			add_one_random_civilian_factory = yes
+			JAP = { add_one_random_civilian_factory = yes }
+		}
+		else_if = {
+			limit = {
+				var:282.owner = {
+					NOT = {
+						tag = ROOT
+						is_ally_with = ROOT
+					}
+				}
+			}
+			create_wargoal = {
+				type = take_state_focus
+				target = var:282.owner
+				generator = { 282 526 528 1102 }
+			}
+		}
+		if = {
+			limit = { VIN = { is_ally_with = ROOT } } #Korea
+			add_one_random_civilian_factory = yes
+			VIN = { add_one_random_civilian_factory = yes }
+		}
+		else_if = {
+			limit = {
+				var:671.owner = {
+					NOT = {
+						tag = ROOT
+						is_ally_with = ROOT
+					}
+				}
+			}
+			create_wargoal = {
+				type = take_state_focus
+				target = var:827.owner
+				generator = { 671 827 286 856 857 }
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = CHN_leverage_ancient_ties_focus
+	icon = GFX_goal_collaborate_local_elites
+	cost = 3
+
+	relative_position_id = CHN_rule_the_south_china_sea_focus
+	x = -1
+	y = 1
+
+	prerequisite = { focus = CHN_rule_the_south_china_sea_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_leverage_ancient_ties_focus"
+		add_political_power = 50
+		add_stability = 0.10
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+#YUN Region Specific Foreign Policy Tree
+shared_focus = {
+	id = CHN_master_of_the_east_continent_focus
+	icon = GFX_focus_generic_navy_battleship3alt
+	cost = 3
+
+	relative_position_id = CHN_return_to_the_world_stage_focus
+	x = -4
+	y = 1
+
+	allow_branch = {
+		CHN_generic_foreign_policy_tree_available = yes
+		tag = YUN
+	}
+
+	prerequisite = { focus = CHN_return_to_the_world_stage_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_master_of_the_east_continent_focus"
+		if = {
+			limit = { has_dlc_bba = yes }
+			add_tech_bonus = {
+				name = CHN_master_of_the_east_continent_focus
+				bonus = 1
+				uses = 1
+				category = mio_cat_all_cas_and_modules
+			}
+		}
+		else = {
+			add_tech_bonus = {
+				name = CHN_master_of_the_east_continent_focus
+				bonus = 1
+				uses = 1
+				category = cas_bomber
+			}
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			if = {
+				limit = {
+					OR = {
+						has_doctrine = mountaineers_1
+						has_doctrine = mountaineers_2
+					}
+				}
+				add_mastery_bonus = {
+					name = CHN_master_of_the_east_continent_focus
+					bonus = 0.1
+					days = 365
+					sub_doctrine = mountaineers_1
+				}
+				add_mastery_bonus = {
+					name = CHN_master_of_the_east_continent_focus
+					bonus = 0.1
+					days = 365
+					sub_doctrine = mountaineers_2
+				}
+			}
+			else = {
+				add_doctrine_cost_reduction = {
+					name = CHN_master_of_the_east_continent_focus
+					cost_reduction = 0.5
+					uses = 1
+					category = special_forces_doctrine
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = CHN_master_of_the_east_continent_focus
+			bonus = 1
+			uses = 1
+			category = mountaineers_tech
+		}
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_NAVY_BONUS }
+}
+
+shared_focus = {
+	id = CHN_the_yellow_book_affair_focus
+	icon = GFX_focus_usa_focus_on_asia
+	cost = 3
+
+	relative_position_id = CHN_master_of_the_east_continent_focus
+	x = 1
+	y = 1
+
+	available = {
+		any_state_of = {
+			target = {
+				701 #Kachin
+				72 #Upper Shan
+				756 #Lower Shan
+				671 #Tonkin
+			}
+			is_owned_by_ROOT_or_ally = no
+		}
+	}
+
+	prerequisite = { focus = CHN_master_of_the_east_continent_focus }
+	ai_will_do = { base = 0 }
+	will_lead_to_war_with = BRM
+	will_lead_to_war_with = SIA
+	will_lead_to_war_with = GEA
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_the_yellow_book_affair_focus"
+		if = {
+			limit = {
+				var:701.owner = {  #Kachin and Upper Shan
+					owns_state = 72
+					NOT = { is_ally_with = YUN }
+				}
+			}
+			create_wargoal = {
+				type = take_state_focus
+				target = var:701.owner
+				generator = { 701 72 1111 }
+			}
+		}
+		else = {
+			if = {
+				limit = { var:701.owner = { NOT = { is_ally_with = YUN } } }
+				create_wargoal = {
+					type = take_state_focus
+					target = var:701.owner
+					generator = { 701 1111 }
+				}
+			}
+			if = {
+				limit = { var:72.owner = { NOT = { is_ally_with = YUN } } }
+				create_wargoal = {
+					type = take_state_focus
+					target = var:72.owner
+					generator = { 72 }
+				}
+			}
+		}
+		if = {
+			limit = {
+				var:671.owner = {  #Tonkin
+					NOT = { is_ally_with = YUN }
+				}
+			}
+			create_wargoal = {
+				type = take_state_focus
+				target = var:671.owner
+				generator = { 671 857 827 286 856 }
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					#Lower Shan
+					BRM = { owns_state = 756 }
+					SHA = { owns_state = 756 }
+					var:756.owner = { is_ally_with = YUN }
+				}
+			}
+			create_wargoal = {
+				type = take_state_focus
+				target = var:756.owner
+				generator = { 756 }
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = CHN_cultivating_sino_korean_ties_focus
+	icon = GFX_goal_collaborate_local_elites
+	cost = 3
+
+	relative_position_id = CHN_master_of_the_east_continent_focus
+	x = -1
+	y = 1
+
+	available = {
+		OR = {
+			country_exists = KOR
+			525 = { #Gyeonggi
+				owner = { NOT = { is_ally_with = ROOT } }
+			}
+		}
+	}
+
+	prerequisite = { focus = CHN_master_of_the_east_continent_focus }
+	ai_will_do = {
+		base = 250
+		modifier = {
+			factor = 2
+			has_war = no
+		}
+		modifier = {
+			factor = 0
+			has_war = yes
+		}
+		modifier = {
+			factor = 2
+			num_divisions > 99
+		}
+	}
+	will_lead_to_war_with = KOR
+	will_lead_to_war_with = JAP
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed CHN_cultivating_sino_korean_ties_focus"
+		custom_effect_tooltip = CHN_cultivating_sino_korean_ties_focus_tt
+		if = {
+			limit = { KOR = { is_ally_with = ROOT } } #Korea
+			add_one_random_civilian_factory = yes
+			add_stability = 0.10
+			add_political_power = 50
+			KOR = {
+				add_one_random_civilian_factory = yes
+				add_stability = 0.10
+				add_war_support = 0.10
+			}
+		}
+		else_if = {
+			limit = {
+				var:525.owner = {
+					NOT = {
+						tag = ROOT
+						is_ally_with = ROOT
+					}
+				}
+			}
+			create_wargoal = {
+				type = take_state_focus
+				target = var:525.owner
+				generator = { 525 527 1100 1099 }
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+#Constitution Drafting Tree
+shared_focus = {
+	id = UPC_calls_for_a_constitutional_convention
+	icon = GFX_goal_generic_parliament2
+	cost = 5
+
+	x = 0
+	y = 0
+
+	allow_branch = {
+		tag = UPC
+		china_is_aligned_with_federalists = yes
+		OR = {
+			AND = {
+				tag = GXC
+				NOT = { has_country_flag = GXC_UPC_authoritarian_direction_flag }
+				GXC_is_phase_5_trigger = yes
+			}
+			AND = {
+				tag = YUN
+				YUN_is_phase_5_trigger = yes
+			}
+			AND = {
+				tag = SZC
+				china_is_the_unifier_of_china_trigger = yes
+			}
+		}
+	}
+	offset = {
+		x = 15
+		y = 13
+		trigger = {
+			tag = GXC
+			china_is_aligned_with_federalists = yes
+		}
+	}
+	offset = {
+		x = 13
+		y = 11
+		trigger = {
+			tag = YUN
+			china_is_aligned_with_federalists = yes
+		}
+	}
+	offset = {
+		x = 7 #Looks a bit weird if you manually go to Phase V but if you do it organically it matches up. Must be some sort of offset in the focus tree.
+		y = -1
+		trigger = {
+			tag = YUN
+			china_is_aligned_with_federalists = yes
+			has_country_flag = YUN_UPC_satellite_narrative_flag
+		}
+	}
+	offset = {
+		x = -7
+		y = 9
+		trigger = {
+			tag = SZC
+			china_is_aligned_with_federalists = yes
+		}
+	}
+	select_effect = {
+		log = "[GetLogRoot]: Select Focus UPC_calls_for_a_constitutional_convention"
+		country_event = UPC.federalelections.600 #Calling a Constitutional Convention
+	}
+	ai_will_do = { factor = 1000 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_calls_for_a_constitutional_convention"
+		mark_focus_tree_layout_dirty = yes
+		effect_tooltip = {
+			custom_effect_tooltip = tooltip_immediate_effect_upon_focus_start
+			country_event = UPC.federalelections.600 #Calling a Constitutional Convention
+		}
+		if = {
+			limit = { tag = SZC }
+			end_coalition = yes
+		}
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+shared_focus = {
+	id = UPC_normalise_political_discourse
+	icon = GFX_goal_generic_council
+	cost = 5
+
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = UPC_calls_for_a_constitutional_convention
+	}
+	relative_position_id = UPC_calls_for_a_constitutional_convention
+	ai_will_do = { factor = 100 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_normalise_political_discourse"
+		mark_focus_tree_layout_dirty = yes
+		add_stability = -0.10
+		UPC_stabilise_the_democratic_system_effect = yes
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+}
+shared_focus = {
+	id = UPC_eliminate_electoral_fraud
+	icon = GFX_goal_generic_tackle_corruption
+	cost = 5
+
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = UPC_calls_for_a_constitutional_convention
+	}
+	relative_position_id = UPC_calls_for_a_constitutional_convention
+	ai_will_do = { factor = 100 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_eliminate_electoral_fraud"
+		mark_focus_tree_layout_dirty = yes
+		add_political_power = -50
+		UPC_crackdown_on_electoral_fraud_effect = yes
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+shared_focus = {
+	id = UPC_nationalise_the_military
+	icon = GFX_goal_focus_chain_army
+	cost = 5
+
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = UPC_normalise_political_discourse
+	}
+	relative_position_id = UPC_normalise_political_discourse
+	ai_will_do = { factor = 100 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_nationalise_the_military"
+		mark_focus_tree_layout_dirty = yes
+		add_war_support = -0.10
+		UPC_depoliticise_the_military_effect = yes
+	}
+	search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+}
+shared_focus = {
+	id = UPC_new_national_elections
+	icon = GFX_focus_NOR_restore_public_trust_in_the_storting
+	cost = 5
+
+	x = 0
+	y = 2
+
+	available = {
+		NOT = { has_country_flag = UPC_actively_holding_elections_flag }
+		NOT = { has_war = yes }
+	}
+
+	prerequisite = {
+		focus = UPC_calls_for_a_constitutional_convention
+	}
+	relative_position_id = UPC_calls_for_a_constitutional_convention
+	ai_will_do = { factor = 1000 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_new_national_elections"
+		if = {
+			limit = { tag = GXC }
+			remove_ideas = GXC_a_nation_without_its_leader_idea
+			if = {
+				limit = {
+					has_country_flag = UPC_has_federalist_democracy_flag
+					has_country_flag = GXC_first_term_timer
+				}
+				country_event = GXC.endgame.304 #Calling New Elections?
+			}
+			else_if = {
+				limit = { has_country_flag = UPC_has_federalist_democracy_flag }
+				country_event = UPC.federalelections.000 #Election Campaigning Begins
+			}
+			else = {
+				country_event = GXC.endgame.431 #The Yue Parliament
+			}
+		}
+		else_if = {
+			limit = { tag = YUN }
+			#No demcoratic backsliding for YUN until after first elections conclude
+			country_event = YUN.endgame.310 #The Federalist Electoral Order
+		}
+		else_if = {
+			limit = { tag = SZC }
+			#No dem backsliding for YUN until after first elections conclude
+			country_event = sichuan_events.610 #Retreat of the Iron-footed general
+		}
+		else = {
+			if = {
+				limit = { has_country_flag = UPC_has_federalist_democracy_flag }
+				country_event = UPC.federalelections.000 #Election Campaigning Begins
+			}
+		}
+		mark_focus_tree_layout_dirty = yes
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+#Coalition Focuses
+
+shared_focus = {
+	id = UPC_affairs_of_the_ruling_coalition
+	icon = GFX_focus_NOR_restore_public_trust_in_the_storting
+	cost = 0
+
+	x = 0
+	y = 0
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	bypass = {
+		hidden_trigger = {
+			has_country_flag = UPC_coalition_mechanic_unlock_flag
+		}
+	}
+	offset = {
+		x = 9
+		y = 11
+		trigger = {
+			tag = GXC
+			china_is_aligned_with_federalists = yes
+		}
+	}
+	offset = {
+		x = 15
+		y = 14
+		trigger = {
+			tag = YUN
+		}
+	}
+	offset = {
+		x = 3
+		y = 10
+		trigger = {
+			tag = SZC
+		}
+	}
+	ai_will_do = { factor = 100 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_affairs_of_the_ruling_coalition"
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+#KMT Coalition Tree
+shared_focus = {
+	id = UPC_KMT_coalition_focus_pol_1
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 0 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_pol_1"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		UPC_KMT_medium_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		add_to_variable = { UPC_KMT_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_coalition_focus_eco_1
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 1 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_eco_1"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		every_core_state = {
+			limit = { china_is_chinese_core_or_claim_trigger = yes }
+			random_select_amount = 4
+			increase_state_category_by_two_levels = yes
+		}
+		add_to_variable = { UPC_KMT_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_coalition_focus_soc_1
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 2 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_soc_1"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		UPC_KMT_medium_effect = yes
+		UPC_YCP_medium_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		add_war_support = 0.05
+		add_to_variable = { UPC_KMT_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_coalition_focus_flex_1
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 3 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_flex_1"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		UPC_CSP_large_effect = yes
+		UPC_RAD_large_effect = yes
+		UPC_election_unban_CSP_effect = yes
+		add_to_variable = { UPC_KMT_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_coalition_focus_pol_2
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 4 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_pol_2"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		UPC_KMT_large_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		activate_advisor = CHI_wang_jingwei_advisor
+		add_to_variable = { UPC_KMT_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_coalition_focus_eco_2
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 5 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_eco_2"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		UPC_KMT_large_effect = yes
+		add_tech_bonus = {
+			name = UPC_KMT_coalition_focus_eco_2
+			uses = 1
+			bonus = 1
+			category = excavation_tech
+		}
+		add_to_variable = { UPC_KMT_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_coalition_focus_soc_2
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 6 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_soc_2"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		UPC_KMT_large_effect = yes
+		UPC_sub_enthusiasm_mega_effect = yes
+		add_stability = 0.05
+		add_to_variable = { UPC_KMT_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_coalition_focus_flex_2
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 7 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_flex_2"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		UPC_KMT_large_effect = yes
+		UPC_CSP_large_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		add_to_variable = { UPC_KMT_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_coalition_focus_final
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+		check_variable = { UPC_KMT_foci_completed = 8 }
+	}
+	available = {
+		has_country_flag = UPC_KMT_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_coalition_focus_final"
+		UPC_KMT_fulfill_coalition_promises_effect = yes
+		add_ideas = UPC_a_modified_tutelage_idea
+		activate_targeted_decision = { target = ROOT decision = UPC_appease_the_KMT_repeatable_decision }
+	}
+}
+
+shared_focus = {
+	id = UPC_KMT_no_coalition_focus
+	icon = GFX_goal_China_LKMT
+	cost = 7
+
+	x = -7
+	y = 1
+
+	allow_branch = {
+		NOT = { has_country_flag = UPC_KMT_in_governing_coalition_flag }
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	available = {
+		always = no
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_KMT_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_KMT_no_coalition_focus"
+		custom_effect_tooltip = UPC_no_coalition_focus_tt
+	}
+}
+
+#CDL Coalition Tree
+shared_focus = {
+	id = UPC_CDL_coalition_focus_pol_1
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 0 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_pol_1"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		UPC_CDL_large_effect = yes
+		UPC_add_enthusiasm_large_effect = yes
+		add_to_variable = { UPC_CDL_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_coalition_focus_eco_1
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 1 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_eco_1"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		UPC_CDL_large_effect = yes
+		add_one_random_infrastructure = yes
+		add_to_variable = { UPC_CDL_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_coalition_focus_soc_1
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 2 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_soc_1"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_large_effect = yes
+		UPC_CDL_large_effect = yes
+		UPC_DCP_medium_effect = yes
+		add_to_variable = { UPC_CDL_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_coalition_focus_flex_1
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 3 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_flex_1"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		add_stability = -0.05
+		UPC_CDL_large_effect = yes
+		add_tech_bonus = {
+			name = UPC_CDL_coalition_focus_flex_1
+			uses = 1
+			bonus = 0.75
+			category = cat_production
+		}
+		add_to_variable = { UPC_CDL_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_coalition_focus_pol_2
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 4 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_pol_2"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		UPC_CDL_large_effect = yes
+		UPC_YCP_medium_effect = yes
+		UPC_DCP_medium_effect = yes
+		if = {
+			limit = { tag = GXC }
+			activate_advisor = GXC_zhang_junmai_advisor
+		}
+		else_if = {
+			limit = { tag = YUN }
+			activate_advisor = YUN_liang_shiqiu_advisor
+		}
+		add_to_variable = { UPC_CDL_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_coalition_focus_eco_2
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 5 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_eco_2"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		add_manpower = 25000
+		UPC_add_enthusiasm_large_effect = yes
+		add_to_variable = { UPC_CDL_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_coalition_focus_soc_2
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 6 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_soc_2"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_large_effect = yes
+		UPC_CDL_medium_effect = yes
+		add_timed_idea = {
+			idea = UPC_education_for_the_masses_idea
+			days = 150
+		}
+		add_to_variable = { UPC_CDL_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_coalition_focus_flex_2
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 7 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_flex_2"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		UPC_CDL_large_effect = yes
+		UPC_add_enthusiasm_large_effect = yes
+		every_character = {
+			limit = {
+				is_army_leader = yes
+				NOT = { has_character_flag = GXC_DSP_character_flag }
+				NOT = { has_character_flag = YUN_CMS_character_flag }
+			}
+			add_timed_unit_leader_trait = {
+				trait = disgruntled
+				days = 180
+			}
+		}
+		add_to_variable = { UPC_CDL_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_coalition_focus_final
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+		check_variable = { UPC_CDL_foci_completed = 8 }
+	}
+	available = {
+		has_country_flag = UPC_CDL_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_coalition_focus_final"
+		UPC_CDL_fulfill_coalition_promises_effect = yes
+		if = {
+			limit = { tag = GXC }
+			add_ideas = UPC_second_party_of_the_republic_idea
+		}
+		else = {
+			add_ideas = UPC_a_second_party_of_the_republic_lib_idea
+		}
+		activate_targeted_decision = { target = ROOT decision = UPC_appease_the_CDL_repeatable_decision }
+	}
+}
+
+shared_focus = {
+	id = UPC_CDL_no_coalition_focus
+	icon = GFX_goal_China_CDL
+	cost = 7
+
+	x = -5
+	y = 1
+
+	allow_branch = {
+		NOT = { has_country_flag = UPC_CDL_in_governing_coalition_flag }
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	available = {
+		always = no
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_CDL_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_CDL_no_coalition_focus"
+		custom_effect_tooltip = UPC_no_coalition_focus_tt
+	}
+}
+
+#GRA Coalition Tree
+shared_focus = {
+	id = UPC_GRA_coalition_focus_pol_1
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 0 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_pol_1"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_mega_effect = yes
+		UPC_REP_medium_effect = yes
+		UPC_CDL_medium_effect = yes
+		UPC_GRA_medium_effect = yes
+		UPC_DCP_medium_effect = yes
+		add_to_variable = { UPC_GRA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_coalition_focus_eco_1
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 1 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_eco_1"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_large_effect = yes
+		add_offsite_building = {
+			type = industrial_complex
+			level = 2
+		}
+		add_to_variable = { UPC_GRA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_coalition_focus_soc_1
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 2 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_soc_1"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_large_effect = yes
+		UPC_GRA_large_effect = yes
+		add_timed_idea = {
+			idea = UPC_the_anti_opium_campaign_idea
+			days = 250
+		}
+		add_to_variable = { UPC_GRA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_coalition_focus_flex_1
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 3 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_flex_1"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_mega_effect = yes
+		every_character = {
+			limit = {
+				is_army_leader = yes
+				NOT = { has_character_flag = GXC_YUE_character_flag }
+				NOT = { has_character_flag = YUN_TJY_character_flag }
+			}
+			add_timed_unit_leader_trait = {
+				trait = disgruntled
+				days = 180
+			}
+		}
+		add_to_variable = { UPC_GRA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_coalition_focus_pol_2
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 4 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_pol_2"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		add_stability = 0.05
+		UPC_CDL_large_effect = yes
+		UPC_GRA_large_effect = yes
+		UPC_DCP_large_effect = yes
+		UPC_REP_large_effect = yes
+		add_to_variable = { UPC_GRA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_coalition_focus_eco_2
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 5 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_eco_2"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		UPC_GRA_mega_effect = yes
+		add_timed_idea = {
+			idea = UPC_union_dissent_idea
+			days = 280
+		}
+		add_to_variable = { UPC_GRA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_coalition_focus_soc_2
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 6 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_soc_2"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_mega_effect = yes
+		add_stability = 0.05
+		add_to_variable = { UPC_GRA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_coalition_focus_flex_2
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 7 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_flex_2"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_medium_effect = yes
+		UPC_REP_mega_effect = yes
+		UPC_REG_mega_effect = yes
+		add_to_variable = { UPC_GRA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_coalition_focus_final
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+		check_variable = { UPC_GRA_foci_completed = 8 }
+	}
+	available = {
+		has_country_flag = UPC_GRA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_coalition_focus_final"
+		UPC_GRA_fulfill_coalition_promises_effect = yes
+		if = {
+			limit = { tag = GXC }
+			add_ideas = UPC_stabilising_electoral_politics_GXC_idea
+		}
+		else_if = {
+			limit = { tag = YUN }
+			add_ideas = UPC_stabilising_electoral_politics_YUN_idea
+		}
+		else = {
+			add_ideas = UPC_stabilising_electoral_politics_HNN_idea
+		}
+		activate_targeted_decision = { target = ROOT decision = UPC_appease_the_GRA_repeatable_decision }
+	}
+}
+
+shared_focus = {
+	id = UPC_GRA_no_coalition_focus
+	icon = GFX_goal_China_GRA
+	cost = 7
+
+	x = -3
+	y = 1
+
+	allow_branch = {
+		NOT = { has_country_flag = UPC_GRA_in_governing_coalition_flag }
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	available = {
+		always = no
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_GRA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_GRA_no_coalition_focus"
+		custom_effect_tooltip = UPC_no_coalition_focus_tt
+	}
+}
+
+#REP Coalition Tree
+shared_focus = {
+	id = UPC_REP_coalition_focus_pol_1
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 0 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_pol_1"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		UPC_ext_enthusiasm_medium_effect = yes
+		UPC_REP_large_effect = yes
+		add_to_variable = { UPC_REP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_coalition_focus_eco_1
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 1 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_eco_1"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		increase_economic_mobilisation = yes
+		UPC_REP_large_effect = yes
+		add_to_variable = { UPC_REP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_coalition_focus_soc_1
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 2 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_soc_1"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		UPC_REP_medium_effect = yes
+		UPC_ext_enthusiasm_medium_effect = yes
+		add_tech_bonus = {
+			name = UPC_REP_coalition_focus_soc_1
+			uses = 2
+			bonus = 0.5
+			category = industry
+		}
+		add_to_variable = { UPC_REP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_coalition_focus_flex_1
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 3 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_flex_1"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_large_effect = yes
+		UPC_REP_large_effect = yes
+		add_stability = 0.05
+		add_to_variable = { UPC_REP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_coalition_focus_pol_2
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 4 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_pol_2"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		UPC_ext_enthusiasm_medium_effect = yes
+		UPC_REP_large_effect = yes
+		activate_advisor = QIE_hu_shih_advisor
+		add_to_variable = { UPC_REP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_coalition_focus_eco_2
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 5 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_eco_2"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		UPC_REP_medium_effect = yes
+		add_one_random_infrastructure = yes
+		add_one_random_infrastructure = yes
+		add_to_variable = { UPC_REP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_coalition_focus_soc_2
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 6 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_soc_2"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		UPC_ext_enthusiasm_large_effect = yes
+		UPC_GRA_medium_effect = yes
+		UPC_CDL_medium_effect = yes
+		UPC_DCP_medium_effect = yes
+		UPC_REP_medium_effect = yes
+		add_to_variable = { UPC_REP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_coalition_focus_flex_2
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 7 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_flex_2"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		add_war_support = -0.10
+		UPC_ext_enthusiasm_large_effect = yes
+		add_to_variable = { UPC_REP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_coalition_focus_final
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+		check_variable = { UPC_REP_foci_completed = 8 }
+	}
+	available = {
+		has_country_flag = UPC_REP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_coalition_focus_final"
+		UPC_REP_fulfill_coalition_promises_effect = yes
+		add_ideas = UPC_anti_partisan_ideal_idea
+		activate_targeted_decision = { target = ROOT decision = UPC_appease_the_REP_repeatable_decision }
+	}
+}
+
+shared_focus = {
+	id = UPC_REP_no_coalition_focus
+	icon = GFX_goal_China_five_races_flag
+	cost = 7
+
+	x = -1
+	y = 1
+
+	allow_branch = {
+		NOT = { has_country_flag = UPC_REP_in_governing_coalition_flag }
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	available = {
+		always = no
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REP_no_coalition_focus"
+		custom_effect_tooltip = UPC_no_coalition_focus_tt
+	}
+}
+
+#DCP Coalition Tree
+shared_focus = {
+	id = UPC_DCP_coalition_focus_pol_1
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 0 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_pol_1"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		UPC_add_enthusiasm_medium_effect = yes
+		UPC_DCP_large_effect = yes
+		add_stability = 0.05
+		add_to_variable = { UPC_DCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_coalition_focus_eco_1
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 1 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_eco_1"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		UPC_ext_enthusiasm_large_effect = yes
+		add_one_random_military_factory = yes
+		add_one_random_military_factory = yes
+		add_to_variable = { UPC_DCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_coalition_focus_soc_1
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 2 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_soc_1"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		UPC_DCP_large_effect = yes
+		UPC_REP_medium_effect = yes
+		activate_advisor = QIE_wu_xianzi_advisor
+		add_to_variable = { UPC_DCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_coalition_focus_flex_1
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 3 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_flex_1"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		UPC_DCP_large_effect = yes
+		add_opinion_modifier = {
+			target = MAL
+			modifier = KR_friendly
+		}
+		add_opinion_modifier = {
+			target = HAW
+			modifier = KR_friendly
+		}
+		add_opinion_modifier = {
+			target = USA
+			modifier = KR_friendly
+		}
+		add_to_variable = { UPC_DCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_coalition_focus_pol_2
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 4 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_pol_2"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		UPC_DCP_large_effect = yes
+		UPC_STA_medium_effect = yes
+		add_timed_idea = {
+			idea = UPC_primacy_of_the_executive_state_idea
+			days = 180
+		}
+		add_to_variable = { UPC_DCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_coalition_focus_eco_2
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 5 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_eco_2"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		UPC_DCP_large_effect = yes
+		every_core_state = {
+			limit = { infrastructure < 5 }
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+			}
+		}
+		add_to_variable = { UPC_DCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_coalition_focus_soc_2
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 6 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_soc_2"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		UPC_ext_enthusiasm_large_effect = yes
+		UPC_DCP_large_effect = yes
+		UPC_REP_large_effect = yes
+		UPC_STA_medium_effect = yes
+		if = {
+			limit = { NOT = { has_character = QIE_wellington_koo } }
+			QIE = { QIE_wellington_koo = { CHN_recruit_character_effect = yes } }
+		}
+		activate_advisor = QIE_wellington_koo_advisor
+		add_to_variable = { UPC_DCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_coalition_focus_flex_2
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 7 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_flex_2"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		UPC_DCP_large_effect = yes
+		if = {
+			limit = { has_idea = UPC_primacy_of_the_executive_state_idea }
+			modify_timed_idea = {
+				idea = UPC_primacy_of_the_executive_state_idea
+				days = 320
+			}
+			UPC_ext_enthusiasm_large_effect = yes
+		}
+		else = {
+			UPC_REG_large_effect = yes
+			UPC_STA_large_effect = yes
+			UPC_sub_enthusiasm_medium_effect = yes
+		}
+		add_to_variable = { UPC_DCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_coalition_focus_final
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+		check_variable = { UPC_DCP_foci_completed = 8 }
+	}
+	available = {
+		has_country_flag = UPC_DCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_coalition_focus_final"
+		UPC_DCP_fulfill_coalition_promises_effect = yes
+		if = {
+			limit = { tag = GXC }
+			add_ideas = UPC_the_liangist_dream_GXC_idea
+		}
+		else = {
+			add_ideas = UPC_the_liangist_dream_left_idea
+		}
+		activate_targeted_decision = { target = ROOT decision = UPC_appease_the_DCP_repeatable_decision }
+	}
+}
+
+shared_focus = {
+	id = UPC_DCP_no_coalition_focus
+	icon = GFX_goal_QIE_cera
+	cost = 7
+
+	x = 1
+	y = 1
+
+	allow_branch = {
+		NOT = { has_country_flag = UPC_DCP_in_governing_coalition_flag }
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	available = {
+		always = no
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_DCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_DCP_no_coalition_focus"
+		custom_effect_tooltip = UPC_no_coalition_focus_tt
+	}
+}
+
+#STA Coalition Tree
+shared_focus = {
+	id = UPC_STA_coalition_focus_pol_1
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 0 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_pol_1"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		UPC_STA_large_effect = yes
+		clear_army_chief = yes
+		if = {
+			limit = {
+				tag = GXC
+				has_character = GXC_ye_ju
+			}
+			activate_advisor = GXC_ye_ju_army_chief
+			set_can_be_fired_in_advisor_role = {
+				character = GXC_ye_ju
+				value = no
+			}
+		}
+		else_if = {
+			limit = {
+				tag = YUN
+				has_character = YUN_tang_jiyao #Check if he's dead or not
+			}
+			activate_advisor = YUN_tang_jiyao_army_chief
+			set_can_be_fired_in_advisor_role = {
+				character = YUN_tang_jiyao
+				value = no
+			}
+		}
+		else_if = {
+			limit = {
+				tag = HNN
+				has_character = HNN_ye_kaixin
+			}
+			activate_advisor = HNN_ye_kaixin_army_chief
+			set_can_be_fired_in_advisor_role = {
+				character = HNN_ye_kaixin
+				value = no
+			}
+		}
+		add_to_variable = { UPC_STA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_coalition_focus_eco_1
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 1 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_eco_1"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		UPC_ctr_enthusiasm_large_effect = yes
+		UPC_STA_large_effect = yes
+		add_timed_idea = {
+			idea = UPC_the_anti_vice_campaign_idea
+			days = 200
+		}
+		add_to_variable = { UPC_STA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_coalition_focus_soc_1
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 2 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_soc_1"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		UPC_STA_medium_effect = yes
+		add_tech_bonus = {
+			name = UPC_STA_coalition_focus_soc_1
+			uses = 3
+			bonus = 0.25
+			category = infantry_tech
+			category = cat_production
+			category = cat_synth_rubber
+		}
+		add_to_variable = { UPC_STA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_coalition_focus_flex_1
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 3 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_flex_1"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		UPC_STA_large_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		army_experience = 30
+		add_to_variable = { UPC_STA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_coalition_focus_pol_2
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 4 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_pol_2"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		UPC_ctr_enthusiasm_large_effect = yes
+		UPC_GRA_medium_effect = yes
+		UPC_STA_medium_effect = yes
+		add_stability = 0.05
+		add_to_variable = { UPC_STA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_coalition_focus_eco_2
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 5 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_eco_2"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		UPC_STA_medium_effect = yes
+		UPC_ctr_enthusiasm_large_effect = yes
+		add_one_random_military_factory = yes
+		add_one_random_military_factory = yes
+		add_to_variable = { UPC_STA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_coalition_focus_soc_2
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 6 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_soc_2"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		UPC_ctr_enthusiasm_large_effect = yes
+		UPC_DCP_large_effect = yes
+		add_stability = 0.05
+		add_to_variable = { UPC_STA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_coalition_focus_flex_2
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 7 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_flex_2"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		UPC_ctr_enthusiasm_large_effect = yes
+		UPC_STA_large_effect = yes
+		add_timed_idea = {
+			idea = UPC_a_legacy_of_thousands_of_years_idea
+			days = 365
+		}
+		add_to_variable = { UPC_STA_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_coalition_focus_final
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+		check_variable = { UPC_STA_foci_completed = 8 }
+	}
+	available = {
+		has_country_flag = UPC_STA_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_coalition_focus_final"
+		UPC_STA_fulfill_coalition_promises_effect = yes
+		add_ideas = UPC_executive_camarilla_idea
+		activate_targeted_decision = { target = ROOT decision = UPC_appease_the_STA_repeatable_decision }
+	}
+}
+
+shared_focus = {
+	id = UPC_STA_no_coalition_focus
+	icon = GFX_goal_China_twelve_symbols
+	cost = 7
+
+	x = 3
+	y = 1
+
+	allow_branch = {
+		NOT = { has_country_flag = UPC_STA_in_governing_coalition_flag }
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	available = {
+		always = no
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_STA_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_STA_no_coalition_focus"
+		custom_effect_tooltip = UPC_no_coalition_focus_tt
+	}
+}
+
+#REG Coalition Tree
+shared_focus = {
+	id = UPC_REG_coalition_focus_pol_1
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 0 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_pol_1"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		UPC_KMT_medium_effect = yes
+		UPC_REP_medium_effect = yes
+		UPC_REG_large_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		add_to_variable = { UPC_REG_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_coalition_focus_eco_1
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 1 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_eco_1"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		UPC_REG_large_effect = yes
+		every_controlled_state = {
+			limit = {
+				OR = {
+					has_state_flag = yunnan_province_state
+					has_state_flag = guangxi_province_state
+					has_state_flag = qinghai_province_state
+					has_state_flag = heilongjiang_province_state
+					has_state_flag = jilin_province_state
+					has_state_flag = ningxia_province_state
+					has_state_flag = xinjiang_province_state
+				}
+			}
+			add_one_random_infrastructure = yes
+		}
+		add_to_variable = { UPC_REG_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_coalition_focus_soc_1
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 2 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_soc_1"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		add_timed_idea = {
+			idea = UPC_the_rural_education_campaign
+			days = 280
+		}
+		add_to_variable = { UPC_REG_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_coalition_focus_flex_1
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 3 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_flex_1"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		UPC_REG_large_effect = yes
+		set_temp_variable = { coalition_stability_var = 0.75 }
+		set_coalition_stability_paternal_autocrat = yes
+		add_to_variable = { UPC_REG_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_coalition_focus_pol_2
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 4 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_pol_2"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		UPC_REG_large_effect = yes
+		set_temp_variable = { ideology_change_var = -0.10 }
+		change_ruling_party_popularity = yes
+		add_to_variable = { UPC_REG_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_coalition_focus_eco_2
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 5 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_eco_2"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		add_political_power = -35
+		add_one_random_military_factory = yes
+		add_one_random_military_factory = yes
+		add_to_variable = { UPC_REG_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_coalition_focus_soc_2
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 6 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_soc_2"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		UPC_REG_large_effect = yes
+		add_stability = 0.05
+		add_war_support = 0.05
+		add_to_variable = { UPC_REG_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_coalition_focus_flex_2
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 7 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_flex_2"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		add_tech_bonus = {
+			name = UPC_REG_coalition_focus_flex_2
+			uses = 1
+			bonus = 0.5
+			category = cat_production
+		}
+		add_political_power = -35
+		add_to_variable = { UPC_REG_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_coalition_focus_final
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+		check_variable = { UPC_REG_foci_completed = 8 }
+	}
+	available = {
+		has_country_flag = UPC_REG_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_coalition_focus_final"
+		UPC_REG_fulfill_coalition_promises_effect = yes
+		add_ideas = UPC_regionalism_enshrined_idea
+		activate_targeted_decision = { target = ROOT decision = UPC_appease_the_REG_repeatable_decision }
+	}
+}
+
+shared_focus = {
+	id = UPC_REG_no_coalition_focus
+	icon = GFX_goal_China_NPA
+	cost = 7
+
+	x = 5
+	y = 1
+
+	allow_branch = {
+		NOT = { has_country_flag = UPC_REG_in_governing_coalition_flag }
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	available = {
+		always = no
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_REG_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_REG_no_coalition_focus"
+		custom_effect_tooltip = UPC_no_coalition_focus_tt
+	}
+}
+
+#YCP Coalition Tree
+shared_focus = {
+	id = UPC_YCP_coalition_focus_pol_1
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 0 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_pol_1"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		UPC_ext_enthusiasm_large_effect = yes
+		UPC_YCP_large_effect = yes
+		activate_advisor = QIE_zeng_qi_advisor
+		add_to_variable = { UPC_YCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_coalition_focus_eco_1
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 1 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_eco_1"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		UPC_YCP_medium_effect = yes
+		add_war_support = 0.05
+		decrease_trade_law = yes
+		add_to_variable = { UPC_YCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_coalition_focus_soc_1
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 2 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_soc_1"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		UPC_REP_medium_effect = yes
+		UPC_YCP_medium_effect = yes
+		add_stability = 0.05
+		add_to_variable = { UPC_YCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_coalition_focus_flex_1
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 3 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_flex_1"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		UPC_YCP_large_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		add_timed_idea = {
+			idea = UPC_all_representative_governmental_organs_idea
+			days = 180
+		}
+		add_to_variable = { UPC_YCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_coalition_focus_pol_2
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 4 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_pol_2"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		UPC_YCP_medium_effect = yes
+		set_temp_variable = { coalition_stability_var = 0.75 }
+		set_coalition_stability_national_populist = yes
+		add_to_variable = { UPC_YCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_coalition_focus_eco_2
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 5 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_eco_2"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		UPC_YCP_large_effect = yes
+		UPC_DCP_medium_effect = yes
+		UPC_CDL_medium_effect = yes
+		UPC_sub_enthusiasm_medium_effect = yes
+		increase_economic_mobilisation = yes
+		add_to_variable = { UPC_YCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_coalition_focus_soc_2
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 6 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_soc_2"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		UPC_YCP_medium_effect = yes
+		UPC_CDL_medium_effect = yes
+		UPC_DCP_medium_effect = yes
+		UPC_GRA_medium_effect = yes
+		add_tech_bonus = {
+			name = UPC_YCP_coalition_focus_soc_2
+			uses = 2
+			bonus = 0.25
+			category = infantry_tech
+			category = mio_cat_artillery
+		}
+		add_to_variable = { UPC_YCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_coalition_focus_flex_2
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 7 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_flex_2"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		UPC_YCP_large_effect = yes
+		UPC_sub_enthusiasm_large_effect = yes
+		if = {
+			limit = { NOT = { has_character = QIE_zhang_yinwu } }
+			QIE = { QIE_zhang_yinwu = { custom_effect_tooltip = character_becomes_a_general } }
+			hidden_effect = { QIE = { QIE_zhang_yinwu = { CHN_recruit_character_effect = yes } } }
+		}
+		if = {
+			limit = { NOT = { has_character = YUN_liao_xingchao } }
+			YUN = { YUN_liao_xingchao = { custom_effect_tooltip = character_becomes_a_general } }
+			hidden_effect = { YUN = { YUN_liao_xingchao = { CHN_recruit_character_effect = yes } } }
+		}
+		if = {
+			limit = { NOT = { has_character = FNG_feng_yong } }
+			FNG = { FNG_feng_yong = { custom_effect_tooltip = character_becomes_a_general } }
+			hidden_effect = { FNG = { FNG_feng_yong = { CHN_recruit_character_effect = yes } } }
+		}
+		add_to_variable = { UPC_YCP_foci_completed = 1 }
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_coalition_focus_final
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+		check_variable = { UPC_YCP_foci_completed = 8 }
+	}
+	available = {
+		has_country_flag = UPC_YCP_in_governing_coalition_flag
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_coalition_focus_final"
+		UPC_YCP_fulfill_coalition_promises_effect = yes
+		add_ideas = UPC_a_plebiscitarian_revolution_by_the_ballot_idea
+		activate_targeted_decision = { target = ROOT decision = UPC_appease_the_YCP_repeatable_decision }
+	}
+}
+
+shared_focus = {
+	id = UPC_YCP_no_coalition_focus
+	icon = GFX_goal_QIE_ycp
+	cost = 7
+
+	x = 7
+	y = 1
+
+	allow_branch = {
+		NOT = { has_country_flag = UPC_YCP_in_governing_coalition_flag }
+		has_country_flag = UPC_has_federalist_democracy_flag
+		has_country_flag = UPC_coalition_mechanic_unlock_flag
+	}
+	available = {
+		always = no
+	}
+
+	prerequisite = {
+		focus = UPC_affairs_of_the_ruling_coalition
+	}
+
+	relative_position_id = UPC_affairs_of_the_ruling_coalition
+
+	ai_will_do = {
+		factor = 100
+
+		modifier = {
+			factor = 5
+			NOT = { has_country_flag = UPC_YCP_coalition_progress_flag }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed UPC_YCP_no_coalition_focus"
+		custom_effect_tooltip = UPC_no_coalition_focus_tt
+	}
+}

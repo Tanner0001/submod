@@ -1,0 +1,1686 @@
+add_namespace = fengtian_shenyang_conference_events
+add_namespace = fengtian_beijing_conference_events
+
+### Shenyang Conference
+
+country_event = { #hidden conference starter event
+	id = fengtian_shenyang_conference_events.0
+	hidden = yes
+
+	trigger = {
+		NOT = { has_country_flag = FNG_shenyang_conference }
+		NOT = { has_country_flag = FNG_conference_fired }
+		country_exists = QIE
+		OR = {
+			ANQ = {
+				exists = yes
+				china_is_aligned_with_fengtian = yes
+			}
+			SHD = {
+				exists = yes
+				china_is_aligned_with_fengtian = yes
+			}
+			country_exists = UPC
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.0 option 1"
+		if = {
+			limit = {
+				OR = {
+					#wait for the Federalists to form
+					country_exists = UPC
+					#wait for ANQ to have peace
+					ANQ = {
+						exists = yes
+						china_is_aligned_with_fengtian = yes
+						NOT = { has_country_flag = ANQ_peace }
+					}
+					#wait for SHD to have peace
+					SHD = {
+						exists = yes
+						china_is_aligned_with_fengtian = yes
+						OR = {
+							has_war_with = CHI
+							has_war_with = ANQ
+							has_war_with = LEP
+						}
+					}
+					#wait for FNG to do national irredentism
+					NOT = { has_country_flag = FNG_national_irredentism_flag }
+				}
+			}
+			country_event = { id = fengtian_shenyang_conference_events.0 days = 5 random_hours = 12 }
+		}
+		else = {
+			if = {
+				limit = {
+					is_subject = yes
+				}
+				country_event = fengtian_shenyang_conference_events.413
+			}
+			else_if = {
+				limit = {
+					OR = {
+						ANQ = {
+							exists = yes
+							china_is_aligned_with_fengtian = yes
+							has_country_flag = ANQ_peace
+						}
+						SHD = {
+							exists = yes
+							china_is_aligned_with_fengtian = yes
+						}
+					}
+				}
+				if = {
+					limit = { has_war_with = QIE }
+					set_country_flag = FNG_shenyang_anq_only
+				}
+				country_event = fengtian_shenyang_conference_events.1
+			}
+			else_if = {
+				limit = {
+					country_exists = UPC
+				}
+				set_country_flag = FNG_shenyang_no_allies
+				country_event = fengtian_shenyang_conference_events.4
+			}
+		}
+	}
+}
+
+country_event = { #A Conference in Shenyang
+	id = fengtian_shenyang_conference_events.1
+	title = fengtian_shenyang_conference_events.1.t
+	desc = {
+		text = fengtian_shenyang_conference_events.1.d1
+		trigger = {
+			NOT = { has_country_flag = FNG_shenyang_anq_only }
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.1.d2
+		trigger = {
+			has_country_flag = FNG_shenyang_anq_only
+		}
+	}
+
+	picture = GFX_report_event_FNG_anguojun_confrence
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_country_flag = FNG_conference_fired }
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = FNG_shenyang_conference
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.1 option fengtian_shenyang_conference_events.1.a"
+		name = fengtian_shenyang_conference_events.1.a #Send the invites
+		hidden_effect = {
+			ANQ = {
+				if = {
+					limit = { china_is_aligned_with_fengtian = yes }
+					country_event = { id = fengtian_shenyang_conference_events.2 random_hours = 16 days = 1 }
+					FNG = { set_country_flag = FNG_shenyang_ANQ } #they autoaccept
+				}
+			}
+			if = {
+				limit = {
+					has_country_flag = FNG_shenyang_anq_only
+				}
+				country_event = { id = fengtian_shenyang_conference_events.7 days = 5 }
+			}
+			else = {
+				SHD = {
+					if = {
+						limit = { china_is_aligned_with_fengtian = yes }
+						country_event = { id = fengtian_shenyang_conference_events.2 days = 1 random_hours = 16 }
+						FNG = { set_country_flag = FNG_shenyang_SHD } #they autoaccept
+					}
+				}
+				if = {
+					limit = {
+						country_exists = UPC
+					}
+					country_event = { id = fengtian_shenyang_conference_events.4 days = 8 }
+				}
+				else = { #if there are no federalists anymore
+					country_event = { id = fengtian_shenyang_conference_events.7 days = 8 }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Go to the Shenyang Conference? (ANQ/SHD)
+	id = fengtian_shenyang_conference_events.2
+	title = fengtian_shenyang_conference_events.2.t
+	desc = {
+		text = fengtian_shenyang_conference_events.2.ddef
+		trigger = {
+			FNG = { NOT = { has_country_flag = FNG_shenyang_anq_only } }
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.2.danq
+		trigger = {
+			FNG = { has_country_flag = FNG_shenyang_anq_only }
+		}
+	}
+
+	trigger = {
+		NOT = { has_country_flag = FNG_conference_fired }
+	}
+
+	is_triggered_only = yes
+
+	picture = GFX_report_event_FNG_zhang_zuolin_handshake
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.2 option fengtian_shenyang_conference_events.2.a"
+		name = fengtian_shenyang_conference_events.2.a #Send a delegation
+		add_political_power = 10
+		add_stability = 0.01
+		if = {
+			limit = {
+				FNG = { has_country_flag = FNG_shenyang_anq_only }
+			}
+			set_country_flag = ANQ_reclamation_deciding_fast
+		}
+		if = {
+			limit = {
+				original_tag = SHD
+			}
+			set_country_flag = SHD_FNG_invites_us_to_conference_flag #Activates the decision to join AGJ
+		}
+		hidden_effect = {
+			FROM = {
+				country_event = { id = fengtian_shenyang_conference_events.3 random_hours = 24 days = 2 }
+			}
+		}
+	}
+}
+
+country_event = { #FROM attending the conference
+	id = fengtian_shenyang_conference_events.3
+	title = fengtian_shenyang_conference_events.3.t
+	desc = {
+		text = fengtian_shenyang_conference_events.3.d
+		trigger = {
+			NOT = { FROM = { has_country_leader = { character = ANQ_liu_heding } } }
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.3.d1
+		trigger = {
+			FROM = { has_country_leader = { character = ANQ_liu_heding } }
+		}
+	}
+
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.3 option fengtian_shenyang_conference_events.3.a"
+		name = fengtian_shenyang_conference_events.3.a
+		add_political_power = 5
+	}
+}
+
+country_event = { #An Alliance with the Federalists?
+	id = fengtian_shenyang_conference_events.4
+	title = fengtian_shenyang_conference_events.4.t
+
+	desc = {
+		text = fengtian_shenyang_conference_events.4.d.no_allies
+		trigger = {
+			has_country_flag = FNG_shenyang_no_allies
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.4.d.conference
+		trigger = {
+			NOT = { has_country_flag = FNG_shenyang_no_allies }
+		}
+	}
+
+	picture = GFX_report_event_GXC_federalist_party_3
+
+	trigger = {
+		country_exists = UPC
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.4 option fengtian_shenyang_conference_events.4.a"
+		name = fengtian_shenyang_conference_events.4.a #Yes
+		ai_chance = {
+			base = 3
+			modifier = {
+				factor = 33
+				has_country_flag = FNG_shenyang_no_allies
+			}
+		}
+		hidden_effect = {
+			UPC = {
+				country_event = { id = fengtian_shenyang_conference_events.5 random_hours = 24 days = 2 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.4 option fengtian_shenyang_conference_events.4.b"
+		name = fengtian_shenyang_conference_events.4.b #No
+		ai_chance = { base = 1 }
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = { has_country_flag = FNG_shenyang_no_allies }
+				}
+				country_event = { id = fengtian_shenyang_conference_events.7 days = 10 }
+			}
+		}
+		clr_country_flag = FNG_shenyang_no_allies
+	}
+}
+
+country_event = { #An Offer From Fengtian (UPC)
+	id = fengtian_shenyang_conference_events.5
+	title = fengtian_shenyang_conference_events.5.t
+
+	desc = {
+		text = fengtian_shenyang_conference_events.5.d.no_allies
+		trigger = {
+			has_country_flag = FNG_shenyang_no_allies
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.5.d.conference
+		trigger = {
+			NOT = {
+				has_country_flag = FNG_shenyang_no_allies
+			}
+		}
+	}
+
+	picture = GFX_report_event_FNG_zhang_zuolin_handshake
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			FROM = {
+				country_event = { id = fengtian_shenyang_conference_events.6 random_hours = 24 days = 2 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.5 option fengtian_shenyang_conference_events.5.a"
+		name = fengtian_shenyang_conference_events.5.a #Yes
+		ai_chance = {
+			base = 1
+			modifier = {
+				set_temp_variable = { FNG_jiongming_chance = FNG.FNG_JAP_influence_variable }
+				multiply_temp_variable = { FNG_jiongming_chance = -1 }
+				add = FNG_jiongming_chance
+			}
+		}
+		FROM = { set_country_flag = FNG_shenyang_UPC }
+	}
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.5 option fengtian_shenyang_conference_events.5.b"
+		name = fengtian_shenyang_conference_events.5.b #No
+		ai_chance = {
+			base = 0
+			modifier = {
+				factor = 0
+				FROM = { FNG_mantetsu_level_none = yes }
+			}
+			modifier = {
+				add = FNG.FNG_JAP_influence_variable
+			}
+		}
+	}
+}
+
+country_event = { #Federalist Response
+	id = fengtian_shenyang_conference_events.6
+
+	title = {
+		text = fengtian_shenyang_conference_events.6.t.accepted
+		trigger = {
+			has_country_flag = FNG_shenyang_UPC
+		}
+	}
+	title = {
+		text = fengtian_shenyang_conference_events.6.t.refused
+		trigger = {
+			NOT = { has_country_flag = FNG_shenyang_UPC }
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.6.d.accepted
+		trigger = {
+			has_country_flag = FNG_shenyang_UPC
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.6.d.refused
+		trigger = {
+			NOT = { has_country_flag = FNG_shenyang_UPC }
+		}
+	}
+
+	picture = GFX_report_event_CHN_china_five_colour_confrence
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_country_flag = FNG_shenyang_no_allies
+		hidden_effect = {
+			country_event = { id = fengtian_shenyang_conference_events.7 days = 4 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.6 option fengtian_shenyang_conference_events.6.a"
+		name = fengtian_shenyang_conference_events.6.a #Excellent
+		trigger = {
+			has_country_flag = FNG_shenyang_UPC
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.6 option fengtian_shenyang_conference_events.6.b"
+		name = fengtian_shenyang_conference_events.6.b #Their loss
+		trigger = {
+			NOT = { has_country_flag = FNG_shenyang_UPC }
+		}
+	}
+}
+
+country_event = { #Start of the Shenyang Conference
+	id = fengtian_shenyang_conference_events.7
+	title = fengtian_shenyang_conference_events.7.t
+	desc = fengtian_shenyang_conference_events.7.d
+
+	picture = GFX_report_event_FNG_anguojun_confrence
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_country_flag = FNG_conference_fired }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.7 option fengtian_shenyang_conference_events.7.a"
+		name = fengtian_shenyang_conference_events.7.a
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = FNG_shenyang_ANQ
+					has_country_flag = FNG_shenyang_SHD
+					SHD = { SHD_is_led_by_zongchang = yes }
+				}
+				country_event = { id = fengtian_shenyang_conference_events.8 days = 1 random_days = 2 }
+			}
+			else_if = {
+				limit = {
+					has_country_flag = FNG_shenyang_UPC
+				}
+				country_event = { id = fengtian_shenyang_conference_events.9 days = 1 random_days = 2 }
+			}
+			else = {
+				country_event = { id = fengtian_shenyang_conference_events.10 days = 1 random_days = 2 }
+			}
+		}
+	}
+}
+
+country_event = { #Heated Discussions
+	id = fengtian_shenyang_conference_events.8
+	title = fengtian_shenyang_conference_events.8.t
+	desc = fengtian_shenyang_conference_events.8.d
+
+	picture = GFX_report_event_CHN_china_five_colour_confrence
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.8 option fengtian_shenyang_conference_events.8.a"
+		name = fengtian_shenyang_conference_events.8.a #Cut it out, both of you
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = FNG_shenyang_UPC
+				}
+				country_event = { id = fengtian_shenyang_conference_events.9 hours = 12 random_hours = 24 }
+			}
+			else = {
+				country_event = { id = fengtian_shenyang_conference_events.10 hours = 12 random_hours = 24 }
+			}
+		}
+	}
+}
+
+country_event = { #Federalists Press For Reform
+	id = fengtian_shenyang_conference_events.9
+	title = fengtian_shenyang_conference_events.9.t
+	desc = fengtian_shenyang_conference_events.9.d
+
+	picture = GFX_report_event_GXC_chen_jiongming_7
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.9 option fengtian_shenyang_conference_events.9.a"
+		name = fengtian_shenyang_conference_events.9.a #Make vague promises
+		add_political_power = -5
+		hidden_effect = {
+			country_event = { id = fengtian_shenyang_conference_events.10 hours = 12 random_hours = 24 }
+		}
+	}
+}
+
+country_event = { #Either Chen Supports Anti-concessionism
+	id = fengtian_shenyang_conference_events.10
+	title = fengtian_shenyang_conference_events.10.t
+
+	desc = {
+		text = fengtian_shenyang_conference_events.10.d.ANQ
+		trigger = {
+			has_country_flag = FNG_shenyang_ANQ
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.10.d.GXC
+		trigger = {
+			NOT = { has_country_flag = FNG_shenyang_ANQ }
+		}
+	}
+
+	picture = GFX_report_event_LEC_shanghai_river
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.10 option fengtian_shenyang_conference_events.10.a"
+		name = fengtian_shenyang_conference_events.10.a
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = FNG_shenyang_ANQ
+					has_country_flag = FNG_shenyang_UPC
+				}
+				country_event = { id = fengtian_shenyang_conference_events.11 hours = 12 random_hours = 24 }
+			}
+			else_if = {
+				limit = {
+					has_country_flag = FNG_shenyang_SHD
+					SHD = { SHD_is_led_by_zongchang = yes }
+				}
+				country_event = { id = fengtian_shenyang_conference_events.12 hours = 12 random_hours = 24 }
+			}
+			else = {
+				country_event = { id = fengtian_shenyang_conference_events.13 hours = 12 random_hours = 24 }
+			}
+		}
+	}
+}
+
+country_event = { #The Chens Press For Anti-concessionism
+	id = fengtian_shenyang_conference_events.11
+	title = fengtian_shenyang_conference_events.11.t
+	desc = fengtian_shenyang_conference_events.11.d
+
+	picture = GFX_report_event_ANQ_chen_tiaoyuan
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.11 option fengtian_shenyang_conference_events.11.a"
+		name = fengtian_shenyang_conference_events.11.a
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = FNG_shenyang_SHD
+					SHD = { SHD_is_led_by_zongchang = yes }
+				}
+				country_event = { id = fengtian_shenyang_conference_events.12 hours = 11 random_hours = 24 }
+			}
+			else = {
+				country_event = { id = fengtian_shenyang_conference_events.13 hours = 12 random_hours = 24 }
+			}
+		}
+	}
+}
+
+country_event = { #Zongchang's Drunken Rants
+	id = fengtian_shenyang_conference_events.12
+	title = fengtian_shenyang_conference_events.12.t
+	desc = fengtian_shenyang_conference_events.12.d
+
+	picture = GFX_report_event_SHD_zhang_zongchang_coat_1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.12 option fengtian_shenyang_conference_events.12.a"
+		name = fengtian_shenyang_conference_events.12.a
+		hidden_effect = {
+			country_event = { id = fengtian_shenyang_conference_events.13 hours = 12 random_hours = 24 }
+		}
+	}
+}
+
+country_event = { #Yang Yuting Urges Caution
+	id = fengtian_shenyang_conference_events.13
+	title = fengtian_shenyang_conference_events.13.t
+	desc = fengtian_shenyang_conference_events.13.d
+
+	picture = GFX_report_event_FNG_yang_yuting_1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.13 option fengtian_shenyang_conference_events.13.a"
+		name = fengtian_shenyang_conference_events.13.a
+		hidden_effect = {
+			country_event = { id = fengtian_shenyang_conference_events.14 hours = 12 random_hours = 24 }
+		}
+	}
+}
+
+country_event = { #The Point of Decision
+	id = fengtian_shenyang_conference_events.14
+	title = fengtian_shenyang_conference_events.14.t
+	desc = fengtian_shenyang_conference_events.14.d
+
+	picture = GFX_report_event_FNG_zhang_zuolin_5
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.14 option fengtian_shenyang_conference_events.14.a"
+		name = fengtian_shenyang_conference_events.14.a #Yes
+		ai_chance = {
+			base = 1
+			modifier = {
+				set_temp_variable = { FNG_accept_chance = FNG.FNG_JAP_influence_variable }
+				multiply_temp_variable = { FNG_accept_chance = -1 }
+				add = FNG_accept_chance
+			}
+			modifier = {
+				add = 0.25
+				has_country_flag = FNG_shenyang_UPC
+			}
+			modifier = {
+				add = 0.25
+				has_country_flag = FNG_shenyang_ANQ
+			}
+		}
+		set_country_flag = FNG_shenyang_anticoncessions
+		if = {
+			limit = { has_country_flag = FNG_shenyang_UPC }
+			custom_effect_tooltip = FNG_federalist_allies
+			hidden_effect = {
+				country_event = { id = fengtian_shenyang_conference_events.15 hours = 12 random_hours = 24 }
+				country_event = { id = fengtian_shenyang_conference_events.17 hours = 36 random_hours = 24 }
+				UPC = {
+					country_event = { id = fengtian_shenyang_conference_events.15 hours = 12 random_hours = 24 }
+					country_event = { id = fengtian_shenyang_conference_events.17 hours = 36 random_hours = 24 }
+				}
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = { has_country_flag = FNG_shenyang_SHD }
+				SHD = {
+					country_event = { id = fengtian_shenyang_conference_events.17 hours = 36 random_hours = 24 }
+				}
+			}
+			if = {
+				limit = { has_country_flag = FNG_shenyang_ANQ }
+				country_event = { id = fengtian_shenyang_conference_events.16 hours = 6 random_hours = 30 }
+				ANQ = {
+					country_event = { id = fengtian_shenyang_conference_events.17 hours = 36 random_hours = 24 }
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.14 option fengtian_shenyang_conference_events.14.b"
+		name = fengtian_shenyang_conference_events.14.b #No
+		ai_chance = {
+			base = 1
+			modifier = {
+				add = FNG.FNG_JAP_influence_variable
+			}
+			modifier = {
+				add = -0.25
+				has_country_flag = FNG_shenyang_UPC
+			}
+			modifier = {
+				add = -0.25
+				has_country_flag = FNG_shenyang_ANQ
+			}
+		}
+		if = {
+			limit = {
+				has_country_flag = FNG_shenyang_ANQ
+				has_country_flag = FNG_shenyang_UPC
+			}
+			custom_effect_tooltip = FNG_anticoncessionists_angered
+			hidden_effect = {
+				country_event = { id = fengtian_shenyang_conference_events.18 hours = 12 random_hours = 24 }
+				ANQ = {
+					country_event = { id = fengtian_shenyang_conference_events.20 hours = 36 random_hours = 24 }
+				}
+			}
+		}
+		else_if = {
+			limit = { has_country_flag = FNG_shenyang_UPC }
+			custom_effect_tooltip = FNG_federalists_angered
+			hidden_effect = {
+				country_event = { id = fengtian_shenyang_conference_events.18 hours = 12 random_hours = 24 }
+			}
+		}
+		else = {
+			custom_effect_tooltip = FNG_anqing_angered
+			hidden_effect = {
+				ANQ = {
+					country_event = { id = fengtian_shenyang_conference_events.20 random_hours = 24 days = 1 }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Federalist-Fengtian alliance
+	id = fengtian_shenyang_conference_events.15
+	title = fengtian_shenyang_conference_events.15.t
+	desc = fengtian_shenyang_conference_events.15.d
+
+	picture = GFX_report_event_FNG_zhang_zuolin_handshake
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.15 option fengtian_shenyang_conference_events.15.a"
+		name = fengtian_shenyang_conference_events.15.a
+	}
+}
+
+country_event = { #Anqing Is Glad for our stance
+	id = fengtian_shenyang_conference_events.16
+	title = fengtian_shenyang_conference_events.16.t
+	desc = fengtian_shenyang_conference_events.16.d
+
+	picture = GFX_report_event_ANQ_chen_tiaoyuan
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.16 option fengtian_shenyang_conference_events.16.a"
+		name = fengtian_shenyang_conference_events.16.a
+		ANQ = {
+			country_event = { id = anqing_events.171 hours = 90 random_hours = 24 }
+		}
+	}
+}
+
+country_event = { #End of the Conference
+	id = fengtian_shenyang_conference_events.17
+	title = fengtian_shenyang_conference_events.17.t
+	desc = {
+		text = fengtian_shenyang_conference_events.17.d
+		trigger = {
+			NOT = { tag = ANQ }
+		}
+	}
+	desc = {
+		text = fengtian_shenyang_conference_events.17.danq
+		trigger = {
+			tag = ANQ
+		}
+	}
+
+	picture = GFX_report_event_CHN_china_five_colour_flag_crowd
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.17 option fengtian_shenyang_conference_events.17.a"
+		name = fengtian_shenyang_conference_events.17.a #Yes
+		trigger = {
+			NOT = { tag = ANQ }
+		}
+		add_political_power = 20
+		add_stability = 0.02
+		if = {
+			limit = {
+				NOT = { tag = FNG }
+			}
+			if = {
+				limit = {
+					OR = {
+						original_tag = SHD
+						tag = UPC
+					}
+				}
+				hidden_effect = { activate_targeted_decision = { target = QIE decision = FNG_Join_The_Zhifeng_War } }
+			}
+			FNG = {
+				clr_country_flag = FNG_shenyang_UPC
+			}
+		}
+	}
+
+	option = { #Anqing has to make decision
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.17 option fengtian_shenyang_conference_events.17.b"
+		name = fengtian_shenyang_conference_events.17.b
+		trigger = {
+			tag = ANQ
+		}
+		country_event = { id = anqing_events.171 hours = 90 random_hours = 24 }
+	}
+}
+
+country_event = { #The Federalists Storm Off
+	id = fengtian_shenyang_conference_events.18
+	title = fengtian_shenyang_conference_events.18.t
+	desc = fengtian_shenyang_conference_events.18.d
+
+	picture = GFX_report_event_GXC_chen_jiongming_5
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.18 option fengtian_shenyang_conference_events.18.a"
+		name = fengtian_shenyang_conference_events.18.a
+		add_political_power = -10
+		add_stability = -0.01
+		hidden_effect = {
+			UPC = {
+				country_event = { id = fengtian_shenyang_conference_events.19 days = 2 random_days = 2 }
+			}
+		}
+	}
+}
+
+country_event = { #Zuolin Refuses Our Demands
+	id = fengtian_shenyang_conference_events.19
+	title = fengtian_shenyang_conference_events.19.t
+	desc = fengtian_shenyang_conference_events.19.d
+
+	picture = GFX_report_event_FNG_zhang_zuolin_4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.19 option fengtian_shenyang_conference_events.19.a"
+		name = fengtian_shenyang_conference_events.19.a
+		set_country_flag = FNG_hostile
+	}
+}
+
+country_event = { #Fengtian Refuses To Denounce The Concessions
+	id = fengtian_shenyang_conference_events.20
+	title = fengtian_shenyang_conference_events.20.t
+	desc = fengtian_shenyang_conference_events.20.d
+
+	picture = GFX_report_event_FNG_zhang_zoulin
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.20 option fengtian_shenyang_conference_events.20.a"
+		name = fengtian_shenyang_conference_events.20.a #decide reclamation
+		FNG = {
+			country_event = { id = fengtian_shenyang_conference_events.21 hours = 12 random_hours = 6 }
+		}
+		country_event = { id = anqing_events.171 hours = 90 random_hours = 24 }
+	}
+}
+
+country_event = { #Tiaoyuan Denounces Fengtian
+	id = fengtian_shenyang_conference_events.21
+	title = fengtian_shenyang_conference_events.21.t
+	desc = fengtian_shenyang_conference_events.21.d
+
+	picture = GFX_report_event_ANQ_chen_tiaoyuan
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.21 option fengtian_shenyang_conference_events.21.a"
+		name = fengtian_shenyang_conference_events.21.a
+	}
+}
+
+country_event = { # Doomed to Failure
+	id = fengtian_shenyang_conference_events.413
+	title = fengtian_shenyang_conference_events.413.t
+	desc = fengtian_shenyang_conference_events.413.d
+
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes
+
+	option = { # But we own Beijing!
+		log = "[GetLogInfo]: event fengtian_shenyang_conference_events.413 option fengtian_shenyang_conference_events.413.a"
+		log = "KR_Event_Logging;FENGTIAN UNIFICATION CONFERENCE RESULT - No"
+		name = fengtian_shenyang_conference_events.413.a
+	}
+}
+
+### Beijing Conference
+
+#Beijing Conference Events Pt 1 (000-199) - Starting Events
+country_event = { #The Beijing Conference
+	id = fengtian_beijing_conference_events.000
+	title = fengtian_beijing_conference_events.000.t
+	desc = fengtian_beijing_conference_events.000.d
+	picture = GFX_report_event_FNG_anguojun_confrence
+
+	is_triggered_only = yes #Triggered by [DECISION]: FNG_japanese_patience_runs_thin_mission
+
+	immediate = {
+		hidden_effect = {
+			every_subject_country = {
+				limit = { is_chinese_or_potential_chinese_tag = yes }
+				country_event = { id = fengtian_beijing_conference_events.010 days = 1 } #Zhang Invites Us to Beijing
+			}
+			JAP = { country_event = { id = fengtian_beijing_conference_events.020 days = 1 } } #Zhang’s Unification Conference
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.000 option fengtian_beijing_conference_events.000.a"
+		name = fengtian_beijing_conference_events.000.a #The Road to Unification lies in front of us.
+		complete_national_focus = FNG_From_Beijing_to_the_Begonia_Leaf
+		country_event = { id = fengtian_beijing_conference_events.002 days = 7 } #Japan Divides the Conference
+		hidden_effect = {
+			news_event = fengtian_beijing_conference_events.001 #Zhang Calls Conference in Beijing
+			set_country_flag = FNG_conference_fired
+		}
+	}
+}
+
+news_event = { #Zhang Calls Conference in Beijing
+	id = fengtian_beijing_conference_events.001
+	immediate = { log = "[GetLogInfo]: event fengtian_beijing_conference_events.001" }
+	title = fengtian_beijing_conference_events.001.t
+	desc = fengtian_beijing_conference_events.001.d
+	picture = GFX_news_event_FNG_conference_success
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.000
+
+	trigger = {
+		wants_world_news = yes
+	}
+	show_major = {
+		regional_asia_news = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.001 option fengtian_beijing_conference_events.001.a"
+		name = fengtian_beijing_conference_events.001.a #The final enemy of the nation remains...
+		trigger = {
+			is_ally_with = FNG
+		}
+		ai_chance = { base = 100 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.001 option fengtian_beijing_conference_events.001.b"
+		name = fengtian_beijing_conference_events.001.b #Let us see if Marshal Zhang will play ball.
+		trigger = {
+			is_ally_with = JAP
+		}
+		ai_chance = { base = 100 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.001 option fengtian_beijing_conference_events.001.c"
+		name = fengtian_beijing_conference_events.001.c #Will the Dragon remain shackled or fly free?
+		trigger = {
+			NOT = {
+				tag = FNG
+				is_subject_of = FNG
+				tag = JAP
+				is_subject_of = JAP
+				is_in_faction_with = JAP
+			}
+		}
+		ai_chance = { base = 100 }
+	}
+}
+
+country_event = { #Japan Divides the Conference
+	id = fengtian_beijing_conference_events.002
+	title = fengtian_beijing_conference_events.002.t
+	desc = fengtian_beijing_conference_events.002.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.000
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = fengtian_beijing_conference_events.003 days = 5 } #The Remnants of Beiyang
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.002 option fengtian_beijing_conference_events.002.a"
+		name = fengtian_beijing_conference_events.002.a #For the good of the nation, we must maintain our ties to Tokyo.
+		ai_chance = { base = 50 }
+		FNG_JAP_investment_large = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.002 option fengtian_beijing_conference_events.002.b"
+		name = fengtian_beijing_conference_events.002.b #The nation must be free, both from Germany and Japan!
+		ai_chance = { base = 50 }
+		FNG_JAP_spend_large = yes
+	}
+}
+
+country_event = { #The Remnants of Beiyang
+	id = fengtian_beijing_conference_events.003
+	title = fengtian_beijing_conference_events.003.t
+	desc = fengtian_beijing_conference_events.003.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.002
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = fengtian_beijing_conference_events.004 days = 5 } #The FCDP Rally the Opposition
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.003 option fengtian_beijing_conference_events.003.a"
+		name = fengtian_beijing_conference_events.003.a #Loyalty is more valuable than merit!
+		ai_chance = { base = 25 }
+		FNG_JAP_investment_large = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.003 option fengtian_beijing_conference_events.003.b"
+		name = fengtian_beijing_conference_events.003.b #Is this not a meritorious government?
+		ai_chance = { base = 50 }
+		set_temp_variable = { CCPOP = 5 }
+		FNG_CCPOP = yes
+		set_temp_variable = { RLPOP = 5 }
+		FNG_RLPOP = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.003 option fengtian_beijing_conference_events.003.c"
+		name = fengtian_beijing_conference_events.003.c #Perhaps the Beiyang factions know the Central Plains best?
+		ai_chance = { base = 25 }
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.05
+		}
+		FNG_JAP_spend_large = yes
+	}
+}
+
+country_event = { #The FCDP Rally the Opposition
+	id = fengtian_beijing_conference_events.004
+	title = fengtian_beijing_conference_events.004.t
+	desc = fengtian_beijing_conference_events.004.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.003
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = fengtian_beijing_conference_events.005 days = 5 } #The Great Decision
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.004 option fengtian_beijing_conference_events.004.a"
+		name = fengtian_beijing_conference_events.004.a #Perhaps we can allow some level of democracy...
+		ai_chance = { base = 50 }
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.004 option fengtian_beijing_conference_events.004.b"
+		name = fengtian_beijing_conference_events.004.b #Wu Peifu was too soft on these idealistic fools!
+		ai_chance = { base = 50 }
+		FNG_JAP_investment_large = yes
+	}
+}
+
+country_event = { #The Great Decision
+	id = fengtian_beijing_conference_events.005
+	title = fengtian_beijing_conference_events.005.t
+	desc = fengtian_beijing_conference_events.005.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.005
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.005 option fengtian_beijing_conference_events.005.a"
+		name = fengtian_beijing_conference_events.005.a #We will open negotiations to join the Sphere.
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 25
+				FNG_mantetsu_level_medium = yes
+			}
+
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = FNG_forpol option = FNG_FORPOL_CONCESSIONS_JAP }
+					has_game_rule = { rule = FNG_forpol option = FNG_FORPOL_CUF }
+				}
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					FNG_mantetsu_level_high = yes
+					FNG_mantetsu_level_very_high = yes
+				}
+			}
+			custom_effect_tooltip = FNG_JAP_influence_high_tooltip
+		}
+		add_war_support = -0.20
+		JAP = { country_event = { id = fengtian_beijing_conference_events.300 days = 7 } } #Zhang Asks to Join the Sphere
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.005 option fengtian_beijing_conference_events.005.b"
+		name = fengtian_beijing_conference_events.005.b #We will gamble that Japan values us more than the concessions.
+		trigger = {
+			OR = {
+				#Rig it if you have game rules
+				AND = {
+					is_ai = yes
+					OR = {
+						has_game_rule = { rule = FNG_forpol option = FNG_FORPOL_CONCESSIONS_JAP }
+						has_game_rule = { rule = FNG_forpol option = FNG_FORPOL_CUF }
+					}
+				}
+				#Actual Trigger
+				NOT = {
+					FNG_mantetsu_level_high = yes
+					FNG_mantetsu_level_very_high = yes
+				}
+			}
+		}
+		ai_chance = {
+			base = 50 #Zhang will normally want to demand the concessions but can be blocked with sufficient Mantetsu influence
+			modifier = {
+				add = -25
+				FNG_mantetsu_level_medium = yes
+			}
+
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FNG_forpol option = FNG_FORPOL_UNCONDITIONAL_JAP }
+			}
+		}
+		#Choosing this option is expensive the more Japanese influence you have
+		if = {
+			limit = {
+				FNG_mantetsu_level_medium = yes
+			}
+			add_political_power = -50
+			add_stability = -0.10
+		}
+		JAP = { country_event = { id = fengtian_beijing_conference_events.200 days = 7 } } #Zhang Demands the Concessions
+		custom_effect_tooltip = FNG_split_from_japan
+	}
+}
+
+country_event = { #Zhang Invites us to Beijing
+	id = fengtian_beijing_conference_events.010
+	title = fengtian_beijing_conference_events.010.t
+	desc = fengtian_beijing_conference_events.010.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.000
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.010 option fengtian_beijing_conference_events.010.a"
+		name = fengtian_beijing_conference_events.010.a #We must not ally with the Japanese Imperialists!
+		ai_chance = { base = 50 }
+		FNG = { country_event = { id = fengtian_beijing_conference_events.011 days = 2 random_days = 5 } } #[FROM.GetLeader] Rails Against Japan
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.010 option fengtian_beijing_conference_events.010.b"
+		name = fengtian_beijing_conference_events.010.b #Friendship with Tokyo guarantees our future.
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				china_alignment_federalists = yes
+			}
+		}
+		FNG = { country_event = { id = fengtian_beijing_conference_events.012 days = 2 random_days = 5 } } #[FROM.GetLeader] Advocates for Japan
+	}
+}
+
+country_event = { #[FROM.GetLeader] Rails Against Japan
+	id = fengtian_beijing_conference_events.011
+	title = fengtian_beijing_conference_events.011.t
+	desc = fengtian_beijing_conference_events.011.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.010
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.011 option fengtian_beijing_conference_events.011.a"
+		name = fengtian_beijing_conference_events.011.a #The opinion is heard.
+		ai_chance = { base = 100 }
+		if = {
+			limit = { china_same_alignment_as_FROM = yes } #PREV is FNG
+			FNG_JAP_spend_large = yes
+		}
+		else_if = {
+			limit = { china_compatible_alignment_to_FROM = yes } #Beiyang
+			FNG_JAP_spend_medium = yes
+		}
+		else = {
+			#Everyone else
+			FNG_JAP_spend_small = yes
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.011 option fengtian_beijing_conference_events.011.b"
+		name = fengtian_beijing_conference_events.011.b #...or maybe not.
+		ai_chance = { base = 0 }
+		custom_effect_tooltip = FNG_japan_will_be_mad_tooltip
+		if = {
+			limit = { china_same_alignment_as_FROM = yes } #PREV is FNG
+			add_political_power = -100
+		}
+		else_if = {
+			limit = { china_compatible_alignment_to_FROM = yes } #Beiyang
+			add_political_power = -50
+		}
+		else = {
+			#Everyone else
+			add_political_power = -30
+		}
+		custom_effect_tooltip = CHN_fuel_to_civil_war_warning_tt
+		FROM = { country_event = { id = fengtian_beijing_conference_events.013 days = 3 } } #Zhang Sidelines Us
+	}
+}
+
+country_event = { #[FROM.GetLeader] Advocates for Japan
+	id = fengtian_beijing_conference_events.012
+	title = fengtian_beijing_conference_events.012.t
+	desc = fengtian_beijing_conference_events.012.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.010
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.012 option fengtian_beijing_conference_events.012.a"
+		name = fengtian_beijing_conference_events.012.a #The opinion is heard.
+		ai_chance = { base = 100 }
+		if = {
+			limit = { china_same_alignment_as_FROM = yes } #PREV is FNG
+			FNG_JAP_investment_large = yes
+		}
+		else_if = {
+			limit = { china_compatible_alignment_to_FROM = yes } #Beiyang
+			FNG_JAP_investment_medium = yes
+		}
+		else = {
+			#Everyone else
+			FNG_JAP_investment_small = yes
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.012 option fengtian_beijing_conference_events.012.b"
+		name = fengtian_beijing_conference_events.012.b #...or maybe not.
+		ai_chance = { base = 0 }
+		custom_effect_tooltip = FNG_japan_will_be_mad_tooltip
+		if = {
+			limit = { china_same_alignment_as_FROM = yes } #PREV is FNG
+			add_political_power = -100
+		}
+		else_if = {
+			limit = { china_compatible_alignment_to_FROM = yes } #Beiyang
+			add_political_power = -50
+		}
+		else = {
+			#Everyone else
+			add_political_power = -30
+		}
+		custom_effect_tooltip = CHN_fuel_to_civil_war_warning_tt
+		FROM = { country_event = { id = fengtian_beijing_conference_events.013 days = 3 } } #Zhang Sidelines Us
+	}
+}
+
+country_event = { #Zhang Sidelines Us
+	id = fengtian_beijing_conference_events.013
+	title = fengtian_beijing_conference_events.013.t
+	desc = fengtian_beijing_conference_events.013.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.012
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.013 option fengtian_beijing_conference_events.013.a"
+		name = fengtian_beijing_conference_events.013.a #We ought to reconsider our allegiance.
+		CHN_add_to_civil_war_preparation_effect = yes
+	}
+}
+
+country_event = { #Zhang’s Unification Conference
+	id = fengtian_beijing_conference_events.020
+	title = fengtian_beijing_conference_events.020.t
+	desc = fengtian_beijing_conference_events.020.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.000
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.020 option fengtian_beijing_conference_events.020.a"
+		name = fengtian_beijing_conference_events.020.a #We are on the cusp of victory, we cannot fail now!
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		effect_tooltip = {
+			FNG_JAP_investment_mega = yes
+		}
+		FNG = { country_event = { id = fengtian_beijing_conference_events.021 days = 3 } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.020 option fengtian_beijing_conference_events.020.b"
+		name = fengtian_beijing_conference_events.020.b #Alas China unites but we remain divided.
+		ai_chance = { base = 100 }
+	}
+}
+
+country_event = { #Tokyo Coordinates Their Forces
+	id = fengtian_beijing_conference_events.021
+	title = fengtian_beijing_conference_events.021.t
+	desc = fengtian_beijing_conference_events.021.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.020
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.021 option fengtian_beijing_conference_events.021.a"
+		name = fengtian_beijing_conference_events.021.a #How much money did Japan spend to make this happen?!
+		FNG_JAP_investment_mega = yes
+	}
+}
+
+#Beijing Conference Events Pt 2 (200-299) - Fengtian Assertive Events
+
+country_event = { #Zhang Demands the Concessions
+	id = fengtian_beijing_conference_events.200
+	title = fengtian_beijing_conference_events.200.t
+	desc = fengtian_beijing_conference_events.200.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.005.b
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.200 option fengtian_beijing_conference_events.200.a"
+		name = fengtian_beijing_conference_events.200.a #We begrudgingly accept these terms.
+		ai_chance = {
+			base = 25 #AI will basically never say yes unless they have decent influence on you and you've got a larger army.
+			modifier = {
+				add = 25
+				FNG_mantetsu_level_medium = yes
+			}
+
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FNG_forpol option = FNG_FORPOL_CUF }
+			}
+		}
+		JAP_add_FNG_to_faction_effect = yes
+		effect_tooltip = {
+			every_state = {
+				limit = {
+					OR = {
+						AND = {
+							is_owned_by = JAP
+							is_core_china = yes
+						}
+						AND = {
+							OR = {
+								is_owned_by = JAP
+								owner = { is_subject_of = JAP }
+							}
+							is_possible_legation_cities_state = yes
+						}
+					}
+				}
+				transfer_state_to = FNG
+			}
+		}
+		FNG = { country_event = { id = fengtian_beijing_conference_events.210 days = 3 } } #The Japanese Accept Our Terms
+
+		log = "KR_Event_Logging;FNG GREAT DECISION - Fengtian joins the Sphere In Exchange for Concessions"
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.200 option fengtian_beijing_conference_events.200.b"
+		name = fengtian_beijing_conference_events.200.b #Stall for time while our forces prepare.
+		ai_chance = {
+			base = 75
+			modifier = {
+				#Overwhelming strength can be persuaive
+				factor = 0.5
+				strength_ratio = {
+					tag = FNG
+					ratio < 1
+				}
+			}
+
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = FNG_forpol option = FNG_FORPOL_CONDITIONAL_JAP }
+					has_game_rule = { rule = FNG_forpol option = FNG_FORPOL_CONCESSIONS_JAP }
+				}
+			}
+		}
+		set_JAP_FNG_hostile_AI = yes
+		FNG = { country_event = { id = fengtian_beijing_conference_events.201 days = 14 } } #The Yalu Incident (FNG)
+		custom_effect_tooltip = FNG_JAP_war_in_two_weeks_warning_tt
+
+		log = "KR_Event_Logging;FNG GREAT DECISION - Fengtian Demands Concessions, Japan Attacks Them"
+	}
+}
+
+country_event = { #The Yalu Incident (FNG)
+	id = fengtian_beijing_conference_events.201
+	title = fengtian_beijing_conference_events.201.t
+	desc = fengtian_beijing_conference_events.201.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.200.b
+
+	immediate = {
+		hidden_effect = {
+			JAP = {
+				clear_JAP_FNG_hostile_AI = yes
+				declare_war_on = {
+					target = FNG
+					type = annex_everything
+				}
+			}
+			every_other_country = {
+				limit = {
+					is_chinese_tag = yes
+					NOT = { is_ally_with = JAP }
+				}
+				JAP = {
+					declare_war_on = {
+						target = PREV
+						type = annex_everything
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.201 option fengtian_beijing_conference_events.201.a"
+		name = fengtian_beijing_conference_events.201.a #Perfidy!
+		FNG_CA_remove = yes
+		FNG_mantetsu_collapse = yes
+		clr_country_flag = FNG_collaborated_with_japan
+		every_subject_country = {
+			limit = { is_chinese_tag = yes }
+			clr_country_flag = FNG_collaborated_with_japan
+		}
+		hidden_effect = {
+			news_event = fengtian_beijing_conference_events.202 #The Yalu Incident (News)
+			set_global_flag = FNG_relations_JAP_broke
+			if = {
+				limit = { is_in_faction_with = JAP }
+				leave_faction = yes
+				peace_out_non_neighbours_after_leaving_faction = yes
+			}
+			JAP = {
+				diplomatic_relation = {
+					country = FNG
+					relation = guarantee
+					active = no
+				}
+				diplomatic_relation = {
+					country = FNG
+					relation = non_aggression_pact
+					active = no
+				}
+				diplomatic_relation = {
+					country = FNG
+					relation = military_access
+					active = no
+				}
+			}
+		}
+	}
+}
+
+news_event = { #The Yalu Incident (News)
+	id = fengtian_beijing_conference_events.202
+	immediate = { log = "[GetLogInfo]: event fengtian_beijing_conference_events.202" }
+	title = fengtian_beijing_conference_events.202.t
+	desc = fengtian_beijing_conference_events.202.d
+	picture = GFX_news_event_FNG_conference_success
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.201
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.202 option fengtian_beijing_conference_events.202.a"
+		name = fengtian_beijing_conference_events.202.a #Zhang will face the iron price!
+		trigger = {
+			is_ally_with = JAP
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.202 option fengtian_beijing_conference_events.202.b"
+		name = fengtian_beijing_conference_events.202.b #The Rising Sun breaks all who refuse to bow.
+		trigger = {
+			NOT = { is_ally_with = JAP }
+		}
+	}
+}
+
+country_event = { #The Japanese Accept Our Terms
+	id = fengtian_beijing_conference_events.210
+	title = fengtian_beijing_conference_events.210.t
+	desc = fengtian_beijing_conference_events.210.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.200.a
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.210 option fengtian_beijing_conference_events.210.a"
+		name = fengtian_beijing_conference_events.210.a #A toast to a beautiful friendship!
+		if = {
+			limit = {
+				LEC = { is_in_faction_with = JAP }
+			}
+			LEC = { country_event = { id = fengtian_beijing_conference_events.211 days = 3 } } #The Sino-Japanese Pact (LEC)
+		}
+		every_state = {
+			limit = {
+				OR = {
+					AND = {
+						is_owned_by = JAP
+						is_core_china = yes
+					}
+					AND = {
+						OR = {
+							is_owned_by = JAP
+							owner = { is_subject_of = JAP }
+						}
+						is_possible_legation_cities_state = yes
+					}
+				}
+			}
+			transfer_state_to = FNG
+		}
+		news_event = fengtian_beijing_conference_events.212 #The Sino-Japanese Pact (News)
+	}
+}
+
+country_event = { #The Sino-Japanese Pact (LEC)
+	id = fengtian_beijing_conference_events.211
+	title = fengtian_beijing_conference_events.211.t
+	desc = fengtian_beijing_conference_events.211.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.210.a
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.211 option fengtian_beijing_conference_events.211.a"
+		name = fengtian_beijing_conference_events.211.a #A tragic betrayal!
+		ai_chance = { base = 100 }
+		FNG = { annex_country = { target = LEC transfer_troops = yes } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.211 option fengtian_beijing_conference_events.211.b"
+		name = fengtian_beijing_conference_events.211.b #We will not go down without a fight!
+		trigger = {
+			NOT = { is_subject_of = JAP }
+		}
+		JAP = { remove_from_faction = LEC }
+		FNG = {
+			create_wargoal = {
+				target = LEC
+				type = annex_everything
+			}
+		}
+	}
+}
+
+news_event = { #The Sino-Japanese Pact (News)
+	id = fengtian_beijing_conference_events.212
+	immediate = { log = "[GetLogInfo]: event fengtian_beijing_conference_events.212" }
+	title = fengtian_beijing_conference_events.212.t
+	desc = fengtian_beijing_conference_events.212.d
+	picture = GFX_news_event_FNG_conference_success
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.210
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.212 option fengtian_beijing_conference_events.212.a"
+		name = fengtian_beijing_conference_events.212.a #A Free China in a Free Asia!
+		trigger = {
+			is_ally_with = JAP
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.212 option fengtian_beijing_conference_events.212.b"
+		name = fengtian_beijing_conference_events.212.b #It seems our worst fears have been realised.
+		trigger = {
+			NOT = { is_ally_with = JAP }
+		}
+	}
+}
+
+#Beijing Conference Events Pt 3 (300-399) - Fengtian Submissive Events
+
+country_event = { #Zhang Asks to Join the Sphere
+	id = fengtian_beijing_conference_events.300
+	title = fengtian_beijing_conference_events.300.t
+	desc = fengtian_beijing_conference_events.300.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.210
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.300 option fengtian_beijing_conference_events.300.a"
+		name = fengtian_beijing_conference_events.300.a #Accept
+		JAP_add_FNG_to_faction_effect = yes
+		custom_effect_tooltip = FNG_JAP_prevent_focus_tooltip
+		FNG = { country_event = { id = fengtian_beijing_conference_events.301 days = 3 } } #Our Entry into the Sphere
+
+		log = "KR_Event_Logging;FNG GREAT DECISION - Fengtian joins the Sphere Unconditionally"
+	}
+}
+
+country_event = { #Zhang Asks to Join the Sphere
+	id = fengtian_beijing_conference_events.301
+	title = fengtian_beijing_conference_events.301.t
+	desc = fengtian_beijing_conference_events.301.d
+	picture = GFX_report_event_CHN_new_government
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.300
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.301 option fengtian_beijing_conference_events.301.a"
+		name = fengtian_beijing_conference_events.301.a #Let's hope we win this game of chess.
+		news_event = fengtian_beijing_conference_events.302 #The Fengtian Clique Joins the Sphere
+	}
+}
+
+news_event = { #The Fengtian Clique Joins the Sphere
+	id = fengtian_beijing_conference_events.302
+	immediate = { log = "[GetLogInfo]: event fengtian_beijing_conference_events.302" }
+	title = fengtian_beijing_conference_events.302.t
+	desc = fengtian_beijing_conference_events.302.d
+	picture = GFX_news_event_FNG_conference_success
+
+	is_triggered_only = yes #Triggered by [EVENT]: fengtian_beijing_conference_events.301
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.302 option fengtian_beijing_conference_events.302.a"
+		name = fengtian_beijing_conference_events.302.a #A Free China in a Free Asia!
+		trigger = {
+			is_ally_with = JAP
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event fengtian_beijing_conference_events.302 option fengtian_beijing_conference_events.302.b"
+		name = fengtian_beijing_conference_events.302.b #It seems our worst fears have been realised.
+		trigger = {
+			NOT = { is_ally_with = JAP }
+		}
+	}
+}

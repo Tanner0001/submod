@@ -1,0 +1,2712 @@
+#############################################
+# Most Serene Republic of Venice Focus Tree
+# By Herkles
+############################################
+
+focus_tree = {
+	id = republic_of_venice
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = VNC
+		}
+	}
+	default = no
+	continuous_focus_position = { x = 325 y = 750 }
+
+	### Political Focuses ###
+
+	focus = {# Open the Great Council
+		id = VNC_great_council
+		icon = GFX_ITA_serene_republic
+		cost = 2
+
+		x = 6
+		y = 0
+
+		available = {
+			has_war = no
+			has_socialist_government = no
+			if = {
+				limit = { has_country_flag = VNC_republican_revolt }
+				NOT = { country_exists = ITA }
+			}
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_great_council"
+			country_event = venice_events.1
+		}
+	}
+
+	focus = {# A New Republic
+		id = VNC_new_republic
+		icon = GFX_goal_ideology_social_liberal
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = -3
+		y = 1
+
+		available = {
+			has_country_flag = VNC_new_republic_is_established
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_great_council
+		}
+		mutually_exclusive = {
+			focus = VNC_old_republic
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_new_republic"
+			add_stability = 0.1
+			hidden_effect = {
+				country_event = { id = venice_events.32 days = 15 }
+				country_event = { id = venice_events.34 days = 5 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Together As One
+		id = VNC_together_as_one
+		icon = GFX_goal_national_mobilization
+		cost = 6
+
+		relative_position_id = VNC_new_republic
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = VNC_new_republic
+		}
+		ai_will_do = { factor = 75 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_together_as_one"
+			add_ideas = VNC_together_idea
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Foreign Policy
+		id = VNC_foreign
+		icon = GFX_goal_generic_globe
+		cost = 6
+
+		relative_position_id = VNC_new_republic
+		x = 0
+		y = 2
+
+		available = {
+			is_subject = no
+		}
+		prerequisite = {
+			focus = VNC_together_as_one
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_foreign"
+			add_political_power = 50
+			add_war_support = 0.05
+			effect_tooltip = {
+				activate_targeted_decision = { target = GER decision = VNC_join_faction }
+				activate_targeted_decision = { target = ENT decision = VNC_join_faction }
+				activate_targeted_decision = { target = AUS decision = VNC_join_faction }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Meritocracy
+		id = VNC_meritocracy
+		icon = GFX_goal_volunteer_alliance
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = -5
+		y = 2
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_new_republic
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_meritocracy"
+			add_ideas = VNC_meritocracy_idea
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Women's Suffrage
+		id = VNC_womens_suffrage
+		icon = GFX_focus_generic_female_voting
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = -5
+		y = 3
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_meritocracy
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_womens_suffrage"
+			swap_ideas = {
+				remove_idea = VNC_meritocracy_idea
+				add_idea = VNC_meritocracy_idea2
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Concio
+		id = VNC_concio
+		icon = GFX_goal_government_icon
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = -1
+		y = 2
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_new_republic
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_concio"
+			add_stability = 0.05
+			set_temp_variable = { ideology_change_var = 10 }
+			change_ruling_party_popularity = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Venetian Welfare
+		id = VNC_venetian_welfare
+		icon = GFX_focus_generic_concessions
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = -1
+		y = 3
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_concio
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_venetian_welfare"
+			add_ideas = VNC_venetian_welfare_idea
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Democratic Republic
+		id = VNC_democratic_republic
+		icon = GFX_goal_liberty
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = -3
+		y = 4
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_womens_suffrage
+		}
+		prerequisite = {
+			focus = VNC_venetian_welfare
+		}
+		prerequisite = {
+			focus = VNC_foreign
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_democratic_republic"
+			add_political_power = 100
+			custom_effect_tooltip = VNC_new_republic_idea_tt
+			hidden_effect = {
+				remove_ideas = {
+					VNC_venetian_welfare_idea
+					VNC_meritocracy_idea2
+					VNC_together_idea
+				}
+				add_ideas = VNC_new_republic_idea
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Old Republic
+		id = VNC_old_republic
+		icon = GFX_goal_ideology_authoritarian_democrat
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = 3
+		y = 1
+
+		available = {
+			has_country_flag = VNC_old_republic_is_restored
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_great_council
+		}
+		mutually_exclusive = {
+			focus = VNC_new_republic
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_old_republic"
+			add_political_power = 50
+			add_stability = 0.05
+			hidden_effect = {
+				country_event = { id = venice_events.32 days = 15 }
+				country_event = { id = venice_events.34 days = 5 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Cultural Renewal
+		id = VNC_avaiation_industry
+		icon = GFX_focus_hol_united_netherlands
+		cost = 6
+
+		relative_position_id = VNC_old_republic
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = VNC_old_republic
+		}
+		ai_will_do = { factor = 75 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_avaiation_industry"
+			add_stability = 0.05
+			add_ideas = VNC_culture_idea
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Stato da Mar
+		id = VNC_stato_da_mar
+		icon = GFX_goal_generic_coastal_navy
+		cost = 6
+
+		relative_position_id = VNC_old_republic
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = VNC_avaiation_industry
+		}
+		available = {
+			is_subject = no
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_stato_da_mar"
+			add_war_support = 0.15
+			effect_tooltip = {
+				activate_targeted_decision = { target = GER decision = VNC_join_faction }
+				activate_targeted_decision = { target = ENT decision = VNC_join_faction }
+			}
+			custom_effect_tooltip = VNC_irridentist_decisions
+			hidden_effect = {
+				activate_targeted_decision = { target = AUS decision = VNC_attack_austria }
+				activate_targeted_decision = { target = 182 decision = VNC_claim_adriatic } #Crete
+				activate_targeted_decision = { target = 183 decision = VNC_claim_adriatic } #Cyprus
+				activate_targeted_decision = { target = 758 decision = VNC_claim_adriatic } #Ionian Islands
+				activate_targeted_decision = { target = THIS decision = VNC_claim_albania }
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {# Course of Honours
+		id = VNC_course_of_honors
+		icon = GFX_goal_generic_improve_relations
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = 1
+		y = 2
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_old_republic
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_course_of_honors"
+			add_political_power = 100
+			set_temp_variable = { ideology_change_var = 10 }
+			change_ruling_party_popularity = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# State Inquistors
+		id = VNC_state_inquistors
+		icon = GFX_goal_secret_agents
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = 1
+		y = 3
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_course_of_honors
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_state_inquistors"
+			if = {
+				limit = {
+					has_dlc_lar = yes
+					has_intelligence_agency = no
+				}
+				create_intelligence_agency = yes
+			}
+			if = {
+				limit = { has_dlc_lar = yes }
+				add_ideas = VNC_state_inquistors_lar_idea
+			}
+			else = {
+				add_ideas = VNC_state_inquistors_idea
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESISTANCE FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# New Nobility
+		id = VNC_new_nobility
+		icon = GFX_focus_rom_parties_end
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = 5
+		y = 2
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_old_republic
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_new_nobility"
+			add_ideas = VNC_nobility_idea
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Merchant Princes
+		id = VNC_merchant_princes
+		icon = GFX_ITA_masquerade
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = 5
+		y = 3
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_new_nobility
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_merchant_princes"
+			swap_ideas = {
+				remove_idea = VNC_nobility_idea
+				add_idea = VNC_nobility_idea2
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Aristocratic Republic
+		id = VNC_aristocratic_republic
+		icon = GFX_focus_generic_self_management
+		cost = 6
+
+		relative_position_id = VNC_great_council
+		x = 3
+		y = 4
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+		}
+		prerequisite = {
+			focus = VNC_merchant_princes
+		}
+		prerequisite = {
+			focus = VNC_state_inquistors
+		}
+		prerequisite = {
+			focus = VNC_stato_da_mar
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_aristocratic_republic"
+			add_political_power = 100
+			custom_effect_tooltip = VNC_old_republic_idea_tt
+			if = {
+				limit = { has_dlc_lar = yes }
+				hidden_effect = {
+					remove_ideas = {
+						VNC_state_inquistors_lar_idea
+						VNC_nobility_idea2
+						VNC_culture_idea
+					}
+					add_ideas = VNC_old_republic_lar_idea
+				}
+			}
+			else = {
+				hidden_effect = {
+					remove_ideas = {
+						VNC_state_inquistors_idea
+						VNC_nobility_idea2
+						VNC_culture_idea
+					}
+					add_ideas = VNC_old_republic_idea
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+### Rebellion against ITA ###
+
+	focus = {
+		id = VNC_last_stand
+		icon = GFX_focus_generic_bastion_of_democracy
+		cost = 1
+
+		x = -4
+		y = 0
+
+		allow_branch = { has_country_flag = VNC_republican_revolt }
+
+		ai_will_do = { factor = 500 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_last_stand"
+			add_ideas = VNC_defender_democracy
+			increase_economic_mobilisation = yes
+		}
+	}
+
+	focus = {
+		id = VNC_unite_rebel
+		icon = GFX_EGY_Palestine_Defence
+		cost = 2
+
+		relative_position_id = VNC_last_stand
+		x = -1
+		y = 1
+
+		prerequisite = { focus = VNC_last_stand }
+
+		ai_will_do = { factor = 500 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_unite_rebel"
+			swap_ideas = {
+				remove_idea = VNC_military_confusion
+				add_idea = VNC_military_confusion2
+			}
+		}
+	}
+
+	focus = {
+		id = VNC_promote_coordination
+		icon = GFX_goal_generic_army_grand_battleplan
+		cost = 3
+
+		relative_position_id = VNC_unite_rebel
+		x = 0
+		y = 1
+
+		prerequisite = { focus = VNC_unite_rebel }
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_promote_coordination"
+			remove_ideas = VNC_military_confusion2
+			add_command_power = 60
+		}
+	}
+
+	focus = {
+		id = VNC_desperate_defence
+		icon = GFX_focus_generic_anti_fascist_diplomacy
+		cost = 3
+
+		relative_position_id = VNC_unite_rebel
+		x = -2
+		y = 1
+
+		available = { surrender_progress > 0.2 }
+		prerequisite = { focus = VNC_unite_rebel }
+		continue_if_invalid = yes
+		cancel_if_invalid = no
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_desperate_defence"
+			add_timed_idea = {
+				idea = VNC_desperate_defence_idea
+				days = 45
+			}
+		}
+	}
+
+	focus = {
+		id = VNC_raise_militias
+		icon = GFX_goal_ITA_Arditi
+		cost = 3
+
+		relative_position_id = VNC_last_stand
+		x = 1
+		y = 1
+
+		available = { controls_state = 759 }
+		prerequisite = { focus = VNC_last_stand }
+
+		ai_will_do = { factor = 2000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_raise_militias"
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Fanteria Partigiana"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 8 }
+					LINE_2 = { localization_key = line_battalion_tt NAME = artillery_brigade ICON = GFX_unit_artillery_brigade_icon_small COUNT = 1 }
+					SUPPORT_1 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+					SUPPORT_2 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+				}
+				if = {
+					limit = { has_template = "Fanteria Partigiana" }
+					delete_unit_template_and_units = { division_template = "Fanteria Partigiana" disband = yes }
+				}
+				division_template = {
+					name = "Fanteria Partigiana"
+					division_names_group = ITA_INF_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+						artillery_brigade = { x = 3 y = 0 }
+					}
+					support = {
+						artillery = { x = 0 y = 0 }
+						engineer = { x = 0 y = 1 }
+					}
+					template_counter = 92
+				}
+			}
+			random_controlled_state = {
+				prioritize = { 759 }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 3
+						TYPE = "Fanteria Partigiana"
+					}
+					create_unit = {
+						division = "division_template = \"Fanteria Partigiana\" start_experience_factor = 0.4"
+						owner = ROOT
+						count = 3
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VNC_rally_defectors
+		icon = GFX_goal_generic_council
+		cost = 2
+
+		relative_position_id = VNC_raise_militias
+		x = 0
+		y = 1
+
+		available = {
+			has_war_with = ITA
+			ITA = { surrender_progress > 0.2 }
+		}
+		prerequisite = { focus = VNC_raise_militias }
+
+		ai_will_do = { factor = 2000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_rally_defectors"
+			ITA = {
+				transfer_units_fraction = {
+					target = VNC
+					target_organization = 1
+					source_organization = 1
+					size = 0.2
+					keep_unit_leaders_trigger = { always = yes }
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VNC_propaganda
+		icon = GFX_focus_SWE_refuge_from_war
+		cost = 2
+
+		relative_position_id = VNC_last_stand
+		x = -3
+		y = 1
+
+		available = {
+			surrender_progress < 0.2
+			has_war_with = ITA
+			ITA = {
+				casualties_inflicted_by = {
+					opponent = VNC
+					thousands > 30
+				}
+			}
+		}
+		prerequisite = { focus = VNC_last_stand }
+
+		ai_will_do = { factor = 500 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_propaganda"
+			ITA = { add_ideas = VNC_defeatist_sentiment }
+		}
+	}
+
+	focus = {
+		id = VNC_final_push
+		icon = GFX_goal_generic_army_superior_firepower
+		cost = 1
+
+		relative_position_id = VNC_rally_defectors
+		x = -1
+		y = 1
+
+		available = {
+			has_war_with = ITA
+			ITA = { surrender_progress > 0.3 }
+			controls_province = 969
+			controls_province = 773
+		}
+		prerequisite = { focus = VNC_rally_defectors }
+		prerequisite = { focus = VNC_promote_coordination }
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_final_push"
+			swap_ideas = {
+				remove_idea = VNC_defender_democracy
+				add_idea = VNC_defender_democracy2
+			}
+			ITA = {
+				transfer_units_fraction = {
+					target = VNC
+					target_organization = 1
+					source_organization = 1
+					size = 0.4
+					keep_unit_leaders_trigger = { always = yes }
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = VNC_utilise_austrian_ties
+		icon = GFX_focus_austrian_cooperation
+		cost = 3
+
+		relative_position_id = VNC_last_stand
+		x = 3
+		y = 1
+
+		available = {
+			country_exists = AUS
+			NOT = { has_war_with = AUS }
+			AUS = {
+				is_major = yes
+				has_capitulated = no
+			}
+		}
+		prerequisite = { focus = VNC_last_stand }
+
+		ai_will_do = {
+			factor = 500
+			modifier = {
+				factor = 0
+				NOT = { has_completed_focus = VNC_promote_coordination }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_utilise_austrian_ties"
+			add_ideas = VNC_austrian_aid
+		}
+	}
+
+	focus = {
+		id = VNC_import_arms
+		icon = GFX_goal_GER_Mauser_Werke_Contracts
+		cost = 3
+
+		relative_position_id = VNC_utilise_austrian_ties
+		x = 0
+		y = 1
+
+		available = {
+			country_exists = AUS
+			NOT = { has_war_with = AUS }
+			AUS = {
+				is_major = yes
+				has_capitulated = no
+			}
+		}
+		prerequisite = { focus = VNC_utilise_austrian_ties }
+
+		ai_will_do = { base = 500 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_import_arms"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 2000
+				producer = AUS
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 150
+				producer = AUS
+			}
+		}
+	}
+
+### Economic Section ###
+	focus = {# Consoli dei mercanti
+		id = VNC_asseses_the_economy
+		icon = GFX_focus_empty_coffers
+		cost = 6
+
+		x = 16
+		y = 0
+
+		available = {
+			if = {
+				limit = { has_country_flag = VNC_republican_revolt }
+				NOT = { country_exists = ITA }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_asseses_the_economy"
+			add_tech_bonus = {
+				name = VNC_asseses_the_economy
+				bonus = 1
+				uses = 1
+				category = industry
+			}
+			increase_economic_mobilisation = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Venetian Industry
+		id = VNC_venetian_industry
+		icon = GFX_goal_production
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = -3
+		y = 1
+
+		prerequisite = {
+			focus = VNC_asseses_the_economy
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_venetian_industry"
+			add_tech_bonus = {
+				name = VNC_venetian_industry
+				bonus = 1
+				uses = 1
+				category = industry
+			}
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Venetian Railways
+		id = VNC_railways
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = -3
+		y = 3
+
+		prerequisite = {
+			focus = VNC_venetian_industry
+		}
+		ai_will_do = { factor = 30 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_railways"
+			add_equipment_to_stockpile = {
+				type = train_equipment
+				amount = 20
+			}
+			build_railway = {
+				level = 1
+				fallback = yes
+				start_province = 13582
+				target_province = 603
+			}
+			if = {
+				limit = {
+					159 = { free_building_slots = { building = infrastructure size < 1 } }
+					160 = { free_building_slots = { building = infrastructure size < 1 } }
+					759 = { free_building_slots = { building = infrastructure size < 1 } }
+				}
+				random_owned_controlled_state = {
+					prioritize = { 160 }
+					limit = {
+						is_core_of = ROOT
+						is_valid_state_for_development = yes
+					}
+					add_extra_state_shared_building_slots = 2
+				}
+			}
+			else = {
+				random_owned_controlled_state = {
+					prioritize = { 160 }
+					limit = {
+						is_core_of = ROOT
+						is_valid_state_for_development = yes
+						free_building_slots = { building = infrastructure size > 0 }
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Bounty of the Sea
+		id = VNC_bounty_of_the_sea
+		icon = GFX_ITA_sea_bounty
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = VNC_asseses_the_economy
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_bounty_of_the_sea"
+			add_ideas = VNC_sea_bounty_idea
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Expand the Arsenal
+		id = VNC_expand_the_arsenal
+		icon = GFX_goal_generic_shipyard
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = -2
+		y = 2
+
+		prerequisite = {
+			focus = VNC_venetian_industry
+		}
+		prerequisite = {
+			focus = VNC_bounty_of_the_sea
+		}
+		available = {
+			160 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_expand_the_arsenal"
+			add_one_random_dockyard = yes
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Center of Trade
+		id = VNC_trade_center
+		icon = GFX_goal_agrarian_reform
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = -1
+		y = 3
+
+		prerequisite = {
+			focus = VNC_expand_the_arsenal
+		}
+		available = {
+			160 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_trade_center"
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Research academies
+		id = VNC_research_institutes
+		icon = GFX_goal_generic_scientific_exchange
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = VNC_asseses_the_economy
+		}
+		ai_will_do = { factor = 45 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_research_institutes"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Venetian Radio
+		id = VNC_venetian_radio
+		icon = GFX_goal_generic_radar
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = 3
+		y = 1
+
+		prerequisite = {
+			focus = VNC_asseses_the_economy
+		}
+		ai_will_do = { factor = 30 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_venetian_radio"
+			if = {
+				limit = { NOT = { has_tech = radio } }
+				set_technology = { radio = 1 }
+				add_tech_bonus = {
+					name = VNC_venetian_radio
+					bonus = 1
+					uses = 1
+					category = electronics
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = VNC_venetian_radio
+					bonus = 1
+					uses = 2
+					category = electronics
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Business Schools
+		id = VNC_bussiness_schools
+		icon = GFX_goal_generic_intelligence_exchange
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = 2
+		y = 2
+
+		prerequisite = {
+			focus = VNC_research_institutes
+		}
+		prerequisite = {
+			focus = VNC_venetian_radio
+		}
+		ai_will_do = { factor = 35 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_bussiness_schools"
+			add_ideas = VNC_venetian_business_schools
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Expand Research Academies
+		id = VNC_expand_research_institutes
+		icon = GFX_goal_double_research
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = VNC_bussiness_schools
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_expand_research_institutes"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Synthetic Research
+		id = VNC_synthetic_research
+		icon = GFX_goal_generic_oil_refinery
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = 3
+		y = 3
+
+		prerequisite = {
+			focus = VNC_venetian_radio
+		}
+		ai_will_do = { factor = 30 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_synthetic_research"
+			add_tech_bonus = {
+				name = VNC_synthetic_research
+				bonus = 1
+				uses = 1
+				category = synth_resources
+			}
+			if = {
+				limit = { NOT = { has_tech = synth_oil_experiments } }
+				set_technology = { synth_oil_experiments = 1 }
+			}
+			else = { add_one_random_synthetic_refinery = yes }
+			add_one_random_synthetic_refinery = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Economic Miracle
+		id = VNC_economic_miracle
+		icon = GFX_goal_generic_positive_trade_relations
+		cost = 6
+
+		relative_position_id = VNC_asseses_the_economy
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = VNC_expand_research_institutes
+		}
+		prerequisite = {
+			focus = VNC_trade_center
+		}
+		prerequisite = {
+			focus = VNC_railways
+		}
+		prerequisite = {
+			focus = VNC_synthetic_research
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_economic_miracle"
+			add_ideas = VNC_economic_miracle_idea
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+### Venetian Navy ###
+	focus = {# Modernize the Navy
+		id = VNC_modernize_the_navy
+		icon = GFX_goal_VNC_Venetian_Navy
+		cost = 6
+
+		x = 24
+		y = 0
+
+		available = {
+			if = {
+				limit = { has_country_flag = VNC_republican_revolt }
+				NOT = { country_exists = ITA }
+			}
+		}
+
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_modernize_the_navy"
+			navy_experience = 50
+			add_doctrine_cost_reduction = {
+				name = VNC_modernize_the_navy
+				cost_reduction = 0.5
+				uses = 1
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Expand the Dockyards
+		id = VNC_expand_dockyards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = -3
+		y = 1
+
+		prerequisite = {
+			focus = VNC_modernize_the_navy
+		}
+		available = {
+			160 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_expand_dockyards"
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Defend the Coast
+		id = VNC_defend_the_coast
+		icon = GFX_focus_generic_coastal_fort
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = -3
+		y = 3
+
+		prerequisite = {
+			focus = VNC_expand_dockyards
+		}
+		available = {
+			160 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_defend_the_coast"
+			160 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 3
+						province = {
+							all_provinces = yes
+							limit_to_naval_base = yes
+						}
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_naval_base
+						BUILDING = coastal_bunker
+						NUMBER = 3
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Continue Naval Reforms
+		id = VNC_continue_with_reforms
+		icon = GFX_goal_navy_hat_ships
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = VNC_modernize_the_navy
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_continue_with_reforms"
+			add_doctrine_cost_reduction = {
+				name = VNC_continue_with_reforms
+				cost_reduction = 0.5
+				uses = 2
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Submarine efforts
+		id = VNC_submarines
+		icon = GFX_goal_generic_wolf_pack
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = VNC_continue_with_reforms
+		}
+		mutually_exclusive = {
+			focus = VNC_heavy_cruisers
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_submarines"
+			add_tech_bonus = {
+				name = VNC_submarines
+				bonus = 1
+				uses = 2
+				category = ss_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Light Cruisers and Destroyers
+		id = VNC_destroyers
+		icon = GFX_focus_generic_destroyer
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = -1
+		y = 3
+
+		prerequisite = {
+			focus = VNC_submarines
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_destroyers"
+			add_tech_bonus = {
+				name = VNC_destroyers
+				bonus = 1
+				uses = 2
+				category = dd_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Heavy Cruisers
+		id = VNC_heavy_cruisers
+		icon = GFX_focus_generic_cruiser2
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = VNC_continue_with_reforms
+		}
+		mutually_exclusive = {
+			focus = VNC_submarines
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_heavy_cruisers"
+			add_tech_bonus = {
+				name = VNC_heavy_cruisers
+				bonus = 1
+				uses = 2
+				category = ca_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Battle Cruisers
+		id = VNC_battle_cruisers
+		icon = GFX_focus_generic_navy_battleship3alt
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = VNC_heavy_cruisers
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_battle_cruisers"
+			add_tech_bonus = {
+				name = VNC_battle_cruisers
+				bonus = 1
+				uses = 2
+				category = bb_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Merchant Marine
+		id = VNC_life_at_sea
+		icon = GFX_goal_USA_liberty_ships
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = 3
+		y = 1
+
+		prerequisite = {
+			focus = VNC_modernize_the_navy
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_life_at_sea"
+			add_ideas = VNC_merchant_marine_idea
+		}
+	}
+
+	focus = {# Fanti da Mar
+		id = VNC_venetian_marines
+		icon = GFX_goal_generic_amphibious_assault
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = 3
+		y = 3
+
+		prerequisite = {
+			focus = VNC_life_at_sea
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_venetian_marines"
+			if = {
+				limit = { NOT = { has_tech = marines } }
+				set_technology = { marines = 1 }
+				custom_effect_tooltip = tooltip_white_line
+				add_tech_bonus = {
+					name = VNC_venetian_marines
+					bonus = 1
+					uses = 1
+					category = marine_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = VNC_venetian_marines
+					bonus = 1
+					uses = 2
+					category = marine_tech
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			hidden_effect = {
+				if = {
+					limit = { has_template = "Venetian Marine Division" }
+					delete_unit_template_and_units = { division_template = "Venetian Marine Division" disband = yes } #no cheating
+				}
+			}
+			if = {
+				limit = { has_tech = amphibious_mechanized_infantry }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_create_division_template
+						NAME = "Venetian Marine Division"
+						LINE_1 = { localization_key = line_battalion_tt NAME = amphibious_mechanized ICON = GFX_unit_amphibious_mechanized_icon_small COUNT = 6 }
+						SUPPORT_1 = { localization_key = support_battalion_tt NAME = recon ICON = GFX_unit_recon_icon_small }
+						SUPPORT_2 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+						SUPPORT_3 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+					}
+					if = {
+						limit = { has_template = "Venetian Marine Division" }
+						delete_unit_template_and_units = { division_template = "Venetian Marine Division" disband = yes } #no cheating
+					}
+					division_template = {
+						name = "Venetian Marine Division"
+						division_names_group = VNC_MAR_01
+						regiments = {
+							amphibious_mechanized = { x = 0 y = 0 }
+							amphibious_mechanized = { x = 0 y = 1 }
+							amphibious_mechanized = { x = 0 y = 2 }
+							amphibious_mechanized = { x = 1 y = 0 }
+							amphibious_mechanized = { x = 1 y = 1 }
+							amphibious_mechanized = { x = 1 y = 2 }
+						}
+						support = {
+							long_range_patrol_support = { x = 0 y = 0 }
+							engineer = { x = 0 y = 1 }
+							artillery = { x = 0 y = 2 }
+						}
+					}
+				}
+			}
+			else = {
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_create_division_template
+						NAME = "Venetian Marine Division"
+						LINE_1 = { localization_key = line_battalion_tt NAME = marine ICON = GFX_unit_marine_icon_small COUNT = 6 }
+						SUPPORT_1 = { localization_key = support_battalion_tt NAME = recon ICON = GFX_unit_recon_icon_small }
+						SUPPORT_2 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+						SUPPORT_3 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+					}
+					division_template = {
+						name = "Venetian Marine Division"
+						division_names_group = VNC_MAR_01
+						regiments = {
+							marine = { x = 0 y = 0 }
+							marine = { x = 0 y = 1 }
+							marine = { x = 0 y = 2 }
+							marine = { x = 1 y = 0 }
+							marine = { x = 1 y = 1 }
+							marine = { x = 1 y = 2 }
+						}
+						support = {
+							recon = { x = 0 y = 0 }
+							engineer = { x = 0 y = 1 }
+							artillery = { x = 0 y = 2 }
+						}
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			random_core_state = {
+				limit = {
+					is_controlled_by = ROOT
+					valid_state_for_spawning_friendly_unit = yes
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "Venetian Marine Division"
+					}
+					create_unit = {
+						division = "division_template = \"Venetian Marine Division\" start_experience_factor = 0.6"
+						owner = ROOT
+						count = 2
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Thalassocracy
+		id = VNC_thalassocracy
+		icon = GFX_goal_generic_coastal_navy
+		cost = 6
+
+		relative_position_id = VNC_modernize_the_navy
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = VNC_destroyers
+			focus = VNC_battle_cruisers
+		}
+		prerequisite = {
+			focus = VNC_venetian_marines
+		}
+		prerequisite = {
+			focus = VNC_defend_the_coast
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_thalassocracy"
+			add_ideas = VNC_zara_policy_idea_2
+		}
+	}
+
+### Venetian Air Force	###
+	focus = {# Upgrade the Army Air force
+		id = VNC_army_air_upgrade
+		icon = GFX_goal_generic_air_fighter_new
+		cost = 6
+
+		x = 37
+		y = 0
+
+		available = {
+			has_design_based_on = small_plane_airframe
+			if = {
+				limit = { has_country_flag = VNC_republican_revolt }
+				has_completed_focus = VNC_promote_coordination
+			}
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_army_air_upgrade"
+			air_experience = 20
+			add_equipment_to_stockpile = {
+				type = small_plane_airframe
+				amount = 40
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {# Upgrade the Naval Air force
+		id = VNC_navy_air_upgrade
+		icon = GFX_focus_generic_navy_battleship3
+		cost = 6
+
+		relative_position_id = VNC_army_air_upgrade
+		x = 2
+		y = 0
+
+		available = {
+			has_design_based_on = small_plane_naval_bomber_airframe
+			if = {
+				limit = { has_country_flag = VNC_republican_revolt }
+				has_completed_focus = VNC_promote_coordination
+			}
+		}
+
+		ai_will_do = {
+			factor = 15
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_navy_air_upgrade"
+			air_experience = 20
+			add_equipment_to_stockpile = {
+				type = small_plane_naval_bomber_airframe
+				amount = 40
+				producer = GER
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {# Aeronautica Militare
+		id = VNC_aeronautica_militare
+		icon = GFX_goal_VNC_Venetian_Air_Force
+		cost = 6
+
+		relative_position_id = VNC_army_air_upgrade
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = VNC_army_air_upgrade
+		}
+		prerequisite = {
+			focus = VNC_navy_air_upgrade
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_aeronautica_militare"
+			add_ideas = VNC_aeronautica_militare_idea
+			add_doctrine_cost_reduction = {
+				name = VNC_aeronautica_militare
+				cost_reduction = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+		}
+	}
+
+	focus = {# Venetian Avaiatian Companies
+		id = VNC_venetian_air_companies
+		icon = GFX_goal_generic_air_production
+		cost = 6
+
+		relative_position_id = VNC_army_air_upgrade
+		x = -2
+		y = 2
+
+		prerequisite = {
+			focus = VNC_aeronautica_militare
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_venetian_air_companies"
+			add_ideas = VNC_aviation_industry
+			add_tech_bonus = {
+				name = VNC_venetian_air_companies
+				bonus = 1
+				uses = 1
+				category = air_equipment
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Offensive Priority
+		id = VNC_offensive_priorty
+		icon = GFX_goal_generic_CAS
+		cost = 6
+
+		relative_position_id = VNC_army_air_upgrade
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = VNC_aeronautica_militare
+		}
+		mutually_exclusive = {
+			focus = VNC_defned_la_serenissim
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_offensive_priorty"
+			air_experience = 10
+			add_tech_bonus = {
+				name = VNC_offensive_priorty
+				bonus = 1
+				uses = 1
+				category = light_fighter
+			}
+			add_doctrine_cost_reduction = {
+				name = VNC_offensive_priorty
+				cost_reduction = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+			swap_ideas = {
+				remove_idea = VNC_aeronautica_militare_idea
+				add_idea = VNC_aeronautica_militare_idea_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {# Strategic Bombing
+		id = VNC_strat_bombers
+		icon = GFX_goal_generic_air_strategic_bomber_new
+		cost = 6
+
+		relative_position_id = VNC_army_air_upgrade
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = VNC_offensive_priorty
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_strat_bombers"
+			air_experience = 25
+			add_tech_bonus = {
+				name = VNC_strat_bombers
+				bonus = 1
+				uses = 1
+				category = cat_strategic_bomber
+			}
+			add_doctrine_cost_reduction = {
+				name = VNC_strat_bombers
+				cost_reduction = 0.75
+				uses = 1
+				category = air_doctrine
+			}
+			swap_ideas = {
+				remove_idea = VNC_aeronautica_militare_idea_2
+				add_idea = VNC_aeronautica_militare_idea_3
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {# Defend La Serenissima
+		id = VNC_defned_la_serenissim
+		icon = GFX_goal_generic_air_fighter2_new
+		cost = 6
+
+		relative_position_id = VNC_army_air_upgrade
+		x = 2
+		y = 2
+
+		prerequisite = {
+			focus = VNC_aeronautica_militare
+		}
+		mutually_exclusive = {
+			focus = VNC_offensive_priorty
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_defned_la_serenissim"
+			air_experience = 10
+			add_tech_bonus = {
+				name = VNC_defned_la_serenissim
+				bonus = 1
+				uses = 1
+				category = light_fighter
+			}
+			add_doctrine_cost_reduction = {
+				name = VNC_defned_la_serenissim
+				cost_reduction = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+			swap_ideas = {
+				remove_idea = VNC_aeronautica_militare_idea
+				add_idea = VNC_aeronautica_militare_idea_4
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {#
+		id = VNC_fighters
+		icon = GFX_goal_generic_air_CAS_new
+		cost = 6
+
+		relative_position_id = VNC_army_air_upgrade
+		x = 2
+		y = 3
+
+		prerequisite = {
+			focus = VNC_defned_la_serenissim
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_fighters"
+			air_experience = 25
+			add_tech_bonus = {
+				name = VNC_fighters
+				bonus = 1
+				uses = 1
+				category = cas_bomber
+			}
+			add_doctrine_cost_reduction = {
+				name = VNC_fighters
+				cost_reduction = 0.75
+				uses = 1
+				category = air_doctrine
+			}
+			swap_ideas = {
+				remove_idea = VNC_aeronautica_militare_idea_4
+				add_idea = VNC_aeronautica_militare_idea_5
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {# Build Airports
+		id = VNC_build_air_ports
+		icon = GFX_goal_generic_build_airforce
+		cost = 6
+
+		relative_position_id = VNC_army_air_upgrade
+		x = 4
+		y = 2
+
+		prerequisite = {
+			focus = VNC_aeronautica_militare
+		}
+		available = {
+			160 = { is_owned_and_controlled_by = VNC }
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_build_air_ports"
+			160 = {
+				if = {
+					limit = {
+						is_owned_and_controlled_by = VNC
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			759 = {
+				if = {
+					limit = {
+						is_owned_and_controlled_by = VNC
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_INDUSTRY FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+### Venetian Army ###
+	focus = {# Venetian Army
+		id = VNC_venetian_army
+		icon = GFX_goal_VNC_Venetian_Army
+		cost = 6
+
+		x = 31
+		y = 0
+
+		available = {
+			if = {
+				limit = { has_country_flag = VNC_republican_revolt }
+				has_completed_focus = VNC_promote_coordination
+			}
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_venetian_army"
+			army_experience = 50
+			increase_conscription = yes
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {# Superior Fire Power
+		id = VNC_superior_fire_power
+		icon = GFX_goal_generic_army_artillery
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = VNC_venetian_army
+		}
+		mutually_exclusive = {
+			focus = VNC_grand_battle_plan
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_superior_fire_power"
+			every_army_leader = { add_attack = 1 }
+			add_doctrine_cost_reduction = {
+				name = VNC_superior_fire_power
+				cost_reduction = 0.5
+				uses = 2
+				category = land_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Modernize the guns
+		id = VNC_modernize_the_guns
+		icon = GFX_goal_Arms_Export
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = VNC_superior_fire_power
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_modernize_the_guns"
+			add_tech_bonus = {
+				name = VNC_modernize_the_guns
+				bonus = 1
+				uses = 2
+				category = infantry_weapons
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Artilery Effort
+		id = VNC_artilery_effort
+		icon = GFX_goal_generic_army_artillery2
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = -2
+		y = 3
+
+		prerequisite = {
+			focus = VNC_modernize_the_guns
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_artilery_effort"
+			add_tech_bonus = {
+				name = VNC_artilery_effort
+				bonus = 1
+				uses = 2
+				category = artillery
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Grand Battle Plan
+		id = VNC_grand_battle_plan
+		icon = GFX_goal_generic_position_armies
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = VNC_venetian_army
+		}
+		mutually_exclusive = {
+			focus = VNC_superior_fire_power
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_grand_battle_plan"
+			every_army_leader = { add_defense = 1 }
+			add_doctrine_cost_reduction = {
+				name = VNC_grand_battle_plan
+				cost_reduction = 0.5
+				uses = 2
+				category = land_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Flexiable Planning
+		id = VNC_flexiable_planning
+		icon = GFX_goal_generic_army_motorized
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = VNC_grand_battle_plan
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_flexiable_planning"
+			add_tech_bonus = {
+				name = VNC_flexiable_planning
+				bonus = 1
+				uses = 2
+				category = cat_mechanized_equipment
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Support Brigades
+		id = VNC_support_brigades
+		icon = GFX_goal_national_mobilization
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = VNC_modernize_the_guns
+			focus = VNC_flexiable_planning
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_support_brigades"
+			add_tech_bonus = {
+				name = VNC_support_brigades
+				bonus = 1
+				uses = 2
+				category = support_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Combined Arms
+		id = VNC_infantry_tanks
+		icon = GFX_focus_generic_combined_arms
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = -1
+		y = 4
+
+		prerequisite = {
+			focus = VNC_support_brigades
+		}
+		prerequisite = {
+			focus = VNC_artilery_effort
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_infantry_tanks"
+			add_ideas = VNC_combined_arms
+			if = {
+				limit = { has_dlc_nsb = yes }
+				if = {
+					limit = { NOT = { has_tech = basic_light_tank_chassis } }
+					set_technology = { basic_light_tank_chassis = 1 }
+				}
+				create_equipment_variant = {
+					name = "Sp.Pz. I"
+					type = light_tank_chassis_1
+					show_position = no
+					parent_version = 0
+					modules = {
+						main_armament_slot = tank_heavy_machine_gun				# MG13/MG17 twin
+						turret_type_slot = tank_light_one_man_tank_turret
+						suspension_type_slot = tank_bogie_suspension
+						armor_type_slot = tank_riveted_armor
+						engine_type_slot = tank_gasoline_engine
+						special_type_slot_1 = secondary_turret_hmg				# Represent 2nd MG in twinned pair
+						special_type_slot_2 = tank_radio_1
+					}
+					upgrades = {
+						tank_nsb_engine_upgrade = 6
+						tank_nsb_armor_upgrade = 1
+					}
+					icon = GFX_GER_basic_light_tank_medium
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = basic_light_tank } }
+					set_technology = { basic_light_tank = 1 }
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Venetian Tank Division"
+					LINE_1 = { localization_key = line_battalion_tt NAME = light_armor ICON = GFX_unit_light_armor_icon_small COUNT = 5 }
+					LINE_2 = { localization_key = line_battalion_tt NAME = motorized ICON = GFX_unit_motorized_icon_small COUNT = 5 }
+					SUPPORT_1 = { localization_key = support_battalion_tt NAME = mot_recon ICON = GFX_unit_mot_recon_icon_small }
+					SUPPORT_2 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+				}
+				if = {
+					limit = { has_template = "Venetian Tank Division" }
+					delete_unit_template_and_units = { division_template = "Venetian Tank Division" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Venetian Tank Division"
+					division_names_group = ITA_ARM_01
+					priority = 2
+					regiments = {
+						light_armor = { x = 0 y = 0 }
+						light_armor = { x = 0 y = 1 }
+						light_armor = { x = 0 y = 2 }
+						light_armor = { x = 0 y = 3 }
+						motorized = { x = 1 y = 0 }
+						motorized = { x = 1 y = 1 }
+						motorized = { x = 1 y = 2 }
+						motorized = { x = 1 y = 3 }
+						light_armor = { x = 2 y = 0 }
+						motorized = { x = 3 y = 0 }
+					}
+					support = {
+						mot_recon = { x = 0 y = 0 }
+						artillery = { x = 0 y = 1 }
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					valid_state_for_spawning_friendly_unit = yes
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_unit
+						TYPE = "Venetian Tank Division"
+					}
+					create_unit = {
+						division = "division_template = \"Venetian Tank Division\" start_experience_factor = 1"
+						owner = ROOT
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {# Commannder Initative
+		id = VNC_commander_initative
+		icon = GFX_focus_generic_military_mission
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = 2
+		y = 3
+
+		prerequisite = {
+			focus = VNC_flexiable_planning
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_commander_initative"
+			add_doctrine_cost_reduction = {
+				name = VNC_commander_initative
+				cost_reduction = 0.5
+				uses = 2
+				category = land_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Planning Schools
+		id = VNC_planning_schools
+		icon = GFX_focus_generic_military_academy
+		cost = 6
+
+		relative_position_id = VNC_venetian_army
+		x = 1
+		y = 4
+
+		prerequisite = {
+			focus = VNC_commander_initative
+		}
+		prerequisite = {
+			focus = VNC_support_brigades
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_planning_schools"
+			add_ideas = VNC_planning_schools_idea
+			every_army_leader = { add_planning = 1 }
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+	### Unification ###
+	focus = {# Begin Risorgimento
+		id = VNC_unification
+		icon = GFX_focus_ITA_cavalry_charge
+		cost = 5
+
+		x = 13
+		y = 5
+
+		available = {
+			NOT = { has_war_with = ITA }
+			is_subject = no
+			OR = {
+				SRI = { has_war_with = SIC }
+				has_war_with = SRI
+				AND = {
+					threat > 0.4
+					has_army_manpower = { size > 124999 }
+				}
+			}
+		}
+		will_lead_to_war_with = SRI
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 10
+				has_war_with = SRI
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_unification"
+			activate_targeted_decision = { target = THIS decision = VNC_unite_italy }
+			add_war_support = 0.1
+			if = {
+				limit = { country_exists = SRI }
+				activate_targeted_decision = { decision = VNC_attack_italy target = SRI }
+			}
+			if = {
+				limit = { country_exists = LOM }
+				activate_targeted_decision = { decision = VNC_attack_italy target = LOM }
+			}
+			if = {
+				limit = { country_exists = EMI }
+				activate_targeted_decision = { decision = VNC_attack_italy target = EMI }
+			}
+			if = {
+				limit = { country_exists = TUS }
+				activate_targeted_decision = { decision = VNC_attack_italy target = TUS }
+			}
+			if = {
+				limit = { country_exists = SIC }
+				activate_targeted_decision = { decision = VNC_attack_italy target = SIC }
+			}
+			if = {
+				limit = { country_exists = SRD }
+				activate_targeted_decision = { decision = VNC_attack_italy target = SRD }
+			}
+			if = {
+				limit = { country_exists = PAP }
+				activate_targeted_decision = { decision = VNC_attack_italy target = PAP }
+			}
+			every_state = {
+				limit = {
+					is_italy = yes
+					owner = {
+						is_subject_of = ROOT
+						is_italian_tag = yes
+					}
+					NOT = { is_core_of = ROOT }
+				}
+				remove_claim_and_add_core_of_ROOT = yes
+			}
+			every_state = {
+				limit = {
+					is_italy = yes
+					NOT = { is_core_of = ROOT }
+					NOT = { is_claimed_by = ROOT }
+					NOT = {
+						owner = {
+							is_subject_of = ROOT
+							is_italian_tag = yes
+						}
+					}
+				}
+				add_claim_by = ROOT
+			}
+			hidden_effect = {
+				activate_targeted_decision = { target = SIC decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = SRD decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = PAP decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = EMI decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = TUS decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = LOM decision = VNC_invite_into_federation }
+				italy_enable_integration = yes
+				set_country_flag = italian_unifier
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {# Naval Exercises
+		id = VNC_naval_exercises
+		icon = GFX_goal_generic_amphibious_assault
+		cost = 5
+
+		relative_position_id = VNC_unification
+		x = -1
+		y = 1
+
+		available = { is_subject = no }
+		prerequisite = {
+			focus = VNC_unification
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				date > 1937.6.1
+			}
+			modifier = {
+				factor = 2
+				date > 1938.1.1
+			}
+			modifier = {
+				factor = 2
+				date > 1938.6.1
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_naval_exercises"
+			navy_experience = 25
+			add_timed_idea = { idea = SRI_recent_naval_exercises_idea days = 365 }
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP }
+	}
+
+	focus = {# Military Exercises
+		id = VNC_military_exercises
+		icon = GFX_goal_generic_major_war
+		cost = 5
+
+		relative_position_id = VNC_unification
+		x = 1
+		y = 1
+
+		available = { is_subject = no }
+		prerequisite = {
+			focus = VNC_unification
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				date > 1937.6.1
+			}
+			modifier = {
+				factor = 2
+				date > 1938.1.1
+			}
+			modifier = {
+				factor = 2
+				date > 1938.6.1
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_military_exercises"
+			army_experience = 25
+			air_experience = 25
+			add_timed_idea = { idea = SRI_recent_military_exercises_idea days = 365 }
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {# Italy is United
+		id = VNC_italy_is_united
+		icon = GFX_ITA_united
+		cost = 2
+
+		relative_position_id = VNC_unification
+		x = 0
+		y = 2
+
+		available = { has_country_flag = ITA_united_italia }
+		prerequisite = { focus = VNC_unification }
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_italy_is_united"
+			add_political_power = 200
+			add_war_support = 0.1
+			add_stability = 0.1
+			hidden_effect = {
+				country_event = { id = italy_events.102 days = 150 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Naples Officers
+		id = VNC_naples_officers
+		icon = GFX_SIC_army
+		cost = 5
+
+		relative_position_id = VNC_italy_is_united
+		x = -1
+		y = 1
+
+		available = {
+			is_subject = no
+			NOT = { country_exists = SIC }
+			SIC = {
+				OR = {
+					has_character = SIC_mario_arisio
+					has_character = SIC_giuseppe_izzo
+					has_character = SIC_romeo_oliva
+				}
+			}
+		}
+		prerequisite = {
+			focus = VNC_italy_is_united
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_naples_officers"
+			ITA_recruit_sicilian_generals = yes
+		}
+	}
+
+	focus = {
+		id = VNC_a_stable_italy
+		icon = GFX_focus_ETH_invite_italian_settlers
+		cost = 5
+
+		relative_position_id = VNC_italy_is_united
+		x = -2
+		y = 2
+
+		available = {
+			is_subject = no
+		}
+		prerequisite = {
+			focus = VNC_italy_is_united
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_a_stable_italy"
+			add_political_power = 50
+			add_stability = 0.05
+			set_temp_variable = { ideology_change_var = 0.1 }
+			change_ruling_party_popularity = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Italian Irredentism
+		id = VNC_italian_irredentism
+		icon = GFX_ITA_irridentism
+		cost = 5
+
+		relative_position_id = VNC_italy_is_united
+		x = 2
+		y = 2
+
+		available = {
+			is_subject = no
+		}
+		prerequisite = {
+			focus = VNC_italy_is_united
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_italian_irredentism"
+			set_country_flag = italy_irredentist_decisions_unlocked
+			custom_effect_tooltip = ITA_irredentist_decisions
+			add_war_support = 0.10
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {# Sardinian Officers
+		id = VNC_sardinian_officers
+		icon = GFX_goal_SRD_army
+		cost = 5
+
+		relative_position_id = VNC_italy_is_united
+		x = 1
+		y = 1
+
+		available = {
+			is_subject = no
+			NOT = { country_exists = SRD }
+			SRD = {
+				OR = {
+					has_character = SRD_giuseppe_valle
+					has_character = SRD_pietro_pintor
+				}
+			}
+		}
+		prerequisite = {
+			focus = VNC_italy_is_united
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed VNC_sardinian_officers"
+			ITA_recruit_sardinian_generals = yes
+		}
+	}
+}
+

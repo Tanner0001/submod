@@ -1,0 +1,2351 @@
+########################
+# Georgia Events
+###########################
+
+add_namespace = georgia_events
+
+country_event = { # Treaty of Poti reevaluation
+	id = georgia_events.2
+	title = georgia_events.2.t
+	desc = georgia_events.2.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = { #End the treaty
+		log = "[GetLogInfo]: event georgia_events.2 option georgia_events.2.a"
+		trigger = {
+			NOT = { has_global_flag = RUS_socrus_happened }
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_treaty option = GEO_TREATY_KEPT }
+			}
+		}
+		name = georgia_events.2.a
+		RUS = {
+			country_event = georgia_events.83
+		}
+		custom_effect_tooltip = GEO_appeal_to_russia
+	}
+	option = { #Keep the treaty
+		log = "[GetLogInfo]: event georgia_events.2 option georgia_events.2.b"
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = RUS_socrus_happened }
+				has_game_rule = { rule = GEO_treaty option = GEO_TREATY_RENOUNCED }
+			}
+		}
+		name = georgia_events.2.b
+		add_political_power = -25
+		set_country_flag = GEO_keep_treaty
+	}
+}
+
+country_event = { # Baku-Poti pipeline nationalisation?
+	id = georgia_events.3
+	title = georgia_events.3.t
+	desc = georgia_events.3.d
+	picture = GFX_Georgia_pipeline
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.3 option georgia_events.3.a"
+		ai_chance = { base = 100 }
+		name = georgia_events.3.a
+		add_political_power = 150
+		if = {
+			limit = { country_exists = AZR }
+			AZR = {
+				country_event = { id = georgia_events.4 days = 1 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event georgia_events.3 option georgia_events.3.b"
+		ai_chance = { base = 0 }
+		name = georgia_events.3.b
+		add_stability = 0.02
+	}
+}
+
+country_event = { # Baku-Poti pipeline has been seized by Georgia!
+	id = georgia_events.4
+	title = georgia_events.4.t
+	desc = georgia_events.4.d
+	picture = GFX_Georgia_pipeline
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.4 option georgia_events.4.a"
+		name = georgia_events.4.a
+		add_political_power = -75
+		#ADD NEGATIVE OPINION MODIFIER HERE
+	}
+}
+
+country_event = { #military focus choice
+	id = georgia_events.5
+	title = georgia_events.5.t
+	desc = georgia_events.5.d
+	picture = GFX_report_event_generic_run_on_the_banks
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.5 option georgia_events.5.a"
+		name = georgia_events.5.a
+		activate_targeted_decision = { target = 231 decision = GEO_a_military_industrial_expansion_decision }
+		activate_targeted_decision = { target = THIS decision = GEO_a_motorise_army_decision }
+		activate_targeted_decision = { target = THIS decision = GEO_aggressive_doctrine_decision }
+	}
+	option = {
+		log = "[GetLogInfo]: event georgia_events.5 option georgia_events.5.b"
+		name = georgia_events.5.b
+		activate_targeted_decision = { target = THIS decision = GEO_d_fortification_program_decision }
+		activate_targeted_decision = { target = 231 decision = GEO_d_citadel_tiflis_program_decision }
+		activate_targeted_decision = { target = THIS decision = GEO_d_anti_air_program_decision }
+	}
+}
+
+country_event = { #Black Monday I
+	id = georgia_events.6
+	title = georgia_events.6.t
+	desc = georgia_events.6.d
+	picture = GFX_report_event_generic_run_on_the_banks
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = GEO_black_monday_hits }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.6 option georgia_events.6.a"
+		name = georgia_events.6.a
+		add_stability = -0.1
+		effect_tooltip = { add_ideas = GEO_black_monday_hits }
+		complete_national_focus = GEO_black_monday
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.05
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.7 days = 7 } # food riots
+			country_event = { id = georgia_events.14 days = 14 } # politics
+		}
+	}
+}
+
+country_event = { #prices skyrocket
+	id = georgia_events.7
+	title = georgia_events.7.t
+	desc = georgia_events.7.d
+	picture = GFX_report_event_generic_food
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #it's the market....
+		log = "[GetLogInfo]: event georgia_events.7 option georgia_events.7.a"
+		name = georgia_events.7.a
+		hidden_effect = {
+			country_event = { id = georgia_events.8 days = 10 }
+		}
+	}
+	option = { #set prices
+		log = "[GetLogInfo]: event georgia_events.7 option georgia_events.7.b"
+		name = georgia_events.7.b
+		add_political_power = -50
+		hidden_effect = {
+			country_event = { id = georgia_events.9 days = 12 }
+		}
+	}
+}
+country_event = { #food riots escalate
+	id = georgia_events.8
+	title = georgia_events.8.t
+	desc = georgia_events.8.d
+	picture = GFX_report_event_USA_Riots
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #what have we done...
+		log = "[GetLogInfo]: event georgia_events.8 option georgia_events.8.a"
+		name = georgia_events.8.a
+		add_stability = -0.05
+		add_ideas = GEO_food_riots
+		hidden_effect = {
+			country_event = { id = georgia_events.10 days = 30 }
+		}
+	}
+}
+country_event = { #food commission
+	id = georgia_events.9
+	title = georgia_events.9.t
+	desc = georgia_events.9.d
+	picture = GFX_report_event_generic_food
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #protect the farmers
+		log = "[GetLogInfo]: event georgia_events.9 option georgia_events.9.a"
+		name = georgia_events.9.a
+		add_ideas = GEO_food_commission
+	}
+}
+country_event = { #food imports to stabilize situation?
+	id = georgia_events.10
+	title = georgia_events.10.t
+	desc = georgia_events.10.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event georgia_events.10 option georgia_events.10.a"
+		name = georgia_events.10.a
+		add_ideas = GEO_food_imports
+		hidden_effect = {
+			country_event = { id = georgia_events.11 days = 25 }
+		}
+	}
+	option = { #no
+		log = "[GetLogInfo]: event georgia_events.10 option georgia_events.10.b"
+		name = georgia_events.10.b
+		add_stability = -0.02
+		hidden_effect = {
+			country_event = { id = georgia_events.12 days = 15 }
+		}
+	}
+}
+country_event = { #food situation stabilizes
+	id = georgia_events.11
+	title = georgia_events.11.t
+	desc = georgia_events.11.d
+	picture = GFX_report_event_generic_food
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.11 option georgia_events.11.a"
+		name = georgia_events.11.a
+		if = {
+			limit = { has_idea = GEO_food_riots }
+			remove_ideas = GEO_food_riots
+		}
+		else_if = {
+			limit = { has_idea = GEO_food_riots_2 }
+			remove_ideas = GEO_food_riots_2
+		}
+		add_stability = 0.05
+	}
+}
+country_event = { #food situation worsens
+	id = georgia_events.12
+	title = georgia_events.12.t
+	desc = georgia_events.12.d
+	picture = GFX_report_event_AST_riot1
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.12 option georgia_events.12.a"
+		name = georgia_events.12.a
+		swap_ideas = {
+			remove_idea = GEO_food_riots
+			add_idea = GEO_food_riots_2
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.13 days = 30 }
+		}
+	}
+}
+
+country_event = { #farmers give in but there are concessions
+	id = georgia_events.13
+	title = georgia_events.13.t
+	desc = georgia_events.13.d
+	picture = GFX_report_event_generic_food
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.13 option georgia_events.13.a"
+		name = georgia_events.13.a
+		hidden_effect = {
+			country_event = { id = georgia_events.11 days = 7 }
+		}
+	}
+}
+
+country_event = { # outrage against evgeni Gegechkori grows
+	id = georgia_events.14
+	title = georgia_events.14.t
+	desc = georgia_events.14.d
+	picture = GFX_report_event_AST_protest1
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.14 option georgia_events.14.a"
+		name = georgia_events.14.a
+		hidden_effect = {
+			country_event = { id = georgia_events.16 days = 7 }
+		}
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.02
+		}
+	}
+}
+
+country_event = { # Noe Zhoredania replaced by Evgeni Gegechkori
+	id = georgia_events.15
+	title = georgia_events.15.t
+	desc = georgia_events.15.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.15 option georgia_events.15.a"
+		name = georgia_events.15.a
+		retire_character = GEO_noe_zhordania
+		promote_character = GEO_evgeni_gegechkori
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.05
+		}
+		add_stability = -0.05
+	}
+}
+
+country_event = { # tiflis protests worsen
+	id = georgia_events.16
+	title = georgia_events.16.t
+	desc = georgia_events.16.d
+	picture = GFX_report_event_AST_protest1
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.16 option georgia_events.16.a"
+		name = georgia_events.16.a
+		hidden_effect = {
+			country_event = { id = georgia_events.17 days = 9 }
+		}
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.02
+		}
+	}
+}
+
+country_event = { # minority situation worsens
+	id = georgia_events.17
+	title = georgia_events.17.t
+	desc = georgia_events.17.d
+	picture = GFX_report_event_ITA_riot
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.17 option georgia_events.17.a"
+		name = georgia_events.17.a
+		hidden_effect = {
+			country_event = { id = georgia_events.18 days = 14 }
+		}
+		add_stability = -0.1
+		add_war_support = -0.1
+	}
+}
+
+country_event = { # pressures grow to call new elections in Mensheviks
+	id = georgia_events.18
+	title = georgia_events.18.t
+	desc = georgia_events.18.d
+	picture = GFX_report_event_GRE_protest
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.18 option georgia_events.18.a"
+		name = georgia_events.18.a
+		add_political_power = -20
+		hidden_effect = {
+			country_event = { id = georgia_events.19 days = 7 }
+		}
+	}
+}
+
+country_event = { # Evgeni Gegechkori calls new elections
+	id = georgia_events.19
+	title = georgia_events.19.t
+	desc = georgia_events.19.d
+	picture = GFX_report_event_CAN_protest
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.19 option georgia_events.19.a"
+		name = georgia_events.19.a
+		hidden_effect = {
+			set_country_flag = GEO_do_1936_election_flag
+			country_event = { id = georgia_events.20 days = 3 } #
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = social_democrat
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 4
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.01
+		}
+	}
+}
+
+country_event = { # protests begin to dispurse and campaign begins
+	id = georgia_events.20
+	title = georgia_events.20.t
+	desc = georgia_events.20.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.20 option georgia_events.20.a"
+		name = georgia_events.20.a
+		add_stability = 0.08
+		add_political_power = 50
+		hidden_effect = {
+			if = {
+				limit = {
+					is_in_faction_with = GER
+				}
+				country_event = { id = georgia_events.21 days = 7 } # joachim
+			}
+			country_event = { id = georgia_events.22 days = 5 } # george
+		}
+	}
+}
+
+country_event = { # joachim announces support for EDP
+	id = georgia_events.21
+	title = georgia_events.21.t
+	desc = georgia_events.21.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.21 option georgia_events.21.a"
+		name = georgia_events.21.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.02
+		}
+	}
+}
+
+country_event = { # george announces support for EDP
+	id = georgia_events.22
+	title = georgia_events.22.t
+	desc = georgia_events.22.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.22 option georgia_events.22.a"
+		name = georgia_events.22.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.02
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.23 days = 25 } # election
+		}
+	}
+}
+
+country_event = { # growth in other left wing/libereal parties
+	id = georgia_events.23
+	title = georgia_events.23.t
+	desc = georgia_events.23.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.23 option georgia_events.23.a"
+		name = georgia_events.23.a
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.02
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.24 days = 25 } # election
+		}
+	}
+}
+
+country_event = { # growth in polarisation
+	id = georgia_events.24
+	title = georgia_events.24.t
+	desc = georgia_events.24.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.24 option georgia_events.24.a"
+		name = georgia_events.24.a
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.25 days = 25 } # election
+		}
+	}
+}
+
+country_event = { # EDP and MMEP both open for coalition
+	id = georgia_events.25
+	title = georgia_events.25.t
+	desc = georgia_events.25.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.25 option georgia_events.25.a"
+		name = georgia_events.25.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.01
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.02
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.26 days = 20 } # election
+		}
+	}
+}
+
+country_event = { # Noe Zhordania holds rally with Egveni 10 days before election
+	id = georgia_events.26
+	title = georgia_events.26.t
+	desc = georgia_events.26.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.26 option georgia_events.26.a"
+		name = georgia_events.26.a
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { # Ekvtime Takaishvili Announces Referendum on the Monarchy
+	id = georgia_events.27
+	title = georgia_events.27.t
+	desc = georgia_events.27.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.27 option georgia_events.27.a"
+		name = georgia_events.27.a
+	}
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.27 option georgia_events.27.b"
+		name = georgia_events.27.b
+	}
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.27 option georgia_events.27.c"
+		name = georgia_events.27.c
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = georgia_events.28 days = 10 }
+		}
+	}
+}
+
+country_event = { # The Tetri Giorgi Holds Rally in Tiflis
+	id = georgia_events.28
+	title = georgia_events.28.t
+	desc = georgia_events.28.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.28 option georgia_events.28.a"
+		name = georgia_events.28.a
+		hidden_effect = {
+			country_event = { id = georgia_events.29 days = 7 } #
+		}
+	}
+}
+
+country_event = { # united socialist front against the monarchy (radsoc, socdem, soclib)
+	id = georgia_events.29
+	title = georgia_events.29.t
+	desc = georgia_events.29.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.29 option georgia_events.29.a"
+		name = georgia_events.29.a
+		hidden_effect = {
+			if = {
+				limit = {
+					is_in_faction_with = GER
+				}
+				country_event = { id = georgia_events.30 days = 3 } # joachim
+			}
+			country_event = { id = georgia_events.31 days = 5 } # george
+		}
+	}
+}
+
+country_event = { # big interview with Joachim in newspaper (heaviliy pro german, christian, keeping democratic, very personal about his life and georgian struggles)
+	id = georgia_events.30
+	title = georgia_events.30.t
+	desc = georgia_events.30.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.30 option georgia_events.30.a"
+		name = georgia_events.30.a
+	}
+}
+
+country_event = { # big interview with george bagration in newspaper (heaviliy nationalist, soldier, not too personal though)
+	id = georgia_events.31
+	title = georgia_events.31.t
+	desc = georgia_events.31.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.31 option georgia_events.31.a"
+		name = georgia_events.31.a
+		hidden_effect = {
+			country_event = { id = georgia_events.32 days = 5 } #
+		}
+	}
+}
+
+country_event = { # referendum
+	id = georgia_events.32
+	title = georgia_events.32.t
+	desc = georgia_events.32.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # hell yea monarchy bruh - Bagration
+		log = "[GetLogInfo]: event georgia_events.32 option georgia_events.32.a"
+		name = georgia_events.32.a
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 25
+				has_country_flag = GEO_end_treaty
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GEO_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_MON_GIORGI_SOCCON } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_PATAUT } }
+			}
+		}
+		GEO_create_giorgi = yes
+		complete_national_focus = GEO_george_bagration_monarch
+		hidden_effect = {
+			country_event = { id = georgia_events.33 days = 1 }
+			news_event = georgia_events.86
+		}
+	}
+
+	option = { # hell yea monarchy bruh - Joachim
+		log = "[GetLogInfo]: event georgia_events.32 option georgia_events.32.b"
+		name = georgia_events.32.b
+		trigger = {
+			is_in_faction_with = GER
+		}
+		ai_chance = {
+			base = 15
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GEO_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_MON_JOACHIM_SOCCON } }
+			}
+		}
+		GEO_create_ioachim = yes
+		complete_national_focus = GEO_joachim_monarch
+		hidden_effect = {
+			country_event = { id = georgia_events.33 days = 1 }
+			news_event = georgia_events.86
+		}
+	}
+
+	option = { # monarchy? thats gonna be a no from me
+		log = "[GetLogInfo]: event georgia_events.32 option georgia_events.32.c"
+		name = georgia_events.32.c
+		complete_national_focus = GEO_republic_victory
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 75
+				has_country_flag = GEO_end_treaty
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GEO_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_REP_SOCCON } }
+			}
+		}
+	}
+}
+
+country_event = { # socialist march in Tiflis
+	id = georgia_events.33
+	title = georgia_events.33.t
+	desc = georgia_events.33.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.33 option georgia_events.33.a"
+		name = georgia_events.33.a
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = georgia_events.34 days = 5 } #
+		}
+	}
+}
+
+country_event = { # peoples guard reformed by Valiko Jugheli
+	id = georgia_events.34
+	title = georgia_events.34.t
+	desc = georgia_events.34.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.34 option georgia_events.34.a"
+		name = georgia_events.34.a
+		add_stability = -0.05
+		hidden_effect = {
+			GEO_valiko_jugheli = {
+				remove_unit_leader_role = yes
+				remove_military_advisor_roles = yes
+			}
+		}
+		custom_effect_tooltip = GEO_remove_jugheli_effect
+		if = {
+			limit = {
+				is_in_faction_with = GER
+			}
+			hidden_effect = {
+				country_event = { id = georgia_events.37 days = 8 } #
+			}
+		}
+		if = {
+			limit = {
+				has_country_flag = GEO_end_treaty
+			}
+			hidden_effect = {
+				country_event = { id = georgia_events.35 days = 3 } #
+			}
+		}
+	}
+}
+
+country_event = { # Shalva Maglakelidze comes to Giorgi Bagration with a proposition
+	id = georgia_events.35
+	title = georgia_events.35.t
+	desc = georgia_events.35.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # go with the plan
+		log = "[GetLogInfo]: event georgia_events.35 option georgia_events.35.a"
+		name = georgia_events.35.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GEO_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_PATAUT } }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.36 days = 2 } #
+		}
+	}
+
+	option = { # ignore the plan
+		log = "[GetLogInfo]: event georgia_events.35 option georgia_events.35.b"
+		name = georgia_events.35.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_path option = GEO_PATH_PATAUT }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.37 days = 6 } #
+		}
+	}
+}
+
+country_event = { # Maglakelidze coup with support from Bagrations and Tetri Girogi
+	id = georgia_events.36
+	title = georgia_events.36.t
+	desc = georgia_events.36.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.36 option georgia_events.36.a"
+		name = georgia_events.36.a
+		add_stability = -0.15
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		activate_advisor = GEO_shalva_maglakelidze_sic
+		hidden_effect = {
+			country_event = { id = georgia_events.39 days = 2 } #
+		}
+	}
+}
+
+country_event = { # riots through Tiflis but power begins to die down
+	id = georgia_events.37
+	title = georgia_events.37.t
+	desc = georgia_events.37.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.37 option georgia_events.37.a"
+		name = georgia_events.37.a
+		add_stability = -0.08
+		hidden_effect = {
+			country_event = { id = georgia_events.38 days = 10 } #
+		}
+	}
+}
+
+country_event = { # riots go away, protests die down, seems to be fine
+	id = georgia_events.38
+	title = georgia_events.38.t
+	desc = georgia_events.38.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.38 option georgia_events.38.a"
+		name = georgia_events.38.a
+	}
+}
+
+country_event = { # Jughelis peoples guard rebellion
+	id = georgia_events.39
+	title = georgia_events.39.t
+	desc = georgia_events.39.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.39 option georgia_events.39.a"
+		name = georgia_events.39.a
+		add_stability = -0.05
+		add_war_support = -0.05
+		set_country_flag = { flag = GEO_peoplesguard_win_flag_count value = 0 }
+		set_country_flag = { flag = GEO_patauts_win_flag_count value = 0 }
+		hidden_effect = {
+			country_event = { id = georgia_events.40 days = 7 } #
+		}
+	}
+}
+
+country_event = { # siege of kutais
+	id = georgia_events.40
+	title = georgia_events.40.t
+	desc = georgia_events.40.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # send a small force through the river
+		log = "[GetLogInfo]: event georgia_events.40 option georgia_events.40.a"
+		name = georgia_events.40.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_path option = GEO_PATH_PATAUT }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.41 days = 2 } #
+		}
+	}
+	option = { # march a large force in
+		log = "[GetLogInfo]: event georgia_events.40 option georgia_events.40.b"
+		name = georgia_events.40.b
+		ai_chance = { base = 1 }
+		hidden_effect = {
+			country_event = { id = georgia_events.42 days = 2 } #
+		}
+	}
+}
+
+country_event = { # forces beaten back by Peoples Guard
+	id = georgia_events.41
+	title = georgia_events.41.t
+	desc = georgia_events.41.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.41 option georgia_events.41.a"
+		name = georgia_events.41.a
+		add_stability = -0.02
+		add_manpower = -500
+		modify_country_flag = {
+			flag = GEO_peoplesguard_win_flag_count
+			value = 1
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.43 days = 5 } #
+		}
+	}
+}
+
+country_event = { # forces take Kutais from Peoples Guard
+	id = georgia_events.42
+	title = georgia_events.42.t
+	desc = georgia_events.42.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.42 option georgia_events.42.a"
+		name = georgia_events.42.a
+		add_stability = 0.02
+		add_manpower = -250
+		modify_country_flag = {
+			flag = GEO_patauts_win_flag_count
+			value = 1
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.43 days = 5 } #
+		}
+	}
+}
+
+country_event = { # siege of Sukhum
+	id = georgia_events.43
+	title = georgia_events.43.t
+	desc = georgia_events.43.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # take main city first
+		log = "[GetLogInfo]: event georgia_events.43 option georgia_events.43.a"
+		name = georgia_events.43.a
+		ai_chance = { base = 1 }
+		hidden_effect = {
+			country_event = { id = georgia_events.44 days = 2 } #
+		}
+	}
+	option = { # take the port first so they cant retreat
+		log = "[GetLogInfo]: event georgia_events.43 option georgia_events.43.b"
+		name = georgia_events.43.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_path option = GEO_PATH_PATAUT }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.45 days = 2 } #
+		}
+	}
+}
+
+country_event = { # they escape by boat but siege successful
+	id = georgia_events.44
+	title = georgia_events.44.t
+	desc = georgia_events.44.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.44 option georgia_events.44.a"
+		name = georgia_events.44.a
+		add_stability = 0.02
+		add_manpower = -250
+		modify_country_flag = {
+			flag = GEO_patauts_win_flag_count
+			value = 1
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.46 days = 5 } #
+		}
+	}
+}
+
+country_event = { # take port, but surrounded and beaten
+	id = georgia_events.45
+	title = georgia_events.45.t
+	desc = georgia_events.45.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.45 option georgia_events.45.a"
+		name = georgia_events.45.a
+		add_stability = -0.02
+		add_manpower = -500
+		modify_country_flag = {
+			flag = GEO_peoplesguard_win_flag_count
+			value = 1
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.46 days = 5 } #
+		}
+	}
+}
+
+country_event = { # battle of Poti, need to get reinforcements to him
+	id = georgia_events.46
+	title = georgia_events.46.t
+	desc = georgia_events.46.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # send troops down caucasian railway
+		log = "[GetLogInfo]: event georgia_events.46 option georgia_events.46.a"
+		name = georgia_events.46.a
+		ai_chance = { base = 1 }
+		hidden_effect = {
+			country_event = { id = georgia_events.47 days = 2 } #
+		}
+	}
+	option = { # organise support from Sukhum
+		log = "[GetLogInfo]: event georgia_events.46 option georgia_events.46.b"
+		name = georgia_events.46.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_path option = GEO_PATH_PATAUT }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.48 days = 2 } #
+		}
+	}
+}
+
+country_event = { # support arrives, battle of Poti is won
+	id = georgia_events.47
+	title = georgia_events.47.t
+	desc = georgia_events.47.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.47 option georgia_events.47.a"
+		name = georgia_events.47.a
+		add_stability = 0.02
+		add_manpower = -250
+		modify_country_flag = {
+			flag = GEO_patauts_win_flag_count
+			value = 1
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.49 days = 3 } #
+		}
+	}
+}
+
+country_event = { # support comes too late, poti lost
+	id = georgia_events.48
+	title = georgia_events.48.t
+	desc = georgia_events.48.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.48 option georgia_events.48.a"
+		name = georgia_events.48.a
+		add_stability = -0.02
+		add_manpower = -500
+		modify_country_flag = {
+			flag = GEO_peoplesguard_win_flag_count
+			value = 1
+		}
+		hidden_effect = {
+			country_event = { id = georgia_events.49 days = 3 } #
+		}
+	}
+}
+
+country_event = { # Jugheli approaches tiflis
+	id = georgia_events.49
+	title = georgia_events.49.t
+	desc = georgia_events.49.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # oh no...
+		log = "[GetLogInfo]: event georgia_events.49 option georgia_events.49.a"
+		name = georgia_events.49.a
+		if = {
+			limit = {
+				has_country_flag = {
+					flag = GEO_peoplesguard_win_flag_count
+					value > 1
+				}
+			}
+			country_event = { id = georgia_events.51 days = 7 }
+		}
+		if = {
+			limit = {
+				has_country_flag = {
+					flag = GEO_patauts_win_flag_count
+					value > 1
+				}
+			}
+			country_event = { id = georgia_events.50 days = 7 }
+		}
+	}
+}
+
+country_event = { # patauts win, Peoples Guard beaten, Jugheli presumed dead
+	id = georgia_events.50
+	title = georgia_events.50.t
+	desc = georgia_events.50.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.50 option georgia_events.50.a"
+		name = georgia_events.50.a
+		complete_national_focus = GEO_pataut_georgia
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { # jugheli takes tiflis, takes power temporarily
+	id = georgia_events.51
+	title = georgia_events.51.t
+	desc = georgia_events.51.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.51 option georgia_events.51.a"
+		name = georgia_events.51.a
+		add_stability = 0.15
+		add_war_support = 0.15
+		GEO_remove_monarchy = yes
+		remove_unit_leader_role = { character = GEO_shalva_maglakelidze }
+		GEO_shalva_maglakelidze = { remove_army_chief_role = yes }
+		GEO_valiko_jugheli = {
+			add_country_leader_role = {
+				country_leader = {
+					desc = GEO_valiko_jugheli_high_command_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_field_marshal_role = {
+				desc = GEO_valiko_jugheli_high_command_desc
+				skill = 2
+				attack_skill = 3
+				defense_skill = 1
+				planning_skill = 1
+				logistics_skill = 2
+			}
+			add_advisor_role = {
+				advisor = {
+					slot = high_command
+					idea_token = GEO_valiko_jugheli_high_command
+					ledger = army
+					traits = { KR_MHC_army_regrouping_1 }
+					cost = 50
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_democrat
+			elections_allowed = no
+		}
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.10
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.20
+		}
+		country_event = { id = georgia_events.52 days = 14 } #
+	}
+}
+
+country_event = { # what to do with Maglakelidze and Bagrations
+	id = georgia_events.52
+	title = georgia_events.52.t
+	desc = georgia_events.52.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # life imprison
+		log = "[GetLogInfo]: event georgia_events.52 option georgia_events.52.a"
+		name = georgia_events.52.a
+		add_stability = 0.05
+		add_political_power = -50
+	}
+
+	option = { # house arrest
+		log = "[GetLogInfo]: event georgia_events.52 option georgia_events.52.b"
+		name = georgia_events.52.b
+		add_stability = -0.05
+		add_political_power = 50
+	}
+
+	after = {
+		country_event = { id = georgia_events.53 days = 14 }
+	}
+}
+
+country_event = { # integrate peoples guard
+	id = georgia_events.53
+	title = georgia_events.53.t
+	desc = georgia_events.53.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.53 option georgia_events.53.a"
+		name = georgia_events.53.a
+		add_manpower = 10000
+		add_war_support = 0.05
+		country_event = { id = georgia_events.54 days = 14 } #
+	}
+}
+
+country_event = { # strengthen political institutions
+	id = georgia_events.54
+	title = georgia_events.54.t
+	desc = georgia_events.54.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.54 option georgia_events.54.a"
+		name = georgia_events.54.a
+		add_political_power = 100
+		hidden_effect = {
+			country_event = { id = georgia_events.55 days = 14 } #
+		}
+	}
+}
+
+country_event = { # announce new elections in a month
+	id = georgia_events.55
+	title = georgia_events.55.t
+	desc = georgia_events.55.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.55 option georgia_events.55.a"
+		name = georgia_events.55.a
+		add_stability = 0.05
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_democrat
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 1
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+	}
+}
+
+country_event = { # EVENT FOR OTTOS Georgia goes anti-German
+	id = georgia_events.56
+	title = georgia_events.56.t
+	desc = georgia_events.56.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.56 option georgia_events.56.a"
+		name = georgia_events.56.a
+	}
+}
+
+country_event = { # EVENT FOR OTTOS Georgia preparing for war!
+	id = georgia_events.57
+	title = georgia_events.57.t
+	desc = georgia_events.57.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.57 option georgia_events.57.a"
+		name = georgia_events.57.a
+	}
+}
+
+country_event = { # kings cabinet
+	id = georgia_events.60
+	title = georgia_events.60.t
+	desc = georgia_events.60.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.60 option georgia_events.60.a"
+		name = georgia_events.60.a
+		add_stability = 0.1
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+	}
+}
+
+country_event = { # EVENT FOR GER Georgia wants to join the reichsthingy
+	id = georgia_events.61
+	title = georgia_events.61.t
+	desc = georgia_events.61.d
+
+	is_triggered_only = yes
+
+	option = { # yeye
+		log = "[GetLogInfo]: event georgia_events.61 option georgia_events.61.a"
+		name = georgia_events.61.a
+		ai_chance = { base = 100 }
+		add_to_faction = FROM
+		FROM = { country_event = georgia_events.62 }
+	}
+
+	option = { # ohnonono
+		log = "[GetLogInfo]: event georgia_events.61 option georgia_events.61.b"
+		name = georgia_events.61.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = georgia_events.63 }
+	}
+}
+
+country_event = { # germany accepts
+	id = georgia_events.62
+	title = georgia_events.62.t
+	desc = georgia_events.62.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.62 option georgia_events.62.a"
+		name = georgia_events.62.a
+	}
+}
+
+country_event = { # germany declines
+	id = georgia_events.63
+	title = georgia_events.63.t
+	desc = georgia_events.63.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.63 option georgia_events.63.a"
+		name = georgia_events.63.a
+	}
+}
+
+country_event = { # elections to the PCA
+	id = georgia_events.67
+	title = georgia_events.67.t
+	desc = georgia_events.67.d
+
+	trigger = {
+		NOT = { has_government = paternal_autocrat }
+		if = {
+			limit = { is_subject = yes }
+			is_subject_of = GER
+		}
+	}
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event georgia_events.67 option georgia_events.67.a"
+		name = georgia_events.67.a
+		add_political_power = 25
+		hidden_effect = {
+			country_event = { id = georgia_events.68 days = 30 }
+		}
+	}
+}
+
+country_event = { # discussion of South Ossetian autonomy increases
+	id = georgia_events.68
+	title = georgia_events.68.t
+	desc = georgia_events.68.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event georgia_events.68 option georgia_events.68.a"
+		name = georgia_events.68.a
+		hidden_effect = {
+			country_event = { id = georgia_events.69 days = 14 }
+		}
+	}
+}
+
+country_event = { # pro-autonomy march in Tskhinvali
+	id = georgia_events.69
+	title = georgia_events.69.t
+	desc = georgia_events.69.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event georgia_events.69 option georgia_events.69.a"
+		name = georgia_events.69.a
+		add_stability = -0.02
+		hidden_effect = {
+			country_event = { id = georgia_events.70 days = 7 }
+		}
+	}
+}
+
+country_event = { # PCA endorses South Ossetian autonomy
+	id = georgia_events.70
+	title = georgia_events.70.t
+	desc = georgia_events.70.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # sure
+		log = "[GetLogInfo]: event georgia_events.70 option georgia_events.70.a"
+		name = georgia_events.70.a
+		add_political_power = -50
+		hidden_effect = {
+			country_event = { id = georgia_events.71 days = 30 }
+		}
+	}
+
+	option = { # no
+		log = "[GetLogInfo]: event georgia_events.70 option georgia_events.70.b"
+		name = georgia_events.70.b
+		hidden_effect = {
+			country_event = { id = georgia_events.72 days = 14 }
+		}
+	}
+}
+
+country_event = { # People's Council of South Ossetia established
+	id = georgia_events.71
+	title = georgia_events.71.t
+	desc = georgia_events.71.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event georgia_events.71 option georgia_events.71.a"
+		name = georgia_events.71.a
+		swap_ideas = {
+			remove_idea = GEO_minority_problem
+			add_idea = GEO_minority_problem_nice
+		}
+	}
+}
+
+country_event = { # SO's begin to arm themselves
+	id = georgia_events.72
+	title = georgia_events.72.t
+	desc = georgia_events.72.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # increase military presence
+		log = "[GetLogInfo]: event georgia_events.72 option georgia_events.72.a"
+		name = georgia_events.72.a
+		add_stability = -0.02
+		hidden_effect = {
+			country_event = { id = georgia_events.73 days = 25 }
+		}
+	}
+
+	option = { # give in
+		log = "[GetLogInfo]: event georgia_events.72 option georgia_events.72.b"
+		name = georgia_events.72.b
+		add_political_power = -60
+		hidden_effect = {
+			country_event = { id = georgia_events.71 days = 30 }
+		}
+	}
+}
+
+country_event = { # military accidentally kill 3 protestors
+	id = georgia_events.73
+	title = georgia_events.73.t
+	desc = georgia_events.73.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # whoops
+		log = "[GetLogInfo]: event georgia_events.73 option georgia_events.73.a"
+		name = georgia_events.73.a
+		add_stability = -0.05
+		add_war_support = -0.05
+		hidden_effect = {
+			country_event = { id = georgia_events.74 days = 7 }
+		}
+	}
+}
+
+country_event = { # SO rebels attack military base in revenge
+	id = georgia_events.74
+	title = georgia_events.74.t
+	desc = georgia_events.74.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # its probably right to concede
+		log = "[GetLogInfo]: event georgia_events.74 option georgia_events.74.a"
+		name = georgia_events.74.a
+		add_political_power = -75
+		hidden_effect = {
+			country_event = { id = georgia_events.71 days = 30 }
+		}
+	}
+
+	option = { # crack down hard
+		log = "[GetLogInfo]: event georgia_events.74 option georgia_events.74.b"
+		name = georgia_events.74.b
+		hidden_effect = {
+			country_event = { id = georgia_events.75 days = 30 }
+		}
+	}
+}
+
+country_event = { # military crackdown in South Ossetia
+	id = georgia_events.75
+	title = georgia_events.75.t
+	desc = georgia_events.75.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # whoops
+		log = "[GetLogInfo]: event georgia_events.75 option georgia_events.75.a"
+		name = georgia_events.75.a
+		swap_ideas = {
+			remove_idea = GEO_minority_problem
+			add_idea = GEO_minority_problem_mean
+		}
+	}
+}
+
+country_event = { #Liberation of Lazistan
+	id = georgia_events.76
+	title = georgia_events.76.t
+	desc = georgia_events.76.d
+	picture = GFX_OTT_Rize1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.76 option georgia_events.76.a"
+		name = georgia_events.76.a
+		add_stability = 0.02
+		add_political_power = 10
+	}
+}
+
+country_event = { #POV GER/RUS - GEO wants Batumi
+	id = georgia_events.77
+	title = georgia_events.77.t
+	desc = georgia_events.77.d
+
+	is_triggered_only = yes
+
+	option = { #Let them take it, but nothing more
+		log = "[GetLogInfo]: event georgia_events.77 option georgia_events.77.a"
+		name = georgia_events.77.a
+		ai_chance = { base = 75 }
+	}
+
+	option = { #Never
+		log = "[GetLogInfo]: event georgia_events.77 option georgia_events.77.b"
+		name = georgia_events.77.b
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				is_ally_with = RUS
+			}
+		}
+		FROM = { country_event = georgia_events.78 }
+	}
+}
+
+country_event = { #We're not allowed to take Batum
+	id = georgia_events.78
+	title = georgia_events.78.t
+	desc = georgia_events.78.d
+
+	is_triggered_only = yes
+
+	option = { #We have to submit
+		log = "[GetLogInfo]: event georgia_events.78 option georgia_events.78.a"
+		name = georgia_events.78.a
+		ai_chance = { base = 100 }
+		effect_tooltip = { remove_targeted_decision = { target = OTT decision = GEO_attack_ottos_decision } }
+		set_country_flag = GEO_dont_attack_ott
+	}
+
+	option = { #Never
+		log = "[GetLogInfo]: event georgia_events.78 option georgia_events.78.b"
+		name = georgia_events.78.b
+		ai_chance = { base = 0 }
+		clear_all_relations_except_wars = yes
+	}
+}
+
+country_event = { #Looming Russian Threat
+	id = georgia_events.79
+	title = georgia_events.79.t
+	desc = georgia_events.79.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.79 option georgia_events.79.a"
+		name = georgia_events.79.a
+		clear_all_relations = yes
+		GER = { country_event = georgia_events.80 }
+	}
+}
+
+country_event = { #New Alliance with Georgia?
+	id = georgia_events.80
+	title = georgia_events.80.t
+	desc = georgia_events.80.d
+
+	is_triggered_only = yes
+
+	option = { #Sure, we agree
+		log = "[GetLogInfo]: event georgia_events.80 option georgia_events.80.a"
+		name = georgia_events.80.a
+		ai_chance = { base = 100 }
+		FROM = { country_event = georgia_events.81 }
+	}
+
+	option = { #Never
+		log = "[GetLogInfo]: event georgia_events.80 option georgia_events.80.b"
+		name = georgia_events.80.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = georgia_events.82 }
+	}
+}
+
+country_event = { #Germany Accepts
+	id = georgia_events.81
+	title = georgia_events.81.t
+	desc = georgia_events.81.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.81 option georgia_events.81.a"
+		name = georgia_events.81.a
+		GER_add_to_mitteleuropa = yes
+		FROM = { add_to_faction = GEO }
+	}
+}
+
+country_event = { #Germany Rejects
+	id = georgia_events.82
+	title = georgia_events.82.t
+	desc = georgia_events.82.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.82 option georgia_events.82.a"
+		name = georgia_events.82.a
+		add_political_power = -10
+	}
+}
+
+country_event = { #Alliance with Georgia?
+	id = georgia_events.83
+	title = georgia_events.83.t
+	desc = georgia_events.83.d
+
+	is_triggered_only = yes
+
+	option = { #Sure, we agree
+		log = "[GetLogInfo]: event georgia_events.83 option georgia_events.83.a"
+		name = georgia_events.83.a
+		trigger = { NOT = { has_global_flag = RUS_socrus_happened } }
+		ai_chance = { base = 1 }
+		FROM = { country_event = georgia_events.84 }
+	}
+
+	option = { #Never
+		log = "[GetLogInfo]: event georgia_events.83 option georgia_events.83.b"
+		name = georgia_events.83.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = RUS_socrus_happened }
+			}
+		}
+		FROM = { country_event = { id = georgia_events.85 days = 1 } }
+		custom_effect_tooltip = GEO_russia_rejection
+	}
+}
+
+country_event = { #Russia Accepts
+	id = georgia_events.84
+	title = georgia_events.84.t
+	desc = georgia_events.84.d
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			clear_all_relations = yes
+			RUS = { give_guarantee = GEO }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.84 option georgia_events.84.a"
+		name = georgia_events.84.a
+		add_political_power = 25
+		set_country_flag = GEO_end_treaty
+		effect_tooltip = {
+			clear_all_relations = yes
+			RUS = { give_guarantee = GEO }
+		}
+		OTT = {
+			country_event = { id = georgia_events.56 days = 1 }
+		}
+	}
+}
+
+country_event = { #Russia Refuse
+	id = georgia_events.85
+	title = georgia_events.85.t
+	desc = georgia_events.85.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event georgia_events.85 option georgia_events.85.a"
+		name = georgia_events.85.a
+		add_political_power = -25
+		set_country_flag = GEO_keep_treaty
+	}
+}
+
+#Georgia Monarchy
+news_event = {
+	id = georgia_events.86
+	immediate = { log = "[GetLogInfo]: event georgia_events.86" }
+	title = georgia_events.86.t
+
+	desc = { #Giorgi
+		text = georgia_events.86.d.giorgi
+		trigger = {
+			NOT = { GEO = { has_country_leader = { character = GEO_ioachim_von_hohenzollern } } }
+		}
+	}
+
+	desc = { #Ioakhim
+		text = georgia_events.86.d.ioakhim
+		trigger = {
+			GEO = { has_country_leader = { character = GEO_ioachim_von_hohenzollern } }
+		}
+	}
+
+	picture = GFX_news_event_ITA_kingdom
+
+	major = yes
+	is_triggered_only = yes
+
+	show_major = { regional_europe_news = yes }
+
+	trigger = { wants_world_news = yes }
+
+	option = {
+		name = georgia_events.86.a
+		trigger = {
+			has_socialist_government = no
+			NOT = { tag = GEO }
+		}
+	}
+
+	option = {
+		name = georgia_events.86.b
+		trigger = {
+			has_socialist_government = yes
+			NOT = { tag = GEO }
+		}
+	}
+
+	option = {
+		name = georgia_events.86.c
+		trigger = {
+			tag = GEO
+		}
+	}
+}
+
+country_event = { # 1936 election
+	id = georgia_events.120
+	title = georgia_events.120.t
+	desc = georgia_events.120.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+		has_country_flag = GEO_do_1936_election_flag
+	}
+
+	immediate = {
+		hidden_effect = { complete_national_focus = GEO_election_1936 }
+	}
+
+	option = { # Mensheviks win
+		log = "[GetLogInfo]: event georgia_events.120 option georgia_events.120.a"
+		name = georgia_events.120.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GEO_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_RADSOC } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_SOCLIB } }
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_country_leader = { character = GEO_ioachim_von_hohenzollern }
+					has_country_leader = { character = GEO_giorgi_bagration_mukhraneli }
+				}
+			}
+			complete_national_focus = GEO_SSDP_victory
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.1
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_democrat
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		country_event = georgia_events.121 # coalition?
+	}
+
+	option = { # EDP-MMEP coalition
+		log = "[GetLogInfo]: event georgia_events.120 option georgia_events.120.b"
+		name = georgia_events.120.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_RADSOC }
+					has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_SOCLIB }
+				}
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_country_leader = { character = GEO_ioachim_von_hohenzollern }
+					has_country_leader = { character = GEO_giorgi_bagration_mukhraneli }
+				}
+			}
+			complete_national_focus = GEO_EDP_MMEP_coalition
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.05
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+	}
+
+	after = {
+		clr_country_flag = GEO_do_1936_election_flag
+	}
+}
+
+country_event = { # menshevik coalition with who?
+	id = georgia_events.121
+	title = georgia_events.121.t
+	desc = georgia_events.121.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # SSPSP
+		log = "[GetLogInfo]: event georgia_events.121 option georgia_events.121.a"
+		name = georgia_events.121.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_RADSOC }
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_country_leader = { character = GEO_ioachim_von_hohenzollern }
+					has_country_leader = { character = GEO_giorgi_bagration_mukhraneli }
+				}
+			}
+			complete_national_focus = GEO_SSDP_SSPSP_coalition
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+	}
+
+	option = { # SR
+		log = "[GetLogInfo]: event georgia_events.121 option georgia_events.121.b"
+		name = georgia_events.121.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_SOCLIB }
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_country_leader = { character = GEO_ioachim_von_hohenzollern }
+					has_country_leader = { character = GEO_giorgi_bagration_mukhraneli }
+				}
+			}
+			complete_national_focus = GEO_SSDP_SR_coalition
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+	}
+}
+
+country_event = { # future elections
+	id = georgia_events.122
+	title = georgia_events.122.t
+	desc = georgia_events.122.d
+
+	trigger = {
+		has_elected_government = yes
+		NOT = { has_country_flag = GEO_do_1936_election_flag }
+	}
+
+	is_triggered_only = yes
+
+	option = { # Mensheviks win
+		log = "[GetLogInfo]: event georgia_events.122 option georgia_events.122.a"
+		name = georgia_events.122.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = GEO_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_RADSOC } }
+				NOT = { has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_SOCLIB } }
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_country_leader = { character = GEO_ioachim_von_hohenzollern }
+					has_country_leader = { character = GEO_giorgi_bagration_mukhraneli }
+				}
+				NOT = { has_completed_focus = GEO_SSDP_victory }
+			}
+			complete_national_focus = GEO_SSDP_victory
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.1
+		}
+		if = {
+			limit = { has_country_leader = { character = GEO_valiko_jugheli } }
+			promote_character = GEO_evgeni_gegechkori
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_democrat
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		country_event = georgia_events.123 # coalition?
+	}
+
+	option = { # EDP-MMEP coalition
+		log = "[GetLogInfo]: event georgia_events.122 option georgia_events.122.b"
+		name = georgia_events.122.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_RADSOC }
+					has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_SOCLIB }
+				}
+			}
+		}
+		if = {
+			limit = {
+				NOT = { has_completed_focus = GEO_EDP_MMEP_coalition }
+			}
+			complete_national_focus = GEO_EDP_MMEP_coalition
+		}
+		set_country_flag = GEO_bypass_king_ref_flag
+		if = {
+			limit = {
+				NOT = {
+					has_country_leader = { character = GEO_ioachim_von_hohenzollern }
+					has_country_leader = { character = GEO_giorgi_bagration_mukhraneli }
+				}
+			}
+			complete_national_focus = GEO_republic_victory
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.05
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+	}
+}
+
+country_event = { # menshevik coalition with who?
+	id = georgia_events.123
+	title = georgia_events.123.t
+	desc = georgia_events.123.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { # SSPSP
+		log = "[GetLogInfo]: event georgia_events.123 option georgia_events.123.a"
+		name = georgia_events.123.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_RADSOC }
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_country_leader = { character = GEO_ioachim_von_hohenzollern }
+					has_country_leader = { character = GEO_giorgi_bagration_mukhraneli }
+				}
+			}
+			complete_national_focus = GEO_SSDP_SSPSP_coalition
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+	}
+
+	option = { # SR
+		log = "[GetLogInfo]: event georgia_events.123 option georgia_events.123.b"
+		name = georgia_events.123.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GEO_path option = GEO_PATH_SOCDEM_SOCLIB }
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_country_leader = { character = GEO_ioachim_von_hohenzollern }
+					has_country_leader = { character = GEO_giorgi_bagration_mukhraneli }
+				}
+			}
+			complete_national_focus = GEO_SSDP_SR_coalition
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+	}
+}
+

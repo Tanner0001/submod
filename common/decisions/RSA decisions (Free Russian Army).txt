@@ -1,0 +1,623 @@
+RSA_german_influence = {
+	RSA_expand_corps = {
+		icon = GFX_decision_generic_reorganize_irregulars
+		allowed = { always = no }
+		available = {
+			paternal_autocrat > 0.15
+			GER = { surrender_progress < 0.1 }
+		}
+		fire_only_once = yes
+		cost = 40
+		days_remove = 30
+		ai_will_do = { base = 1 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove RSA_expand_corps"
+			add_popularity = { ideology = paternal_autocrat popularity = 0.02 }
+			if = {
+				limit = { has_template = "Svobodnaya Mekhanizirovannaya diviziya" }
+				64 = {
+					create_unit = {
+						division = "division_template = \"Svobodnaya Mekhanizirovannaya diviziya\" start_experience_factor = 0.2"
+						owner = ROOT
+					}
+				}
+			}
+			if = {
+				limit = { has_template = "Dobrovolcheskaya Diviziya" }
+				64 = {
+					create_unit = {
+						division = "division_template = \"Dobrovolcheskaya Diviziya\" start_experience_factor = 0.1"
+						owner = ROOT
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	RSA_recruit_pows = {
+		icon = GFX_decision_soldierly_discipline
+		allowed = { always = no }
+		available = {
+			RUS = { casualties > 10000 }
+			has_manpower < 60000
+		}
+		cost = 20
+		days_remove = 120
+		ai_will_do = { base = 10 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove RSA_recruit_pows"
+			add_manpower = 50000
+		}
+		fixed_random_seed = no
+	}
+	RSA_prepare_offensive_operation = {
+		icon = GFX_decision_generic_operation
+		allowed = { always = no }
+		cost = 75
+		days_remove = 100
+		ai_will_do = { base = 150 }
+		modifier = {
+			max_planning_factor = 0.5
+			army_attack_against_major_factor = 0.1
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove RSA_prepare_offensive_operation"
+		}
+		fixed_random_seed = no
+	}
+	RSA_ruhr_contracts = {
+		icon = GFX_decision_generic_industry
+		allowed = { always = no }
+		cost = 50
+		days_remove = 365
+		ai_will_do = { base = 150 }
+		modifier = {
+			military_factory_donations = 3
+			industrial_factory_donations = 2
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove RSA_ruhr_contracts"
+			add_popularity = { ideology = paternal_autocrat popularity = 0.01 }
+			RSA_check_legitimacy = yes
+		}
+		fixed_random_seed = no
+	}
+	RSA_lootbox = {
+		icon = GFX_decision_artillery
+		allowed = { always = no }
+		visible = {
+			has_war_with = RUS
+			is_ally_with = GER
+		}
+		available = {
+			has_completed_focus = RSA_expand_german_aid
+			GER = {
+				controls_state = 51 #Eastern Rhineland
+				controls_state = 64 #Berlin
+			}
+		}
+		cost = RSA_lootbox_cost
+		days_remove = 7
+		fixed_random_seed = no
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				has_political_power > 300
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete RSA_lootbox"
+			add_popularity = { ideology = paternal_autocrat popularity = 0.01 }
+			RSA_check_legitimacy = yes
+			random_list = {
+				30 = { #WWI Mauser Surplus
+					modifier = {
+						factor = 0.3
+						has_equipment = { infantry_equipment > 5000 }
+					}
+					custom_effect_tooltip = RSA_lootbox_1
+					effect_tooltip = {
+						add_equipment_to_stockpile = {
+							type = infantry_equipment_1
+							amount = 750
+							producer = GER
+						}
+						add_equipment_to_stockpile = {
+							type = support_equipment_1
+							amount = 100
+							producer = GER
+						}
+					}
+					custom_effect_tooltip = tooltip_white_line
+					set_country_flag = RSA_lootbox_1_flag
+				}
+				20 = { #Krupp Surplus
+					modifier = {
+						factor = 0.5
+						has_equipment = { artillery_equipment > 2000 }
+					}
+					custom_effect_tooltip = RSA_lootbox_2
+					set_country_flag = RSA_lootbox_2_flag
+					effect_tooltip = {
+						add_equipment_to_stockpile = {
+							type = artillery_equipment_1
+							amount = 300
+							producer = GER
+						}
+						add_equipment_to_stockpile = {
+							type = anti_air_equipment_1
+							amount = 100
+							producer = GER
+						}
+						add_equipment_to_stockpile = {
+							type = support_equipment_1
+							amount = 150
+							producer = GER
+						}
+					}
+					custom_effect_tooltip = tooltip_white_line
+				}
+				10 = { #Opels
+					modifier = {
+						factor = 2
+						any_country_division = {
+							division_has_majority_template = motorized
+						}
+					}
+					modifier = {
+						factor = 0.25
+						has_equipment = { motorized_equipment > 2000 }
+					}
+					set_country_flag = RSA_lootbox_3_flag
+					custom_effect_tooltip = RSA_lootbox_3
+					effect_tooltip = {
+						add_fuel = 6000
+						add_equipment_to_stockpile = {
+							type = motorized_equipment
+							amount = 150
+							producer = GER
+						}
+						add_equipment_to_stockpile = {
+							type = armored_car_equipment
+							amount = 100
+							producer = GER
+						}
+					}
+					custom_effect_tooltip = tooltip_white_line
+				}
+				5 = { #Train Pack
+					modifier = {
+						factor = 0
+						has_equipment = { railway_gun_equipment > 0 }
+						has_equipment = { train_equipment > 30 }
+					}
+					set_country_flag = RSA_lootbox_4_flag
+					custom_effect_tooltip = RSA_lootbox_4
+					effect_tooltip = {
+						add_equipment_to_stockpile = {
+							type = train_equipment
+							amount = 20
+							producer = GER
+						}
+						create_railway_gun = {
+							equipment = railway_gun_equipment_1
+							name = "Svyatogor"
+							location = 6521 #Berlin
+						}
+					}
+					custom_effect_tooltip = tooltip_white_line
+				}
+				10 = { #Tanks
+					modifier = {
+						factor = 2
+						any_country_division = {
+							OR = {
+								division_has_majority_template = light_armor
+								division_has_majority_template = medium_armor
+							}
+						}
+					}
+					modifier = {
+						factor = 0.5
+						has_equipment = { medium_tank_chassis > 1000 }
+					}
+					set_country_flag = RSA_lootbox_5_flag
+					custom_effect_tooltip = RSA_lootbox_5
+					effect_tooltip = {
+						add_fuel = 4000
+						add_equipment_to_stockpile = {
+							type = anti_tank_equipment
+							amount = 100
+							producer = GER
+						}
+						add_equipment_to_stockpile = {
+							type = light_tank_chassis
+							amount = 200
+							producer = GER
+						}
+						add_equipment_to_stockpile = {
+							type = medium_tank_chassis
+							amount = 100
+							producer = GER
+						}
+					}
+				}
+			}
+			country_event = russia_free_army_events.30
+		}
+	}
+}
+RSA_saving_russia = {
+	#RSA_negotiate = {
+	#	icon = GFX_decision_peace_dove
+	#	allowed = { always = no }
+	#	visible = {
+	#		RUS = {
+	#			exists = yes
+	#			has_capitulated = no
+	#			has_war_with = ROOT
+	#		}
+	#	}
+	#	available = {
+	#		RUS = {
+	#			NOT = { has_government = national_populist }
+	#		}
+	#		controls_state = 219 #Moscow
+	#		OR = {
+	#			controls_state = 195 #Petrograd
+	#			controls_state = 217 #Tsaritsyn
+	#		}
+	#	}
+	#	cost = 40
+	#	ai_will_do = { base = 10 }
+	#	complete_effect = {
+	#		log = "[GetLogRoot]: Decision complete RSA_negotiate"
+	#		RUS = { country_event = russia_boldyrev_events.20 }
+	#	}
+	#}
+	RSA_counter_claims = {
+		icon = GFX_decision_eng_trade_unions_demand
+		allowed = { always = no }
+		available = {
+			has_capitulated = no
+			OR = {
+				FROM = {
+					has_capitulated = yes
+				}
+				ROOT = {
+					strength_ratio = {
+						tag = FROM
+						ratio > 1
+					}
+				}
+				RUS = {
+					casualties_inflicted_by = {
+						opponent = ROOT
+						thousands > 1000
+					}
+				}
+			}
+		}
+		cost = 75
+		fire_only_once = yes
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				FROM = { is_ai = no }
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove RSA_counter_claims"
+			RSA_counter_claims_effect = yes
+			if = {
+				limit = { NOT = { has_global_flag = RSA_counter_claim_flag } }
+				set_global_flag = RSA_counter_claim_flag
+			}
+		}
+		fixed_random_seed = no
+	}
+	RSA_prepare_caucasus_uprising = {
+		icon = GFX_decision_cavalry
+		allowed = { always = no }
+		available = {
+			OR = {
+				GEO = {
+					is_ally_with = ROOT
+					has_capitulated = no
+				}
+				AZR = {
+					is_ally_with = ROOT
+					has_capitulated = no
+				}
+				234 = { controller = { is_ally_with = ROOT } } #Yekaterinodar
+				1006 = { controller = { is_ally_with = ROOT } } #Novorossiysk
+			}
+		}
+		visible = {
+			has_war_with = RUS
+			any_state_of = {
+				target = { 233 961 393 } #Vladikavkaz, Chechnya
+				controller = { is_ally_with = RUS }
+			}
+		}
+		cost = 20
+		fire_only_once = yes
+		days_remove = 14
+		ai_will_do = { base = 10 }
+		highlight_states = {
+			highlight_state_targets = {
+				state = 233
+				state = 961
+			}
+		}
+		cancel_if_not_visible = yes
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove RSA_prepare_caucasus_uprising"
+			hidden_effect = { country_event = russia_free_army_events.10 }
+			event_option_tooltip = russia_free_army_events.10.a
+		}
+		fixed_random_seed = no
+	}
+	RSA_recruit_soldiers = {
+		icon = GFX_decision_generic_military
+		available = {
+			FROM = {
+				controller = { is_ally_with = RSA }
+				is_core_of = ROOT
+			}
+		}
+		fire_only_once = yes
+		cost = 25
+		state_target = yes
+		ai_will_do = { base = 150 }
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete RSA_recruit_soldiers"
+			if = {
+				limit = { NOT = { has_country_flag = RUS_recruit_soldiers_decision_taken_once } }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_create_division_template
+						NAME = "Pekhotnaya Brigada"
+						LINE_1 = { localization_key = line_battalion_tt NAME = militia ICON = GFX_unit_militia_icon_small COUNT = 8 }
+					}
+					if = {
+						limit = { has_template = "Pekhotnaya Brigada" }
+						delete_unit_template_and_units = { division_template = "Pekhotnaya Brigada" disband = yes } #no cheating
+					}
+					division_template = {
+						name = "Pekhotnaya Brigada"
+						division_names_group = RSA_MIL_01
+						is_locked = yes
+						regiments = {
+							militia = { x = 0 y = 0 }
+							militia = { x = 0 y = 1 }
+							militia = { x = 0 y = 2 }
+							militia = { x = 0 y = 3 }
+							militia = { x = 1 y = 0 }
+							militia = { x = 1 y = 1 }
+							militia = { x = 1 y = 2 }
+							militia = { x = 1 y = 3 }
+						}
+					}
+				}
+				set_country_flag = RUS_recruit_soldiers_decision_taken_once
+			}
+			FROM = {
+				set_temp_variable = {
+					RSA_num_divisions_to_spawn = {
+						value = 1
+						if = { limit = { value = state_population_k greater_than = 3000 } add = 3 }
+						else_if = { limit = { value = state_population_k greater_than = 2000 } add = 2 }
+						else_if = { limit = { value = state_population_k greater_than = 1000 } add = 1 }
+					}
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = "[?RSA_num_divisions_to_spawn]"
+						TYPE = "Pekhotnaya Brigada"
+					}
+					create_unit = {
+						division = "division_template = \"Pekhotnaya Brigada\" start_experience_factor = 0.2"
+						owner = ROOT
+						count = RSA_num_divisions_to_spawn
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+RSA_postwar = {
+	RSA_talks_with_entente = {
+		icon = GFX_decision_eng_ally_imperialist_coup
+		name = RSA_talks_with
+		allowed = { always = no }
+		available = {
+			has_completed_focus = RUS_pacific_trade
+			country_exists = IMP
+			country_exists = NFA
+			ENT = {
+				NOT = {
+					has_war_with = GER
+					has_war_with = ROOT
+				}
+			}
+		}
+		visible = {
+			NOT = {
+				has_country_flag = RSA_alliance_proposal
+			}
+			FROM = {
+				is_faction_leader = yes
+			}
+			RUS_boldyrev = yes
+			is_in_faction = no
+		}
+		cost = 40
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = RSA_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = RSA_forpol option = RSA_FORPOL_ENT } }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete RSA_talks_with_entente"
+			FROM = { country_event = russia_boldyrev_events.50 } #Boldyrev requests alliance
+			custom_effect_tooltip = RSA_only_one_tt
+			set_country_flag = RSA_alliance_proposal
+		}
+		fixed_random_seed = no
+	}
+	RSA_talks_with_japan = {
+		icon = GFX_decision_jap_pacific_guardian
+		name = RSA_talks_with
+		allowed = { always = no }
+		available = {
+			has_completed_focus = RUS_pacific_trade
+			FER = {
+				OR = {
+					exists = no
+					is_subject_of = JAP
+				}
+			}
+			JAP = {
+				is_faction_leader = yes
+				NOT = {
+					has_war_with = GER
+					has_war_with = ROOT
+				}
+			}
+		}
+		visible = {
+			NOT = {
+				has_global_flag = JAP_Fading_Sun
+				has_country_flag = RSA_alliance_proposal
+			}
+			RUS_boldyrev = yes
+			is_in_faction = no
+		}
+		cost = 40
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = RSA_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = RSA_forpol option = RSA_FORPOL_JAP } }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete RSA_talks_with_japan"
+			FROM = { country_event = russia_boldyrev_events.50 } #Boldyrev requests alliance
+			custom_effect_tooltip = RSA_only_one_tt
+			set_country_flag = RSA_alliance_proposal
+		}
+		fixed_random_seed = no
+	}
+	RSA_talks_with_america = {
+		icon = GFX_decision_eng_puppet_usa
+		name = RSA_talks_with
+		allowed = { always = no }
+		available = {
+			has_completed_focus = RUS_pacific_trade
+			FROM = {
+				owns_state = 361  #Washington DC
+				NOT = {
+					has_war_with = GER
+					has_war_with = ROOT
+				}
+			}
+		}
+		visible = {
+			has_global_flag = USA_civil_war_over_flag
+			NOT = {
+				has_country_flag = RSA_alliance_proposal
+			}
+			FROM = {
+				NOT = {
+					is_in_faction_with = ENT
+					is_in_faction_with = GER
+					is_subject = yes
+					tag = WCA
+				}
+			}
+			RUS_boldyrev = yes
+			is_in_faction = no
+		}
+		cost = 40
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = RSA_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = RSA_forpol option = RSA_FORPOL_ACW_VICTOR } }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete RSA_talks_with_america"
+			FROM = { country_event = russia_boldyrev_events.50 } #Boldyrev requests alliance
+			custom_effect_tooltip = RSA_only_one_tt
+			set_country_flag = RSA_alliance_proposal
+		}
+		fixed_random_seed = no
+	}
+	RSA_take_siberia = {
+		icon = GFX_decision_hol_draw_up_staff_plans
+		allowed = { always = no }
+		available = { hidden_trigger = { always = no } }
+		cancel_trigger = {
+			NOT = { has_war_with = FER }
+		}
+		selectable_mission = no
+		is_good = no
+		days_mission_timeout = 400
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout RSA_take_siberia"
+			if = {
+				limit = {
+					NOT = {
+						controls_state = 572 #Chelyabinsk
+						controls_state = 653 #Ekaterinburg
+					}
+				}
+				custom_effect_tooltip = RSA_take_siberia_tt_1
+			}
+			else_if = {
+				limit = {
+					NOT = {
+						controls_state = 657 #Blagoveshchensk
+						controls_state = 409 #Khabarovsk
+						controls_state = 408 #Vladivostok
+					}
+					controls_state = 572 #Chelyabinsk
+					controls_state = 653 #Ekaterinburg
+				}
+				custom_effect_tooltip = RSA_take_siberia_tt_2
+			}
+			else_if = {
+				limit = {
+					OR = {
+						controls_state = 657 #Blagoveshchensk
+						controls_state = 409 #Khabarovsk
+						controls_state = 408 #Vladivostok
+					}
+				}
+				custom_effect_tooltip = RSA_take_siberia_tt_3
+				FER = {
+					add_war_support = -0.5
+					add_stability = -0.5
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}

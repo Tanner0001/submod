@@ -1,0 +1,423 @@
+FRA_phalanstere_effect = {
+	if = {
+		limit = { NOT = { tag = ROOT } }
+		custom_effect_tooltip = if_they_accept_tt
+	}
+	add_opinion_modifier = {
+		target = INT
+		modifier = KR_approves_of_govt
+	}
+	if = {
+		limit = {
+			ENG = {
+				NOT = { tag = ROOT }
+				FRA_is_phalanstere_member = yes
+			}
+		}
+		add_opinion_modifier = {
+			target = ENG
+			modifier = KR_approves_of_govt
+		}
+	}
+	if = {
+		limit = {
+			tag = CEN
+			OR = {
+				312 = { #Honduras
+					is_owned_and_controlled_by = PREV
+					NOT = { has_state_flag = FRA_phalanstere_developed }
+				}
+				313 = { #Guatemala
+					is_owned_and_controlled_by = PREV
+					NOT = { has_state_flag = FRA_phalanstere_developed }
+				}
+				314 = { #El Salvador
+					is_owned_and_controlled_by = PREV
+					NOT = { has_state_flag = FRA_phalanstere_developed }
+				}
+				316 = { #Costa Rica
+					is_owned_and_controlled_by = PREV
+					NOT = { has_state_flag = FRA_phalanstere_developed }
+				}
+				317 = { #Managua
+					is_owned_and_controlled_by = PREV
+					NOT = { has_state_flag = FRA_phalanstere_developed }
+				}
+			}
+		}
+		every_owned_state = {
+			limit = {
+				OR = {
+					state = 312 #Honduras
+					state = 313 #Guatemala
+					state = 314 #El Salvador
+					state = 316 #Costa Rica
+					state = 317 #Managua
+				}
+				NOT = { has_state_flag = FRA_phalanstere_developed }
+			}
+			FRA_phalanstere_development_in_targeted_state = yes
+		}
+	}
+	else_if = {
+		limit = { has_variable = FRA_num_target_states }
+		FRA_phalanstere_development_in_random_state = yes
+		FRA_phalanstere_infrastructure_effect = yes
+		if = {
+			limit = { check_variable = { FRA_num_target_states > 1 } }
+			FRA_phalanstere_development_in_random_state = yes
+			FRA_phalanstere_infrastructure_effect = yes
+		}
+		if = {
+			limit = { check_variable = { FRA_num_target_states > 2 } }
+			FRA_phalanstere_development_in_random_state = yes
+			FRA_phalanstere_infrastructure_effect = yes
+		}
+		if = {
+			limit = { check_variable = { FRA_num_target_states > 3 } }
+			FRA_phalanstere_development_in_random_state = yes
+			FRA_phalanstere_infrastructure_effect = yes
+		}
+	}
+	else = {
+		FRA_phalanstere_development_in_capital = yes
+		FRA_phalanstere_infrastructure_effect = yes
+	}
+	FRA_add_to_phalanstere = yes
+	if = {
+		limit = { NOT = { tag = ENG } }
+		add_tech_bonus = {
+			name = FRA_Develop_Country
+			bonus = 1
+			uses = 1
+			category = industry
+		}
+	}
+}
+
+FRA_phalanstere_development_in_random_state = {
+	add_one_random_civilian_factory = yes
+}
+
+FRA_phalanstere_development_in_capital = {
+	if = {
+		limit = {
+			capital_scope = {
+				free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+			}
+		}
+		capital_scope = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else = {
+		FRA_phalanstere_development_in_random_state = yes
+	}
+}
+
+FRA_phalanstere_development_in_targeted_state = {
+	if = {
+		limit = {
+			free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+			NOT = { has_state_flag = FRA_phalanstere_developed }
+		}
+		set_state_flag = FRA_phalanstere_developed
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = infrastructure
+			level = 1
+			instant_build = yes
+		}
+		add_building_construction = {
+			type = industrial_complex
+			level = 1
+			instant_build = yes
+		}
+	}
+	else = {
+		FRA_phalanstere_development_in_random_state = yes
+		FRA_phalanstere_infrastructure_effect = yes
+	}
+}
+
+FRA_phalanstere_infrastructure_effect = {
+	random_owned_controlled_state = {
+		limit = {
+			is_in_home_area = yes
+			OR = {
+				oil > 0
+				rubber > 0
+				steel > 0
+				aluminium > 0
+				tungsten > 0
+				chromium > 0
+			}
+			free_building_slots = { building = infrastructure size > 0 }
+			is_valid_state_for_development = yes
+		}
+		add_building_construction = {
+			type = infrastructure
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+
+INT_disable_phalanstere = {
+	if = {
+		limit = { has_event_target = INT_phalanstere_leader }
+		every_country = { FRA_remove_from_phalanstere = yes }
+		FRA_remove_from_phalanstere = yes
+		dismantle_economic_sphere = yes
+		clear_global_event_target = INT_phalanstere_leader
+	}
+}
+
+INT_move_phalanstere_leadership = {
+	if = {
+		limit = { has_event_target = INT_phalanstere_leader }
+		save_global_event_target_as = INT_phalanstere_leader
+		set_economic_sphere_leader = yes
+	}
+}
+
+FRA_add_to_phalanstere = {
+	if = {
+		limit = {
+			NOT = { has_country_flag = FRA_phanlanstere_member }
+			INT = { is_in_economic_sphere = yes }
+		}
+		set_country_flag = FRA_phanlanstere_member
+		set_temp_variable = { sphere_target = THIS }
+		INT = { add_to_economic_sphere = yes }
+		if = {
+			limit = { NOT = { is_in_tech_sharing_group = phalanstere_research } }
+			add_to_tech_sharing_group = phalanstere_research
+		}
+	}
+}
+
+FRA_remove_from_phalanstere = {
+	if = {
+		limit = { has_country_flag = FRA_phanlanstere_member }
+		clr_country_flag = FRA_phanlanstere_member
+		leave_economic_sphere = yes
+	}
+	if = {
+		limit = { is_in_tech_sharing_group = phalanstere_research }
+		remove_from_tech_sharing_group = phalanstere_research
+	}
+}
+
+FRA_damocles_effect = {
+	if = {
+		limit = {
+			NOT = { has_tech = atomic_research }
+			NOT = { is_researching_technology = atomic_research }
+		}
+		add_tech_bonus = {
+			name = FRA_damocles
+			ahead_reduction = 1
+			bonus = 1
+			uses = 1
+			technology = atomic_research
+		}
+		add_breakthrough_progress = {
+			specialization = specialization_nuclear
+			value = 0.5
+		}
+	}
+	else = {
+		add_breakthrough_progress = {
+			specialization = specialization_nuclear
+			value = 0.8
+		}
+	}
+}
+
+FRA_add_extra_basic_spg_variants = {
+	if = {
+		limit = { has_dlc_nsb = yes }
+		custom_effect_tooltip = tooltip_white_line
+		create_equipment_variant = {
+			name = "AMC 35 Automoteur"
+			type = medium_tank_artillery_chassis_1
+			design_team = mio:FRA_somua_organisation
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_close_support_gun
+				turret_type_slot = tank_medium_fixed_superstructure_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 3
+				tank_nsb_armor_upgrade = 4
+			}
+		}
+		create_equipment_variant = {
+			name = "Chasseur de Char AMC 35"
+			type = medium_tank_destroyer_chassis_1
+			design_team = mio:FRA_somua_organisation
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_heavy_cannon
+				turret_type_slot = tank_medium_fixed_superstructure_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 3
+				tank_nsb_armor_upgrade = 3
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		create_equipment_variant = {
+			name = "Chasseur de Char S35"
+			type = medium_tank_destroyer_chassis_2
+			design_team = mio:FRA_somua_organisation
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_heavy_cannon_2
+				turret_type_slot = tank_medium_fixed_superstructure_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 4
+				tank_nsb_armor_upgrade = 4
+			}
+		}
+		create_equipment_variant = {
+			name = "S35 Automoteur"
+			type = medium_tank_artillery_chassis_2
+			design_team = mio:FRA_somua_organisation
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_medium_howitzer_2
+				turret_type_slot = tank_medium_fixed_superstructure_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_welded_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+				special_type_slot_2 = additional_machine_guns
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 4
+				tank_nsb_armor_upgrade = 6
+			}
+		}
+		create_equipment_variant = {
+			name = "S35 DCA Canon"
+			type = medium_tank_aa_chassis_2
+			design_team = mio:FRA_somua_organisation
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_anti_air_cannon_2
+				turret_type_slot = tank_medium_two_man_tank_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 4
+				tank_nsb_armor_upgrade = 4
+			}
+		}
+	}
+}
+
+FRA_add_final_tank_variants = {
+	if = {
+		limit = { has_dlc_nsb = yes }
+		custom_effect_tooltip = tooltip_white_line
+		create_equipment_variant = {
+			name = "Lorraine 42"
+			type = medium_tank_chassis_3
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_medium_cannon_2
+				turret_type_slot = tank_medium_two_man_tank_turret
+				suspension_type_slot = tank_christie_suspension
+				armor_type_slot = tank_welded_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = tank_radio_1
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 6
+				tank_nsb_armor_upgrade = 3
+			}
+		}
+		create_equipment_variant = {
+			name = "Lorraine 42 Automoteur"
+			type = medium_tank_artillery_chassis_3
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_heavy_howitzer
+				turret_type_slot = tank_medium_fixed_superstructure_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+			}
+			upgrades = {
+				tank_nsb_engine_upgrade = 5
+				tank_nsb_armor_upgrade = 1
+			}
+		}
+	}
+}
+
+FRA_spawn_romandy_militia = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_create_division_template
+			NAME = "Militia Division"
+			LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 5 }
+		}
+		if = {
+			limit = { has_template = "Militia Division" }
+			delete_unit_template_and_units = { division_template = "Militia Division" disband = yes } #no cheating
+		}
+		division_template = {
+			name = "Militia Division"			# Militia Division
+			division_names_group = FRA_MIL_01
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+				infantry = { x = 0 y = 2 }
+				infantry = { x = 0 y = 3 }
+				infantry = { x = 1 y = 0 }
+			}
+			template_counter = 68
+		}
+	}
+	760 = { #Romandy
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_spawn_units
+				COUNT = 2
+				TYPE = "Militia Division"
+			}
+			create_unit = {
+				division = "name = \"Corps de la Romandie\" division_template = \"Militia Division\" start_experience_factor = 0.1 start_equipment_factor = 0.5"
+				owner = ROOT
+				prioritize_location = 6666
+			}
+			create_unit = {
+				division = "name = \"1ers Francs-Tireurs de Geneve\" division_template = \"Militia Division\" start_experience_factor = 0.1 start_equipment_factor = 0.5"
+				owner = ROOT
+				prioritize_location = 6666
+			}
+		}
+	}
+}

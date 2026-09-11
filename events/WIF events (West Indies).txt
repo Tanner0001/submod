@@ -1,0 +1,5016 @@
+###############################
+# West Indies Federation Events #Welcome To The Dojo
+###############################
+
+add_namespace = west_indies_federation_politics_events #All politically related
+add_namespace = west_indies_federation_army_events #Actually consists of effects from the industry as well
+add_namespace = west_indies_federation_foreign_policy_events #All foreign policy
+
+country_event = { # Hidden event for the AI to pick its path
+	id = west_indies_federation_politics_events.1
+	hidden = yes
+	is_triggered_only = yes
+	trigger = { is_ai = yes }
+
+	option = { # PA-PNP Coalition - Social Democrat
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.1 option 1"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = WIF_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_SOCDEM } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_NOT_SOC } }
+			}
+		}
+		## Unless game rule is set, only applies to first election, elections are random after that
+		set_country_flag = WIF_socdem_ai
+	}
+
+	option = { # PA-LP Coalition - Social Liberal
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.1 option 2"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = WIF_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_SOCLIB } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_NOT_SOC } }
+			}
+		}
+		## Unless game rule is set, only applies to first election, elections are random after that
+		set_country_flag = WIF_soclib_ai
+	}
+
+	option = { # UP - Market Liberal
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.1 option 3"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = WIF_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_NOT_SOC } }
+			}
+		}
+		## Unless game rule is set, only applies to first election, elections are random after that
+		set_country_flag = WIF_marlib_ai
+	}
+
+	option = { # NCP - Social Conservative
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.1 option 4"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = WIF_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_SOCCON } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_NOT_SOC } }
+			}
+		}
+		## Unless game rule is set, only applies to first election, elections are random after that
+		set_country_flag = WIF_soccon_ai
+	}
+
+	option = { # PU - Authoritarian Democrat
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.1 option 5"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = WIF_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_AUTDEM } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_NOT_SOC } }
+			}
+		}
+		## PU AI does not take focus WIF_restore_democracy
+		set_country_flag = WIF_autdem_ai
+	}
+
+	option = { # Socialists - Revolution
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.1 option 6"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = WIF_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_LABOUR_RADSOC } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_PEOPLES_RADSOC } }
+				NOT = { has_game_rule = { rule = WIF_path option = WIF_PATH_SYNDIE } }
+			}
+		}
+		## Unless game rule is set, odds for each sub-path decided in west_indies_federation_politics_events.801
+		set_country_flag = WIF_socialist_ai
+	}
+}
+
+country_event = { #Labour Strikes in Guadeloupe
+	id = west_indies_federation_politics_events.2
+	title = west_indies_federation_politics_events.2.t
+	desc = west_indies_federation_politics_events.2.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Arrange a meeting
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.2 option west_indies_federation_politics_events.2.a"
+		name = west_indies_federation_politics_events.2.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_socialist_ai
+			}
+		}
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.3 days = 7 }
+		}
+		add_popularity = {
+			ideology = radical_socialist popularity = 0.01
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		WIF_decrease_socialist_tensions = yes
+	}
+
+	option = { #Ignore the problem
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.2 option west_indies_federation_politics_events.2.b"
+		name = west_indies_federation_politics_events.2.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_autdem_ai
+			}
+		}
+		add_popularity = {
+			ideology = radical_socialist popularity = 0.01
+		}
+		add_popularity = {
+			ideology = syndicalist popularity = 0.02
+		}
+		add_stability = -0.01
+		set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		WIF_increase_socialist_tensions = yes
+	}
+}
+
+country_event = { #Meeting
+	id = west_indies_federation_politics_events.3
+	title = west_indies_federation_politics_events.3.t
+	desc = west_indies_federation_politics_events.3.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Accept the demands
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.3 option west_indies_federation_politics_events.3.a"
+		name = west_indies_federation_politics_events.3.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_socialist_ai
+			}
+		}
+		add_popularity = {
+			ideology = syndicalist popularity = -0.01
+		}
+		add_popularity = {
+			ideology = radical_socialist popularity = -0.01
+		}
+		add_political_power = -30
+		set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+		WIF_decrease_socialist_tensions = yes
+	}
+
+	option = { #Screw that
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.3 option west_indies_federation_politics_events.3.b"
+		name = west_indies_federation_politics_events.3.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_autdem_ai
+			}
+		}
+		add_stability = -0.04
+		add_popularity = {
+			ideology = syndicalist popularity = 0.01
+		}
+		add_popularity = {
+			ideology = radical_socialist popularity = 0.02
+		}
+		set_temp_variable = { WIF_socialist_tensions_change_var = 4 }
+		WIF_increase_socialist_tensions = yes
+	}
+}
+
+country_event = { #Great Depression
+	id = west_indies_federation_politics_events.4
+	title = west_indies_federation_politics_events.4.t
+	desc = west_indies_federation_politics_events.4.d
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			swap_ideas = {
+				remove_idea = WIF_economic_downfall
+				add_idea = WIF_great_depression_1
+			}
+			country_event = { id = west_indies_federation_politics_events.5 days = 17 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.4 option west_indies_federation_politics_events.4.a"
+		name = west_indies_federation_politics_events.4.a
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = WIF_economic_downfall
+				add_idea = WIF_great_depression_1
+			}
+		}
+		unlock_national_focus = WIF_depression_woes
+		add_popularity = { ideology = market_liberal popularity = -0.02 }
+		set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		WIF_increase_socialist_tensions = yes
+	}
+}
+
+country_event = { #Jamaican protests
+	id = west_indies_federation_politics_events.5
+	title = west_indies_federation_politics_events.5.t
+	desc = west_indies_federation_politics_events.5.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			CAN = {
+				country_event = { id = west_indies_federation_politics_events.6 days = 20 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.5 option west_indies_federation_politics_events.5.a"
+		name = west_indies_federation_politics_events.5.a
+		add_stability = -0.05
+		set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		WIF_increase_socialist_tensions = yes
+	}
+}
+
+country_event = { #Canada getting the run-down
+	id = west_indies_federation_politics_events.6
+	title = west_indies_federation_politics_events.6.t
+	desc = west_indies_federation_politics_events.6.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.6 option west_indies_federation_politics_events.6.a"
+		name = west_indies_federation_politics_events.6.a
+		add_political_power = 20
+		WIF = {
+			country_event = { id = west_indies_federation_politics_events.7 days = 4 }
+		}
+	}
+}
+
+country_event = { #Moyne Commission arrives
+	id = west_indies_federation_politics_events.7
+	title = west_indies_federation_politics_events.7.t
+	desc = west_indies_federation_politics_events.7.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.7 option west_indies_federation_politics_events.7.a"
+		name = west_indies_federation_politics_events.7.a
+		add_political_power = 5
+		country_event = { id = west_indies_federation_politics_events.8 days = 4 }
+	}
+}
+
+country_event = { #Moyne Commission arrives in Guyana for hearing
+	id = west_indies_federation_politics_events.8
+	title = west_indies_federation_politics_events.8.t
+	desc = west_indies_federation_politics_events.8.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.8 option west_indies_federation_politics_events.8.a"
+		name = west_indies_federation_politics_events.8.a
+		add_stability = -0.05
+		country_event = { id = west_indies_federation_politics_events.9 days = 5 }
+		set_temp_variable = { WIF_empire_tensions_change_var = 2 }
+		WIF_increase_empire_tensions_and_update = yes
+	}
+}
+
+country_event = { #Trinidad & Tobago next
+	id = west_indies_federation_politics_events.9
+	title = west_indies_federation_politics_events.9.t
+	desc = west_indies_federation_politics_events.9.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.9 option west_indies_federation_politics_events.9.a"
+		name = west_indies_federation_politics_events.9.a
+		add_stability = -0.04
+		add_popularity = {
+			ideology = market_liberal popularity = -0.03
+		}
+		country_event = { id = west_indies_federation_politics_events.11 days = 3 }
+		set_temp_variable = { WIF_empire_tensions_change_var = 3 }
+		WIF_increase_empire_tensions_and_update = yes
+	}
+}
+
+country_event = { #Minor islands, Barbados stands out
+	id = west_indies_federation_politics_events.11
+	title = west_indies_federation_politics_events.11.t
+	desc = west_indies_federation_politics_events.11.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.11 option west_indies_federation_politics_events.11.a"
+		name = west_indies_federation_politics_events.11.a
+		add_stability = -0.04
+		country_event = { id = west_indies_federation_politics_events.12 days = 15 }
+		set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+		WIF_increase_empire_tensions_and_update = yes
+	}
+}
+
+country_event = { #French islands, starvation is rampant
+	id = west_indies_federation_politics_events.12
+	title = west_indies_federation_politics_events.12.t
+	desc = west_indies_federation_politics_events.12.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.12 option west_indies_federation_politics_events.12.a"
+		name = west_indies_federation_politics_events.12.a
+		add_war_support = -0.05
+		country_event = { id = west_indies_federation_politics_events.13 days = 7 }
+		set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		WIF_increase_socialist_tensions = yes
+	}
+}
+
+country_event = { #Jamaica, just what the hell
+	id = west_indies_federation_politics_events.13
+	title = west_indies_federation_politics_events.13.t
+	desc = west_indies_federation_politics_events.13.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.13 option west_indies_federation_politics_events.13.a"
+		name = west_indies_federation_politics_events.13.a
+		add_stability = -0.1
+		add_popularity = {
+			ideology = market_liberal popularity = -0.03
+		}
+		country_event = { id = west_indies_federation_politics_events.14 days = 10 }
+		set_temp_variable = { WIF_empire_tensions_change_var = 3 }
+		WIF_increase_empire_tensions_and_update = yes
+	}
+}
+
+country_event = { #Bermuda and Bahamas
+	id = west_indies_federation_politics_events.14
+	title = west_indies_federation_politics_events.14.t
+	desc = west_indies_federation_politics_events.14.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.14 option west_indies_federation_politics_events.14.a"
+		name = west_indies_federation_politics_events.14.a
+		add_political_power = 5
+		country_event = { id = west_indies_federation_politics_events.15 days = 2 }
+		CAN = {
+			country_event = { id = west_indies_federation_politics_events.16 days = 10 }
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+		WIF_decrease_empire_tensions_and_update = yes
+	}
+}
+
+country_event = { #Summary of what to do
+	id = west_indies_federation_politics_events.15
+	title = west_indies_federation_politics_events.15.t
+	desc = west_indies_federation_politics_events.15.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.15 option west_indies_federation_politics_events.15.a"
+		name = west_indies_federation_politics_events.15.a
+		add_political_power = 10
+		unlock_national_focus = WIF_moyne_report
+		activate_mission = WIF_moyne_report_timer
+		custom_effect_tooltip = WIF_get_to_work_tooltip
+	}
+}
+
+country_event = { #Moyne Commission returns
+	id = west_indies_federation_politics_events.16
+	title = west_indies_federation_politics_events.16.t
+	desc = west_indies_federation_politics_events.16.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.16 option west_indies_federation_politics_events.16.a"
+		name = west_indies_federation_politics_events.16.a
+		add_political_power = -40
+	}
+}
+
+country_event = { #Allocate budget to the West Indies?
+	id = west_indies_federation_politics_events.17
+	title = west_indies_federation_politics_events.17.t
+	desc = west_indies_federation_politics_events.17.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.17 option west_indies_federation_politics_events.17.a"
+		name = west_indies_federation_politics_events.17.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_country_flag = WIF_socialist_ai
+					has_country_flag = WIF_autdem_ai
+				}
+			}
+		}
+		add_timed_idea = {
+			idea = WIF_CAN_gib_monies days = 730
+		}
+		WIF = {
+			country_event = { id = west_indies_federation_politics_events.18 days = 1 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.17 option west_indies_federation_politics_events.17.b"
+		name = west_indies_federation_politics_events.17.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					has_country_flag = WIF_socialist_ai
+					has_country_flag = WIF_autdem_ai
+				}
+			}
+		}
+		add_stability = -0.05
+		WIF = {
+			country_event = { id = west_indies_federation_politics_events.19 days = 1 }
+		}
+	}
+}
+country_event = { #Canada gives us some overtime budget
+	id = west_indies_federation_politics_events.18
+	title = west_indies_federation_politics_events.18.t
+	desc = west_indies_federation_politics_events.18.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.18 option west_indies_federation_politics_events.18.a"
+		name = west_indies_federation_politics_events.18.a
+		add_timed_idea = {
+			idea = WIF_CAN_get_monies days = 730
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 3 }
+		WIF_decrease_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		WIF_decrease_socialist_tensions = yes
+	}
+}
+
+country_event = { #Canada doesn't give us any monies
+	id = west_indies_federation_politics_events.19
+	title = west_indies_federation_politics_events.19.t
+	desc = west_indies_federation_politics_events.19.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.19 option west_indies_federation_politics_events.19.a"
+		name = west_indies_federation_politics_events.19.a
+		set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 4 }
+		WIF_increase_socialist_tensions = yes
+	}
+}
+
+country_event = { #Popularization of Calypso
+	id = west_indies_federation_politics_events.20
+	title = west_indies_federation_politics_events.20.t
+	desc = west_indies_federation_politics_events.20.d
+
+	is_triggered_only = yes
+
+	option = {#Try to clamp down on Calypso
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.20 option west_indies_federation_politics_events.20.a"
+		name = west_indies_federation_politics_events.20.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_autdem_ai
+			}
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 4 }
+		WIF_decrease_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+		WIF_increase_socialist_tensions = yes
+		add_political_power = -20
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.100 days = 72 }
+		}
+	}
+
+	option = {#Political expression is a common right
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.20 option west_indies_federation_politics_events.20.b"
+		name = west_indies_federation_politics_events.20.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_socialist_ai
+			}
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 5 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+		WIF_decrease_socialist_tensions = yes
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.101 days = 1032 } # The Calypso King
+		}
+	}
+}
+
+country_event = { #Further fall of living standards
+	id = west_indies_federation_politics_events.21
+	title = west_indies_federation_politics_events.21.t
+	desc = west_indies_federation_politics_events.21.d
+
+	is_triggered_only = yes
+
+	option = {#We're trying our best...
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.21 option west_indies_federation_politics_events.21.a"
+		name = west_indies_federation_politics_events.21.a
+		set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+		WIF_increase_socialist_tensions = yes
+		add_stability = -0.05
+		add_popularity = {
+			ideology = market_liberal popularity = -0.03
+		}
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.22 days = 27 }
+		}
+	}
+}
+
+country_event = { #Unrest almost sparks in Jamaica
+	id = west_indies_federation_politics_events.22
+	title = west_indies_federation_politics_events.22.t
+	desc = west_indies_federation_politics_events.22.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.22 option west_indies_federation_politics_events.22.a"
+		name = west_indies_federation_politics_events.22.a
+		set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 1 }
+		WIF_increase_socialist_tensions = yes
+		add_stability = -0.03
+	}
+}
+
+#unrest event chain for early 37
+country_event = { #jamaica unrest
+	id = west_indies_federation_politics_events.24
+	title = west_indies_federation_politics_events.24.t
+
+	desc = {
+		text = west_indies_federation_politics_events.24.d.no_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count < 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.24.d.some_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count = 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.24.d.all_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count > 1 } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.24 option west_indies_federation_politics_events.24.a"
+		name = west_indies_federation_politics_events.24.a
+		if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count < 1 }
+			}
+			add_political_power = -50
+			add_stability = -0.02
+			set_temp_variable = { WIF_socialist_tensions_change_var = 8 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count = 1 }
+			}
+			add_political_power = -30
+			add_stability = -0.01
+			set_temp_variable = { WIF_socialist_tensions_change_var = 5 }
+		}
+		else = {
+			add_political_power = -10
+			set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		}
+		WIF_increase_socialist_tensions = yes
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.25 days = 15 }
+		}
+	}
+}
+
+country_event = { #Guyana unrest
+	id = west_indies_federation_politics_events.25
+	title = west_indies_federation_politics_events.25.t
+
+	desc = {
+		text = west_indies_federation_politics_events.25.d.no_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count < 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.25.d.some_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count = 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.25.d.all_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count > 1 } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.25 option west_indies_federation_politics_events.25.a"
+		name = west_indies_federation_politics_events.25.a
+		if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count < 1 }
+			}
+			add_political_power = -40
+			set_temp_variable = { WIF_socialist_tensions_change_var = 8 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count = 1 }
+			}
+			add_political_power = -20
+			set_temp_variable = { WIF_empire_tensions_change_var = 3 }
+			WIF_increase_empire_tensions = yes
+			set_temp_variable = { WIF_socialist_tensions_change_var = 5 }
+		}
+		else = {
+			set_temp_variable = { WIF_empire_tensions_change_var = 6 }
+			WIF_increase_empire_tensions = yes
+			set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		}
+		WIF_increase_socialist_tensions = yes
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.26 days = 15 }
+		}
+	}
+}
+
+country_event = { #french colonies unrest
+	id = west_indies_federation_politics_events.26
+	title = west_indies_federation_politics_events.26.t
+
+	desc = {
+		text = west_indies_federation_politics_events.26.d.no_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count < 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.26.d.some_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count = 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.26.d.all_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count > 1 } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.26 option west_indies_federation_politics_events.26.a"
+		name = west_indies_federation_politics_events.26.a
+		if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count < 1 }
+			}
+			add_stability = -0.05
+			set_temp_variable = { WIF_socialist_tensions_change_var = 8 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count = 1 }
+			}
+			add_stability = -0.03
+			set_temp_variable = { WIF_socialist_tensions_change_var = 5 }
+		}
+		else = {
+			add_stability = -0.01
+			set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		}
+		WIF_increase_socialist_tensions = yes
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.27 days = 15 }
+		}
+	}
+}
+
+country_event = { #trinidad and tobago unrest
+	id = west_indies_federation_politics_events.27
+	title = west_indies_federation_politics_events.27.t
+
+	desc = {
+		text = west_indies_federation_politics_events.27.d.no_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count < 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.27.d.some_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count = 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.27.d.all_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count > 1 } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.27 option west_indies_federation_politics_events.27.a"
+		name = west_indies_federation_politics_events.27.a
+		if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count < 1 }
+			}
+			add_timed_idea = {
+				idea = WIF_plantations_burn1
+				days = 90
+			}
+			set_temp_variable = { WIF_empire_tensions_change_var = 8 }
+		}
+		else_if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count = 1 }
+			}
+			add_timed_idea = {
+				idea = WIF_plantations_burn2
+				days = 90
+			}
+			set_temp_variable = { WIF_empire_tensions_change_var = 6 }
+		}
+		else = {
+			add_timed_idea = {
+				idea = WIF_plantations_burn2
+				days = 40
+			}
+			set_temp_variable = { WIF_empire_tensions_change_var = 2 }
+		}
+		WIF_increase_empire_tensions_and_update = yes
+	}
+}
+
+country_event = { #moyne prepares a respone for WIF
+	id = west_indies_federation_politics_events.28
+	title = west_indies_federation_politics_events.28.t
+
+	desc = {
+		text = west_indies_federation_politics_events.28.d.no_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count < 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.28.d.some_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count = 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.28.d.all_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count > 1 } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.28 option west_indies_federation_politics_events.28.a"
+		name = west_indies_federation_politics_events.28.a
+		trigger = { check_variable = { WIF_moyne_reform_count < 1 } }
+		add_political_power = -100
+		set_temp_variable = { WIF_empire_tensions_change_var = 8 }
+		WIF_increase_empire_tensions_and_update = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.28 option west_indies_federation_politics_events.28.b"
+		name = west_indies_federation_politics_events.28.b
+		trigger = { check_variable = { WIF_moyne_reform_count = 1 } }
+		add_political_power = -50
+		set_temp_variable = { WIF_empire_tensions_change_var = 4 }
+		WIF_increase_empire_tensions_and_update = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.28 option west_indies_federation_politics_events.28.c"
+		name = west_indies_federation_politics_events.28.c
+		trigger = { check_variable = { WIF_moyne_reform_count > 1 } }
+		add_political_power = 50
+		set_temp_variable = { WIF_empire_tensions_change_var = 6 }
+		WIF_decrease_empire_tensions_and_update = yes
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.29 days = 20 }
+		}
+	}
+}
+
+country_event = { #WIF politics, transformed
+	id = west_indies_federation_politics_events.29
+	title = west_indies_federation_politics_events.29.t
+
+	desc = {
+		text = west_indies_federation_politics_events.29.d.no_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count < 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.29.d.some_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count = 1 } }
+	}
+	desc = {
+		text = west_indies_federation_politics_events.29.d.all_reforms
+		trigger = { check_variable = { WIF_moyne_reform_count > 1 } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.29 option west_indies_federation_politics_events.29.a"
+		name = west_indies_federation_politics_events.29.a
+		if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count < 1 }
+			}
+			set_party_name = {
+				ideology = social_democrat
+				long_name = WIF_social_democrat_party_after_split_long
+				name = WIF_social_democrat_party_after_split
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.1
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = market_liberal
+				popularity = -0.15
+			}
+		}
+		else_if = {
+			limit = {
+				check_variable = { WIF_moyne_reform_count = 1 }
+			}
+			set_party_name = {
+				ideology = social_democrat
+				long_name = WIF_social_democrat_party_after_split_long
+				name = WIF_social_democrat_party_after_split
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.1
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = market_liberal
+				popularity = -0.05
+			}
+		}
+		else = {
+			set_party_name = {
+				ideology = social_liberal
+				long_name = WIF_social_liberal_party_after_split_long
+				name = WIF_social_liberal_party_after_split
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = 0.1
+			}
+			add_popularity = {
+				ideology = market_liberal
+				popularity = 0.05
+			}
+		}
+	}
+}
+
+country_event = { #WIF elections
+	id = west_indies_federation_politics_events.30
+	title = west_indies_federation_politics_events.30.t
+	desc = west_indies_federation_politics_events.30.d
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_country_flag = WIF_government_change_event_in_progress }
+	}
+
+	immediate = {
+		set_country_flag = WIF_government_change_event_in_progress
+	}
+
+	option = { #socdems
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.30 option west_indies_federation_politics_events.30.a"
+		name = west_indies_federation_politics_events.30.a
+		trigger = {
+			check_variable = { WIF_moyne_reform_count < 2 }
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 2
+				has_completed_focus = WIF_pa_pnp_coalition # Won first election
+			}
+			modifier = { # First elections
+				factor = 0
+				OR = {
+					has_country_flag = WIF_marlib_ai
+					has_country_flag = WIF_soccon_ai
+					has_country_flag = WIF_socialist_ai
+				}
+			}
+			modifier = { # Later elections
+				factor = 0
+				OR = {
+					has_game_rule = { rule = WIF_path option = WIF_PATH_MARLIB }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SOCCON }
+				}
+			}
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_democrat
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.1
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 10 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 5 }
+		WIF_decrease_socialist_tensions = yes
+		if = {
+			limit = {
+				OR = {
+					has_country_flag = WIF_emergency_elections
+					date < 1938.1.1
+				}
+			}
+			complete_national_focus = WIF_pa_victory
+			complete_national_focus = WIF_pa_pnp_coalition
+			clr_country_flag = WIF_emergency_elections
+		}
+	}
+
+	option = { #soclibs
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.30 option west_indies_federation_politics_events.30.b"
+		name = west_indies_federation_politics_events.30.b
+		trigger = {
+			check_variable = { WIF_moyne_reform_count > 1 }
+		}
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 1.5
+				has_completed_focus = WIF_pa_lp_coalition # Won first election
+			}
+			modifier = { # First elections
+				factor = 0
+				OR = {
+					has_country_flag = WIF_marlib_ai
+					has_country_flag = WIF_soccon_ai
+					has_country_flag = WIF_socialist_ai
+				}
+			}
+			modifier = { # Later elections
+				factor = 0
+				OR = {
+					has_game_rule = { rule = WIF_path option = WIF_PATH_MARLIB }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SOCCON }
+				}
+			}
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_liberal
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.1
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 5 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+		WIF_decrease_socialist_tensions = yes
+		if = {
+			limit = {
+				OR = {
+					has_country_flag = WIF_emergency_elections
+					date < 1938.1.1
+				}
+			}
+			complete_national_focus = WIF_pa_victory
+			complete_national_focus = WIF_pa_lp_coalition
+			clr_country_flag = WIF_emergency_elections
+		}
+	}
+
+	option = { #soccons
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.30 option west_indies_federation_politics_events.30.c"
+		name = west_indies_federation_politics_events.30.c
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 1.5
+				has_completed_focus = WIF_ncp_victory # Won first election
+			}
+			modifier = { # First elections
+				factor = 0
+				OR = {
+					has_country_flag = WIF_socdem_ai
+					has_country_flag = WIF_soclib_ai
+					has_country_flag = WIF_marlib_ai
+					has_country_flag = WIF_autdem_ai
+				}
+			}
+			modifier = { # Later elections
+				factor = 0
+				OR = {
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SOCDEM }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SOCLIB }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_MARLIB }
+				}
+			}
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 10 }
+		WIF_decrease_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 10 }
+		WIF_increase_socialist_tensions = yes
+		if = {
+			limit = {
+				OR = {
+					has_country_flag = WIF_emergency_elections
+					date < 1938.1.1
+				}
+			}
+			complete_national_focus = WIF_ncp_victory
+			clr_country_flag = WIF_emergency_elections
+		}
+	}
+
+	option = { #marlibs
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.30 option west_indies_federation_politics_events.30.e"
+		name = west_indies_federation_politics_events.30.e
+		trigger = {
+			check_variable = { WIF_moyne_reform_count > 0 }
+		}
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 1.5
+				has_completed_focus = WIF_unity_victory # Won first election
+			}
+			modifier = { # First elections
+				factor = 0
+				OR = {
+					has_country_flag = WIF_socdem_ai
+					has_country_flag = WIF_soclib_ai
+					has_country_flag = WIF_soccon_ai
+					has_country_flag = WIF_socialist_ai
+					has_country_flag = WIF_autdem_ai
+				}
+			}
+			modifier = { # Later elections
+				factor = 0
+				OR = {
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SOCDEM }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SOCLIB }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SOCCON }
+				}
+			}
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = market_liberal
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 2 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 4 }
+		WIF_increase_socialist_tensions = yes
+		if = {
+			limit = {
+				OR = {
+					has_country_flag = WIF_emergency_elections
+					date < 1938.1.1
+				}
+			}
+			complete_national_focus = WIF_unity_victory
+			clr_country_flag = WIF_emergency_elections
+		}
+	}
+
+	after = {
+		if = {
+			limit = { NOT = { has_government = social_liberal } }
+			WIF_teardown_2nd_cayenne_agreement_PA_LP = yes
+			WIF_teardown_coalition_PA_LP = yes
+		}
+		if = {
+			limit = { NOT = { has_government = social_conservative } }
+			WIF_teardown_integration_process_NCP = yes
+			WIF_teardown_constitution_process_NCP = yes
+			if = {
+				limit = {
+					OR = {
+						has_idea = WIF_consolidation_idea_1
+						has_idea = WIF_consolidation_idea_2
+					}
+				}
+				hidden_effect = { country_event = { id = west_indies_federation_politics_events.513 days = 80 random_days = 45 } } # The Situation is Improving
+			}
+		}
+		clr_country_flag = WIF_socdem_ai
+		clr_country_flag = WIF_soclib_ai
+		clr_country_flag = WIF_marlib_ai
+		clr_country_flag = WIF_soccon_ai
+		clr_country_flag = WIF_government_change_event_in_progress
+	}
+}
+
+country_event = { #red revolt
+	id = west_indies_federation_politics_events.31
+	title = west_indies_federation_politics_events.31.t
+	desc = west_indies_federation_politics_events.31.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		check_variable = { WIF_socialist_tensions_var > 80 }
+		has_country_flag = WIF_can_revolt
+		NOT = { has_country_flag = WIF_government_change_event_in_progress }
+		is_in_faction_with = ENT
+		OR = {
+			is_ai = no
+			has_country_flag = WIF_socialist_ai # AI cheats
+		}
+	}
+
+	immediate = {
+		set_country_flag = WIF_government_change_event_in_progress
+		WIF_teardown_2nd_cayenne_agreement_PA_LP = yes
+		WIF_teardown_coalition_PA_LP = yes
+		WIF_teardown_integration_process_NCP = yes
+		WIF_teardown_constitution_process_NCP = yes
+		set_variable = { WIF_empire_tensions_var = 55 }
+		set_variable = { WIF_socialist_tensions_var = 0 }
+		clr_country_flag = WIF_socialist_ai
+	}
+
+	option = { #woohoo
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.31 option west_indies_federation_politics_events.31.a"
+		name = west_indies_federation_politics_events.31.a
+		if = {
+			limit = { is_in_faction = yes }
+			if = {
+				limit = { is_subject = yes }
+				overlord = {
+					set_autonomy = {
+						target = ROOT
+						autonomy_state = autonomy_free
+					}
+				}
+			}
+			if = {
+				limit = { is_in_faction_with = CAN }
+				CAN = { country_event = { id = west_indies_federation_politics_events.3100 days = 2 } }
+			}
+			faction_leader = { set_temp_variable = { WIF_former_overlord = THIS } }
+			leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+		else_if = {
+			limit = { is_subject = yes }
+			overlord = {
+				set_temp_variable = { WIF_former_overlord = THIS }
+				set_autonomy = {
+					target = WIF
+					autonomy_state = autonomy_free
+				}
+			}
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+
+		# Peace setup if was at war with CEN on ENT side
+		CEN = {
+			if = {
+				limit = {
+					has_war_with = ROOT
+					is_in_faction = no
+					is_subject = no
+				}
+				## Transfer Belize to CEN if currently at war with them
+				311 = { # Belize
+					if = {
+						limit = {
+							is_owned_by = ROOT
+							PREV = { has_socialist_government = no }
+						}
+						teleport_armies = {
+							limit = { is_ally_with = ROOT }
+							to_state = var:capital
+						}
+						transfer_state_to = PREV
+					}
+				}
+				white_peace_with_ROOT = yes
+				## Transfer event target to former overlord; used for CEN-ENT scripted peace
+				var:WIF_former_overlord = { save_event_target_as = CEN_scripted_peace_target }
+				hidden_effect = {
+					country_event = { id = central_america_socialist_events.050 days = 15 }
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						has_completed_focus = CEN_into_world
+						NOT = {
+							has_country_flag = CEN_negotiated_belize_claims
+							owns_state = 311 # Belize
+						}
+					}
+					activate_targeted_decision = { target = WIF decision = CEN_settle_the_belize_issue }
+				}
+			}
+		}
+
+		# Peace out MEX if both at war early game
+		MEX = {
+			if = {
+				limit = {
+					has_war_with = ROOT
+					is_valid_peace_target = yes
+				}
+				311 = { # Belize
+					if = {
+						limit = {
+							is_owned_by = ROOT
+							is_claimed_by = PREV
+							is_controlled_by = PREV
+						}
+						teleport_armies = {
+							limit = { is_ally_with = ROOT }
+							to_state = var:capital
+						}
+						transfer_state_to = PREV
+					}
+				}
+				white_peace_with_ROOT = yes
+			}
+		}
+
+		set_politics = {
+			ruling_party = syndicalist
+		}
+
+		hidden_effect = {
+			remove_opinion_modifier = { target = CAN modifier = CAN_imperial_pride }
+			remove_opinion_modifier = { target = ENT modifier = CAN_imperial_pride }
+			every_other_country = {
+				limit = {
+					OR = {
+						is_ally_with = ENT
+						original_tag = RAJ
+						original_tag = SRD
+						original_tag = SAF
+						original_tag = ZIM
+					}
+				}
+				PREV = { clear_relations_with_PREV = yes }
+			}
+			WIF_remove_CAN_ideas = yes
+			drop_cosmetic_tag = yes
+			add_popularity = {
+				ideology = syndicalist
+				popularity = 0.31
+			}
+			add_popularity = {
+				ideology = radical_socialist
+				popularity = 0.22
+			}
+			add_popularity = {
+				ideology = totalist
+				popularity = 0.03
+			}
+			remove_ideas = {
+				WIF_clamp_down_syndicalism
+				WIF_lax_antisyndicalist_laws
+			}
+			WIF_remove_PA_LP_ideas = yes
+			WIF_remove_NCP_ideas = yes
+			WIF_restore_french_caribbean_cores = yes
+		}
+		add_stability = -0.4
+		complete_national_focus = WIF_syndicalist_revolution
+		set_party_name = {
+			ideology = social_democrat
+			long_name = WIF_social_democrat_party_syndie_long
+			name = WIF_social_democrat_party_syndie
+		}
+		set_party_name = {
+			ideology = syndicalist
+			long_name = WIF_syndicalist_party_after_revolt_long
+			name = WIF_syndicalist_party_after_revolt
+		}
+		set_party_name = {
+			ideology = radical_socialist
+			long_name = WIF_radical_socialist_party_after_revolt_long
+			name = WIF_radical_socialist_party_after_revolt
+		}
+		custom_effect_tooltip = WIF_revolution_update_tensions_tt
+		WIF_evaluate_tensions = yes
+		clr_country_flag = WIF_government_change_event_in_progress
+	}
+}
+
+country_event = { #Revolution in the Caribbean (CAN)
+	id = west_indies_federation_politics_events.3100
+	title = west_indies_federation_politics_events.3100.t
+	desc = west_indies_federation_politics_events.3100.d
+
+	is_triggered_only = yes
+
+	option = { #declare war
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.3100 option west_indies_federation_politics_events.3100.a"
+		name = west_indies_federation_politics_events.3100.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		declare_war_on = {
+			target = FROM
+			type = annex_everything
+		}
+		hidden_effect = {
+			FROM = {
+				if = {
+					limit = { is_ai = yes }
+					set_country_flag = { flag = WIF_AI_scripted_peace_timer days = 200 value = 1 }
+				}
+				country_event = { id = west_indies_federation_politics_events.811 days = 2 }
+			}
+		}
+	}
+
+	option = { #don't
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.3100 option west_indies_federation_politics_events.3100.b"
+		name = west_indies_federation_politics_events.3100.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				has_war_with_major = yes
+			}
+		}
+		add_political_power = -20
+		add_stability = -0.05
+	}
+
+	after = {
+		custom_effect_tooltip = west_indies_federation_politics_events.3100_tt
+	}
+}
+
+country_event = { #Officers return to WIF from IMP
+	id = west_indies_federation_politics_events.3101
+	title = west_indies_federation_politics_events.3101.t
+	desc = west_indies_federation_politics_events.3101.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.3101 option west_indies_federation_politics_events.3101.a"
+		name = west_indies_federation_politics_events.3101.a
+		custom_effect_tooltip = west_indies_federation_politics_events.3101_tt
+	}
+}
+
+country_event = { #governor revolt
+	id = west_indies_federation_politics_events.32
+	title = west_indies_federation_politics_events.32.t
+	desc = west_indies_federation_politics_events.32.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		check_variable = { WIF_empire_tensions_var > 80 }
+		has_country_flag = WIF_can_revolt
+		NOT = { has_country_flag = WIF_government_change_event_in_progress }
+		is_in_faction_with = ENT
+		OR = {
+			is_ai = no
+			has_country_flag = WIF_autdem_ai # AI cheats
+		}
+	}
+
+	immediate = {
+		set_country_flag = WIF_government_change_event_in_progress
+		WIF_teardown_2nd_cayenne_agreement_PA_LP = yes
+		WIF_teardown_coalition_PA_LP = yes
+		WIF_teardown_integration_process_NCP = yes
+		WIF_teardown_constitution_process_NCP = yes
+		set_variable = { WIF_empire_tensions_var = 0 }
+		set_variable = { WIF_socialist_tensions_var = 75 }
+		clr_country_flag = WIF_autdem_ai
+	}
+
+	option = { #woohoo
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.32 option west_indies_federation_politics_events.32.a"
+		name = west_indies_federation_politics_events.32.a
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		complete_national_focus = WIF_governor_push
+		add_stability = -0.3
+		hidden_effect = {
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = radical_socialist
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = syndicalist
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = totalist
+				popularity = 0.03
+			}
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.2
+			}
+			remove_ideas = {
+				WIF_building_social_coalition_1a
+				WIF_building_social_coalition_1b
+				WIF_building_social_coalition_2
+				WIF_grand_social_coalition
+				WIF_informal_cooperation_unions
+				WIF_legalised_trade_unions
+				WIF_decentralise_economy
+				WIF_a_new_economy_confederation
+			}
+			WIF_remove_PA_LP_ideas = yes
+			WIF_remove_NCP_ideas = yes
+			WIF_restore_french_caribbean_cores = yes
+			country_event = { id = west_indies_federation_politics_events.38 days = 10 }
+		}
+
+		if = {
+			limit = { NOT = { has_autonomy_state = federated_colony } }
+			get_current_government_type = yes
+			ENT = {
+				set_autonomy = {
+					target = WIF
+					autonomy_state = federated_colony
+					end_wars = no
+				}
+			}
+			restore_previous_government_type = yes
+		}
+		custom_effect_tooltip = WIF_governor_coup_update_tensions_tt
+		WIF_evaluate_tensions = yes
+		clr_country_flag = WIF_government_change_event_in_progress
+	}
+}
+
+country_event = { #governor power in the unity reforms
+	id = west_indies_federation_politics_events.33
+	title = west_indies_federation_politics_events.33.t
+	desc = west_indies_federation_politics_events.33.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #french power
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.33 option west_indies_federation_politics_events.33.a"
+		name = west_indies_federation_politics_events.33.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_socialist_ai
+			}
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 5 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 5 }
+		WIF_decrease_socialist_tensions = yes
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_war_support = 0.05
+		custom_effect_tooltip = WIF_unity_empower_french_tooltip
+		set_country_flag = WIF_empowered_french_governors
+	}
+
+	option = { #british power
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.33 option west_indies_federation_politics_events.33.b"
+		name = west_indies_federation_politics_events.33.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_autdem_ai
+			}
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 5 }
+		WIF_decrease_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+		WIF_increase_socialist_tensions = yes
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		add_stability = 0.05
+	}
+}
+
+country_event = { #start the conference preparations
+	id = west_indies_federation_politics_events.34
+	title = west_indies_federation_politics_events.34.t
+	desc = west_indies_federation_politics_events.34.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.34 option west_indies_federation_politics_events.34.a"
+		name = west_indies_federation_politics_events.34.a
+		set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+		WIF_decrease_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 1 }
+		WIF_decrease_socialist_tensions = yes
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.02
+		}
+
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.35 days = 3 }
+		}
+	}
+}
+
+country_event = { #PA arrives
+	id = west_indies_federation_politics_events.35
+	title = west_indies_federation_politics_events.35.t
+	desc = west_indies_federation_politics_events.35.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #french power
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.35 option west_indies_federation_politics_events.35.a"
+		name = west_indies_federation_politics_events.35.a
+		set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+		WIF_decrease_socialist_tensions = yes
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.02
+		}
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.36 days = 3 }
+		}
+	}
+}
+
+country_event = { #NCP arrives
+	id = west_indies_federation_politics_events.36
+	title = west_indies_federation_politics_events.36.t
+	desc = west_indies_federation_politics_events.36.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.36 option west_indies_federation_politics_events.36.a"
+		name = west_indies_federation_politics_events.36.a
+		set_temp_variable = { WIF_empire_tensions_change_var = 3 }
+		WIF_decrease_empire_tensions_and_update = yes
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.02
+		}
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.37 days = 3 }
+		}
+	}
+}
+
+country_event = { #let's begin
+	id = west_indies_federation_politics_events.37
+	title = west_indies_federation_politics_events.37.t
+	desc = west_indies_federation_politics_events.37.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.37 option west_indies_federation_politics_events.37.a"
+		name = west_indies_federation_politics_events.37.a
+		set_temp_variable = { WIF_empire_tensions_change_var = 2 }
+		WIF_decrease_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		WIF_decrease_socialist_tensions = yes
+		set_country_flag = WIF_unity_conference_ready_flag
+	}
+}
+
+country_event = { #governor coup flavour event
+	id = west_indies_federation_politics_events.38
+	title = west_indies_federation_politics_events.38.t
+	desc = west_indies_federation_politics_events.38.d
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.38 option west_indies_federation_politics_events.38.a"
+		name = west_indies_federation_politics_events.38.a
+		add_political_power = -35
+		set_temp_variable = { WIF_socialist_tensions_change_var = 5 }
+		WIF_decrease_socialist_tensions = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.38 option west_indies_federation_politics_events.38.b"
+		name = west_indies_federation_politics_events.38.b
+		ai_chance = { base = 0 }
+		add_stability = 0.06
+		set_temp_variable = { WIF_socialist_tensions_change_var = 6 }
+		WIF_increase_socialist_tensions = yes
+	}
+}
+
+country_event = { #canada sees that socdem wif declared independence
+	id = west_indies_federation_politics_events.39
+	title = west_indies_federation_politics_events.39.t
+	desc = west_indies_federation_politics_events.39.d
+
+	trigger = {
+		is_in_faction_with = FROM
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.39 option west_indies_federation_politics_events.39.a"
+		name = west_indies_federation_politics_events.39.a
+		add_political_power = 25
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.39 option west_indies_federation_politics_events.39.b"
+		name = west_indies_federation_politics_events.39.b
+		add_political_power = -100
+		ai_chance = { base = 0 }
+		FROM = {
+			if = {
+				limit = { is_in_faction = yes }
+				leave_faction = yes
+				peace_out_non_neighbours_after_leaving_faction = yes
+			}
+			hidden_effect = { country_event = west_indies_federation_politics_events.40 }
+		}
+		declare_war_on = {
+			target = FROM
+			type = annex_everything
+		}
+	}
+}
+
+country_event = { #we're getting cucked by canada
+	id = west_indies_federation_politics_events.40
+	title = west_indies_federation_politics_events.40.t
+	desc = west_indies_federation_politics_events.40.d
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.40 option west_indies_federation_politics_events.40.a"
+		name = west_indies_federation_politics_events.40.a
+		add_manpower = 100000
+		effect_tooltip = {
+			FROM = {
+				declare_war_on = {
+					target = ROOT
+					type = annex_everything
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Fiennes retires hidden event
+	id = west_indies_federation_politics_events.41
+	hidden = yes
+
+	trigger = { has_character = WIF_eustace_fiennes }
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.41 option 1"
+		if = {
+			limit = { has_socialist_government = yes }
+			retire_character = WIF_eustace_fiennes
+		}
+		else = {
+			country_event = west_indies_federation_politics_events.42
+		}
+	}
+}
+
+country_event = { #Fiennes retires
+	id = west_indies_federation_politics_events.42
+	title = west_indies_federation_politics_events.42.t
+	desc = west_indies_federation_politics_events.42.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.42 option west_indies_federation_politics_events.42.a"
+		name = west_indies_federation_politics_events.42.a
+		retire_character = WIF_eustace_fiennes
+	}
+}
+
+country_event = { #Angery T&T over Calypso
+	id = west_indies_federation_politics_events.100
+	title = west_indies_federation_politics_events.100.t
+	desc = west_indies_federation_politics_events.100.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.100 option west_indies_federation_politics_events.100.a"
+		name = west_indies_federation_politics_events.100.a
+		set_temp_variable = { WIF_socialist_tensions_change_var = 1 }
+		WIF_increase_socialist_tensions = yes
+		add_political_power = -20
+	}
+}
+
+country_event = { #Calypso King contest
+	id = west_indies_federation_politics_events.101
+	title = west_indies_federation_politics_events.101.t
+	desc = west_indies_federation_politics_events.101.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.101 option west_indies_federation_politics_events.101.a"
+		name = west_indies_federation_politics_events.101.a
+		set_temp_variable = { WIF_socialist_tensions_change_var = 1 }
+		WIF_decrease_socialist_tensions = yes
+		add_political_power = 10
+	}
+}
+
+country_event = { #Working with plantation conditions
+	id = west_indies_federation_politics_events.102
+	title = west_indies_federation_politics_events.102.t
+	desc = west_indies_federation_politics_events.102.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {#Try to increase the needed conditions for it to function
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.102 option west_indies_federation_politics_events.102.a"
+		name = west_indies_federation_politics_events.102.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_socialist_ai
+			}
+		}
+		trigger = {
+			has_soclib_or_socdem_government = yes
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 6 }
+		WIF_increase_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 2 }
+		WIF_decrease_socialist_tensions = yes
+		add_political_power = -50
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.102 option west_indies_federation_politics_events.102.b"
+		name = west_indies_federation_politics_events.102.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_autdem_ai
+			}
+		}
+		trigger = {
+			has_soclib_or_socdem_government = no
+		}
+		set_temp_variable = { WIF_socialist_tensions_change_var = 5 }
+		WIF_increase_socialist_tensions = yes
+		add_war_support = -0.05
+	}
+}
+
+country_event = { #Transfering of Cubbit from Bermuda, Reginald arrives
+	id = west_indies_federation_army_events.5
+	title = west_indies_federation_army_events.5.t
+	desc = west_indies_federation_army_events.5.d
+
+	trigger = {
+		has_character = WIF_thomas_cubitt
+		has_character = WIF_reginald_hildyard
+	}
+
+	is_triggered_only = yes
+
+	option = { #:wave:
+		log = "[GetLogInfo]: event west_indies_federation_army_events.5 option west_indies_federation_army_events.5.a"
+		name = west_indies_federation_army_events.5.a
+		effect_tooltip = { retire_character = WIF_thomas_cubitt }
+		hidden_effect = { WIF_thomas_cubitt = { kill_character = yes } }
+		if = {
+			limit = { WIF_reginald_hildyard = { is_unit_leader = no } }
+			WIF_reginald_hildyard = {
+				add_field_marshal_role = {
+					desc = WIF_reginald_hildyard_army_chief_desc
+					traits = { old_guard war_hero desert_fox adaptable }
+					skill = 2
+					attack_skill = 1
+					defense_skill = 2
+					planning_skill = 2
+					logistics_skill = 3
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Naval situation
+	id = west_indies_federation_army_events.9
+	title = west_indies_federation_army_events.9.t
+	desc = west_indies_federation_army_events.9.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Cunningham doctrine, big boats
+		log = "[GetLogInfo]: event west_indies_federation_army_events.9 option west_indies_federation_army_events.9.a"
+		name = west_indies_federation_army_events.9.a
+		ai_chance = { base = 0 } # AI always takes WIF_increase_military_funding
+		custom_effect_tooltip = WIF_cunningham_doctrine_tooltip
+		complete_national_focus = WIF_navy_defend_empire
+	}
+
+	option = { #Leatham doctrine, small boats
+		log = "[GetLogInfo]: event west_indies_federation_army_events.9 option west_indies_federation_army_events.9.b"
+		name = west_indies_federation_army_events.9.b
+		custom_effect_tooltip = WIF_leatham_doctrine_tooltip
+		complete_national_focus = WIF_navy_defend_our_seas
+	}
+}
+
+country_event = { #Requesting Canadian ships
+	id = west_indies_federation_army_events.10
+	title = west_indies_federation_army_events.10.t
+	desc = west_indies_federation_army_events.10.d
+
+	is_triggered_only = yes
+
+	option = { #Send the boats
+		log = "[GetLogInfo]: event west_indies_federation_army_events.10 option west_indies_federation_army_events.10.a"
+		name = west_indies_federation_army_events.10.a
+		if = {
+			limit = { WIF = { has_completed_focus = WIF_navy_defend_empire } }
+			custom_effect_tooltip = WIF_transfer_two_cruisers_six_destroyers
+			transfer_ship = { prefer_name = "HMS Curlew" type = light_cruiser target = WIF exclude_refitting = yes }
+			transfer_ship = { prefer_name = "HMS Carlisle" type = light_cruiser target = WIF exclude_refitting = yes }
+			transfer_ship = { prefer_name = "HMS Vanoc" type = destroyer target = WIF exclude_refitting = yes }
+			transfer_ship = { prefer_name = "HMS Vortigern" type = destroyer target = WIF exclude_refitting = yes }
+		}
+		else = {
+			custom_effect_tooltip = WIF_transfer_four_destroyers
+		}
+		transfer_ship = { prefer_name = "HMS Montrose" type = destroyer target = WIF exclude_refitting = yes }
+		transfer_ship = { prefer_name = "HMS Sturdy" type = destroyer target = WIF exclude_refitting = yes }
+		transfer_ship = { prefer_name = "HMS Valentine" type = destroyer target = WIF exclude_refitting = yes }
+		transfer_ship = { prefer_name = "HMS Vega" type = destroyer target = WIF exclude_refitting = yes }
+		WIF = {
+			country_event = west_indies_federation_army_events.11
+		}
+	}
+
+	option = { #We like the boats
+		log = "[GetLogInfo]: event west_indies_federation_army_events.10 option west_indies_federation_army_events.10.b"
+		name = west_indies_federation_army_events.10.b
+		ai_chance = { base = 0 }
+		WIF = {
+			country_event = west_indies_federation_army_events.12
+			set_country_flag = WIF_not_boat_sent
+		}
+	}
+}
+
+country_event = { #Sent
+	id = west_indies_federation_army_events.11
+	title = west_indies_federation_army_events.11.t
+	desc = west_indies_federation_army_events.11.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_army_events.11 option west_indies_federation_army_events.11.a"
+		name = west_indies_federation_army_events.11.a
+		if = {
+			limit = { WIF = { has_completed_focus = WIF_navy_defend_empire } }
+			CAN = { custom_effect_tooltip = WIF_transfer_two_cruisers_six_destroyers }
+		}
+		else = {
+			CAN = { custom_effect_tooltip = WIF_transfer_four_destroyers }
+		}
+	}
+}
+
+country_event = { #Not sent
+	id = west_indies_federation_army_events.12
+	title = west_indies_federation_army_events.12.t
+	desc = {
+		text = west_indies_federation_army_events.12.big
+		trigger = {
+			has_completed_focus = WIF_navy_defend_empire
+		}
+	}
+	desc = {
+		text = west_indies_federation_army_events.12.small
+		trigger = {
+			NOT = { has_completed_focus = WIF_navy_defend_empire }
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_army_events.12 option west_indies_federation_army_events.12.a"
+		name = west_indies_federation_army_events.12.a
+		if = {
+			limit = { has_completed_focus = WIF_navy_defend_empire }
+			custom_effect_tooltip = WIF_forced_smol_navy
+			complete_national_focus = WIF_navy_defend_our_seas
+		}
+		add_political_power = -25
+	}
+}
+
+country_event = { #wowee syndie army
+	id = west_indies_federation_army_events.13
+	title = west_indies_federation_army_events.13.t
+	desc = west_indies_federation_army_events.13.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_army_events.13 option west_indies_federation_army_events.13.a"
+		name = west_indies_federation_army_events.13.a
+		custom_effect_tooltip = WIF_lmao
+		army_experience = 70
+		add_political_power = 20
+		add_manpower = 5000
+	}
+}
+
+### Puerto Rico seizing from the civil War ###
+country_event = {# Puerto Rico Riots
+	id = west_indies_federation_foreign_policy_events.1
+	title = west_indies_federation_foreign_policy_events.1.t
+	desc = west_indies_federation_foreign_policy_events.1.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {#Keep it annexed
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.1 option west_indies_federation_foreign_policy_events.1.a"
+		name = west_indies_federation_foreign_policy_events.1.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PUE_path option = PUE_PATH_INDEPENDENCE }
+					has_game_rule = { rule = PUE_path option = PUE_PATH_BACK_TO_UNION }
+				}
+			}
+		}
+		add_political_power = -25
+		custom_effect_tooltip = PR_Revolt_TT
+		set_country_flag = PR_REVOLT_READY
+	}
+	option = {#Tell the Governor to handle it
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.1 option west_indies_federation_foreign_policy_events.1.b"
+		name = west_indies_federation_foreign_policy_events.1.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PUE_path option = PUE_PATH_INTERVENTION_NATPOP }
+					has_game_rule = { rule = PUE_path option = PUE_PATH_ACQUIESCENCE_NATPOP }
+					has_game_rule = { rule = PUE_path option = PUE_PATH_STAY_IN_UNION }
+					has_game_rule = { rule = PUE_path option = PUE_PATH_CAN }
+					has_game_rule = { rule = PUE_path option = PUE_PATH_WIF }
+					has_game_rule = { rule = PUE_path option = PUE_PATH_PUPPET }
+				}
+			}
+		}
+		add_political_power = 25
+		PUE = {
+			transfer_state = 686
+		}
+		puppet = PUE
+		hidden_effect = {
+			PUE = {
+				if = {
+					limit = {
+						NOT = {
+							has_government = paternal_autocrat
+						}
+					}
+					add_popularity = {
+						ideology = paternal_autocrat
+						popularity = 0.75
+					}
+					set_politics = {
+						ruling_party = paternal_autocrat
+					}
+				}
+				PUE_spawn_starting_units_and_ship_variants = yes
+				country_event = { id = puerto_rico_events.48 days = 1 }
+			}
+		}
+	}
+
+	option = {#Tell the Governor to handle it (Play as PR)
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.1 option west_indies_federation_foreign_policy_events.1.c"
+		name = west_indies_federation_foreign_policy_events.1.c
+		ai_chance = { base = 0 }
+		add_political_power = 25
+		PUE = {
+			transfer_state = 686
+		}
+		puppet = PUE
+		hidden_effect = {
+			PUE = {
+				if = {
+					limit = {
+						NOT = {
+							has_government = paternal_autocrat
+						}
+					}
+					add_popularity = {
+						ideology = paternal_autocrat
+						popularity = 0.75
+					}
+					set_politics = {
+						ruling_party = paternal_autocrat
+					}
+				}
+				PUE_spawn_starting_units_and_ship_variants = yes
+				country_event = { id = puerto_rico_events.48 days = 1 }
+			}
+			PUE = {
+				change_tag_from = USA
+			}
+		}
+	}
+}
+country_event = {# Puerto Rico given to the Entente
+	id = west_indies_federation_foreign_policy_events.2
+	title = west_indies_federation_foreign_policy_events.2.t
+	desc = west_indies_federation_foreign_policy_events.2.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.2 option west_indies_federation_foreign_policy_events.2.a"
+		name = west_indies_federation_foreign_policy_events.2.a
+
+		ai_chance = { base = 90 }
+		WIF = {
+			country_event = west_indies_federation_foreign_policy_events.3
+			transfer_state = 686
+			add_state_claim = 686
+		}
+
+		reverse_add_opinion_modifier = { target = WIF modifier = WIF_gained_puerto_rico }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.2 option west_indies_federation_foreign_policy_events.2.b"
+		name = west_indies_federation_foreign_policy_events.2.b
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0.5
+				WIF = {
+					is_ai = no
+				}
+			}
+		}
+
+		686 = {
+			custom_override_tooltip = {
+				add_building_construction = { type = naval_base province = 1440 level = 4 instant_build = yes }
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = naval_base
+					NUMBER = 4
+					VP = 1440
+				}
+			}
+			remove_building = { type = industrial_complex level = 1 }
+		}
+	}
+}
+country_event = {# Puerto Rico given to the Federation
+	id = west_indies_federation_foreign_policy_events.3
+	title = west_indies_federation_foreign_policy_events.3.t
+	desc = west_indies_federation_foreign_policy_events.3.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.3 option west_indies_federation_foreign_policy_events.3.a"
+		name = west_indies_federation_foreign_policy_events.3.a
+
+		add_stability = 0.02
+
+		reverse_add_opinion_modifier = { target = CAN modifier = WIF_gained_puerto_rico }
+		hidden_effect = {
+			country_event = { id = west_indies_federation_foreign_policy_events.4 days = 1500 }
+			country_event = { id = puerto_rico_events.5 days = 30 random_days = 40 }
+		}
+	}
+}
+
+country_event = {# coring PR
+	id = west_indies_federation_foreign_policy_events.4
+	title = west_indies_federation_foreign_policy_events.4.t
+	desc = west_indies_federation_foreign_policy_events.4.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+	trigger = {
+		owns_state = 686
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.4 option west_indies_federation_foreign_policy_events.4.a"
+		name = west_indies_federation_foreign_policy_events.4.a
+		if = {
+			limit = { 686 = { NOT = { is_core_of = ROOT } } }
+			add_state_core = 686
+		}
+	}
+}
+
+country_event = {# Asking for a general from ENG
+	id = west_indies_federation_foreign_policy_events.5
+	title = west_indies_federation_foreign_policy_events.5.t
+	desc = west_indies_federation_foreign_policy_events.5.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.5 option west_indies_federation_foreign_policy_events.5.a"
+		name = west_indies_federation_foreign_policy_events.5.a
+		effect_tooltip = { ENG_ronald_scobie = { set_nationality = FROM } }
+		FROM = { country_event = west_indies_federation_foreign_policy_events.7 }
+	}
+
+	option = { #no
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.5 option west_indies_federation_foreign_policy_events.5.b"
+		name = west_indies_federation_foreign_policy_events.5.b
+		FROM = { country_event = west_indies_federation_foreign_policy_events.8 }
+	}
+}
+
+country_event = {# Asking for a general from CAN
+	id = west_indies_federation_foreign_policy_events.6
+	title = west_indies_federation_foreign_policy_events.6.t
+	desc = west_indies_federation_foreign_policy_events.6.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.6 option west_indies_federation_foreign_policy_events.6.a"
+		name = west_indies_federation_foreign_policy_events.6.a
+		effect_tooltip = { GBR_philip_neame = { set_nationality = FROM } }
+		FROM = { country_event = west_indies_federation_foreign_policy_events.7 }
+	}
+
+	option = { #no
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.6 option west_indies_federation_foreign_policy_events.6.b"
+		name = west_indies_federation_foreign_policy_events.6.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = west_indies_federation_foreign_policy_events.8 }
+	}
+}
+
+country_event = {# got the general
+	id = west_indies_federation_foreign_policy_events.7
+	title = west_indies_federation_foreign_policy_events.7.t
+	desc = west_indies_federation_foreign_policy_events.7.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.7 option west_indies_federation_foreign_policy_events.7.a"
+		name = west_indies_federation_foreign_policy_events.7.a
+		add_war_support = 0.02
+		if = {
+			limit = { FROM = { tag = ENG } }
+			FROM = { ENG_ronald_scobie = { set_nationality = ROOT } }
+		}
+		else = {
+			FROM = { GBR_philip_neame = { set_nationality = ROOT } }
+		}
+	}
+}
+
+country_event = {# didnt get the general
+	id = west_indies_federation_foreign_policy_events.8
+	title = west_indies_federation_foreign_policy_events.8.t
+	desc = west_indies_federation_foreign_policy_events.8.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.8 option west_indies_federation_foreign_policy_events.8.a"
+		name = west_indies_federation_foreign_policy_events.8.a
+		add_war_support = -0.02
+	}
+}
+
+country_event = {# Seizing Dutch possessions
+	id = west_indies_federation_foreign_policy_events.9
+	immediate = {
+		hidden_effect = {
+			HOL = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							state = 309
+							state = 695
+							state = 1038
+							state = 1077
+						}
+					}
+					WIF = {
+						transfer_state = PREV
+						add_state_claim = PREV
+					}
+				}
+				country_event = { id = west_indies_federation_foreign_policy_events.10 days = 1 }
+			}
+		}
+	}
+	title = west_indies_federation_foreign_policy_events.9.t
+	desc = west_indies_federation_foreign_policy_events.9.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.9 option west_indies_federation_foreign_policy_events.9.a"
+		name = west_indies_federation_foreign_policy_events.9.a
+		add_stability = -0.03
+	}
+}
+
+country_event = {# Dutch notice
+	id = west_indies_federation_foreign_policy_events.10
+	title = west_indies_federation_foreign_policy_events.10.t
+	desc = west_indies_federation_foreign_policy_events.10.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_foreign_policy_events.10 option west_indies_federation_foreign_policy_events.10.a"
+		name = west_indies_federation_foreign_policy_events.10.a
+	}
+}
+
+country_event = { #Before going to Ottawa
+	id = west_indies_federation_politics_events.499
+	title = west_indies_federation_politics_events.499.t
+	desc = west_indies_federation_politics_events.499.d
+	picture = GFX_report_event_WIF_Stamp_Edward
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #In the name of the King
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.499 option west_indies_federation_politics_events.499.a"
+		name = west_indies_federation_politics_events.499.a
+		add_political_power = -50
+		add_popularity = {
+			ideology = social_conservative popularity = -0.01
+		}
+		set_temp_variable = { WIF_socialist_tensions_change_var = 1 }
+		WIF_increase_socialist_tensions = yes
+		country_event = { id = west_indies_federation_politics_events.500 days = 8 }
+	}
+}
+
+country_event = { #Ottawa pledge
+	id = west_indies_federation_politics_events.500
+	title = west_indies_federation_politics_events.500.t
+	desc = west_indies_federation_politics_events.500.d
+	picture = GFX_report_event_WIF_Edward_Visit
+
+	is_triggered_only = yes
+
+	option = { #God save the King
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.500 option west_indies_federation_politics_events.500.a"
+		name = west_indies_federation_politics_events.500.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_autdem_ai
+			}
+		}
+		if = {
+			limit = { is_in_faction_with = ENT }
+			save_event_target_as = WIF_ottawa_pledge_no_assistance_request
+			ENT = {
+				country_event = { id = west_indies_federation_politics_events.501 days = 1 }
+			}
+		}
+		add_popularity = {
+			ideology = social_conservative popularity = 0.01
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 3 }
+		WIF_decrease_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+		WIF_increase_socialist_tensions = yes
+	}
+
+	option = { #In the name of the East Indies (asks for support)
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.500 option west_indies_federation_politics_events.500.b"
+		name = west_indies_federation_politics_events.500.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_socialist_ai
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction_with = ENT
+			}
+			ENT = {
+				country_event = west_indies_federation_politics_events.502
+			}
+		}
+		add_popularity = {
+			ideology = social_conservative popularity = 0.05
+		}
+		set_temp_variable = { WIF_empire_tensions_change_var = 2 }
+		WIF_decrease_empire_tensions = yes
+		set_temp_variable = { WIF_socialist_tensions_change_var = 1 }
+		WIF_increase_socialist_tensions = yes
+	}
+}
+
+country_event = { #God save the King
+	id = west_indies_federation_politics_events.501
+	title = west_indies_federation_politics_events.501.t
+	desc = west_indies_federation_politics_events.501.d
+	picture = GFX_report_event_WIF_Edward_Visit
+
+	is_triggered_only = yes
+
+	option = { #It is a pleasure
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.501 option west_indies_federation_politics_events.501.a"
+		name = west_indies_federation_politics_events.501.a
+		add_political_power = 10
+		WIF = {
+			country_event = west_indies_federation_politics_events.503
+		}
+	}
+}
+
+country_event = { #Ask for help
+	id = west_indies_federation_politics_events.502
+	title = west_indies_federation_politics_events.502.t
+	desc = west_indies_federation_politics_events.502.d
+	picture = GFX_report_event_WIF_Edward_Visit
+
+	is_triggered_only = yes
+
+	option = { #Canada helps
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.502 option west_indies_federation_politics_events.502.a"
+		name = west_indies_federation_politics_events.502.a
+		WIF = {
+			country_event = west_indies_federation_politics_events.503
+			set_country_flag = WIF_ottawa_pledge_assistance_provided
+		}
+	}
+
+	option = { #Canada rejects us
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.502 option west_indies_federation_politics_events.502.b"
+		name = west_indies_federation_politics_events.502.b
+		ai_chance = { base = 0 }
+		WIF = {
+			save_event_target_as = WIF_ottawa_pledge_assistance_rejected
+			country_event = west_indies_federation_politics_events.503
+		}
+	}
+}
+
+country_event = { #Effects of our visit
+	id = west_indies_federation_politics_events.503
+	title = west_indies_federation_politics_events.503.t
+	picture = GFX_report_event_WIF_Edward_Visit
+
+	is_triggered_only = yes
+
+	desc = {
+		text = west_indies_federation_politics_events.503.d.no_assistance_request
+		trigger = {
+			has_event_target = WIF_ottawa_pledge_no_assistance_request
+		}
+	}
+	desc = {
+		text = west_indies_federation_politics_events.503.d.assistance_provided
+		trigger = {
+			has_country_flag = WIF_ottawa_pledge_assistance_provided
+		}
+	}
+	desc = {
+		text = west_indies_federation_politics_events.503.d.assistance_rejected
+		trigger = {
+			has_event_target = WIF_ottawa_pledge_assistance_rejected
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.503 option west_indies_federation_politics_events.503.a"
+		name = west_indies_federation_politics_events.503.a
+		if = {
+			limit = { has_event_target = WIF_ottawa_pledge_no_assistance_request }
+			add_popularity = {
+				ideology = social_conservative popularity = 0.02
+			}
+			add_political_power = 100
+			add_stability = 0.10
+		}
+		else_if = {
+			limit = { has_country_flag = WIF_ottawa_pledge_assistance_provided }
+			add_popularity = {
+				ideology = social_conservative popularity = 0.01
+			}
+			add_offsite_building = {
+				type = arms_factory
+				level = 1
+			}
+			add_political_power = 40
+		}
+		else = {
+			add_popularity = {
+				ideology = social_conservative popularity = -0.05
+			}
+			add_political_power = -50
+		}
+	}
+}
+
+country_event = { #French population reaction (French Guiana incident)
+	id = west_indies_federation_politics_events.504
+	title = west_indies_federation_politics_events.504.t
+	desc = west_indies_federation_politics_events.504.d
+	picture = GFX_report_event_WIF_Map
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.504 option west_indies_federation_politics_events.504.a"
+		name = west_indies_federation_politics_events.504.a
+		310 = {
+			set_demilitarized_zone = yes
+		}
+		add_political_power = -10
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.505 days = 15 }
+			country_event = { id = west_indies_federation_politics_events.507 days = 2 }
+		}
+	}
+}
+
+country_event = { #Aluminium mine strike (French Guiana incident)
+	id = west_indies_federation_politics_events.505
+	title = west_indies_federation_politics_events.505.t
+	desc = west_indies_federation_politics_events.505.d
+	picture = GFX_report_event_WIF_Boxite
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.505 option west_indies_federation_politics_events.505.a"
+		name = west_indies_federation_politics_events.505.a
+		310 = { add_dynamic_modifier = { modifier = WIF_bauxite_mine_strike } }
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.506 days = 4 }
+		}
+	}
+}
+
+country_event = { #Reaction from Kingston (French Guiana incident)
+	id = west_indies_federation_politics_events.506
+	title = west_indies_federation_politics_events.506.t
+	desc = west_indies_federation_politics_events.506.d
+	picture = GFX_report_event_WIF_Devonhouse
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.506 option west_indies_federation_politics_events.506.a"
+		name = west_indies_federation_politics_events.506.a
+		add_stability = -0.01
+		activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_send_police }
+	}
+}
+
+country_event = { #French population reaction- islanders support
+	id = west_indies_federation_politics_events.507
+	title = west_indies_federation_politics_events.507.t
+	desc = west_indies_federation_politics_events.507.d
+	picture = GFX_report_event_WIF_Map
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.507 option west_indies_federation_politics_events.507.a"
+		name = west_indies_federation_politics_events.507.a
+		every_core_state = {
+			limit = { is_core_of = ANT }
+			remove_core_of = ROOT
+			hidden_effect = { add_claim_by = ROOT }
+		}
+		310 = {
+			damage_building = {
+				type = infrastructure
+				damage = 1
+			}
+		}
+	}
+}
+
+country_event = { #Guyana trials end
+	id = west_indies_federation_politics_events.508
+	title = west_indies_federation_politics_events.508.t
+	desc = west_indies_federation_politics_events.508.d
+	picture = GFX_report_event_WIF_Justice
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Harsh trials- local judge from Bahamas
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.508 option west_indies_federation_politics_events.508.a"
+		name = west_indies_federation_politics_events.508.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_completed_focus = WIF_completely_revoke
+			}
+		}
+		country_event = { id = west_indies_federation_politics_events.509 days = 10 }
+		custom_effect_tooltip = WIF_integration_harsh_trials_tt
+	}
+
+	option = { #Gentle trials- judge from Montreal
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.508 option west_indies_federation_politics_events.508.b"
+		name = west_indies_federation_politics_events.508.b
+		ai_chance = { base = 60 }
+		country_event = { id = west_indies_federation_politics_events.510 days = 10 }
+		custom_effect_tooltip = WIF_integration_gentle_trials_tt
+	}
+}
+
+country_event = { #Harsh trials
+	id = west_indies_federation_politics_events.509
+	title = west_indies_federation_politics_events.509.t
+	desc = west_indies_federation_politics_events.509.d
+	picture = GFX_report_event_WIF_Justice
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Execution
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.509 option west_indies_federation_politics_events.509.a"
+		name = west_indies_federation_politics_events.509.a
+		ai_chance = { base = 30 }
+		set_temp_variable = { WIF_integration_change_var = 5 }
+		WIF_decrease_integration = yes
+		add_war_support = 0.05
+	}
+
+	option = { #Public execution
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.509 option west_indies_federation_politics_events.509.b"
+		name = west_indies_federation_politics_events.509.b
+		ai_chance = { base = 20 }
+		set_temp_variable = { WIF_integration_change_var = 10 }
+		WIF_decrease_integration = yes
+		add_war_support = 0.1
+	}
+
+	option = { #Life-time sentence
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.509 option west_indies_federation_politics_events.509.c"
+		name = west_indies_federation_politics_events.509.c
+		ai_chance = { base = 50 }
+		add_stability = -0.05
+	}
+}
+
+country_event = { #Gentle trials
+	id = west_indies_federation_politics_events.510
+	title = west_indies_federation_politics_events.510.t
+	desc = west_indies_federation_politics_events.510.d
+	picture = GFX_report_event_WIF_Justice
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Diverse sentences (from life-time to 10 years)
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.510 option west_indies_federation_politics_events.510.a"
+		name = west_indies_federation_politics_events.510.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_completed_focus = WIF_completely_revoke
+			}
+		}
+		set_temp_variable = { WIF_integration_change_var = 5 }
+		WIF_increase_integration = yes
+		add_war_support = -0.05
+	}
+
+	option = { #Parole
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.510 option west_indies_federation_politics_events.510.b"
+		name = west_indies_federation_politics_events.510.b
+		ai_chance = { base = 30 }
+		set_temp_variable = { WIF_integration_change_var = 10 }
+		WIF_increase_integration = yes
+		add_war_support = -0.1
+	}
+}
+
+country_event = { #Governor of Guadelupe
+	id = west_indies_federation_politics_events.511
+	title = west_indies_federation_politics_events.511.t
+	desc = west_indies_federation_politics_events.511.d
+	picture = GFX_report_event_WIF_Palms
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = social_conservative
+	}
+
+	option = { #Sangster (soc lib)
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.511 option west_indies_federation_politics_events.511.a"
+		name = west_indies_federation_politics_events.511.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_completed_focus = WIF_merely_lower
+			}
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.02
+		}
+		add_stability = -0.05
+		set_temp_variable = { WIF_integration_change_var = 5 }
+		WIF_increase_integration = yes
+	}
+
+	option = { #Legitimus (soc dem)
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.511 option west_indies_federation_politics_events.511.b"
+		name = west_indies_federation_politics_events.511.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				has_completed_focus = WIF_completely_revoke
+			}
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.02
+		}
+		add_stability = 0.05
+		set_temp_variable = { WIF_integration_change_var = 5 }
+		WIF_decrease_integration = yes
+	}
+}
+
+country_event = { #Head of the Federal Istitute
+	id = west_indies_federation_politics_events.512
+	title = west_indies_federation_politics_events.512.t
+	desc = west_indies_federation_politics_events.512.d
+	picture = GFX_report_event_WIF_Kingston
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = social_conservative
+	}
+
+	option = { #Grey
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.512 option west_indies_federation_politics_events.512.a"
+		name = west_indies_federation_politics_events.512.a
+		add_stability = -0.04
+		add_political_power = 60
+		set_country_flag = WIF_federal_institute_grey_chosen
+	}
+
+	option = { #Arundell
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.512 option west_indies_federation_politics_events.512.b"
+		name = west_indies_federation_politics_events.512.b
+		add_stability = -0.02
+		add_political_power = 30
+		set_country_flag = WIF_federal_institute_arundell_chosen
+	}
+}
+
+country_event = { #Get your cores and remove consolidation nasty effects
+	id = west_indies_federation_politics_events.513
+	title = west_indies_federation_politics_events.513.t
+	desc = west_indies_federation_politics_events.513.d
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.513 option west_indies_federation_politics_events.513.a"
+		name = west_indies_federation_politics_events.513.a
+		if = {
+			limit = { has_idea = WIF_consolidation_idea_1 }
+			remove_ideas = WIF_consolidation_idea_1
+		}
+		if = {
+			limit = { has_idea = WIF_consolidation_idea_2 }
+			remove_ideas = WIF_consolidation_idea_2
+		}
+		WIF_restore_french_caribbean_cores = yes
+	}
+}
+
+country_event = { #School strike
+	id = west_indies_federation_politics_events.514
+	title = west_indies_federation_politics_events.514.t
+	desc = west_indies_federation_politics_events.514.d
+	picture = GFX_report_event_WIF_School
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = social_conservative
+	}
+
+	option = { #Keep it this way
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.514 option west_indies_federation_politics_events.514.a"
+		name = west_indies_federation_politics_events.514.a
+		ai_chance = { base = 0 }
+		random_list = {
+			20 = {}
+			40 = {
+				add_stability = -0.05
+			}
+			40 = {
+				add_stability = -0.1
+			}
+		}
+	}
+
+	option = { #Let them speak French
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.514 option west_indies_federation_politics_events.514.b"
+		name = west_indies_federation_politics_events.514.b
+		add_timed_idea = {
+			idea = WIF_french_in_school_costs
+			days = 60
+		}
+		random_list = {
+			20 = {}
+			40 = {
+				add_stability = 0.05
+			}
+			40 = {
+				add_stability = 0.1
+			}
+		}
+	}
+}
+
+country_event = { #Guyana traitors killed
+	id = west_indies_federation_politics_events.516
+	title = west_indies_federation_politics_events.516.t
+	desc = west_indies_federation_politics_events.516.d
+	picture = GFX_report_event_WIF_Justice
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.516 option west_indies_federation_politics_events.516.a"
+		name = west_indies_federation_politics_events.516.a
+		add_stability = -0.1
+		691 = {
+			damage_building = {
+				type = infrastructure
+				damage = 1
+			}
+			remove_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+	}
+}
+
+country_event = { #Flyer in french
+	id = west_indies_federation_politics_events.517
+	title = west_indies_federation_politics_events.517.t
+	desc = west_indies_federation_politics_events.517.d
+	picture = GFX_report_event_WIF_Manifesto
+	is_triggered_only = yes
+
+	option = { #Kingston- Parade Garden- Mount Pelée Street
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.517 option west_indies_federation_politics_events.517.a"
+		name = west_indies_federation_politics_events.517.a
+		trigger = {
+			NOT = { has_country_flag = WIF_flyer_mount_pelee }
+		}
+		ai_chance = { base = 25 }
+		save_event_target_as = WIF_flyer_mount_pelee_chosen
+		country_event = west_indies_federation_politics_events.518
+		set_country_flag = WIF_flyer_mount_pelee
+	}
+
+	option = { #Great exhibition
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.517 option west_indies_federation_politics_events.517.b"
+		name = west_indies_federation_politics_events.517.b
+		trigger = {
+			NOT = { has_country_flag = WIF_flyer_great_exhibition }
+		}
+		ai_chance = { base = 15 }
+		save_event_target_as = WIF_flyer_great_exhibition_chosen
+		country_event = west_indies_federation_politics_events.519
+		set_country_flag = WIF_flyer_great_exhibition
+	}
+
+	option = { #Economic integration programme
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.517 option west_indies_federation_politics_events.517.c"
+		name = west_indies_federation_politics_events.517.c
+		trigger = {
+			NOT = { has_country_flag = WIF_flyer_economic_integration }
+		}
+		ai_chance = { base = 10 }
+		save_event_target_as = WIF_flyer_economic_integration_chosen
+		country_event = west_indies_federation_politics_events.520
+		set_country_flag = WIF_flyer_economic_integration
+	}
+}
+
+country_event = { #Kingston- Parade Garden- Mount Pelée Street
+	id = west_indies_federation_politics_events.518
+	title = west_indies_federation_politics_events.518.t
+	desc = west_indies_federation_politics_events.518.d
+	picture = GFX_report_event_WIF_Pelee
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #name it after King Edward
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.518 option west_indies_federation_politics_events.518.a"
+		name = west_indies_federation_politics_events.518.a
+		ai_chance = { base = 15 }
+		set_variable = { WIF_flyer_effects_cost = -10 }
+		set_variable = { WIF_flyer_effects_odds = 20 }
+	}
+	option = { #name it after the victims of the Moun Pelée
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.518 option west_indies_federation_politics_events.518.b"
+		name = west_indies_federation_politics_events.518.b
+		ai_chance = { base = 25 }
+		set_variable = { WIF_flyer_effects_cost = -12 }
+		set_variable = { WIF_flyer_effects_odds = 50 }
+	}
+	option = { #build a monument for them
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.518 option west_indies_federation_politics_events.518.c"
+		name = west_indies_federation_politics_events.518.c
+		ai_chance = { base = 10 }
+		set_variable = { WIF_flyer_effects_cost = -25 }
+		set_variable = { WIF_flyer_effects_odds = 100 }
+	}
+	after = {
+		country_event = west_indies_federation_politics_events.521
+	}
+}
+
+country_event = { #Great exhibition
+	id = west_indies_federation_politics_events.519
+	title = west_indies_federation_politics_events.519.t
+	desc = west_indies_federation_politics_events.519.d
+	picture = GFX_report_event_WIF_Jamaica_Tourism
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #just WIF
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.519 option west_indies_federation_politics_events.519.a"
+		name = west_indies_federation_politics_events.519.a
+		ai_chance = { base = 30 }
+		set_variable = { WIF_flyer_effects_cost = -15 }
+		set_variable = { WIF_flyer_effects_odds = 40 }
+	}
+	option = { #Ottawa and New York
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.519 option west_indies_federation_politics_events.519.b"
+		name = west_indies_federation_politics_events.519.b
+		ai_chance = { base = 15 }
+		set_variable = { WIF_flyer_effects_cost = -25 }
+		set_variable = { WIF_flyer_effects_odds = 70 }
+	}
+	option = { #world turne
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.519 option west_indies_federation_politics_events.519.c"
+		name = west_indies_federation_politics_events.519.c
+		ai_chance = { base = 5 }
+		set_variable = { WIF_flyer_effects_cost = -40 }
+		set_variable = { WIF_flyer_effects_odds = 200 }
+	}
+	after = {
+		country_event = west_indies_federation_politics_events.521
+	}
+}
+
+country_event = { #Economic integration programme
+	id = west_indies_federation_politics_events.520
+	title = west_indies_federation_politics_events.520.t
+	desc = west_indies_federation_politics_events.520.d
+	picture = GFX_report_event_WIF_Kingston_harbor
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Build up docks of Port of France
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.520 option west_indies_federation_politics_events.520.a"
+		name = west_indies_federation_politics_events.520.a
+		ai_chance = { base = 44 }
+		save_event_target_as = WIF_flyer_docks_chosen
+		set_variable = { WIF_flyer_effects_cost = -30 }
+	}
+	option = { #Send factories from Jamaica to Port of France
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.520 option west_indies_federation_politics_events.520.b"
+		name = west_indies_federation_politics_events.520.b
+		ai_chance = { base = 5 }
+		save_event_target_as = WIF_flyer_factories_chosen
+		set_variable = { WIF_flyer_effects_cost = -60 }
+	}
+	option = { #Great industrial project
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.520 option west_indies_federation_politics_events.520.c"
+		name = west_indies_federation_politics_events.520.c
+		ai_chance = { base = 1 }
+		set_variable = { WIF_flyer_effects_cost = -90 }
+	}
+	after = {
+		set_variable = { WIF_flyer_effects_odds = 150 }
+		country_event = west_indies_federation_politics_events.521
+	}
+}
+
+country_event = { #Luck
+	id = west_indies_federation_politics_events.521
+	title = west_indies_federation_politics_events.521.t
+	desc = west_indies_federation_politics_events.521.d
+	picture = GFX_report_event_WIF_Manifesto
+	is_triggered_only = yes
+
+	option = { #Small efforts
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.521 option west_indies_federation_politics_events.521.a"
+		name = west_indies_federation_politics_events.521.a
+		ai_chance = { base = 44 }
+	}
+	option = { #Help the couse
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.521 option west_indies_federation_politics_events.521.b"
+		name = west_indies_federation_politics_events.521.b
+		ai_chance = { base = 5 }
+		multiply_variable = { WIF_flyer_effects_cost = 1.5 }
+		multiply_variable = { WIF_flyer_effects_odds = 1.5 }
+	}
+	option = { #Extra help would be nice
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.521 option west_indies_federation_politics_events.521.c"
+		name = west_indies_federation_politics_events.521.c
+		ai_chance = { base = 1 }
+		multiply_variable = { WIF_flyer_effects_cost = 2 }
+		multiply_variable = { WIF_flyer_effects_odds = 2 }
+	}
+	after = {
+		country_event = west_indies_federation_politics_events.522
+	}
+}
+
+country_event = { #Results
+	id = west_indies_federation_politics_events.522
+	title = west_indies_federation_politics_events.522.t
+	desc = west_indies_federation_politics_events.522.d
+	picture = GFX_report_event_WIF_Manifesto
+	is_triggered_only = yes
+
+	option = { #Street
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.522 option west_indies_federation_politics_events.522.a"
+		name = west_indies_federation_politics_events.522.a
+		trigger = {
+			has_event_target = WIF_flyer_mount_pelee_chosen
+		}
+		add_political_power = WIF_flyer_effects_cost
+		random_list = {
+			1 = {
+				modifier = { factor = WIF_flyer_effects_odds }
+				add_stability = 0.05
+				add_political_power = 20
+			}
+			50 = {
+				add_stability = -0.05
+			}
+		}
+	}
+
+	option = { #Exhibition
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.522 option west_indies_federation_politics_events.522.b"
+		name = west_indies_federation_politics_events.522.b
+		trigger = {
+			has_event_target = WIF_flyer_great_exhibition_chosen
+		}
+		add_political_power = WIF_flyer_effects_cost
+		random_list = {
+			1 = {
+				modifier = { factor = WIF_flyer_effects_odds }
+				add_stability = 0.1
+			}
+			50 = {
+				add_stability = -0.1
+			}
+		}
+	}
+
+	option = { #Economy
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.522 option west_indies_federation_politics_events.522.c"
+		name = west_indies_federation_politics_events.522.c
+		trigger = {
+			has_event_target = WIF_flyer_economic_integration_chosen
+		}
+		if = {
+			limit = { has_event_target = WIF_flyer_docks_chosen }
+			random_list = {
+				1 = {
+					modifier = { factor = WIF_flyer_effects_odds }
+					694 = {
+						add_extra_state_shared_building_slots = 1
+						add_building_construction = {
+							type = dockyard
+							level = 1
+							instant_build = yes
+						}
+						custom_override_tooltip = {
+							add_building_construction = {
+								type = naval_base
+								level = 1
+								instant_build = yes
+								province = 177
+							}
+							tooltip = {
+								localization_key = tooltip_add_building_on_victory_point
+								BUILDING = naval_base
+								NUMBER = 1
+								VP = 177
+							}
+						}
+					}
+				}
+				1 = {
+					modifier = { factor = WIF_flyer_effects_odds }
+					694 = {
+						add_extra_state_shared_building_slots = 2
+						custom_override_tooltip = {
+							add_building_construction = {
+								type = naval_base
+								level = 3
+								instant_build = yes
+								province = 177
+							}
+							tooltip = {
+								localization_key = tooltip_add_building_on_victory_point
+								BUILDING = naval_base
+								NUMBER = 3
+								VP = 177
+							}
+						}
+					}
+				}
+				100 = {
+					add_stability = -0.01
+				}
+			}
+			add_political_power = WIF_flyer_effects_cost
+		}
+		else_if = {
+			limit = { has_event_target = WIF_flyer_factories_chosen }
+			random_list = {
+				1 = {
+					modifier = { factor = WIF_flyer_effects_odds }
+					random_owned_controlled_state = {
+						prioritize = { 689 } # Jamaica
+						limit = {
+							industrial_complex > 0
+							is_core_of = WIF
+						}
+						remove_building = {
+							type = industrial_complex
+							level = 1
+						}
+						add_extra_state_shared_building_slots = -1
+					}
+					694 = {
+						add_extra_state_shared_building_slots = 3
+						add_building_construction = {
+							type = industrial_complex
+							level = 2
+							instant_build = yes
+						}
+					}
+				}
+				50 = {
+					add_stability = -0.01
+				}
+			}
+			add_political_power = WIF_flyer_effects_cost
+		}
+		else = {
+			random_list = {
+				1 = {
+					modifier = { factor = WIF_flyer_effects_odds }
+					689 = {
+						add_extra_state_shared_building_slots = 2
+						add_building_construction = {
+							type = industrial_complex
+							level = 1
+							instant_build = yes
+						}
+					}
+					694 = {
+						add_extra_state_shared_building_slots = 2
+						add_building_construction = {
+							type = industrial_complex
+							level = 1
+							instant_build = yes
+						}
+					}
+				}
+				50 = {
+					add_stability = -0.01
+				}
+			}
+			add_political_power = WIF_flyer_effects_cost
+		}
+	}
+
+	after = {
+		clear_variable = WIF_flyer_effects_cost
+		clear_variable = WIF_flyer_effects_odds
+	}
+}
+country_event = { #French-Caribbean Exchange Program
+	id = west_indies_federation_politics_events.523
+	title = west_indies_federation_politics_events.523.t
+	desc = west_indies_federation_politics_events.523.d
+	picture = GFX_report_event_WIF_Sorbonne
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = social_conservative
+		country_exists = FRA
+		NOT = { has_war_with = FRA }
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.523 option west_indies_federation_politics_events.523.a"
+		name = west_indies_federation_politics_events.523.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_completed_focus = WIF_merely_lower
+			}
+		}
+		add_opinion_modifier = {
+			target = FRA
+			modifier = WIF_FRA_exchange
+		}
+		reverse_add_opinion_modifier = {
+			target = FRA
+			modifier = WIF_FRA_exchange
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = -0.01
+		}
+		add_popularity = {
+			ideology = totalist
+			popularity = -0.01
+		}
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.524 days = 365 }
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.523 option west_indies_federation_politics_events.523.b"
+		name = west_indies_federation_politics_events.523.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_completed_focus = WIF_completely_revoke
+			}
+		}
+		add_political_power = 25
+	}
+}
+
+country_event = { #French-Caribbean Exchange Program- students return
+	id = west_indies_federation_politics_events.524
+	title = west_indies_federation_politics_events.524.t
+
+	desc = {
+		text = west_indies_federation_politics_events.524.d.ncp
+		trigger = {
+			has_government = social_conservative
+			FRA = {
+				exists = yes
+				has_capitulated = no
+			}
+		}
+	}
+	desc = {
+		text = west_indies_federation_politics_events.524.d.other
+		trigger = {
+			NOT = { has_government = social_conservative }
+			FRA = {
+				exists = yes
+				has_capitulated = no
+			}
+		}
+	}
+	desc = {
+		text = west_indies_federation_politics_events.524.d.fallen_commune
+		trigger = {
+			NOT = {
+				FRA = {
+					exists = yes
+					has_capitulated = no
+				}
+			}
+		}
+	}
+
+	picture = GFX_report_event_WIF_Sorbonne
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.524 option west_indies_federation_politics_events.524.a"
+		name = west_indies_federation_politics_events.524.a
+		trigger = {
+			has_government = social_conservative
+			FRA = {
+				exists = yes
+				has_capitulated = no
+			}
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+		add_stability = -0.05
+	}
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.524 option west_indies_federation_politics_events.524.b"
+		name = west_indies_federation_politics_events.524.b
+		ai_chance = { base = 0 }
+		trigger = {
+			has_government = social_conservative
+			FRA = {
+				exists = yes
+				has_capitulated = no
+			}
+		}
+		add_stability = -0.1
+		add_political_power = -100
+	}
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.524 option west_indies_federation_politics_events.524.c"
+		name = west_indies_federation_politics_events.524.c
+		trigger = {
+			NOT = { has_government = social_conservative }
+			FRA = {
+				exists = yes
+				has_capitulated = no
+			}
+		}
+		add_stability = -0.1
+		add_political_power = -100
+	}
+	option = { #
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.524 option west_indies_federation_politics_events.524.e"
+		name = west_indies_federation_politics_events.524.e
+		trigger = {
+			NOT = {
+				FRA = {
+					exists = yes
+					has_capitulated = no
+				}
+			}
+		}
+		add_political_power = -10
+	}
+}
+#### Constitution
+country_event = { #Free Trade- constitution
+	id = west_indies_federation_politics_events.525
+	title = west_indies_federation_politics_events.525.t
+	desc = west_indies_federation_politics_events.525.d
+	picture = GFX_report_event_WIF_Constitution
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #best quality- new companies boom due to easy to understand economic system
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.525 option west_indies_federation_politics_events.525.a"
+		name = west_indies_federation_politics_events.525.a
+		689 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		WIF_increase_constitution_values_option_a = yes
+	}
+
+	option = { #status quo
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.525 option west_indies_federation_politics_events.525.b"
+		name = west_indies_federation_politics_events.525.b
+		ai_chance = { base = 0 }
+		WIF_increase_constitution_values_option_b = yes
+	}
+	option = { #gain votes- old economic system hurting our development
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.525 option west_indies_federation_politics_events.525.c"
+		name = west_indies_federation_politics_events.525.c
+		ai_chance = { base = 0 }
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		WIF_increase_constitution_values_option_c = yes
+	}
+
+	after = {
+		add_to_variable = { WIF_constitution_vote_decisions_taken = 1 }
+	}
+}
+
+country_event = { #Personal liberties- constitution
+	id = west_indies_federation_politics_events.526
+	title = west_indies_federation_politics_events.526.t
+	desc = west_indies_federation_politics_events.526.d
+	picture = GFX_report_event_WIF_Constitution
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #best quality- modern standards, requested by people
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.526 option west_indies_federation_politics_events.525.a"
+		name = west_indies_federation_politics_events.525.a
+		ai_chance = { base = 0 }
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+		WIF_increase_constitution_values_option_a = yes
+	}
+
+	option = { #status quo
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.526 option west_indies_federation_politics_events.525.b"
+		name = west_indies_federation_politics_events.525.b
+		ai_chance = { base = 0 }
+		WIF_increase_constitution_values_option_b = yes
+	}
+	option = { #gain votes- protect our party
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.526 option west_indies_federation_politics_events.525.c"
+		name = west_indies_federation_politics_events.525.c
+		add_war_support = -0.05
+		WIF_increase_constitution_values_option_c = yes
+	}
+
+	after = {
+		add_to_variable = { WIF_constitution_vote_decisions_taken = 1 }
+	}
+}
+
+country_event = { #Political system- constitution
+	id = west_indies_federation_politics_events.527
+	title = west_indies_federation_politics_events.527.t
+	desc = west_indies_federation_politics_events.527.d
+	picture = GFX_report_event_WIF_Constitution
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #best quality- strong federation
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.527 option west_indies_federation_politics_events.525.a"
+		name = west_indies_federation_politics_events.525.a
+		add_stability = 0.1
+		if = {
+			limit = {
+				has_idea = WIF_cayenne_agreement_ncp1
+			}
+			remove_ideas = WIF_cayenne_agreement_ncp1
+		}
+		WIF_increase_constitution_values_option_a = yes
+	}
+
+	option = { #status quo
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.527 option west_indies_federation_politics_events.525.b"
+		name = west_indies_federation_politics_events.525.b
+		ai_chance = { base = 0 }
+		WIF_increase_constitution_values_option_b = yes
+	}
+	option = { #gain votes- nothing understable about federation in order to keep calm our opponents
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.527 option west_indies_federation_politics_events.525.c"
+		name = west_indies_federation_politics_events.525.c
+		ai_chance = { base = 0 }
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		WIF_increase_constitution_values_option_c = yes
+	}
+
+	after = {
+		add_to_variable = { WIF_constitution_vote_decisions_taken = 1 }
+	}
+}
+
+country_event = { #Rule of law- constitution
+	id = west_indies_federation_politics_events.528
+	title = west_indies_federation_politics_events.528.t
+	desc = west_indies_federation_politics_events.528.d
+	picture = GFX_report_event_WIF_Constitution
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #best quality- fight corruption and crimes
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.528 option west_indies_federation_politics_events.525.a"
+		name = west_indies_federation_politics_events.525.a
+		ai_chance = { base = 0 }
+		add_manpower = 5000
+		WIF_increase_constitution_values_option_a = yes
+	}
+
+	option = { #status quo
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.528 option west_indies_federation_politics_events.525.b"
+		name = west_indies_federation_politics_events.525.b
+		ai_chance = { base = 0 }
+		WIF_increase_constitution_values_option_b = yes
+	}
+	option = { #gain votes- let it be
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.528 option west_indies_federation_politics_events.525.c"
+		name = west_indies_federation_politics_events.525.c
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		WIF_increase_constitution_values_option_c = yes
+	}
+
+	after = {
+		add_to_variable = { WIF_constitution_vote_decisions_taken = 1 }
+	}
+}
+
+country_event = { #Canada- constitution
+	id = west_indies_federation_politics_events.529
+	title = west_indies_federation_politics_events.529.t
+	desc = west_indies_federation_politics_events.529.d
+	picture = GFX_report_event_WIF_Constitution
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #best quality- tight cooperation in our benefit
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.529 option west_indies_federation_politics_events.525.a"
+		name = west_indies_federation_politics_events.525.a
+		689 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		WIF_increase_constitution_values_option_a = yes
+	}
+
+	option = { #status quo
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.529 option west_indies_federation_politics_events.525.b"
+		name = west_indies_federation_politics_events.525.b
+		ai_chance = { base = 0 }
+		WIF_increase_constitution_values_option_b = yes
+	}
+	option = { #gain votes- we are their subject, nothing to write down in our constitution
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.529 option west_indies_federation_politics_events.525.c"
+		name = west_indies_federation_politics_events.525.c
+		ai_chance = { base = 0 }
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		WIF_increase_constitution_values_option_c = yes
+	}
+
+	after = {
+		add_to_variable = { WIF_constitution_vote_decisions_taken = 1 }
+	}
+}
+
+country_event = { #1st balancing event- constitution
+	id = west_indies_federation_politics_events.530
+	title = west_indies_federation_politics_events.530.t
+	desc = west_indies_federation_politics_events.530.d
+	picture = GFX_report_event_WIF_Constitution
+
+	trigger = {
+		has_variable = WIF_constitution_quality_var
+	}
+
+	is_triggered_only = yes
+
+	option = { #work hard on it
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.530 option west_indies_federation_politics_events.530.a"
+		name = west_indies_federation_politics_events.530.a
+		ai_chance = { base = 0 }
+		set_temp_variable = { WIF_constitution_quality_change_var = 15 }
+		WIF_increase_constitution_quality = yes
+		add_political_power = -60
+	}
+
+	option = { #add some work
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.530 option west_indies_federation_politics_events.530.b"
+		name = west_indies_federation_politics_events.530.b
+		ai_chance = { base = 0 }
+		set_temp_variable = { WIF_constitution_quality_change_var = 5 }
+		WIF_increase_constitution_quality = yes
+		add_political_power = -30
+	}
+	option = { #lets rest this week
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.530 option west_indies_federation_politics_events.530.c"
+		name = west_indies_federation_politics_events.530.c
+		add_stability = 0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		set_temp_variable = { WIF_constitution_votes_for_change_var = 1 }
+		WIF_gain_constitution_votes_for = yes
+	}
+}
+
+country_event = { #2nd balancing event- constitution
+	id = west_indies_federation_politics_events.531
+	title = west_indies_federation_politics_events.531.t
+	desc = west_indies_federation_politics_events.531.d
+	picture = GFX_report_event_WIF_Constitution
+
+	trigger = {
+		has_variable = WIF_constitution_quality_var
+	}
+
+	is_triggered_only = yes
+
+	option = { #support from some
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.531 option west_indies_federation_politics_events.531.a"
+		name = west_indies_federation_politics_events.531.a
+		set_temp_variable = { WIF_constitution_votes_for_change_var = 3 }
+		WIF_gain_constitution_votes_for = yes
+	}
+
+	option = { #make promises to them
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.531 option west_indies_federation_politics_events.531.b"
+		name = west_indies_federation_politics_events.531.b
+		ai_chance = { base = 0 }
+		random_list = {
+			25 = {
+				set_temp_variable = { WIF_constitution_votes_against_change_var = 2 }
+				WIF_gain_constitution_votes_against = yes
+			}
+			75 = {
+				set_temp_variable = { WIF_constitution_votes_for_change_var = 6 }
+				WIF_gain_constitution_votes_for = yes
+			}
+		}
+	}
+	option = { #try corruption
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.531 option west_indies_federation_politics_events.531.c"
+		name = west_indies_federation_politics_events.531.c
+		ai_chance = { base = 0 }
+		random_list = {
+			50 = {
+				set_temp_variable = { WIF_constitution_votes_against_change_var = 6 }
+				WIF_gain_constitution_votes_against = yes
+			}
+			50 = {
+				set_temp_variable = { WIF_constitution_votes_for_change_var = 12 }
+				WIF_gain_constitution_votes_for = yes
+			}
+		}
+	}
+}
+
+#west_indies_federation_politics_events.600 - 611 deleted
+
+####Second Cayenne Agreement Decisions events
+country_event = { #NCP
+	id = west_indies_federation_politics_events.612
+	title = west_indies_federation_politics_events.612.t
+	desc = west_indies_federation_politics_events.612.d
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.612 option west_indies_federation_politics_events.612.a"
+		name = west_indies_federation_politics_events.612.a
+		if = {
+			limit = { has_idea = WIF_NCP_concessions_2nd_Cayenne }
+			modify_timed_idea = {
+				idea = WIF_NCP_concessions_2nd_Cayenne
+				days = 180
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = WIF_NCP_concessions_2nd_Cayenne
+				days = 180
+			}
+		}
+		add_to_variable = {
+			var = WIF_2nd_cayenne_conference_for
+			value = 5
+			tooltip = WIF_forging_new_agreement_effect_gain_votes
+		}
+		subtract_from_variable = { WIF_2nd_cayenne_conference_against = 5 }
+		add_political_power = 40
+	}
+
+	option = { #Reject
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.612 option west_indies_federation_politics_events.612.b"
+		name = west_indies_federation_politics_events.612.b
+		ai_chance = { base = 0 }
+		trigger = {
+			NOT = { has_country_flag = WIF_2nd_cayenne_rejected_concessions_once }
+		}
+		set_country_flag = WIF_2nd_cayenne_rejected_concessions_once
+	}
+}
+
+country_event = { #Unity
+	id = west_indies_federation_politics_events.613
+	title = west_indies_federation_politics_events.613.t
+	desc = west_indies_federation_politics_events.612.d
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.613 option west_indies_federation_politics_events.612.a"
+		name = west_indies_federation_politics_events.612.a
+		add_timed_idea = {
+			idea = WIF_Unity_concessions_2nd_Cayenne
+			days = 180
+		}
+		add_to_variable = {
+			var = WIF_2nd_cayenne_conference_for
+			value = 5
+			tooltip = WIF_forging_new_agreement_effect_gain_votes
+		}
+		subtract_from_variable = { WIF_2nd_cayenne_conference_against = 5 }
+		add_political_power = 60
+	}
+
+	option = { #Reject
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.613 option west_indies_federation_politics_events.612.b"
+		name = west_indies_federation_politics_events.612.b
+		ai_chance = { base = 0 }
+		trigger = {
+			NOT = { has_country_flag = WIF_2nd_cayenne_rejected_concessions_once }
+		}
+		set_country_flag = WIF_2nd_cayenne_rejected_concessions_once
+	}
+}
+
+country_event = { #SocDem
+	id = west_indies_federation_politics_events.614
+	title = west_indies_federation_politics_events.614.t
+	desc = west_indies_federation_politics_events.612.d
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.614 option west_indies_federation_politics_events.612.a"
+		name = west_indies_federation_politics_events.612.a
+		add_timed_idea = {
+			idea = WIF_SocDem_concessions_2nd_Cayenne
+			days = 180
+		}
+		add_to_variable = {
+			var = WIF_2nd_cayenne_conference_for
+			value = 5
+			tooltip = WIF_forging_new_agreement_effect_gain_votes
+		}
+		subtract_from_variable = { WIF_2nd_cayenne_conference_against = 5 }
+		add_political_power = 60
+	}
+
+	option = { #Reject
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.614 option west_indies_federation_politics_events.612.b"
+		name = west_indies_federation_politics_events.612.b
+		ai_chance = { base = 0 }
+		trigger = {
+			NOT = { has_country_flag = WIF_2nd_cayenne_rejected_concessions_once }
+		}
+		set_country_flag = WIF_2nd_cayenne_rejected_concessions_once
+	}
+}
+
+country_event = { #Conscription
+	id = west_indies_federation_politics_events.615
+	title = west_indies_federation_politics_events.615.t
+	desc = west_indies_federation_politics_events.615.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Dec
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.615 option west_indies_federation_politics_events.615.a"
+		name = west_indies_federation_politics_events.615.a
+		ai_chance = { base = 0 } # AI really needs manpower
+		add_ideas = WIF_pacifism
+	}
+
+	option = { #Inc
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.615 option west_indies_federation_politics_events.615.b"
+		name = west_indies_federation_politics_events.615.b
+		add_ideas = WIF_increased_soldier_wages
+	}
+}
+
+country_event = { #Autonomy
+	id = west_indies_federation_politics_events.616
+	title = west_indies_federation_politics_events.616.t
+	desc = west_indies_federation_politics_events.616.d
+	picture = GFX_report_event_WIF_Women
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #They are too needy
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.616 option west_indies_federation_politics_events.616.a"
+		name = west_indies_federation_politics_events.616.a
+		ai_chance = { base = 0 }
+		add_political_power = 100
+	}
+
+	option = { #Give them more autonomy
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.616 option west_indies_federation_politics_events.616.b"
+		name = west_indies_federation_politics_events.616.b
+		add_ideas = WIF_sangster_bill
+	}
+}
+
+country_event = { #Corruption scandal (SYN)
+	id = west_indies_federation_politics_events.617
+	title = west_indies_federation_politics_events.617.t
+	desc = west_indies_federation_politics_events.617.d
+
+	is_triggered_only = yes
+
+	option = { #Sad
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.617 option west_indies_federation_politics_events.617.a"
+		name = west_indies_federation_politics_events.617.a
+		WIF_decrease_coalition_stability = yes
+	}
+}
+
+country_event = { #Mass Resignation
+	id = west_indies_federation_politics_events.618
+	title = west_indies_federation_politics_events.618.t
+	desc = west_indies_federation_politics_events.618.d
+
+	is_triggered_only = yes
+
+	option = { #Sad
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.618 option west_indies_federation_politics_events.618.a"
+		name = west_indies_federation_politics_events.618.a
+		WIF_decrease_coalition_stability = yes
+	}
+}
+
+country_event = { #Personal conflicts (AUTH)
+	id = west_indies_federation_politics_events.619
+	title = west_indies_federation_politics_events.619.t
+	desc = west_indies_federation_politics_events.619.d
+
+	is_triggered_only = yes
+
+	option = { #Sad
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.619 option west_indies_federation_politics_events.619.a"
+		name = west_indies_federation_politics_events.619.a
+		WIF_decrease_coalition_stability = yes
+	}
+}
+
+country_event = { #Improved stability
+	id = west_indies_federation_politics_events.620
+	title = west_indies_federation_politics_events.620.t
+	desc = west_indies_federation_politics_events.620.d
+
+	is_triggered_only = yes
+
+	option = { #good
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.620 option west_indies_federation_politics_events.620.a"
+		name = west_indies_federation_politics_events.620.a
+		if = {
+			limit = { check_variable = { WIF_coalition_stability_var > 3 } }
+			add_political_power = 50
+		}
+		else = {
+			WIF_increase_coalition_stability = yes
+		}
+	}
+}
+
+country_event = { #Coallition turbulence (SYN and AUTH)
+	id = west_indies_federation_politics_events.621
+	title = west_indies_federation_politics_events.621.t
+	desc = west_indies_federation_politics_events.619.d
+
+	is_triggered_only = yes
+
+	option = { #Sad
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.621 option west_indies_federation_politics_events.619.a"
+		name = west_indies_federation_politics_events.619.a
+		WIF_decrease_coalition_stability = yes
+	}
+}
+
+country_event = { #Good job
+	id = west_indies_federation_politics_events.622
+	title = west_indies_federation_politics_events.622.t
+	desc = west_indies_federation_politics_events.622.d
+
+	is_triggered_only = yes
+
+	option = { #Sad
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.622 option west_indies_federation_politics_events.622.a"
+		name = west_indies_federation_politics_events.622.a
+		if = {
+			limit = { check_variable = { WIF_coalition_stability_var > 3 } }
+			add_political_power = 50
+		}
+		else = {
+			WIF_increase_coalition_stability = yes
+		}
+	}
+}
+
+country_event = { #Form majority coalition
+	id = west_indies_federation_politics_events.623
+	title = west_indies_federation_politics_events.623.t
+	desc = west_indies_federation_politics_events.623.d
+
+	is_triggered_only = yes
+
+	option = { #Unity
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.623 option west_indies_federation_politics_events.623.a"
+		name = west_indies_federation_politics_events.623.a
+		ai_chance = { base = 90 }
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+	}
+
+	option = { #NCP
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.623 option west_indies_federation_politics_events.623.b"
+		name = west_indies_federation_politics_events.623.b
+		ai_chance = { base = 90 }
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		if = {
+			limit = { has_idea = WIF_NCP_concessions_2nd_Cayenne }
+			modify_timed_idea = {
+				idea = WIF_NCP_concessions_2nd_Cayenne
+				days = 360
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = WIF_NCP_concessions_2nd_Cayenne
+				days = 360
+			}
+		}
+	}
+
+	option = { #Soc-Dem
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.623 option west_indies_federation_politics_events.623.c"
+		name = west_indies_federation_politics_events.623.c
+		ai_chance = { base = 90 }
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+	}
+}
+
+country_event = { #Penalty for minority gov.
+	id = west_indies_federation_politics_events.625
+	title = west_indies_federation_politics_events.625.t
+	desc = west_indies_federation_politics_events.625.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_variable = WIF_coalition_stability_var
+		NOT = { has_country_flag = WIF_coalition_majority_government }
+	}
+
+	option = { #Sad
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.625 option west_indies_federation_politics_events.625.a"
+		name = west_indies_federation_politics_events.625.a
+		WIF_decrease_coalition_stability = yes
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.625 days = 95 random_days = 20 } # Lack of Majority
+		}
+	}
+}
+
+country_event = { #syndie internationale shite
+	id = west_indies_federation_politics_events.800
+	title = west_indies_federation_politics_events.800.t
+	desc = west_indies_federation_politics_events.800.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #dab!
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.800 option west_indies_federation_politics_events.800.a"
+		name = west_indies_federation_politics_events.800.a
+		hidden_effect = {
+			FRA = {
+				country_event = { id = west_indies_federation_politics_events.824 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = { #syndie democracy and the elections
+	id = west_indies_federation_politics_events.801
+	title = west_indies_federation_politics_events.801.t
+	desc = west_indies_federation_politics_events.801.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #labour party (socdem)
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.801 option west_indies_federation_politics_events.801.a"
+		name = west_indies_federation_politics_events.801.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = WIF_path option = WIF_PATH_PEOPLES_RADSOC }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SYNDIE }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = radical_socialist
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.2
+		}
+		set_party_name = {
+			ideology = radical_socialist
+			long_name = WIF_social_democrat_party_syndie_long
+			name = WIF_social_democrat_party_syndie
+		}
+		promote_character = WIF_joseph_lagrosilliere
+		complete_national_focus = WIF_soc_dem_syndies
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.802 days = 2 }
+		}
+	}
+
+	option = { #the people's party (radsoc)
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.801 option west_indies_federation_politics_events.801.b"
+		name = west_indies_federation_politics_events.801.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = WIF_path option = WIF_PATH_LABOUR_RADSOC }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_SYNDIE }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = radical_socialist
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.2
+		}
+		complete_national_focus = WIF_radical_syndies
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.813 days = 2 }
+		}
+	}
+
+	option = { #the butler party (syndie)
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.801 option west_indies_federation_politics_events.801.c"
+		name = west_indies_federation_politics_events.801.c
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = WIF_path option = WIF_PATH_LABOUR_RADSOC }
+					has_game_rule = { rule = WIF_path option = WIF_PATH_PEOPLES_RADSOC }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = syndicalist
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.2
+		}
+		complete_national_focus = WIF_syndie_syndies
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.820 days = 2 }
+		}
+	}
+}
+
+country_event = { #socdem victory
+	id = west_indies_federation_politics_events.802
+	title = west_indies_federation_politics_events.802.t
+	desc = west_indies_federation_politics_events.802.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #yeet on them haters
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.802 option west_indies_federation_politics_events.802.a"
+		name = west_indies_federation_politics_events.802.a
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.803 days = 13 }
+		}
+	}
+}
+
+country_event = { #Lagrosillière announces education plans
+	id = west_indies_federation_politics_events.803
+	title = west_indies_federation_politics_events.803.t
+	desc = west_indies_federation_politics_events.803.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #thank you lagrosilliere very cool
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.803 option west_indies_federation_politics_events.803.a"
+		name = west_indies_federation_politics_events.803.a
+		add_political_power = 10
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.804 days = 365 }
+			country_event = { id = west_indies_federation_politics_events.805 days = 730 }
+			country_event = { id = west_indies_federation_politics_events.806 days = 1095 }
+			country_event = { id = west_indies_federation_politics_events.807 days = 3650 }
+			country_event = { id = west_indies_federation_politics_events.808 days = 7300 }
+			country_event = { id = west_indies_federation_politics_events.809 days = 15 }
+		}
+	}
+}
+
+country_event = { #Education Program - Year 1 Report
+	id = west_indies_federation_politics_events.804
+	title = west_indies_federation_politics_events.804.t
+	desc = west_indies_federation_politics_events.804.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.804 option west_indies_federation_politics_events.804.a"
+		name = west_indies_federation_politics_events.804.a
+		add_political_power = 20
+	}
+}
+
+country_event = { #Education Program - Year 2 Report
+	id = west_indies_federation_politics_events.805
+	title = west_indies_federation_politics_events.805.t
+	desc = west_indies_federation_politics_events.805.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.805 option west_indies_federation_politics_events.805.a"
+		name = west_indies_federation_politics_events.805.a
+		add_political_power = 20
+	}
+}
+
+country_event = { #Education Program - Year 3 Report
+	id = west_indies_federation_politics_events.806
+	title = west_indies_federation_politics_events.806.t
+	desc = west_indies_federation_politics_events.806.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.806 option west_indies_federation_politics_events.806.a"
+		name = west_indies_federation_politics_events.806.a
+		add_political_power = 20
+	}
+}
+
+country_event = { #Education Program - Year 10 Report
+	id = west_indies_federation_politics_events.807
+	title = west_indies_federation_politics_events.807.t
+	desc = west_indies_federation_politics_events.807.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.807 option west_indies_federation_politics_events.807.a"
+		name = west_indies_federation_politics_events.807.a
+		add_political_power = 20
+	}
+}
+
+country_event = { #Education Program - Year 20 Report
+	id = west_indies_federation_politics_events.808
+	title = west_indies_federation_politics_events.808.t
+	desc = west_indies_federation_politics_events.808.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.808 option west_indies_federation_politics_events.808.a"
+		name = west_indies_federation_politics_events.808.a
+		add_political_power = 20
+	}
+}
+
+country_event = { #Increased Welfare Spending
+	id = west_indies_federation_politics_events.809
+	title = west_indies_federation_politics_events.809.t
+	desc = west_indies_federation_politics_events.809.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.809 option west_indies_federation_politics_events.809.a"
+		name = west_indies_federation_politics_events.809.a
+		add_political_power = -20
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.810 days = 18 }
+		}
+	}
+}
+
+country_event = { #Housing Programs
+	id = west_indies_federation_politics_events.810
+	title = west_indies_federation_politics_events.810.t
+	desc = west_indies_federation_politics_events.810.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.810 option west_indies_federation_politics_events.810.a"
+		name = west_indies_federation_politics_events.810.a
+		add_political_power = -20
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.815 days = 17 }
+		}
+	}
+}
+
+country_event = { #Canada Responds
+	id = west_indies_federation_politics_events.811
+	title = west_indies_federation_politics_events.811.t
+	desc = west_indies_federation_politics_events.811.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.811 option west_indies_federation_politics_events.811.a"
+		name = west_indies_federation_politics_events.811.a
+		add_political_power = -20
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = {
+						divisions_in_state = {
+							type = infantry
+							size > 0
+							state = 690
+						}
+					}
+				}
+				country_event = { id = west_indies_federation_politics_events.827 days = 2 }
+			}
+			else_if = {
+				limit = {
+					divisions_in_state = {
+						type = infantry
+						size > 0
+						state = 690
+					}
+				}
+				country_event = { id = west_indies_federation_politics_events.829 days = 2 }
+			}
+			if = {
+				limit = {
+					NOT = {
+						divisions_in_state = {
+							type = infantry
+							size > 0
+							state = 696
+						}
+					}
+				}
+				country_event = { id = west_indies_federation_politics_events.828 days = 1 }
+			}
+			else_if = {
+				limit = {
+					divisions_in_state = {
+						type = infantry
+						size > 0
+						state = 696
+					}
+				}
+				country_event = { id = west_indies_federation_politics_events.830 days = 1 }
+			}
+		}
+		country_event = { id = west_indies_federation_politics_events.817 days = 14 }
+	}
+}
+
+country_event = { #West Indies Culture
+	id = west_indies_federation_politics_events.812
+	title = west_indies_federation_politics_events.812.t
+	desc = west_indies_federation_politics_events.812.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.812 option west_indies_federation_politics_events.812.a"
+		name = west_indies_federation_politics_events.812.a
+		add_ideas = WIF_indies_culture
+	}
+}
+
+country_event = { #Freedom Coalition Victory
+	id = west_indies_federation_politics_events.813
+	title = west_indies_federation_politics_events.813.t
+	desc = west_indies_federation_politics_events.813.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.813 option west_indies_federation_politics_events.813.a"
+		name = west_indies_federation_politics_events.813.a
+		add_political_power = 10
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.814 days = 15 }
+		}
+	}
+}
+
+country_event = { #Autonomy of Provinces
+	id = west_indies_federation_politics_events.814
+	title = west_indies_federation_politics_events.814.t
+	desc = west_indies_federation_politics_events.814.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.814 option west_indies_federation_politics_events.814.a"
+		name = west_indies_federation_politics_events.814.a
+		add_political_power = -20
+		add_stability = 0.05
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.815 days = 15 }
+		}
+	}
+}
+
+country_event = { #healthcare shit
+	id = west_indies_federation_politics_events.815
+	title = west_indies_federation_politics_events.815.t
+	desc = west_indies_federation_politics_events.815.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.815 option west_indies_federation_politics_events.815.a"
+		name = west_indies_federation_politics_events.815.a
+		add_political_power = 10
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.816 days = 15 }
+		}
+	}
+}
+
+country_event = { #west indian worker's museum
+	id = west_indies_federation_politics_events.816
+	title = west_indies_federation_politics_events.816.t
+	desc = west_indies_federation_politics_events.816.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.816 option west_indies_federation_politics_events.816.a"
+		name = west_indies_federation_politics_events.816.a
+		add_political_power = 30
+	}
+}
+
+country_event = { #the call to arms
+	id = west_indies_federation_politics_events.817
+	title = west_indies_federation_politics_events.817.t
+	desc = west_indies_federation_politics_events.817.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.817 option west_indies_federation_politics_events.817.a"
+		name = west_indies_federation_politics_events.817.a
+		add_war_support = 0.1
+		add_manpower = 50000
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.818 days = 12 }
+		}
+	}
+}
+
+country_event = { #canadian ships near kingston
+	id = west_indies_federation_politics_events.818
+	title = west_indies_federation_politics_events.818.t
+	desc = west_indies_federation_politics_events.818.d
+	picture = GFX_report_event_WIF_Port_of_Jamaica
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = CAN
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.818 option west_indies_federation_politics_events.818.a"
+		name = west_indies_federation_politics_events.818.a
+		add_political_power = -40
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.819 days = 12 }
+		}
+	}
+}
+
+country_event = { #discourse within the union
+	id = west_indies_federation_politics_events.819
+	title = west_indies_federation_politics_events.819.t
+	desc = west_indies_federation_politics_events.819.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.819 option west_indies_federation_politics_events.819.a"
+		name = west_indies_federation_politics_events.819.a
+		add_political_power = -40
+	}
+}
+
+country_event = { #butler victory
+	id = west_indies_federation_politics_events.820
+	title = west_indies_federation_politics_events.820.t
+	desc = west_indies_federation_politics_events.820.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.820 option west_indies_federation_politics_events.820.a"
+		name = west_indies_federation_politics_events.820.a
+		add_political_power = 20
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.821 days = 14 }
+		}
+	}
+}
+
+country_event = { #elevation of unions
+	id = west_indies_federation_politics_events.821
+	title = west_indies_federation_politics_events.821.t
+	desc = west_indies_federation_politics_events.821.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.821 option west_indies_federation_politics_events.821.a"
+		name = west_indies_federation_politics_events.821.a
+		add_political_power = 20
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.822 days = 14 }
+		}
+	}
+}
+
+country_event = { #changing the capital
+	id = west_indies_federation_politics_events.822
+	title = west_indies_federation_politics_events.822.t
+	desc = west_indies_federation_politics_events.822.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.822 option west_indies_federation_politics_events.822.a"
+		name = west_indies_federation_politics_events.822.a
+		add_political_power = -20
+		set_capital = { state = 691 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.822 option west_indies_federation_politics_events.822.b"
+		name = west_indies_federation_politics_events.822.b
+		add_political_power = 20
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = west_indies_federation_politics_events.823 days = 17 }
+		}
+	}
+}
+
+country_event = { #Political Propaganda
+	id = west_indies_federation_politics_events.823
+	title = west_indies_federation_politics_events.823.t
+	desc = west_indies_federation_politics_events.823.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.823 option west_indies_federation_politics_events.823.a"
+		name = west_indies_federation_politics_events.823.a
+		add_political_power = 20
+	}
+}
+
+country_event = { #hi france
+	id = west_indies_federation_politics_events.824
+	title = west_indies_federation_politics_events.824.t
+	desc = west_indies_federation_politics_events.824.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.824 option west_indies_federation_politics_events.824.a"
+		name = west_indies_federation_politics_events.824.a
+		ai_chance = { base = 100 }
+		FRA = { add_to_faction = WIF }
+		WIF = {
+			country_event = { id = west_indies_federation_politics_events.825 days = 1 }
+		}
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.824 option west_indies_federation_politics_events.824.b"
+		name = west_indies_federation_politics_events.824.b
+		ai_chance = { base = 0 }
+		WIF = {
+			country_event = { id = west_indies_federation_politics_events.826 days = 1 }
+		}
+	}
+}
+
+country_event = { #france says yes
+	id = west_indies_federation_politics_events.825
+	title = west_indies_federation_politics_events.825.t
+	desc = west_indies_federation_politics_events.825.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.825 option west_indies_federation_politics_events.825.a"
+		name = west_indies_federation_politics_events.825.a
+		add_war_support = 0.05
+	}
+}
+
+country_event = { #france says no
+	id = west_indies_federation_politics_events.826
+	title = west_indies_federation_politics_events.826.t
+	desc = west_indies_federation_politics_events.826.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.826 option west_indies_federation_politics_events.826.a"
+		name = west_indies_federation_politics_events.826.a
+		add_war_support = -0.05
+	}
+}
+
+country_event = { #bahamas defect
+	id = west_indies_federation_politics_events.827
+	title = west_indies_federation_politics_events.827.t
+	desc = west_indies_federation_politics_events.827.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.827 option west_indies_federation_politics_events.827.a"
+		name = west_indies_federation_politics_events.827.a
+		add_war_support = -0.02
+		CAN = {
+			transfer_state = 690
+		}
+	}
+}
+
+country_event = { #bermuda defects
+	id = west_indies_federation_politics_events.828
+	title = west_indies_federation_politics_events.828.t
+	desc = west_indies_federation_politics_events.828.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.828 option west_indies_federation_politics_events.828.a"
+		name = west_indies_federation_politics_events.828.a
+		add_war_support = -0.02
+		CAN = {
+			transfer_state = 696
+		}
+	}
+}
+
+country_event = { #bahamas stay
+	id = west_indies_federation_politics_events.829
+	title = west_indies_federation_politics_events.829.t
+	desc = west_indies_federation_politics_events.829.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.829 option west_indies_federation_politics_events.829.a"
+		name = west_indies_federation_politics_events.829.a
+		add_war_support = 0.02
+	}
+}
+
+country_event = { #bermuda stays
+	id = west_indies_federation_politics_events.830
+	title = west_indies_federation_politics_events.830.t
+	desc = west_indies_federation_politics_events.830.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.830 option west_indies_federation_politics_events.830.a"
+		name = west_indies_federation_politics_events.830.a
+		add_war_support = 0.02
+	}
+}
+
+country_event = { #WIF is talking with the TI (CAN)
+	id = west_indies_federation_politics_events.831
+	title = west_indies_federation_politics_events.831.t
+	desc = west_indies_federation_politics_events.831.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = WIF
+		is_in_faction_with = ENT
+		NOT = { has_war_with = INT }
+		NOT = { has_war_with = ENG }
+		WIF = {
+			is_subject = no
+			has_socialist_government = yes
+			focus_progress = { focus = WIF_join_internationale progress > 0 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.831 option west_indies_federation_politics_events.831.a"
+		name = west_indies_federation_politics_events.831.a #Withdraw from the Caribbean. They are not worth the trouble.
+		ai_chance = { base = 20 }
+		WIF = {
+			white_peace_with_ROOT = yes
+			country_event = { id = west_indies_federation_politics_events.832 days = 2 }
+		}
+		if = {
+			limit = { owns_state = 690 }
+			WIF = { transfer_state = 690 }
+		}
+		if = {
+			limit = { owns_state = 696 }
+			WIF = { transfer_state = 696 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.831 option west_indies_federation_politics_events.831.b"
+		name = west_indies_federation_politics_events.831.b #Withdraw, but retain control of Bermuda/Bahamas
+		trigger = {
+			OR = {
+				owns_state = 690
+				owns_state = 696
+			}
+		}
+		ai_chance = { base = 80 }
+		WIF = { country_event = { id = west_indies_federation_politics_events.833 days = 2 } }
+		custom_effect_tooltip = WIF_event_islands_kept
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.831 option west_indies_federation_politics_events.831.c"
+		name = west_indies_federation_politics_events.831.c #Continue the war
+		ai_chance = { base = 0 }
+		custom_effect_tooltip = WIF_revolution_internationale
+	}
+}
+
+country_event = { #Canada withdraws from the Caribbean (WIF)
+	id = west_indies_federation_politics_events.832
+	title = west_indies_federation_politics_events.832.t
+	desc = west_indies_federation_politics_events.832.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_war_with = FROM
+		has_socialist_government = yes
+		FROM = {
+			is_in_faction_with = ENT
+			NOT = { has_war_with = INT }
+			NOT = { has_war_with = ENG }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.832 option west_indies_federation_politics_events.832.a"
+		name = west_indies_federation_politics_events.832.a
+		add_stability = 0.1
+	}
+}
+
+country_event = { #Canada retains Bermuda/Bahamas (WIF)
+	id = west_indies_federation_politics_events.833
+	title = west_indies_federation_politics_events.833.t
+	desc = west_indies_federation_politics_events.833.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_war_with = FROM
+		has_socialist_government = yes
+		FROM = {
+			is_in_faction_with = ENT
+			NOT = { has_war_with = INT }
+			NOT = { has_war_with = ENG }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.833 option west_indies_federation_politics_events.833.a"
+		name = west_indies_federation_politics_events.833.a #Nothing we can do.
+		add_stability = 0.05
+		ENT = { white_peace_with_ROOT = yes }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.833 option west_indies_federation_politics_events.833.b"
+		name = west_indies_federation_politics_events.833.b #Unacceptable, they must return the islands.
+		ai_chance = { base = 0 }
+		CAN = {
+			country_event = { id = west_indies_federation_politics_events.834 days = 2 }
+		}
+	}
+}
+
+country_event = { #WIF refuses peace (CAN)
+	id = west_indies_federation_politics_events.834
+	title = west_indies_federation_politics_events.834.t
+	desc = west_indies_federation_politics_events.834.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = WIF
+		is_in_faction_with = ENT
+		NOT = { has_war_with = INT }
+		NOT = { has_war_with = ENG }
+		WIF = {
+			is_subject = no
+			has_socialist_government = yes
+			focus_progress = { focus = WIF_join_internationale progress > 0 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.834 option west_indies_federation_politics_events.834.a"
+		name = west_indies_federation_politics_events.834.a #This is not worth the trouble.
+		ai_chance = { base = 100 }
+		WIF = {
+			white_peace_with_ROOT = yes
+			country_event = { id = west_indies_federation_politics_events.832 days = 2 }
+		}
+		if = {
+			limit = { owns_state = 690 }
+			WIF = { transfer_state = 690 }
+		}
+		if = {
+			limit = { owns_state = 696 }
+			WIF = { transfer_state = 696 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.834 option west_indies_federation_politics_events.834.b"
+		name = west_indies_federation_politics_events.834.b #Punish this insolence!
+		ai_chance = { base = 0 }
+		custom_effect_tooltip = WIF_revolution_internationale
+	}
+}
+
+country_event = { #WIF - we don't own the French territories anymore, we are suddenly much more stable
+	id = west_indies_federation_politics_events.835
+	title = west_indies_federation_politics_events.835.t
+	desc = west_indies_federation_politics_events.835.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_socialist_government = no
+		NOT = {
+			owns_any_state_of = {
+				310 #Cayenne
+				694 #French Caribbean
+				1037 #Inini
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event west_indies_federation_politics_events.835 option west_indies_federation_politics_events.835.a"
+		name = west_indies_federation_politics_events.835.a #Oh wait, that was the ticket!
+		WIF = {
+			custom_effect_tooltip = WIF_end_of_french_influence_tt
+			add_stability = 0.15
+			add_political_power = 50
+			hidden_effect = {
+				remove_ideas = WIF_cayenne_agreement
+				remove_ideas = WIF_cayenne_agreement_normal_socdems
+				remove_ideas = WIF_cayenne_agreement_ncp1
+				remove_ideas = WIF_cayenne_agreement_ncp2
+				remove_ideas = WIF_NCP_concessions_2nd_Cayenne
+				remove_ideas = WIF_Unity_concessions_2nd_Cayenne
+				remove_ideas = WIF_SocDem_concessions_2nd_Cayenne
+				remove_ideas = WIF_2nd_Cayenne_Agreement
+				remove_ideas = WIF_sangster_bill
+				remove_ideas = WIF_cayenne_agreement_2_00
+				remove_ideas = WIF_cayenne_agreement_2_01
+				remove_ideas = WIF_cayenne_agreement_2_02
+				remove_ideas = WIF_cayenne_agreement_2_03
+				remove_ideas = WIF_cayenne_agreement_2_04
+				remove_ideas = WIF_cayenne_agreement_2_05
+				remove_ideas = WIF_cayenne_agreement_2_06
+				remove_ideas = WIF_cayenne_agreement_2_10
+				remove_ideas = WIF_cayenne_agreement_2_11
+				remove_ideas = WIF_cayenne_agreement_2_12
+				remove_ideas = WIF_cayenne_agreement_2_13
+				remove_ideas = WIF_cayenne_agreement_2_14
+				remove_ideas = WIF_cayenne_agreement_2_15
+				remove_ideas = WIF_cayenne_agreement_2_16
+				set_temp_variable = { WIF_socialist_tensions_change_var = 55 }
+				WIF_decrease_socialist_tensions = yes
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = -0.3
+			}
+			add_popularity = {
+				ideology = radical_socialist
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = syndicalist
+				popularity = -0.05
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = -0.025
+			}
+		}
+	}
+}
+

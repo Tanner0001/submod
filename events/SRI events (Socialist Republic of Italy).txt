@@ -1,0 +1,2976 @@
+####################################
+# Socialist Republic of Italy Events
+####################################
+
+add_namespace = socialist_italy_events
+
+### initial events ###
+country_event = { # Mussolini signs the Totalist Charter
+	id = socialist_italy_events.2
+	title = socialist_italy_events.2.t
+	desc = socialist_italy_events.2.d
+	picture = GFX_report_event_SRI_mussolini
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.2 option socialist_italy_events.2.a"
+		name = socialist_italy_events.2.a
+		add_stability = -0.05
+		set_temp_variable = { coalition_partner_var = token:totalist }
+		remove_from_coalition = yes
+		swap_ideas = {
+			remove_idea = SRI_dannunzian_coalition
+			add_idea = SRI_broken_orthodoxy
+		}
+	}
+}
+country_event = { # 1936 elections
+	id = socialist_italy_events.3
+	title = socialist_italy_events.3.t
+	desc = socialist_italy_events.3.d
+	picture = GFX_report_event_GRE_election
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # Oh noes
+		log = "[GetLogInfo]: event socialist_italy_events.3 option socialist_italy_events.3.a"
+		name = socialist_italy_events.3.a
+		add_political_power = -50
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.03
+		}
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.05
+		}
+		set_country_flag = SRI_1936_elections_held
+	}
+}
+country_event = { # Bop activation
+	id = socialist_italy_events.4
+	title = socialist_italy_events.4.t
+	desc = socialist_italy_events.4.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.4 option socialist_italy_events.4.a"
+		name = socialist_italy_events.4.a
+		custom_effect_tooltip = socialist_italy_events.4.a.tt
+		add_country_leader_role = {
+			character = SRI_benito_mussolini
+			promote_leader = yes
+			country_leader = {
+				desc = SRI_benito_mussolini_leader_desc
+				ideology = syndicalist_subtype
+			}
+		}
+		add_country_leader_role = {
+			character = SRI_benito_mussolini
+			promote_leader = yes
+			country_leader = {
+				desc = SRI_benito_mussolini_leader_desc
+				ideology = radical_socialist_subtype
+			}
+		}
+		hidden_effect = {
+			activate_advisor = SRI_angelo_tasca_sic
+			activate_targeted_decision = { target = FROM decision = SRI_abuse_the_presidency_bop_decision }
+			activate_targeted_decision = { target = FROM decision = SRI_launch_strike_bop_decision }
+			activate_targeted_decision = { target = FROM decision = SRI_let_blackshirts_loose_bop_decision }
+			activate_targeted_decision = { target = FROM decision = SRI_negotiate_with_factory_cooperatives }
+			country_event = { id = socialist_italy_events.10 days = 15 random_days = 20 } # pulse event
+		}
+		set_power_balance = {
+			id = SRI_power_balance
+			left_side = SRI_syndie_side
+			right_side = SRI_totalist_side
+			set_default = yes
+		}
+	}
+}
+
+# BoP events
+
+country_event = { # Radsoc gov forms
+	id = socialist_italy_events.5
+	title = socialist_italy_events.5.t
+	desc = socialist_italy_events.5.d
+	picture = GFX_report_event_generic_reporters
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.5 option socialist_italy_events.5.a"
+		name = socialist_italy_events.5.a
+		if = {
+			limit = {
+				has_power_balance = {
+					id = SRI_power_balance
+				}
+			}
+			set_politics = {
+				ruling_party = radical_socialist
+				elections_allowed = yes
+			}
+			add_popularity = {
+				ideology = radical_socialist
+				popularity = 0.05
+			}
+			activate_advisor = SRI_carlo_rosselli_sic
+		}
+	}
+}
+country_event = { # Syndie gov forms
+	id = socialist_italy_events.6
+	title = socialist_italy_events.6.t
+	desc = socialist_italy_events.6.d
+	picture = GFX_report_event_generic_reporters
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.6 option socialist_italy_events.6.a"
+		name = socialist_italy_events.6.a
+		if = {
+			limit = {
+				has_power_balance = {
+					id = SRI_power_balance
+				}
+			}
+			set_politics = {
+				ruling_party = syndicalist
+				elections_allowed = yes
+			}
+			add_popularity = {
+				ideology = syndicalist
+				popularity = 0.05
+			}
+			activate_advisor = SRI_angelo_tasca_sic
+		}
+	}
+}
+country_event = { # Totalist gov forms
+	id = socialist_italy_events.7
+	title = socialist_italy_events.7.t
+	desc = socialist_italy_events.7.d
+	picture = GFX_report_event_generic_reporters
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.7 option socialist_italy_events.7.a"
+		name = socialist_italy_events.7.a
+		if = {
+			limit = {
+				has_power_balance = {
+					id = SRI_power_balance
+				}
+			}
+			set_politics = {
+				ruling_party = totalist
+				elections_allowed = yes
+			}
+			add_popularity = {
+				ideology = totalist
+				popularity = 0.05
+			}
+			activate_advisor = SRI_alceste_de_ambris_sic
+		}
+	}
+}
+country_event = { # elections in a month
+	id = socialist_italy_events.8
+	title = socialist_italy_events.8.t
+	desc = socialist_italy_events.8.d
+	picture = GFX_report_event_communists_cheer
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.8 option socialist_italy_events.8.a"
+		name = socialist_italy_events.8.a
+		set_country_flag = SRI_reset_election_timer
+		custom_effect_tooltip = socialist_italy_events.4.a.tt
+		hidden_effect = {
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = var:current_party_ideology_group
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 1
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+		}
+	}
+}
+
+country_event = { # BoP ending
+	id = socialist_italy_events.9
+	title = socialist_italy_events.9.t
+	desc = {
+		trigger = {
+			is_power_balance_in_range = {
+				id = SRI_power_balance
+				range = SRI_radsoc_side
+			}
+		}
+		text = socialist_italy_events.9.d.r
+	}
+	desc = {
+		trigger = {
+			is_power_balance_in_range = {
+				id = SRI_power_balance
+				range = SRI_bop_syndie_in_control_side
+			}
+		}
+		text = socialist_italy_events.9.d.s
+	}
+	desc = {
+		trigger = {
+			is_power_balance_in_range = {
+				id = SRI_power_balance
+				range = SRI_bop_totalist_in_control_side
+			}
+		}
+		text = socialist_italy_events.9.d.t
+	}
+	picture = GFX_report_event_GRE_election
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		has_country_flag = SRI_italy_unified_flag
+		has_country_flag = SRI_1936_elections_held
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			promote_character = SRI_carlo_rosselli
+			SRI_giuseppe_giulietti = {
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = SRI_giuseppe_giulietti_2_leader_desc
+						ideology = syndicalist_subtype
+					}
+					promote_leader = yes
+				}
+			}
+			SRI_benito_mussolini = {
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = SRI_benito_mussolini_2_leader_desc
+						ideology = totalist_subtype
+					}
+					promote_leader = yes
+				}
+			}
+			complete_national_focus = SRI_making_the_new_italy
+		}
+	}
+
+	option = { # RadSoc
+		log = "[GetLogInfo]: event socialist_italy_events.9 option socialist_italy_events.9.a"
+		name = socialist_italy_events.9.a
+		trigger = {
+			OR = {
+				AND = {
+					is_power_balance_in_range = {
+						id = SRI_power_balance
+						range = SRI_radsoc_side
+					}
+					OR = {
+						is_ai = no
+						has_game_rule = { rule = SRI_path option = DEFAULT }
+					}
+				}
+				AND = {
+					is_ai = yes
+					OR = {
+						has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+						has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+						has_country_flag = SRI_radsoc_ai
+					}
+				}
+			}
+		}
+		complete_national_focus = SRI_seven_points_manifesto
+	}
+
+	option = { # Syndie
+		log = "[GetLogInfo]: event socialist_italy_events.9 option socialist_italy_events.9.b"
+		name = socialist_italy_events.9.b
+		trigger = {
+			OR = {
+				AND = {
+					is_power_balance_in_range = {
+						id = SRI_power_balance
+						range = SRI_bop_syndie_in_control_side
+					}
+					OR = {
+						is_ai = no
+						has_game_rule = { rule = SRI_path option = DEFAULT }
+					}
+				}
+				AND = {
+					is_ai = yes
+					OR = {
+						has_game_rule = { rule = SRI_path option = SRI_PATH_VITTORIO_SYNDIE }
+						has_game_rule = { rule = SRI_path option = SRI_PATH_MESCHI_SYNDIE }
+						has_game_rule = { rule = SRI_path option = SRI_PATH_NENNI_SYNDIE }
+						has_country_flag = SRI_syndicalist_ai
+					}
+				}
+			}
+		}
+		complete_national_focus = SRI_the_syndicalist_orthodoxy
+	}
+
+	option = { # Tot
+		log = "[GetLogInfo]: event socialist_italy_events.9 option socialist_italy_events.9.c"
+		name = socialist_italy_events.9.c
+		trigger = {
+			OR = {
+				AND = {
+					is_power_balance_in_range = {
+						id = SRI_power_balance
+						range = SRI_bop_totalist_in_control_side
+					}
+					OR = {
+						is_ai = no
+						has_game_rule = { rule = SRI_path option = DEFAULT }
+					}
+				}
+				AND = {
+					is_ai = yes
+					OR = {
+						has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST }
+						has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST }
+						has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST }
+						has_country_flag = SRI_totalist_ai
+					}
+				}
+			}
+		}
+		complete_national_focus = SRI_the_fascist_revolution
+	}
+
+	after = {
+		hidden_effect = {
+			remove_power_balance = { id = SRI_power_balance }
+		}
+	}
+}
+
+country_event = { # BoP pulse event
+	id = socialist_italy_events.10
+
+	is_triggered_only = yes
+	hidden = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	immediate = {
+		country_event = { id = socialist_italy_events.10 days = 60 random_days = 60 }
+	}
+
+	option = { # Pact of Pacification
+		log = "[GetLogInfo]: event socialist_italy_events.10 option AI_OPTION"
+		name = AI_OPTION #PACIFICATION
+		trigger = {
+			NOT = {
+				is_power_balance_in_range = {
+					id = SRI_power_balance
+					range = SRI_radsoc_side
+				}
+			}
+		}
+		country_event = socialist_italy_events.11
+		ai_chance = { base = 1 }
+	}
+
+	option = { # Blackshirt actions
+		log = "[GetLogInfo]: event socialist_italy_events.10 option AI_OPTION"
+		name = AI_OPTION #BLACKSHIRTS
+		trigger = {
+			NOT = {
+				is_power_balance_in_range = {
+					id = SRI_power_balance
+					range = SRI_bop_totalist_in_control_side
+				}
+			}
+		}
+		country_event = socialist_italy_events.12
+		ai_chance = { base = 2 }
+	}
+
+	option = { # Strikes against Mussolini
+		log = "[GetLogInfo]: event socialist_italy_events.10 option AI_OPTION"
+		name = AI_OPTION #STRIKES
+		country_event = socialist_italy_events.13
+		ai_chance = { base = 2 }
+	}
+
+	option = { # Conflict between Presidency and Government
+		log = "[GetLogInfo]: event socialist_italy_events.10 option AI_OPTION"
+		name = AI_OPTION #CONFLICT
+		trigger = {
+			date > 1937.3.1
+			NOT = {
+				is_power_balance_in_range = {
+					id = SRI_power_balance
+					range = SRI_bop_totalist_in_control_side
+				}
+			}
+		}
+		country_event = socialist_italy_events.14
+		ai_chance = { base = 2 }
+	}
+
+	option = { # Papers against the Presidency
+		log = "[GetLogInfo]: event socialist_italy_events.10 option AI_OPTION"
+		name = AI_OPTION #PAPERS
+		trigger = {
+			is_power_balance_in_range = {
+				id = SRI_power_balance
+				range = SRI_bop_totalist_in_control_side
+			}
+		}
+		country_event = socialist_italy_events.15
+		ai_chance = { base = 2 }
+	}
+
+	option = { # Massive Rallies
+		log = "[GetLogInfo]: event socialist_italy_events.10 option AI_OPTION"
+		name = AI_OPTION #RALLIES
+		country_event = socialist_italy_events.16
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SRI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST } }
+				NOT = { has_country_flag = SRI_totalist_ai }
+			}
+		}
+	}
+
+	option = { # Support for the War Effort
+		log = "[GetLogInfo]: event socialist_italy_events.10 option AI_OPTION"
+		name = AI_OPTION #WAR_EFFORT
+		trigger = {
+			has_war = yes
+		}
+		country_event = socialist_italy_events.17
+		ai_chance = {
+			base = 3
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SRI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST } }
+				NOT = { has_country_flag = SRI_totalist_ai }
+			}
+		}
+	}
+
+	option = { # Rise in Revolutionary Fervour
+		log = "[GetLogInfo]: event socialist_italy_events.10 option AI_OPTION"
+		name = AI_OPTION #FERVOUR
+		country_event = socialist_italy_events.18
+		ai_chance = { base = 1 }
+	}
+}
+
+country_event = { # Pact of Pacification
+	id = socialist_italy_events.11
+	title = socialist_italy_events.11.t
+	desc = socialist_italy_events.11.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.11 option socialist_italy_events.11.a"
+		name = socialist_italy_events.11.a
+		add_political_power = -25
+		if = {
+			limit = {
+				is_power_balance_in_range = {
+					id = SRI_power_balance
+					range = SRI_bop_syndie_in_control_side
+				}
+			}
+			add_power_balance_value = {
+				id = SRI_power_balance
+				value = 0.15
+			}
+		}
+		else = {
+			add_power_balance_value = {
+				id = SRI_power_balance
+				value = -0.15
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SRI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC } }
+				NOT = { has_country_flag = SRI_radsoc_ai }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.11 option socialist_italy_events.11.b"
+		name = socialist_italy_events.11.b
+		add_stability = -0.05
+		if = {
+			limit = {
+				is_power_balance_in_range = {
+					id = SRI_power_balance
+					range = SRI_bop_syndie_in_control_side
+				}
+			}
+			add_power_balance_value = {
+				id = SRI_power_balance
+				value = -0.05
+			}
+		}
+		else = {
+			add_power_balance_value = {
+				id = SRI_power_balance
+				value = 0.05
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+					has_country_flag = SRI_radsoc_ai
+				}
+			}
+		}
+	}
+}
+
+country_event = { # Blackshirt Actions
+	id = socialist_italy_events.12
+	title = socialist_italy_events.12.t
+	desc = socialist_italy_events.12.d
+	picture = GFX_report_event_generic_fire
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.12 option socialist_italy_events.12.a"
+		name = socialist_italy_events.12.a
+		add_war_support = 0.05
+		add_stability = -0.1
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = 0.15
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_VITTORIO_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MESCHI_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_NENNI_SYNDIE }
+					has_country_flag = SRI_syndicalist_ai
+					AND = {
+						is_power_balance_in_range = { id = SRI_power_balance range > SRI_radsoc_side }
+						OR = {
+							has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+							has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+							has_country_flag = SRI_radsoc_ai
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.12 option socialist_italy_events.12.b"
+		name = socialist_italy_events.12.b
+		add_political_power = -50
+		add_stability = 0.05
+		add_manpower = -700
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = -0.05
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST }
+					has_country_flag = SRI_totalist_ai
+					AND = {
+						is_power_balance_in_range = { id = SRI_power_balance range < SRI_radsoc_side }
+						OR = {
+							has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+							has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+							has_country_flag = SRI_radsoc_ai
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+country_event = { # Strikes against Mussolini
+	id = socialist_italy_events.13
+	title = socialist_italy_events.13.t
+	desc = socialist_italy_events.13.d
+	picture = GFX_report_event_ITA_riot
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.13 option socialist_italy_events.13.a"
+		name = socialist_italy_events.13.a
+		add_war_support = -0.1
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = -0.15
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST }
+					has_country_flag = SRI_totalist_ai
+					AND = {
+						is_power_balance_in_range = { id = SRI_power_balance range < SRI_radsoc_side }
+						OR = {
+							has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+							has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+							has_country_flag = SRI_radsoc_ai
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.13 option socialist_italy_events.13.b"
+		name = socialist_italy_events.13.b
+		add_political_power = -25
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = 0.05
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_VITTORIO_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MESCHI_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_NENNI_SYNDIE }
+					has_country_flag = SRI_syndicalist_ai
+					AND = {
+						is_power_balance_in_range = { id = SRI_power_balance range > SRI_radsoc_side }
+						OR = {
+							has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+							has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+							has_country_flag = SRI_radsoc_ai
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+country_event = { # Conflict between President and Government
+	id = socialist_italy_events.14
+	title = socialist_italy_events.14.t
+	desc = socialist_italy_events.14.d
+	picture = GFX_report_event_generic_reporters
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.14 option socialist_italy_events.14.a"
+		name = socialist_italy_events.14.a
+		add_stability = -0.15
+		add_political_power = -200
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = 0.9
+		}
+		ai_chance = { base = 0 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.14 option socialist_italy_events.14.b"
+		name = socialist_italy_events.14.b
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = -0.15
+		}
+		ai_chance = { base = 1 }
+	}
+}
+
+country_event = { # Papers against the Presidency
+	id = socialist_italy_events.15
+	title = socialist_italy_events.15.t
+	desc = socialist_italy_events.15.d
+	picture = GFX_report_event_generic_workers
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.15 option socialist_italy_events.15.a"
+		name = socialist_italy_events.15.a
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = -0.15
+		}
+		ai_chance = { base = 1 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.15 option socialist_italy_events.15.b"
+		name = socialist_italy_events.15.b
+		add_political_power = -50
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { # Massive Rallies
+	id = socialist_italy_events.16
+	title = socialist_italy_events.16.t
+	desc = socialist_italy_events.16.d
+	picture = GFX_report_event_SRI_mussolini_crowds
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.16 option socialist_italy_events.16.a"
+		name = socialist_italy_events.16.a
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = 0.1
+		}
+	}
+}
+
+country_event = { # Support for the War Effort
+	id = socialist_italy_events.17
+	title = socialist_italy_events.17.t
+	desc = socialist_italy_events.17.d
+	picture = GFX_report_event_SRI_mussolini_crowds
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.17 option socialist_italy_events.17.a"
+		name = socialist_italy_events.17.a
+		add_war_support = 0.1
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = 0.1
+		}
+	}
+}
+
+country_event = { # Rise in Revolutionary Fervour
+	id = socialist_italy_events.18
+	title = socialist_italy_events.18.t
+	desc = socialist_italy_events.18.d
+	picture = GFX_report_event_ITA_crowd
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_power_balance = {
+			id = SRI_power_balance
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.18 option socialist_italy_events.18.a"
+		name = socialist_italy_events.18.a
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = 0.1
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_VITTORIO_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MESCHI_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_NENNI_SYNDIE }
+					has_country_flag = SRI_syndicalist_ai
+					AND = {
+						is_power_balance_in_range = { id = SRI_power_balance range > SRI_radsoc_side }
+						OR = {
+							has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+							has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+							has_country_flag = SRI_radsoc_ai
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.18 option socialist_italy_events.18.b"
+		name = socialist_italy_events.18.b
+		add_power_balance_value = {
+			id = SRI_power_balance
+			value = -0.1
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST }
+					has_country_flag = SRI_totalist_ai
+					AND = {
+						is_power_balance_in_range = { id = SRI_power_balance range < SRI_radsoc_side }
+						OR = {
+							has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+							has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+							has_country_flag = SRI_radsoc_ai
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+### Chetniks ###
+
+country_event = { # The formation of the FMC
+	id = socialist_italy_events.22
+	title = socialist_italy_events.22.t
+	desc = socialist_italy_events.22.d
+	picture = GFX_report_event_SRI_italy_army
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = SRI
+		has_socialist_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.22 option socialist_italy_events.22.a"
+		name = socialist_italy_events.22.a
+		if = {
+			limit = {
+				has_idea = SRI_fmc_idea_starter
+			}
+			swap_ideas = {
+				remove_idea = SRI_fmc_idea_starter
+				add_idea = SRI_fmc_idea_1
+			}
+		}
+		else = {
+			swap_ideas = {
+				remove_idea = SRI_fmc_idea_still_here
+				add_idea = SRI_fmc_idea_1
+			}
+		}
+		activate_targeted_decision = { target = THIS decision = SRI_expand_police_operations }
+		activate_targeted_decision = { target = THIS decision = SRI_leave_an_opening_dec }
+		activate_mission = SRI_chetnik_operations
+		activate_mission = SRI_chetniks_on_the_move
+		hidden_effect = {
+			set_country_flag = { flag = SRI_fmc_attacks value = 0 }
+		}
+	}
+}
+country_event = { # Bounce event for FMC attacks
+	id = socialist_italy_events.23
+	title = socialist_italy_events.23.t
+
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		tag = SRI
+		exists = yes
+		OR = {
+			has_idea = SRI_fmc_idea_1
+			has_idea = SRI_fmc_idea_2
+			has_idea = SRI_fmc_idea_3
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.23 option AI_OPTION"
+		name = AI_OPTION #FACTORY_SABOTAGE
+		trigger = {
+			SRI = {
+				any_owned_state = {
+					is_core_of = SRI
+					non_damaged_building_level = { building = industrial_complex level > 0 }
+					is_controlled_by = SRI
+				}
+			}
+		}
+		ai_chance = { base = 25 }
+		SRI = {
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = SRI
+					non_damaged_building_level = { building = industrial_complex level > 0 }
+				}
+				save_event_target_as = attack_state
+			}
+			country_event = socialist_italy_events.25
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.23 option AI_OPTION"
+		name = AI_OPTION #ARMS_FACTORY_SABOTAGE
+		trigger = {
+			SRI = {
+				any_owned_state = {
+					is_core_of = SRI
+					non_damaged_building_level = { building = arms_factory level > 0 }
+					is_controlled_by = SRI
+				}
+			}
+		}
+		ai_chance = { base = 25 }
+		SRI = {
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = SRI
+					non_damaged_building_level = { building = arms_factory level > 0 }
+				}
+				save_event_target_as = attack_state
+			}
+			country_event = socialist_italy_events.26
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.23 option AI_OPTION"
+		name = AI_OPTION #RAILWAY_ATTACK
+		trigger = {
+			SRI = {
+				any_owned_state = {
+					is_core_of = SRI
+					non_damaged_building_level = { building = infrastructure level > 1 }
+					is_controlled_by = SRI
+				}
+			}
+		}
+		ai_chance = { base = 25 }
+		SRI = {
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = SRI
+					non_damaged_building_level = { building = infrastructure level > 1 }
+				}
+				save_event_target_as = attack_state
+			}
+			country_event = socialist_italy_events.27
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.23 option AI_OPTION"
+		name = AI_OPTION #GUARD_ATTACK
+		trigger = {
+			SRI = {
+				has_manpower > 3000
+				any_owned_state = {
+					is_core_of = SRI
+					is_controlled_by = SRI
+				}
+			}
+		}
+		ai_chance = { base = 25 }
+		SRI = {
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = SRI
+				}
+				save_event_target_as = attack_state
+			}
+			country_event = socialist_italy_events.28
+		}
+	}
+}
+country_event = { # FMC terrorism - factory sabotaged
+	id = socialist_italy_events.25
+	title = socialist_italy_events.25.t
+	desc = socialist_italy_events.25.d
+	picture = GFX_report_event_SRI_bombing
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.25 option socialist_italy_events.25.a"
+		name = socialist_italy_events.25.a
+		add_political_power = -25
+		add_stability = -0.02
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+		event_target:attack_state = {
+			damage_building = {
+				type = industrial_complex
+				damage = 1.0
+			}
+		}
+	}
+}
+country_event = { # FMC terrorism - arms factory sabotaged
+	id = socialist_italy_events.26
+	title = socialist_italy_events.26.t
+	desc = socialist_italy_events.26.d
+	picture = GFX_report_event_SRI_bombing
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.26 option socialist_italy_events.26.a"
+		name = socialist_italy_events.26.a
+		add_political_power = -25
+		add_stability = -0.02
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+		event_target:attack_state = {
+			damage_building = {
+				type = arms_factory
+				damage = 1.0
+			}
+		}
+	}
+}
+country_event = { # FMC terrorism - Railways attacked
+	id = socialist_italy_events.27
+	title = socialist_italy_events.27.t
+	desc = socialist_italy_events.27.d
+	picture = GFX_report_event_POL_train_bomb
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.27 option socialist_italy_events.27.a"
+		name = socialist_italy_events.27.a
+		add_political_power = -25
+		add_stability = -0.02
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+		event_target:attack_state = {
+			damage_building = {
+				type = infrastructure
+				damage = 2.0
+			}
+		}
+	}
+}
+country_event = { # FMC terrorism - Republican Guard attacked
+	id = socialist_italy_events.28
+	title = socialist_italy_events.28.t
+	desc = socialist_italy_events.28.d
+	picture = GFX_report_event_POL_train_bomb
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.28 option socialist_italy_events.28.a"
+		name = socialist_italy_events.28.a
+		add_political_power = -50
+		add_stability = -0.03
+		add_manpower = -3000
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+	}
+}
+country_event = { # FMC ringleaders caught
+	id = socialist_italy_events.29
+	title = socialist_italy_events.29.t
+	desc = socialist_italy_events.29.d
+	picture = GFX_report_event_SRI_arrests
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.29 option socialist_italy_events.29.a"
+		name = socialist_italy_events.29.a
+		add_stability = 0.02
+		swap_ideas = {
+			remove_idea = SRI_fmc_idea_1
+			add_idea = SRI_fmc_idea_2
+		}
+		set_country_flag = { flag = SRI_fmc_attacks value = 0 }
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.1
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = -0.05
+		}
+	}
+}
+country_event = { # Marshal Caviglia caught
+	id = socialist_italy_events.30
+	title = socialist_italy_events.30.t
+	desc = socialist_italy_events.30.d
+	picture = GFX_report_event_SRI_enrico_caviglia
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.30 option socialist_italy_events.30.a"
+		name = socialist_italy_events.30.a
+		SRI_enrico_caviglia = { kill_character = yes }
+		add_stability = 0.15
+		swap_ideas = {
+			remove_idea = SRI_fmc_idea_2
+			add_idea = SRI_fmc_idea_3
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.15
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = -0.1
+		}
+	}
+}
+
+### Postwar events ###
+
+country_event = { # Italy has been unified
+	id = socialist_italy_events.40
+	title = socialist_italy_events.40.t
+	desc = socialist_italy_events.40.d
+	picture = GFX_report_event_SRI_palace
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.40 option socialist_italy_events.40.a"
+		name = socialist_italy_events.40.a
+		hidden_effect = {
+			country_event = { id = socialist_italy_events.8 days = 5 }
+			country_event = { id = socialist_italy_events.68 days = 30 }
+			country_event = { id = socialist_italy_events.69 days = 130 }
+			country_event = { id = socialist_italy_events.72 days = 170 }
+			country_event = { id = socialist_italy_events.73 days = 270 }
+			country_event = { id = socialist_italy_events.74 days = 300 }
+			country_event = { id = socialist_italy_events.75 days = 330 }
+			country_event = { id = socialist_italy_events.76 days = 360 }
+			country_event = { id = socialist_italy_events.79 days = 420 }
+			country_event = { id = socialist_italy_events.80 days = 450 }
+			country_event = { id = socialist_italy_events.106 days = 90 }
+		}
+	}
+}
+country_event = { # Rosselli killed
+	id = socialist_italy_events.41
+	title = socialist_italy_events.41.t
+	desc = socialist_italy_events.41.d
+	picture = GFX_report_event_SRI_bombing
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.41 option socialist_italy_events.41.a"
+		name = socialist_italy_events.41.a
+		SRI_carlo_rosselli = { kill_character = yes }
+		promote_character = SRI_emilio_lussu
+		add_ideas = SRI_massive_protests_idea
+		activate_mission = SRI_massive_protests_mission
+	}
+}
+country_event = { # Plot against Mussolini
+	id = socialist_italy_events.42
+	title = socialist_italy_events.42.t
+	desc = socialist_italy_events.42.d
+	picture = GFX_report_event_SRI_mussolini
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.42 option socialist_italy_events.42.a"
+		name = socialist_italy_events.42.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SRI_path option = DEFAULT } }
+			}
+		}
+		country_event = { id = socialist_italy_events.43 days = 5 }
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.42 option socialist_italy_events.42.b"
+		name = socialist_italy_events.42.b
+		ai_chance = { base = 90 }
+		country_event = { id = socialist_italy_events.44 days = 6 }
+	}
+}
+country_event = { # Veterans Coup
+	id = socialist_italy_events.43
+	title = socialist_italy_events.43.t
+	desc = socialist_italy_events.43.d
+	picture = GFX_report_event_SRI_italy_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.43 option socialist_italy_events.43.a"
+		name = socialist_italy_events.43.a
+		uncomplete_national_focus = {
+			focus = SRI_the_fascist_revolution
+			uncomplete_children = yes
+		}
+		complete_national_focus = SRI_seven_points_manifesto
+		add_popularity = {
+			ideology = totalist
+			popularity = -0.4
+		}
+		remove_ideas = SRI_massive_protests_idea
+		if = {
+			limit = { has_idea = SRI_squadrismo_idea }
+			remove_ideas = SRI_squadrismo_idea
+		}
+		SRI_purge_fascist_characters = yes
+	}
+}
+country_event = { # Mussolini speech
+	id = socialist_italy_events.44
+	title = socialist_italy_events.44.t
+	desc = socialist_italy_events.44.d
+	picture = GFX_report_event_SRI_mussolini_crowds
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.44 option socialist_italy_events.44.a"
+		name = socialist_italy_events.44.a
+		add_stability = 0.1
+		hidden_effect = {
+			SRI_benito_mussolini = {
+				set_portraits = {
+					civilian = { large = GFX_portrait_SRI_benito_mussolini_civilian_large_blackshirt }
+				}
+			}
+		}
+	}
+}
+country_event = { # Death of the Fascist Revolution
+	id = socialist_italy_events.45
+	title = socialist_italy_events.45.t
+	desc = socialist_italy_events.45.d
+	picture = GFX_report_event_ITA_protest
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.45 option socialist_italy_events.45.a"
+		name = socialist_italy_events.45.a
+		uncomplete_national_focus = {
+			focus = SRI_the_fascist_revolution
+			uncomplete_children = yes
+		}
+		complete_national_focus = SRI_the_syndicalist_orthodoxy
+		add_popularity = {
+			ideology = totalist
+			popularity = -0.4
+		}
+		remove_ideas = SRI_massive_protests_idea
+		if = {
+			limit = { has_idea = SRI_squadrismo_idea }
+			remove_ideas = SRI_squadrismo_idea
+		}
+		SRI_purge_fascist_characters = yes
+	}
+}
+country_event = { # Mussolini appoints Togliatti
+	id = socialist_italy_events.46
+	title = socialist_italy_events.46.t
+	desc = socialist_italy_events.46.d
+	picture = GFX_report_event_SRI_togliatti
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.46 option socialist_italy_events.46.a"
+		name = socialist_italy_events.46.a
+		activate_advisor = SRI_palmiro_togliatti_sic
+		hidden_effect = {
+			country_event = { id = socialist_italy_events.47 days = 10 random_days = 5 }
+		}
+	}
+}
+country_event = { # Mussolini Shot!
+	id = socialist_italy_events.47
+	title = socialist_italy_events.47.t
+	desc = socialist_italy_events.47.d
+	picture = GFX_report_event_generic_riot1
+
+	is_triggered_only = yes
+
+	option = { # rip bozo
+		log = "[GetLogInfo]: event socialist_italy_events.47 option socialist_italy_events.47.a"
+		name = socialist_italy_events.47.a
+		SRI_benito_mussolini = { kill_character = yes }
+		promote_character = SRI_palmiro_togliatti
+		activate_advisor = SRI_luigi_longo_sic
+		hidden_effect = {
+			country_event = { id = socialist_italy_events.48 days = 3 }
+		}
+		mark_focus_tree_layout_dirty = yes
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST }
+			}
+		}
+	}
+	option = { # he lives, shame
+		log = "[GetLogInfo]: event socialist_italy_events.47 option socialist_italy_events.47.b"
+		name = socialist_italy_events.47.b
+		add_stability = 0.05
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.05
+		}
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SRI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST } }
+			}
+		}
+	}
+}
+country_event = { # Blackshirt Putsch
+	id = socialist_italy_events.48
+	title = socialist_italy_events.48.t
+	desc = socialist_italy_events.48.d
+	picture = GFX_report_event_SRI_arrests
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.48 option socialist_italy_events.48.a"
+		name = socialist_italy_events.48.a
+		add_stability = -0.15
+		add_popularity = {
+			ideology = totalist
+			popularity = -0.15
+		}
+		SRI_purge_fascist_characters = yes
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.48 option socialist_italy_events.48.b"
+		name = socialist_italy_events.48.b
+		promote_character = SRI_alceste_de_ambris
+		activate_advisor = SRI_nicola_bombacci_sic
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST }
+			}
+		}
+	}
+
+	after = {
+		mark_focus_tree_layout_dirty = yes
+	}
+}
+
+country_event = { # Prisoner of the Vatican
+	id = socialist_italy_events.50
+	title = socialist_italy_events.50.t
+	desc = socialist_italy_events.50.d
+	picture = GFX_report_event_ITA_pope
+
+	is_triggered_only = yes
+
+	option = { # Forced exile
+		log = "[GetLogInfo]: event socialist_italy_events.50 option socialist_italy_events.50.a"
+		name = socialist_italy_events.50.a
+		add_political_power = 50
+		add_war_support = -0.05
+		hidden_effect = {
+			country_event = { id = socialist_italy_events.70 days = 50 random_days = 100 }
+		}
+	}
+}
+country_event = { # The Pope is Exiled
+	id = socialist_italy_events.53
+	title = socialist_italy_events.53.t
+	desc = socialist_italy_events.53.d
+	picture = GFX_report_event_ITA_pope
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.53 option socialist_italy_events.53.a"
+		name = socialist_italy_events.53.a
+		add_political_power = 100
+		add_stability = -0.1
+		every_collection_element = {
+			input = {
+				input = constant:country_groups.catholic_countries
+				operators = {
+					limit = {
+						has_socialist_government = no
+						exists = yes
+						NOT = { tag = ROOT }
+					}
+				}
+				name = collection_catholic_countries
+			}
+			add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+			add_to_temp_array = { SRI_pope_flee_targets = THIS }
+		}
+		hidden_effect = {
+			country_event = { id = socialist_italy_events.70 days = 50 random_days = 100 }
+			if = {
+				limit = {
+					any_of_scopes = {
+						array = SRI_pope_flee_targets
+						is_actual_major = yes
+						is_subject = no
+						has_war = no
+					}
+				}
+				random_scope_in_array = {
+					array = SRI_pope_flee_targets
+					limit = {
+						is_actual_major = yes
+						is_subject = no
+						has_war = no
+					}
+					country_event = { id = socialist_italy_events.54 days = 7 }
+				}
+			}
+			else_if = {
+				limit = {
+					any_of_scopes = {
+						array = SRI_pope_flee_targets
+						is_subject = no
+						has_war = no
+					}
+				}
+				random_scope_in_array = {
+					array = SRI_pope_flee_targets
+					limit = {
+						is_subject = no
+						has_war = no
+					}
+					country_event = { id = socialist_italy_events.54 days = 7 }
+				}
+			}
+			else_if = {
+				limit = {
+					any_of_scopes = {
+						array = SRI_pope_flee_targets
+						is_subject = yes
+						has_war = no
+					}
+				}
+				random_scope_in_array = {
+					array = SRI_pope_flee_targets
+					limit = {
+						is_subject = yes
+						has_war = no
+					}
+					country_event = { id = socialist_italy_events.54 days = 7 }
+				}
+			}
+			else_if = {
+				limit = {
+					any_of_scopes = {
+						array = SRI_pope_flee_targets
+						has_capitulated = no
+					}
+				}
+				random_scope_in_array = {
+					array = SRI_pope_flee_targets
+					limit = { has_capitulated = no }
+					country_event = { id = socialist_italy_events.54 days = 7 }
+				}
+			}
+		}
+	}
+}
+country_event = { # Pope arrives in Catholic country
+	id = socialist_italy_events.54
+	title = socialist_italy_events.54.t
+	desc = socialist_italy_events.54.d
+	picture = GFX_report_event_ITA_pope
+
+	is_triggered_only = yes
+
+	trigger = {
+		exists = yes
+		has_socialist_government = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.54 option socialist_italy_events.54.a"
+		name = socialist_italy_events.54.a
+		add_political_power = 50
+		hidden_effect = {
+			ROOT = { save_event_target_as = refuge }
+			add_ideas = PAP_exiled_holy_see
+			random_other_country = {
+				limit = { is_ai = yes }
+				news_event = papal_state_events.71
+			}
+		}
+	}
+}
+country_event = { # Pope accepts the SRI
+	id = socialist_italy_events.65
+	title = socialist_italy_events.65.t
+	desc = socialist_italy_events.65.d
+	picture = GFX_report_event_ITA_pope
+
+	is_triggered_only = yes
+
+	option = { # yay!
+		log = "[GetLogInfo]: event socialist_italy_events.65 option socialist_italy_events.65.a"
+		name = socialist_italy_events.65.a
+		add_stability = 0.05
+		every_collection_element = {
+			input = {
+				input = constant:country_groups.catholic_countries
+				operators = {
+					limit = {
+						has_socialist_government = no
+						NOT = {
+							tag = ROOT
+							has_war_with = ROOT
+						}
+					}
+				}
+				name = collection_catholic_countries
+			}
+			add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+		}
+		hidden_effect = {
+			country_event = { id = socialist_italy_events.71 days = 50 random_days = 100 }
+		}
+	}
+}
+
+### Social Revolution ###
+country_event = { # Trial for the Republic of Italy
+	id = socialist_italy_events.68
+	title = socialist_italy_events.68.t
+	desc = socialist_italy_events.68.d
+	picture = GFX_report_event_HOL_mass_arrests
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.68 option socialist_italy_events.68.a"
+		name = socialist_italy_events.68.a
+		add_stability = 0.05
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.68 option socialist_italy_events.68.b"
+		name = socialist_italy_events.68.b
+		add_political_power = 20
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.05
+		}
+	}
+}
+country_event = { # What to do with Royal Palaces
+	id = socialist_italy_events.69
+	title = socialist_italy_events.69.t
+	desc = socialist_italy_events.69.d
+	picture = GFX_report_event_SRI_palace
+	is_triggered_only = yes
+
+	option = { # have local communes take them over
+		log = "[GetLogInfo]: event socialist_italy_events.69 option socialist_italy_events.69.a"
+		name = socialist_italy_events.69.a
+		add_stability = 0.05
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+	}
+	option = { # Turn them into Governmental buildings
+		log = "[GetLogInfo]: event socialist_italy_events.69 option socialist_italy_events.69.b"
+		name = socialist_italy_events.69.b
+		add_political_power = 20
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.05
+		}
+	}
+	option = { # turn them into youth palaces
+		log = "[GetLogInfo]: event socialist_italy_events.69 option socialist_italy_events.69.c"
+		name = socialist_italy_events.69.c
+		add_war_support = 0.05
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.05
+		}
+	}
+}
+country_event = { # Resistance to Secularism
+	id = socialist_italy_events.70
+	title = socialist_italy_events.70.t
+	desc = socialist_italy_events.70.d
+	picture = GFX_report_event_SRI_arrests
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.70 option socialist_italy_events.70.a"
+		name = socialist_italy_events.70.a
+		add_stability = -0.05
+	}
+}
+country_event = { # Christian socialist policies help
+	id = socialist_italy_events.71
+	title = socialist_italy_events.71.t
+	desc = socialist_italy_events.71.d
+	picture = GFX_report_event_SRI_catholic_priest
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.71 option socialist_italy_events.71.a"
+		name = socialist_italy_events.71.a
+		add_stability = 0.03
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+	}
+}
+country_event = { # Land Reform in Southern Italy
+	id = socialist_italy_events.72
+	title = socialist_italy_events.72.t
+	desc = socialist_italy_events.72.d
+	picture = GFX_report_event_SRI_italian_farmers
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.72 option socialist_italy_events.72.a"
+		name = socialist_italy_events.72.a
+		add_political_power = 20
+		837 = {
+			if = {
+				limit = {
+					is_owned_by = SRI
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+}
+country_event = { # industrialization of the south
+	id = socialist_italy_events.73
+	title = socialist_italy_events.73.t
+	desc = socialist_italy_events.73.d
+	picture = GFX_report_event_generic_factory_construction
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.73 option socialist_italy_events.73.a"
+		name = socialist_italy_events.73.a
+		156 = {
+			if = {
+				limit = {
+					is_owned_by = SRI
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+}
+country_event = { # syndicalization of the economy
+	id = socialist_italy_events.74
+	title = socialist_italy_events.74.t
+	desc = socialist_italy_events.74.d
+	picture = GFX_report_event_generic_factory_workers
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.74 option socialist_italy_events.74.a"
+		name = socialist_italy_events.74.a
+		random_owned_controlled_state = {
+			prioritize = { 156 }
+			limit = {
+				is_italy = yes
+				is_valid_state_for_development = yes
+				free_building_slots = { building = infrastructure size > 0 }
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			limit = {
+				is_italy = yes
+				is_valid_state_for_development = yes
+				free_building_slots = { building = infrastructure size > 0 }
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			limit = {
+				is_italy = yes
+				is_valid_state_for_development = yes
+				free_building_slots = { building = infrastructure size > 0 }
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.74 option socialist_italy_events.74.b"
+		name = socialist_italy_events.74.b
+		random_owned_controlled_state = {
+			prioritize = { 115 }
+			limit = {
+				is_italy = yes
+				is_valid_state_for_development = yes
+				free_building_slots = { building = industrial_complex size > 1 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.74 option socialist_italy_events.74.c"
+		name = socialist_italy_events.74.c
+		random_owned_controlled_state = {
+			prioritize = { 159 }
+			limit = {
+				is_italy = yes
+				is_valid_state_for_development = yes
+				free_building_slots = { building = arms_factory size > 1 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = arms_factory
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+}
+country_event = { # New Communes
+	id = socialist_italy_events.75
+	title = socialist_italy_events.75.t
+	desc = socialist_italy_events.75.d
+	picture = GFX_report_event_SRI_palace
+	is_triggered_only = yes
+	trigger = {
+		NOT = {
+			has_government = totalist
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.75 option socialist_italy_events.75.a"
+		name = socialist_italy_events.75.a
+		add_stability = 0.01
+	}
+}
+country_event = { # Resistance to social changes
+	id = socialist_italy_events.76
+	title = socialist_italy_events.76.t
+	desc = socialist_italy_events.76.d
+	picture = GFX_report_event_BEL_Protest
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.76 option socialist_italy_events.76.a"
+		name = socialist_italy_events.76.a
+		add_stability = -0.05
+	}
+}
+country_event = { # Secret Police help prevent trouble
+	id = socialist_italy_events.77
+	title = socialist_italy_events.77.t
+	desc = socialist_italy_events.77.d
+	picture = GFX_report_event_HOL_mass_arrests
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	trigger = {
+		has_government = totalist
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.77 option socialist_italy_events.77.a"
+		name = socialist_italy_events.77.a
+		add_stability = 0.03
+	}
+}
+country_event = { # Exhibition of the Revolution
+	id = socialist_italy_events.79
+	title = socialist_italy_events.79.t
+	desc = socialist_italy_events.79.d
+	picture = GFX_report_event_SRI_mussolini_crowds
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.79 option socialist_italy_events.79.a"
+		name = socialist_italy_events.79.a
+		add_political_power = 150
+	}
+}
+country_event = { # Women entering politics
+	id = socialist_italy_events.80
+	title = socialist_italy_events.80.t
+	desc = socialist_italy_events.80.d
+	picture = GFX_report_event_SRI_italy_women_congress
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.80 option socialist_italy_events.80.a"
+		name = socialist_italy_events.80.a
+		add_stability = 0.02
+	}
+}
+
+### Life in the SRI ###
+country_event = { # Christian Associations of Italian Workers
+	id = socialist_italy_events.86
+	title = socialist_italy_events.86.t
+	desc = socialist_italy_events.86.d
+	picture = GFX_report_event_SRI_catholic_priest
+
+	is_triggered_only = yes
+	trigger = {
+		NOT = {
+			has_government = totalist
+			has_completed_focus = SRI_exclude_catholic_unions
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.86 option socialist_italy_events.86.a"
+		name = socialist_italy_events.86.a
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+	}
+}
+country_event = { # Futuristic Architecture
+	id = socialist_italy_events.87
+	title = socialist_italy_events.87.t
+	desc = socialist_italy_events.87.d
+	picture = GFX_report_event_SRI_futurist_architecture
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.87 option socialist_italy_events.87.a"
+		name = socialist_italy_events.87.a
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.05
+		}
+	}
+}
+country_event = { # Associazione Ricreativa e Culturale Italiana
+	id = socialist_italy_events.88
+	title = socialist_italy_events.88.t
+	desc = socialist_italy_events.88.d
+	picture = GFX_report_event_ITA_italian_recreation1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.88 option socialist_italy_events.88.a"
+		name = socialist_italy_events.88.a
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.05
+		}
+	}
+}
+country_event = { # Unione Donne italiane
+	id = socialist_italy_events.89
+	title = socialist_italy_events.89.t
+	desc = socialist_italy_events.89.d
+	picture = GFX_report_event_SRI_italy_women_congress
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.89 option socialist_italy_events.89.a"
+		name = socialist_italy_events.89.a
+		add_political_power = 20
+	}
+}
+country_event = { # 1937 Championship between Bolgna and Torino
+	id = socialist_italy_events.90
+	title = socialist_italy_events.90.t
+	desc = socialist_italy_events.90.d
+	picture = GFX_report_event_SRI_italy_football
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.90 option socialist_italy_events.90.a"
+		name = socialist_italy_events.90.a
+		hidden_effect = {
+			random_list = {
+				50 = {
+					SRI = {
+						country_event = { id = socialist_italy_events.91 days = 2 }
+					}
+				}
+				50 = {
+					SRI = {
+						country_event = { id = socialist_italy_events.92 days = 2 }
+					}
+				}
+			}
+		}
+	}
+}
+country_event = { # Bologna Wins Football match
+	id = socialist_italy_events.91
+	title = socialist_italy_events.91.t
+	desc = socialist_italy_events.91.d
+	picture = GFX_report_event_SRI_italy_football
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.91 option socialist_italy_events.91.a"
+		name = socialist_italy_events.91.a
+		add_political_power = 20
+	}
+}
+country_event = { # Torino Wins Football match
+	id = socialist_italy_events.92
+	title = socialist_italy_events.92.t
+	desc = socialist_italy_events.92.d
+	picture = GFX_report_event_SRI_italy_football
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.92 option socialist_italy_events.92.a"
+		name = socialist_italy_events.92.a
+		add_political_power = 20
+	}
+}
+
+### Flavour Events ###
+country_event = { # The Founding of Cinecitt?
+	id = socialist_italy_events.100
+	title = socialist_italy_events.100.t
+	desc = socialist_italy_events.100.d
+	picture = GFX_report_event_SRI_cinecitta
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.100 option socialist_italy_events.100.a"
+		name = socialist_italy_events.100.a
+		add_political_power = 20
+	}
+}
+country_event = { # Death of Filippo Turati
+	id = socialist_italy_events.101
+	title = socialist_italy_events.101.t
+	desc = socialist_italy_events.101.d
+	picture = GFX_report_event_europe_funeral
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.101 option socialist_italy_events.101.a"
+		name = socialist_italy_events.101.a
+		add_political_power = 20
+	}
+}
+country_event = { # Maggio Musicale Fiorentino
+	id = socialist_italy_events.102
+	title = socialist_italy_events.102.t
+	desc = socialist_italy_events.102.d
+	picture = GFX_report_event_SRI_palace
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.102 option socialist_italy_events.102.a"
+		name = socialist_italy_events.102.a
+		add_political_power = 20
+	}
+}
+country_event = { # Enrico Fermi creates the Pisa Pile-1
+	id = socialist_italy_events.103
+	title = socialist_italy_events.103.t
+	desc = socialist_italy_events.103.d
+	picture = GFX_report_event_SRI_enrico_fermi
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.103 option socialist_italy_events.103.a"
+		name = socialist_italy_events.103.a
+		add_political_power = 20
+		hidden_effect = {
+			country_event = { id = socialist_italy_events.104 days = 150 }
+		}
+	}
+}
+country_event = { # Enrico Fermi wins Noble Prize
+	id = socialist_italy_events.104
+	title = socialist_italy_events.104.t
+	desc = socialist_italy_events.104.d
+	picture = GFX_report_event_SRI_enrico_fermi
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.104 option socialist_italy_events.104.a"
+		name = socialist_italy_events.104.a
+		add_political_power = 20
+	}
+}
+country_event = { # Commune of San Marino
+	id = socialist_italy_events.105
+	title = socialist_italy_events.105.t
+	desc = socialist_italy_events.105.d
+	picture = GFX_report_event_SRI_palace
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.105 option socialist_italy_events.105.a"
+		name = socialist_italy_events.105.a
+		add_stability = 0.01
+	}
+}
+country_event = { # Roma Jazz Festival
+	id = socialist_italy_events.106
+	title = socialist_italy_events.106.t
+	desc = socialist_italy_events.106.d
+	picture = GFX_report_event_SRI_happy_crowds
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.106 option socialist_italy_events.106.a"
+		name = socialist_italy_events.106.a
+		add_political_power = 20
+	}
+}
+country_event = { # The Giro d'Italia is refounded
+	id = socialist_italy_events.107
+	title = socialist_italy_events.107.t
+	desc = socialist_italy_events.107.d
+	picture = GFX_report_event_SRI_bike_race
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = SRI
+		has_country_flag = SRI_italy_unified_flag
+		has_war = no
+	}
+
+	mean_time_to_happen = {
+		months = 12
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.107 option socialist_italy_events.107.a"
+		name = socialist_italy_events.107.a
+		add_political_power = 20
+		hidden_effect = {
+			set_country_flag = SRI_giro_race_founded
+		}
+	}
+}
+country_event = { # Fausto Coppi wins the Giro D'Italia
+	id = socialist_italy_events.108
+	title = socialist_italy_events.108.t
+	desc = socialist_italy_events.108.d
+	picture = GFX_report_event_SRI_bike_race
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = SRI
+		has_country_flag = SRI_italy_unified_flag
+		has_country_flag = SRI_giro_race_founded
+		date > 1940.4.21
+	}
+
+	mean_time_to_happen = {
+		days = 30
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.108 option socialist_italy_events.108.a"
+		name = socialist_italy_events.108.a
+		add_political_power = 20
+	}
+}
+country_event = { # Film Spartacus
+	id = socialist_italy_events.109
+	title = socialist_italy_events.109.t
+	desc = socialist_italy_events.109.d
+	picture = GFX_report_event_SRI_cinecitta
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.109 option socialist_italy_events.109.a"
+		name = socialist_italy_events.109.a
+		add_political_power = 20
+	}
+}
+
+### Revamp flavor events ###
+
+country_event = { # Garibaldi's Hymn becomes the new national anthem
+	id = socialist_italy_events.130
+	title = socialist_italy_events.130.t
+	desc = socialist_italy_events.130.d
+	picture = GFX_report_event_SRI_garibaldi_horse
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.130 option socialist_italy_events.130.a"
+		name = socialist_italy_events.130.a
+		add_stability = 0.05
+	}
+}
+
+country_event = { # Local elections of [GetYear]
+	id = socialist_italy_events.131
+	title = socialist_italy_events.131.t
+	desc = socialist_italy_events.131.d
+	picture = GFX_report_event_ser_election
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.131 option socialist_italy_events.131.a"
+		name = socialist_italy_events.131.a
+		add_political_power = 20
+		add_stability = 0.05
+	}
+}
+
+country_event = { # Union-Actionist Pact
+	id = socialist_italy_events.132
+	title = socialist_italy_events.132.t
+	desc = socialist_italy_events.132.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.132 option socialist_italy_events.132.a"
+		name = socialist_italy_events.132.a
+	}
+}
+
+country_event = { # de Ambris returns to the USI
+	id = socialist_italy_events.133
+	title = socialist_italy_events.133.t
+	desc = socialist_italy_events.133.d
+	picture = GFX_report_event_SPA_civwar
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.133 option socialist_italy_events.133.a"
+		name = socialist_italy_events.133.a
+	}
+}
+
+country_event = { # Pertini speaks for socialist unity
+	id = socialist_italy_events.134
+	title = socialist_italy_events.134.t
+	desc = socialist_italy_events.134.d
+	picture = GFX_report_event_SRI_pertini_speech
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.134 option socialist_italy_events.134.a"
+		name = socialist_italy_events.134.a
+		add_popularity = {
+			popularity = 0.025
+			ideology = radical_socialist
+		}
+		add_popularity = {
+			popularity = 0.025
+			ideology = social_democrat
+		}
+	}
+}
+
+country_event = { # First Congress of CGIL
+	id = socialist_italy_events.135
+	title = socialist_italy_events.135.t
+	desc = socialist_italy_events.135.d
+	picture = GFX_report_event_SRI_happy_crowds
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.135 option socialist_italy_events.135.a"
+		name = socialist_italy_events.135.a
+	}
+}
+
+country_event = { # Local Elections to the Chambers of Labour
+	id = socialist_italy_events.136
+	title = socialist_italy_events.136.t
+	desc = socialist_italy_events.136.d
+	picture = GFX_report_event_ser_election
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.136 option socialist_italy_events.136.a"
+		name = socialist_italy_events.136.a
+	}
+}
+
+country_event = { # New Agrarian Reform
+	id = socialist_italy_events.142
+	title = socialist_italy_events.142.t
+	desc = socialist_italy_events.142.d
+	picture = GFX_report_event_SRI_italian_farmers
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.142 option socialist_italy_events.142.a"
+		name = socialist_italy_events.142.a
+	}
+}
+
+country_event = { # Restoration of the Presidency, Gaetano Salvemini elected as fully ceremonial HoS with Rosselli returning to SiC
+	id = socialist_italy_events.143
+	title = socialist_italy_events.143.t
+	desc = socialist_italy_events.143.d
+	picture = GFX_report_event_ITA_milan
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.143 option socialist_italy_events.143.a"
+		name = socialist_italy_events.143.a
+		promote_character = SRI_gaetano_salvemini
+		activate_advisor = SRI_carlo_rosselli_sic
+	}
+}
+
+country_event = { # The New Compromise (a new deal to allow a combined union-parliamentarian house is made)
+	id = socialist_italy_events.144
+	title = socialist_italy_events.144.t
+	desc = socialist_italy_events.144.d
+	picture = GFX_report_event_SWE_Trade_Unions
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.144 option socialist_italy_events.144.a"
+		name = socialist_italy_events.144.a
+	}
+}
+
+country_event = { # SRI rallies syndicalists in ITA
+	id = socialist_italy_events.126
+	title = socialist_italy_events.126.t
+	desc = socialist_italy_events.126.d
+	picture = GFX_report_event_GRE_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.126 option socialist_italy_events.126.a"
+		name = socialist_italy_events.126.a
+		add_stability = -0.05
+	}
+}
+
+#balance broken notification event
+news_event = {
+	id = socialist_italy_events.127
+	immediate = { log = "[GetLogInfo]: event socialist_italy_events.127" }
+	title = socialist_italy_events.127.t
+	desc = socialist_italy_events.127.d
+	picture = GFX_news_event_ITA_big_crowd
+
+	is_triggered_only = yes
+
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			is_in_faction_with = INT
+			is_in_faction_with = GER
+			is_in_faction_with = AUS
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.127 option socialist_italy_events.127.a"
+		name = socialist_italy_events.127.a
+		trigger = { tag = SRI }
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.127 option socialist_italy_events.127.b"
+		name = socialist_italy_events.127.b
+		trigger = {
+			NOT = { tag = SRI }
+			is_italian_tag = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.127 option socialist_italy_events.127.c"
+		name = socialist_italy_events.127.c
+		trigger = { is_italian_tag = no }
+	}
+}
+
+#balance broken manually
+country_event = {
+	id = socialist_italy_events.1270
+	title = socialist_italy_events.127.t #the title appears in event tooltips firing this event
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	hidden = yes
+
+	trigger = {
+		has_global_flag = KR_italy_balance
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.1270 option 1"
+		clr_global_flag = KR_italy_balance
+		news_event = socialist_italy_events.127
+	}
+}
+
+#balance broken by on_war_relation_added
+country_event = {
+	id = socialist_italy_events.1271
+	title = socialist_italy_events.127.t #the title appears in event tooltips firing this event
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	hidden = yes
+
+	trigger = {
+		SRI = {
+			OR = {
+				has_war_with = AUS
+				has_war_with = GER
+				any_enemy_country = {
+					OR = {
+						AND = {
+							is_italian_tag = yes
+							any_allied_country = {
+								has_war_with = SRI
+								NOT = { is_subject_of = PREV }
+							}
+						}
+						AND = {
+							is_major = yes
+							num_of_controlled_factories > 50
+						}
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.1271 option 1"
+		country_event = socialist_italy_events.1270
+	}
+}
+
+country_event = { #SRI is invited to the Internationale
+	id = socialist_italy_events.128
+	title = socialist_italy_events.128.t
+	desc = socialist_italy_events.128.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { is_in_faction_with = FROM }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.128 option socialist_italy_events.128.a"
+		name = socialist_italy_events.128.a # Of course!
+		FROM = { add_to_faction = ROOT }
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.128 option socialist_italy_events.128.b"
+		name = socialist_italy_events.128.b # Refuse
+		ai_chance = { base = 0 }
+		set_country_flag = SRI_refused_intl_membership
+		add_political_power = -250
+		add_stability = -0.25
+		set_temp_variable = { ideology_change_var = -0.25 }
+		change_ruling_party_popularity = yes
+		hidden_effect = {
+			remove_opinion_modifier = { target = FRA modifier = KR_close_allies }
+			remove_opinion_modifier = { target = ENG modifier = KR_close_allies }
+			FRA = {
+				remove_opinion_modifier = { target = SRI modifier = KR_close_allies }
+				add_opinion_modifier = { target = SRI modifier = KR_disapproves_of_govt }
+			}
+			ENG = {
+				remove_opinion_modifier = { target = SRI modifier = KR_close_allies }
+				add_opinion_modifier = { target = SRI modifier = KR_disapproves_of_govt }
+			}
+		}
+	}
+}
+
+country_event = { #SRI wants to join the Internationale
+	id = socialist_italy_events.129
+	title = socialist_italy_events.129.t
+	desc = socialist_italy_events.129.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { is_in_faction_with = FROM }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.129 option socialist_italy_events.128.a"
+		name = socialist_italy_events.128.a # Of course!
+		add_to_faction = FROM
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.129 option socialist_italy_events.128.b"
+		name = socialist_italy_events.128.b # Refuse
+		ai_chance = { base = 0 }
+		FROM = { set_country_flag = SRI_refused_intl_membership }
+		add_political_power = -200
+		add_stability = -0.2
+		set_temp_variable = { ideology_change_var = -0.2 }
+		change_ruling_party_popularity = yes
+		hidden_effect = {
+			SRI = {
+				remove_opinion_modifier = { target = FRA modifier = KR_close_allies }
+				remove_opinion_modifier = { target = ENG modifier = KR_close_allies }
+				add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			}
+			FRA = {
+				remove_opinion_modifier = { target = SRI modifier = KR_close_allies }
+			}
+			ENG = {
+				remove_opinion_modifier = { target = SRI modifier = KR_close_allies }
+			}
+		}
+	}
+}
+
+country_event = { #SRI AI-pathing
+	id = socialist_italy_events.300
+	is_triggered_only = yes
+	trigger = { is_ai = yes }
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.300 option 1" #Totalist
+		set_country_flag = SRI_totalist_ai
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_VITTORIO_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_NENNI_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MESCHI_SYNDIE }
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.300 option 2" #Syndicalist
+		set_country_flag = SRI_syndicalist_ai
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_SALVEMINI_RADSOC }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_LUSSU_RADSOC }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST }
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.300 option 3" #Radical Socialist
+		set_country_flag = SRI_radsoc_ai
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SRI_path option = SRI_PATH_VITTORIO_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_NENNI_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MESCHI_SYNDIE }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_TOGLIATTI_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_MUSSOLINI_TOTALIST }
+					has_game_rule = { rule = SRI_path option = SRI_PATH_DE_AMBRIS_TOTALIST }
+				}
+			}
+		}
+	}
+}
+
+###
+
+country_event = { # Generic election event for if italy is not united by 1941
+	id = socialist_italy_events.137
+	title = socialist_italy_events.137.t
+	desc = socialist_italy_events.137.d
+	picture = GFX_report_event_GRE_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_country_flag = SRI_italy_unified_flag }
+		has_country_flag = SRI_1936_elections_held
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.137 option socialist_italy_events.137.a"
+		name = socialist_italy_events.137.a
+		add_popularity = {
+			ideology = var:current_party_ideology_group
+			popularity = 0.025
+		}
+		add_stability = 0.025
+	}
+}
+
+country_event = { # Rosselli Shot
+	id = socialist_italy_events.138
+	title = socialist_italy_events.138.t
+	desc = socialist_italy_events.138.d
+	picture = GFX_report_event_generic_riot1
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_leader = { character = SRI_carlo_rosselli }
+		NOT = { has_completed_focus = SRI_break_enemies_of_democracy }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.138 option socialist_italy_events.138.a"
+		name = socialist_italy_events.138.a
+		add_stability = -0.15
+		SRI_carlo_rosselli = { kill_character = yes }
+		promote_character = SRI_emilio_lussu
+		activate_advisor = SRI_bruno_buozzi_sic
+	}
+}
+
+country_event = { # Generic postwar syndie election event
+	id = socialist_italy_events.139
+	title = socialist_italy_events.139.t
+	desc = socialist_italy_events.139.d
+	picture = GFX_report_event_GRE_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = SRI_italy_unified_flag
+		has_completed_focus = SRI_the_syndicalist_orthodoxy
+	}
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { has_country_flag = SRI_reset_election_timer }
+				clr_country_flag = SRI_reset_election_timer
+				meta_effect = {
+					text = {
+						set_politics = {
+							ruling_party = var:current_party_ideology_group
+							last_election = "[CURRENT_DATE]"
+							election_frequency = 60
+							elections_allowed = yes
+						}
+					}
+					CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.139 option socialist_italy_events.139.a"
+		name = socialist_italy_events.139.a
+	}
+}
+
+country_event = { # Generic postwar radsoc election event (w/o constitutional restoration)
+	id = socialist_italy_events.140
+	title = socialist_italy_events.140.t
+	desc = socialist_italy_events.140.d
+	picture = GFX_report_event_GRE_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = SRI_italy_unified_flag
+		has_completed_focus = SRI_seven_points_manifesto
+		NOT = {
+			has_completed_focus = SRI_constitutional_restoration
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { has_country_flag = SRI_reset_election_timer }
+				clr_country_flag = SRI_reset_election_timer
+				meta_effect = {
+					text = {
+						set_politics = {
+							ruling_party = var:current_party_ideology_group
+							last_election = "[CURRENT_DATE]"
+							election_frequency = 60
+							elections_allowed = yes
+						}
+					}
+					CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.140 option socialist_italy_events.140.a"
+		name = socialist_italy_events.140.a
+	}
+}
+
+country_event = { # Generic postwar radsoc election event (with constitutional restoration)
+	id = socialist_italy_events.141
+	title = socialist_italy_events.141.t
+	desc = socialist_italy_events.141.d
+	picture = GFX_report_event_GRE_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = SRI_italy_unified_flag
+		has_completed_focus = SRI_seven_points_manifesto
+		has_completed_focus = SRI_constitutional_restoration
+	}
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { has_country_flag = SRI_reset_election_timer }
+				clr_country_flag = SRI_reset_election_timer
+				meta_effect = {
+					text = {
+						set_politics = {
+							ruling_party = var:current_party_ideology_group
+							last_election = "[CURRENT_DATE]"
+							election_frequency = 60
+							elections_allowed = yes
+						}
+					}
+					CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+				}
+			}
+		}
+	}
+
+	option = { #Pacciardi
+		log = "[GetLogInfo]: event socialist_italy_events.141 option socialist_italy_events.141.a"
+		name = socialist_italy_events.141.a
+		activate_advisor = SRI_randolfo_pacciardi_sic
+	}
+
+	option = { #Rosselli
+		log = "[GetLogInfo]: event socialist_italy_events.141 option socialist_italy_events.141.b"
+		name = socialist_italy_events.141.b
+		activate_advisor = SRI_carlo_rosselli_sic
+	}
+}
+
+country_event = { # Leonilde Iotti flavour event
+	id = socialist_italy_events.200
+	title = socialist_italy_events.200.t
+	desc = socialist_italy_events.200.d
+	picture = GFX_report_event_SRI_female_red_guards
+
+	trigger = {
+		has_completed_focus = SRI_gruppi_di_difesa_della_donna
+		OR = {
+			NOT = { has_completed_focus = SRI_leggi_fascistissime }
+			has_country_leader = { character = SRI_palmiro_togliatti }
+		}
+		NOT = { has_character = SRI_leonilde_iotti }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event socialist_italy_events.200 option socialist_italy_events.200.a"
+		name = socialist_italy_events.200.a
+		show_unit_leaders_tooltip = SRI_leonilde_iotti
+		hidden_effect = {
+			SRI_leonilde_iotti = { set_nationality = ROOT }
+		}
+	}
+}
+
+# Italy Reunited by SRI
+news_event = {
+	id = socialist_italy_events.201
+	immediate = { log = "[GetLogInfo]: event socialist_italy_events.201" }
+	title = socialist_italy_events.201.t
+	desc = socialist_italy_events.201.d
+	picture = GFX_news_event_ITA_big_crowd
+
+	major = yes
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = socialist_italy_events.201.a
+		trigger = { has_socialist_government = yes }
+	}
+	option = {
+		name = socialist_italy_events.201.b
+		trigger = { has_socialist_government = no }
+	}
+}
+
+# Italian Civil War Resumes
+news_event = {
+	id = socialist_italy_events.202
+	immediate = { log = "[GetLogInfo]: event socialist_italy_events.202" }
+	title = socialist_italy_events.202.t
+	desc = {
+		trigger = { SRI = { has_offensive_war = yes } }
+		text = socialist_italy_events.202.d.srioffensive
+	}
+	desc = {
+		trigger = { SRI = { has_defensive_war = yes } }
+		text = socialist_italy_events.202.d.sridefensive
+	}
+	picture = GFX_news_event_ITA_big_crowd
+	is_triggered_only = yes
+	major = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = { # Will Italy ever find peace?
+		name = socialist_italy_events.202.a
+		trigger = {
+			is_italian_tag = no
+		}
+	}
+
+	option = { # We shall prevail!
+		name = socialist_italy_events.202.b
+		trigger = {
+			is_italian_tag = yes
+		}
+	}
+
+	after = {
+		effect_tooltip = {
+			add_named_threat = {
+				threat = 6
+				name = italian_wars_threat
+			}
+		}
+	}
+}

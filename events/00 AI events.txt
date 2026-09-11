@@ -1,0 +1,665 @@
+##############################################
+################KAISERREICH AI################
+##############################################
+#This file will allow more specific control over the AI that cannot be achieved through other means
+
+add_namespace = ai_events
+
+# Delete volunteers which were in the middle of being transferred from a tag which got annexed during 14 day transfer period
+country_event = {
+	id = ai_events.10
+	hidden = yes
+
+	trigger = {
+		NOT = { country_exists = FROM }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.10 option 1"
+		FROM = { delete_unit = { disband = yes } }
+	}
+}
+
+#hidden event to set up starting market access in economic spheres
+country_event = {
+	id = ai_events.90
+	hidden = yes
+
+	trigger = {
+		has_dlc_aat = yes
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.90 option 1"
+		every_country = {
+			limit = { is_in_economic_sphere = yes }
+			for_each_scope_loop = {
+				array = economic_sphere:members
+				if = {
+					limit = {
+						NOT = { has_market_access_with = PREV }
+						NOT = { tag = PREV }
+					}
+					diplomatic_relation = {
+						country = PREV
+						relation = market_access_rights
+					}
+				}
+			}
+		}
+	}
+}
+
+#hidden AI event to bypass exploits based on not calling puppets to wars
+country_event = {
+	id = ai_events.100
+	hidden = yes
+
+	trigger = {
+		has_war = yes
+		has_civil_war = no
+		is_valid_peace_target = yes
+		is_ai = yes
+		any_of_scopes = {
+			array = potential_and_current_enemies
+			is_subject = yes
+			OR = {
+				is_ai = no
+				overlord = { is_ai = no }
+			}
+			overlord = {
+				has_war_with = ROOT
+				war_length_with = { tag = ROOT months > 1 }
+				NOT = { check_variable = { modifier@cannot_call_allies_or_join_wars > 0 } }
+			}
+			NOT = { has_war_with = ROOT }
+			NOT = { check_variable = { modifier@cannot_call_allies_or_join_wars > 0 } }
+		}
+	}
+
+	is_triggered_only = yes #global on_weekly
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.100 option 1"
+		for_each_scope_loop = {
+			array = potential_and_current_enemies
+			if = {
+				limit = {
+					is_subject = yes
+					overlord = {
+						is_ai = no
+						has_war_with = ROOT
+						war_length_with = { tag = ROOT months > 1 }
+						NOT = { check_variable = { modifier@cannot_call_allies_or_join_wars > 0 } }
+					}
+					NOT = { has_war_with = ROOT }
+					NOT = { check_variable = { modifier@cannot_call_allies_or_join_wars > 0 } }
+				}
+				ROOT = { declare_war_on = { target = PREV type = annex_everything } }
+			}
+		}
+	}
+}
+
+#2nd Weltkrieg - Shared
+country_event = {
+	id = ai_events.200
+	hidden = yes
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.200 option 1"
+		set_global_flag = second_weltkrieg_has_started
+		set_global_flag = { flag = weltkrieg_home_by_christmas_achievement_timer value = 1 days = 365 }
+		log = "KR_Event_Logging;THE SECOND WELTKRIEG"
+		add_named_threat = {
+			threat = 20
+			name = second_weltkrieg_threat
+		}
+		GER = {
+			country_event = germany_events.49 # Wartime unpreparedness
+			country_event = { id = germany_flavour_events.14 days = 30 } # Crown Prince Wilhelm given army command
+		}
+		SWI = {
+			country_event = { id = switzerland_events.135 days = 2 random_days = 4 }
+		}
+		BRA = {
+			country_event = { id = brazil_events.209 days = 15 random_days = 45 } #The New Rubber Boom
+			country_event = { id = brazil_events.701 days = 180 random_days = 540 } #Carlos Drummond de Andrade Publishes 'Sentimento do Mundo'
+		}
+		URG = {
+			country_event = { id = uruguay_events.16 days = 30 random_days = 50 } #fire wank event for URG about not being at war while the world burns
+		}
+		HAI = {
+			activate_targeted_decision = { decision = HAI_propose_rubber_program target = THIS } # HAI rubber decisions
+		}
+		DEN = { country_event = { id = denmark_events.1015 days = 70 } }
+
+		AUS = {
+			activate_targeted_decision = { target = INT decision = AUS_syndie_threat }
+			activate_targeted_decision = { target = RUS decision = AUS_russian_threat }
+		}
+	}
+}
+
+#2nd Weltkrieg - RUS vs GER
+country_event = {
+	id = ai_events.201
+	hidden = yes
+
+	trigger = {
+		RUS = {
+			has_war_with = GER
+			has_socialist_government = no
+			is_faction_leader = yes
+		}
+		GER = { is_faction_leader = yes }
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.201 option 1"
+		country_event = ai_events.200 #WK2 boot
+		if = {
+			limit = { tag = GER }
+			news_event = { id = world_news_events.3 days = 2 }
+		}
+		else = {
+			news_event = { id = world_news_events.1 days = 2 }
+		}
+	}
+}
+
+#2nd Weltkrieg - INT vs GER
+country_event = {
+	id = ai_events.202
+	hidden = yes
+
+	trigger = {
+		OR = {
+			INT = {
+				has_war_with = GER
+				is_faction_leader = yes
+			}
+			RUS = {
+				has_war_with = GER
+				has_socialist_government = yes
+				is_faction_leader = yes
+			}
+		}
+		GER = { is_faction_leader = yes }
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.202 option 1"
+		italy_break_balance = yes
+		country_event = ai_events.200 #WK2 boot
+		if = {
+			limit = { tag = GER }
+			news_event = { id = world_news_events.4 days = 2 }
+		}
+		else = {
+			news_event = { id = world_news_events.2 days = 2 }
+		}
+		SWE = {
+			country_event = { id = sweden_events.50 days = 15 random_days = 10 }
+		}
+		LEC = {
+			country_event = { id = legation_cities_events.97 days = 15 random_days = 15 }
+		}
+	}
+}
+
+#Third Weltkrieg Entente vs Germany
+country_event = {
+	id = ai_events.203
+	hidden = yes
+
+	trigger = {
+		second_weltkrieg_has_begun = yes
+		has_global_flag = second_weltkrieg_has_ended
+		GER = {
+			has_war_with = ENT
+			is_faction_leader = yes
+		}
+		ENT = { is_faction_leader = yes }
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.203 option 1"
+		news_event = world_news_events.456
+	}
+}
+
+#Third Weltkrieg Russia vs Internationale
+country_event = {
+	id = ai_events.204
+	hidden = yes
+
+	trigger = {
+		second_weltkrieg_has_begun = yes
+		has_global_flag = second_weltkrieg_has_ended
+		RUS = {
+			has_war_with = INT
+			is_faction_leader = yes
+			has_socialist_government = no
+		}
+		INT = { is_faction_leader = yes }
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.204 option 1"
+		news_event = world_news_events.457
+	}
+}
+
+#2nd Sino-Japanese War
+country_event = {
+	id = ai_events.205
+	hidden = yes
+
+	trigger = {
+		JAP = {
+			is_faction_leader = yes
+			any_enemy_country = {
+				is_chinese_tag = yes
+				is_subject = no
+			}
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.205 option 1"
+		JAP = {
+			if = {
+				limit = { NOT = { has_completed_focus = JAP_continental_warfare } }
+				add_named_threat = {
+					threat = 6
+					name = JAP_sino_japanese_war_threat
+				}
+			}
+			if = {
+				limit = {
+					has_war_with = FNG
+					FNG = { is_subject = no }
+				}
+				FNG = { save_event_target_as = china }
+			}
+			else_if = {
+				limit = {
+					has_war_with = 608.owner #Beijing
+					var:608.owner = {
+						is_chinese_tag = yes
+						is_subject = no
+					}
+				}
+				var:608.owner = { save_event_target_as = china }
+			}
+			else_if = {
+				limit = {
+					has_war_with = 613.owner #Nanjing
+					var:613.owner = {
+						is_chinese_tag = yes
+						is_subject = no
+					}
+				}
+				var:613.owner = { save_event_target_as = china }
+			}
+			else_if = {
+				limit = {
+					has_war_with = 1048.owner #Wuhan
+					var:1048.owner = {
+						is_chinese_tag = yes
+						is_subject = no
+					}
+				}
+				var:1048.owner = { save_event_target_as = china }
+			}
+			else_if = {
+				limit = {
+					has_war_with = 592.owner #Guangzhou
+					var:592.owner = {
+						is_chinese_tag = yes
+						is_subject = no
+					}
+				}
+				var:592.owner = { save_event_target_as = china }
+			}
+			else_if = {
+				limit = {
+					has_war_with = 650.owner #Chongqing
+					var:650.owner = {
+						is_chinese_tag = yes
+						is_subject = no
+					}
+				}
+				var:650.owner = { save_event_target_as = china }
+			}
+			else_if = {
+				limit = {
+					has_war_with = 325.owner #Kunming
+					var:325.owner = {
+						is_chinese_tag = yes
+						is_subject = no
+					}
+				}
+				var:325.owner = { save_event_target_as = china }
+			}
+			else = {
+				random_enemy_country = {
+					limit = {
+						is_chinese_tag = yes
+						is_subject = no
+					}
+					save_event_target_as = china
+				}
+			}
+			news_event = world_news_events.459
+		}
+		FNG = {
+			if = {
+				limit = {
+					has_active_mission = FNG_japanese_patience_runs_thin_mission
+				}
+				country_event = { id = fengtian_japan_mechanic_events.030 days = 1 } #Japan Enters the Fray
+			}
+			else_if = {
+				limit = { NOT = { has_completed_focus = FNG_Begin_the_War_of_National_Reclamation } } #This is basically a skill issue since SSJW should really only start after WW2 begins.
+				country_event = { id = fengtian_japan_mechanic_events.031 days = 1 } #Japan Enters the Continent
+			}
+		}
+		GXC = {
+			if = {
+				limit = {
+					#NPA will get the event to have a satellite revolt
+					china_is_unaligned = yes
+					is_subject = yes
+				}
+				country_event = { id = GXC.lategame.900 days = 3 } #The Sino-Japanese War Begins
+			}
+		}
+		QIE = {
+			country_event = { id = qing_foreign_policy_events.001 days = 1 } #The Korean Liberation Army
+		}
+		YUN = {
+			if = {
+				limit = {
+					#NPA will get the event to have a satellite revolt
+					china_is_unaligned = yes
+					YUN_is_phase_3_trigger = yes
+				}
+				country_event = { id = YUN.lategame.800 days = 3 } #The Second Sino-Japanese War
+			}
+		}
+	}
+}
+
+#Eastern Seas War, German-Japanese War
+country_event = {
+	id = ai_events.208
+	hidden = yes
+
+	trigger = {
+		JAP = {
+			has_war_with = GER
+			is_faction_leader = yes
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.208 option 1"
+		news_event = world_news_events.474
+	}
+}
+
+#Defensive Bonus for GER to make WK2 longer
+country_event = {
+	id = ai_events.209
+	hidden = yes
+
+	trigger = {
+		original_tag = GER
+		is_faction_leader = yes
+		is_ai = yes
+		OR = {
+			has_war_with = RUS
+			has_war_with = FRA
+			has_war_with = ENT
+		}
+		surrender_progress > 0.1
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.209 option 1"
+		add_timed_idea = {
+			idea = WK_defensive_bonus
+			days = 1095
+		}
+	}
+}
+
+#Defensive Bonus for FRA to make WK2 longer
+country_event = {
+	id = ai_events.210
+	hidden = yes
+
+	trigger = {
+		original_tag = FRA
+		is_faction_leader = yes
+		is_ai = yes
+		has_war_with = GER
+		NOT = { has_full_control_of_state = 16 } #Ile de France
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.210 option 1"
+		add_timed_idea = {
+			idea = WK_defensive_bonus
+			days = 1095
+		}
+	}
+}
+
+#End of the Second Weltkrieg
+country_event = {
+	id = ai_events.211
+	hidden = yes
+
+	trigger = {
+		second_weltkrieg_has_begun = yes
+		OR = {
+			### GERMANY LOSES ###
+			AND = {
+				GER = {
+					NOT = { has_war_with = INT }
+					NOT = { has_war_with = RUS }
+					OR = {
+						exists = no
+						is_in_faction = no #== Reichspakt has disbanded
+						is_subject = yes
+					}
+				}
+			}
+
+			### GERMANY WINS ###
+			AND = {
+				GER = {
+					is_faction_leader = yes
+					NOT = { has_war_with = INT }
+					NOT = { has_war_with = RUS }
+				}
+				INT = {
+					OR = {
+						is_faction_leader = no #== doesn't exist
+						original_tag = ENG
+						is_in_europe = no
+					}
+				}
+				RUS = {
+					OR = {
+						exists = no
+						is_subject = yes
+						is_in_faction = no #== scripted peace
+					}
+				}
+			}
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.211 option 1"
+		set_global_flag = second_weltkrieg_has_ended
+	}
+}
+
+country_event = { #hidden recurring event to make the AI build more air bases if needed (donotlog)
+	id = ai_events.212
+	hidden = yes
+
+	trigger = {
+		is_ai = yes
+		has_manpower > 2000 #make sure they're not deploying due to lack of manpower
+		OR = {
+			has_equipment = { small_plane_airframe > 99 }
+			has_equipment = { small_plane_cas_airframe > 99 }
+			has_equipment = { small_plane_naval_bomber_airframe > 99 }
+			AND = {
+				has_manpower > 4000 #make sure they're not deploying due to lack of manpower
+				OR = {
+					has_equipment = { medium_plane_airframe > 99 }
+					has_equipment = { medium_plane_fighter_airframe > 99 }
+				}
+			}
+			AND = {
+				has_manpower > 8000 #make sure they're not deploying due to lack of manpower
+				OR = {
+					has_equipment = { large_plane_airframe > 99 }
+					has_equipment = { large_plane_maritime_patrol_plane_airframe > 99 }
+				}
+			}
+		}
+		NOT = { has_country_flag = AI_expand_air_bases_cooldown }
+	}
+
+	is_triggered_only = yes #on_weekly
+
+	option = {
+		log = "[GetLogInfo]: event ai_events.212 - AI_expand_air_bases"
+		set_country_flag = { flag = AI_expand_air_bases_cooldown days = 45 value = 1 }
+		every_controlled_state = {
+			if = {
+				limit = {
+					is_fully_controlled_by = ROOT
+					air_base < 10
+				}
+				add_to_temp_array = { air_base_potential_states = THIS }
+			}
+			if = {
+				limit = {
+					any_neighbor_state = { controller = { has_war_with = ROOT } }
+				}
+				if = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						air_base < 10
+					}
+					add_to_temp_array = { air_base_potential_states_neighbouring_enemy = THIS }
+				}
+				every_neighbor_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						air_base < 10
+					}
+					add_to_temp_array = { air_base_potential_states_close_to_enemy = THIS }
+				}
+			}
+			if = {
+				limit = {
+					any_of_scopes = {
+						array = air_base_potential_states_neighbouring_enemy
+						is_in_home_area = yes
+					}
+				}
+				set_temp_variable = { home_area_neighbouring_enemy = 1 }
+			}
+			if = {
+				limit = {
+					any_of_scopes = {
+						array = air_base_potential_states_close_to_enemy
+						is_in_home_area = yes
+					}
+				}
+				set_temp_variable = { home_area_close_to_enemy = 1 }
+			}
+			if = {
+				limit = {
+					any_of_scopes = {
+						array = air_base_potential_states
+						is_in_home_area = yes
+					}
+				}
+				set_temp_variable = { home_area_potential = 1 }
+			}
+		}
+		random_controlled_state = {
+			limit = {
+				is_in_array = { air_base_potential_states = THIS }
+				if = {
+					limit = { has_variable = air_base_potential_states_neighbouring_enemy^num }
+					is_in_array = { air_base_potential_states_neighbouring_enemy = THIS }
+					if = {
+						limit = { has_variable = home_area_neighbouring_enemy }
+						is_in_home_area = yes
+					}
+				}
+				else_if = {
+					limit = { has_variable = air_base_potential_states_close_to_enemy^num }
+					is_in_array = { air_base_potential_states_close_to_enemy = THIS }
+					if = {
+						limit = { has_variable = home_area_close_to_enemy }
+						is_in_home_area = yes
+					}
+				}
+				else_if = {
+					limit = { has_variable = home_area_potential }
+					is_in_home_area = yes
+				}
+			}
+			add_building_construction = {
+				type = air_base
+				level = 1
+				instant_build = no
+			}
+		}
+	}
+}

@@ -1,0 +1,3661 @@
+###########################
+# Iceland Events
+###########################
+# By The Alpha Dog
+###########################
+
+add_namespace = iceland_events
+
+country_event = { #Iceland expands its fishing
+	id = iceland_events.1
+
+	title = iceland_events.1.t
+	desc = iceland_events.1.d
+	picture = GFX_report_event_ICE_Sun_cod
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.1 option iceland_events.1.a"
+		name = iceland_events.1.a
+		set_country_flag = ICE_expanded_fishing
+		add_timed_idea = {
+			idea = ICE_cod_salesmen
+			days = 60
+		}
+		hidden_effect = {
+			CAN = {
+				country_event = { id = iceland_events.2 days = 3 }
+			}
+			#Set up these variables now so they can be adjusted later
+			set_variable = {
+				var = resistance_ICE_popularity
+				value = 35
+			}
+			set_variable = {
+				var = resistance_ICE_strength
+				value = 0
+			}
+			set_variable = {
+				var = occupation_ENG_strength
+				value = 100
+			}
+		}
+	}
+}
+
+country_event = { #CAN tap into trade (CAN)
+	id = iceland_events.2
+
+	title = iceland_events.2.t
+	desc = iceland_events.2.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.2 option iceland_events.2.a"
+		name = iceland_events.2.a
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_SOCCON_INDEPENDENT }
+			}
+		}
+		set_country_flag = CAN_ICE_Interested
+	}
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.2 option iceland_events.2.b"
+		name = iceland_events.2.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_completed_focus = CAN_within_arms_reach
+				NOT = { has_game_rule = { rule = ICE_path option = ICE_PATH_SOCCON_INDEPENDENT } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT }
+			}
+		}
+		set_country_flag = CAN_ICE_Not_Interested
+	}
+
+	after = {
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.3 days = 2 } }
+		}
+	}
+}
+
+country_event = { #ICE expanded into our waters (ENG)
+	id = iceland_events.3
+
+	title = iceland_events.3.t
+	desc = iceland_events.3.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.3 option iceland_events.3.a"
+		name = iceland_events.3.a
+		if = {
+			limit = {
+				CAN = { has_country_flag = CAN_ICE_Interested }
+			}
+			ICE = { country_event = { id = iceland_events.6 days = 7 } }
+		}
+		else_if = {
+			limit = {
+				CAN = { has_country_flag = CAN_ICE_Not_Interested }
+			}
+			ICE = { country_event = { id = iceland_events.5 days = 7 } }
+		}
+		ai_chance = {
+			base = 35
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_SOCCON_INDEPENDENT }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event iceland_events.3 option iceland_events.3.b"
+		name = iceland_events.3.b
+		if = {
+			limit = {
+				CAN = { has_country_flag = CAN_ICE_Interested }
+			}
+			ICE = { country_event = { id = iceland_events.4 days = 7 } }
+		}
+		else_if = {
+			limit = {
+				CAN = { has_country_flag = CAN_ICE_Not_Interested }
+			}
+			ICE = { country_event = { id = iceland_events.78 days = 7 } }
+		}
+		ai_chance = {
+			base = 65
+			modifier = { #Ideally the cod war happens in this path
+				factor = 0.25
+				CAN = { has_country_flag = CAN_ICE_Not_Interested }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ICE_path option = ICE_PATH_SYNDIE }
+					has_game_rule = { rule = ICE_path option = ICE_PATH_RADSOC }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #(only) CAN offers a deal (ICE)
+	id = iceland_events.4
+
+	title = iceland_events.4.t
+	desc = iceland_events.4.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #ICE-CAN Trade Agreement
+		log = "[GetLogInfo]: event iceland_events.4 option iceland_events.4.a"
+		name = iceland_events.4.a
+		remove_ideas = ICE_cod_salesmen
+		country_event = { id = iceland_events.8 days = 1 }
+		CAN = { country_event = { id = iceland_events.7 days = 1 } }
+	}
+}
+
+country_event = { #(only) ENG offers a deal
+	id = iceland_events.5
+
+	title = iceland_events.5.t
+	desc = iceland_events.5.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #ICE_ENG Trade Agreement
+		log = "[GetLogInfo]: event iceland_events.5 option iceland_events.5.a"
+		name = iceland_events.5.a
+		remove_ideas = ICE_cod_salesmen
+		country_event = { id = iceland_events.11 days = 1 }
+		ENG = { country_event = { id = iceland_events.10 days = 1 } }
+	}
+}
+
+country_event = { #both CAN et ENG offer a deal
+	id = iceland_events.6
+
+	title = iceland_events.6.t
+	desc = iceland_events.6.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Go with CAN (ICE)
+		log = "[GetLogInfo]: event iceland_events.6 option iceland_events.6.a"
+		name = iceland_events.6.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 30
+				has_completed_focus = ICE_CAN_Trade
+			}
+		}
+		country_event = { id = iceland_events.8 days = 1 }
+		CAN = { country_event = { id = iceland_events.7 days = 1 } }
+	}
+
+	option = { #Go with ENG
+		log = "[GetLogInfo]: event iceland_events.6 option iceland_events.6.b"
+		name = iceland_events.6.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 30
+				ICE = { has_completed_focus = ICE_ENG_Trade }
+			}
+		}
+		country_event = { id = iceland_events.11 days = 1 }
+		ENG = { country_event = { id = iceland_events.10 days = 1 } }
+	}
+
+	after = {
+		remove_ideas = ICE_cod_salesmen
+	}
+}
+
+country_event = { #CAN Trade (CAN)
+	id = iceland_events.7
+
+	title = iceland_events.7.t
+	desc = iceland_events.7.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #North Atlantic cod trade begins
+		log = "[GetLogInfo]: event iceland_events.7 option iceland_events.7.a"
+		name = iceland_events.7.a
+		add_stability = 0.03
+		add_ideas = CAN_ICE_Deal_1
+		hidden_effect = {
+			ENG = {
+				country_event = { id = iceland_events.9 days = 14 }
+			}
+		}
+	}
+}
+
+country_event = { #No Trade
+	id = iceland_events.78
+
+	title = iceland_events.78.t
+	desc = iceland_events.78.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #No North Atlantic cod trade
+		log = "[GetLogInfo]: event iceland_events.78 option iceland_events.78.a"
+		name = iceland_events.78.a
+		add_stability = -0.03
+		remove_ideas = ICE_cod_salesmen
+		set_country_flag = Cod_War_Neutral
+	}
+}
+
+country_event = { #CAN Trade (ICE)
+	id = iceland_events.8
+
+	title = iceland_events.8.t
+	desc = iceland_events.8.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #North Atlantic cod trade begins
+		log = "[GetLogInfo]: event iceland_events.8 option iceland_events.8.a"
+		name = iceland_events.8.a
+		add_stability = 0.03
+		add_ideas = ICE_cod_deal_2
+	}
+}
+
+country_event = { #CAN Trade (ENG)
+	id = iceland_events.9
+
+	title = iceland_events.9.t
+	desc = iceland_events.9.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Iceland is selling our fish to CAN
+		log = "[GetLogInfo]: event iceland_events.9 option iceland_events.9.a"
+		name = iceland_events.9.a
+		country_event = { id = iceland_events.14 days = 3 }
+	}
+}
+
+country_event = { #ENG Trade (ENG)
+	id = iceland_events.10
+
+	title = iceland_events.10.t
+	desc = iceland_events.10.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #North Atlantic cod trade begins
+		log = "[GetLogInfo]: event iceland_events.10 option iceland_events.10.a"
+		name = iceland_events.10.a
+		add_stability = 0.03
+		add_ideas = ENG_ICE_Deal
+		hidden_effect = {
+			CAN = {
+				country_event = { id = iceland_events.12 days = 14 }
+			}
+		}
+	}
+}
+
+country_event = { #ENG Trade (ICE)
+	id = iceland_events.11
+
+	title = iceland_events.11.t
+	desc = iceland_events.11.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #North Atlantic cod trade begins
+		log = "[GetLogInfo]: event iceland_events.11 option iceland_events.11.a"
+		name = iceland_events.11.a
+		add_stability = 0.03
+		add_ideas = ICE_cod_deal_1
+	}
+}
+
+country_event = { #ENG Trade (CAN)
+	id = iceland_events.12
+
+	title = iceland_events.12.t
+	desc = iceland_events.12.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Give Iceland a sweeter deal
+		log = "[GetLogInfo]: event iceland_events.12 option iceland_events.12.a"
+		name = iceland_events.12.a
+		ai_chance = { base = 80 }
+		add_stability = -0.01
+		custom_effect_tooltip = cod_trade_newdeal_can_tt
+		hidden_effect = {
+			ICE = {
+				country_event = { id = iceland_events.13 days = 1 }
+			}
+		}
+	}
+
+	option = { #Back out of cod trade
+		log = "[GetLogInfo]: event iceland_events.12 option iceland_events.12.b"
+		name = iceland_events.12.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_completed_focus = CAN_within_arms_reach
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT }
+			}
+		}
+		add_stability = -0.05
+		custom_effect_tooltip = cod_trade_backdown_can_tt
+	}
+}
+
+country_event = { #A New Deal? (ICE)
+	id = iceland_events.13
+
+	title = iceland_events.13.t
+	desc = iceland_events.13.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	option = { #A New Deal
+		log = "[GetLogInfo]: event iceland_events.13 option iceland_events.13.a"
+		name = iceland_events.13.a
+		add_stability = -0.05
+		add_political_power = -50
+		if = {
+			limit = {
+				has_idea = ICE_cod_deal_1
+			}
+			swap_ideas = {
+				remove_idea = ICE_cod_deal_1
+				add_idea = ICE_cod_deal_3
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = ICE_cod_deal_2
+			}
+			swap_ideas = {
+				remove_idea = ICE_cod_deal_2
+				add_idea = ICE_cod_deal_3
+			}
+		}
+		hidden_effect = {
+			ENG = {
+				country_event = { id = iceland_events.14 days = 3 }
+				remove_ideas = ENG_ICE_Deal
+			}
+			if = {
+				limit = {
+					CAN = {
+						has_idea = CAN_ICE_Deal_1
+					}
+				}
+				CAN = {
+					swap_ideas = {
+						remove_idea = CAN_ICE_Deal_1
+						add_idea = CAN_ICE_Deal_2
+					}
+				}
+			}
+			else = {
+				CAN = {
+					add_ideas = CAN_ICE_Deal_2
+				}
+			}
+		}
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 30
+				has_completed_focus = ICE_CAN_Trade
+			}
+		}
+	}
+	option = { #Stay Loyal
+		log = "[GetLogInfo]: event iceland_events.13 option iceland_events.13.b"
+		name = iceland_events.13.b
+		add_stability = 0.05
+		add_popularity = { ideology = syndicalist popularity = 0.05 }
+		complete_national_focus = ICE_English_Pup
+		ICE_english_garrison_template_check = yes
+		ICE_setup_starting_english_garrison = yes
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 20
+				has_completed_focus = ICE_ENG_Trade
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT }
+			}
+		}
+	}
+}
+
+country_event = { #Contest the waters! (ENG)
+	id = iceland_events.14
+
+	title = iceland_events.14.t
+	desc = iceland_events.14.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Show them their place
+		log = "[GetLogInfo]: event iceland_events.14 option iceland_events.14.a"
+		name = iceland_events.14.a
+		hidden_effect = { country_event = { id = iceland_events.15 days = 3 } }
+	}
+}
+
+country_event = { #Cutting the Fishing Lines! (ENG)
+	id = iceland_events.15
+
+	title = iceland_events.15.t
+	desc = iceland_events.15.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Destroyer detachment sees success at sea
+		log = "[GetLogInfo]: event iceland_events.15 option iceland_events.15.a"
+		name = iceland_events.15.a
+		add_political_power = 25
+		add_stability = 0.01
+		add_war_support = 0.01
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.16 days = 5 } }
+		}
+	}
+}
+
+country_event = { #Fishermen Attacked (ICE)
+	id = iceland_events.16
+
+	title = iceland_events.16.t
+	desc = iceland_events.16.d
+	picture = GFX_report_event_ICE_Sun_cod
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #We won't back down over a few destroyers
+		log = "[GetLogInfo]: event iceland_events.16 option iceland_events.16.a"
+		name = iceland_events.16.a
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = -2
+			producer = ICE
+		}
+		if = {
+			limit = {
+				has_idea = ICE_cod_deal_3
+			}
+			swap_ideas = {
+				remove_idea = ICE_cod_deal_3
+				add_idea = ICE_cod_deal_2
+			}
+		}
+		else = {
+			swap_ideas = {
+				remove_idea = ICE_cod_deal_2
+				add_idea = ICE_cod_deal_1
+			}
+		}
+		hidden_effect = {
+			country_event = { id = iceland_events.17 days = 7 }
+		}
+	}
+}
+
+country_event = { #Retaliate against their trawlers? (ICE)
+	id = iceland_events.17
+
+	title = iceland_events.17.t
+	desc = iceland_events.17.d
+	picture = GFX_report_event_ICE_Sun_cod
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Cut their lines
+		log = "[GetLogInfo]: event iceland_events.17 option iceland_events.17.a"
+		name = iceland_events.17.a
+		ai_chance = { base = 50 }
+		add_political_power = 20
+		ENG = { country_event = { id = iceland_events.18 days = 8 } }
+	}
+
+	option = { #No need to stoop to their level
+		log = "[GetLogInfo]: event iceland_events.17 option iceland_events.17.b"
+		name = iceland_events.17.b
+		ai_chance = { base = 50 }
+		add_stability = 0.03
+		hidden_effect = {
+			country_event = { id = iceland_events.178 days = 9 }
+		}
+		set_country_flag = ICE_nonviolent
+	}
+}
+
+country_event = { #More flagrant attacks (ICE)
+	id = iceland_events.178
+
+	title = iceland_events.178.t
+	desc = iceland_events.178.d
+	picture = GFX_report_event_ICE_Harbour_1
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Mobilize the coast guard
+		log = "[GetLogInfo]: event iceland_events.178 option iceland_events.178.a"
+		name = iceland_events.178.a
+		add_political_power = 10
+		ENG = { country_event = { id = iceland_events.18 days = 8 } }
+		clr_country_flag = ICE_nonviolent
+		ai_chance = { base = 85 }
+	}
+
+	option = { #We can't risk their response
+		log = "[GetLogInfo]: event iceland_events.178 option iceland_events.178.b"
+		name = iceland_events.178.b
+		add_stability = -0.1
+		hidden_effect = {
+			country_event = { id = iceland_events.179 days = 6 }
+		}
+		ai_chance = { base = 15 }
+	}
+}
+
+country_event = { #We must do something!
+	id = iceland_events.179
+
+	title = iceland_events.179.t
+	desc = iceland_events.179.d
+	picture = GFX_report_event_ICE_Harbour_2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Mobilize the coast guard
+		log = "[GetLogInfo]: event iceland_events.179 option iceland_events.179.a"
+		name = iceland_events.179.a
+		add_political_power = 5
+		ENG = { country_event = { id = iceland_events.18 days = 8 } }
+		clr_country_flag = ICE_nonviolent
+		ai_chance = { base = 85 }
+	}
+
+	option = { #Plead mercy to the English
+		log = "[GetLogInfo]: event iceland_events.179 option iceland_events.179.b"
+		name = iceland_events.179.b
+		add_stability = -0.25
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.29 days = 6 } }
+		}
+		ai_chance = { base = 15 }
+	}
+}
+
+country_event = { #English fishermen attacked (ENG)
+	id = iceland_events.18
+
+	title = iceland_events.18.t
+	desc = iceland_events.18.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Send reinforcements
+		log = "[GetLogInfo]: event iceland_events.18 option iceland_events.18.a"
+		name = iceland_events.18.a
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = -3
+			producer = ENG
+		}
+		add_political_power = -5
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.19 days = 6 } }
+		}
+	}
+}
+
+country_event = { #A Hero returns home (ICE)
+	id = iceland_events.19
+
+	title = iceland_events.19.t
+	desc = iceland_events.19.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Remember the Ægir!
+		log = "[GetLogInfo]: event iceland_events.19 option iceland_events.19.a"
+		name = iceland_events.19.a
+		add_political_power = 15
+		add_war_support = 0.05
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = -6
+			producer = ICE
+		}
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.20 days = 7 } }
+		}
+	}
+}
+
+country_event = { #Request Aid from Canada (ICE)
+	id = iceland_events.20
+
+	title = iceland_events.20.t
+	desc = iceland_events.20.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Ask for Troops and Navy
+		log = "[GetLogInfo]: event iceland_events.20 option iceland_events.20.a"
+		ai_chance = { base = 65 }
+		name = iceland_events.20.a
+		add_political_power = -75
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.21 days = 8 } }
+		}
+	}
+
+	option = { #Ask for just Naval Support
+		log = "[GetLogInfo]: event iceland_events.20 option iceland_events.20.b"
+		ai_chance = { base = 35 }
+		name = iceland_events.20.b
+		add_political_power = -40
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.22 days = 8 } }
+		}
+	}
+}
+
+country_event = { #Iceland requests aid (CAN)
+	id = iceland_events.21
+
+	title = iceland_events.21.t
+	desc = iceland_events.21.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Send them what they ask for
+		log = "[GetLogInfo]: event iceland_events.21 option iceland_events.21.a"
+		name = iceland_events.21.a
+		army_experience = 10
+		navy_experience = 10
+		hidden_effect = {
+			country_event = { id = iceland_events.23 days = 3 }
+			ICE = {
+				set_country_flag = ICE_can_sent_troop_navy
+				country_event = { id = iceland_events.24 days = 7 }
+				country_event = { id = iceland_events.25 days = 13 }
+			}
+		}
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 2
+				has_completed_focus = CAN_within_arms_reach
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with = AST
+					has_war_with = ACC
+					has_war_with = APG
+				}
+				NOT = { has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT } }
+			}
+		}
+	}
+	option = { #We can only spare the navy force
+		log = "[GetLogInfo]: event iceland_events.21 option iceland_events.21.b"
+		name = iceland_events.21.b
+		navy_experience = 10
+		hidden_effect = {
+			country_event = { id = iceland_events.23 days = 3 }
+			ICE = {
+				country_event = { id = iceland_events.24 days = 7 }
+			}
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with = AST
+					has_war_with = ACC
+					has_war_with = APG
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT }
+			}
+		}
+	}
+	option = { #We can't spare anything
+		log = "[GetLogInfo]: event iceland_events.21 option iceland_events.21.c"
+		name = iceland_events.21.c
+		hidden_effect = {
+			ICE = {
+				country_event = { id = iceland_events.26 days = 5 }
+			}
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					has_war_with = AST
+					has_war_with = ACC
+					has_war_with = APG
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT }
+			}
+		}
+	}
+}
+
+country_event = { #Iceland requests aid (CAN)
+	id = iceland_events.22
+
+	title = iceland_events.21.t
+	desc = iceland_events.22.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Send them what they ask for
+		log = "[GetLogInfo]: event iceland_events.22 option iceland_events.21.a"
+		name = iceland_events.21.a
+		navy_experience = 10
+		hidden_effect = {
+			country_event = { id = iceland_events.23 days = 3 }
+			ICE = {
+				country_event = { id = iceland_events.24 days = 7 }
+			}
+		}
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with = AST
+					has_war_with = ACC
+					has_war_with = APG
+				}
+				NOT = { has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT } }
+			}
+		}
+	}
+	option = { #We can't spare anything
+		log = "[GetLogInfo]: event iceland_events.22 option iceland_events.21.c"
+		name = iceland_events.21.c
+		hidden_effect = {
+			ICE = {
+				country_event = { id = iceland_events.26 days = 5 }
+			}
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					has_war_with = AST
+					has_war_with = ACC
+					has_war_with = APG
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT }
+			}
+		}
+	}
+}
+
+country_event = { #Send off the Navy (CAN)
+	id = iceland_events.23
+
+	title = iceland_events.23.t
+	desc = iceland_events.23.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Good Luck and Godspeed
+		log = "[GetLogInfo]: event iceland_events.23 option iceland_events.23.a"
+		name = iceland_events.23.a
+		add_war_support = 0.01
+	}
+}
+
+country_event = { #Canadian Squadron arrives (ICE)
+	id = iceland_events.24
+
+	title = iceland_events.24.t
+	desc = iceland_events.24.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Welcome Canadians!
+		log = "[GetLogInfo]: event iceland_events.24 option iceland_events.24.a"
+		name = iceland_events.24.a
+		add_war_support = 0.10
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.31 days = 8 } }
+		}
+	}
+}
+
+country_event = { #Canadian armed forces arrive (ICE)
+	id = iceland_events.25
+
+	title = iceland_events.25.t
+	desc = iceland_events.25.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Welcome Canadians!
+		log = "[GetLogInfo]: event iceland_events.25 option iceland_events.25.a"
+		name = iceland_events.25.a
+		add_war_support = 0.10
+	}
+}
+
+country_event = { #No aid from canada (ICE)
+	id = iceland_events.26
+
+	title = iceland_events.26.t
+	desc = iceland_events.26.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #We stand alone
+		log = "[GetLogInfo]: event iceland_events.26 option iceland_events.26.a"
+		name = iceland_events.26.a
+		add_war_support = -0.20
+		hidden_effect = {
+			country_event = { id = iceland_events.27 days = 5 }
+		}
+	}
+}
+
+country_event = { #More lost fishing trawlers (ICE)
+	id = iceland_events.27
+
+	title = iceland_events.27.t
+	desc = iceland_events.27.d
+	picture = GFX_report_event_ICE_Sun_cod
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #RN chokes out our fishermen
+		log = "[GetLogInfo]: event iceland_events.27 option iceland_events.27.a"
+		name = iceland_events.27.a
+		if = {
+			limit = {
+				has_idea = ICE_cod_deal_3
+			}
+			remove_ideas = ICE_cod_deal_3
+		}
+		else_if = {
+			limit = {
+				has_idea = ICE_cod_deal_2
+			}
+			remove_ideas = ICE_cod_deal_2
+		}
+		else_if = {
+			limit = {
+				has_idea = ICE_cod_deal_1
+			}
+			remove_ideas = ICE_cod_deal_1
+		}
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = -12
+			producer = ICE
+		}
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.28 hours = 3 } }
+			ENG = { country_event = { id = iceland_events.29 days = 18 } }
+		}
+	}
+}
+
+country_event = { #Losing out on the deal (CAN)
+	id = iceland_events.28
+
+	title = iceland_events.28.t
+	desc = iceland_events.28.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #The cod deal is over
+		log = "[GetLogInfo]: event iceland_events.28 option iceland_events.28.a"
+		name = iceland_events.28.a
+		if = {
+			limit = {
+				has_idea = CAN_ICE_Deal_2
+			}
+			remove_ideas = CAN_ICE_Deal_2
+		}
+		else_if = {
+			limit = {
+				has_idea = CAN_ICE_Deal_1
+			}
+			remove_ideas = CAN_ICE_Deal_1
+		}
+		add_stability = -0.02
+	}
+}
+
+country_event = { #Send an ultimatum to Iceland? (ENG)
+	id = iceland_events.29
+
+	title = iceland_events.29.t
+	desc = iceland_events.29.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Ultimatum for a Syndicalist Government
+		log = "[GetLogInfo]: event iceland_events.29 option iceland_events.29.a"
+		name = iceland_events.29.a
+		add_political_power = -25
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.291 days = 2 } }
+		}
+		ai_chance = { base = 80 }
+	}
+
+	option = { #Leave them alone
+		log = "[GetLogInfo]: event iceland_events.29 option iceland_events.29.b"
+		name = iceland_events.29.b
+		add_political_power = 10
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.30 days = 7 } }
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 1.5
+				ICE = {
+					has_country_flag = ICE_nonviolent
+				}
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ICE_path option = ICE_PATH_SYNDIE }
+					has_game_rule = { rule = ICE_path option = ICE_PATH_RADSOC }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #An Ultimatum from England (ICE)
+	id = iceland_events.291
+
+	title = iceland_events.291.t
+	desc = iceland_events.291.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #We must bow
+		log = "[GetLogInfo]: event iceland_events.291 option iceland_events.291.a"
+		name = iceland_events.291.a
+		add_political_power = -50
+		complete_national_focus = ICE_English_Pup
+		set_global_flag = Cod_War_TI_Victory
+		ICE_english_garrison_template_check = yes
+		ICE_setup_starting_english_garrison = yes
+	}
+}
+
+country_event = { #Alone in the Atlantic (ICE)
+	id = iceland_events.30
+
+	title = iceland_events.30.t
+	desc = iceland_events.30.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Looking to the east
+		log = "[GetLogInfo]: event iceland_events.30 option iceland_events.30.a"
+		name = iceland_events.30.a
+		set_country_flag = Cod_War_Neutral
+	}
+}
+
+country_event = { #Canadian Fleet Arrives (ENG)
+	id = iceland_events.31
+
+	title = iceland_events.31.t
+	desc = iceland_events.31.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Get Aggressive
+		log = "[GetLogInfo]: event iceland_events.31 option iceland_events.31.a"
+		name = iceland_events.31.a
+		add_political_power = -15
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = -5
+			producer = ENG
+		}
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.32 days = 5 } }
+		}
+	}
+	option = { #Stick together
+		log = "[GetLogInfo]: event iceland_events.31 option iceland_events.31.b"
+		name = iceland_events.31.b
+		navy_experience = 5
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = -5
+			producer = ENG
+		}
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.33 days = 5 } }
+		}
+	}
+}
+
+country_event = { #Aggressive strikes from the English (ICE)
+	id = iceland_events.32
+
+	title = iceland_events.32.t
+	desc = iceland_events.32.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Request planes for aerial recon
+		log = "[GetLogInfo]: event iceland_events.32 option iceland_events.32.a"
+		name = iceland_events.32.a
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = -4
+			producer = ICE
+		}
+		CAN = { country_event = { id = iceland_events.34 days = 7 } }
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.37 days = 18 } }
+		}
+	}
+}
+
+country_event = { #All quiet in the North Atlantic (ICE)
+	id = iceland_events.33
+
+	title = iceland_events.33.t
+	desc = iceland_events.33.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Safety at last
+		log = "[GetLogInfo]: event iceland_events.33 option iceland_events.33.a"
+		name = iceland_events.33.a
+		add_political_power = 20
+		add_stability = 0.05
+		CAN = { navy_experience = 5 }
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.37 days = 11 } }
+		}
+	}
+}
+
+country_event = { #Iceland requests scout planes (CAN)
+	id = iceland_events.34
+
+	title = iceland_events.34.t
+	desc = iceland_events.34.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Send them reinforcements
+		log = "[GetLogInfo]: event iceland_events.34 option iceland_events.34.a"
+		name = iceland_events.34.a
+		ai_chance = { base = 90 }
+		send_equipment = { target = ICE type = small_plane_airframe amount = 10 }
+		ICE = { country_event = { id = iceland_events.35 days = 7 } }
+	}
+
+	option = { #We can't spare anything
+		log = "[GetLogInfo]: event iceland_events.34 option iceland_events.34.b"
+		name = iceland_events.34.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_completed_focus = CAN_within_arms_reach
+			}
+		}
+		ICE = { country_event = { id = iceland_events.36 days = 7 } }
+	}
+}
+
+country_event = { #Canada sent scout planes (ICE)
+	id = iceland_events.35
+	title = iceland_events.35.t
+	desc = iceland_events.35.d
+
+	is_triggered_only = yes
+
+	option = { #Thanks Canada!
+		log = "[GetLogInfo]: event iceland_events.35 option iceland_events.35.a"
+		name = iceland_events.35.a
+		add_manpower = 200
+		add_equipment_to_stockpile = {
+			type = small_plane_airframe
+			amount = 10
+			producer = CAN
+		}
+	}
+}
+
+country_event = { #Canada does not send fighter reinforcements (ICE)
+	id = iceland_events.36
+	title = iceland_events.36.t
+	desc = iceland_events.36.d
+
+	is_triggered_only = yes
+
+	option = { #Unfortunate
+		log = "[GetLogInfo]: event iceland_events.36 option iceland_events.36.a"
+		name = iceland_events.36.a
+	}
+}
+
+country_event = { #Authorize a submarine raid? (ENG)
+	id = iceland_events.37
+
+	title = iceland_events.37.t
+	desc = iceland_events.37.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #dew it
+		log = "[GetLogInfo]: event iceland_events.37 option iceland_events.37.a"
+		name = iceland_events.37.a
+		add_political_power = -10
+		hidden_effect = { country_event = { id = iceland_events.38 days = 33 } }
+	}
+}
+
+country_event = { #Raiding the Cumberland (ENG)
+	id = iceland_events.38
+
+	title = iceland_events.38.t
+	desc = iceland_events.38.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #In and out clean
+		log = "[GetLogInfo]: event iceland_events.38 option iceland_events.38.a"
+		name = iceland_events.38.a
+		add_war_support = 0.02
+		add_political_power = 25
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.39 hours = 3 } }
+		}
+	}
+}
+
+country_event = { #Claxons in the night (ICE)
+	id = iceland_events.39
+
+	title = iceland_events.39.t
+	desc = iceland_events.39.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Chaos in the Harbour
+		log = "[GetLogInfo]: event iceland_events.39 option iceland_events.39.a"
+		name = iceland_events.39.a
+		add_war_support = -0.03
+		add_stability = -0.15
+		add_political_power = -20
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.40 days = 1 } }
+		}
+	}
+}
+
+country_event = { #Sombre news from Iceland (CAN)
+	id = iceland_events.40
+
+	title = iceland_events.40.t
+	desc = iceland_events.40.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #A day of mourning
+		log = "[GetLogInfo]: event iceland_events.40 option iceland_events.40.a"
+		name = iceland_events.40.a
+		add_war_support = -0.01
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.41 days = 1 } }
+		}
+	}
+}
+
+country_event = { #The fate of the Cumberland (ICE)
+	id = iceland_events.41
+
+	title = iceland_events.41.t
+	desc = iceland_events.41.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Demand an apology!
+		log = "[GetLogInfo]: event iceland_events.41 option iceland_events.41.a"
+		name = iceland_events.41.a
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.42 days = 2 } }
+		}
+	}
+}
+
+country_event = { #Cumberland Submarine Raid Discovered (ENG)
+	id = iceland_events.42
+
+	title = iceland_events.42.t
+	desc = iceland_events.42.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Deny it
+		log = "[GetLogInfo]: event iceland_events.42 option iceland_events.42.a"
+		name = iceland_events.42.a
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.43 days = 3 } }
+		}
+	}
+
+	option = { #Claim responsibility
+		log = "[GetLogInfo]: event iceland_events.42 option iceland_events.42.b"
+		name = iceland_events.42.b
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.44 days = 3 } }
+		}
+	}
+}
+
+country_event = { #ENG response to Cumberland Telegram - Denial (ICE)
+	id = iceland_events.43
+
+	title = iceland_events.43.t
+	desc = iceland_events.43.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #They will be forced to admit the truth
+		log = "[GetLogInfo]: event iceland_events.43 option iceland_events.43.a"
+		name = iceland_events.43.a
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.45 days = 4 } }
+		}
+	}
+}
+
+country_event = { #ENG response to Cumberland Telegram - Boast (ICE)
+	id = iceland_events.44
+
+	title = iceland_events.43.t
+	desc = iceland_events.44.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Those Devils!
+		log = "[GetLogInfo]: event iceland_events.44 option iceland_events.44.a"
+		name = iceland_events.44.a
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.45 days = 4 } }
+		}
+	}
+}
+
+country_event = { #English Torpedoes found near the corpse of the Cumberland (CAN)
+	id = iceland_events.45
+
+	title = iceland_events.45.t
+	desc = iceland_events.45.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #The people shall be heard!
+		log = "[GetLogInfo]: event iceland_events.45 option iceland_events.45.a"
+		name = iceland_events.45.a
+		add_war_support = 0.05
+		add_manpower = 5000
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.46 days = 13 } }
+		}
+	}
+}
+
+country_event = { #Spies report from Canada (ENG)
+	id = iceland_events.46
+
+	title = iceland_events.46.t
+	desc = iceland_events.46.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Blockade Iceland
+		log = "[GetLogInfo]: event iceland_events.46 option iceland_events.46.a"
+		name = iceland_events.46.a
+		ai_chance = {
+			base = 95
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_PATAUT }
+			}
+		}
+		hidden_effect = {
+			ICE = {
+				country_event = { id = iceland_events.48 days = 4 }
+			}
+		}
+	}
+
+	option = { #Back Down
+		log = "[GetLogInfo]: event iceland_events.46 option iceland_events.46.b"
+		name = iceland_events.46.b
+		add_war_support = -0.05
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.47 days = 8 } }
+		}
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ICE_path option = ICE_PATH_SYNDIE }
+					has_game_rule = { rule = ICE_path option = ICE_PATH_RADSOC }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Free Rein of the Waters! (ICE)
+	id = iceland_events.47
+
+	title = iceland_events.47.t
+	desc = iceland_events.47.d
+	picture = GFX_report_event_ICE_Sun_cod
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Our rightful waters!
+		log = "[GetLogInfo]: event iceland_events.47 option iceland_events.47.a"
+		name = iceland_events.47.a
+		add_stability = 0.15
+		add_equipment_to_stockpile = {
+			type = convoy_1
+			amount = 50
+			producer = ICE
+		}
+		if = {
+			limit = {
+				has_idea = ICE_cod_deal_1
+			}
+			swap_ideas = {
+				remove_idea = ICE_cod_deal_1
+				add_idea = ICE_cod_deal_2
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = ICE_cod_deal_2
+			}
+			swap_ideas = {
+				remove_idea = ICE_cod_deal_2
+				add_idea = ICE_cod_deal_3
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = ICE_cod_deal_3
+			}
+			swap_ideas = {
+				remove_idea = ICE_cod_deal_3
+				add_idea = ICE_cod_deal_4
+			}
+		}
+		complete_national_focus = ICE_Ottawa_King
+		set_global_flag = Cod_War_Entente_Victory
+		ICE_canadian_garrison_template_check = yes
+		ICE_setup_starting_canadian_english_garrison = yes
+	}
+}
+
+country_event = { #The blockade begins (ICE)
+	id = iceland_events.48
+
+	title = iceland_events.48.t
+	desc = iceland_events.48.d
+	picture = GFX_report_event_ICE_Sun_cod
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Cut off from our trade
+		log = "[GetLogInfo]: event iceland_events.48 option iceland_events.48.a"
+		name = iceland_events.48.a
+		if = {
+			limit = {
+				has_idea = ICE_cod_deal_1
+			}
+			remove_ideas = ICE_cod_deal_1
+		}
+		else_if = {
+			limit = {
+				has_idea = ICE_cod_deal_2
+			}
+			remove_ideas = ICE_cod_deal_2
+		}
+		else_if = {
+			limit = {
+				has_idea = ICE_cod_deal_3
+			}
+			remove_ideas = ICE_cod_deal_3
+		}
+		else_if = {
+			limit = {
+				has_idea = ICE_cod_deal_4
+			}
+			remove_ideas = ICE_cod_deal_4
+		}
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.49 days = 3 } }
+		}
+	}
+}
+
+country_event = { #North Sea Squadron Trapped (CAN)
+	id = iceland_events.49
+
+	title = iceland_events.49.t
+	desc = iceland_events.49.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.49 option iceland_events.49.a"
+		name = iceland_events.49.a
+		add_war_support = -0.01
+		add_manpower = -1200
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.50 days = 7 } }
+		}
+	}
+}
+
+country_event = { #The Blockade of Iceland (ENG)
+	id = iceland_events.50
+
+	title = iceland_events.50.t
+	desc = iceland_events.50.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #A successful operation
+		log = "[GetLogInfo]: event iceland_events.50 option iceland_events.50.a"
+		name = iceland_events.50.a
+		add_political_power = 75
+		add_stability = -0.02
+		add_war_support = 0.02
+		hidden_effect = { country_event = { id = iceland_events.51 days = 9 } }
+	}
+}
+
+country_event = { #Force their hand (ENG)
+	id = iceland_events.51
+
+	title = iceland_events.51.t
+	desc = iceland_events.51.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Deliver the Demands
+		log = "[GetLogInfo]: event iceland_events.51 option iceland_events.51.a"
+		name = iceland_events.51.a
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.52 days = 1 } }
+		}
+	}
+}
+
+country_event = { #ENG demands for fishing trade (ICE)
+	id = iceland_events.52
+
+	title = iceland_events.52.t
+	desc = iceland_events.52.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Reject their extortion
+		log = "[GetLogInfo]: event iceland_events.52 option iceland_events.52.a"
+		name = iceland_events.52.a
+		add_war_support = 0.02
+		hidden_effect = { country_event = { id = iceland_events.53 days = 1 } }
+		ai_chance = { base = 95 }
+	}
+
+	option = { #We have no choice but to bow to their demands
+		log = "[GetLogInfo]: event iceland_events.52 option iceland_events.52.b"
+		name = iceland_events.52.b
+		add_war_support = -0.5
+		set_global_flag = Cod_War_TI_Victory
+		add_ideas = ICE_cod_deal_Neg
+		ICE_english_garrison_template_check = yes
+		ICE_setup_starting_english_garrison = yes
+		hidden_effect = {
+			complete_national_focus = ICE_English_Pup
+		}
+		ai_chance = { base = 5 }
+	}
+}
+
+country_event = { #Organising a Defence for Iceland (ICE)
+	id = iceland_events.53
+
+	title = iceland_events.53.t
+	desc = iceland_events.53.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Defend the Isle
+		log = "[GetLogInfo]: event iceland_events.53 option iceland_events.53.a"
+		name = iceland_events.53.a
+		ai_chance = { base = 40 }
+		trigger = {
+			has_country_flag = ICE_can_sent_troop_navy
+		}
+		100 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = coastal_bunker
+					level = 1
+					province = 12674
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = coastal_bunker
+					NUMBER = 1
+					VP = 12674
+				}
+			}
+		}
+	}
+
+	option = { #Let them land but organise a resistance
+		log = "[GetLogInfo]: event iceland_events.53 option iceland_events.53.b"
+		name = iceland_events.53.b
+		ai_chance = { base = 60 }
+		if = {
+			limit = {
+				has_country_flag = ICE_can_sent_troop_navy
+			}
+			add_to_variable = { resistance_ICE_strength = 35 }
+			add_to_variable = { resistance_ICE_popularity = 15 }
+		}
+		else = {
+			add_to_variable = { resistance_ICE_strength = 15 }
+			add_to_variable = { resistance_ICE_popularity = 5 }
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.54 days = 4 } }
+		}
+	}
+}
+
+country_event = { #Iceland rejects our demands (ENG) #Maybe add an operation Fork reference here
+	id = iceland_events.54
+
+	title = iceland_events.54.t
+	desc = iceland_events.54.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Deploy Large Force
+		log = "[GetLogInfo]: event iceland_events.54 option iceland_events.54.a"
+		name = iceland_events.54.a
+		ai_chance = { base = 80 }
+		add_political_power = -50
+		if = {
+			limit = {
+				100 = {
+					any_province_building_level = {
+						province = {
+							id = 12674
+						}
+						building = coastal_bunker
+						level > 0
+					}
+				}
+			}
+			country_event = { id = iceland_events.55 days = 7 }
+		}
+		else = {
+			country_event = { id = iceland_events.56 days = 7 }
+		}
+	}
+
+	option = { #Deploy a small force
+		log = "[GetLogInfo]: event iceland_events.54 option iceland_events.54.b"
+		name = iceland_events.54.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ICE_path option = ICE_PATH_SYNDIE }
+					has_game_rule = { rule = ICE_path option = ICE_PATH_RADSOC }
+				}
+			}
+		}
+		add_political_power = -20
+		if = {
+			limit = {
+				100 = {
+					any_province_building_level = {
+						province = {
+							id = 12674
+						}
+						building = coastal_bunker
+						level > 0
+					}
+				}
+			}
+			country_event = { id = iceland_events.57 days = 7 }
+		}
+		else = {
+			country_event = { id = iceland_events.56 days = 7 }
+		}
+	}
+}
+
+country_event = { #Iceland defences crushed (ENG)
+	id = iceland_events.55
+
+	title = iceland_events.55.t
+	desc = iceland_events.55.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Triumph
+		log = "[GetLogInfo]: event iceland_events.55 option iceland_events.55.a"
+		name = iceland_events.55.a
+		add_war_support = 0.05
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.58 days = 3 } }
+			ICE = { country_event = { id = iceland_events.60 days = 1 } }
+		}
+	}
+}
+
+country_event = { #Uncontested Landing (ENG)
+	id = iceland_events.56
+
+	title = iceland_events.56.t
+	desc = iceland_events.56.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #No resistance
+		log = "[GetLogInfo]: event iceland_events.56 option iceland_events.56.a"
+		name = iceland_events.56.a
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.62 days = 2 } }
+		}
+	}
+}
+
+country_event = { #Our attack foiled (ENG)
+	id = iceland_events.57
+
+	title = iceland_events.57.t
+	desc = iceland_events.57.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Catastrophe
+		log = "[GetLogInfo]: event iceland_events.57 option iceland_events.57.a"
+		name = iceland_events.57.a
+		add_war_support = -0.05
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.63 days = 3 } }
+			ICE = { country_event = { id = iceland_events.64 days = 1 } }
+			country_event = { id = iceland_events.65 days = 17 }
+		}
+	}
+}
+
+country_event = { #Iceland defences crushed (CAN)
+	id = iceland_events.58
+
+	title = iceland_events.58.t
+	desc = iceland_events.58.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Catastrophe
+		log = "[GetLogInfo]: event iceland_events.58 option iceland_events.58.a"
+		name = iceland_events.58.a
+		add_war_support = -0.05
+		hidden_effect = {
+			country_event = { id = iceland_events.59 days = 6 }
+		}
+	}
+}
+
+country_event = { #Send commandos? (CAN)
+	id = iceland_events.59
+
+	title = iceland_events.59.t
+	desc = iceland_events.59.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Send the forces
+		log = "[GetLogInfo]: event iceland_events.59 option iceland_events.59.a"
+		name = iceland_events.59.a
+		ai_chance = { base = 80 }
+		hidden_effect = {
+			ICE = {
+				add_to_variable = { resistance_ICE_strength = 20 }
+			}
+		}
+	}
+
+	option = { #Too risky
+		log = "[GetLogInfo]: event iceland_events.59 option iceland_events.59.b"
+		name = iceland_events.59.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_completed_focus = CAN_within_arms_reach
+			}
+		}
+	}
+}
+
+country_event = { #Send commandos? (CAN)
+	id = iceland_events.591
+
+	title = iceland_events.59.t
+	desc = iceland_events.591.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Send the forces
+		log = "[GetLogInfo]: event iceland_events.591 option iceland_events.591.a"
+		name = iceland_events.591.a
+		ai_chance = { base = 80 }
+		hidden_effect = {
+			ICE = {
+				add_to_variable = { resistance_ICE_strength = 20 }
+			}
+		}
+	}
+
+	option = { #Too risky
+		log = "[GetLogInfo]: event iceland_events.591 option iceland_events.591.b"
+		name = iceland_events.591.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_completed_focus = CAN_within_arms_reach
+			}
+		}
+	}
+}
+
+country_event = { #Iceland defences crushed (ICE)
+	id = iceland_events.60
+
+	title = iceland_events.60.t
+	desc = iceland_events.60.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Defeat in the field
+		log = "[GetLogInfo]: event iceland_events.60 option iceland_events.60.a"
+		name = iceland_events.60.a
+		add_political_power = -50
+		add_stability = -0.1
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.61 days = 14 } }
+		}
+	}
+}
+
+country_event = { #Iceland's new government (ENG)
+	id = iceland_events.61
+
+	title = iceland_events.61.t
+	desc = iceland_events.61.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Reform their government
+		log = "[GetLogInfo]: event iceland_events.61 option iceland_events.61.a"
+		name = iceland_events.61.a
+		add_political_power = 60
+		ICE = {
+			get_current_government_type = yes
+			clear_variable = original_government_type
+			clear_array = original_coalitions
+		}
+		set_autonomy = {
+			target = ICE
+			autonomy_state = occupied_puppet
+			end_wars = no
+		}
+		ICE = {
+			restore_previous_government_type = yes
+			complete_national_focus = ICE_English_Pup
+			ICE_english_garrison_template_check = yes
+			ICE_setup_starting_english_garrison = yes
+			hidden_effect = {
+				add_popularity = { ideology = syndicalist popularity = 0.15 }
+				add_popularity = { ideology = radical_socialist popularity = 0.05 }
+			}
+		}
+		set_global_flag = Cod_War_TI_Victory
+	}
+}
+
+country_event = { #English troops in Reykjavik (ICE)
+	id = iceland_events.62
+
+	title = iceland_events.62.t
+	desc = iceland_events.62.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #We had no chance
+		log = "[GetLogInfo]: event iceland_events.62 option iceland_events.62.a"
+		name = iceland_events.62.a
+		add_political_power = -25
+		hidden_effect = {
+			ENG = { country_event = { id = iceland_events.61 days = 2 } }
+		}
+	}
+}
+
+country_event = { #Successful defence of Iceland (CAN)
+	id = iceland_events.63
+
+	title = iceland_events.63.t
+	desc = iceland_events.63.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #A triumph over the Revolutionaries
+		log = "[GetLogInfo]: event iceland_events.63 option iceland_events.63.a"
+		name = iceland_events.63.a
+		add_war_support = 0.05
+	}
+}
+
+country_event = { #Successful defence of Iceland (ICE)
+	id = iceland_events.64
+
+	title = iceland_events.64.t
+	desc = iceland_events.64.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #A triumph over the Revolutionaries
+		log = "[GetLogInfo]: event iceland_events.64 option iceland_events.64.a"
+		name = iceland_events.64.a
+		add_political_power = 100
+		add_stability = 0.1
+		add_war_support = 0.05
+	}
+}
+
+country_event = { #The Icelandic Question (ENG)
+	id = iceland_events.65
+
+	title = iceland_events.65.t
+	desc = iceland_events.65.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Make an example of Iceland
+		log = "[GetLogInfo]: event iceland_events.65 option iceland_events.65.a"
+		name = iceland_events.65.a
+		ai_chance = { base = 80 }
+		hidden_effect = {
+			ICE = {
+				country_event = { id = iceland_events.67 days = 1 }
+			}
+		}
+	}
+
+	option = { #Back Down
+		log = "[GetLogInfo]: event iceland_events.65 option iceland_events.65.b"
+		name = iceland_events.65.b
+		ai_chance = { base = 20 }
+		add_stability = -0.1
+		hidden_effect = {
+			ICE = { country_event = { id = iceland_events.66 days = 1 } }
+		}
+	}
+}
+
+country_event = { #England Backs down (ICE)
+	id = iceland_events.66
+
+	title = iceland_events.66.t
+	desc = iceland_events.66.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.66 option iceland_events.66.a"
+		name = iceland_events.66.a
+		complete_national_focus = ICE_Ottawa_King
+		set_global_flag = Cod_War_Entente_Victory
+		ICE_canadian_garrison_template_check = yes
+		ICE_setup_starting_canadian_english_garrison = yes
+	}
+}
+
+country_event = { #Reykjavik Bombed (ICE)
+	id = iceland_events.67
+
+	title = iceland_events.67.t
+	desc = iceland_events.67.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Panic in the night
+		log = "[GetLogInfo]: event iceland_events.67 option iceland_events.67.a"
+		name = iceland_events.67.a
+		add_stability = -0.1
+		add_war_support = -0.1
+		hidden_effect = {
+			set_country_flag = Cod_War_Neutral
+		}
+	}
+}
+
+############################
+#######Other Events#########
+############################
+
+#Expanding the Fishing Regions#
+
+country_event = { #building a fishery
+	id = iceland_events.600
+	title = iceland_events.600.t
+	desc = iceland_events.600.d
+	picture = GFX_report_event_ICE_Fish_Factory
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Let the catches flow in
+		log = "[GetLogInfo]: event iceland_events.600 option iceland_events.600.a"
+		name = iceland_events.600.a
+		add_stability = 0.05
+		add_political_power = 15
+	}
+}
+
+#Recovery Planning Chain#
+
+country_event = { #Austerity Budget
+	id = iceland_events.74
+	title = iceland_events.74.t
+	desc = iceland_events.74.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Severe Austerity
+		log = "[GetLogInfo]: event iceland_events.74 option iceland_events.74.a"
+		name = iceland_events.74.a
+		add_stability = -0.08
+		add_political_power = -50
+		add_ideas = ICE_Austerity_Lev_3
+	}
+
+	option = { #Moderate Austerity
+		log = "[GetLogInfo]: event iceland_events.74 option iceland_events.74.b"
+		name = iceland_events.74.b
+		add_stability = -0.04
+		add_political_power = -25
+		add_ideas = ICE_Austerity_Lev_2
+	}
+
+	after = {
+		hidden_effect = { country_event = { id = iceland_events.75 days = 14 } }
+	}
+}
+
+country_event = { #Who to support
+	id = iceland_events.75
+	title = iceland_events.75.t
+	desc = iceland_events.75.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Support the Rural Areas
+		log = "[GetLogInfo]: event iceland_events.75 option iceland_events.75.a"
+		name = iceland_events.75.a
+		hidden_effect = {
+			country_event = { id = iceland_events.76 days = 14 }
+			set_country_flag = ICE_Support_Rural_Neutral
+		}
+	}
+
+	option = { #Support the Urban Area
+		log = "[GetLogInfo]: event iceland_events.75 option iceland_events.75.b"
+		name = iceland_events.75.b
+		hidden_effect = {
+			country_event = { id = iceland_events.77 days = 21 }
+			set_country_flag = ICE_Support_Urban_Neutral
+		}
+	}
+
+	after = {
+		add_stability = 0.01
+	}
+}
+
+country_event = { #Urbanites ask for aid pt.2
+	id = iceland_events.76
+	title = iceland_events.76.t
+	desc = iceland_events.76.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Balanced Support Choice
+		log = "[GetLogInfo]: event iceland_events.76 option iceland_events.76.a"
+		name = iceland_events.76.a
+		add_stability = 0.01
+		hidden_effect = {
+			set_country_flag = ICE_Balanced_Support_Neutral
+		}
+		ai_chance = { base = 75 }
+	}
+
+	option = { #Exclusive Aid for Farmers
+		log = "[GetLogInfo]: event iceland_events.76 option iceland_events.76.b"
+		name = iceland_events.76.b
+		add_stability = -0.02
+
+		ai_chance = { base = 25 }
+	}
+}
+
+country_event = { #Rural people ask for aid pt.2
+	id = iceland_events.77
+	title = iceland_events.77.t
+	desc = iceland_events.77.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Balanced Support Choice
+		log = "[GetLogInfo]: event iceland_events.77 option iceland_events.76.a"
+		name = iceland_events.76.a
+		add_stability = 0.01
+		hidden_effect = {
+			set_country_flag = ICE_Balanced_Support_Neutral
+		}
+		ai_chance = { base = 75 }
+	}
+
+	option = { #Exclusive Aid for Urbanites
+		log = "[GetLogInfo]: event iceland_events.77 option iceland_events.77.b"
+		name = iceland_events.77.b
+		add_stability = -0.02
+
+		ai_chance = { base = 25 }
+	}
+}
+
+#Relief Chain#
+
+country_event = { #Starting Radio Broadcasts
+	id = iceland_events.80
+	title = iceland_events.80.t
+	desc = iceland_events.80.d
+	picture = GFX_report_event_USA_fireside_chats
+
+	is_triggered_only = yes
+
+	option = { #Stability returning
+		log = "[GetLogInfo]: event iceland_events.80 option iceland_events.80.a"
+		name = iceland_events.80.a
+		add_stability = 0.05
+		hidden_effect = { country_event = { id = iceland_events.81 days = 370 } }
+	}
+}
+
+country_event = { #Continue the Radio Broadcasts?
+	id = iceland_events.81
+	title = iceland_events.81.t
+	desc = iceland_events.81.d
+	picture = GFX_report_event_USA_fireside_chats
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Continue the program
+		log = "[GetLogInfo]: event iceland_events.81 option iceland_events.81.a"
+		name = iceland_events.81.a
+		add_stability = 0.02
+		add_political_power = -50
+		add_timed_idea = {
+			idea = ICE_Public_Broadcasts
+			days = 365
+		}
+		hidden_effect = {
+			country_event = { id = iceland_events.80 days = 1 }
+		}
+	}
+
+	option = { #Our efforts are better spent elsewhere
+		log = "[GetLogInfo]: event iceland_events.81 option iceland_events.81.b"
+		name = iceland_events.81.b
+		add_political_power = 50
+	}
+}
+
+country_event = { #Iceland requests a Danish Bailout (DEN)
+	id = iceland_events.82
+	title = iceland_events.82.t
+	desc = iceland_events.82.d
+	picture = GFX_report_event_USA_fireside_chats
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #We must help our people
+		log = "[GetLogInfo]: event iceland_events.82 option iceland_events.82.a"
+		name = iceland_events.82.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ICE_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ICE_path option = ICE_PATH_SOCDEM } }
+			}
+		}
+		ICE = {
+			add_timed_idea = {
+				idea = ICE_danish_bailout
+				days = 1500
+			}
+		}
+		DEN = {
+			add_timed_idea = {
+				idea = DEN_danish_bailout
+				days = 1500
+			}
+		}
+		hidden_effect = {
+			ICE = {
+				country_event = { id = iceland_events.83 days = 1 }
+				set_country_flag = ICE_Loyal_DEN
+			}
+		}
+	}
+
+	option = { #They are on their own
+		log = "[GetLogInfo]: event iceland_events.82 option iceland_events.82.b"
+		name = iceland_events.82.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_SOCDEM }
+			}
+		}
+		add_stability = -0.01
+		hidden_effect = {
+			ICE = {
+				country_event = { id = iceland_events.84 days = 1 }
+				set_country_flag = ICE_Disloyal_DEN
+			}
+		}
+	}
+}
+
+country_event = { #Denmark sends aid!
+	id = iceland_events.83
+	title = iceland_events.83.t
+	desc = iceland_events.83.d
+	picture = GFX_report_event_USA_fireside_chats
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Thank you Denmark!
+		log = "[GetLogInfo]: event iceland_events.83 option iceland_events.83.a"
+		name = iceland_events.83.a
+		add_stability = 0.05
+	}
+}
+
+country_event = { #Denmark witholds aid!
+	id = iceland_events.84
+	title = iceland_events.84.t
+	desc = iceland_events.84.d
+	picture = GFX_report_event_USA_fireside_chats
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #How could you!
+		log = "[GetLogInfo]: event iceland_events.84 option iceland_events.84.a"
+		name = iceland_events.84.a
+		add_stability = -0.05
+	}
+}
+
+country_event = { #Charitable Events
+	id = iceland_events.85
+
+	title = iceland_events.85.t
+	desc = iceland_events.85.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	option = { #May the lord smile on their kindness
+		log = "[GetLogInfo]: event iceland_events.85 option iceland_events.85.a"
+		name = iceland_events.85.a
+		add_stability = 0.02
+	}
+}
+
+country_event = { #Riders of ~Rohan~ I mean Iceland
+	id = iceland_events.86
+
+	title = iceland_events.86.t
+	desc = iceland_events.86.d
+	picture = GFX_report_event_ICE_Pony_Express
+
+	is_triggered_only = yes
+
+	option = { #Send out the riders
+		log = "[GetLogInfo]: event iceland_events.86 option iceland_events.86.a"
+		name = iceland_events.86.a
+		hidden_effect = { country_event = { id = iceland_events.87 months = 3 } }
+	}
+}
+
+country_event = { #Sending out aid
+	id = iceland_events.87
+
+	title = iceland_events.87.t
+	desc = iceland_events.87.d
+	picture = GFX_report_event_ICE_Moss_Road
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Send out the riders
+		log = "[GetLogInfo]: event iceland_events.87 option iceland_events.87.a"
+		name = iceland_events.87.a
+		add_political_power = 10
+	}
+}
+
+#Status Quo Iceland Tree Events#
+
+country_event = { #Temperance Movement protests
+	id = iceland_events.90
+	title = iceland_events.90.t
+	desc = iceland_events.90.d
+	picture = GFX_news_event_AST_stephenson #Maybe find something more suitable
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.90 option iceland_events.90.a"
+		name = iceland_events.90.a
+		add_stability = -0.02
+	}
+}
+
+country_event = { #Reform the taxes?
+	id = iceland_events.91
+	title = iceland_events.91.t
+	desc = iceland_events.91.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.91 option iceland_events.91.a"
+		name = iceland_events.91.a
+		add_stability = -0.075
+		add_ideas = ICE_Reformed_Taxes_Idea
+	}
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.91 option iceland_events.91.b"
+		name = iceland_events.91.b
+		add_stability = 0.10
+		add_political_power = 25
+	}
+}
+
+#Reducing Austerity#
+
+country_event = { #Reducing Austerity
+	id = iceland_events.100
+	title = iceland_events.100.t
+	desc = iceland_events.100.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Reduce Austerity
+		log = "[GetLogInfo]: event iceland_events.100 option iceland_events.100.a"
+		name = iceland_events.100.a
+		add_stability = 0.05
+		add_political_power = -10
+		ICE_reduce_austerity = yes
+	}
+
+	option = { #Stay where we are at
+		log = "[GetLogInfo]: event iceland_events.100 option iceland_events.100.b"
+		name = iceland_events.100.b
+		add_stability = -0.02
+		add_political_power = 25
+		hidden_effect = { country_event = { id = iceland_events.102 days = 15 } }
+	}
+}
+
+country_event = { #Austerity Budget reduced, when should we revisit our situation?
+	id = iceland_events.101
+	title = iceland_events.101.t
+	desc = iceland_events.101.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	option = { #Revisit the issue in 6 months
+		log = "[GetLogInfo]: event iceland_events.101 option iceland_events.101.a"
+		name = iceland_events.101.a
+		hidden_effect = { country_event = { id = iceland_events.103 days = 180 } }
+	}
+
+	option = { #Revisit the issue in 1 year
+		log = "[GetLogInfo]: event iceland_events.101 option iceland_events.101.b"
+		name = iceland_events.101.b
+		hidden_effect = { country_event = { id = iceland_events.104 days = 365 } }
+	}
+}
+
+country_event = { #Austerity Budget not reduced, when should we reduce the budget?
+	id = iceland_events.102
+	title = iceland_events.102.t
+	desc = iceland_events.102.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	option = { #Revisit the issue in 6 months
+		log = "[GetLogInfo]: event iceland_events.102 option iceland_events.101.a"
+		name = iceland_events.101.a
+		hidden_effect = { country_event = { id = iceland_events.105 days = 180 } }
+	}
+
+	option = { #Revisit the issue in 1 year
+		log = "[GetLogInfo]: event iceland_events.102 option iceland_events.101.b"
+		name = iceland_events.101.b
+		hidden_effect = { country_event = { id = iceland_events.106 days = 365 } }
+	}
+}
+
+country_event = { #it has been 6 months - budget prev. reduced
+	id = iceland_events.103
+	title = iceland_events.100.t
+	desc = iceland_events.103.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	option = { #Reduce Austerity
+		log = "[GetLogInfo]: event iceland_events.103 option iceland_events.100.a"
+		name = iceland_events.100.a
+		add_stability = 0.02
+		add_political_power = -10
+		ICE_reduce_austerity = yes
+	}
+
+	option = { #Stay where we are at
+		log = "[GetLogInfo]: event iceland_events.103 option iceland_events.100.b"
+		name = iceland_events.100.b
+		add_stability = -0.02
+		add_political_power = 25
+		hidden_effect = { country_event = { id = iceland_events.102 days = 15 } }
+	}
+}
+
+country_event = { #it has been 1 year - budget prev. reduced
+	id = iceland_events.104
+	title = iceland_events.100.t
+	desc = iceland_events.104.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	option = { #Reduce Austerity
+		log = "[GetLogInfo]: event iceland_events.104 option iceland_events.100.a"
+		name = iceland_events.100.a
+		add_stability = 0.05
+		add_political_power = -10
+		ICE_reduce_austerity = yes
+	}
+
+	option = { #Stay where we are at
+		log = "[GetLogInfo]: event iceland_events.104 option iceland_events.100.b"
+		name = iceland_events.100.b
+		add_stability = -0.05
+		add_political_power = 25
+		hidden_effect = { country_event = { id = iceland_events.102 days = 15 } }
+	}
+}
+
+country_event = { #it has been 6 months - budget not reduced
+	id = iceland_events.105
+	title = iceland_events.100.t
+	desc = iceland_events.105.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	option = { #Reduce Austerity
+		log = "[GetLogInfo]: event iceland_events.105 option iceland_events.100.a"
+		name = iceland_events.100.a
+		add_stability = 0.02
+		add_political_power = -10
+		ICE_reduce_austerity = yes
+	}
+
+	option = { #Stay where we are at
+		log = "[GetLogInfo]: event iceland_events.105 option iceland_events.100.b"
+		name = iceland_events.100.b
+		add_stability = -0.02
+		add_political_power = 25
+		hidden_effect = { country_event = { id = iceland_events.102 days = 15 } }
+	}
+}
+
+country_event = { #it has been 1 year - budget not reduced
+	id = iceland_events.106
+	title = iceland_events.100.t
+	desc = iceland_events.106.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	option = { #Reduce Austerity
+		log = "[GetLogInfo]: event iceland_events.106 option iceland_events.100.a"
+		name = iceland_events.100.a
+		add_stability = 0.075
+		add_political_power = -10
+		ICE_reduce_austerity = yes
+	}
+
+	option = { #Stay where we are at
+		log = "[GetLogInfo]: event iceland_events.106 option iceland_events.100.b"
+		name = iceland_events.100.b
+		add_stability = -0.075
+		add_political_power = 25
+		hidden_effect = { country_event = { id = iceland_events.102 days = 15 } }
+	}
+}
+
+country_event = { #End to Austerity
+	id = iceland_events.107
+	title = iceland_events.107.t
+	desc = iceland_events.107.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #End to Austerity
+		log = "[GetLogInfo]: event iceland_events.107 option iceland_events.107.a"
+		name = iceland_events.107.a
+		add_stability = 0.1
+	}
+}
+
+#Canadian Tree Events#
+
+country_event = { #Call on the Canadian Military Engineers
+	id = iceland_events.110
+	title = iceland_events.110.t
+	desc = iceland_events.110.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Request Canadian Engineers
+		log = "[GetLogInfo]: event iceland_events.110 option iceland_events.110.a"
+		name = iceland_events.110.a
+		custom_effect_tooltip = ICE_Can_Engineer_Dec_Cat
+	}
+}
+
+country_event = { #Request the Z Force
+	id = iceland_events.111
+	title = iceland_events.111.t
+	desc = iceland_events.111.d
+	picture = GFX_report_event_NOR_parliament
+
+	trigger = {
+		tag = ICE
+		focus_progress = {
+			focus = ICE_Garrison
+			progress > 0.2
+		}
+	}
+	fire_only_once = yes
+
+	option = { #Request the Z Force
+		log = "[GetLogInfo]: event iceland_events.111 option iceland_events.111.a"
+		name = iceland_events.111.a
+	}
+}
+
+country_event = { #Which branch of the IRAF to expand?
+	id = iceland_events.113
+	title = iceland_events.113.t
+	desc = iceland_events.113.d
+
+	is_triggered_only = yes
+
+	option = { #Request more fighters
+		log = "[GetLogInfo]: event iceland_events.113 option iceland_events.113.a"
+		name = iceland_events.113.a
+		ai_chance = { base = 70 }
+		CAN = { country_event = { id = iceland_events.114 days = 7 } }
+	}
+
+	option = { #We need more bombers
+		log = "[GetLogInfo]: event iceland_events.113 option iceland_events.113.b"
+		name = iceland_events.113.b
+		ai_chance = { base = 30 }
+		CAN = { country_event = { id = iceland_events.117 days = 7 } }
+	}
+}
+
+country_event = { #Iceland requests fighter reinforcements for the IRAF (CAN)
+	id = iceland_events.114
+	title = iceland_events.114.t
+	desc = iceland_events.114.d
+
+	is_triggered_only = yes
+
+	option = { #Send them reinforcements
+		log = "[GetLogInfo]: event iceland_events.114 option iceland_events.114.a"
+		name = iceland_events.114.a
+		ai_chance = { base = 70 }
+		send_equipment = { target = ICE type = small_plane_airframe amount = 10 }
+		ICE = { country_event = { id = iceland_events.115 days = 7 } }
+	}
+
+	option = { #We can't spare anything
+		log = "[GetLogInfo]: event iceland_events.114 option iceland_events.114.b"
+		name = iceland_events.114.b
+		ai_chance = { base = 30 }
+		ICE = { country_event = { id = iceland_events.116 days = 7 } }
+	}
+}
+
+country_event = { #Canada sent fighter reinforcements
+	id = iceland_events.115
+	title = iceland_events.115.t
+	desc = iceland_events.115.d
+
+	is_triggered_only = yes
+
+	option = { #Thanks Canada!
+		log = "[GetLogInfo]: event iceland_events.115 option iceland_events.35.a"
+		name = iceland_events.35.a
+		add_manpower = 200
+		add_equipment_to_stockpile = {
+			type = small_plane_airframe
+			amount = 10
+			producer = CAN
+		}
+	}
+}
+
+country_event = { #Canada does not send fighter reinforcements
+	id = iceland_events.116
+	title = iceland_events.116.t
+	desc = iceland_events.116.d
+
+	is_triggered_only = yes
+
+	option = { #Unfortunate
+		log = "[GetLogInfo]: event iceland_events.116 option iceland_events.36.a"
+		name = iceland_events.36.a
+	}
+}
+
+country_event = { #Iceland requests bomber reinforcements for the IRAF (CAN)
+	id = iceland_events.117
+	title = iceland_events.114.t
+	desc = iceland_events.117.d
+
+	is_triggered_only = yes
+
+	option = { #Send them reinforcements
+		log = "[GetLogInfo]: event iceland_events.117 option iceland_events.117.a"
+		name = iceland_events.117.a
+		ai_chance = { base = 70 }
+		send_equipment = {
+			target = ICE
+			type = small_plane_naval_bomber_airframe
+			amount = 10
+		}
+		ICE = { country_event = { id = iceland_events.118 days = 7 } }
+	}
+
+	option = { #We can't spare anything
+		log = "[GetLogInfo]: event iceland_events.117 option iceland_events.117.b"
+		name = iceland_events.117.b
+		ai_chance = { base = 30 }
+		ICE = { country_event = { id = iceland_events.119 days = 7 } }
+	}
+}
+
+country_event = { #Canada sent bomber reinforcements
+	id = iceland_events.118
+	title = iceland_events.118.t
+	desc = iceland_events.118.d
+
+	is_triggered_only = yes
+
+	option = { #Thanks Canada!
+		log = "[GetLogInfo]: event iceland_events.118 option iceland_events.35.a"
+		name = iceland_events.35.a
+		add_manpower = 200
+		add_equipment_to_stockpile = {
+			type = small_plane_naval_bomber_airframe
+			amount = 10
+			producer = CAN
+		}
+	}
+}
+
+country_event = { #Canada does not send bomber reinforcements
+	id = iceland_events.119
+	title = iceland_events.119.t
+	desc = iceland_events.119.d
+
+	is_triggered_only = yes
+
+	option = { #Unfortunate
+		log = "[GetLogInfo]: event iceland_events.119 option iceland_events.36.a"
+		name = iceland_events.36.a
+	}
+}
+
+#Union of Britain Tree Events#
+
+country_event = { #Forming the government
+	id = iceland_events.130
+	title = iceland_events.130.t
+	desc = iceland_events.130.d
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Syndicalist Focus
+		log = "[GetLogInfo]: event iceland_events.130 option iceland_events.130.a"
+		name = iceland_events.130.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_RADSOC }
+			}
+		}
+		set_politics = { ruling_party = syndicalist elections_allowed = yes }
+		add_popularity = { ideology = syndicalist popularity = 0.15 }
+		add_popularity = { ideology = radical_socialist popularity = 0.05 }
+	}
+
+	option = { #Farmers Focus
+		log = "[GetLogInfo]: event iceland_events.130 option iceland_events.130.b"
+		name = iceland_events.130.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_SYNDIE }
+			}
+		}
+		set_politics = { ruling_party = radical_socialist elections_allowed = yes }
+		add_popularity = { ideology = radical_socialist popularity = 0.15 }
+		add_popularity = { ideology = syndicalist popularity = 0.05 }
+	}
+}
+
+#CWCS Events#
+
+country_event = { #Roads in shambles
+	id = iceland_events.150
+
+	title = iceland_events.150.t
+	desc = iceland_events.150.d
+	picture = GFX_report_event_ICE_Poor_Roads
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #We need to do something about this!
+		log = "[GetLogInfo]: event iceland_events.150 option iceland_events.150.a"
+		name = iceland_events.150.a
+	}
+}
+
+country_event = { #Warm Water Pipes
+	id = iceland_events.151
+
+	title = iceland_events.151.t
+	desc = iceland_events.151.d
+	picture = GFX_report_event_ICE_Hot_Indoor_Pool
+
+	is_triggered_only = yes
+
+	option = { #May a warm bath, warm our spirits
+		log = "[GetLogInfo]: event iceland_events.151 option iceland_events.151.a"
+		name = iceland_events.151.a
+		add_stability = 0.01
+	}
+}
+
+#Generic Events#
+
+country_event = { #Geyser Donation
+	id = iceland_events.170
+
+	title = iceland_events.170.t
+	desc = iceland_events.170.d
+	picture = GFX_report_event_ICE_Geyser
+
+	is_triggered_only = yes
+
+	option = { #A most fabulous donation
+		log = "[GetLogInfo]: event iceland_events.170 option iceland_events.170.a"
+		name = iceland_events.170.a
+	}
+}
+
+country_event = { #Opening of the Hydroelectric Plant
+	id = iceland_events.171
+
+	title = iceland_events.171.t
+	desc = iceland_events.171.d
+	picture = GFX_report_event_ICE_Hydro_Plant
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #To a brighter future!
+		log = "[GetLogInfo]: event iceland_events.171 option iceland_events.171.a"
+		name = iceland_events.171.a
+		add_political_power = 5
+	}
+}
+
+country_event = { #Hummocks & Health
+	id = iceland_events.172
+
+	title = iceland_events.172.t
+	desc = iceland_events.172.d
+	picture = GFX_report_event_ICE_Hummock_Health
+
+	is_triggered_only = yes
+
+	option = { #If it works, it works
+		log = "[GetLogInfo]: event iceland_events.172 option iceland_events.172.a"
+		name = iceland_events.172.a
+		add_political_power = 5
+	}
+}
+
+country_event = { #Farming Communities
+	id = iceland_events.173
+
+	title = iceland_events.173.t
+	desc = iceland_events.173.d
+	picture = GFX_report_event_ICE_Homes
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #For efficiency!
+		log = "[GetLogInfo]: event iceland_events.173 option iceland_events.173.a"
+		name = iceland_events.173.a
+	}
+}
+
+country_event = { #Packing the Barrels
+	id = iceland_events.174
+
+	title = iceland_events.174.t
+	desc = iceland_events.174.d
+	picture = GFX_report_event_ICE_Fish_Barrel_Export
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Pack and roll
+		log = "[GetLogInfo]: event iceland_events.174 option iceland_events.174.a"
+		name = iceland_events.174.a
+	}
+}
+
+country_event = { #A new source of power
+	id = iceland_events.175
+
+	title = iceland_events.175.t
+	desc = iceland_events.175.d
+	picture = GFX_report_event_ICE_Waterfall_1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #An untapped spring
+		log = "[GetLogInfo]: event iceland_events.175 option iceland_events.175.a"
+		name = iceland_events.175.a
+	}
+}
+
+country_event = { #Expand the harbour
+	id = iceland_events.176
+
+	title = iceland_events.176.t
+	desc = iceland_events.176.d
+	picture = GFX_report_event_ICE_Cod_Harbour
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Busy times ahead
+		log = "[GetLogInfo]: event iceland_events.176 option iceland_events.176.a"
+		name = iceland_events.176.a
+	}
+}
+
+country_event = { #Need new ships
+	id = iceland_events.177
+
+	title = iceland_events.177.t
+	desc = iceland_events.177.d
+	picture = GFX_report_event_ICE_Harbour_2
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #Farewell old friend
+		log = "[GetLogInfo]: event iceland_events.177 option iceland_events.177.a"
+		name = iceland_events.177.a
+	}
+}
+
+#iceland_events.178 and iceland_events.179 are taken in the cod war events
+
+#Black Monday#
+
+country_event = {
+	id = iceland_events.200
+	title = iceland_events.200.t
+	desc = iceland_events.200.d
+	picture = GFX_report_event_generic_run_on_the_banks
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			swap_ideas = {
+				remove_idea = ICE_ailing_economy
+				add_idea = ICE_failing_economy
+			}
+			activate_mission = ICE_Unemployment_Crisis
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.200 option iceland_events.200.a"
+		name = iceland_events.200.a
+		add_stability = -0.25
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = ICE_ailing_economy
+				add_idea = ICE_failing_economy
+			}
+			activate_mission = ICE_Unemployment_Crisis
+		}
+	}
+}
+
+#Plebiscite of 1937#
+
+country_event = {
+	id = iceland_events.250
+	title = iceland_events.250.t
+	desc = iceland_events.250.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+	trigger = {
+		NOT = { has_country_flag = ICE_was_annexed } #If ICE was annexed before 1937, no plebiscite
+	}
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.250 option iceland_events.250.a"
+		name = iceland_events.250.a
+
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_country_flag = ICE_Loyal_DEN
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ICE_path option = ICE_PATH_SOCDEM }
+			}
+		}
+
+		remove_ideas = ICE_Personal_Union
+		drop_cosmetic_tag = yes
+		set_country_flag = Independence_1937
+	}
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.250 option iceland_events.250.b"
+		name = iceland_events.250.b
+
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_country_flag = ICE_Disloyal_DEN
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ICE_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ICE_path option = ICE_PATH_SOCDEM } }
+			}
+		}
+		set_country_flag = Status_Quo_1937
+	}
+
+	after = {
+		set_country_flag = Vote_Held_1937
+	}
+}
+
+country_event = { #Independence Victory
+	id = iceland_events.251
+	title = iceland_events.251.t
+	desc = iceland_events.251.d
+	picture = GFX_report_event_NOR_parliament
+
+	trigger = {
+		date > 1937.06.17
+		tag = ICE
+		has_country_flag = Independence_1937
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.251 option iceland_events.251.a"
+		name = iceland_events.251.a
+		set_politics = { ruling_party = social_conservative elections_allowed = yes }
+		add_popularity = { ideology = social_conservative popularity = 0.15 }
+		hidden_effect = {
+			add_popularity = { ideology = social_liberal popularity = 0.03 }
+			add_popularity = { ideology = radical_socialist popularity = 0.01 }
+			add_popularity = { ideology = syndicalist popularity = 0.03 }
+			add_popularity = { ideology = national_populist popularity = 0.02 }
+			add_popularity = { ideology = social_democrat popularity = -0.05 }
+			news_event = iceland_events.351
+		}
+		leave_faction = yes
+		separate_peace_all_wars = yes
+		DEN = {
+			end_puppet = ICE
+			give_guarantee = ICE
+			country_event = iceland_events.256
+		}
+	}
+}
+
+country_event = { #Status Quo Victory
+	id = iceland_events.252
+	title = iceland_events.252.t
+	desc = iceland_events.252.d
+	picture = GFX_report_event_NOR_parliament
+
+	trigger = {
+		date > 1937.06.17
+		tag = ICE
+		has_country_flag = Status_Quo_1937
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.252 option iceland_events.252.a"
+		name = iceland_events.252.a
+		set_politics = { ruling_party = social_democrat elections_allowed = yes }
+		add_popularity = { ideology = social_democrat popularity = 0.15 }
+		hidden_effect = {
+			add_popularity = { ideology = national_populist popularity = 0.07 }
+			add_popularity = { ideology = social_conservative popularity = -0.07 }
+		}
+		hidden_effect = {
+			country_event = { id = iceland_events.258 days = 180 }
+			DEN = { country_event = iceland_events.257 }
+		}
+	}
+}
+
+country_event = { #Icexit from Mitteleuropa
+	id = iceland_events.253
+	title = iceland_events.253.t
+	desc = iceland_events.253.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.253 option iceland_events.253.a"
+		name = iceland_events.253.a
+		add_political_power = 10
+		add_stability = -0.03
+		hidden_effect = {
+			CAN = { country_event = { id = iceland_events.254 days = 7 } }
+			ENG = { country_event = { id = iceland_events.254 days = 7 } }
+		}
+	}
+}
+
+country_event = { #Iceland leaves Mitteleuropa (CAN / ENG)
+	id = iceland_events.254
+	title = iceland_events.253.t
+	desc = {
+		text = iceland_events.254.d1
+		trigger = { tag = CAN }
+	}
+	desc = {
+		text = iceland_events.254.d2
+		trigger = { NOT = { tag = CAN } }
+	}
+	picture = GFX_report_event_generic_run_on_the_banks
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event iceland_events.254 option iceland_events.254.a"
+		name = iceland_events.254.a
+		hidden_effect = {
+			reverse_add_opinion_modifier = { target = ROOT modifier = ICE_atlantic_trade_plus }
+		}
+	}
+}
+
+country_event = { #Iceland elects to leave
+	id = iceland_events.256
+	title = iceland_events.256.t
+	desc = iceland_events.256.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #very well
+		log = "[GetLogInfo]: event iceland_events.256 option iceland_events.256.a"
+		name = iceland_events.256.a
+		add_political_power = -25
+	}
+}
+
+country_event = { #Iceland elects to stay
+	id = iceland_events.257
+	title = iceland_events.257.t
+	desc = iceland_events.257.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #very well
+		log = "[GetLogInfo]: event iceland_events.257 option iceland_events.257.a"
+		name = iceland_events.257.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Jon Baldvinsson Retires
+	id = iceland_events.258
+	title = iceland_events.258.t
+	desc = iceland_events.258.d
+	picture = GFX_report_event_DEN_government
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #We wish him the best
+		log = "[GetLogInfo]: event iceland_events.258 option iceland_events.258.a"
+		name = iceland_events.258.a
+		retire_character = ICE_jon_baldvinsson
+		promote_character = ICE_stefan_johann_stefansson
+	}
+}
+
+#iceland_events.291 is taken in the cod war events
+
+country_event = { #How should the banks be run?
+	id = iceland_events.300
+
+	title = iceland_events.300.t
+	desc = iceland_events.300.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #One Island, One Bank!
+		log = "[GetLogInfo]: event iceland_events.300 option iceland_events.300.a"
+		name = iceland_events.300.a
+		hidden_effect = {
+			complete_national_focus = ICE_Central_Bank
+		}
+		ai_chance = { base = 35 }
+	}
+
+	option = { #Delegate to smaller banks
+		log = "[GetLogInfo]: event iceland_events.300 option iceland_events.300.b"
+		name = iceland_events.300.b
+		hidden_effect = {
+			complete_national_focus = ICE_Separate_Bank
+		}
+		ai_chance = { base = 65 }
+	}
+}
+
+country_event = { #Commissioning new designs
+	id = iceland_events.301
+
+	title = iceland_events.301.t
+	desc = iceland_events.301.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Go with Sweden
+		log = "[GetLogInfo]: event iceland_events.301 option iceland_events.301.a"
+		name = iceland_events.301.a
+		trigger = {
+			OR = {
+				SWE = {
+					exists = yes
+					NOT = { has_war_with = ROOT }
+				}
+				SCA = {
+					exists = yes
+					NOT = { has_war_with = ROOT }
+				}
+			}
+		}
+		add_political_power = -10
+		hidden_effect = {
+			SWE = {
+				add_political_power = 10
+			}
+		}
+		ai_chance = { base = 65 }
+		add_tech_bonus = {
+			name = ICE_purchased_designs_tt
+			bonus = 0.5
+			ahead_reduction = 1
+			uses = 1
+			category = dd_tech
+		}
+	}
+
+	option = { #A Danish design
+		log = "[GetLogInfo]: event iceland_events.301 option iceland_events.301.b"
+		name = iceland_events.301.b
+		trigger = {
+			OR = {
+				DEN = {
+					exists = yes
+					NOT = { has_war_with = ROOT }
+				}
+				SCA = {
+					exists = yes
+					NOT = { has_war_with = ROOT }
+				}
+			}
+		}
+		add_political_power = -10
+		hidden_effect = {
+			DEN = {
+				add_political_power = 10
+			}
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 5
+				ICE = { is_subject_of = DEN }
+			}
+			modifier = {
+				factor = 0
+				ICE = { has_tech = basic_ship_hull_light }
+			}
+		}
+		if = {
+			limit = { NOT = { has_tech = basic_ship_hull_light } }
+			set_technology = { basic_ship_hull_light = 1 }
+		}
+		else = {
+			add_equipment_to_stockpile = { type = convoy_1 amount = 10 producer = DEN }
+		}
+	}
+
+	option = { #A Norwegian Model
+		log = "[GetLogInfo]: event iceland_events.301 option iceland_events.301.c"
+		name = iceland_events.301.c
+		trigger = {
+			OR = {
+				NOR = {
+					exists = yes
+					NOT = { has_war_with = ROOT }
+				}
+				SCA = {
+					exists = yes
+					NOT = { has_war_with = ROOT }
+				}
+			}
+		}
+		add_political_power = -10
+		hidden_effect = {
+			NOR = {
+				add_political_power = 10
+			}
+		}
+		ai_chance = { base = 15 }
+		add_tech_bonus = {
+			name = ICE_purchased_designs_tt
+			bonus = 1
+			uses = 1
+			category = dd_tech
+		}
+	}
+}
+
+country_event = { #Iceland is getting rebellious (ENG)
+	id = iceland_events.350
+
+	title = iceland_events.350.t
+	desc = iceland_events.350.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { #Send forces
+		log = "[GetLogInfo]: event iceland_events.350 option iceland_events.350.a"
+		name = iceland_events.350.a
+		add_to_variable = {
+			var = occupation_ENG_strength
+			value = 5
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.5
+				ICE = {
+					NOT = { check_variable = { resistance_ICE_strength > 15 } }
+				}
+			}
+		}
+	}
+
+	option = { #What can they do?
+		log = "[GetLogInfo]: event iceland_events.350 option iceland_events.350.b"
+		name = iceland_events.350.b
+		ai_chance = { base = 70 }
+	}
+}
+
+# Icelandic Independence
+news_event = {
+	id = iceland_events.351
+	immediate = { log = "[GetLogInfo]: event iceland_events.351" }
+	title = iceland_events.351.t
+	desc = iceland_events.351.d
+	picture = GFX_news_event_ICE_independent
+
+	is_triggered_only = yes
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			tag = CAN
+		}
+	}
+
+	option = { #A day to celebrate!
+		name = iceland_events.351.a
+		trigger = {
+			tag = ICE
+		}
+	}
+
+	option = { #How interesting...
+		name = iceland_events.351.b
+		trigger = {
+			OR = {
+				tag = CAN
+				tag = ENG
+				tag = DEN
+			}
+		}
+	}
+
+	option = { #How interesting...
+		name = iceland_events.351.c
+		trigger = {
+			NOT = {
+				tag = CAN
+				tag = ENG
+				tag = DEN
+				tag = ICE
+			}
+		}
+	}
+}
+

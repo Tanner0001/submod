@@ -1,0 +1,4989 @@
+###########################
+# Argentina Events
+###########################
+# By Jeankedezeehond
+###########################
+
+add_namespace = argentina_black_monday_events
+add_namespace = argentina_carles_events
+add_namespace = argentina_immigration_events
+add_namespace = argentina_foreign_events
+add_namespace = argentina_military_events
+add_namespace = argentina_chilean_war_events
+add_namespace = argentina_democratic_events
+add_namespace = argentina_news_events
+
+### ARG - CHL war ###
+country_event = { # loop event for unit desertions during ARG-CHL war (donotlog)
+	id = argentina_chilean_war_events.100
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		ARG = { has_war_with = FOP }
+	}
+
+	immediate = {
+		country_event = { id = argentina_chilean_war_events.100 days = 24 random_days = 10 random_hours = 24 }
+	}
+
+	option = {
+		if = {
+			limit = {
+				ARG = {
+					is_ai = yes
+					surrender_progress > 0.4
+					has_capitulated = no
+				}
+			}
+			ARG = { country_event = argentina_chilean_war_events.101 }
+		}
+		else_if = {
+			limit = {
+				FOP = {
+					is_ai = yes
+					surrender_progress > 0.4
+					has_capitulated = no
+				}
+			}
+			FOP = { country_event = argentina_chilean_war_events.102 }
+		}
+		### Since it doesn't make sense for CHL to join ARG, instead reduce available manpower and inf equipment
+		if = {
+			limit = {
+				CHL = {
+					is_ai = yes
+					has_war_with = ARG
+					surrender_progress > 0.4
+					has_capitulated = no
+				}
+			}
+			CHL = { country_event = argentina_chilean_war_events.103 }
+
+			### Die faster pls, thank you - solves CHL sitting in northern mountains with 100% war support
+			if = {
+				limit = {
+					CHL = { surrender_progress > 0.7 }
+				}
+				CHL = {
+					add_stability = -0.25
+					add_war_support = -0.25
+					disband_twenty_percent_units_delete_equipment = yes
+				}
+			}
+		}
+	}
+}
+
+country_event = { # ARG-FOP desertion event for ARG
+	id = argentina_chilean_war_events.101
+	title = argentina_chilean_war_events.101.t
+	desc = argentina_chilean_war_events.101.d
+	picture = GFX_report_event_ARG_car94
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = FOP
+		surrender_progress > 0.4
+		has_capitulated = no
+		num_divisions > 3
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_chilean_war_events.101 option argentina_chilean_war_events.101.a"
+		name = argentina_chilean_war_events.101.a
+		custom_effect_tooltip = ARG_FOP_our_defection_tooltip
+		add_war_support = -0.05
+		hidden_effect = {
+			transfer_units_fraction = {
+				target = FOP
+				target_organization = 1
+				source_organization = 1
+				army_ratio = 0.1
+				stockpile_ratio = 0
+				navy_ratio = 0
+				air_ratio = 0
+			}
+			FOP = { country_event = argentina_chilean_war_events.104 }
+		}
+	}
+}
+
+country_event = { # ARG-FOP desertion event for FOP
+	id = argentina_chilean_war_events.102
+	title = argentina_chilean_war_events.102.t
+	desc = argentina_chilean_war_events.102.d
+	picture = GFX_report_event_ARG_car94
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = ARG
+		surrender_progress > 0.4
+		has_capitulated = no
+		num_divisions > 3
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_chilean_war_events.102 option argentina_chilean_war_events.102.a"
+		name = argentina_chilean_war_events.102.a
+		custom_effect_tooltip = ARG_FOP_our_defection_tooltip
+		add_war_support = -0.05
+		hidden_effect = {
+			transfer_units_fraction = {
+				target = ARG
+				target_organization = 1
+				source_organization = 1
+				army_ratio = 0.1
+				stockpile_ratio = 0
+				navy_ratio = 0
+				air_ratio = 0
+			}
+			ARG = { country_event = argentina_chilean_war_events.104 }
+		}
+	}
+}
+
+country_event = { # ARG-FOP desertion event for CHL - deplete manpower and inf equipment
+	id = argentina_chilean_war_events.103
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = ARG
+		surrender_progress > 0.5
+		has_capitulated = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_chilean_war_events.103 option 1"
+		hidden_effect = {
+			add_manpower = -5000
+			add_war_support = -0.05
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -1000
+			}
+		}
+	}
+}
+
+country_event = { # ARG-FOP desertion event - notification for the tag that receives troops
+	id = argentina_chilean_war_events.104
+	title = argentina_chilean_war_events.104.t
+	desc = argentina_chilean_war_events.104.d
+
+	picture = GFX_report_event_BLR_soldiers_review
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_chilean_war_events.104 option argentina_chilean_war_events.104.a"
+		name = argentina_chilean_war_events.104.a
+		custom_effect_tooltip = ARG_FOP_enemy_defection_tooltip
+	}
+}
+
+###Military###
+#Navy underfunded
+country_event = { #Navy underfunded
+	id = argentina_military_events.10
+	title = argentina_military_events.10.t
+	desc = argentina_military_events.10.d
+	picture = GFX_report_event_ARG_mil10
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.10 option argentina_military_events.10.a"
+		name = argentina_military_events.10.a
+		set_country_flag = NAVY_ANGERY
+		hidden_effect = {
+			country_event = { id = argentina_military_events.11 days = 150 random_days = 300 } #Crisis in the Dockyards
+			country_event = { id = argentina_military_events.12 days = 250 random_days = 200 } #Destroyer sinks in the harbour
+			country_event = { id = argentina_military_events.13 days = 100 random_days = 350 } #Skirmish between ARA and Army troops in Buenos Aires
+		}
+	}
+}
+
+country_event = { #Crisis in the Dockyards
+	id = argentina_military_events.11
+	title = argentina_military_events.11.t
+	desc = argentina_military_events.11.d
+	picture = GFX_report_event_ARG_mil11
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = NAVY_ANGERY
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.11 option argentina_military_events.11.a"
+		name = argentina_military_events.11.a
+		add_war_support = -0.05
+		add_ideas = ARG_Dockyard_Crisis
+	}
+}
+
+country_event = { #Destroyer sinks in the harbour
+	id = argentina_military_events.12
+	title = argentina_military_events.12.t
+	desc = argentina_military_events.12.d
+	picture = GFX_report_event_ARG_mil12
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = NAVY_ANGERY
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.12 option argentina_military_events.12.a"
+		name = argentina_military_events.12.a
+		add_political_power = -100
+	}
+}
+
+country_event = { #Skirmish between ARA and Army troops in Buenos Aires
+	id = argentina_military_events.13
+	title = argentina_military_events.13.t
+	desc = argentina_military_events.13.d
+	picture = GFX_report_event_ARG_mil13
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = NAVY_ANGERY
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.13 option argentina_military_events.13.a"
+		name = argentina_military_events.13.a
+		add_stability = -0.05
+	}
+}
+
+#Army underfunded
+country_event = { #Army underfunded
+	id = argentina_military_events.20
+	title = argentina_military_events.20.t
+	desc = argentina_military_events.20.d
+	picture = GFX_report_event_ARG_mil20
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.20 option argentina_military_events.20.a"
+		name = argentina_military_events.20.a
+		set_country_flag = ARMY_ANGERY
+		hidden_effect = {
+			country_event = { id = argentina_military_events.21 days = 150 random_days = 300 } #Rampant Desertion
+			country_event = { id = argentina_military_events.22 days = 250 random_days = 200 } #Lack of steel
+			country_event = { id = argentina_military_events.23 days = 100 random_days = 350 } #Lack of Skilled officers
+		}
+	}
+}
+
+country_event = { #Rampant Desertion
+	id = argentina_military_events.21
+	title = argentina_military_events.21.t
+	desc = argentina_military_events.21.d
+	picture = GFX_report_event_BEL_Desertion
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARMY_ANGERY
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.21 option argentina_military_events.21.a"
+		name = argentina_military_events.21.a
+		add_ideas = ARG_Desertion
+	}
+}
+
+country_event = { #Lack of steel
+	id = argentina_military_events.22
+	title = argentina_military_events.22.t
+	desc = argentina_military_events.22.d
+	picture = GFX_report_event_ARG_mil22
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARMY_ANGERY
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.22 option argentina_military_events.22.a"
+		name = argentina_military_events.22.a
+		add_ideas = ARG_Lack_of_Steel
+	}
+}
+
+country_event = { #Lack of Skilled officers
+	id = argentina_military_events.23
+	title = argentina_military_events.23.t
+	desc = argentina_military_events.23.d
+	picture = GFX_report_event_ARG_mil23
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARMY_ANGERY
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.23 option argentina_military_events.23.a"
+		name = argentina_military_events.23.a
+		add_ideas = ARG_Unskilled_Officers
+	}
+}
+
+country_event = { #Officer Alberte joins the GOU
+	id = argentina_military_events.24
+	title = argentina_military_events.24.t
+	desc = argentina_military_events.24.d
+
+	picture = GFX_report_event_ARG_mil23
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_idea = ARG_interservice_rivalry_army_strengthened
+			has_idea = ARG_interservice_rivalry_army_dominant
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_military_events.24 option argentina_military_events.24.a"
+		name = argentina_military_events.24.a
+		show_unit_leaders_tooltip = ARG_bernardo_alberte
+		hidden_effect = { ARG_bernardo_alberte = { set_nationality = ROOT } }
+	}
+}
+
+###Foreign###
+country_event = { #Cooperate with Peru
+	id = argentina_foreign_events.100
+	title = argentina_foreign_events.100.t
+	desc = argentina_foreign_events.100.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.100 option argentina_foreign_events.100.a"
+		ai_chance = { base = 100 }
+		name = argentina_foreign_events.100.a
+		set_global_flag = ARG_pact_of_lima_signed
+		effect_tooltip = {
+			ARG = {
+				add_political_power = 50
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 500
+					producer = PRU
+				}
+			}
+		}
+		hidden_effect = {
+			ARG = {
+				country_event = argentina_foreign_events.200
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.100 option argentina_foreign_events.100.b"
+		ai_chance = { base = 0 }
+		name = argentina_foreign_events.100.b
+		hidden_effect = {
+			ARG = {
+				country_event = argentina_foreign_events.300
+			}
+		}
+	}
+}
+
+country_event = { #Yes
+	id = argentina_foreign_events.200
+	title = argentina_foreign_events.200.t
+	desc = argentina_foreign_events.200.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.200 option argentina_foreign_events.200.a"
+		name = argentina_foreign_events.200.a
+		add_political_power = 50
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 500
+			producer = PRU
+		}
+	}
+}
+
+country_event = { #No
+	id = argentina_foreign_events.300
+	title = argentina_foreign_events.300.t
+	desc = argentina_foreign_events.300.d
+	picture = GFX_report_event_ARG_mil20
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.300 option argentina_foreign_events.300.a"
+		name = argentina_foreign_events.300.a
+		add_war_support = -0.03
+	}
+}
+
+country_event = { #Ally Peru?
+	id = argentina_foreign_events.1
+	title = argentina_foreign_events.1.t
+	desc = argentina_foreign_events.1.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.1 option argentina_foreign_events.1.a"
+		ai_chance = { base = 100 }
+		name = argentina_foreign_events.1.a
+		ARG = {
+			country_event = argentina_foreign_events.2
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.1 option argentina_foreign_events.1.b"
+		ai_chance = { base = 0 }
+		name = argentina_foreign_events.1.b
+		ARG = {
+			country_event = argentina_foreign_events.3
+		}
+	}
+}
+
+country_event = { #Yes
+	id = argentina_foreign_events.2
+	title = argentina_foreign_events.2.t
+	desc = argentina_foreign_events.2.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.2 option argentina_foreign_events.2.a"
+		name = argentina_foreign_events.2.a
+		add_war_support = 0.06
+		create_faction_from_template = { template = faction_template_generic name = buenos_aires_lima_axis }
+		add_to_faction = PRU
+		hidden_effect = {
+			CHL = {
+				country_event = chile_events.45 #event for NatPop CHL to join ARG faction
+			}
+		}
+	}
+}
+
+country_event = { #No
+	id = argentina_foreign_events.3
+	title = argentina_foreign_events.3.t
+	desc = argentina_foreign_events.3.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.3 option argentina_foreign_events.3.a"
+		name = argentina_foreign_events.3.a
+		create_faction_from_template = { template = faction_template_generic name = argentinian_sphere_faction }
+	}
+}
+
+country_event = { #Volunteers to Rome
+	id = argentina_foreign_events.7
+	title = argentina_foreign_events.7.t
+	desc = argentina_foreign_events.7.d
+	picture = GFX_report_event_ARG_car52
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.7 option argentina_foreign_events.7.a"
+		name = argentina_foreign_events.7.a
+		add_war_support = 0.03
+		add_manpower = -10000
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.7 option argentina_foreign_events.7.b"
+		name = argentina_foreign_events.7.b
+		save_event_target_as = ARG_sent_max_volunteers
+		add_war_support = 0.06
+		add_manpower = -15000
+		send_equipment = {
+			target = PAP
+			type = infantry_equipment
+			amount = 2500
+		}
+	}
+	after = {
+		PAP = { country_event = argentina_foreign_events.8 }
+	}
+}
+
+country_event = { #Volunteers arrive
+	id = argentina_foreign_events.8
+	title = argentina_foreign_events.8.t
+	desc = argentina_foreign_events.8.d
+	picture = GFX_report_event_ARG_mil20
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.8 option argentina_foreign_events.8.a"
+		name = argentina_foreign_events.8.a
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_create_division_template
+				NAME = "Argentine Volunteers"
+				LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 4 }
+				SUPPORT_1 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+			}
+			if = {
+				limit = { has_template = "Argentine Volunteers" }
+				delete_unit_template_and_units = { division_template = "Argentine Volunteers" disband = yes } #no cheating
+			}
+			division_template = {
+				name = "Argentine Volunteers"
+				division_names_group = ARG_MIL_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+				}
+				support = {
+					artillery = { x = 0 y = 0 }
+				}
+				template_counter = 68
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		capital_scope = {
+			if = {
+				limit = { has_event_target = ARG_sent_max_volunteers }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 3
+						TYPE = "Argentine Volunteers"
+					}
+					create_unit = {
+						division = "name = \"1st Argentine Volunteers\" division_template = \"Argentine Volunteers\" start_equipment_factor = 0.5"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2nd Argentine Volunteers\" division_template = \"Argentine Volunteers\" start_equipment_factor = 0.5"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"3rd Argentine Volunteers\" division_template = \"Argentine Volunteers\" start_equipment_factor = 0.5"
+						owner = ROOT
+					}
+				}
+			}
+			else = {
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_unit
+						TYPE = "Argentine Volunteers"
+					}
+					create_unit = {
+						division = "name = \"1st Argentine Volunteers\" division_template = \"Argentine Volunteers\" start_equipment_factor = 0.5"
+						owner = ROOT
+					}
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Permission to join the Reichspakt
+	id = argentina_foreign_events.9
+	title = argentina_foreign_events.9.t
+	desc = argentina_foreign_events.9.d
+	picture = GFX_report_event_GER_reichstag2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.9 option argentina_foreign_events.9.a"
+		name = argentina_foreign_events.9.a
+		add_to_faction = ARG
+		ARG = {
+			country_event = argentina_foreign_events.10
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.9 option argentina_foreign_events.9.b"
+		ai_chance = { base = 0 }
+		name = argentina_foreign_events.9.b
+		ARG = {
+			country_event = argentina_foreign_events.11
+		}
+	}
+}
+
+country_event = { #Permission to join the Reichspakt
+	id = argentina_foreign_events.91
+	title = argentina_foreign_events.91.t
+	desc = argentina_foreign_events.91.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.91 option argentina_foreign_events.91.a"
+		ai_chance = { base = 100 }
+		name = argentina_foreign_events.91.a
+		add_to_faction = ARG
+		ARG = {
+			country_event = argentina_foreign_events.10
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.91 option argentina_foreign_events.91.b"
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 200
+				ARG = {
+					has_government = national_populist
+					NOT = {
+						OR = {
+							has_completed_focus = ARG_Punish_Paraguay
+							has_completed_focus = ARG_Uruguay_is_ours
+							has_completed_focus = ARG_Yacuiba_Dispute
+							has_completed_focus = ARG_Ultimate_Confrontation
+						}
+					}
+				}
+			}
+		}
+		name = argentina_foreign_events.91.b
+		ARG = {
+			country_event = argentina_foreign_events.11
+		}
+	}
+}
+
+country_event = { #Germany accepts
+	id = argentina_foreign_events.10
+	title = argentina_foreign_events.10.t
+	desc = argentina_foreign_events.10.d
+	picture = GFX_report_event_GER_reichstag2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.10 option argentina_foreign_events.10.a"
+		name = argentina_foreign_events.10.a
+	}
+}
+
+country_event = { #Germany refuses
+	id = argentina_foreign_events.11
+	title = argentina_foreign_events.11.t
+	desc = argentina_foreign_events.11.d
+	picture = GFX_report_event_ARG_mil20
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.11 option argentina_foreign_events.11.a"
+		name = argentina_foreign_events.11.a
+	}
+}
+
+country_event = { #Permission to join the Entente
+	id = argentina_foreign_events.92
+	title = argentina_foreign_events.92.t
+	desc = argentina_foreign_events.92.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.92 option argentina_foreign_events.92.a"
+		ai_chance = { base = 100 }
+		name = argentina_foreign_events.92.a
+		add_to_faction = ARG
+		ARG = {
+			country_event = argentina_foreign_events.102
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.92 option argentina_foreign_events.92.b"
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 200
+				ARG = {
+					has_government = national_populist
+					NOT = {
+						OR = {
+							has_completed_focus = ARG_Punish_Paraguay
+							has_completed_focus = ARG_Uruguay_is_ours
+							has_completed_focus = ARG_Yacuiba_Dispute
+							has_completed_focus = ARG_Ultimate_Confrontation
+						}
+					}
+				}
+			}
+		}
+		name = argentina_foreign_events.92.b
+		ARG = {
+			country_event = argentina_foreign_events.112
+		}
+	}
+}
+
+country_event = { #Canada accepts
+	id = argentina_foreign_events.102
+	title = argentina_foreign_events.102.t
+	desc = argentina_foreign_events.102.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.102 option argentina_foreign_events.102.a"
+		name = argentina_foreign_events.102.a
+	}
+}
+
+country_event = { #Canada refuses
+	id = argentina_foreign_events.112
+	title = argentina_foreign_events.112.t
+	desc = argentina_foreign_events.112.d
+	picture = GFX_report_event_ARG_mil20
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.112 option argentina_foreign_events.112.a"
+		name = argentina_foreign_events.112.a
+	}
+}
+
+country_event = { #American immigrants, do we take their stuff?
+	id = argentina_foreign_events.12
+	title = argentina_foreign_events.12.t
+	desc = argentina_foreign_events.12.d
+	picture = GFX_report_event_ARG_for12
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.12 option argentina_foreign_events.12.a"
+		name = argentina_foreign_events.12.a
+		902 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_stability = -0.05
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.12 option argentina_foreign_events.12.b"
+		name = argentina_foreign_events.12.b
+		trigger = {
+			has_war = no
+			has_stability > 0.5
+		}
+		add_to_variable = {
+			var = arg_im_factor
+			value = 50
+			tooltip = ARG_add_immigration_tt
+		}
+		### Immigration modifier update
+		add_to_variable = { var = var_ARG_immigration_modifier_buff value = 0.022 }
+		add_to_variable = { var = var_ARG_immigration_modifier_debuff value = -0.011 }
+		clamp_variable = { var = var_ARG_immigration_modifier_buff min = 0 max = 0.30 }
+		clamp_variable = { var = var_ARG_immigration_modifier_debuff min = -0.15 max = 0 }
+		add_stability = -0.03
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.12 option argentina_foreign_events.12.c"
+		name = argentina_foreign_events.12.c
+		subtract_from_variable = {
+			var = arg_im_factor
+			value = 50
+			tooltip = ARG_reduce_immigration
+		}
+		### Immigration modifier update
+		add_to_variable = { var = var_ARG_immigration_modifier_buff value = -0.022 }
+		add_to_variable = { var = var_ARG_immigration_modifier_debuff value = 0.011 }
+		clamp_variable = { var = var_ARG_immigration_modifier_buff min = 0 max = 0.30 }
+		clamp_variable = { var = var_ARG_immigration_modifier_debuff min = -0.15 max = 0 }
+		add_stability = 0.03
+	}
+}
+
+country_event = { #Victory against the FOP
+	id = argentina_foreign_events.13
+	title = argentina_foreign_events.13.t
+	desc = argentina_foreign_events.13.d
+	picture = GFX_report_event_ARG_for13
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.13 option argentina_foreign_events.13.a"
+		name = argentina_foreign_events.13.a
+		add_war_support = 0.1
+		random_other_country = {
+			limit = {
+				OR = {
+					tag = ARG
+					tag = FOP
+				}
+			}
+			country_event = argentina_foreign_events.20
+		}
+	}
+}
+
+country_event = { #FOP finds out about the ARG Rio Negro Victory
+	id = argentina_foreign_events.20
+	title = argentina_foreign_events.20.t
+	desc = argentina_foreign_events.20.d
+	picture = GFX_report_event_ARG_for13
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.20 option argentina_foreign_events.20.a"
+		name = argentina_foreign_events.20.a
+		add_war_support = -0.1
+	}
+}
+
+country_event = { #Pressuring Uruguay
+	id = argentina_foreign_events.14
+	title = argentina_foreign_events.14.t
+	desc = argentina_foreign_events.14.d
+	picture = GFX_report_event_ARG_mil20
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.14 option argentina_foreign_events.14.a"
+		name = argentina_foreign_events.14.a
+		ai_chance = { base = 70 }
+		FROM = {
+			puppet = {
+				target = ROOT
+				end_wars = no
+			}
+			country_event = argentina_foreign_events.17
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.14 option argentina_foreign_events.14.b"
+		name = argentina_foreign_events.14.b
+		ai_chance = { base = 30 }
+		FROM = { country_event = argentina_foreign_events.15 }
+	}
+}
+
+country_event = { #Uruguay refuses our offer
+	id = argentina_foreign_events.15
+	title = argentina_foreign_events.15.t
+	desc = argentina_foreign_events.15.d
+	picture = GFX_report_event_ARG_mil20
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.15 option argentina_foreign_events.15.a"
+		ai_chance = { base = 90 }
+		name = argentina_foreign_events.15.a
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.15 option argentina_foreign_events.15.b"
+		ai_chance = { base = 10 }
+		name = argentina_foreign_events.15.b
+		declare_war_on = {
+			target = URG
+			type = annex_everything
+		}
+	}
+}
+
+country_event = { #Coup to depose the hesitant player
+	id = argentina_foreign_events.16
+	title = argentina_foreign_events.16.t
+	desc = argentina_foreign_events.16.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = {
+			owns_state = 512
+			owns_state = 1029
+			has_war = yes
+			is_subject = yes
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			declare_war_on = {
+				target = FOP
+				type = annex_everything
+			}
+		}
+		log = "KR_Event_Logging;ARG POLITICAL PATH - December 1937 Coup"
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.16 option argentina_foreign_events.16.a"
+		name = argentina_foreign_events.16.a
+		add_stability = -1
+		add_war_support = -1
+
+		#Depose Ramirez
+		if = {
+			limit = {
+				has_government = paternal_autocrat
+			}
+			add_country_leader_role = {
+				character = ARG_edelmiro_julian_farrell
+				country_leader = {
+					desc = ARG_edelmiro_julian_farrell_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+			activate_advisor = ARG_juan_domingo_peron_advisor
+			hidden_effect = {
+				country_event = { id = argentina_carles_events.42 days = 365 }
+			}
+		}
+
+		#Depose Carles
+		if = {
+			limit = {
+				has_government = national_populist
+			}
+			retire_character = ARG_manuel_carles
+			add_country_leader_role = {
+				character = ARG_council_of_buenos_aires
+				country_leader = {
+					desc = ARG_council_of_buenos_aires_leader_desc
+					ideology = national_populist_subtype
+				}
+				promote_leader = yes
+			}
+			set_country_flag = ARG_GOU_in_control
+			set_politics = {
+				ruling_party = paternal_autocrat
+				elections_allowed = yes
+				last_election = "1935.9.13"
+				election_frequency = 72
+			}
+			hidden_effect = {
+				load_focus_tree = KR_Argentina_Democratic
+				complete_national_focus = ARG_Rigged_Elections
+				if = {
+					limit = { NOT = { has_completed_focus = ARG_Economic_Control_over_Argentina } }
+					complete_national_focus = ARG_Economic_Control_over_Argentina
+				}
+				if = {
+					limit = {
+						country_exists = URG
+						NOT = {
+							has_war_with = URG
+							has_subject = URG
+						}
+					}
+					country_event = { id = argentina_carles_events.30 days = 10 }
+				}
+				else = {
+					country_event = { id = argentina_carles_events.31 days = 10 }
+				}
+				if = {
+					limit = {
+						PRU = {
+							NOT = {
+								is_subject_of = ARG
+							}
+						}
+					}
+					country_event = { id = argentina_carles_events.23 days = 3 }
+				}
+			}
+		}
+
+		#Depose Democracy
+		if = {
+			limit = { has_authoritarian_government = no }
+			load_focus_tree = KR_Argentina_Democratic
+			complete_national_focus = ARG_Rigged_Elections
+			set_country_flag = ARG_GOU_in_control
+			set_politics = {
+				ruling_party = paternal_autocrat
+				elections_allowed = yes
+				last_election = "1935.9.13"
+				election_frequency = 72
+			}
+			hidden_effect = {
+				country_event = { id = argentina_carles_events.23 days = 3 }
+			}
+		}
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+	}
+}
+
+country_event = { #Uruguay accepts our offer
+	id = argentina_foreign_events.17
+	title = argentina_foreign_events.17.t
+	desc = argentina_foreign_events.17.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_foreign_events.17 option argentina_foreign_events.17.a"
+		name = argentina_foreign_events.17.a
+		add_political_power = 30
+	}
+}
+
+country_event = { # does tag want to join the Axis faction
+	id = argentina_foreign_events.400
+	title = argentina_foreign_events.400.t
+	desc = argentina_foreign_events.400.d
+	picture = GFX_report_event_AUS_Ausgleich_dip_agree
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		is_in_faction = no
+	}
+
+	option = { # yes
+		log = "[GetLogInfo]: event argentina_foreign_events.400 option argentina_foreign_events.400.a"
+		name = argentina_foreign_events.400.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = -25
+				has_opinion = { target = FROM value < 0 }
+			}
+		}
+		separate_peace_all_wars = yes
+		ARG = { add_to_faction = ROOT }
+	}
+
+	option = { # nah
+		log = "[GetLogInfo]: event argentina_foreign_events.400 option argentina_foreign_events.400.b"
+		name = argentina_foreign_events.400.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				add = -15
+				has_opinion = { target = FROM value > 100 }
+			}
+			modifier = {
+				add = -30
+				strength_ratio = { tag = ARG ratio < 0.5 }
+			}
+			modifier = {
+				add = 150
+				has_guarantor = yes
+			}
+		}
+		ARG = {
+			declare_war_on = {
+				target = ROOT
+				type = puppet_wargoal_focus
+			}
+		}
+	}
+}
+
+#################
+###Immigration###
+#################
+
+###1936
+country_event = { #1936 Immigration Report setting up the state variables
+	id = argentina_immigration_events.10
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.10 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.1 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1936 Immigration Report adding the manpower
+	id = argentina_immigration_events.1
+	title = argentina_immigration_events.1.t
+	desc = argentina_immigration_events.1.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.1 option argentina_immigration_events.1.a"
+		name = argentina_immigration_events.1.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###1937
+country_event = { #1937 Immigration Report setting up the state variables
+	id = argentina_immigration_events.20
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.20 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.2 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1937 Immigration Report adding the manpower
+	id = argentina_immigration_events.2
+	title = argentina_immigration_events.2.t
+	desc = argentina_immigration_events.2.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.2 option argentina_immigration_events.2.a"
+		name = argentina_immigration_events.2.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###1938
+country_event = { #1938 Immigration Report setting up the state variables
+	id = argentina_immigration_events.30
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.30 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.3 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1938 Immigration Report adding the manpower
+	id = argentina_immigration_events.3
+	title = argentina_immigration_events.3.t
+	desc = argentina_immigration_events.3.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.3 option argentina_immigration_events.3.a"
+		name = argentina_immigration_events.3.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###1939
+country_event = { #1939 Immigration Report setting up the state variables
+	id = argentina_immigration_events.40
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.40 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.4 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1939 Immigration Report adding the manpower
+	id = argentina_immigration_events.4
+	title = argentina_immigration_events.4.t
+	desc = argentina_immigration_events.4.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.4 option argentina_immigration_events.4.a"
+		name = argentina_immigration_events.4.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###1940
+country_event = { #1940 Immigration Report setting up the state variables
+	id = argentina_immigration_events.50
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.50 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.5 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1940 Immigration Report adding the manpower
+	id = argentina_immigration_events.5
+	title = argentina_immigration_events.5.t
+	desc = argentina_immigration_events.5.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.5 option argentina_immigration_events.5.a"
+		name = argentina_immigration_events.5.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###1941
+country_event = { #1941 Immigration Report setting up the state variables
+	id = argentina_immigration_events.60
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.60 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.6 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1941 Immigration Report adding the manpower
+	id = argentina_immigration_events.6
+	title = argentina_immigration_events.6.t
+	desc = argentina_immigration_events.6.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.6 option argentina_immigration_events.6.a"
+		name = argentina_immigration_events.6.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###1942
+country_event = { #1942 Immigration Report setting up the state variables
+	id = argentina_immigration_events.70
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.70 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.7 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1942 Immigration Report adding the manpower
+	id = argentina_immigration_events.7
+	title = argentina_immigration_events.7.t
+	desc = argentina_immigration_events.7.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.7 option argentina_immigration_events.7.a"
+		name = argentina_immigration_events.7.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###1943
+country_event = { #1943 Immigration Report setting up the state variables
+	id = argentina_immigration_events.80
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.80 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.8 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1943 Immigration Report adding the manpower
+	id = argentina_immigration_events.8
+	title = argentina_immigration_events.8.t
+	desc = argentina_immigration_events.8.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.8 option argentina_immigration_events.8.a"
+		name = argentina_immigration_events.8.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###1944
+country_event = { #1944 Immigration Report setting up the state variables
+	id = argentina_immigration_events.90
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.90 option 1"
+		#Value for this years Immigration
+		multiply_variable  = { arg_im_factor = 0.01 }
+		set_variable = { arg_im_total_temp = 57821 }
+		multiply_variable = { arg_im_total_temp = arg_im_factor }
+
+		set_variable = {
+			global.arg_im_total = arg_im_total_temp
+		}
+		set_variable = {
+			arg_im_factor = 100
+		}
+
+		#Buenos Aires
+		278 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_ba = 0.7
+			}
+			multiply_variable = {
+				var = arg_im_factor_ba
+				value = arg_im_total_temp
+			}
+		}
+
+		#Cordoba
+		902 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_co = 0.2
+			}
+			multiply_variable = {
+				var = arg_im_factor_co
+				value = arg_im_total_temp
+			}
+		}
+
+		#Entre Rios
+		510 = {
+			set_variable = {
+				arg_im_total_temp = global.arg_im_total
+			}
+			set_variable = {
+				arg_im_factor_er = 0.1
+			}
+			multiply_variable = {
+				var = arg_im_factor_er
+				value = arg_im_total_temp
+			}
+		}
+
+		country_event = argentina_immigration_events.9 #thanks podcat for making this necessary
+	}
+}
+
+country_event = { #1944 Immigration Report adding the manpower
+	id = argentina_immigration_events.9
+	title = argentina_immigration_events.9.t
+	desc = argentina_immigration_events.9.d
+	picture = GFX_report_event_ARG_im
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_immigration_events.9 option argentina_immigration_events.9.a"
+		name = argentina_immigration_events.9.a
+		#Buenos Aires
+		278 = {
+			add_manpower = arg_im_factor_ba
+		}
+
+		#Cordoba
+		902 = {
+			add_manpower = arg_im_factor_co
+		}
+
+		#Entre Rios
+		510 = {
+			add_manpower = arg_im_factor_er
+		}
+	}
+}
+
+###Economy###
+country_event = { #Black Monday hits the nation
+	id = argentina_black_monday_events.1
+	title = argentina_black_monday_events.1.t
+	desc = argentina_black_monday_events.1.d
+	picture = GFX_report_event_ARG_bla1
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = ARG_Black_Monday }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_black_monday_events.1 option argentina_black_monday_events.1.a"
+		name = argentina_black_monday_events.1.a
+		effect_tooltip = { add_ideas = ARG_Black_Monday }
+		hidden_effect = {
+			country_event = { id = argentina_black_monday_events.2 days = 1 }
+		}
+	}
+}
+
+country_event = { #Closing the Bolsa de Comercio de Buenos Aires
+	id = argentina_black_monday_events.2
+	title = argentina_black_monday_events.2.t
+	desc = argentina_black_monday_events.2.d
+	picture = GFX_report_event_ARG_bla2
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = argentina_black_monday_events.3 days = 30 }
+		}
+	}
+
+	option = { #Close the Exchange
+		log = "[GetLogInfo]: event argentina_black_monday_events.2 option argentina_black_monday_events.2.a"
+		ai_chance = { base = 75 }
+		name = argentina_black_monday_events.2.a
+		add_stability = -0.05
+		add_political_power = -75
+	}
+
+	option = { #Keep it open
+		log = "[GetLogInfo]: event argentina_black_monday_events.2 option argentina_black_monday_events.2.b"
+		ai_chance = { base = 25 }
+		name = argentina_black_monday_events.2.b
+		add_stability = -0.10
+	}
+}
+
+country_event = { #Closure of the Currency Board
+	id = argentina_black_monday_events.3
+	title = argentina_black_monday_events.3.t
+	desc = argentina_black_monday_events.3.d
+	picture = GFX_report_event_ARG_bla2
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = argentina_black_monday_events.4 days = 14 }
+		}
+	}
+
+	option = { #Close the board
+		log = "[GetLogInfo]: event argentina_black_monday_events.3 option argentina_black_monday_events.3.a"
+		ai_chance = { base = 90 }
+		name = argentina_black_monday_events.3.a
+		add_political_power = -75
+	}
+
+	option = { #Keep the board open
+		log = "[GetLogInfo]: event argentina_black_monday_events.3 option argentina_black_monday_events.3.b"
+		ai_chance = { base = 10 }
+		name = argentina_black_monday_events.3.b
+		hidden_effect = {
+			country_event = { id = argentina_black_monday_events.31 days = 500 }
+		}
+	}
+}
+
+country_event = { #Currency Board is forced to close
+	id = argentina_black_monday_events.31
+	title = argentina_black_monday_events.31.t
+	desc = argentina_black_monday_events.31.d
+	picture = GFX_report_event_generic_food
+
+	is_triggered_only = yes
+
+	option = { #F for Currency Board
+		log = "[GetLogInfo]: event argentina_black_monday_events.31 option argentina_black_monday_events.31.a"
+		name = argentina_black_monday_events.31.a
+		add_political_power = -100
+		add_stability = -0.05
+	}
+}
+
+country_event = { #Peso spiralling downwards
+	id = argentina_black_monday_events.4
+	title = argentina_black_monday_events.4.t
+	desc = argentina_black_monday_events.4.d
+	picture = GFX_report_event_ARG_bla2
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = argentina_black_monday_events.5 days = 90 }
+		}
+	}
+
+	option = { #Oh the humanity
+		log = "[GetLogInfo]: event argentina_black_monday_events.4 option argentina_black_monday_events.4.a"
+		name = argentina_black_monday_events.4.a
+		add_stability = -0.05
+	}
+}
+
+country_event = { #Unrest in Cordoba and Mendoza
+	id = argentina_black_monday_events.5
+	title = argentina_black_monday_events.5.t
+	desc = argentina_black_monday_events.5.d
+	picture = GFX_report_event_ARG_bla5
+
+	is_triggered_only = yes
+
+	option = { #Crack down on the protests
+		log = "[GetLogInfo]: event argentina_black_monday_events.5 option argentina_black_monday_events.5.a"
+		name = argentina_black_monday_events.5.a
+		add_stability = -0.05
+	}
+}
+
+#START OF THE GERMAN CHAIN
+country_event = { #Start of the German Negotiations
+	id = argentina_black_monday_events.6
+	title = argentina_black_monday_events.6.t
+	desc = argentina_black_monday_events.6.d
+	picture = GFX_report_event_GER_reichstag2
+
+	is_triggered_only = yes
+
+	option = { #The debate is opened
+		log = "[GetLogInfo]: event argentina_black_monday_events.6 option argentina_black_monday_events.6.a"
+		name = argentina_black_monday_events.6.a
+		add_political_power = 30
+		GER = {
+			country_event = { id = argentina_black_monday_events.7 days = 5 }
+		}
+	}
+}
+
+country_event = { #Argentina trade proposal
+	id = argentina_black_monday_events.7
+	title = argentina_black_monday_events.7.t
+	desc = argentina_black_monday_events.7.d
+	picture = GFX_report_event_ARG_car8
+
+	is_triggered_only = yes
+
+	option = { #Accept the deal
+		log = "[GetLogInfo]: event argentina_black_monday_events.7 option argentina_black_monday_events.7.a"
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARG_forpol option = ARG_FORPOL_ENT }
+					has_game_rule = { rule = ARG_forpol option = ARG_FORPOL_ENT_FALKLAND }
+				}
+			}
+		}
+		name = argentina_black_monday_events.7.a
+		ARG = {
+			country_event = { id = argentina_black_monday_events.71 days = 5 }
+		}
+		add_ideas = ARG_Trade_Agreement
+		custom_effect_tooltip = ARG_GER_trade_treaty_default_tt
+	}
+	option = { #Force them to lower import rates on German products
+		log = "[GetLogInfo]: event argentina_black_monday_events.7 option argentina_black_monday_events.7.b"
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_forpol option = ARG_FORPOL_GER }
+			}
+		}
+		name = argentina_black_monday_events.7.b
+		ARG = {
+			country_event = { id = argentina_black_monday_events.72 days = 5 }
+		}
+		custom_effect_tooltip = ARG_GER_trade_treaty_harsh_tt
+	}
+}
+
+country_event = { #Argentina trade proposal accepted (Germany)
+	id = argentina_black_monday_events.71
+	title = argentina_black_monday_events.71.t
+	desc = argentina_black_monday_events.71.d
+	picture = GFX_report_event_GER_reichstag2
+
+	is_triggered_only = yes
+
+	option = { #Huzzah
+		log = "[GetLogInfo]: event argentina_black_monday_events.71 option argentina_black_monday_events.71.a"
+		name = argentina_black_monday_events.71.a
+		add_stability = 0.07
+		set_country_flag = ARG_GER_trade_deal
+		custom_effect_tooltip = ARG_join_RP_tooltip
+		hidden_effect = {
+			activate_targeted_decision = { target = GER decision = ARG_Joining_the_Reichspakt }
+		}
+	}
+}
+
+country_event = { #Germany forces us to lower import rates
+	id = argentina_black_monday_events.72
+	title = argentina_black_monday_events.72.t
+	desc = argentina_black_monday_events.72.d
+	picture = GFX_report_event_GER_reichstag2
+
+	is_triggered_only = yes
+
+	option = { #We have no choice but to accept
+		log = "[GetLogInfo]: event argentina_black_monday_events.72 option argentina_black_monday_events.72.a"
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARG_forpol option = ARG_FORPOL_ENT }
+					has_game_rule = { rule = ARG_forpol option = ARG_FORPOL_ENT_FALKLAND }
+				}
+			}
+		}
+		name = argentina_black_monday_events.72.a
+		GER = {
+			country_event = { id = argentina_black_monday_events.76 days = 5 }
+		}
+		set_country_flag = ARG_GER_trade_deal
+		custom_effect_tooltip = ARG_join_RP_tooltip
+		hidden_effect = {
+			activate_targeted_decision = { target = GER decision = ARG_Joining_the_Reichspakt }
+		}
+	}
+	option = { #Approach the Entente to see if they are willing to negotiate
+		log = "[GetLogInfo]: event argentina_black_monday_events.72 option argentina_black_monday_events.72.b"
+		trigger = { country_exists = ENT }
+		ai_chance = { base = 10 }
+		name = argentina_black_monday_events.72.b
+		ENT = {
+			country_event = { id = argentina_black_monday_events.73 days = 5 }
+		}
+	}
+}
+
+country_event = { #Argentina approaches the Entente
+	id = argentina_black_monday_events.73
+	title = argentina_black_monday_events.73.t
+	desc = argentina_black_monday_events.73.d
+	picture = GFX_report_event_ARG_car8
+
+	is_triggered_only = yes
+
+	option = { #We could use another ally
+		log = "[GetLogInfo]: event argentina_black_monday_events.73 option argentina_black_monday_events.73.a"
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_forpol option = ARG_FORPOL_ENT_FALKLAND }
+			}
+		}
+		name = argentina_black_monday_events.73.a
+		ARG = {
+			country_event = { id = argentina_black_monday_events.74 days = 5 }
+		}
+		add_ideas = ARG_Trade_Agreement
+	}
+	option = { #Press for the return of the Falklands
+		log = "[GetLogInfo]: event argentina_black_monday_events.73 option argentina_black_monday_events.73.b"
+		name = argentina_black_monday_events.73.b
+		trigger = { original_tag = IMP }
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_forpol option = ARG_FORPOL_ENT }
+			}
+		}
+		ARG = {
+			country_event = { id = argentina_black_monday_events.75 days = 5 }
+		}
+	}
+}
+
+country_event = { #Argentina trade proposal accepted (Entente)
+	id = argentina_black_monday_events.74
+	title = argentina_black_monday_events.74.t
+	desc = argentina_black_monday_events.74.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = { #Huzzah
+		log = "[GetLogInfo]: event argentina_black_monday_events.74 option argentina_black_monday_events.74.a"
+		name = argentina_black_monday_events.74.a
+		add_stability = 0.05
+		set_country_flag = ARG_CAN_trade_deal
+		custom_effect_tooltip = ARG_join_ENT_tooltip
+		hidden_effect = {
+			activate_targeted_decision = { target = ENT decision = ARG_Joining_the_Entente }
+		}
+	}
+}
+
+country_event = { #Choice between Mitteleuropa or the Entente
+	id = argentina_black_monday_events.75
+	title = argentina_black_monday_events.75.t
+	desc = argentina_black_monday_events.75.d
+	picture = GFX_report_event_ARG_bla75
+
+	is_triggered_only = yes
+
+	option = { #German ties are more important
+		log = "[GetLogInfo]: event argentina_black_monday_events.75 option argentina_black_monday_events.75.a"
+		name = argentina_black_monday_events.75.a
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_forpol option = ARG_FORPOL_ENT_FALKLAND }
+			}
+		}
+		GER = {
+			country_event = { id = argentina_black_monday_events.76 days = 5 }
+		}
+		set_country_flag = ARG_GER_trade_deal
+		custom_effect_tooltip = ARG_join_RP_tooltip
+		hidden_effect = {
+			activate_targeted_decision = { target = GER decision = ARG_Joining_the_Reichspakt }
+		}
+	}
+	option = { #The Brits are not so bad after all
+		log = "[GetLogInfo]: event argentina_black_monday_events.75 option argentina_black_monday_events.75.b"
+		name = argentina_black_monday_events.75.b
+		trigger = { country_exists = ENT }
+		ai_chance = { base = 10 }
+		IMP = {
+			country_event = { id = argentina_black_monday_events.76 days = 5 }
+		}
+		set_country_flag = ARG_CAN_trade_deal
+		custom_effect_tooltip = ARG_join_ENT_tooltip
+		hidden_effect = {
+			activate_targeted_decision = { target = ENT decision = ARG_Joining_the_Entente }
+		}
+		remove_state_core = 299
+		remove_state_core = 720
+		IMP = {
+			transfer_state = 299
+			transfer_state = 720
+		}
+	}
+}
+
+country_event = { #Argentina accepts our trade deal
+	id = argentina_black_monday_events.76
+	title = argentina_black_monday_events.76.t
+	desc = argentina_black_monday_events.76.d
+	picture = GFX_report_event_ARG_car8
+
+	is_triggered_only = yes
+
+	option = { #Huzzah
+		log = "[GetLogInfo]: event argentina_black_monday_events.76 option argentina_black_monday_events.76.a"
+		name = argentina_black_monday_events.76.a
+		add_stability = 0.03
+		add_ideas = ARG_Trade_Agreement_Harsh
+	}
+}
+
+country_event = { #Introduction of the Empréstito patriótico
+	id = argentina_black_monday_events.8
+	title = argentina_black_monday_events.8.t
+	desc = argentina_black_monday_events.8.d
+	picture = GFX_report_event_ARG_car22
+
+	is_triggered_only = yes
+
+	option = { #Yes tax
+		log = "[GetLogInfo]: event argentina_black_monday_events.8 option argentina_black_monday_events.8.a"
+		name = argentina_black_monday_events.8.a
+		add_stability = -0.05
+		add_political_power = 75
+	}
+	option = { #No tax
+		log = "[GetLogInfo]: event argentina_black_monday_events.8 option argentina_black_monday_events.8.b"
+		name = argentina_black_monday_events.8.b
+		add_stability = 0.02
+	}
+}
+
+country_event = { #Creation of La Junta Nacional de Granos
+	id = argentina_black_monday_events.9
+	title = argentina_black_monday_events.9.t
+	desc = argentina_black_monday_events.9.d
+	picture = GFX_report_event_ARG_bla9
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = argentina_black_monday_events.10 days = 365 }
+		}
+	}
+
+	option = { #Yes tax
+		log = "[GetLogInfo]: event argentina_black_monday_events.9 option argentina_black_monday_events.9.a"
+		name = argentina_black_monday_events.9.a
+		add_political_power = -100
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+		set_country_flag = ARG_national_grain_board_full
+	}
+
+	option = { #Some tax
+		log = "[GetLogInfo]: event argentina_black_monday_events.9 option argentina_black_monday_events.9.b"
+		name = argentina_black_monday_events.9.b
+		add_political_power = -50
+		set_country_flag = ARG_national_grain_board_limited
+	}
+
+	option = { #No tax
+		log = "[GetLogInfo]: event argentina_black_monday_events.9 option argentina_black_monday_events.9.c"
+		name = argentina_black_monday_events.9.c
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { #Stabilisation in the countryside
+	id = argentina_black_monday_events.10
+	title = argentina_black_monday_events.10.t
+	desc = argentina_black_monday_events.10.d
+	picture = GFX_report_event_ARG_bla10
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_country_flag = ARG_national_grain_board_full
+			has_country_flag = ARG_national_grain_board_limited
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_black_monday_events.10 option argentina_black_monday_events.10.a"
+		trigger = {
+			has_country_flag = ARG_national_grain_board_full
+		}
+		name = argentina_black_monday_events.10.a
+		add_stability = 0.06
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_black_monday_events.10 option argentina_black_monday_events.10.b"
+		trigger = {
+			has_country_flag = ARG_national_grain_board_limited
+		}
+		name = argentina_black_monday_events.10.b
+		add_stability = 0.03
+	}
+
+	after = {
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+	}
+}
+
+country_event = { #La Viña Dam construction project
+	id = argentina_black_monday_events.11
+	title = argentina_black_monday_events.11.t
+	desc = argentina_black_monday_events.11.d
+	picture = GFX_report_event_ARG_bla11
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_black_monday_events.11 option argentina_black_monday_events.11.a"
+		ai_chance = { base = 70 }
+		name = argentina_black_monday_events.11.a
+		add_political_power = -40
+		activate_mission = ARG_Vina_Dam_mission
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_black_monday_events.11 option argentina_black_monday_events.11.b"
+		ai_chance = { base = 30 }
+		name = argentina_black_monday_events.11.b
+	}
+}
+
+country_event = { #Escuela de Aviación Militar de Argentina opening
+	id = argentina_black_monday_events.12
+	title = argentina_black_monday_events.12.t
+	desc = argentina_black_monday_events.12.d
+	picture = GFX_report_event_ARG_bla12
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_black_monday_events.12 option argentina_black_monday_events.12.a"
+		name = argentina_black_monday_events.12.a
+		278 = {
+			add_building_construction = {
+				type = air_base
+				level = 3
+				instant_build = yes
+			}
+		}
+	}
+}
+
+###CARLES
+
+country_event = { #Colegio Militar de la Nación skirimish
+	id = argentina_carles_events.2
+	title = argentina_carles_events.2.t
+	desc = argentina_carles_events.2.d
+	picture = GFX_report_event_ARG_car6
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.2 option argentina_carles_events.2.a"
+		ai_chance = { base = 50 }
+		name = argentina_carles_events.2.a
+		add_stability = 0.03
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.2 option argentina_carles_events.2.b"
+		ai_chance = { base = 0 }
+		name = argentina_carles_events.2.b
+		add_stability = -0.03
+		add_political_power = 20
+		ARG_progress_carles_rule_idea = yes
+	}
+}
+
+country_event = { #Struggle for the Railroads
+	id = argentina_carles_events.3
+	title = argentina_carles_events.3.t
+	desc = argentina_carles_events.3.d
+	picture = GFX_report_event_ARG_car3
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.6 days = 25 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.3 option argentina_carles_events.3.a"
+		log = "KR_Event_Logging;ARG POLITICAL PATH - Carles Retains Control"
+		ai_chance = {
+			base = 65
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_NATPOP } }
+			}
+		}
+		name = argentina_carles_events.3.a
+		set_country_flag = ARG_push_to_rosario
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.3 option argentina_carles_events.3.b"
+		ai_chance = {
+			base = 35
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_path option = ARG_PATH_NATPOP }
+			}
+		}
+		set_country_flag = ARG_push_to_mar_del_plata
+		name = argentina_carles_events.3.b
+	}
+}
+
+country_event = { #Increased Gendarmeria Conscription
+	id = argentina_carles_events.4
+	title = argentina_carles_events.4.t
+	desc = argentina_carles_events.4.d
+	picture = GFX_report_event_ARG_car4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.4 option argentina_carles_events.4.a"
+		ai_chance = { base = 50 }
+		name = argentina_carles_events.4.a
+		set_country_flag = ARG_gendarmeria_expanded
+		add_political_power = -25
+		ARG_progress_carles_rule_idea = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.4 option argentina_carles_events.4.b"
+		ai_chance = { base = 0 }
+		name = argentina_carles_events.4.b
+	}
+}
+
+country_event = { #Status of the Judiciary Branch
+	id = argentina_carles_events.5
+	title = argentina_carles_events.5.t
+	desc = argentina_carles_events.5.d
+	picture = GFX_report_event_generic_trial
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.5 option argentina_carles_events.5.a"
+		ai_chance = { base = 50 }
+		name = argentina_carles_events.5.a
+		set_country_flag = ARG_judiciary_subjugated
+		ARG_progress_carles_rule_idea = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.5 option argentina_carles_events.5.b"
+		ai_chance = { base = 0 }
+		name = argentina_carles_events.5.b
+	}
+}
+
+country_event = { #Restriction of Free Speech
+	id = argentina_carles_events.50
+	title = argentina_carles_events.50.t
+	desc = argentina_carles_events.50.d
+	picture = GFX_report_event_CAN_microphone
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.50 option argentina_carles_events.50.a"
+		ai_chance = { base = 50 }
+		name = argentina_carles_events.50.a
+		set_country_flag = ARG_restricted_free_speech
+		ARG_progress_carles_rule_idea = yes
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.51 days = 5 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.50 option argentina_carles_events.50.b"
+		ai_chance = { base = 0 }
+		name = argentina_carles_events.50.b
+	}
+}
+
+country_event = { #Protest in Buenos Aires
+	id = argentina_carles_events.51
+	title = argentina_carles_events.51.t
+	desc = argentina_carles_events.51.d
+	picture = GFX_report_event_ARG_car51
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_restricted_free_speech
+		has_country_flag = ARG_judiciary_subjugated
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.51 option argentina_carles_events.51.a"
+		trigger = {
+			has_country_flag = ARG_gendarmeria_expanded
+		}
+		ai_chance = { base = 100 }
+		name = argentina_carles_events.51.a
+		add_stability = -0.04
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.51 option argentina_carles_events.51.b"
+		ai_chance = { base = 1 }
+		name = argentina_carles_events.51.b
+		add_stability = -0.07
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.52 days = 7 }
+		}
+	}
+}
+
+country_event = { #Escalation between Carles and loyalist remnants
+	id = argentina_carles_events.52
+	title = argentina_carles_events.52.t
+	desc = argentina_carles_events.52.d
+	picture = GFX_report_event_ARG_car52
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.52 option argentina_carles_events.52.a"
+		name = argentina_carles_events.52.a
+		set_country_flag = ARG_protests_in_capital
+		278 = {
+			add_manpower = -50
+		}
+	}
+}
+
+country_event = { #Cordoba and Rosario renounce the Carles Regime
+	id = argentina_carles_events.6
+	title = argentina_carles_events.6.t
+	desc = argentina_carles_events.6.d
+	picture = GFX_report_event_ARG_car6
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.6 option argentina_carles_events.6.a"
+		name = argentina_carles_events.6.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.61 hours = 6 }
+		}
+	}
+}
+
+country_event = { #Carles invokes article 6 of the Argentine constitution to retake Cordoba
+	id = argentina_carles_events.61
+	title = argentina_carles_events.61.t
+	desc = argentina_carles_events.61.d
+	picture = GFX_report_event_ARG_car96
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.61 option argentina_carles_events.61.a"
+		name = argentina_carles_events.61.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.7 days = 2 }
+		}
+	}
+}
+
+country_event = { #Outer Provinces follow suit
+	id = argentina_carles_events.7
+	title = argentina_carles_events.7.t
+	desc = argentina_carles_events.7.d
+	picture = GFX_report_event_ARG_car7
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.7 option argentina_carles_events.7.a"
+		name = argentina_carles_events.7.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.8 days = 4 }
+		}
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.10 days = 4 }
+		}
+	}
+}
+
+country_event = { #Navy occupies Mar del Plata
+	id = argentina_carles_events.8
+	title = argentina_carles_events.8.t
+	desc = argentina_carles_events.8.d
+	picture = GFX_report_event_ARG_car8
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_push_to_mar_del_plata
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.8 option argentina_carles_events.8.a"
+		name = argentina_carles_events.8.a
+		add_stability = 0.03
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.9 days = 3 }
+		}
+	}
+}
+
+country_event = { #Insurgents sabotage the Buenos Aires-Rosario connection
+	id = argentina_carles_events.9
+	title = argentina_carles_events.9.t
+	desc = argentina_carles_events.9.d
+	picture = GFX_report_event_ARG_car9
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.9 option argentina_carles_events.9.a"
+		trigger = {
+			NOT = {
+				has_country_flag = ARG_protests_in_capital
+			}
+		}
+		ai_chance = { base = 0 } #AI should never take this as it means they simply just sit there post civil war
+		name = argentina_carles_events.9.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.20 days = 4 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.9 option argentina_carles_events.9.b"
+		ai_chance = { base = 100 }
+		name = argentina_carles_events.9.b
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.93 days = 4 }
+		}
+	}
+}
+
+country_event = { #The cards start falling down (GOC backs the old army)
+	id = argentina_carles_events.93
+	title = argentina_carles_events.93.t
+	desc = argentina_carles_events.93.d
+	picture = GFX_report_event_ARG_car93
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.93 option argentina_carles_events.93.a"
+		name = argentina_carles_events.93.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.94 days = 14 }
+		}
+	}
+}
+
+country_event = { #Defeat in Rosario
+	id = argentina_carles_events.94
+	title = argentina_carles_events.94.t
+	desc = argentina_carles_events.94.d
+	picture = GFX_report_event_ARG_car94
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.94 option argentina_carles_events.94.a"
+		name = argentina_carles_events.94.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.95 days = 7 }
+		}
+	}
+}
+
+country_event = { #Fall of Buenos Aires
+	id = argentina_carles_events.95
+	title = argentina_carles_events.95.t
+	desc = argentina_carles_events.95.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.95 option argentina_carles_events.95.a"
+		name = argentina_carles_events.95.a
+		hidden_effect = {
+			URG = { country_event = uruguay_events.60 }
+			country_event = { id = argentina_carles_events.96 hours = 30 }
+		}
+		ARG_manuel_carles = { kill_character = yes }
+		add_country_leader_role = {
+			character = ARG_council_of_buenos_aires
+			country_leader = {
+				desc = ARG_council_of_buenos_aires_leader_desc
+				ideology = national_populist_subtype
+			}
+			promote_leader = yes
+		}
+	}
+}
+
+country_event = { #Navy surrenders
+	id = argentina_carles_events.96
+	title = argentina_carles_events.96.t
+	desc = argentina_carles_events.96.d
+	picture = GFX_report_event_ARG_car96
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.96 option argentina_carles_events.96.a"
+		name = argentina_carles_events.96.a
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = yes
+			last_election = "1930.12.13"
+			election_frequency = 72
+		}
+		load_focus_tree = KR_Argentina_Democratic
+		complete_national_focus = ARG_Economic_Control_over_Argentina
+		set_country_flag = ARG_GOU_in_control
+		add_stability = 0.25
+		swap_ideas = {
+			remove_idea = ARG_interservice_rivalry_navy_dominant
+			add_idea = ARG_interservice_rivalry_army_dominant
+		}
+		custom_effect_tooltip = tooltip_white_line
+		ARG_create_starting_divisions = yes
+		hidden_effect = {
+			news_event = argentina_news_events.2
+			country_event = { id = argentina_democratic_events.1 days = 16 }
+			if = {
+				limit = { has_country_flag = ARG_gendarmeria_expanded }
+				add_manpower = 15000
+			}
+			every_owned_state = {
+				set_demilitarized_zone = no
+			}
+		}
+	}
+}
+
+country_event = { #Railroad secured by Carles
+	id = argentina_carles_events.10
+	title = argentina_carles_events.10.t
+	desc = argentina_carles_events.10.d
+	picture = GFX_report_event_ARG_car9
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_push_to_rosario
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.10 option argentina_carles_events.10.a"
+		name = argentina_carles_events.10.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.11 days = 4 }
+		}
+	}
+}
+
+country_event = { #Capture of Rosario
+	id = argentina_carles_events.11
+	title = argentina_carles_events.11.t
+	desc = argentina_carles_events.11.d
+	picture = GFX_report_event_ARG_car11
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.11 option argentina_carles_events.11.a"
+		name = argentina_carles_events.11.a
+		set_country_flag = ARG_rosario_is_taken
+	}
+}
+
+country_event = { #Carles instates cabinet
+	id = argentina_carles_events.12
+	title = argentina_carles_events.12.t
+	desc = argentina_carles_events.12.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.12 option argentina_carles_events.12.a"
+		name = argentina_carles_events.12.a
+		ARG_create_starting_divisions = yes
+		hidden_effect = {
+			news_event = argentina_news_events.1
+			if = {
+				limit = { has_country_flag = ARG_gendarmeria_expanded }
+				add_manpower = 15000
+			}
+		}
+	}
+}
+
+country_event = { #Carles purges rightwing opposition
+	id = argentina_carles_events.13
+	title = argentina_carles_events.13.t
+	desc = argentina_carles_events.13.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	option = {   # Limited purges
+		log = "[GetLogInfo]: event argentina_carles_events.13 option argentina_carles_events.13.a"
+		name = argentina_carles_events.13.a
+		ai_chance = { base = 50 }
+		add_stability = -0.05
+		add_popularity = { ideology = national_populist popularity = 0.10 }
+		add_popularity = { ideology = social_conservative popularity = -0.075 }
+		add_popularity = { ideology = market_liberal popularity = -0.075 }
+		add_popularity = { ideology = social_liberal popularity = -0.075 }
+	}
+	option = {   # Mass purges
+		log = "[GetLogInfo]: event argentina_carles_events.13 option argentina_carles_events.13.b"
+		name = argentina_carles_events.13.b
+		ai_chance = { base = 0 }
+		add_stability = -0.1
+		add_popularity = { ideology = national_populist popularity = 0.10 }
+		add_popularity = { ideology = social_conservative popularity = -0.15 }
+		add_popularity = { ideology = market_liberal popularity = -0.15 }
+		add_popularity = { ideology = social_liberal popularity = -0.15 }
+		ARG_progress_carles_rule_idea = yes
+	}
+}
+
+country_event = { #Carles purges leftwing opposition
+	id = argentina_carles_events.14
+	title = argentina_carles_events.14.t
+	desc = argentina_carles_events.14.d
+	picture = GFX_flavour_paris_commune
+
+	is_triggered_only = yes
+
+	option = {   # Limited purges
+		log = "[GetLogInfo]: event argentina_carles_events.14 option argentina_carles_events.14.a"
+		name = argentina_carles_events.14.a
+		ai_chance = { base = 50 }
+		add_stability = -0.05
+		add_popularity = { ideology = national_populist popularity = 0.10 }
+		add_popularity = { ideology = social_democrat popularity = -0.075 }
+		add_popularity = { ideology = radical_socialist popularity = -0.075 }
+		add_popularity = { ideology = syndicalist popularity = -0.075 }
+		add_popularity = { ideology = totalist popularity = -0.075 }
+	}
+	option = {   # Mass purges
+		log = "[GetLogInfo]: event argentina_carles_events.14 option argentina_carles_events.14.b"
+		name = argentina_carles_events.14.b
+		ai_chance = { base = 0 }
+		add_stability = -0.1
+		add_popularity = { ideology = national_populist popularity = 0.10 }
+		add_popularity = { ideology = social_democrat popularity = -0.15 }
+		add_popularity = { ideology = radical_socialist popularity = -0.15 }
+		add_popularity = { ideology = syndicalist popularity = -0.15 }
+		add_popularity = { ideology = totalist popularity = -0.15 }
+		ARG_progress_carles_rule_idea = yes
+	}
+}
+
+country_event = { #Fall Rosario with the GOU
+	id = argentina_carles_events.20
+	title = argentina_carles_events.20.t
+	desc = argentina_carles_events.20.d
+	picture = GFX_report_event_ARG_car52
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.20 option argentina_carles_events.20.a"
+		log = "KR_Event_Logging;ARG POLITICAL PATH - Carles Retains Control With GOU Support"
+		name = argentina_carles_events.20.a
+		set_country_flag = ARG_rosario_is_taken
+	}
+}
+
+country_event = { #GOU calls Carles to order
+	id = argentina_carles_events.21
+	title = argentina_carles_events.21.t
+	desc = argentina_carles_events.21.d
+	picture = GFX_report_event_ARG_car21
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = national_populist
+		OR = {
+			CHL = {
+				is_subject_of = ARG
+			}
+			ARG = {
+				owns_state = 279
+			}
+		}
+		OR = {
+			has_idea = ARG_interservice_rivalry_army_strengthened
+			has_idea = ARG_interservice_rivalry_army_dominant
+			has_idea = ARG_interservice_rivalry_navy_strengthened
+			has_idea = ARG_interservice_rivalry_navy_dominant
+		}
+	}
+
+	immediate = {
+		set_country_flag = GOU_ANGERY
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.21 option argentina_carles_events.21.a"
+		ai_chance = { base = 75 }
+		name = argentina_carles_events.21.a
+		set_country_flag = ARG_GOU_in_control
+		custom_effect_tooltip = ARG_GOU_control_tt
+		add_political_power = -100
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.21 option argentina_carles_events.21.b"
+		ai_chance = { base = 25 }
+		name = argentina_carles_events.21.b
+		hidden_effect = {
+			ARG_interservice_rivalry_towards_navy = yes
+		}
+		custom_effect_tooltip = ARG_increase_navy_influence_tt
+		add_war_support = -0.10
+	}
+	after = {
+		custom_effect_tooltip = ARG_may_cause_coup_tt
+	}
+}
+
+country_event = { #Coup of [GetDate]
+	id = argentina_carles_events.22
+	title = argentina_carles_events.22.t
+	desc = argentina_carles_events.22.d
+	picture = GFX_report_event_ARG_car22
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = national_populist
+		has_idea = ARG_interservice_rivalry_army_dominant
+		has_country_flag = GOU_ANGERY
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.22 option argentina_carles_events.22.a"
+		name = argentina_carles_events.22.a
+		load_focus_tree = KR_Argentina_Democratic
+		complete_national_focus = ARG_Rigged_Elections
+		set_country_flag = ARG_GOU_in_control
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = yes
+			last_election = "1936.9.13"
+			election_frequency = 72
+		}
+		add_popularity = { ideology = paternal_autocrat popularity = 0.2 }
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.23 days = 3 }
+			if = {
+				limit = {
+					country_exists = URG
+					NOT = {
+						has_war_with = URG
+						has_subject = URG
+					}
+				}
+				country_event = { id = argentina_carles_events.30 days = 10 }
+			}
+			else = {
+				country_event = { id = argentina_carles_events.31 days = 10 }
+			}
+		}
+		add_stability = -0.20
+	}
+}
+
+country_event = { #Carles arrives in Peru
+	id = argentina_carles_events.23
+	title = argentina_carles_events.23.t
+	desc = argentina_carles_events.23.d
+	picture = GFX_report_event_ARG_carles_b
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.23 option argentina_carles_events.23.a"
+		name = argentina_carles_events.23.a
+		PRU = {
+			country_event = argentina_carles_events.24
+		}
+	}
+}
+
+country_event = { #Argentina demands the extradition of Carles
+	id = argentina_carles_events.24
+	title = argentina_carles_events.24.t
+	desc = argentina_carles_events.24.d
+	picture = GFX_report_event_ARG_carles_b
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.24 option argentina_carles_events.24.a"
+		ai_chance = { base = 75 }
+		name = argentina_carles_events.24.a
+		ARG = {
+			country_event = argentina_carles_events.25
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.24 option argentina_carles_events.24.b"
+		ai_chance = { base = 25 }
+		name = argentina_carles_events.24.b
+		ARG = {
+			country_event = argentina_carles_events.26
+		}
+	}
+}
+
+country_event = { #Peru extradites Carles
+	id = argentina_carles_events.25
+	title = argentina_carles_events.25.t
+	desc = argentina_carles_events.25.d
+	picture = GFX_report_event_ARG_carles_b
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.25 option argentina_carles_events.25.a"
+		name = argentina_carles_events.25.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.10
+		}
+	}
+}
+
+country_event = { #Peru refuses to extradite Carles
+	id = argentina_carles_events.26
+	title = argentina_carles_events.26.t
+	desc = argentina_carles_events.26.d
+	picture = GFX_report_event_ARG_carles_b
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.26 option argentina_carles_events.26.a"
+		name = argentina_carles_events.26.a
+		add_political_power = -75
+	}
+}
+
+## RAMIREZ PRESIDENCY ##
+country_event = {
+	id = argentina_carles_events.30
+	title = argentina_carles_events.30.t
+	desc = argentina_carles_events.30.d
+	picture = GFX_report_event_ARG_car30
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.30 option argentina_carles_events.30.a"
+		name = argentina_carles_events.30.a
+		add_stability = -0.03
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.31 days = 10 }
+		}
+	}
+}
+
+country_event = {		# Crackdown on the FOIC
+	id = argentina_carles_events.31
+	title = argentina_carles_events.31.t
+	desc = argentina_carles_events.31.d
+
+	picture = GFX_report_event_ARG_car31
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.31 option argentina_carles_events.31.a"
+		name = argentina_carles_events.31.a
+		add_stability = -0.08
+		add_political_power = 50
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.32 days = 7 }
+		}
+	}
+}
+
+country_event = {		# Dissolution of General Conferention of Labour
+	id = argentina_carles_events.32
+	title = argentina_carles_events.32.t
+	desc = argentina_carles_events.32.d
+	picture = GFX_report_event_FNG_industry3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.32 option argentina_carles_events.32.a"
+		name = argentina_carles_events.32.a
+		add_stability = -0.08
+		add_political_power = 75
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.36 days = 20 }
+		}
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.33 days = 8 }
+		}
+	}
+}
+
+country_event = {		# Taking over Littoral University
+	id = argentina_carles_events.33
+	title = argentina_carles_events.33.t
+	desc = argentina_carles_events.33.d
+	picture = GFX_report_event_ARG_car33
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.33 option argentina_carles_events.33.a"
+		name = argentina_carles_events.33.a
+		add_political_power = 40
+		add_stability = -0.07
+	}
+}
+
+country_event = {		# General Strike!
+	id = argentina_carles_events.34
+	title = argentina_carles_events.34.t
+	desc = argentina_carles_events.34.d
+	picture = GFX_report_event_ARG_car34
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.34 option argentina_carles_events.34.a"
+		name = argentina_carles_events.34.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.35 days = 40 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.35
+	title = argentina_carles_events.35.t
+	desc = argentina_carles_events.35.d
+	picture = GFX_report_event_ARG_car35
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.35 option argentina_carles_events.35.a"
+		name = argentina_carles_events.35.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.38 days = 100 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.36
+	title = argentina_carles_events.36.t
+	desc = argentina_carles_events.36.d
+	picture = GFX_report_event_ARG_car36
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.36 option argentina_carles_events.36.a"
+		name = argentina_carles_events.36.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.37 days = 12 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.37
+	title = argentina_carles_events.37.t
+	desc = argentina_carles_events.37.d
+	picture = GFX_report_event_ARG_car37
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.37 option argentina_carles_events.37.a"
+		name = argentina_carles_events.37.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.34 days = 30 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.38
+	title = argentina_carles_events.38.t
+	desc = argentina_carles_events.38.d
+	picture = GFX_report_event_ARG_car38
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.38 option argentina_carles_events.38.a"
+		name = argentina_carles_events.38.a
+		add_stability = 0.30
+		set_country_flag = ARG_internal_conflicts_resolved
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.39
+	title = argentina_carles_events.39.t
+	desc = argentina_carles_events.39.d
+	picture = GFX_report_event_ARG_car21
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.39 option argentina_carles_events.39.a"
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_PATAUT_NEUT }
+			}
+		}
+		name = argentina_carles_events.39.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.40 days = 3 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.39 option argentina_carles_events.39.b"
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_PATAUT_NEUT } }
+				NOT = { has_game_rule = { rule = ARG_forpol option = DEFAULT } }
+			}
+		}
+		name = argentina_carles_events.39.b
+		add_stability = 0.05
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.40
+	title = argentina_carles_events.40.t
+	desc = argentina_carles_events.40.d
+	picture = GFX_report_event_ARG_car40
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.40 option argentina_carles_events.40.a"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_PATAUT }
+			}
+		}
+		name = argentina_carles_events.40.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.400 days = 10 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.40 option argentina_carles_events.40.b"
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_PATAUT } }
+			}
+		}
+		name = argentina_carles_events.40.b
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.41 days = 3 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.400
+	title = argentina_carles_events.400.t
+	desc = argentina_carles_events.400.d
+	picture = GFX_report_event_ARG_car400
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.400 option argentina_carles_events.400.a"
+		name = argentina_carles_events.400.a
+		add_country_leader_role = {
+			character = ARG_edelmiro_julian_farrell
+			country_leader = {
+				desc = ARG_edelmiro_julian_farrell_leader_desc
+				ideology = paternal_autocrat_subtype
+			}
+			promote_leader = yes
+		}
+		activate_advisor = ARG_juan_domingo_peron_advisor
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.08
+		}
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.42 days = 365 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.41
+	title = argentina_carles_events.41.t
+	desc = argentina_carles_events.41.d
+	picture = GFX_report_event_ARG_car41
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.41 option argentina_carles_events.41.a"
+		ai_chance = { base = 20 }
+		name = argentina_carles_events.41.a
+		add_stability = 0.05
+		GER = {
+			country_event = argentina_foreign_events.9
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.41 option argentina_carles_events.41.b"
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_PATAUT }
+			}
+		}
+		name = argentina_carles_events.41.b
+		add_country_leader_role = {
+			character = ARG_edelmiro_julian_farrell
+			country_leader = {
+				desc = ARG_edelmiro_julian_farrell_leader_desc
+				ideology = paternal_autocrat_subtype
+			}
+			promote_leader = yes
+		}
+		activate_advisor = ARG_juan_domingo_peron_advisor
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.08
+		}
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.42 days = 365 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.42
+	title = argentina_carles_events.42.t
+	desc = argentina_carles_events.42.d
+	picture = GFX_report_event_ARG_car42
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.42 option argentina_carles_events.42.a"
+		name = argentina_carles_events.42.a
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.43 days = 7 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.43
+	title = argentina_carles_events.43.t
+	desc = argentina_carles_events.43.d
+	picture = GFX_report_event_ARG_car93
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			ARG_juan_domingo_peron = { retire = yes }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.43 option argentina_carles_events.43.a"
+		ai_chance = { base = 80 }
+		name = argentina_carles_events.43.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.44 days = 12 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.43 option argentina_carles_events.43.b"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+			}
+		}
+		name = argentina_carles_events.43.b
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.46 days = 60 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.44
+	title = argentina_carles_events.44.t
+	desc = argentina_carles_events.44.d
+	picture = GFX_report_event_ARG_car44
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			ARG_juan_domingo_peron = {
+				set_nationality = ARG
+				promote_character = yes
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.44 option argentina_carles_events.44.a"
+		name = argentina_carles_events.44.a
+		hidden_effect = {
+			country_event = { id = argentina_carles_events.45 days = 60 }
+		}
+		add_stability = -0.10
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.45
+	title = argentina_carles_events.45.t
+	desc = argentina_carles_events.45.d
+	picture = GFX_report_event_ser_election
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.45 option argentina_carles_events.45.a"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_AUTDEM } }
+			}
+		}
+		name = argentina_carles_events.45.a
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.40
+		}
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+		set_country_flag = DIPLO_OPEN
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.45 option argentina_carles_events.45.b"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_SOCLIB } }
+			}
+		}
+		name = argentina_carles_events.45.b
+		complete_national_focus = ARG_Free_Elections_of_the_Republic
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_elpidio_gonzalez
+			country_leader = {
+				desc = ARG_elpidio_gonzalez_leader_desc
+				ideology = social_liberal_subtype
+			}
+			promote_leader = yes
+		}
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+		set_country_flag = DIPLO_OPEN
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.45 option argentina_carles_events.45.c"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_SOCCON } }
+			}
+		}
+		name = argentina_carles_events.45.c
+		complete_national_focus = ARG_Free_Elections_of_the_Republic
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_jose_tamborini
+			country_leader = {
+				desc = ARG_jose_tamborini_leader_desc
+				ideology = social_conservative_subtype
+			}
+			promote_leader = yes
+		}
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+		set_country_flag = DIPLO_OPEN
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.45 option argentina_carles_events.45.e"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_MARLIB } }
+			}
+		}
+		name = argentina_carles_events.45.e
+		complete_national_focus = ARG_Free_Elections_of_the_Republic
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_robustiano_costas
+			country_leader = {
+				desc = ARG_robustiano_costas_leader_desc
+				ideology = market_liberal_subtype
+			}
+			promote_leader = yes
+		}
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+		set_country_flag = DIPLO_OPEN
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.45 option argentina_carles_events.45.f"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				OR = {
+					is_in_faction_with = GER
+					is_in_faction_with = ENT
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_RADSOC } }
+			}
+		}
+		name = argentina_carles_events.45.f
+		complete_national_focus = ARG_Free_Elections_of_the_Republic
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_alicia_moreau
+			country_leader = {
+				desc = ARG_alicia_moreau_leader_desc
+				ideology = radical_socialist_subtype
+			}
+			promote_leader = yes
+		}
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+		if = {
+			limit = {
+				is_in_faction_but_not_leader = yes
+				var:faction_leader = { has_socialist_government = no }
+			}
+			leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+		every_subject_country = {
+			limit = { has_socialist_government = no }
+			remove_puppet_and_leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.46
+	title = argentina_carles_events.46.t
+	desc = argentina_carles_events.46.d
+	picture = GFX_report_event_ser_election
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { complete_national_focus = ARG_Free_Elections_of_the_Republic }
+		log = "KR_Event_Logging;ARG POLITICAL PATH - Argentina Retains Democracy"
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.46 option argentina_carles_events.46.a"
+		ai_chance = { base = 5 }
+		name = argentina_carles_events.46.a
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_arturo_frondizi
+			country_leader = {
+				desc = ARG_arturo_frondizi_leader_desc
+				ideology = social_liberal_subtype
+			}
+			promote_leader = yes
+		}
+		set_country_flag = DIPLO_OPEN
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.46 option argentina_carles_events.46.b"
+		ai_chance = { base = 5 }
+		name = argentina_carles_events.46.b
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_arturo_frondizi
+			country_leader = {
+				desc = ARG_arturo_frondizi_leader_desc
+				ideology = social_liberal_subtype
+			}
+			promote_leader = yes
+		}
+		add_country_leader_role = {
+			character = ARG_jose_tamborini
+			country_leader = {
+				desc = ARG_jose_tamborini_leader_desc
+				ideology = social_conservative_subtype
+			}
+			promote_leader = yes
+		}
+		set_country_flag = DIPLO_OPEN
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.46 option argentina_carles_events.46.c"
+		ai_chance = { base = 5 }
+		name = argentina_carles_events.46.c
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_robustiano_costas
+			country_leader = {
+				desc = ARG_robustiano_costas_leader_desc
+				ideology = market_liberal_subtype
+			}
+			promote_leader = yes
+		}
+		set_country_flag = DIPLO_OPEN
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.46 option argentina_carles_events.46.e"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				OR = {
+					is_in_faction_with = GER
+					is_in_faction_with = ENT
+				}
+			}
+		}
+		name = argentina_carles_events.46.e
+		add_stability = 0.35
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_alicia_moreau
+			country_leader = {
+				desc = ARG_alicia_moreau_leader_desc
+				ideology = radical_socialist_subtype
+			}
+			promote_leader = yes
+		}
+		set_country_flag = DIPLO_OPEN
+		custom_effect_tooltip = ARG_faction_joining_decisions_enabled_tt
+		if = {
+			limit = {
+				is_in_faction_but_not_leader = yes
+				var:faction_leader = { has_socialist_government = no }
+			}
+			leave_faction = yes
+		}
+		every_subject_country = {
+			limit = { has_socialist_government = no }
+			remove_puppet_and_leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+	}
+}
+
+country_event = {
+	id = argentina_carles_events.47
+	title = argentina_carles_events.47.t
+	desc = argentina_carles_events.47.d
+	picture = GFX_report_event_ARG_obelisco
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = national_populist
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_carles_events.47 option argentina_carles_events.47.a"
+		name = argentina_carles_events.47.a
+		add_country_leader_role = {
+			character = ARG_council_of_buenos_aires
+			country_leader = {
+				desc = ARG_council_of_buenos_aires_leader_desc
+				ideology = national_populist_subtype
+			}
+			promote_leader = yes
+		}
+	}
+}
+
+country_event = {#The Justo Trial
+	id = argentina_carles_events.48
+	title = argentina_carles_events.48.t
+	desc = argentina_carles_events.48.d
+	picture = GFX_report_event_generic_trial_big
+
+	is_triggered_only = yes
+
+	option = { #Spare Liborio
+		log = "[GetLogInfo]: event argentina_carles_events.48 option argentina_carles_events.48.a"
+		name = argentina_carles_events.48.a
+		ai_chance = { base = 60 }
+		set_country_flag = ARG_Liborio_Justo_spared
+		add_political_power = -75
+	}
+	option = { #Don't spare
+		log = "[GetLogInfo]: event argentina_carles_events.48 option argentina_carles_events.48.b"
+		name = argentina_carles_events.48.b
+		ai_chance = { base = 80 }
+		trigger = {
+			has_government = national_populist
+		}
+		set_country_flag = ARG_Liborio_Justo_not_spared
+		add_political_power = 100
+		add_stability = -0.05
+		add_war_support = -0.05
+		add_popularity = {
+			ideology = national_populist
+			popularity = -0.10
+		}
+		if = {
+			limit = { has_character = ARG_agustin_pedro_justo }
+			ARG_agustin_pedro_justo = { kill_character = yes }
+		}
+	}
+}
+
+## ROAD TO DEMOCRACY ##
+
+country_event = {
+	id = argentina_democratic_events.1
+	title = argentina_democratic_events.1.t
+	desc = argentina_democratic_events.1.d
+	picture = GFX_report_event_ARG_car21
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.1 option argentina_democratic_events.1.a"
+		name = argentina_democratic_events.1.a
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.2 days = 25 }
+		}
+		add_stability = -0.10
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.2
+	title = argentina_democratic_events.2.t
+	desc = argentina_democratic_events.2.d
+	picture = GFX_report_event_ARG_car42
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.2 option argentina_democratic_events.2.a"
+		ai_chance = { base = 75 }
+		name = argentina_democratic_events.2.a
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.3 days = 7 }
+		}
+		add_stability = 0.05
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.2 option argentina_democratic_events.2.b"
+		ai_chance = { base = 75 }
+		name = argentina_democratic_events.2.b
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.4 days = 60 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.3
+	title = argentina_democratic_events.3.t
+	desc = argentina_democratic_events.3.d
+	picture = GFX_report_event_ARG_car8
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.3 option argentina_democratic_events.3.a"
+		name = argentina_democratic_events.3.a
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.4 days = 53 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.4
+	title = argentina_democratic_events.4.t
+	desc = argentina_democratic_events.4.d
+	picture = GFX_report_event_ARG_car21
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.4 option argentina_democratic_events.4.a"
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_DEM } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCCON } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_MARLIB } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCLIB } }
+			}
+		}
+		name = argentina_democratic_events.4.a
+		set_country_flag = ARG_elections_not_rigged
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.4 option argentina_democratic_events.4.b"
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_DEM }
+					has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCCON }
+					has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_MARLIB }
+					has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCLIB }
+				}
+			}
+		}
+		name = argentina_democratic_events.4.b
+		set_country_flag = ARG_rig_elections
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.5
+	title = argentina_democratic_events.5.t
+	desc = argentina_democratic_events.5.d
+	picture = GFX_report_event_SWE_Elections
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_rig_elections
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.5 option argentina_democratic_events.5.a"
+		name = argentina_democratic_events.5.a
+		add_political_power = -150
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.25
+		}
+		country_event = { id = argentina_carles_events.30 days = 7 }
+		complete_national_focus = ARG_Rigged_Elections
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.6
+	title = argentina_democratic_events.6.t
+	desc = argentina_democratic_events.6.d
+	picture = GFX_report_event_ARG_parliament
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_elections_not_rigged
+		date < 1938.1.1
+		date > 1934.1.1
+	}
+
+	immediate = {
+		hidden_effect = {
+			complete_national_focus = ARG_Free_Elections_of_the_Republic
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.6 option argentina_democratic_events.6.a"
+		ai_chance = {
+			base = 34
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCLIB } }
+			}
+		}
+		name = argentina_democratic_events.6.a
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+			election_frequency = 72
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.6 option argentina_democratic_events.6.b"
+		ai_chance = {
+			base = 33
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCCON } }
+			}
+		}
+		name = argentina_democratic_events.6.b
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+			election_frequency = 72
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.6 option argentina_democratic_events.6.c"
+		ai_chance = {
+			base = 33
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_MARLIB } }
+			}
+		}
+		name = argentina_democratic_events.6.c
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+			election_frequency = 72
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.40
+		}
+		promote_character = ARG_ramon_antonio_castillo
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.7
+	title = argentina_democratic_events.7.t
+	desc = argentina_democratic_events.7.d
+	picture = GFX_report_event_ARG_parliament
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_elections_not_rigged
+		date < 1944.1.1
+		date > 1940.1.1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.7 option argentina_democratic_events.7.a"
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_AUTDEM } }
+			}
+		}
+		name = argentina_democratic_events.7.a
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.7 option argentina_democratic_events.7.b"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCLIB } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_SOCLIB } }
+			}
+		}
+		name = argentina_democratic_events.7.b
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_elpidio_gonzalez
+			country_leader = {
+				desc = ARG_elpidio_gonzalez_leader_desc
+				ideology = social_liberal_subtype
+			}
+			promote_leader = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.7 option argentina_democratic_events.7.c"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCCON } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_SOCCON } }
+			}
+		}
+		name = argentina_democratic_events.7.c
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_jose_tamborini
+			country_leader = {
+				desc = ARG_jose_tamborini_leader_desc
+				ideology = social_conservative_subtype
+			}
+			promote_leader = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.7 option argentina_democratic_events.7.e"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_MARLIB } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_MARLIB } }
+			}
+		}
+		name = argentina_democratic_events.7.e
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_robustiano_costas
+			country_leader = {
+				desc = ARG_robustiano_costas_leader_desc
+				ideology = market_liberal_subtype
+			}
+			promote_leader = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.7 option argentina_democratic_events.7.f"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				OR = {
+					is_in_faction_with = GER
+					is_in_faction_with = ENT
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_RADSOC } }
+			}
+		}
+		name = argentina_democratic_events.7.f
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.40
+		}
+		if = {
+			limit = {
+				is_in_faction_but_not_leader = yes
+				var:faction_leader = { has_socialist_government = no }
+			}
+			leave_faction = yes
+		}
+		every_subject_country = {
+			limit = { has_socialist_government = no }
+			remove_puppet_and_leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.71
+	title = argentina_democratic_events.71.t
+	desc = argentina_democratic_events.71.d
+	picture = GFX_report_event_ARG_parliament
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_elections_not_rigged
+		date < 1950.1.1
+		date > 1946.1.1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.71 option argentina_democratic_events.71.a"
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_AUTDEM } }
+			}
+		}
+		name = argentina_democratic_events.71.a
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.71 option argentina_democratic_events.71.b"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_SOCLIB } }
+			}
+		}
+		name = argentina_democratic_events.71.b
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_arturo_frondizi
+			country_leader = {
+				desc = ARG_arturo_frondizi_leader_desc
+				ideology = social_liberal_subtype
+			}
+			promote_leader = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.71 option argentina_democratic_events.71.c"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_SOCCON } }
+			}
+		}
+		name = argentina_democratic_events.71.c
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_jose_tamborini
+			country_leader = {
+				desc = ARG_jose_tamborini_leader_desc
+				ideology = social_conservative_subtype
+			}
+			promote_leader = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.71 option argentina_democratic_events.71.e"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_MARLIB } }
+			}
+		}
+		name = argentina_democratic_events.71.e
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_ricardo_balbin
+			country_leader = {
+				desc = ARG_ricardo_balbin_leader_desc
+				ideology = market_liberal_subtype
+			}
+			promote_leader = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.71 option argentina_democratic_events.71.f"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				OR = {
+					is_in_faction_with = GER
+					is_in_faction_with = ENT
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_FARRELL_RADSOC } }
+			}
+		}
+		name = argentina_democratic_events.71.f
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.40
+		}
+		add_country_leader_role = {
+			character = ARG_alicia_moreau
+			country_leader = {
+				desc = ARG_alicia_moreau_leader_desc
+				ideology = radical_socialist_subtype
+			}
+			promote_leader = yes
+		}
+		if = {
+			limit = {
+				is_in_faction_but_not_leader = yes
+				var:faction_leader = { has_socialist_government = no }
+			}
+			leave_faction = yes
+		}
+		every_subject_country = {
+			limit = { has_socialist_government = no }
+			remove_puppet_and_leave_faction = yes
+			peace_out_non_neighbours_after_leaving_faction = yes
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.8
+	title = argentina_democratic_events.8.t
+	desc = argentina_democratic_events.8.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.8 option argentina_democratic_events.8.a"
+		name = argentina_democratic_events.8.a
+		FOP = {
+			country_event = argentina_democratic_events.9
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.9
+	title = argentina_democratic_events.9.t
+	desc = argentina_democratic_events.9.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.9 option argentina_democratic_events.9.a"
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_peace option = ARG_PEACE_FAILURE }
+			}
+		}
+		name = argentina_democratic_events.9.a
+		add_stability = 0.05
+		ARG = {
+			country_event = argentina_democratic_events.10
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.9 option argentina_democratic_events.9.b"
+		ai_chance = {
+			base = 60
+			modifier = {
+				add = -60
+				ARG = { has_government = radical_socialist }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARG_peace option = ARG_PEACE_SUCCESS }
+			}
+		}
+		name = argentina_democratic_events.9.b
+		add_stability = -0.05
+		ARG = {
+			country_event = argentina_democratic_events.11
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.10
+	immediate = { log = "KR_Event_Logging;ARGENTINA REUNIFIES IN PEACE" }
+	title = argentina_democratic_events.10.t
+	desc = argentina_democratic_events.10.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = ARG
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.10 option argentina_democratic_events.10.a"
+		log = "KR_Event_Logging;ARG POLITICAL PATH - Peaceful Reunification"
+		name = argentina_democratic_events.10.a
+		add_stability = 0.05
+		add_political_power = 100
+		if = {
+			limit = {
+				FOP = { is_ai = no }
+			}
+			ARG = { change_tag_from = FOP }
+		}
+		annex_country = { target = FOP }
+		add_state_core = 512
+		add_state_core = 1029
+		add_popularity = { ideology = totalist popularity = 0.03 }
+		add_popularity = { ideology = syndicalist popularity = 0.04 }
+		add_popularity = { ideology = radical_socialist popularity = 0.08 }
+		add_popularity = { ideology = social_democrat popularity = 0.10 }
+		ARG_unlock_immigration = yes
+		hidden_effect = {
+			CHL = { dismantle_faction = yes }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.11
+	title = argentina_democratic_events.11.t
+	desc = argentina_democratic_events.11.d
+	picture = GFX_report_event_BRA_army2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.11 option argentina_democratic_events.11.a"
+		name = argentina_democratic_events.11.a
+		add_stability = -0.10
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.12 days = 7 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.12
+	title = argentina_democratic_events.12.t
+	desc = argentina_democratic_events.12.d
+	picture = GFX_report_event_ARG_car21
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.12 option argentina_democratic_events.12.a"
+		name = argentina_democratic_events.12.a
+		add_stability = -0.05
+		set_temp_variable = { ideology_change_var = -0.1 }
+		change_ruling_party_popularity = yes
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.13 days = 3 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.13
+	title = argentina_democratic_events.13.t
+	desc = argentina_democratic_events.13.d
+	picture = GFX_report_event_ARG_car96
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_country_flag = ARG_elections_not_rigged
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.13 option argentina_democratic_events.13.a"
+		ai_chance = { base = 50 }
+		name = argentina_democratic_events.13.a
+		add_stability = -0.15
+		set_temp_variable = { ideology_change_var = -0.2 }
+		change_ruling_party_popularity = yes
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.15 days = 25 }
+		}
+		add_country_leader_role = {
+			character = ARG_argentine_parliament
+			country_leader = {
+				desc = ARG_argentine_parliament_leader_desc
+				ideology = paternal_autocrat_subtype
+			}
+			promote_leader = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.13 option argentina_democratic_events.13.b"
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_DEM }
+					has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCCON }
+					has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_MARLIB }
+					has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCLIB }
+				}
+			}
+		}
+		name = argentina_democratic_events.13.b
+		add_stability = 0.03
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.14 days = 2 }
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.14
+	title = argentina_democratic_events.14.t
+	desc = argentina_democratic_events.14.d
+	picture = GFX_report_event_ARG_car21
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { complete_national_focus = ARG_Rigged_Elections }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.14 option argentina_democratic_events.14.a"
+		name = argentina_democratic_events.14.a
+		add_stability = -0.15
+		set_temp_variable = { ideology_change_var = -0.3 }
+		change_ruling_party_popularity = yes
+		set_country_flag = ARG_GOU_in_control
+		set_country_flag = ARG_ramirez_second_coup
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = yes
+			last_election = "1936.1.1"
+			election_frequency = 72
+		}
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.15
+	title = argentina_democratic_events.15.t
+	desc = argentina_democratic_events.15.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = argentina_democratic_events.17 days = 5 }
+			country_event = { id = argentina_democratic_events.16 days = 5 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.15 option argentina_democratic_events.15.a"
+		ai_chance = { base = 10 }
+		name = argentina_democratic_events.15.a
+		set_country_flag = ARG_elections_not_rigged
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.15 option argentina_democratic_events.15.b"
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+			}
+		}
+		name = argentina_democratic_events.15.b
+		set_country_flag = ARG_rig_elections_again
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.16
+	title = argentina_democratic_events.16.t
+	desc = argentina_democratic_events.16.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_rig_elections_again
+	}
+
+	immediate = {
+		hidden_effect = { complete_national_focus = ARG_Rigged_Elections }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.16 option argentina_democratic_events.16.a"
+		name = argentina_democratic_events.16.a
+		add_stability = 0.25
+		add_political_power = -150
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.25
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		country_event = { id = argentina_carles_events.30 days = 7 }
+	}
+}
+
+country_event = {
+	id = argentina_democratic_events.17
+	title = argentina_democratic_events.17.t
+	desc = argentina_democratic_events.17.d
+	picture = GFX_report_event_ARG_parliament
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = ARG_elections_not_rigged
+	}
+
+	immediate = {
+		hidden_effect = { complete_national_focus = ARG_Free_Elections_of_the_Republic }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.17 option argentina_democratic_events.17.a"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCLIB } }
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+			}
+		}
+		name = argentina_democratic_events.17.a
+		add_stability = 0.25
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.17 option argentina_democratic_events.17.b"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_SOCCON } }
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+			}
+		}
+		name = argentina_democratic_events.17.b
+		add_stability = 0.25
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event argentina_democratic_events.17 option argentina_democratic_events.17.c"
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARG_path option = ARG_PATH_RAMIREZ_MARLIB } }
+				NOT = { has_game_rule = { rule = ARG_path option = DEFAULT } }
+			}
+		}
+		name = argentina_democratic_events.17.c
+		add_stability = 0.25
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.40
+		}
+	}
+}
+
+# News Events
+
+# Manuel Carles Solidifies Control
+news_event = {
+	id = argentina_news_events.1
+	immediate = { log = "[GetLogInfo]: event argentina_news_events.1" }
+	title = argentina_news_events.1.t
+	desc = argentina_news_events.1.d
+	picture = GFX_news_event_ARG_Carles
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_south_america_news = yes }
+
+	option = {
+		name = argentina_news_events.1.a
+		trigger = {
+			has_socialist_government = no
+		}
+	}
+	option = {
+		name = argentina_news_events.1.b
+		trigger = {
+			has_socialist_government = yes
+		}
+	}
+}
+
+# Ramirez defeats Carles
+news_event = {
+	id = argentina_news_events.2
+	immediate = { log = "[GetLogInfo]: event argentina_news_events.2" }
+	title = argentina_news_events.2.t
+	desc = argentina_news_events.2.d
+	picture = GFX_news_event_ARG_Ramirez
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_south_america_news = yes }
+
+	option = {
+		name = argentina_news_events.2.a
+	}
+}

@@ -1,0 +1,2898 @@
+###########################
+# Papal States Focus Tree
+# By TheBlackWinds
+###########################
+
+focus_tree = {
+	id = Papal_States
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = PAP
+		}
+	}
+	default = no
+	continuous_focus_position = { x = 2200 y = 0 }
+
+	###The Popes ###
+	focus = {# Papal Conclave
+		id = PAP_conclave
+		icon = GFX_goal_faith_and_state
+		cost = 2
+
+		x = 6
+		y = 0
+
+		available = {
+			NOT = { has_character = PAP_pius_xi }
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_conclave"
+			country_event = papal_state_events.8
+		}
+	}
+
+	focus = {# Stephen X
+		id = PAP_stephen_x_focus
+		icon = GFX_goal_italy_stephen
+		cost = 0
+
+		relative_position_id = PAP_conclave
+		x = -5
+		y = 1
+
+		prerequisite = {
+			focus = PAP_conclave
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_stephen_x_focus"
+			custom_effect_tooltip = PAP_conclave_choice
+		}
+	}
+
+	focus = {# Help the Poor
+		id = PAP_help_poor
+		icon = GFX_focus_generic_concessions
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -5
+		y = 2
+
+		prerequisite = {
+			focus = PAP_stephen_x_focus
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_help_poor"
+			add_ideas = PAP_food_kitchens
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Displaced Families
+		id = PAP_displaced_families
+		icon = GFX_goal_refugee_management
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -5
+		y = 3
+
+		prerequisite = {
+			focus = PAP_help_poor
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_displaced_families"
+			add_ideas = PAP_aid_refugees
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# A call to the People
+		id = PAP_call_people
+		icon = GFX_goal_generic_national_unity
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -5
+		y = 4
+
+		prerequisite = {
+			focus = PAP_displaced_families
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_call_people"
+			add_stability = 0.10
+			add_ideas = PAP_callpeople
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# John XXIII
+		id = PAP_john_xxiii_focus
+		icon = GFX_goal_italy_john
+		cost = 0
+
+		relative_position_id = PAP_conclave
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = PAP_conclave
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_john_xxiii_focus"
+			custom_effect_tooltip = PAP_conclave_choice
+		}
+	}
+
+	focus = {# Welfare Programs
+		id = PAP_welfare_programs
+		icon = GFX_goal_generic_government_deals
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = PAP_john_xxiii_focus
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_welfare_programs"
+			add_ideas = PAP_welfare
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Ecclesiastical matters
+		id = PAP_eccalesiastical_matters
+		icon = GFX_BEL_Improve_Catholic_Relations
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -3
+		y = 3
+
+		prerequisite = {
+			focus = PAP_help_poor
+			focus = PAP_welfare_programs
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_eccalesiastical_matters"
+			add_political_power = -50
+			add_stability = 0.1
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Relinquish Temporal Power
+		id = PAP_relinquish_temporal
+		icon = GFX_goal_accord_with_pope
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -3
+		y = 4
+
+		prerequisite = {
+			focus = PAP_eccalesiastical_matters
+		}
+		ai_will_do = { factor = 75 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_relinquish_temporal"
+			add_war_support = -0.10
+			add_stability = 0.05
+			custom_effect_tooltip = tooltip_white_line
+			set_cosmetic_tag = PAP_rome
+			custom_effect_tooltip = {
+				localization_key = tooltip_enable_focus
+				FOCUS = PAP_roman_senate
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_idea = PAP_italy_balance_idea }
+					remove_ideas = PAP_italy_balance_idea
+					add_ideas = PAP_italy_balance_idea_rome
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# The People's Rule
+		id = PAP_peoples_rule
+		icon = GFX_focus_generic_the_giant_wakes
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -3
+		y = 5
+
+		prerequisite = {
+			focus = PAP_relinquish_temporal
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_peoples_rule"
+			add_political_power = 100
+			add_popularity = { ideology = social_conservative popularity = 0.2 }
+			add_popularity = { ideology = market_liberal popularity = 0.2 }
+			add_popularity = { ideology = social_liberal popularity = 0.2 }
+			add_popularity = { ideology = social_democrat popularity = 0.2 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Catholic Trade Unions
+		id = PAP_trade_unions
+		icon = GFX_goal_production
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -1
+		y = 3
+
+		prerequisite = {
+			focus = PAP_welfare_programs
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_trade_unions"
+			add_ideas = PAP_christian_unions
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Economic incentives
+		id = PAP_economic_incentives
+		icon = GFX_goal_socialist_infrastructure
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = -1
+		y = 4
+
+		prerequisite = {
+			focus = PAP_trade_unions
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_economic_incentives"
+			add_ideas = PAP_factory_incentives
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Pius XII
+		id = PAP_pius_xii_focus
+		icon = GFX_goal_italy_pius
+		cost = 0
+
+		relative_position_id = PAP_conclave
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = PAP_conclave
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_pius_xii_focus"
+			custom_effect_tooltip = PAP_conclave_choice
+		}
+	}
+
+	focus = {# Traditional Values
+		id = PAP_traditional_values
+		icon = GFX_goal_generic_defence
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = PAP_pius_xii_focus
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_traditional_values"
+			add_stability = 0.05
+			add_ideas = PAP_tradition
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Patron of Rome
+		id = PAP_roman_patron
+		icon = GFX_goal_imperial_legacy
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = PAP_traditional_values
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_roman_patron"
+			add_ideas = PAP_rome_patron
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Fight Corruption
+		id = PAP_fight_corruption
+		icon = GFX_focus_renounce_the_treaty_of_trianon
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 1
+		y = 4
+
+		prerequisite = {
+			focus = PAP_roman_patron
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_fight_corruption"
+			add_ideas = PAP_virtue
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {# Temporal Power
+		id = PAP_temporal_power
+		icon = GFX_goal_authority
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 3
+		y = 3
+
+		prerequisite = {
+			focus = PAP_promote_order
+			focus = PAP_traditional_values
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_temporal_power"
+			add_stability = 0.05
+			add_political_power = 50
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = {
+				localization_key = tooltip_enable_focus
+				FOCUS = PAP_reformed_power
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Condemn Mob Rule
+		id = PAP_condemn_mobrule
+		icon = GFX_goal_UK_ban_unions
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 3
+		y = 4
+
+		prerequisite = {
+			focus = PAP_temporal_power
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_condemn_mobrule"
+			add_war_support = 0.05
+			add_popularity = { ideology = radical_socialist popularity = -0.1 }
+			add_popularity = { ideology = syndicalist popularity = -0.1 }
+			add_popularity = { ideology = totalist popularity = -0.1 }
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {# Strengthen the Border
+		id = PAP_strengthen_border
+		icon = GFX_goal_nested_fortifications
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 3
+		y = 5
+
+		prerequisite = {
+			focus = PAP_condemn_mobrule
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_strengthen_border"
+			2 = {
+				add_building_construction = {
+					type = bunker
+					province = 11751
+					level = 2
+				}
+				add_building_construction = {
+					type = bunker
+					province = 5042
+					level = 2
+				}
+			}
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Julius IV
+		id = PAP_julius_iv_focus
+		icon = GFX_goal_italy_julius
+		cost = 0
+
+		relative_position_id = PAP_conclave
+		x = 5
+		y = 1
+
+		prerequisite = {
+			focus = PAP_conclave
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_julius_iv_focus"
+			custom_effect_tooltip = PAP_conclave_choice
+		}
+	}
+
+	focus = {# Promote Order
+		id = PAP_promote_order
+		icon = GFX_goal_authoritarian
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 5
+		y = 2
+
+		prerequisite = {
+			focus = PAP_julius_iv_focus
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_promote_order"
+			add_war_support = 0.05
+			add_ideas = PAP_order
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Call to the Faithful
+		id = PAP_call_faithful
+		icon = GFX_goal_national_populism
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 5
+		y = 3
+
+		prerequisite = {
+			focus = PAP_promote_order
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_call_faithful"
+			add_ideas = PAP_calling_faithful
+			add_manpower = 30000
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {# Holy War
+		id = PAP_holy_war
+		icon = GFX_PAP_holy_war
+		cost = 6
+
+		relative_position_id = PAP_conclave
+		x = 5
+		y = 4
+
+		prerequisite = {
+			focus = PAP_call_faithful
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_holy_war"
+			add_ideas = PAP_crusade
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+### Roman Senate ###
+	focus = {# Roman Senate
+		id = PAP_roman_senate
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		cost = 6
+
+		x = 18
+		y = 0
+
+		available = {
+			has_completed_focus = PAP_relinquish_temporal
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_roman_senate"
+			add_stability = 0.10
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Roman General Election
+		id = PAP_general_election
+		icon = GFX_goal_generic_elections
+		cost = 2
+
+		relative_position_id = PAP_roman_senate
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_roman_senate
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_general_election"
+			country_event = papal_state_events.9
+		}
+	}
+
+	focus = {# Dealing with Black Monday
+		id = PAP_black_monday
+		icon = GFX_goal_bankruptcy
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = -3
+		y = 2
+
+		prerequisite = {
+			focus = PAP_general_election
+		}
+		available = {
+			PAP_black_monday_active = yes
+		}
+		ai_will_do = { factor = 100 }
+		bypass = {
+			PAP_black_monday_active = no
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_black_monday"
+			add_stability = 0.05
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Lazio Subsidies
+		id = PAP_lazio_subsidies
+		icon = GFX_PAP_lazio_industry
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = -4
+		y = 3
+
+		prerequisite = {
+			focus = PAP_black_monday
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_lazio_subsidies"
+			2 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = { has_idea = PAP_black_monday_1 }
+				swap_ideas = {
+					remove_idea = PAP_black_monday_1
+					add_idea = PAP_black_monday_2
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Revive Industry
+		id = PAP_revive_industry
+		icon = GFX_goal_generic_construct_mil_factory
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = -4
+		y = 4
+
+		prerequisite = {
+			focus = PAP_lazio_subsidies
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_revive_industry"
+			2 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = { has_idea = PAP_black_monday_2 }
+				swap_ideas = {
+					remove_idea = PAP_black_monday_2
+					add_idea = PAP_black_monday_3
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Aid Farmers
+		id = PAP_aid_farmers
+		icon = GFX_focus_AUS_agriculture
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = -2
+		y = 3
+
+		prerequisite = {
+			focus = PAP_black_monday
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_aid_farmers"
+			add_ideas = PAP_farmer_aid
+			if = {
+				limit = { has_idea = PAP_black_monday_1 }
+				swap_ideas = {
+					remove_idea = PAP_black_monday_1
+					add_idea = PAP_black_monday_2
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Agricultural Incentives
+		id = PAP_agricultural_incentives
+		icon = GFX_goal_agrarian_reform
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = -2
+		y = 4
+
+		prerequisite = {
+			focus = PAP_aid_farmers
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_agricultural_incentives"
+			add_ideas = PAP_agriculture_incentives
+			if = {
+				limit = { has_idea = PAP_black_monday_2 }
+				swap_ideas = {
+					remove_idea = PAP_black_monday_2
+					add_idea = PAP_black_monday_3
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Economic Recovery
+		id = PAP_economic_recovery
+		icon = GFX_goal_economic_control
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = -3
+		y = 5
+
+		prerequisite = {
+			focus = PAP_revive_industry
+		}
+		prerequisite = {
+			focus = PAP_agricultural_incentives
+		}
+		ai_will_do = { factor = 200 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_economic_recovery"
+			add_one_random_civilian_factory = yes
+			if = {
+				limit = { has_idea = PAP_black_monday_3 }
+				remove_ideas = PAP_black_monday_3
+				hidden_effect = {
+					country_event = papal_state_events.38
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Heavy Industry
+		id = PAP_heavy_industry
+		icon = GFX_generic_heavy_industry
+		cost = 6
+
+		relative_position_id = PAP_economic_recovery
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_economic_recovery
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_heavy_industry"
+			add_ideas = PAP_heavyindustry
+			add_resource = {
+				type = steel
+				amount = 5
+				state = 2
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Fulfil Campaign Promises
+		id = PAP_campaign_promises
+		icon = GFX_focus_generic_self_management
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = PAP_general_election
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_campaign_promises"
+			add_political_power = 75
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Knocking down slums
+		id = PAP_infrastructure_investment
+		icon = GFX_goal_generic_construct_public_housing
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = PAP_campaign_promises
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = { factor = 45 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_infrastructure_investment"
+			add_popularity = { ideology = social_democrat popularity = -0.075 }
+			add_popularity = { ideology = social_conservative popularity = -0.05 }
+			add_stability = 0.05
+			2 = { increase_state_category_by_one_level = yes }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Military Railways
+		id = PAP_military_railways
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = PAP_infrastructure_investment
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_military_railways"
+			add_equipment_to_stockpile = {
+				type = train_equipment
+				amount = 10
+			}
+			2 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = PAP_military_railways
+				bonus = 1
+				uses = 1
+				category = construction_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Education Reform
+		id = PAP_education_reform
+		icon = GFX_goal_KTG_Bookstack
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = 0
+		y = 5
+
+		prerequisite = {
+			focus = PAP_military_railways
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_education_reform"
+			add_research_slot_until_five = yes
+			add_tech_bonus = {
+				name = PAP_education_reform
+				bonus = 1
+				uses = 2
+				category = industry
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# University Grants
+		id = PAP_university_grants
+		icon = GFX_goal_BRA_catholic_education
+		cost = 6
+
+		relative_position_id = PAP_roman_senate
+		x = -1
+		y = 6
+
+		prerequisite = {
+			focus = PAP_economic_recovery
+		}
+		prerequisite = {
+			focus = PAP_education_reform
+		}
+		ai_will_do = { factor = 75 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_university_grants"
+			add_research_slot_until_five = yes
+			add_ideas = LOM_education_reform_idea
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+### Papal armed forces ####
+	focus = {# Roman Army
+		id = PAP_roman_army
+		icon = GFX_PAP_roman_army
+		cost = 6
+
+		x = 20
+		y = 2
+
+		prerequisite = {
+			focus = PAP_general_election
+		}
+		ai_will_do = { factor = 55 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_roman_army"
+			army_experience = 50
+			add_doctrine_cost_reduction = {
+				name = PAP_roman_army
+				cost_reduction = 0.5
+				uses = 2
+				category = land_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {# Armed Citizenry
+		id = PAP_armed_citizenry
+		icon = GFX_goal_national_arsenal
+		cost = 6
+
+		relative_position_id = PAP_roman_army
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_roman_army
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_armed_citizenry"
+			add_ideas = PAP_armedcitizens
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Milizia Cittadina"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 5 }
+				}
+				if = {
+					limit = { has_template = "Milizia Cittadina" }
+					delete_unit_template_and_units = { division_template = "Milizia Cittadina" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Milizia Cittadina"
+					division_names_group = ITAL_MIL_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 0 y = 3 }
+						infantry = { x = 1 y = 0 }
+					}
+					template_counter = 68
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 2 }
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "Milizia Cittadina"
+					}
+					create_unit = {
+						division = "division_template = \"Milizia Cittadina\" start_experience_factor = 0.2"
+						owner = ROOT
+						count = 2
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {# Men of Rome
+		id = PAP_men_of_rome
+		icon = GFX_goal_conscription
+		cost = 6
+
+		relative_position_id = PAP_roman_army
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = PAP_armed_citizenry
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_men_of_rome"
+			add_ideas = PAP_romanmanpower
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {# Legionary Spirit
+		id = PAP_legionary_spirit
+		icon = GFX_PAP_legionary_spirit
+		cost = 6
+
+		relative_position_id = PAP_men_of_rome
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = PAP_men_of_rome
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_legionary_spirit"
+			add_ideas = PAP_legionaries
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {# army reorganization
+		id = PAP_army_reorganisation
+		icon = GFX_focus_generic_little_entente
+		cost = 6
+
+		relative_position_id = PAP_roman_army
+		x = 6
+		y = 1
+
+		prerequisite = {
+			focus = PAP_palatine_guard
+			focus = PAP_roman_army
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_army_reorganisation"
+			add_doctrine_cost_reduction = {
+				name = PAP_army_reorganisation
+				cost_reduction = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Fanteria Romana"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 9 }
+				}
+				if = {
+					limit = { has_template = "Fanteria Romana" }
+					delete_unit_template_and_units = { division_template = "Fanteria Romana" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Fanteria Romana"
+					division_names_group = ITAL_INF_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 2 }
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 3
+						TYPE = "Fanteria Romana"
+					}
+					create_unit = {
+						division = "division_template = \"Fanteria Romana\" start_experience_factor = 0.1"
+						owner = ROOT
+						count = 3
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Latin Perimeter
+		id = PAP_latin_perimeter
+		icon = GFX_goal_demobilization
+		cost = 6
+
+		relative_position_id = PAP_roman_army
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = PAP_armed_citizenry
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_latin_perimeter"
+			2 = {
+				add_building_construction = {
+					type = bunker
+					province = 11751
+					level = 2
+				}
+				add_building_construction = {
+					type = bunker
+					province = 5042
+					level = 2
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Combined Arms
+		id = PAP_combined_arms
+		icon = GFX_focus_generic_license_production
+		cost = 6
+
+		relative_position_id = PAP_roman_army
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = PAP_palatine_guard
+			focus = PAP_roman_army
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_combined_arms"
+			add_tech_bonus = {
+				name = PAP_combined_arms
+				bonus = 1
+				uses = 1
+				category = motorized_equipment
+				category = cat_mechanized_equipment
+			}
+			add_tech_bonus = {
+				name = PAP_combined_arms
+				bonus = 1
+				uses = 1
+				category = armor
+			}
+			if = {
+				limit = { has_dlc_nsb = yes }
+				if = {
+					limit = { NOT = { has_tech = basic_light_tank_chassis } }
+					set_technology = { basic_light_tank_chassis = 1 }
+				}
+				create_equipment_variant = {
+					name = "Sp.Pz. I"
+					type = light_tank_chassis_1
+					show_position = no
+					parent_version = 0
+					modules = {
+						main_armament_slot = tank_heavy_machine_gun				# MG13/MG17 twin
+						turret_type_slot = tank_light_one_man_tank_turret
+						suspension_type_slot = tank_bogie_suspension
+						armor_type_slot = tank_riveted_armor
+						engine_type_slot = tank_gasoline_engine
+						special_type_slot_1 = secondary_turret_hmg				# Represent 2nd MG in twinned pair
+						special_type_slot_2 = tank_radio_1
+					}
+					upgrades = {
+						tank_nsb_engine_upgrade = 6
+						tank_nsb_armor_upgrade = 1
+					}
+					icon = GFX_GER_basic_light_tank_medium
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = basic_light_tank } }
+					set_technology = { basic_light_tank = 1 }
+				}
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Pontifical Tank Division"
+					LINE_1 = { localization_key = line_battalion_tt NAME = light_armor ICON = GFX_unit_light_armor_icon_small COUNT = 5 }
+					LINE_2 = { localization_key = line_battalion_tt NAME = motorized ICON = GFX_unit_motorized_icon_small COUNT = 5 }
+					SUPPORT_1 = { localization_key = support_battalion_tt NAME = mot_recon ICON = GFX_unit_mot_recon_icon_small }
+					SUPPORT_2 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+				}
+				if = {
+					limit = { has_template = "Pontifical Tank Division" }
+					delete_unit_template_and_units = { division_template = "Pontifical Tank Division" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Pontifical Tank Division"
+					division_names_group = ITA_ARM_01
+					priority = 2
+					regiments = {
+						light_armor = { x = 0 y = 0 }
+						light_armor = { x = 0 y = 1 }
+						light_armor = { x = 0 y = 2 }
+						light_armor = { x = 0 y = 3 }
+						motorized = { x = 1 y = 0 }
+						motorized = { x = 1 y = 1 }
+						motorized = { x = 1 y = 2 }
+						motorized = { x = 1 y = 3 }
+						light_armor = { x = 2 y = 0 }
+						motorized = { x = 3 y = 0 }
+					}
+					support = {
+						mot_recon = { x = 0 y = 0 }
+						artillery = { x = 0 y = 1 }
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					valid_state_for_spawning_friendly_unit = yes
+				}
+				create_unit = {
+					division = "division_template = \"Pontifical Tank Division\" start_experience_factor = 1"
+					owner = ROOT
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_unit
+						TYPE = "Pontifical Tank Division"
+					}
+					create_unit = {
+						division = "division_template = \"Pontifical Tank Division\" start_experience_factor = 1"
+						owner = ROOT
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Pontifical Navy
+		id = PAP_navy
+		icon = GFX_PAP_roman_navy
+		cost = 6
+
+		relative_position_id = PAP_roman_army
+		x = 4
+		y = 1
+
+		prerequisite = {
+			focus = PAP_palatine_guard
+			focus = PAP_roman_army
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_navy"
+			add_ideas = PAP_navy_idea
+			navy_experience = 50
+			add_doctrine_cost_reduction = {
+				name = PAP_navy
+				cost_reduction = 0.5
+				uses = 1
+				category = naval_doctrine
+			}
+			2 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Expand Ports
+		id = PAP_expand_ports
+		icon = GFX_goal_generic_construct_naval_dockyard
+		cost = 6
+
+		relative_position_id = PAP_navy
+		x = 2
+		y = 3
+
+		prerequisite = {
+			focus = PAP_navy
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_expand_ports"
+			2 = {
+				add_extra_state_shared_building_slots = 2
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = 11846
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 11846
+					}
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Fleet in being
+		id = PAP_in_being
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		cost = 6
+
+		relative_position_id = PAP_navy
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = PAP_navy
+		}
+		mutually_exclusive = {
+			focus = PAP_trade_interdiction
+		}
+		ai_will_do = { factor = 20 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_in_being"
+			swap_ideas = {
+				remove_idea = PAP_navy_idea
+				add_idea = PAP_navy_idea_capital
+			}
+			add_doctrine_cost_reduction = {
+				name = PAP_in_being
+				cost_reduction = 0.5
+				uses = 1
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# A roman Fleet
+		id = PAP_roman_fleet
+		icon = GFX_goal_generic_navy_battleship
+		cost = 6
+
+		relative_position_id = PAP_in_being
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_in_being
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_roman_fleet"
+			add_tech_bonus = {
+				name = PAP_roman_fleet
+				bonus = 1
+				uses = 2
+				category = ca_tech
+				category = bb_tech
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_mastery_bonus = {
+				name = PAP_roman_fleet
+				bonus = 0.1
+				days = 365
+				track = capital_ships
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Trade interdiction
+		id = PAP_trade_interdiction
+		icon = GFX_goal_generic_trade_interdiction
+		cost = 6
+
+		relative_position_id = PAP_navy
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = PAP_navy
+		}
+		mutually_exclusive = {
+			focus = PAP_in_being
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_trade_interdiction"
+			swap_ideas = {
+				remove_idea = PAP_navy_idea
+				add_idea = PAP_navy_idea_sub
+			}
+			add_doctrine_cost_reduction = {
+				name = PAP_trade_interdiction
+				cost_reduction = 0.5
+				uses = 1
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Submarine Focus
+		id = PAP_submarines
+		icon = GFX_goal_generic_navy_submarine
+		cost = 6
+
+		relative_position_id = PAP_trade_interdiction
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_trade_interdiction
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_submarines"
+			add_tech_bonus = {
+				name = PAP_submarines
+				bonus = 1
+				uses = 2
+				category = ss_tech
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_mastery_bonus = {
+				name = PAP_submarines
+				bonus = 0.1
+				days = 365
+				track = submarines
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Cruiser Focus
+		id = PAP_screens
+		icon = GFX_goal_generic_navy_cruiser
+		cost = 6
+
+		relative_position_id = PAP_submarines
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = PAP_submarines
+			focus = PAP_roman_fleet
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_screens"
+			if = {
+				limit = { has_idea = PAP_navy_idea_capital }
+				swap_ideas = {
+					remove_idea = PAP_navy_idea_capital
+					add_idea = PAP_rule_the_seas_capital_idea
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = PAP_navy_idea_sub
+					add_idea = PAP_rule_the_seas_sub_idea
+				}
+			}
+			add_tech_bonus = {
+				name = PAP_screens
+				bonus = 1
+				uses = 2
+				category = dd_tech
+				category = ca_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Pontifical Air Force
+		id = PAP_air_force
+		icon = GFX_PAP_air_force
+		cost = 6
+
+		relative_position_id = PAP_roman_army
+		x = 9
+		y = 1
+
+		prerequisite = {
+			focus = PAP_palatine_guard
+			focus = PAP_roman_army
+		}
+		ai_will_do = {
+			factor = 45
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_air_force"
+			air_experience = 50
+			add_doctrine_cost_reduction = {
+				name = PAP_air_force
+				cost_reduction = 0.5
+				uses = 2
+				category = air_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {# Military Airfield expansion
+		id = PAP_airfield_expansion
+		icon = GFX_goal_generic_air_production
+		cost = 6
+
+		relative_position_id = PAP_air_force
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = PAP_air_force
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_airfield_expansion"
+			2 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+			add_ideas = VNC_aviation_industry
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Naval Bombers
+		id = PAP_naval_bombers
+		icon = GFX_goal_generic_air_naval_bomber_new
+		cost = 6
+
+		relative_position_id = PAP_navy
+		x = 3
+		y = 1
+
+		available = { has_design_based_on = small_plane_naval_bomber_airframe }
+
+		prerequisite = {
+			focus = PAP_navy
+		}
+		prerequisite = {
+			focus = PAP_air_force
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_naval_bombers"
+			add_tech_bonus = {
+				name = PAP_naval_bombers
+				bonus = 1
+				uses = 1
+				category = naval_bomber
+			}
+			add_equipment_to_stockpile = {
+				type = small_plane_naval_bomber_airframe
+				amount = 40
+				producer = GER
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Defend the skies
+		id = PAP_defend_skies
+		icon = GFX_goal_air_armada
+		cost = 6
+
+		relative_position_id = PAP_air_force
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_air_force
+		}
+		ai_will_do = {
+			factor = 35
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_defend_skies"
+			add_tech_bonus = {
+				name = PAP_defend_skies
+				bonus = 0.75
+				uses = 2
+				category = light_fighter
+				category = cat_heavy_fighter
+			}
+			add_ideas = VNC_aeronautica_militare_idea_4
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Anti-Air Defence
+		id = PAP_anti_air
+		icon = GFX_focus_generic_air_defense
+		cost = 6
+
+		relative_position_id = PAP_defend_skies
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = PAP_defend_skies
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_anti_air"
+			2 = {
+				add_building_construction = {
+					type = anti_air_building
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = PAP_anti_air
+				bonus = 0.75
+				uses = 2
+				category = cat_anti_air
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Radar Focus
+		id = PAP_radar
+		icon = GFX_goal_generic_radar
+		cost = 6
+
+		relative_position_id = PAP_anti_air
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_anti_air
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_radar"
+			if = {
+				limit = { NOT = { is_special_project_completed = sp:sp_air_radar } }
+				complete_special_project = sp:sp_air_radar
+			}
+			else = {
+				add_tech_bonus = {
+					name = PAP_radar
+					bonus = 1
+					uses = 1
+					category = radar_tech
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 2 }
+				limit = {
+					is_core_of = ROOT
+					has_maximum_radar_station_level = no
+				}
+				add_building_construction = {
+					type = radar_station
+					level = 1
+					instant_build = yes
+				}
+			}
+			2 = {
+				add_building_construction = {
+					type = radar_station
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# CAS focus
+		id = PAP_closeair_support
+		icon = GFX_goal_generic_air_CAS_new
+		cost = 6
+
+		relative_position_id = PAP_defend_skies
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = PAP_defend_skies
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_closeair_support"
+			add_tech_bonus = {
+				name = PAP_closeair_support
+				bonus = 1
+				uses = 1
+				category = cas_bomber
+			}
+			swap_ideas = {
+				remove_idea = VNC_aeronautica_militare_idea_4
+				add_idea = VNC_aeronautica_militare_idea_5
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Bomber Focus
+		id = PAP_bombers
+		icon = GFX_goal_generic_air_bomber_new
+		cost = 6
+
+		relative_position_id = PAP_closeair_support
+		x = 0
+		y = 1
+
+		available = { has_design_based_on = medium_plane_airframe }
+
+		prerequisite = {
+			focus = PAP_closeair_support
+		}
+		ai_will_do = {
+			factor = 35
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_bombers"
+			add_tech_bonus = {
+				name = PAP_bombers
+				bonus = 1
+				uses = 1
+				category = tactical_bomber
+			}
+			add_equipment_to_stockpile = {
+				type = medium_plane_airframe
+				amount = 40
+				producer = GER
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+### Papal States ###
+	focus = {# Reformed Temporal Power
+		id = PAP_reformed_power
+		icon = GFX_BEL_Federalism
+		cost = 6
+
+		x = 33
+		y = 0
+
+		available = {
+			has_completed_focus = PAP_temporal_power
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_reformed_power"
+			add_stability = 0.10
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Faithful Arms
+		id = PAP_faithful_arms
+		icon = GFX_goal_national_mobilization
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_reformed_power
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_faithful_arms"
+			add_war_support = 0.05
+			2 = { add_manpower = 60000 }
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_1
+				amount = 2000
+				producer = PAP
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Expand Palatine Guard
+		id = PAP_palatine_guard
+		icon = GFX_PAP_palatine_guard
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = -2
+		y = 2
+
+		prerequisite = {
+			focus = PAP_faithful_arms
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_palatine_guard"
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "2a Guardia Palatina"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 9 }
+				}
+				if = {
+					limit = { has_template = "2a Guardia Palatina" }
+					delete_unit_template_and_units = { division_template = "2a Guardia Palatina" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "2a Guardia Palatina"
+					division_names_group = ITAL_INF_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 2 }
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 3
+						TYPE = "2a Guardia Palatina"
+					}
+					create_unit = {
+						division = "division_template = \"2a Guardia Palatina\" start_experience_factor = 0.1"
+						owner = ROOT
+						count = 3
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {# Industry Captains
+		id = PAP_industry_captains
+		icon = GFX_generic_medium_industry
+		cost = 6
+
+		relative_position_id = PAP_palatine_guard
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_palatine_guard
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_industry_captains"
+			add_ideas = PAP_romanindustry
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Zouave Officers
+		id = PAP_zouave_officers
+		icon = GFX_focus_generic_military_mission
+		cost = 6
+
+		relative_position_id = PAP_palatine_guard
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = PAP_palatine_guard
+		}
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_zouave_officers"
+			add_ideas = PAP_foreign_officers
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {# Zouave Mobilisation
+		id = PAP_zouave_mobilisation
+		icon = GFX_focus_secret_rearmament
+		cost = 6
+
+		relative_position_id = PAP_zouave_officers
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_zouave_officers
+		}
+		available = {
+			has_war = yes
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_zouave_mobilisation"
+			add_manpower = 10000
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Zuavi Pontifici"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 4 }
+					SUPPORT_1 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+					SUPPORT_2 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+				}
+				if = {
+					limit = { has_template = "Zuavi Pontifici" }
+					delete_unit_template_and_units = { division_template = "Zuavi Pontifici" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Zuavi Pontifici"
+					division_names_group = ITAL_MIL_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+						artillery = { x = 0 y = 1 }
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 2 }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 6
+						TYPE = "Zuavi Pontifici"
+					}
+					create_unit = {
+						division = "division_template = \"Zuavi Pontifici\" start_experience_factor = 0.2"
+						owner = ROOT
+						count = 6
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {# Financial Aid
+		id = PAP_financial_aid
+		icon = GFX_goal_HOL_progressive_tax
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = PAP_faithful_arms
+		}
+		available = {
+			PAP_black_monday_active = yes
+		}
+		ai_will_do = { factor = 100 }
+		bypass = {
+			OR = {
+				NOT = {
+					is_subject_of = SIC
+					SIC = {
+						exists = yes
+						is_subject = no
+						NOT = { has_war_with = ROOT }
+					}
+				}
+				PAP_black_monday_active = no
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_financial_aid"
+			country_event = papal_state_events.11
+		}
+	}
+
+	focus = {# Budget Rebalancing
+		id = PAP_budget_rebalancing
+		icon = GFX_goal_generic_deals
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = PAP_financial_aid
+		}
+		available = {
+			PAP_black_monday_active = yes
+		}
+		bypass = {
+			PAP_black_monday_active = no
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_budget_rebalancing"
+			add_political_power = -50
+			if = {
+				limit = { has_idea = PAP_black_monday_1 }
+				swap_ideas = {
+					remove_idea = PAP_black_monday_1
+					add_idea = PAP_black_monday_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAP_black_monday_2 }
+				swap_ideas = {
+					remove_idea = PAP_black_monday_2
+					add_idea = PAP_black_monday_3
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Ending Temporal Debt
+		id = PAP_temporal_debt
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = PAP_budget_rebalancing
+		}
+		ai_will_do = { factor = 100 }
+		available = {
+			PAP_black_monday_active = yes
+		}
+		bypass = {
+			PAP_black_monday_active = no
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_temporal_debt"
+			if = {
+				limit = { has_idea = PAP_black_monday_2 }
+				add_stability = -0.1
+				remove_ideas = PAP_black_monday_2
+			}
+			if = {
+				limit = { has_idea = PAP_black_monday_3 }
+				add_stability = -0.05
+				remove_ideas = PAP_black_monday_3
+				hidden_effect = {
+					country_event = papal_state_events.38
+				}
+			}
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Papal Gendarme
+		id = PAP_papal_gendarmerie
+		icon = GFX_goal_HOL_amend_wapenwet
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = 0
+		y = 7
+
+		prerequisite = {
+			focus = PAP_temporal_debt
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_papal_gendarmerie"
+			add_ideas = PAP_gendarmerie
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Preparing for War
+		id = PAP_igitur_qui
+		icon = GFX_goal_generic_construct_mil_factory
+		cost = 6
+
+		relative_position_id = PAP_faithful_arms
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = PAP_faithful_arms
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_igitur_qui"
+			2 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {# Labor Omnia
+		id = PAP_labor_omnia
+		icon = GFX_BEL_Catholic_Construction
+		cost = 6
+
+		relative_position_id = PAP_igitur_qui
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_igitur_qui
+		}
+		available = {
+			2 = { is_owned_and_controlled_by = PAP }
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_labor_omnia"
+			country_event = papal_state_events.5
+			custom_effect_tooltip = tooltip_white_line
+			activate_mission = PAP_clear_march
+			custom_effect_tooltip = after_mission_completes
+			event_option_tooltip = papal_state_events.6.a
+		}
+	}
+
+	focus = {# Action Follows Belief
+		id = PAP_actiones_secundum
+		icon = GFX_goal_state_economy
+		cost = 6
+
+		relative_position_id = PAP_labor_omnia
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_labor_omnia
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_actiones_secundum"
+			add_ideas = PAP_ASF
+		}
+	}
+
+	focus = {# Renewed Impetus
+		id = PAP_renewed_impetus
+		icon = GFX_goal_PAP_crusade
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = 1
+		y = 5
+
+		prerequisite = {
+			focus = PAP_temporal_debt
+		}
+		prerequisite = {
+			focus = PAP_actiones_secundum
+		}
+		ai_will_do = {
+			factor = 75
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_renewed_impetus"
+			add_stability = 0.05
+			add_ideas = PAP_impetus
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Military Aid
+		id = PAP_military_aid
+		icon = GFX_goal_SIC_kingdom_of_two_sicilies
+		cost = 6
+
+		relative_position_id = PAP_renewed_impetus
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = PAP_renewed_impetus
+		}
+		available = {
+			has_capitulated = no
+			OR = {
+				is_ally_with = SIC
+				is_guaranteed_by = SIC
+			}
+			SIC = {
+				NOT = { has_war_with = ROOT }
+				has_capitulated = no
+			}
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_military_aid"
+			SIC = { country_event = { id = papal_state_events.18 days = 1 } }
+			custom_effect_tooltip = if_they_accept_tt
+			event_option_tooltip = papal_state_events.19.a
+		}
+	}
+
+	focus = {# Sicilian Advisors
+		id = PAP_sicilian_advisors
+		icon = GFX_goal_foreign_diplomacy
+		cost = 6
+
+		relative_position_id = PAP_military_aid
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_military_aid
+		}
+		available = {
+			has_capitulated = no
+			OR = {
+				is_ally_with = SIC
+				is_guaranteed_by = SIC
+			}
+			SIC = {
+				NOT = { has_war_with = ROOT }
+				has_capitulated = no
+			}
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_sicilian_advisors"
+			add_ideas = PAP_sicily_advisors
+			add_doctrine_cost_reduction = {
+				name = PAP_sicilian_advisors
+				cost_reduction = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Technical Aides
+		id = PAP_technical_aides
+		icon = GFX_goal_tfv_generic_tech_sharing
+		cost = 6
+
+		relative_position_id = PAP_igitur_qui
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = PAP_igitur_qui
+		}
+		available = {
+			has_capitulated = no
+			OR = {
+				is_ally_with = SIC
+				is_guaranteed_by = SIC
+				owns_state = 117
+			}
+		}
+		ai_will_do = { factor = 75 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_technical_aides"
+			add_research_slot_until_five = yes
+			add_tech_bonus = {
+				name = PAP_technical_aides
+				bonus = 1
+				uses = 2
+				category = industry
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Joint Staff
+		id = PAP_joint_staff
+		icon = GFX_goal_planning_bonus
+		cost = 6
+
+		relative_position_id = PAP_sicilian_advisors
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAP_sicilian_advisors
+		}
+		available = {
+			has_capitulated = no
+			is_ally_with = SIC
+			SIC = { has_capitulated = no }
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_joint_staff"
+			add_ideas = PAP_jointstaff
+			SIC = { country_event = { id = papal_state_events.41 days = 1 } }
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {# Experto Crede
+		id = PAP_experto_crede
+		icon = GFX_goal_military_research
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = 1
+		y = 6
+
+		prerequisite = {
+			focus = PAP_renewed_impetus
+		}
+		ai_will_do = { factor = 75 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_experto_crede"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {# Through difficulties the Stars
+		id = PAP_per_aspera
+		icon = GFX_goal_generic_corporatism
+		cost = 6
+
+		relative_position_id = PAP_reformed_power
+		x = 1
+		y = 8
+
+		prerequisite = {
+			focus = PAP_experto_crede
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_per_aspera"
+			add_ideas = PAP_PAAA
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+	### Unification ###
+	focus = {# Begin Risorgimento
+		id = PAP_unification
+		icon = GFX_focus_ITA_cavalry_charge
+		cost = 5
+
+		x = 6
+		y = 5
+
+		available = {
+			is_subject = no
+			OR = {
+				SRI = { has_war_with = SIC }
+				has_war_with = SRI
+				AND = {
+					threat > 0.4
+					has_army_manpower = { size > 99999 }
+				}
+			}
+		}
+		will_lead_to_war_with = SRI
+		ai_will_do = {
+			base = 300
+			modifier = {
+				factor = 10
+				has_war_with = SRI
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_unification"
+			add_war_support = 0.1
+			if = {
+				limit = { country_exists = SRI }
+				activate_targeted_decision = { decision = VNC_attack_italy target = SRI }
+			}
+			if = {
+				limit = { country_exists = LOM }
+				activate_targeted_decision = { decision = VNC_attack_italy target = LOM }
+			}
+			if = {
+				limit = { country_exists = ITA }
+				activate_targeted_decision = { decision = VNC_attack_italy target = ITA }
+			}
+			if = {
+				limit = { country_exists = EMI }
+				activate_targeted_decision = { decision = VNC_attack_italy target = EMI }
+			}
+			if = {
+				limit = { country_exists = TUS }
+				activate_targeted_decision = { decision = VNC_attack_italy target = TUS }
+			}
+			if = {
+				limit = { country_exists = SIC }
+				activate_targeted_decision = { decision = VNC_attack_italy target = SIC }
+			}
+			if = {
+				limit = { country_exists = SRD }
+				activate_targeted_decision = { decision = VNC_attack_italy target = SRD }
+			}
+			if = {
+				limit = { country_exists = VNC }
+				activate_targeted_decision = { decision = VNC_attack_italy target = VNC }
+			}
+			every_state = {
+				limit = {
+					is_italy = yes
+					owner = {
+						is_subject_of = ROOT
+						is_italian_tag = yes
+					}
+					NOT = { is_core_of = ROOT }
+				}
+				remove_claim_and_add_core_of_ROOT = yes
+			}
+			every_state = {
+				limit = {
+					is_italy = yes
+					NOT = { is_core_of = ROOT }
+					NOT = { is_claimed_by = ROOT }
+					NOT = {
+						owner = {
+							is_subject_of = ROOT
+							is_italian_tag = yes
+						}
+					}
+				}
+				add_claim_by = ROOT
+			}
+			hidden_effect = {
+				activate_targeted_decision = { target = SIC decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = ITA decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = SRD decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = VNC decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = EMI decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = TUS decision = VNC_invite_into_federation }
+				activate_targeted_decision = { target = LOM decision = VNC_invite_into_federation }
+				italy_enable_integration = yes
+				set_country_flag = italian_unifier
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {# Naval Exercises
+		id = PAP_naval_exercises
+		icon = GFX_goal_generic_amphibious_assault
+		cost = 5
+
+		relative_position_id = PAP_unification
+		x = -1
+		y = 1
+
+		available = { is_subject = no }
+		prerequisite = {
+			focus = PAP_unification
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				date > 1937.6.1
+			}
+			modifier = {
+				factor = 2
+				date > 1938.1.1
+			}
+			modifier = {
+				factor = 2
+				date > 1938.6.1
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_naval_exercises"
+			navy_experience = 25
+			add_timed_idea = { idea = SRI_recent_naval_exercises_idea days = 365 }
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP }
+	}
+
+	focus = {# Military Exercises
+		id = PAP_military_exercises
+		icon = GFX_goal_generic_major_war
+		cost = 5
+
+		relative_position_id = PAP_unification
+		x = 1
+		y = 1
+
+		available = { is_subject = no }
+		prerequisite = {
+			focus = PAP_unification
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				date > 1937.6.1
+			}
+			modifier = {
+				factor = 2
+				date > 1938.1.1
+			}
+			modifier = {
+				factor = 2
+				date > 1938.6.1
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_military_exercises"
+			army_experience = 25
+			air_experience = 25
+			add_timed_idea = { idea = SRI_recent_military_exercises_idea days = 365 }
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {# Italy is United
+		id = PAP_italy_is_united
+		icon = GFX_ITA_united
+		cost = 4
+
+		relative_position_id = PAP_unification
+		x = 0
+		y = 2
+
+		available = { has_country_flag = ITA_united_italia }
+		prerequisite = { focus = PAP_unification }
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_italy_is_united"
+			add_political_power = 200
+			add_war_support = 0.1
+			add_stability = 0.1
+			italy_reset_beretta_mio = yes
+			hidden_effect = {
+				country_event = { id = italy_events.102 days = 150 }
+				if = {
+					limit = { has_dlc_aat = yes }
+					mio:ITALY_beretta_organisation = {
+						set_mio_name_key = beretta
+						set_mio_icon = GFX_idea_beretta
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Naples Officers
+		id = PAP_naples_officers
+		icon = GFX_SIC_army
+		cost = 5
+
+		relative_position_id = PAP_italy_is_united
+		x = -1
+		y = 1
+
+		available = {
+			is_subject = no
+			NOT = { country_exists = SIC }
+			SIC = {
+				OR = {
+					has_character = SIC_mario_arisio
+					has_character = SIC_giuseppe_izzo
+					has_character = SIC_romeo_oliva
+				}
+			}
+		}
+		prerequisite = {
+			focus = PAP_italy_is_united
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_naples_officers"
+			ITA_recruit_sicilian_generals = yes
+		}
+	}
+
+	focus = {
+		id = PAP_a_stable_italy
+		icon = GFX_focus_ETH_invite_italian_settlers
+		cost = 5
+
+		relative_position_id = PAP_italy_is_united
+		x = -2
+		y = 2
+
+		available = {
+			is_subject = no
+		}
+		prerequisite = {
+			focus = PAP_italy_is_united
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_a_stable_italy"
+			add_political_power = 50
+			add_stability = 0.05
+			set_temp_variable = { ideology_change_var = 0.1 }
+			change_ruling_party_popularity = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# Italian Irredentism
+		id = PAP_italian_irredentism
+		icon = GFX_ITA_irridentism
+		cost = 5
+
+		relative_position_id = PAP_italy_is_united
+		x = 2
+		y = 2
+
+		available = {
+			is_subject = no
+		}
+		prerequisite = {
+			focus = PAP_italy_is_united
+		}
+		ai_will_do = { factor = 200 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_italian_irredentism"
+			set_country_flag = italy_irredentist_decisions_unlocked
+			custom_effect_tooltip = ITA_irredentist_decisions
+			add_war_support = 0.10
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {# Sardinian Officers
+		id = PAP_sardinian_officers
+		icon = GFX_goal_SRD_army
+		cost = 5
+
+		relative_position_id = PAP_italy_is_united
+		x = 1
+		y = 1
+
+		available = {
+			is_subject = no
+			NOT = { country_exists = SRD }
+			SRD = {
+				OR = {
+					has_character = SRD_giuseppe_valle
+					has_character = SRD_pietro_pintor
+				}
+			}
+		}
+		prerequisite = {
+			focus = PAP_italy_is_united
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAP_sardinian_officers"
+			ITA_recruit_sardinian_generals = yes
+		}
+	}
+}
+

@@ -1,0 +1,4147 @@
+###########################
+# Belgrade Pact Events
+###########################
+
+add_namespace = belgrade_pact_events
+
+###########################
+# Formation of the Pact
+###########################
+
+# Belgrade pact formed
+country_event = {
+	id = belgrade_pact_events.1
+	title = belgrade_pact_events.1.t
+	desc = belgrade_pact_events.1.d
+	picture = GFX_report_event_generic_conference2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.1 option belgrade_pact_events.1.a"
+		name = belgrade_pact_events.1.a # Open the Congress
+		add_war_support = 0.05
+		set_country_flag = SER_founded_belgradepact
+		create_faction_from_template = faction_template_belgrade_pact
+		scope:faction = { set_variable = { non_ideological_faction = 1 } }
+		add_named_threat = {
+			threat = 4
+			name = SER_belgrade_pact_threat
+		}
+		hidden_effect = {
+			add_opinion_modifier = { target = BUL modifier = Belgrade_Pact_anti_bulgaria }
+			reverse_add_opinion_modifier = { target = BUL modifier = Belgrade_Pact_joined_against_us }
+			every_country = {
+				limit = {
+					OR = {
+						tag = GER
+						tag = AUS
+						is_subject_of = AUS
+						is_subject_of = GER
+						tag = ALB
+					}
+				}
+				add_opinion_modifier = { target = ROOT modifier = Belgrade_Pact_joined_boo }
+			}
+			country_event = { id = belgrade_pact_events.5 days = 30 }
+			AUS = {
+				country_event = { id = belgrade_pact_events.6 days = 14 }
+			}
+			TUR = { country_event = ottomans_foreign_policy_events.5 }
+		}
+	}
+}
+
+# Invitation to the Belgrade Pact
+country_event = {
+	id = belgrade_pact_events.2
+	title = belgrade_pact_events.2.t
+	desc = belgrade_pact_events.2.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.2 option belgrade_pact_events.2.a"
+		name = belgrade_pact_events.2.a # Join the Belgrade Pact
+
+		SER = {
+			add_to_faction = ROOT
+			add_opinion_modifier = { target = ROOT modifier = Belgrade_Pact_joined_yay }
+			hidden_effect = { country_event = belgrade_pact_events.3 } # Notify Serbia of joining
+		}
+		reverse_add_opinion_modifier = { target = BUL modifier = Belgrade_Pact_joined_against_us }
+
+		hidden_effect = {
+			add_opinion_modifier = { target = BUL modifier = Belgrade_Pact_anti_bulgaria }
+
+			every_country = {
+				limit = {
+					OR = {
+						tag = GER
+						tag = AUS
+						is_subject_of = AUS
+						is_subject_of = GER
+						tag = ALB
+					}
+				}
+				add_opinion_modifier = { target = ROOT modifier = Belgrade_Pact_joined_boo }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.2 option belgrade_pact_events.2.b"
+		name = belgrade_pact_events.2.b # We have no interest
+		ai_chance = { base = 0 }
+
+		add_war_support = -0.1
+
+		SER = {
+			country_event = belgrade_pact_events.4 # Notify Serbia of the refusal
+			add_opinion_modifier = { target = ROOT modifier = Belgrade_Pact_refused }
+		}
+
+		hidden_effect = {
+			every_country = {
+				limit = {
+					OR = {
+						tag = BUL
+						tag = GER
+						tag = AUS
+						is_subject_of = GER
+						is_subject_of = AUS
+						tag = ALB
+					}
+				}
+				add_opinion_modifier = { target = ROOT modifier = Belgrade_Pact_did_not_join_yay }
+			}
+		}
+	}
+}
+
+# A country joins the pact
+country_event = {
+	id = belgrade_pact_events.3
+	title = belgrade_pact_events.3.t
+	desc = belgrade_pact_events.3.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.3 option belgrade_pact_events.3.a"
+		name = belgrade_pact_events.3.a # Welcome
+		effect_tooltip = {
+			add_to_faction = FROM
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					NOT = { has_country_flag = SER_pactnews }
+					GRE = {
+						OR = {
+							exists = no
+							has_war = yes
+							is_in_faction_with = ROOT
+						}
+					}
+					ROM = {
+						OR = {
+							exists = no
+							has_war = yes
+							is_in_faction_with = ROOT
+						}
+					}
+					MNT = {
+						OR = {
+							exists = no
+							has_war = yes
+							is_in_faction_with = ROOT
+						}
+					}
+				}
+				set_country_flag = SER_pactnews
+				news_event = { id = world_news_events.18 days = 1 }
+			}
+		}
+	}
+}
+
+# A country refuses to join the pact
+country_event = {
+	id = belgrade_pact_events.4
+	title = belgrade_pact_events.4.t
+	desc = belgrade_pact_events.4.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.4 option belgrade_pact_events.4.a"
+		name = belgrade_pact_events.4.a # We don't need them
+	}
+}
+
+# Dissolution of the pact if nobody joins
+country_event = {
+	id = belgrade_pact_events.5
+	title = belgrade_pact_events.5.t
+	desc = belgrade_pact_events.5.d
+	picture = GFX_report_event_generic_conference
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = BPL
+		has_country_flag = { flag = SER_founded_belgradepact days > 45 }
+		is_faction_leader = yes
+		has_war = no
+		NOT = {
+			any_allied_country = { is_subject = no }
+			any_country_of = {
+				count = 2
+				target = { SER ROM GRE }
+				is_in_faction_with = ROOT
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.5 option belgrade_pact_events.5.a"
+		name = belgrade_pact_events.5.a
+		dismantle_faction = yes
+		if = {
+			limit = { NOT = { has_global_flag = balkan_war_ended } }
+			clr_country_flag = SER_founded_belgradepact
+		}
+	}
+}
+
+###########################
+# Support for Bulgaria
+###########################
+
+# Formation of the Belgrade Pact (Austria)
+country_event = {
+	id = belgrade_pact_events.6
+	title = belgrade_pact_events.6.t
+	desc = belgrade_pact_events.6.d
+	picture = GFX_report_event_soviet_finnish_pact
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.6 option belgrade_pact_events.6.a"
+		name = belgrade_pact_events.6.a # Support Bulgaria
+		ai_chance = { base = 100 }
+		every_country = {
+			limit = {
+				is_in_faction_with = BPL
+			}
+			add_ideas = belgrade_part_arms_embargo
+			add_opinion_modifier = { target = ROOT modifier = KR_supported_our_enemies }
+			country_event = belgrade_pact_events.7
+		}
+		set_country_flag = SER_supported_bulgaria
+		GER = { country_event = belgrade_pact_events.8 }
+		ALB = { country_event = belgrade_pact_events.8 }
+		BUL = {
+			add_opinion_modifier = { target = ROOT modifier = KR_supported_us }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.6 option belgrade_pact_events.6.b"
+		name = belgrade_pact_events.6.b # Avoid the Balkans
+		ai_chance = { base = 0 }
+		add_political_power = -5
+	}
+}
+# Arms embargo!
+country_event = {
+	id = belgrade_pact_events.7
+	title = belgrade_pact_events.7.t
+	desc = belgrade_pact_events.7.d
+	picture = GFX_report_event_soviet_finnish_pact
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.7 option belgrade_pact_events.7.a"
+		name = belgrade_pact_events.7.a # This is not good
+		if = {
+			limit = {
+				FROM = {
+					tag = AUS
+				}
+			}
+			effect_tooltip = {
+				add_ideas = belgrade_part_arms_embargo
+			}
+		}
+	}
+}
+
+# Join the embargo?
+country_event = {
+	id = belgrade_pact_events.8
+	title = belgrade_pact_events.8.t
+	desc = belgrade_pact_events.8.d
+	picture = GFX_report_event_soviet_finnish_pact
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.8 option belgrade_pact_events.8.a"
+		name = belgrade_pact_events.8.a # Support Bulgaria
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				tag = ALB
+				OR = {
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_ROM }
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_4BW }
+				}
+			}
+		}
+		every_country = {
+			limit = {
+				is_in_faction_with = BPL
+			}
+			add_opinion_modifier = { target = ROOT modifier = KR_supported_our_enemies }
+			country_event = belgrade_pact_events.7
+		}
+		set_country_flag = SER_supported_bulgaria
+		BUL = {
+			add_opinion_modifier = { target = ROOT modifier = KR_supported_us }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.8 option belgrade_pact_events.8.b"
+		name = belgrade_pact_events.8.b # Avoid the Balkans
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				tag = ALB
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+				NOT = {
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_ROM }
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_4BW }
+				}
+			}
+		}
+		add_political_power = -5
+	}
+}
+
+###########################
+# War starts
+###########################
+
+# Bulgaria: Ultimatum from Serbia
+country_event = {
+	id = belgrade_pact_events.17
+	title = belgrade_pact_events.17.t
+	desc = belgrade_pact_events.17.d
+	picture = GFX_report_event_GRE_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.17 option belgrade_pact_events.17.a"
+		name = belgrade_pact_events.17.a # Then it is war
+		add_ideas = has_scripted_peace
+		swap_ideas = {
+			remove_idea = BUL_waning_hegemony
+			add_idea = BUL_waning_hegemony_2
+		}
+		effect_tooltip = {
+			SER = {
+				declare_war_on = {
+					target = BUL
+					type = annex_everything
+				}
+			}
+		}
+	}
+}
+
+# Bulgaria: warned that Ottomans are on the move
+country_event = {
+	id = belgrade_pact_events.25
+	title = belgrade_pact_events.25.t
+	desc = belgrade_pact_events.25.d
+	picture = GFX_report_event_GRE_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.25 option belgrade_pact_events.25.a"
+		name = belgrade_pact_events.25.a
+		add_opinion_modifier = { target = TUR modifier = KR_disapproves_of_govt }
+	}
+}
+
+# Romania/Greece - Should we accept the deal
+country_event = {
+	id = belgrade_pact_events.27
+	title = belgrade_pact_events.27.t
+	desc = belgrade_pact_events.27.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.27 option belgrade_pact_events.27.a"
+		name = belgrade_pact_events.27.a # Ye
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.27 option belgrade_pact_events.27.b"
+		name = belgrade_pact_events.27.b # Nah
+		ai_chance = { base = 0 }
+		leave_faction = yes
+		custom_effect_tooltip = BP_temporary_breakaway_tt
+		set_country_flag = BP_temporary_breakaway
+		if = {
+			limit = {
+				tag = ROM
+				has_war_with = ALB
+				ALB = {
+					is_valid_peace_target = yes
+					OR = {
+						has_country_flag = ALB_joined_BUL_war
+						has_guaranteed = BUL
+						has_war_together_with = BUL
+					}
+				}
+			}
+			ALB = { white_peace_with_ROOT = yes }
+		}
+		hidden_effect = {
+			country_event = { id = belgrade_pact_events.29 days = 3 }
+		}
+	}
+}
+
+# Serbia: Peace processing
+country_event = {
+	id = belgrade_pact_events.28
+	title = belgrade_pact_events.28.t
+	desc = belgrade_pact_events.28.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.28 option belgrade_pact_events.28.a"
+		name = belgrade_pact_events.28.a # We are triumphant!
+		add_stability = 0.1
+		BUL = {
+			set_country_flag = BUL_balkan_peace_loss
+			if = { #Remove Bulgarian-Albanian Alliance/Anti-Belgrade Pact if it exists
+				limit = { is_faction_leader = yes }
+				dismantle_faction = yes
+			}
+			white_peace_with_ROOT = yes
+			remove_ideas = has_scripted_peace
+		}
+		set_global_flag = balkan_war_ended
+
+		# separate peace for Ottomans if they joined the war
+		hidden_effect = {
+			184 = {
+				if = {
+					limit = {
+						is_owned_by = BUL
+						is_core_of = TUR
+						OR = {
+							is_controlled_by = TUR
+							AND = {
+								is_controlled_by = BUL
+								TUR = {
+									is_ai = no
+									has_war_with = BUL
+								}
+							}
+						}
+					}
+					set_state_flag = SER_transfer_to_OTT
+				}
+			}
+			1089 = {
+				if = {
+					limit = {
+						is_owned_by = BUL
+						is_core_of = TUR
+						184 = { has_state_flag = SER_transfer_to_OTT }
+					}
+					set_state_flag = SER_transfer_to_OTT
+				}
+			}
+			if = {
+				limit = {
+					TUR = { has_country_flag = OTT_war_for_thrace }
+				}
+				TUR = {
+					country_event = { id = belgrade_pact_events.39 hours = 8 }
+				}
+			}
+		}
+
+		# cede disputed land with custom effect
+		belgrade_pact_gain_land_from_bulgaria = yes
+
+		BUL = {
+			every_subject_country = {
+				PREV = {
+					set_autonomy = {
+						target = PREV
+						autonomy_state = autonomy_free
+					}
+				}
+			}
+		}
+
+		# Set The Belgrade Pact's leadership back to Serbia
+		if = {
+			limit = {
+				is_in_faction_with = BPL
+				is_faction_leader = no
+				is_subject = no
+				has_capitulated = no
+			}
+			set_faction_leader = yes
+		}
+
+		hidden_effect = {
+			# Let Bulgaria know that Serbia accepted the peace offer
+			BUL = { country_event = belgrade_pact_events.37 }
+
+			# Let all other Pact members know that peace is signed
+			every_other_country = {
+				limit = {
+					is_in_faction_with = SER
+				}
+				country_event = belgrade_pact_events.38
+			}
+
+			# Pity units and equipment for Serbia if they capitulated during the war
+			if = {
+				limit = { has_country_flag = SER_balkan_war_capitulated }
+				random_controlled_state = {
+					prioritize = { 107 } # Belgrade
+					create_unit = {
+						division = "name = \"Pesadijska Divizija\" division_template = \"Pesadijska Divizija\""
+						owner = ROOT
+						count = 8
+					}
+				}
+				add_equipment_to_stockpile = {
+					type = infantry_equipment_1
+					amount = 1000
+					producer = SER
+				}
+				clr_country_flag = SER_balkan_war_capitulated
+			}
+		}
+	}
+}
+country_event = {
+	id = belgrade_pact_events.29
+	title = belgrade_pact_events.29.t
+	desc = belgrade_pact_events.29.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.29 option belgrade_pact_events.29.a"
+		name = belgrade_pact_events.29.a # Shit
+		add_ideas = BP_war_exhaustion
+	}
+}
+# Reinvitation to the Belgrade Pact
+country_event = {
+	id = belgrade_pact_events.30
+	title = belgrade_pact_events.30.t
+	desc = belgrade_pact_events.30.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.30 option belgrade_pact_events.30.a"
+		name = belgrade_pact_events.30.a # Join the Belgrade Pact
+		ai_chance = { base = 100 }
+
+		SER = {
+			add_to_faction = ROOT
+			hidden_effect = { country_event = belgrade_pact_events.3 } # Notify Serbia of joining
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.30 option belgrade_pact_events.30.b"
+		name = belgrade_pact_events.30.b # We have no interest
+		ai_chance = { base = 0 }
+		SER = {
+			country_event = belgrade_pact_events.4 # Notify Serbia of the refusal
+		}
+	}
+
+	after = {
+		clr_country_flag = BP_temporary_breakaway
+	}
+}
+
+###########################
+# Peace events
+###########################
+
+### Bulgaria: we're losing, sue for peace?
+country_event = {
+	id = belgrade_pact_events.35
+	title = belgrade_pact_events.35.t
+	desc = belgrade_pact_events.35.d
+	picture = GFX_report_event_czech_soldiers_02
+	timeout_days = 4
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = BUL
+		has_war_with = BPL
+		is_valid_peace_target = yes
+		SER = { has_country_flag = SER_founded_belgradepact }
+		NOT = { has_global_flag = balkan_war_ended }
+		if = {
+			limit = {
+				has_global_flag = balkan_war_first_year
+			}
+			surrender_progress > 0.5
+		}
+		else = {
+			surrender_progress > 0.4
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			add_ideas = has_scripted_peace
+			if = {
+				limit = { SER = { is_faction_leader = no } }
+				SER = { set_faction_leader = yes }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.35 option belgrade_pact_events.35.a"
+		name = belgrade_pact_events.35.a # Sue for peace.
+		add_stability = -0.1
+		BPL = { country_event = belgrade_pact_events.36 } # Send the peace offer to Belgrade Pact's leader
+		custom_effect_tooltip = BUL_other_states_may_continue_war_tt
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.35 option belgrade_pact_events.35.b"
+		name = belgrade_pact_events.35.b # We can still win this!
+		ai_chance = { base = 0 }
+		add_war_support = -0.2
+		remove_ideas = has_scripted_peace
+	}
+}
+
+# Belgrade Pact leader: Bulgaria asks for peace
+country_event = {
+	id = belgrade_pact_events.36
+	title = belgrade_pact_events.36.t
+	desc = belgrade_pact_events.36.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	timeout_days = 3
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.36 option belgrade_pact_events.36.a"
+		name = belgrade_pact_events.36.a # We are triumphant!
+		custom_effect_tooltip = SER_other_states_may_continue_war_tt
+		hidden_effect = {
+			every_allied_country = {
+				country_event = belgrade_pact_events.27
+			}
+			SER = { country_event = { id = belgrade_pact_events.28 days = 2 } }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.36 option belgrade_pact_events.36.b"
+		name = belgrade_pact_events.36.b # They will be crushed
+		ai_chance = { base = 0 }
+		BUL = {
+			country_event = belgrade_pact_events.46 # Notify Bulgaria of refusal
+		}
+		hidden_effect = {
+			every_faction_member = {
+				country_event = belgrade_pact_events.29
+			}
+		}
+	}
+}
+
+# Bulgaria: Serbia accepted our peace offer
+country_event = {
+	id = belgrade_pact_events.37
+	title = belgrade_pact_events.37.t
+	desc = belgrade_pact_events.37.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.37 option belgrade_pact_events.37.a"
+		name = belgrade_pact_events.37.a # At least we exist!
+		if = {
+			limit = { has_idea = GER_mil_support_idea }
+			remove_ideas = GER_mil_support_idea
+		}
+		mark_focus_tree_layout_dirty = yes
+		unlock_national_focus = BUL_balkan_war_defeat
+		if = {
+			limit = {
+				OR = {
+					has_idea = limited_conscription
+					has_idea = extensive_conscription
+					has_idea = service_by_requirement
+					has_idea = all_adults_serve
+					has_idea = scraping_the_barrel
+				}
+			}
+			add_ideas = volunteer_only
+		}
+		if = {
+			limit = { NOT = { has_idea = civilian_economy } }
+			add_ideas = civilian_economy
+		}
+		effect_tooltip = {
+			SER = { white_peace = BUL }
+		}
+		# clear military accesses that are no longer needed
+		hidden_effect = {
+			if = {
+				limit = {
+					country_exists = AUS
+					BUL = { gives_military_access_to = AUS }
+				}
+				AUS = {
+					diplomatic_relation = {
+						country = BUL
+						relation = military_access
+						active = no
+					}
+				}
+				BUL = {
+					diplomatic_relation = {
+						country = AUS
+						relation = military_access
+						active = no
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = CRO
+					BUL = { gives_military_access_to = CRO }
+				}
+				CRO = {
+					diplomatic_relation = {
+						country = BUL
+						relation = military_access
+						active = no
+					}
+				}
+				BUL = {
+					diplomatic_relation = {
+						country = CRO
+						relation = military_access
+						active = no
+					}
+				}
+			}
+		}
+	}
+}
+
+# Pact members: peace signed
+country_event = {
+	id = belgrade_pact_events.38
+	immediate = { log = "KR_Event_Logging;The Pact WINS 4BW" }
+	title = belgrade_pact_events.38.t
+	desc = belgrade_pact_events.38.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { has_country_flag = GRE_staying_in_BPL } #GRE shouldn't get this event multiple times if they choose to stay in the Belgrade Pact
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.38 option belgrade_pact_events.38.a"
+		name = belgrade_pact_events.38.a # The Belgrade Pact stands triumphant!
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				tag = GRE
+				AUS = { NOT = { is_ally_with = 766.owner } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN } }
+			}
+			modifier = {
+				factor = 0
+				tag = GRE
+				OR = {
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_KEEP }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_INT_BEATEN }
+				}
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN } }
+			}
+		}
+		if = {
+			limit = {
+				original_tag = GRE
+			}
+			set_country_flag = GRE_staying_in_BPL
+		}
+	}
+
+	option = { #For GRE: leave the Pact
+		log = "[GetLogInfo]: event belgrade_pact_events.38 option belgrade_pact_events.38.b"
+		name = belgrade_pact_events.38.b # Leave the Pact
+		trigger = {
+			original_tag = GRE
+			is_in_faction = yes
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				AUS = { NOT = { is_ally_with = 766.owner } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN } }
+			}
+			modifier = {
+				add = 100
+				OR = {
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_KEEP }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_INT_BEATEN }
+				}
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN } }
+			}
+		}
+		hidden_effect = {
+			# Set The Belgrade Pact's leadership back to Serbia and leave the Belgrade Pact
+			if = {
+				limit = {
+					is_faction_leader = yes
+					is_in_faction_with = SER
+					SER = { is_subject = no }
+					SER = { has_capitulated = no }
+				}
+				SER = { set_faction_leader = yes }
+				leave_faction = yes
+			}
+			# Set The Belgrade Pact's leadership to Romania if Serbia has capituated
+			else_if = {
+				limit = {
+					is_faction_leader = yes
+					is_in_faction_with = ROM
+					ROM = { is_subject = no }
+					ROM = { has_capitulated = no }
+				}
+				ROM = { set_faction_leader = yes }
+				leave_faction = yes
+			}
+			else_if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				dismantle_faction = yes
+			}
+			else_if = {
+				limit = {
+					is_in_faction = yes
+				}
+				leave_faction = yes
+			}
+			peace_out_non_neighbours_after_leaving_faction = yes
+			# Move armies home
+			every_state = {
+				limit = {
+					owner = {
+						is_ally_with = BPL
+					}
+				}
+				teleport_armies = {
+					limit = {
+						original_tag = GRE
+					}
+					to_state_array = owned_controlled_states
+				}
+			}
+			if = {
+				limit = {
+					has_war_with = ALB
+				}
+				766 = { add_claim_of_ROOT = yes }
+				add_to_array = { GRE_megali_enemies = ALB }
+			}
+			SER = { country_event = { id = belgrade_pact_events.208 days = 1 } }
+		}
+	}
+	after = {
+		add_stability = 0.1
+		effect_tooltip = {
+			SER = {
+				white_peace = BUL
+			}
+		}
+	}
+}
+
+# Ottomans: Serbia made peace
+country_event = {
+	id = belgrade_pact_events.39
+	title = belgrade_pact_events.39.t
+	picture = GFX_report_event_generic_sign_treaty2
+
+	desc = {
+		text = belgrade_pact_events.39.d.gained
+		trigger = {
+			184 = { has_state_flag = SER_transfer_to_OTT }
+		}
+	}
+	desc = {
+		text = belgrade_pact_events.39.d.nogain
+		trigger = {
+			NOT = { 184 = { has_state_flag = SER_transfer_to_OTT } }
+		}
+	}
+
+	timeout_days = 4
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = BUL
+		has_country_flag = OTT_war_for_thrace
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.39 option belgrade_pact_events.39.a"
+		name = belgrade_pact_events.39.a #End the war
+		ai_chance = { base = 100 }
+		clr_country_flag = OTT_war_for_thrace
+		BUL = {
+			if = {
+				limit = { owns_state = 184 }
+				184 = { transfer_state_to = ROOT }
+				if = {
+					limit = { owns_state = 1089 }
+					1089 = { transfer_state_to = ROOT }
+				}
+			}
+			white_peace_with_ROOT = yes
+		}
+		if = {
+			limit = {
+				ALB = {
+					has_war_with = TUR
+					is_valid_peace_target = yes
+					OR = {
+						has_country_flag = ALB_joined_BUL_war
+						has_guaranteed = BUL
+						has_war_together_with = BUL
+					}
+				}
+			}
+			ALB = { white_peace_with_ROOT = yes }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.39 option belgrade_pact_events.39.b"
+		name = belgrade_pact_events.39.b #Continue the war
+		ai_chance = { base = 0 }
+		add_political_power = -50
+	}
+	after = {
+		every_state = {
+			limit = { has_state_flag = SER_transfer_to_OTT }
+			clr_state_flag = SER_transfer_to_OTT
+		}
+	}
+}
+
+### Ottomans: We have what we came for - make peace?
+country_event = {
+	id = belgrade_pact_events.40
+	title = belgrade_pact_events.40.t
+	desc = belgrade_pact_events.40.d
+	picture = GFX_report_event_czech_soldiers_02
+	timeout_days = 4
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = TUR
+		has_war_with = BUL
+		has_country_flag = OTT_war_for_thrace
+		is_valid_peace_target = yes
+		BUL = { is_valid_peace_target = yes }
+		184 = { #Komotini
+			is_owned_by = BUL
+			OR = {
+				is_controlled_by = TUR
+				is_controlled_by = BUL
+			}
+		}
+		if = {
+			limit = { controls_state = 48 } #Sofia
+			BUL = { surrender_progress > 0.3 }
+			1089 = { #Kardzhali
+				OR = {
+					is_controlled_by = TUR
+					is_controlled_by = BUL
+					NOT = { is_owned_by = BUL }
+				}
+			}
+		}
+		else = {
+			184 = { #Komotini
+				OR = {
+					is_controlled_by = TUR
+					NOT = { is_owned_by = BUL }
+				}
+			}
+			1089 = { #Kardzhali
+				OR = {
+					is_controlled_by = TUR
+					NOT = { is_owned_by = BUL }
+				}
+			}
+		}
+		controls_state = 341 #Adrianople
+		controls_state = 773 #Constantinople
+		BUL = {
+			OR = {
+				has_war_with = BPL
+				surrender_progress > 0.4
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 3
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.40 option belgrade_pact_events.40.a"
+		name = belgrade_pact_events.40.a #Make peace
+		BUL = { country_event = belgrade_pact_events.41 }
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.40 option belgrade_pact_events.40.b"
+		name = belgrade_pact_events.40.b #Continue the war!
+		ai_chance = { base = 0 }
+		clr_country_flag = OTT_war_for_thrace
+		add_political_power = -100
+		add_war_support = -0.10
+	}
+}
+
+# Bulgaria: Make peace with Ottomans?
+country_event = {
+	id = belgrade_pact_events.41
+	title = belgrade_pact_events.41.t
+	desc = belgrade_pact_events.41.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.41 option belgrade_pact_events.41.a"
+		name = belgrade_pact_events.41.a #Agree
+		add_political_power = -50
+		if = {
+			limit = { owns_state = 184 }
+			184 = {
+				transfer_state_to = TUR
+				if = {
+					limit = { 341 = { OTT_is_sovereign_province = yes } } #Adrianople
+					ott_set_authority_vilayet_low = yes
+				}
+				else_if = {
+					limit = { 341 = { OTT_is_autonomous_province = yes } } #Adrianople
+					ott_set_authority_vilayet_medium = yes
+				}
+				else = {
+					ott_set_authority_vilayet_high = yes
+				}
+			}
+			if = {
+				limit = { owns_state = 1089 }
+				1089 = {
+					transfer_state_to = TUR
+					if = {
+						limit = { 341 = { OTT_is_sovereign_province = yes } } #Adrianople
+						ott_set_authority_vilayet_low = yes
+					}
+					else_if = {
+						limit = { 341 = { OTT_is_autonomous_province = yes } } #Adrianople
+						ott_set_authority_vilayet_medium = yes
+					}
+					else = {
+						ott_set_authority_vilayet_high = yes
+					}
+				}
+			}
+		}
+		TUR = {
+			clr_country_flag = OTT_war_for_thrace
+			white_peace_with_ROOT = yes
+			save_event_target_as = white_peace_receiver
+		}
+
+		# separate peace for Albania if it joined the war
+		if = {
+			limit = {
+				ALB = {
+					has_war_with = TUR
+					is_valid_peace_target = yes
+					OR = {
+						has_country_flag = ALB_joined_BUL_war
+						has_guaranteed = BUL
+						has_war_together_with = BUL
+					}
+				}
+			}
+			ALB = {
+				white_peace_with_TARGET = yes
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.41 option belgrade_pact_events.41.b"
+		name = belgrade_pact_events.41.b #No peace
+		ai_chance = { base = 0 }
+		add_war_support = -0.10
+		TUR = {
+			clr_country_flag = OTT_war_for_thrace
+			country_event = belgrade_pact_events.46
+		}
+	}
+}
+
+### Ottomans: we are losing the war
+country_event = {
+	id = belgrade_pact_events.42
+	title = belgrade_pact_events.42.t
+	desc = belgrade_pact_events.42.d
+	picture = GFX_report_event_czech_soldiers_02
+	timeout_days = 4
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = TUR
+		has_war_with = BUL
+		has_country_flag = OTT_war_for_thrace
+		is_valid_peace_target = yes
+		BUL = { is_valid_peace_target = yes }
+		OR = {
+			AND = {
+				BUL = { NOT = { has_country_flag = BUL_byzantine_larp_timer } }
+				NOT = {
+					controls_state = 184 #Komotini
+					controls_state = 1089 #Kardzhali
+					controls_state = 341 #Adrianople
+					controls_state = 773 #Constantinople
+				}
+			}
+			#Germany demanding to end the war bypasses these requirements
+			has_global_flag = germany_demands_end_to_balkan_war
+			#Austria demanding to end the war bypasses these requirements
+			has_global_flag = austria_demands_end_to_balkan_war
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 15
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.42 option belgrade_pact_events.42.a"
+		name = belgrade_pact_events.42.a #Make peace
+		BUL = { country_event = belgrade_pact_events.43 }
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.42 option belgrade_pact_events.42.b"
+		name = belgrade_pact_events.42.b #Refuse
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		add_war_support = -0.10
+		if = {
+			limit = {
+				has_global_flag = germany_demands_end_to_balkan_war
+				has_global_flag = austria_demands_end_to_balkan_war
+			}
+			GER = {
+				declare_war_on = {
+					target = TUR
+					type = annex_everything
+				}
+				if = {
+					limit = {
+						BUL = { is_faction_leader = yes }
+					}
+					every_other_country = {
+						limit = {
+							is_in_faction_with = BUL
+							is_subject = no
+							is_faction_leader = no
+						}
+						set_global_flag = TEMPORARY_DISABLED_FACTION_POPUP
+						GER = { add_to_faction = PREV }
+					}
+					add_to_faction = BUL
+				}
+				else = {
+					add_to_faction = BUL
+				}
+			}
+			AUS = {
+				declare_war_on = {
+					target = TUR
+					type = annex_everything
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_global_flag = germany_demands_end_to_balkan_war
+				NOT = { has_global_flag = austria_demands_end_to_balkan_war }
+			}
+			GER = {
+				declare_war_on = {
+					target = TUR
+					type = annex_everything
+				}
+				if = {
+					limit = {
+						BUL = { is_faction_leader = yes }
+					}
+					every_other_country = {
+						limit = {
+							is_in_faction_with = BUL
+							is_subject = no
+							is_faction_leader = no
+						}
+						set_global_flag = TEMPORARY_DISABLED_FACTION_POPUP
+						GER = { add_to_faction = PREV }
+					}
+					add_to_faction = BUL
+				}
+				else = {
+					add_to_faction = BUL
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_global_flag = austria_demands_end_to_balkan_war
+				NOT = { has_global_flag = germany_demands_end_to_balkan_war }
+			}
+			AUS = {
+				declare_war_on = {
+					target = TUR
+					type = annex_everything
+				}
+				if = {
+					limit = {
+						BUL = { is_faction_leader = yes }
+					}
+					every_other_country = {
+						limit = {
+							is_in_faction_with = BUL
+							is_subject = no
+							is_faction_leader = no
+						}
+						set_global_flag = TEMPORARY_DISABLED_FACTION_POPUP
+						AUS = { add_to_faction = PREV }
+					}
+					add_to_faction = BUL
+				}
+				else = {
+					add_to_faction = BUL
+				}
+			}
+		}
+	}
+}
+
+# Bulgaria: end the war?
+country_event = {
+	id = belgrade_pact_events.43
+	title = belgrade_pact_events.43.t
+	desc = belgrade_pact_events.43.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = { NOT = { has_country_flag = BUL_balkan_peace_loss } }
+			hidden_effect = { add_state_claim = 341 } #Adrianople
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.43 option belgrade_pact_events.43.a"
+		name = belgrade_pact_events.43.a #Make peace
+		184 = { remove_core_of = TUR }
+		1089 = { remove_core_of = TUR }
+		TUR = {
+			every_owned_state = {
+				limit = { is_claim_or_core_of_ROOT = yes }
+				transfer_state_to = BUL
+			}
+			clr_country_flag = OTT_war_for_thrace
+			white_peace_with_ROOT = yes
+			save_event_target_as = white_peace_receiver
+		}
+
+		# separate peace for Albania if it joined the war
+		if = {
+			limit = {
+				ALB = {
+					has_war_with = TUR
+					is_valid_peace_target = yes
+					OR = {
+						has_country_flag = ALB_joined_BUL_war
+						has_guaranteed = BUL
+						has_war_together_with = BUL
+					}
+				}
+			}
+			ALB = {
+				white_peace_with_TARGET = yes
+			}
+		}
+	}
+}
+
+# <country> refuses our peace offer
+country_event = {
+	id = belgrade_pact_events.46
+	title = belgrade_pact_events.46.t
+	desc = belgrade_pact_events.46.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.46 option belgrade_pact_events.46.a"
+		name = belgrade_pact_events.46.a # We need to turn the tide
+		add_war_support = 0.10
+		remove_ideas = has_scripted_peace
+	}
+}
+
+### Serbia: we're losing, sue for peace?
+country_event = {
+	id = belgrade_pact_events.47
+	title = belgrade_pact_events.47.t
+	desc = belgrade_pact_events.47.d
+	picture = GFX_report_event_czech_soldiers_02
+	timeout_days = 4
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = BPL
+		has_war_with = BUL
+		is_faction_leader = yes
+
+		has_global_flag = balkan_war_started
+		NOT = { has_global_flag = balkan_war_ended }
+		BUL = { is_valid_peace_target = yes }
+		OR = {
+			if = {
+				limit = {
+					has_global_flag = balkan_war_first_year
+				}
+				AND = {
+					BUL = { surrender_progress < 0.5 } # If both sides fulfill their victory conditions at the same time, default to BPL victory
+
+					# All members have to be in a bad shape
+					OR = {
+						any_country_of = {
+							count = 2
+							target = { SER ROM GRE }
+							has_capitulated = yes
+							has_war_with = BUL
+						}
+						AND = {
+							if = {
+								limit = { SER = { has_war_with = BUL } }
+								OR = {
+									SER = { num_of_controlled_states < 2 }
+									SER = { has_capitulated = yes }
+								}
+							}
+							if = {
+								limit = { ROM = { has_war_with = BUL } }
+								OR = {
+									ROM = { surrender_progress > 0.60 }
+									ROM = { has_capitulated = yes }
+								}
+							}
+							if = {
+								limit = { GRE = { has_war_with = BUL } }
+								OR = {
+									GRE = { num_of_controlled_states < 4 }
+									GRE = { has_capitulated = yes }
+								}
+							}
+						}
+					}
+				}
+			}
+			else = {
+				AND = {
+					BUL = { surrender_progress < 0.4 } # If both sides fulfill their victory conditions at the same time, default to BPL victory
+
+					# Some members have to be in a bad shape
+					OR = {
+						any_country_of = {
+							target = { SER ROM GRE }
+							has_capitulated = yes
+							has_war_with = BUL
+						}
+						count_triggers = {
+							amount = 2
+							if = {
+								limit = { SER = { has_war_with = BUL } }
+								OR = {
+									SER = { num_of_controlled_states < 2 }
+									SER = { has_capitulated = yes }
+								}
+							}
+							if = {
+								limit = { ROM = { has_war_with = BUL } }
+								OR = {
+									ROM = { surrender_progress > 0.60 }
+									ROM = { has_capitulated = yes }
+								}
+							}
+							if = {
+								limit = { GRE = { has_war_with = BUL } }
+								OR = {
+									GRE = { num_of_controlled_states < 4 }
+									GRE = { has_capitulated = yes }
+								}
+							}
+						}
+					}
+				}
+			}
+			#Germany demanding to end the war bypasses these requirements
+			has_global_flag = germany_demands_end_to_balkan_war
+			#Austria demanding to end the war bypasses these requirements
+			has_global_flag = austria_demands_end_to_balkan_war
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.47 option belgrade_pact_events.47.a"
+		name = belgrade_pact_events.47.a # Sue for peace.
+		BUL = { country_event = belgrade_pact_events.48 }
+		every_faction_member = {
+			set_country_flag = { flag = balkan_war_loss_temp_flag days = 10 value = 1 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.47 option belgrade_pact_events.47.b"
+		name = belgrade_pact_events.47.b # We can still win this
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		if = {
+			limit = {
+				has_global_flag = germany_demands_end_to_balkan_war
+				has_global_flag = austria_demands_end_to_balkan_war
+			}
+			GER = {
+				declare_war_on = {
+					target = BPL
+					type = annex_everything
+				}
+				if = {
+					limit = {
+						BUL = { is_faction_leader = yes }
+					}
+					every_other_country = {
+						limit = {
+							is_in_faction_with = BUL
+							is_subject = no
+							is_faction_leader = no
+						}
+						set_global_flag = TEMPORARY_DISABLED_FACTION_POPUP
+						GER = { add_to_faction = PREV }
+					}
+					add_to_faction = BUL
+				}
+				else = {
+					add_to_faction = BUL
+				}
+			}
+			AUS = {
+				declare_war_on = {
+					target = BPL
+					type = annex_everything
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_global_flag = germany_demands_end_to_balkan_war
+				NOT = { has_global_flag = austria_demands_end_to_balkan_war }
+			}
+			GER = {
+				declare_war_on = {
+					target = BPL
+					type = annex_everything
+				}
+				if = {
+					limit = {
+						BUL = { is_faction_leader = yes }
+					}
+					every_other_country = {
+						limit = {
+							is_in_faction_with = BUL
+							is_subject = no
+							is_faction_leader = no
+						}
+						set_global_flag = TEMPORARY_DISABLED_FACTION_POPUP
+						GER = { add_to_faction = PREV }
+					}
+					add_to_faction = BUL
+				}
+				else = {
+					add_to_faction = BUL
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				has_global_flag = austria_demands_end_to_balkan_war
+				NOT = { has_global_flag = germany_demands_end_to_balkan_war }
+			}
+			AUS = {
+				declare_war_on = {
+					target = BPL
+					type = annex_everything
+				}
+				if = {
+					limit = {
+						BUL = { is_faction_leader = yes }
+					}
+					every_other_country = {
+						limit = {
+							is_in_faction_with = BUL
+							is_subject = no
+							is_faction_leader = no
+						}
+						set_global_flag = TEMPORARY_DISABLED_FACTION_POPUP
+						AUS = { add_to_faction = PREV }
+					}
+					add_to_faction = BUL
+				}
+				else = {
+					add_to_faction = BUL
+				}
+			}
+		}
+	}
+}
+
+# Bulgaria: Serbia offers peace
+country_event = {
+	id = belgrade_pact_events.48
+	title = belgrade_pact_events.48.t
+	desc = belgrade_pact_events.48.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	timeout_days = 3
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					CZE = { is_in_faction_with = BPL }
+				}
+				CZE = {
+					leave_faction = yes
+					if = {
+						limit = {
+							has_war_with = BUL
+						}
+						white_peace_with_ROOT = yes
+					}
+				}
+			}
+			if = {
+				limit = {
+					GAL = { is_in_faction_with = BPL }
+				}
+				GAL = {
+					leave_faction = yes
+					if = {
+						limit = {
+							has_war_with = BUL
+						}
+						white_peace_with_ROOT = yes
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = CRO
+					CRO = { has_war_with = AUS }
+				}
+				CRO = { give_military_access = CZE }
+				CZE = { give_military_access = CRO }
+				if = {
+					limit = {
+						country_exists = GAL
+					}
+					CRO = { give_military_access = GAL }
+					GAL = { give_military_access = CRO }
+				}
+			}
+			if = {
+				limit = {
+					CRO = { is_subject = no }
+					SER = { has_capitulated = yes }
+					CRO = { controls_state = 107 } #Belgrade
+					has_global_flag = AUS_treaty_of_budapest
+					NOT = {
+						has_global_flag = germany_demands_end_to_balkan_war
+						has_global_flag = austria_demands_end_to_balkan_war
+					}
+				}
+				save_event_target_as = CRO_YUG
+			}
+			every_enemy_country = {
+				limit = { is_ally_with = SER }
+				set_country_flag = SER_joined_balkan_war
+			}
+			SER = { save_event_target_as = white_peace_receiver }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.48 option belgrade_pact_events.48.a"
+		name = belgrade_pact_events.48.a # We are triumphant
+		set_global_flag = balkan_war_ended
+		add_political_power = 200
+
+		SER = {
+			# Set The Belgrade Pact's leadership back to Serbia
+			hidden_effect = {
+				if = {
+					limit = {
+						is_in_faction_with = BPL
+						is_faction_leader = no
+						is_subject = no
+						has_capitulated = no
+					}
+					set_faction_leader = yes
+				}
+			}
+			white_peace_with_ROOT = yes
+			every_enemy_country = {
+				limit = {
+					OR = {
+						tag = AUS
+						tag = HUN
+						tag = CRO
+						tag = GAL
+						tag = CZE
+					}
+					is_valid_peace_target = yes
+				}
+				white_peace_with_TARGET = yes
+			}
+			if = {
+				limit = {
+					has_country_flag = SER_balkan_war_capitulated
+				}
+				clr_country_flag = SER_balkan_war_capitulated
+			}
+		}
+
+		if = {
+			limit = {
+				has_country_flag = BUL_byzantine_larp_timer
+			}
+			clr_country_flag = BUL_byzantine_larp_timer
+		}
+
+		# clear military accesses that are no longer needed
+		hidden_effect = {
+			if = {
+				limit = {
+					country_exists = AUS
+					BUL = { gives_military_access_to = AUS }
+				}
+				AUS = {
+					diplomatic_relation = {
+						country = BUL
+						relation = military_access
+						active = no
+					}
+				}
+				BUL = {
+					diplomatic_relation = {
+						country = AUS
+						relation = military_access
+						active = no
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = CRO
+					BUL = { gives_military_access_to = CRO }
+				}
+				CRO = {
+					diplomatic_relation = {
+						country = BUL
+						relation = military_access
+						active = no
+					}
+				}
+				BUL = {
+					diplomatic_relation = {
+						country = CRO
+						relation = military_access
+						active = no
+					}
+				}
+			}
+		}
+
+		# separate peace for Albania if it joined the war
+		if = {
+			limit = {
+				ALB = {
+					has_war_with = SER
+					is_valid_peace_target = yes
+					OR = {
+						has_country_flag = ALB_joined_BUL_war
+						is_in_faction_with = BUL
+						has_guaranteed = BUL
+						has_war_together_with = BUL
+					}
+				}
+			}
+			ALB = { white_peace_with_TARGET = yes }
+			hidden_effect = {
+				if = {
+					limit = { ALB = { gives_military_access_to = AUS } }
+					AUS = {
+						diplomatic_relation = {
+							country = ALB
+							relation = military_access
+							active = no
+						}
+					}
+					ALB = {
+						diplomatic_relation = {
+							country = AUS
+							relation = military_access
+							active = no
+						}
+					}
+				}
+				if = {
+					limit = { ALB = { gives_military_access_to = CRO } }
+					CRO = {
+						diplomatic_relation = {
+							country = ALB
+							relation = military_access
+							active = no
+						}
+					}
+					ALB = {
+						diplomatic_relation = {
+							country = CRO
+							relation = military_access
+							active = no
+						}
+					}
+				}
+			}
+		}
+
+		effect_tooltip = {
+			BPL = { dismantle_faction = yes }
+		}
+
+		if = {
+			limit = {
+				NOT = {
+					has_global_flag = germany_demands_end_to_balkan_war
+					has_global_flag = austria_demands_end_to_balkan_war
+				}
+			}
+			every_state = {
+				limit = {
+					owner = { has_country_flag = SER_joined_balkan_war }
+					OR = {
+						state = 767 #Nish
+						state = 106 #Macedonia
+						state = 772 #Constantza
+						state = 77 #Silistria
+						state = 989 #Chalcidice
+						state = 731 #Florina
+						state = 769 #Serres
+						state = 184 #Komotini
+						is_claim_or_core_of_ROOT = yes
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							state = 731
+							is_claim_or_core_of_ROOT = yes
+						}
+					}
+					add_claim_by = BUL
+				}
+				if = {
+					limit = {
+						state = 731
+						NOT = { is_core_of = BUL }
+					}
+					add_core_of = BUL
+				}
+				transfer_state_to = BUL
+			}
+			if = {
+				limit = {
+					has_event_target = CRO_YUG
+				}
+				SER = {
+					every_owned_state = {
+						limit = {
+							OR = {
+								is_serbia = yes
+								is_montenegro = yes
+							}
+							if = {
+								limit = {
+									OR = {
+										NOT = { country_exists = ALB }
+										ALB = { has_country_flag = ALB_joined_BUL_war }
+									}
+								}
+								NOT = { state = 765 } #Kosovo
+							}
+						}
+						transfer_state_to = CRO
+					}
+				}
+			}
+			if = {
+				limit = {
+					SER = {
+						owns_state = 105
+					}
+					NOT = { has_event_target = CRO_YUG }
+				}
+				MNT = {
+					transfer_state = 105 #Montenegro
+				}
+				hidden_effect = { # swap out Markovic and Miletic for Grulovic and Rankovic, respectively
+					SER = {
+						if = {
+							limit = { has_character = SER_vukasin_markovic }
+							SER_vukasin_markovic = { set_nationality = MNT }
+							MNT = {
+								promote_character = {
+									character = SER_vukasin_markovic
+									ideology = totalist_subtype
+								}
+							}
+						}
+						if = {
+							limit = { has_character = MNT_petko_miletic }
+							MNT_petko_miletic = { set_nationality = MNT }
+							MNT = {
+								promote_character = {
+									character = MNT_petko_miletic
+									ideology = syndicalist_subtype
+								}
+							}
+						}
+						promote_character = {
+							character = SER_nikola_grulovic
+							ideology = totalist_subtype
+						}
+						SER_aleksandar_rankovic = {
+							add_country_leader_role = {
+								country_leader = {
+									desc = SER_aleksandar_rankovic_advisor_desc
+									ideology = syndicalist_subtype
+								}
+								promote_leader = yes
+							}
+						}
+					}
+				}
+			}
+		}
+
+		SER = {
+			if = {
+				limit = {
+					country_exists = AUS
+					NOT = { has_global_flag = AUS_treaty_of_budapest }
+				}
+				every_owned_state = {
+					limit = {
+						OR = {
+							is_croatia = yes
+							is_bosnia = yes
+							is_slovenia = yes
+							state = 875 #West Banat
+							state = 488 #Trieste
+							state = 841 #Kotor
+						}
+					}
+					transfer_state_to = AUS
+				}
+			}
+			else = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							is_croatia = yes
+							is_bosnia = yes
+						}
+						NOT = { state = 45 } #Vojvodina
+					}
+					transfer_state_to = CRO
+				}
+				841 = { transfer_state_to = 163.owner } #Kotor -> Dalmatia
+				every_owned_state = {
+					limit = { is_slovenia = yes }
+					transfer_state_to = SLV
+				}
+				hidden_effect = {
+					SLV = { drop_cosmetic_tag = yes }
+					SLV = { activate_targeted_decision = { target = GER decision = CZE_join_germany } }
+				}
+				if = {
+					limit = { owns_state = 45 } #Vojvodina
+					45 = { transfer_state_to = 43.owner } #Vojvodina -> Central Hungary
+					if = {
+						limit = {
+							HUN = { owns_state = 43 } #Central Hungary
+						}
+						45 = { add_core_of = HUN } #Vojvodina
+					}
+				}
+				if = {
+					limit = { owns_state = 875 } #West Banat
+					875 = { transfer_state_to = 82.owner } #West Banat -> Banat
+				}
+				if = {
+					limit = { owns_state = 488 } #Trieste
+					488 = { transfer_state_to = 759.owner } #Trieste -> Friuli
+				}
+			}
+			SER_remove_yugoslavia = yes
+			every_core_state = {
+				limit = {
+					NOT = { is_owned_by = SER }
+					is_serbia = no
+					is_montenegro = no
+				}
+				remove_core_of = SER
+			}
+			every_state = {
+				limit = {
+					is_claimed_by = SER
+					NOT = { is_owned_by = SER }
+					is_serbia = no
+					is_montenegro = no
+				}
+				remove_claim_by = SER
+			}
+		}
+
+		if = {
+			limit = {
+				ROM = {
+					has_country_flag = SER_joined_balkan_war
+				}
+			}
+			if = {
+				limit = {
+					ROM = { owns_state = 81 }
+					NOT = {
+						has_global_flag = germany_demands_end_to_balkan_war
+						has_global_flag = austria_demands_end_to_balkan_war
+					}
+				}
+				81 = { set_demilitarized_zone = yes } # Oltenia
+			}
+			ROM = {
+				set_country_flag = ROM_defeated_by_bulgaria
+				country_event = romania_events.240 #Fall of Carol-Legionary government
+				every_owned_state = {
+					limit = { is_core_of = TRS }
+					transfer_state_to = 43.owner #All of Transylvania (Area) -> Central Hungary
+					if = {
+						limit = {
+							HUN = { owns_state = 43 }
+						}
+						add_core_of = HUN
+					}
+				}
+				if = {
+					limit = { owns_state = 80 } #Cernauti
+					if = {
+						limit = {
+							country_exists = AUS
+							NOT = { has_global_flag = AUS_treaty_of_budapest }
+						}
+						80 = { transfer_state_to = AUS }
+					}
+					else_if = {
+						limit = {
+							country_exists = TRS
+						}
+						80 = { transfer_state_to = TRS }
+					}
+					else = {
+						80 = { transfer_state_to = 89.owner } #Cernauti -> Stanislawow
+					}
+				}
+				if = {
+					limit = { owns_state = 713 } #Suceava
+					if = {
+						limit = {
+							country_exists = AUS
+							NOT = { has_global_flag = AUS_treaty_of_budapest }
+						}
+						713 = { transfer_state_to = AUS }
+					}
+					else_if = {
+						limit = {
+							country_exists = TRS
+						}
+						713 = { transfer_state_to = TRS }
+					}
+				}
+				if = {
+					limit = {
+						has_completed_focus = ROM_balkan
+					}
+					remove_targeted_decision = { target = SER decision = ROM_demand_banat }
+				}
+			}
+		}
+		if = {
+			limit = {
+				GRE = {
+					has_country_flag = SER_joined_balkan_war
+					owns_state = 1076
+				}
+				NOT = {
+					has_global_flag = germany_demands_end_to_balkan_war
+					has_global_flag = austria_demands_end_to_balkan_war
+				}
+			}
+			1076 = { set_demilitarized_zone = yes } # Thessalia
+		}
+		if = {
+			limit = {
+				ALB = { has_country_flag = ALB_joined_BUL_war }
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_global_flag = germany_demands_end_to_balkan_war
+						has_global_flag = austria_demands_end_to_balkan_war
+					}
+				}
+				every_state = {
+					limit = {
+						owner = { has_country_flag = SER_joined_balkan_war }
+						OR = {
+							is_core_of = ALB
+							is_claimed_by = ALB
+						}
+					}
+					transfer_state_to = ALB
+				}
+			}
+			else_if = {
+				limit = {
+					NOT = {
+						has_event_target = balkan_war_limited_bpl_victory
+					}
+				}
+				every_state = {
+					limit = {
+						owner = { has_country_flag = SER_joined_balkan_war }
+						is_albania = yes
+					}
+					transfer_state_to = ALB
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				GRE = {
+					has_country_flag = SER_joined_balkan_war
+					owns_state = 989 #Chalcidice
+				}
+				has_event_target = balkan_war_limited_bul_victory
+			}
+			989 = { transfer_state_to = BUL }
+		}
+
+		if = {
+			limit = {
+				has_event_target = balkan_war_limited_bpl_victory
+			}
+			# cede disputed land with custom effect
+			belgrade_pact_gain_land_from_bulgaria = yes
+		}
+
+		if = {
+			limit = {
+				SER = {
+					owns_state = 765
+				}
+				NOT = { has_event_target = CRO_YUG }
+				NOT = {
+					has_global_flag = germany_demands_end_to_balkan_war
+					has_global_flag = austria_demands_end_to_balkan_war
+				}
+			}
+			765 = { set_demilitarized_zone = yes } # Kosovo
+		}
+
+		#Remove SER/GRE claims/cores on Albania
+		if = {
+			limit = {
+				1053 = { is_claimed_by = SER } # Ghegeria
+				NOT = { has_event_target = balkan_war_limited_bpl_victory }
+			}
+			1053 = { remove_claim_by = SER } # Ghegeria
+		}
+		if = {
+			limit = {
+				766 = { is_core_of = GRE } # Northern Epirus
+				NOT = { has_event_target = balkan_war_limited_bpl_victory }
+			}
+			766 = { remove_core_of = GRE } # Northern Epirus
+		}
+		else_if = {
+			limit = {
+				766 = { is_claimed_by = GRE } # Northern Epirus
+				NOT = { has_event_target = balkan_war_limited_bpl_victory }
+			}
+			766 = { remove_claim_by = GRE } # Northern Epirus
+		}
+
+		if = {
+			limit = {
+				NOT = { has_event_target = CRO_YUG }
+				NOT = {
+					has_global_flag = germany_demands_end_to_balkan_war
+					has_global_flag = austria_demands_end_to_balkan_war
+				}
+			}
+			add_timed_idea = {
+				idea = BUL_reparation_payments_from_serbia
+				days = 1460
+			}
+		}
+
+		hidden_effect = {
+			# Remove Bulgarian-Albanian Alliance/Anti-Belgrade Pact if it exists
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				dismantle_faction = yes
+			}
+			# Notify all Pact members of peace
+			country_event = { id = bulgaria_events.54 days = 60 random_days = 7 }
+			# Move armies home
+			every_state = {
+				teleport_armies = {
+					limit = {
+						OR = {
+							is_ally_with = BPL
+							original_tag = BUL
+							original_tag = ALB
+						}
+					}
+					to_state_array = owned_controlled_states
+				}
+			}
+			SER = {
+				remove_ideas = SER_konspiracija_idea
+				remove_targeted_decision = { target = CRO decision = SER_Ultimatum_To_Illyria }
+				country_event = { id = belgrade_pact_events.49 hours = 4 }
+			}
+			if = {
+				limit = {
+					ROM = { has_country_flag = SER_joined_balkan_war }
+				}
+				ROM = {
+					country_event = { id = belgrade_pact_events.50 hours = 4 }
+				}
+			}
+			if = {
+				limit = {
+					GRE = { has_country_flag = SER_joined_balkan_war }
+				}
+				GRE = {
+					country_event = { id = belgrade_pact_events.51 hours = 4 }
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.48 option belgrade_pact_events.48.b"
+		name = belgrade_pact_events.48.b # No, they shall be crushed.
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		SER = { # Notify Serbia of refusal
+			country_event = belgrade_pact_events.46
+			if = {
+				limit = {
+					has_country_flag = SER_balkan_war_capitulated
+				}
+				clr_country_flag = SER_balkan_war_capitulated
+			}
+		}
+	}
+}
+
+# Serbia: peace was signed, we lost the war
+country_event = {
+	id = belgrade_pact_events.49
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					has_global_flag = germany_demands_end_to_balkan_war
+					has_global_flag = austria_demands_end_to_balkan_war
+				}
+			}
+			log = "KR_Event_Logging;Germany and or Austria demands end of 4BW WINS 4BW"
+		}
+		else = {
+			log = "KR_Event_Logging;Bulgaria WINS 4BW"
+		}
+	}
+	title = belgrade_pact_events.49.t
+	desc = belgrade_pact_events.49.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.49 option belgrade_pact_events.49.a"
+		name = belgrade_pact_events.49.a # At least we exist
+		clr_country_flag = SER_joined_balkan_war
+		if = {
+			limit = { is_faction_leader = yes }
+			dismantle_faction = yes
+		}
+		else_if = {
+			limit = { is_in_faction_with = BPL }
+			faction_leader = { dismantle_faction = yes }
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_global_flag = germany_demands_end_to_balkan_war
+					has_global_flag = austria_demands_end_to_balkan_war
+				}
+			}
+			add_timed_idea = {
+				idea = SER_reparation_payments
+				days = 1460
+			}
+		}
+	}
+}
+
+# Romania: peace was signed, we lost the war
+country_event = {
+	id = belgrade_pact_events.50
+	title = belgrade_pact_events.50.t
+	desc = belgrade_pact_events.50.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.50 option belgrade_pact_events.50.a"
+		name = belgrade_pact_events.50.a # At least we exist
+		clr_country_flag = SER_joined_balkan_war
+		if = {
+			limit = { is_faction_leader = yes }
+			dismantle_faction = yes
+		}
+		else_if = {
+			limit = { is_in_faction_with = BPL }
+			faction_leader = { dismantle_faction = yes }
+		}
+		if = {
+			limit = {
+				NOT = { country_exists = SER }
+			}
+			log = "KR_Event_Logging;Bulgaria WINS 4BW"
+		}
+	}
+}
+
+# Greece: peace was signed, we lost the war
+country_event = {
+	id = belgrade_pact_events.51
+	title = belgrade_pact_events.51.t
+	desc = belgrade_pact_events.51.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.51 option belgrade_pact_events.51.a"
+		name = belgrade_pact_events.51.a # At least we exist
+		clr_country_flag = SER_joined_balkan_war
+		if = {
+			limit = { is_faction_leader = yes }
+			dismantle_faction = yes
+		}
+		else_if = {
+			limit = { is_in_faction_with = BPL }
+			faction_leader = { dismantle_faction = yes }
+		}
+		hidden_effect = {
+			country_event = { id = greece_events.17 days = 5 } # Massive demonstrations after Balkan War loss
+		}
+	}
+}
+
+# Double-check balkan war ending global
+country_event = {
+	id = belgrade_pact_events.52
+	title = belgrade_pact_events.52.t
+	desc = belgrade_pact_events.52.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	fire_only_once = yes
+
+	trigger = {
+		OR = {
+			tag = SER
+			tag = BUL
+		}
+		has_global_flag = balkan_war_started
+		if = {
+			limit = { tag = SER }
+			NOT = { has_war_with = BUL }
+		}
+		if = {
+			limit = { tag = BUL }
+			NOT = { has_war_with = SER }
+		}
+		NOT = { has_global_flag = balkan_war_ended }
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.52 option belgrade_pact_events.52.a"
+		name = belgrade_pact_events.52.a
+		if = { #Remove Bulgarian-Albanian Alliance/Anti-Belgrade Pact if it exists
+			limit = {
+				tag = BUL
+				is_faction_leader = yes
+				NOT = { has_completed_focus = BUL_military_alliances }
+				NOT = { has_completed_focus = BUL_third_empire }
+				NOT = { has_completed_focus = BUL_YUG_greater_ambitions }
+			}
+			BUL = { dismantle_faction = yes }
+		}
+		set_global_flag = balkan_war_ended
+	}
+}
+
+# Double-check removal of Ottoman war flag
+country_event = {
+	id = belgrade_pact_events.53
+	title = belgrade_pact_events.53.t
+	desc = belgrade_pact_events.53.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = TUR
+		has_country_flag = OTT_war_for_thrace
+		NOT = { has_war_with = BUL }
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.53 option belgrade_pact_events.53.a"
+		name = belgrade_pact_events.53.a
+		clr_country_flag = OTT_war_for_thrace
+	}
+}
+
+#Germany and Austria: Demand end of Balkan War?
+country_event = {
+	id = belgrade_pact_events.54
+	title = belgrade_pact_events.54.t
+	desc = belgrade_pact_events.54.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			original_tag = GER
+			original_tag = AUS
+		}
+		has_global_flag = balkan_war_started
+		NOT = { has_global_flag = balkan_war_ended }
+		BUL = { has_war_with = BPL }
+		BUL = { is_valid_peace_target = yes }
+		BUL = { surrender_progress < 0.5 }
+		SER = { has_country_flag = SER_founded_belgradepact }
+		BPL = { is_valid_peace_target = yes }
+		BPL = {
+			NOT = {
+				any_collection_element = {
+					collection = collection:guarantors
+					is_major = yes
+				}
+			}
+		}
+		is_major = yes
+		is_faction_leader = yes
+		can_declare_war_on = BPL
+		NOT = { has_guaranteed = BPL }
+		NOT = { has_non_aggression_pact_with = BPL }
+		NOT = { has_war_with = BPL }
+		NOT = { has_war_with = BUL }
+		NOT = { has_war_with = INT }
+		NOT = { has_war_with = RUS }
+		NOT = { has_war_with = AUS }
+		NOT = { has_war_with = GER }
+		if = {
+			limit = {
+				TUR = { has_war_with = BUL }
+				TUR = { has_country_flag = OTT_war_for_thrace }
+			}
+			NOT = { has_war_with = TUR }
+			TUR = { is_valid_peace_target = yes }
+			can_declare_war_on = TUR
+			NOT = { has_guaranteed = TUR }
+			NOT = { has_non_aggression_pact_with = TUR }
+			NOT = {
+				any_collection_element = {
+					collection = collection:guarantors
+					is_major = yes
+				}
+			}
+		}
+		if = {
+			limit = {
+				original_tag = AUS
+			}
+			NOT = { has_global_flag = AUS_treaty_of_budapest }
+			NOT = { has_war_with = HUN }
+			NOT = { has_war_with = CZE }
+			NOT = { has_war_with = GAL }
+			NOT = { has_war_with = CRO }
+		}
+		if = {
+			limit = {
+				AUS = { is_ai = no }
+				GER = { is_ai = no }
+			}
+			NOT = { tag = AUS } #if both tags are players GER will get the event
+		}
+		else_if = {
+			limit = {
+				OR = {
+					AUS = { is_ai = no }
+					GER = { is_ai = no }
+				}
+			}
+			is_ai = no #if one tag is a player the player will get the event
+		}
+	}
+
+	option = { #Demand an end to the war
+		log = "[GetLogInfo]: event belgrade_pact_events.54 option belgrade_pact_events.54.a"
+		name = belgrade_pact_events.54.a
+		if = {
+			limit = {
+				original_tag = GER
+			}
+			set_global_flag = germany_demands_end_to_balkan_war
+		}
+		else = {
+			set_global_flag = austria_demands_end_to_balkan_war
+		}
+		if = {
+			limit = {
+				BUL = { surrender_progress < 0.3 }
+				OR = {
+					NOT = { GRE = { controls_state = 47 } } #Central Greece
+					NOT = { GRE = { controls_state = 989 } } #Chalcidce
+				}
+			}
+			BUL = { save_event_target_as = balkan_war_limited_bul_victory }
+		}
+		else_if = {
+			limit = {
+				BUL = { surrender_progress > 0.3 }
+			}
+			BUL = { save_event_target_as = balkan_war_limited_bpl_victory }
+		}
+		BPL = { country_event = belgrade_pact_events.47 }
+		if = {
+			limit = {
+				TUR = { has_war_with = BUL }
+				TUR = { has_country_flag = OTT_war_for_thrace }
+			}
+			TUR = {
+				country_event = { id = belgrade_pact_events.42 days = 1 }
+			}
+		}
+	}
+
+	option = { #Let them fight
+		log = "[GetLogInfo]: event belgrade_pact_events.54 option belgrade_pact_events.54.b"
+		name = belgrade_pact_events.54.b
+		ai_chance = { base = 0 }
+	}
+}
+
+###########################
+# Albania vs. the Belgrade Pact
+# (and other bad choices)
+###########################
+
+### Albania: start of the war, support Bulgaria?
+country_event = {
+	id = belgrade_pact_events.70
+	title = belgrade_pact_events.70.t
+	desc = belgrade_pact_events.70.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	trigger = {
+		tag = ALB
+		has_country_flag = SER_supported_bulgaria
+		is_subject = no
+		can_declare_war_on = SER
+		SER = {
+			has_country_flag = SER_founded_belgradepact
+			is_faction_leader = yes
+			has_war_with = BUL
+		}
+		has_global_flag = balkan_war_started
+		NOT = { has_global_flag = balkan_war_ended }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.70 option belgrade_pact_events.70.a"
+		name = belgrade_pact_events.70.a # Send aid
+		trigger = {
+			OR = {
+				has_manpower > 1000
+				has_equipment = { infantry_equipment > 1000 }
+			}
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_ROM }
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_4BW }
+				}
+			}
+		}
+
+		add_manpower = -1000
+		hidden_effect = {
+			BUL = { add_manpower = 1000 }
+		}
+		send_equipment = {
+			target = BUL
+			type = infantry_equipment
+			amount = 1000
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.70 option belgrade_pact_events.70.b"
+		name = belgrade_pact_events.70.b # Offer an alliance
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_BPL_OTT }
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_ROM }
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_4BW }
+				}
+			}
+		}
+		BUL = {
+			country_event = { id = belgrade_pact_events.71 days = 1 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.70 option belgrade_pact_events.70.c"
+		name = belgrade_pact_events.70.c # We can't do anything
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+				NOT = {
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_ROM }
+					has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_4BW }
+				}
+			}
+		}
+		clr_country_flag = SER_supported_bulgaria
+	}
+}
+
+# Bulgaria: The Albanians offer an alliance
+country_event = {
+	id = belgrade_pact_events.71
+	title = belgrade_pact_events.71.t
+	desc = belgrade_pact_events.71.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = SER
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.71 option belgrade_pact_events.71.a"
+		name = belgrade_pact_events.71.a # Of course
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0.5
+				NOT = {
+					GRE = { is_in_faction_with = SER }
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_faction_leader = no
+			}
+			create_faction_from_template = { template = faction_template_generic name = bulgarian_albanian_alliance }
+		}
+		add_to_faction = ALB
+		ALB = {
+			country_event = { id = belgrade_pact_events.72 hours = 4 }
+			declare_war_on = {
+				target = SER
+				type = annex_everything
+			}
+		}
+		hidden_effect = {
+			BUL = { give_military_access = ALB }
+			ALB = { give_military_access = BUL }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.71 option belgrade_pact_events.71.b"
+		name = belgrade_pact_events.71.b # We don't need them.
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL }
+					has_game_rule = { rule = BPL_war option = BPL_WAR_BUL_ALB_BPL_OTT }
+				}
+			}
+		}
+		ALB = {
+			country_event = { id = belgrade_pact_events.73 hours = 4 }
+		}
+	}
+}
+
+# Albania: Bulgaria accepts our alliance
+country_event = {
+	id = belgrade_pact_events.72
+	title = belgrade_pact_events.72.t
+	desc = belgrade_pact_events.72.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.72 option belgrade_pact_events.72.a"
+		name = belgrade_pact_events.72.a # Together, we will defeat the Belgrade belgrade_pact_events.
+		set_country_flag = ALB_joined_BUL_war
+		effect_tooltip = {
+			BUL = {
+				add_to_faction = ALB
+			}
+			ALB = {
+				declare_war_on = {
+					target = SER
+					type = annex_everything
+				}
+			}
+		}
+	}
+}
+
+# Albania: Bulgaria refuses our alliance
+country_event = {
+	id = belgrade_pact_events.73
+	title = belgrade_pact_events.73.t
+	desc = belgrade_pact_events.73.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.73 option belgrade_pact_events.73.a"
+		name = belgrade_pact_events.73.a # Good luck on your own then.
+		clr_country_flag = SER_supported_bulgaria
+	}
+}
+
+### Albania: we're losing, sue for peace?
+country_event = {
+	id = belgrade_pact_events.74
+	title = belgrade_pact_events.74.t
+	desc = belgrade_pact_events.74.d
+
+	trigger = {
+		tag = ALB
+		has_country_flag = ALB_joined_BUL_war
+		has_war_with = BPL
+		surrender_progress > 0.25
+		has_capitulated = no
+		BUL = {
+			OR = {
+				exists = no
+				is_subject = yes
+				NOT = { has_war_with = SER }
+				if = {
+					limit = {
+						has_global_flag = balkan_war_first_year
+					}
+					surrender_progress > 0.40
+				}
+				else = {
+					surrender_progress > 0.30
+				}
+			}
+		}
+		BPL = { is_faction_leader = yes }
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.74 option belgrade_pact_events.74.a"
+		name = belgrade_pact_events.74.a # Sue for peace.
+		add_political_power = -50
+		BPL = { country_event = belgrade_pact_events.75 } # Send the peace offer to the Belgrade Pact's leader
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.74 option belgrade_pact_events.74.b"
+		name = belgrade_pact_events.74.b # We can still win this!
+		ai_chance = { base = 0 }
+		add_political_power = -100
+	}
+}
+
+# Belgrade Pact leader: The Albanians offer peace
+country_event = {
+	id = belgrade_pact_events.75
+	title = belgrade_pact_events.75.t
+	desc = belgrade_pact_events.75.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.75 option belgrade_pact_events.75.a"
+		name = belgrade_pact_events.75.a # The Belgrade Pact stands triumphant
+		if = {
+			limit = {
+				BUL = {
+					is_faction_leader = yes
+					is_in_faction_with = CRO
+				}
+			}
+			ALB = { leave_faction = yes }
+		}
+		else_if = {
+			limit = {
+				BUL = { is_faction_leader = yes }
+			}
+			BUL = { dismantle_faction = yes }
+		}
+		ALB = {
+			white_peace_with_ROOT = yes
+		}
+		if = {
+			limit = {
+				ALB = {
+					has_war_with = TUR
+				}
+			}
+			ALB = {
+				white_peace = TUR
+			}
+		}
+		if = {
+			limit = {
+				ALB = {
+					has_war_with = ROM
+				}
+			}
+			ALB = {
+				white_peace = ROM
+			}
+		}
+		belgrade_pact_gain_land_from_albania = yes
+		hidden_effect = {
+			# Notify all Pact members
+			every_other_country = {
+				limit = {
+					is_in_faction_with = BPL
+				}
+				country_event = belgrade_pact_events.77
+			}
+			# Clear military accesses that are no longer needed
+			if = {
+				limit = {
+					country_exists = AUS
+					ALB = { gives_military_access_to = AUS }
+				}
+				AUS = {
+					diplomatic_relation = {
+						country = ALB
+						relation = military_access
+						active = no
+					}
+				}
+				ALB = {
+					diplomatic_relation = {
+						country = AUS
+						relation = military_access
+						active = no
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = CRO
+					ALB = { gives_military_access_to = CRO }
+				}
+				CRO = {
+					diplomatic_relation = {
+						country = ALB
+						relation = military_access
+						active = no
+					}
+				}
+				ALB = {
+					diplomatic_relation = {
+						country = CRO
+						relation = military_access
+						active = no
+					}
+				}
+			}
+			# Move armies home
+			every_state = {
+				teleport_armies = {
+					limit = {
+						original_tag = ALB
+					}
+					to_state_array = owned_controlled_states
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.75 option belgrade_pact_events.75.b"
+		name = belgrade_pact_events.75.b # No, they shall be crushed
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		ALB = { country_event = belgrade_pact_events.46 } # Notify Albanians of refusal
+	}
+}
+
+# Pact members: Peace with the Albania
+country_event = {
+	id = belgrade_pact_events.77
+	title = belgrade_pact_events.77.t
+	desc = belgrade_pact_events.77.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.77 option belgrade_pact_events.77.a"
+		name = belgrade_pact_events.77.a # Belgrade Pact stands triumphant
+		effect_tooltip = {
+			BPL = { white_peace = ALB }
+		}
+	}
+}
+
+### Belgrade Pact Leader: Defeated Bulgaria but Albanians are pushing us back
+country_event = {
+	id = belgrade_pact_events.78
+	title = belgrade_pact_events.78.t
+	desc = belgrade_pact_events.78.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	trigger = {
+		tag = BPL
+		has_war_with = ALB
+		SER = { has_capitulated = yes }
+		BUL = {
+			OR = {
+				exists = no
+				is_subject = yes
+				has_country_flag = BUL_balkan_peace_loss
+			}
+		}
+		ALB = {
+			is_valid_peace_target = yes
+			controls_state = 765 #Kosovo
+			controls_all_owned_states = yes
+			has_country_flag = ALB_joined_BUL_war
+		}
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.78 option belgrade_pact_events.78.a"
+		name = belgrade_pact_events.78.a # Sue for peace.
+		add_political_power = -50
+		ALB = { country_event = belgrade_pact_events.79 } # Send the peace offer to the Albanians
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.78 option belgrade_pact_events.78.b"
+		name = belgrade_pact_events.78.b # We can still win this!
+		ai_chance = { base = 0 }
+		add_political_power = -100
+	}
+}
+
+# Albanians: Serbia offers peace
+country_event = {
+	id = belgrade_pact_events.79
+	title = belgrade_pact_events.79.t
+	desc = belgrade_pact_events.79.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.79 option belgrade_pact_events.79.a"
+		name = belgrade_pact_events.79.a # Enough bloodshed. End this war.
+
+		every_state = {
+			limit = {
+				owner = { is_in_faction_with = BPL }
+				OR = {
+					is_core_of = ALB
+					is_claimed_by = ALB
+					state = 106 #Macedonia
+					state = 185 #Epirus
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						is_claimed_by = ALB
+						is_core_of = ALB
+					}
+				}
+				add_claim_by = ALB
+			}
+			transfer_state_to = ALB
+		}
+
+		BPL = { white_peace_with_ROOT = yes }
+
+		if = {
+			limit = {
+				ALB = {
+					has_war_with = TUR
+				}
+			}
+			ALB = {
+				white_peace = TUR
+			}
+		}
+
+		if = {
+			limit = {
+				ALB = {
+					has_war_with = ROM
+				}
+			}
+			ALB = {
+				white_peace = ROM
+			}
+		}
+
+		hidden_effect = {
+			# Notify all Pact members of peace
+			every_other_country = {
+				limit = { is_in_faction_with = BPL }
+				country_event = belgrade_pact_events.80
+			}
+			# Clear military accesses that are no longer needed
+			if = {
+				limit = {
+					country_exists = AUS
+					ALB = { gives_military_access_to = AUS }
+				}
+				AUS = {
+					diplomatic_relation = {
+						country = ALB
+						relation = military_access
+						active = no
+					}
+				}
+				ALB = {
+					diplomatic_relation = {
+						country = AUS
+						relation = military_access
+						active = no
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = CRO
+					ALB = { gives_military_access_to = CRO }
+				}
+				CRO = {
+					diplomatic_relation = {
+						country = ALB
+						relation = military_access
+						active = no
+					}
+				}
+				ALB = {
+					diplomatic_relation = {
+						country = CRO
+						relation = military_access
+						active = no
+					}
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.79 option belgrade_pact_events.79.b"
+		name = belgrade_pact_events.79.b # No, they shall be crushed
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		SER = { country_event = belgrade_pact_events.46 } # Notify Serbia of refusal
+	}
+}
+
+# Pact members: peace was signed
+country_event = {
+	id = belgrade_pact_events.80
+	title = belgrade_pact_events.80.t
+	desc = belgrade_pact_events.80.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.80 option belgrade_pact_events.80.a"
+		name = belgrade_pact_events.80.a # Unfortunate
+		add_political_power = -100
+		effect_tooltip = {
+			ALB = { white_peace = BPL }
+		}
+	}
+}
+
+# Bulgaria: Illyria asks to form The Anti-Belgrade Pact
+country_event = {
+	id = belgrade_pact_events.81
+	title = belgrade_pact_events.81.t
+	desc = belgrade_pact_events.81.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.81 option belgrade_pact_events.81.a"
+		name = belgrade_pact_events.81.a # Together against Belgrade!
+		if = {
+			limit = {
+				is_faction_leader = yes
+			}
+			add_to_faction = CRO
+			set_faction_name = anti_belgrade_pact
+		}
+		else = {
+			create_faction_from_template = { template = faction_template_generic name = anti_belgrade_pact }
+			add_to_faction = CRO
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.81 option belgrade_pact_events.81.b"
+		ai_chance = { base = 0 }
+		name = belgrade_pact_events.81.b # We do not need them
+	}
+}
+
+###########################
+# Belgrade Pact vs. Austria
+###########################
+
+country_event = { # looping hidden event to move the Pact leader to another member who's still fighting (donotlog)
+	id = belgrade_pact_events.100
+
+	#break the loop if no longer in the faction or no longer at war
+	trigger = {
+		is_in_faction_with = BPL
+		has_war = yes
+	}
+
+	hidden = yes
+	is_triggered_only = yes
+
+	option = {
+		if = {
+			limit = {
+				is_faction_leader = yes
+				is_ai = yes #Only do this for ai BPL
+			}
+			random_allied_country = {
+				limit = {
+					has_capitulated = no
+					is_subject = no
+					surrender_progress < BPL.surrender_progress
+					OR = {
+						original_tag = GRE
+						original_tag = ROM
+						original_tag = SER
+					}
+				}
+				set_faction_leader = yes
+			}
+		}
+		country_event = { id = belgrade_pact_events.100 days = 1 }
+	}
+}
+
+###########################
+# 2nd Congress events
+###########################
+
+# Victory in the Balkan War
+country_event = {
+	id = belgrade_pact_events.200
+	title = belgrade_pact_events.200.t
+	desc = belgrade_pact_events.200.d
+
+	trigger = {
+		can_declare_war_on = AUS
+		AUS = { is_subject = no }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.200 option belgrade_pact_events.200.a"
+		name = belgrade_pact_events.200.a #Organise a new conference
+		ROM = {
+			country_event = { id = belgrade_pact_events.201 days = 2 }
+		}
+		GRE = {
+			country_event = { id = belgrade_pact_events.201 days = 2 }
+		}
+		hidden_effect = {
+			country_event = { id = belgrade_pact_events.202 days = 4 }
+			country_event = { id = belgrade_pact_events.205 days = 8 }
+		}
+	}
+}
+
+# An invitation from Serbia
+country_event = {
+	id = belgrade_pact_events.201
+	title = belgrade_pact_events.201.t
+	desc = belgrade_pact_events.201.d
+
+	trigger = {
+		can_declare_war_on = AUS
+		is_subject = no
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.201 option belgrade_pact_events.201.a"
+		name = belgrade_pact_events.201.a #Very well, we shall attend
+		add_to_array = { SER.SER_attending_congress = ROOT }
+	}
+}
+
+# Invite Italy?
+country_event = {
+	id = belgrade_pact_events.202
+	title = belgrade_pact_events.202.t
+	desc = belgrade_pact_events.202.d.ITA
+
+	trigger = {
+		can_declare_war_on = AUS
+		ITA = {
+			has_government = national_populist
+			exists = yes
+			is_subject = no
+			is_in_faction = no
+			NOT = {
+				has_war_with = ROOT
+				has_war_with = VNC
+			}
+		}
+		AUS = {
+			owns_any_state_of = {
+				103 #Rijeka
+				488 #Trieste
+				683 #Gorizia
+				736 #Istria
+				783 #Trentino
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.202 option belgrade_pact_events.202.a"
+		name = belgrade_pact_events.202.a #All help is welcome
+		ITA = { country_event = { id = belgrade_pact_events.203 days = 2 } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.202 option belgrade_pact_events.202.b"
+		name = belgrade_pact_events.202.b #Don't bother
+		ai_chance = { base = 0 }
+	}
+}
+
+# Italy Invited to Attend
+country_event = {
+	id = belgrade_pact_events.203
+	title = belgrade_pact_events.203.t
+	desc = belgrade_pact_events.203.d
+
+	trigger = {
+		can_declare_war_on = AUS
+		is_subject = no
+		is_in_faction = no
+		NOT = { has_war_with = ROOT }
+		OR = {
+			has_socialist_government = yes
+			has_dictatorship_government = yes
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.203 option belgrade_pact_events.203.a"
+		name = belgrade_pact_events.203.a #Very well, we shall attend
+		add_to_array = { SER.SER_attending_congress = ROOT }
+		FROM = { country_event = belgrade_pact_events.204 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.203 option belgrade_pact_events.203.b"
+		name = belgrade_pact_events.203.b #This is a waste of time
+		ai_chance = { base = 0 }
+	}
+}
+
+# FROM will attend
+country_event = {
+	id = belgrade_pact_events.204
+	title = belgrade_pact_events.204.t
+	desc = belgrade_pact_events.204.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.204 option belgrade_pact_events.204.a"
+		name = belgrade_pact_events.204.a #Excellent
+		add_political_power = 5
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_pleased
+		}
+	}
+}
+
+# The delegates arrive
+country_event = {
+	id = belgrade_pact_events.205
+	title = belgrade_pact_events.205.t
+	desc = belgrade_pact_events.205.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.205 option belgrade_pact_events.205.a"
+		name = belgrade_pact_events.205.a #Let the Congress begin!
+		country_event = { id = belgrade_pact_events.206 days = 1 }
+	}
+}
+
+# Deciding on a Goal
+country_event = {
+	id = belgrade_pact_events.206
+	title = belgrade_pact_events.206.t
+	desc = belgrade_pact_events.206.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.206 option belgrade_pact_events.206.a"
+		name = belgrade_pact_events.206.a #A war with Austria
+		ai_chance = { base = 90 }
+		set_country_flag = SER_war_against_austria
+		country_event = { id = belgrade_pact_events.209 days = 5 }
+		hidden_effect = {
+			for_each_scope_loop = {
+				array = SER.SER_attending_congress
+				country_event = { id = belgrade_pact_events.207 days = 2 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.206 option belgrade_pact_events.206.b"
+		name = belgrade_pact_events.206.b #Force them with diplomacy
+		ai_chance = { base = 10 }
+		set_country_flag = SER_diplomacy_with_austria
+		AUS = {
+			country_event = { id = belgrade_pact_events.216 days = 5 }
+		}
+		hidden_effect = {
+			for_each_scope_loop = {
+				array = SER.SER_attending_congress
+				country_event = { id = belgrade_pact_events.215 days = 2 }
+			}
+		}
+	}
+}
+
+# The Congress chooses to attack Austria
+country_event = {
+	id = belgrade_pact_events.207
+	title = belgrade_pact_events.207.t
+	desc = belgrade_pact_events.207.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.207 option belgrade_pact_events.207.a"
+		name = belgrade_pact_events.207.a #We support this initiative
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				tag = GRE
+				AUS = { NOT = { is_ally_with = 766.owner } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN } }
+			}
+			modifier = {
+				factor = 0
+				tag = ROM
+				SER = {
+					is_faction_leader = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0
+				tag = GRE
+				OR = {
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_KEEP }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_INT_BEATEN }
+				}
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN } }
+			}
+		}
+		add_to_array = { SER.SER_will_attack_austria = ROOT }
+		set_country_flag = SER_will_attack_austria
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.207 option belgrade_pact_events.207.b"
+		name = belgrade_pact_events.207.b #We will join the Pact!
+		trigger = {
+			tag = ROM
+			SER = {
+				is_faction_leader = yes
+				NOT = { is_in_faction_with = ROOT }
+			}
+		}
+		ai_chance = { base = 100 }
+		SER = {
+			add_to_faction = ROOT
+			country_event = belgrade_pact_events.3
+		}
+		add_to_array = { SER.SER_will_attack_austria = ROOT }
+		set_country_flag = SER_will_attack_austria
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.207 option belgrade_pact_events.207.c"
+		name = belgrade_pact_events.207.c #What? No!
+		trigger = {
+			NOT = { tag = ROM }
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				tag = GRE
+				AUS = { NOT = { is_ally_with = 766.owner } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN } }
+			}
+			modifier = {
+				add = 100
+				tag = GRE
+				OR = {
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_GER }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_AUS }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_ENT }
+					has_game_rule = { rule = GRE_forpol option = GRE_FORPOL_RUS }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_KEEP }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_INT_BEATEN }
+				}
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN } }
+			}
+		}
+		if = {
+			limit = { is_in_faction_with = FROM }
+			leave_faction = yes
+		}
+		remove_from_array = { SER.SER_attending_congress = ROOT }
+		FROM = { country_event = belgrade_pact_events.208 }
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.207 option belgrade_pact_events.207.e"
+		name = belgrade_pact_events.207.e #What? No!
+		trigger = {
+			tag = ROM
+			is_ai = no
+		}
+		if = {
+			limit = { is_in_faction_with = FROM }
+			leave_faction = yes
+		}
+		remove_from_array = { SER.SER_attending_congress = ROOT }
+		FROM = { country_event = belgrade_pact_events.208 }
+		add_stability = -0.1
+		add_war_support = -0.6
+		set_temp_variable = { ideology_change_var = -0.5 }
+		change_ruling_party_popularity = yes
+	}
+}
+
+# FROM leaves the Congress
+country_event = {
+	id = belgrade_pact_events.208
+	title = belgrade_pact_events.208.t
+
+	desc = {
+		text = belgrade_pact_events.208.d.war
+		trigger = { has_country_flag = SER_war_against_austria }
+	}
+	desc = {
+		text = belgrade_pact_events.208.d.diplomacy
+		trigger = { has_country_flag = SER_diplomacy_with_austria }
+	}
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.208 option belgrade_pact_events.208.a"
+		name = belgrade_pact_events.208.a #Their loss
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_disapproves_of_govt
+		}
+	}
+}
+
+# The Question of Claims (SER)
+country_event = {
+	id = belgrade_pact_events.209
+	title = belgrade_pact_events.209.t
+	desc = belgrade_pact_events.209.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.209 option belgrade_pact_events.209.a"
+		name = belgrade_pact_events.209.a #We shall free the Slavs!
+		SER_add_balkan_claims = yes
+		hidden_effect = {
+			if = {
+				limit = {
+					is_in_array = { SER.SER_attending_congress = ROM }
+				}
+				ROM = {
+					country_event = { id = belgrade_pact_events.210 days = 2 }
+				}
+			}
+			if = {
+				limit = {
+					is_in_array = { SER.SER_attending_congress = GRE }
+				}
+				GRE = {
+					country_event = { id = belgrade_pact_events.211 days = 2 }
+				}
+			}
+			if = {
+				limit = {
+					is_in_array = { SER.SER_attending_congress = ITA }
+				}
+				ITA = {
+					country_event = { id = belgrade_pact_events.213 days = 2 }
+				}
+			}
+			country_event = { id = belgrade_pact_events.214 days = 6 }
+		}
+	}
+}
+
+# The Question of Claims (ROM)
+country_event = {
+	id = belgrade_pact_events.210
+	title = belgrade_pact_events.210.t
+	desc = belgrade_pact_events.210.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.210 option belgrade_pact_events.210.a"
+		name = belgrade_pact_events.210.a #We will reunite with Transylvania!
+		add_state_claim = 76 #Cluj
+		add_state_claim = 80 #Cernauti
+		add_state_claim = 82 #Banat
+		add_state_claim = 83 #Partium
+		add_state_claim = 84 #Brasov
+		add_state_claim = 713 #Suceava
+		add_state_claim = 789 #Szeklerland
+	}
+}
+
+# The Question of Claims (GRE)
+country_event = {
+	id = belgrade_pact_events.211
+	title = belgrade_pact_events.211.t
+	desc = belgrade_pact_events.211.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.211 option belgrade_pact_events.211.a"
+		name = belgrade_pact_events.211.a #We have no claims.
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					AUS = { is_ally_with = 766.owner }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN }
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.211 option belgrade_pact_events.211.b"
+		name = belgrade_pact_events.211.b #Northern Epirus belongs to us!
+		ai_chance = { base = 1 }
+		trigger = {
+			OR = {
+				AUS = { is_ally_with = 766.owner }
+				has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP }
+				has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN }
+				has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN }
+			}
+		}
+		if = {
+			limit = {
+				766 = {
+					NOT = {
+						is_core_of = GRE
+						is_claimed_by = GRE
+					}
+				}
+			}
+			add_state_claim = 766 #Northern Epirus
+		}
+	}
+}
+
+# The Question of Claims (ITA)
+country_event = {
+	id = belgrade_pact_events.213
+	title = belgrade_pact_events.213.t
+	desc = belgrade_pact_events.213.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.213 option belgrade_pact_events.213.a"
+		name = belgrade_pact_events.213.a #We shall recover Istria and Trento!
+		add_state_claim = 103 #Rijeka
+		add_state_claim = 488 #Trieste
+		add_state_claim = 683 #Gorizia
+		add_state_claim = 736 #Istria
+		add_state_claim = 783 #Trentino
+	}
+}
+
+# The Congress has Ended
+country_event = {
+	id = belgrade_pact_events.214
+	title = belgrade_pact_events.214.t
+	desc = belgrade_pact_events.214.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.214 option belgrade_pact_events.214.a"
+		name = belgrade_pact_events.214.a #Onwards!
+		unlock_decision_tooltip = SER_Attack_Austria
+	}
+}
+
+# The Congress chooses to negotiate with Austria
+country_event = {
+	id = belgrade_pact_events.215
+	title = belgrade_pact_events.215.t
+	desc = belgrade_pact_events.215.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.215 option belgrade_pact_events.215.a"
+		name = belgrade_pact_events.215.a #We support this initiative
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.215 option belgrade_pact_events.215.b"
+		name = belgrade_pact_events.215.b #What? No!
+		trigger = {
+			NOT = { tag = ROM }
+		}
+		ai_chance = { base = 0 }
+		if = {
+			limit = { is_in_faction_with = FROM }
+			leave_faction = yes
+		}
+		remove_from_array = { SER.SER_attending_congress = ROOT }
+		FROM = { country_event = belgrade_pact_events.208 }
+	}
+}
+
+# An Invitation to Belgrade? (AUS)
+country_event = {
+	id = belgrade_pact_events.216
+	title = belgrade_pact_events.216.t
+	desc = belgrade_pact_events.216.d
+
+	trigger = {
+		SER = { can_declare_war_on = AUS }
+	}
+
+	is_triggered_only = yes
+
+	#option = {
+	#	name = belgrade_pact_events.216.a #A chance for peace, perhaps?
+	#}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.216 option belgrade_pact_events.216.b"
+		name = belgrade_pact_events.216.b #We reject their ridiculous offer!
+		FROM = {
+			country_event = { id = belgrade_pact_events.217 days = 3 }
+		}
+	}
+}
+
+# Austria Refuses
+country_event = {
+	id = belgrade_pact_events.217
+	title = belgrade_pact_events.217.t
+	desc = belgrade_pact_events.217.d
+
+	trigger = {
+		can_declare_war_on = AUS
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.217 option belgrade_pact_events.217.a"
+		name = belgrade_pact_events.217.a #War it shall be, then.
+		hidden_effect = {
+			for_each_scope_loop = {
+				array = SER.SER_attending_congress
+				country_event = { id = belgrade_pact_events.207 days = 2 }
+			}
+			country_event = { id = belgrade_pact_events.209 days = 5 }
+		}
+	}
+}
+
+# Economic Council
+country_event = {#Pact of Organisation invitation
+	id = belgrade_pact_events.300
+	title = belgrade_pact_events.300.t
+	desc = belgrade_pact_events.300.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.300 option belgrade_pact_events.300.a"
+		name = belgrade_pact_events.300.a #Of course
+		ai_chance = { base = 10 }
+		if = {
+			limit = { NOT = { is_in_array = { global.balkan_economic_union = ROOT } } }
+			add_to_array = { global.balkan_economic_union = ROOT }
+		}
+		effect_tooltip = {
+			FROM = { country_event = belgrade_pact_events.302 }
+			country_event = belgrade_pact_events.303
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.300 option belgrade_pact_events.300.b"
+		name = belgrade_pact_events.300.b #Ew, economic integration
+		ai_chance = { base = 0 }
+		FROM = { country_event = belgrade_pact_events.301 }
+	}
+}
+country_event = {#FROM refuses
+	id = belgrade_pact_events.301
+	title = belgrade_pact_events.301.t
+	desc = belgrade_pact_events.301.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.301 option belgrade_pact_events.301.a"
+		name = belgrade_pact_events.301.a #Whatever
+		add_political_power = -5
+	}
+}
+country_event = {#Formation of the Economic Council (initiator)
+	id = belgrade_pact_events.302
+	title = belgrade_pact_events.302.t
+	desc = belgrade_pact_events.302.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.302 option belgrade_pact_events.302.a"
+		name = belgrade_pact_events.302.a #Woop woop
+		add_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+		set_temp_variable = { temp = 0.05 }
+		multiply_temp_variable = { temp = global.balkan_economic_union^num }
+		clamp_temp_variable = { var = temp max = 0.15 }
+		set_variable = {
+			global.BPL_pact_of_organisation_construction_speed = temp
+			tooltip = production_speed_buildings_factor_tooltip
+		}
+		every_other_country = {
+			limit = { is_in_array = { global.balkan_economic_union = THIS } }
+			country_event = belgrade_pact_events.303
+		}
+	}
+}
+country_event = {#Formation of the Economic Council (others)
+	id = belgrade_pact_events.303
+	title = belgrade_pact_events.303.t
+	desc = belgrade_pact_events.303.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.303 option belgrade_pact_events.303.a"
+		name = belgrade_pact_events.303.a #Woop woop
+		add_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+		effect_tooltip = {
+			add_to_variable = {
+				temp = global.BPL_pact_of_organisation_construction_speed
+				tooltip = production_speed_buildings_factor_tooltip
+			}
+		}
+	}
+}
+country_event = { #Economic Council upgraded
+	id = belgrade_pact_events.304
+	title = belgrade_pact_events.304.t
+	desc = belgrade_pact_events.304.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.304 option belgrade_pact_events.304.a"
+		name = belgrade_pact_events.304.a #Woop woop
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = BPL_pact_of_organisation
+		}
+
+		set_temp_variable = { temp = 0.05 }
+		multiply_temp_variable = { temp = global.balkan_economic_union^num }
+		clamp_temp_variable = { var = temp max = 0.15 }
+		set_variable = {
+			global.BPL_pact_of_organisation_building_slots = temp
+			tooltip = global_building_slots_factor_tooltip
+		}
+
+		divide_temp_variable = { temp = 2 }
+		set_variable = {
+			global.BPL_pact_of_organisation_research_speed = temp
+			tooltip = research_speed_factor_tooltip
+		}
+	}
+}
+country_event = {#Kicked out of the Economic Council
+	id = belgrade_pact_events.305
+	title = belgrade_pact_events.305.t
+
+	desc = {
+		text = belgrade_pact_events.305.d.war
+		trigger = { has_socialist_government = no }
+	}
+	desc = {
+		text = belgrade_pact_events.305.d.revolution
+		trigger = { has_socialist_government = yes }
+	}
+
+	picture = GFX_report_event_generic_diplomacy1
+
+	trigger = {
+		has_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { SER = { has_war_with = ROM } } #Break up Pact of Organisation
+				belgrade_pact_dissolve_pact_of_organisation = yes
+			}
+			else_if = {
+				limit = { is_in_array = { global.balkan_economic_union = ROOT } }
+				remove_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+				remove_from_array = { global.balkan_economic_union = ROOT }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.305 option belgrade_pact_events.305.a"
+		name = belgrade_pact_events.305.a
+		effect_tooltip = {
+			remove_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+		}
+	}
+}
+country_event = { #Economic Council upgraded
+	id = belgrade_pact_events.306
+	title = belgrade_pact_events.306.t
+	desc = belgrade_pact_events.306.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.306 option belgrade_pact_events.306.a"
+		name = belgrade_pact_events.306.a #Woop woop
+		if = {
+			limit = { has_event_target = BPL_modifier_changed }
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = BPL_pact_of_organisation
+			}
+			effect_tooltip = {
+				add_to_variable = {
+					global.BPL_pact_of_organisation_construction_speed = 0.05
+					tooltip = production_speed_buildings_factor_tooltip
+				}
+				if = {
+					limit = { NOT = { check_variable = { global.BPL_pact_of_organisation_building_slots = 0 } } }
+					add_to_variable = {
+						global.BPL_pact_of_organisation_building_slots = 0.05
+						tooltip = global_building_slots_factor_tooltip
+					}
+				}
+				if = {
+					limit = { NOT = { check_variable = { global.BPL_pact_of_organisation_research_speed = 0 } } }
+					add_to_variable = {
+						global.BPL_pact_of_organisation_research_speed = 0.025
+						tooltip = research_speed_factor_tooltip
+					}
+				}
+			}
+		}
+	}
+}
+country_event = { #Do you want to keep BP?
+	id = belgrade_pact_events.307
+	title = belgrade_pact_events.307.t
+	desc = belgrade_pact_events.307.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		is_faction_leader = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.307 option belgrade_pact_events.307.a"
+		name = belgrade_pact_events.307.a #Definitely
+		trigger = {
+			SER = {
+				owns_state = 875
+				NOT = { #recouncilation not possible if Romania has taken West Banat or Serbia is socialist
+					has_completed_focus = SER_YUG_anti_imperialist_vanguard
+					has_completed_focus = SER_YUG_balkan_socialist_federation
+				}
+			}
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				ROM = { has_government = national_populist }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+			}
+			modifier = {
+				add = -5
+				ROM = { has_government = paternal_autocrat }
+			}
+			modifier = {
+				factor = 100
+				ROM = { has_completed_focus = ROM_michael }
+			}
+			modifier = {
+				factor = 0
+				SER = { has_socialist_government = yes }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_KEEP } }
+				NOT = { has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP } }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_AUS_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_INT_BEATEN }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_INT_BEATEN }
+				}
+			}
+		}
+		set_global_flag = SER_keeping_the_pact
+	}
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.307 option belgrade_pact_events.307.b"
+		name = belgrade_pact_events.307.b #Sorry, this was just one war thing.
+		belgrade_pact_is_disbanded = yes
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_KEEP }
+					has_game_rule = { rule = BPL_dissolution option = BPL_DISSOLUTION_GRE_KEEP }
+				}
+			}
+		}
+	}
+}
+
+country_event = {
+	id = belgrade_pact_events.308
+	title = belgrade_pact_events.308.t
+	desc = belgrade_pact_events.308.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event belgrade_pact_events.308 option belgrade_pact_events.308.a"
+		name = belgrade_pact_events.308.a
+		add_research_slot_until_five = yes
+	}
+}

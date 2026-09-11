@@ -1,0 +1,126 @@
+ROM_hates_austria = {
+	reversed = yes
+
+	enable = {
+		is_ally_with = AUS
+		ROM = {
+			is_subject = no
+			NOT = { is_ally_with = AUS }
+		}
+		AUS = { AUS_is_led_by_habsburgs = yes }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = antagonize
+		id = ROM
+		value = 1000
+	}
+	ai_strategy = {
+		type = diplo_action_acceptance
+		target = market_access_rights
+		id = ROM
+		value = -1000
+	}
+}
+
+ROM_support_separatists = {
+	allowed = { tag = ROM }
+	enable = {
+		has_completed_focus = ROM_across_the_carpathians
+		is_subject = no
+		has_war = no
+		NOT = { owns_state = 84 }
+		NOT = { has_country_flag = ROM_TRS_prepared }
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = save_equipment
+		id = infantry_equipment
+		value = 701
+	}
+	ai_strategy = {
+		type = save_equipment
+		id = support_equipment
+		value = 81
+	}
+	ai_strategy = {
+		type = equipment_variant_production_factor
+		id = support_equipment
+		value = 20
+	}
+}
+
+ROM_focus_on_coring_TRS = {
+	allowed = { tag = ROM }
+	enable = {
+		owns_state = 84
+		NOT = { has_idea = ROM_great_game }
+	}
+	abort = {
+		has_idea = ROM_great_union
+	}
+	ai_strategy = {
+		type = pp_spend_amount
+		id = idea
+		value = 50
+	}
+	ai_strategy = {
+		type = pp_spend_amount
+		id = decision
+		value = 300
+	}
+	ai_strategy = {
+		type = pp_spend_priority
+		id = idea
+		value = -100
+	}
+	ai_strategy = {
+		type = pp_spend_priority
+		id = decision
+		value = 300
+	}
+}
+
+ROM_put_units_on_BUL_border = {
+	allowed = {
+		original_tag = ROM
+	}
+	enable = {
+		is_in_faction_with = SER
+		OR = {
+			AND = {
+				SER = { focus_progress = { focus = SER_ultimatum_to_bulgaria progress > 0 } }
+				NOT = { SER = { has_completed_focus = SER_ultimatum_to_bulgaria } }
+			}
+			AND = {
+				country_exists = MAC
+				has_war = no
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = conquer
+		id = BUL
+		value = 400
+	}
+	ai_strategy = {
+		type = front_unit_request
+		tag = BUL
+		value = 100
+	}
+	ai_strategy = {
+		type = front_unit_request
+		country_trigger = { NOT = { original_tag = BUL } }
+		value = -400
+	}
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = SER
+		value = 1000
+	}
+}

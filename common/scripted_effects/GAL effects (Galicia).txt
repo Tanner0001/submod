@@ -1,0 +1,231 @@
+GAL_set_polish_portraits = {
+	GAL_stanislaw_szeptycki = {
+		set_portraits = {
+			army = {
+				large = GFX_portrait_GAL_stanislaw_szeptycki_army_large_polish
+				small = GFX_portrait_GAL_stanislaw_szeptycki_army_small_polish
+			}
+		}
+	}
+	GAL_franciszek_kleeberg = {
+		set_portraits = {
+			army = {
+				large = GFX_portrait_GAL_franciszek_kleeberg_army_large_polish
+				small = GFX_portrait_GAL_franciszek_kleeberg_army_small_polish
+			}
+		}
+	}
+	GAL_tadeusz_kutrzeba = {
+		set_portraits = {
+			army = {
+				large = GFX_portrait_GAL_tadeusz_kutrzeba_army_large_polish
+				small = GFX_portrait_GAL_tadeusz_kutrzeba_army_small_polish
+			}
+		}
+	}
+	GAL_wladyslaw_sikorski = {
+		set_portraits = {
+			army = {
+				large = GFX_portrait_GAL_wladyslaw_sikorski_army_large_polish
+				small = GFX_portrait_GAL_wladyslaw_sikorski_army_small_polish
+			}
+		}
+	}
+}
+
+GAL_set_ukrainian_portraits = {
+	GAL_dmytro_vitovskyi = {
+		set_portraits = {
+			army = {
+				large = GFX_portrait_GAL_dmytro_vitovskyi_army_large_ukrainian
+				small = GFX_portrait_GAL_dmytro_vitovskyi_army_small_ukrainian
+			}
+		}
+	}
+	GAL_hnat_stefaniv = {
+		set_portraits = {
+			army = {
+				large = GFX_portrait_GAL_hnat_stefaniv_army_large_ukrainian
+				small = GFX_portrait_GAL_hnat_stefaniv_army_small_ukrainian
+			}
+		}
+	}
+}
+
+GAL_characters_join_poland_effect = {
+	GAL = {
+		GAL_set_polish_portraits = yes
+		if = {
+			limit = { has_character = GAL_ludwik_spiechowicz_boruta }
+			GAL_ludwik_spiechowicz_boruta = {
+				remove_high_command_role = yes
+				remove_political_advisor_role = yes
+				add_advisor_role = {
+					advisor = {
+						slot = political_advisor
+						idea_token = GAL_ludwik_spiechowicz_boruta_advisor
+						traits = { KR_reformist_soldier }
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_character = GAL_eugeniusz_kwiatkowski }
+			GAL_eugeniusz_kwiatkowski = {
+				remove_trait = {
+					slot = political_advisor
+					trait = KR_captain_of_industry
+				}
+				add_trait = {
+					slot = political_advisor
+					trait = KR_industrialiser
+				}
+			}
+		}
+		if = {
+			limit = { has_character = GAL_franciszek_pokorny }
+			GAL_franciszek_pokorny = {
+				remove_trait = {
+					slot = political_advisor
+					trait = KR_head_of_intelligence
+				}
+				add_trait = {
+					slot = political_advisor
+					trait = KR_genius_cryptologist
+				}
+			}
+		}
+		if = {
+			limit = { has_character = GAL_wincenty_witos }
+			GAL_wincenty_witos = {
+				remove_second_in_command_role = yes
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = GAL_wincenty_witos_leader_desc
+						ideology = social_liberal_subtype
+						traits = { KR_agrarian_conservative_sic }
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GAL_wincenty_witos_leader_desc
+						ideology = social_democrat_subtype
+						traits = { KR_agrarian_conservative_sic }
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GAL_wincenty_witos_leader_desc
+						ideology = social_conservative_subtype
+						traits = { KR_agrarian_conservative_sic }
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_character = GAL_gabriel_narutowicz }
+			GAL_gabriel_narutowicz = {
+				remove_civilian_advisor_roles = yes
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = GAL_gabriel_narutowicz_leader_desc
+						ideology = social_liberal_subtype
+						traits = { KR_defender_of_minorities }
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GAL_gabriel_narutowicz_leader_desc
+						ideology = social_democrat_subtype
+						traits = { KR_defender_of_minorities }
+					}
+				}
+			}
+		}
+		every_character = {
+			limit = { has_character_flag = GAL_polish_character }
+			hidden_effect = {
+				if = {
+					limit = { has_trait = GAL_polish_officer }
+					remove_unit_leader_trait = GAL_polish_officer
+				}
+			}
+			set_nationality = POL
+			demote_to_general = yes
+		}
+	}
+}
+
+GAL_characters_join_poland_immediate = {
+	if = {
+		limit = { GAL = { any_character = { has_character_flag = GAL_polish_character } } }
+		hidden_effect = {
+			GAL_characters_join_poland_effect = yes
+			GAL_characters_join_ukraine = yes
+			GAL_remove_karl_albrecht = yes
+		}
+		custom_effect_tooltip = characters_will_be_recruited
+		GAL = {
+			character_list_tooltip = {
+				limit = { has_character_flag = GAL_polish_character }
+			}
+		}
+	}
+}
+
+GAL_characters_join_ukraine_effect = {
+	GAL = {
+		GAL_set_ukrainian_portraits = yes
+		every_character = {
+			limit = { has_character_flag = GAL_ukrainian_character }
+			hidden_effect = {
+				if = {
+					limit = { has_trait = GAL_ukrainian_officer }
+					remove_unit_leader_trait = GAL_ukrainian_officer
+				}
+			}
+			set_nationality = UKR
+			demote_to_general = yes
+		}
+	}
+}
+
+GAL_characters_join_ukraine_immediate = {
+	if = {
+		limit = { GAL = { any_character = { has_character_flag = GAL_ukrainian_character } } }
+		hidden_effect = {
+			GAL_characters_join_ukraine_effect = yes
+			GAL_remove_karl_albrecht = yes
+			every_character = { clr_character_flag = GAL_ukrainian_character }
+		}
+		custom_effect_tooltip = characters_will_be_recruited
+		GAL = {
+			character_list_tooltip = {
+				limit = { has_character_flag = GAL_ukrainian_character }
+			}
+		}
+	}
+}
+
+GAL_characters_join_ukraine = {
+	hidden_effect = {
+		UKR = { country_event = { id = galicia_events.8 days = 3 random_days = 3 } }
+	}
+}
+
+GAL_remove_karl_albrecht = {
+	GAL = {
+		if = {
+			limit = { has_character = AUS_karl_albrecht_von_habsburg }
+			hidden_effect = {
+				AUS_karl_albrecht_von_habsburg = { remove_all_country_leader_roles = yes }
+			}
+			AUS_karl_albrecht_von_habsburg = {
+				set_character_name = AUS_karl_albrecht_von_habsburg
+				set_nationality = AUS
+			}
+		}
+	}
+}

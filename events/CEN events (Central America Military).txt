@@ -1,0 +1,2397 @@
+#####################################
+## Military Central America Events ##
+##	   By Wladyslaw Sikorski	   ##
+#####################################
+
+add_namespace = central_america_dictatorship_events
+
+### Intro Event
+country_event = { #yay forced union
+	id = central_america_dictatorship_events.1
+	title = central_america_dictatorship_events.1.t
+	desc = central_america_dictatorship_events.1.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.1 option central_america_dictatorship_events.1.a"
+		name = central_america_dictatorship_events.1.a
+	}
+}
+
+country_event = { #clearing and setting up flags for CEN puppet
+	id = central_america_dictatorship_events.2
+
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			NIC = { NIC_anastasio_somoza_garcia = { set_nationality = ROOT } }
+			GUA = { GUA_jorge_ubico_castaneda = { set_nationality = ROOT } }
+		}
+		set_variable = { CENmil_Congress_AuthDem = 0 }
+		set_variable = { CENmil_Congress_PatAut = 0 }
+		set_variable = { CENmil_Congress_NatPop = 0 }
+		clr_country_flag = CENmil_professional_army_doctrine
+		clr_country_flag = CENmil_mass_assault_doctrine
+	}
+
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.2 option 1"
+		trigger = {
+			has_government = authoritarian_democrat
+		}
+		add_to_variable = { CENmil_Congress_AuthDem = 4 }
+		set_country_flag = CENmil_professional_army_doctrine
+	}
+
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.2 option 2"
+		trigger = {
+			has_dictatorship_government = yes
+		}
+		add_to_variable = { CENmil_Congress_PatAut = 4 }
+		set_country_flag = CENmil_mass_assault_doctrine
+		if = {
+			limit = { has_government = national_populist }
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.3
+			}
+		}
+	}
+	after = {
+		unlock_national_focus = CENmil_laissez_faire
+		activate_targeted_decision = { target = CEN decision = CENmil_promote_investments }
+	}
+}
+
+### 3 - 12 Military Congress, tied to focus
+
+country_event = { # Opening of the Congress
+	id = central_america_dictatorship_events.3
+	title = central_america_dictatorship_events.3.t
+	desc = central_america_dictatorship_events.3.d
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { NIC = { NIC_anastasio_somoza_garcia = { set_nationality = ROOT } } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.3 option central_america_dictatorship_events.3.a"
+		name = central_america_dictatorship_events.3.a
+		add_political_power = 25
+		hidden_effect = {
+			set_variable = { CENmil_Congress_AuthDem = 0 }
+			set_variable = { CENmil_Congress_PatAut = 0 }
+			set_variable = { CENmil_Congress_NatPop = 0 }
+			NIC_anastasio_somoza_garcia = {
+				if = {
+					limit = { NOT = { has_ideology = authoritarian_democrat_subtype } }
+					add_country_leader_role = {
+						country_leader = {
+							desc = NIC_anastasio_somoza_garcia_leader_desc
+							ideology = authoritarian_democrat_subtype
+						}
+					}
+				}
+			}
+			country_event = { id = central_america_dictatorship_events.4 days = 4 }
+		}
+	}
+}
+
+country_event = { # New Economics minister
+	id = central_america_dictatorship_events.4
+	title = central_america_dictatorship_events.4.t
+	desc = {
+		text = central_america_dictatorship_events.4.d.yes.martinez
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.4.d.no.martinez
+		trigger = {
+			NOT = { has_character = ELS_maximiliano_hernandez_martinez }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # Somoza
+		log = "[GetLogInfo]: event central_america_dictatorship_events.4 option central_america_dictatorship_events.4.a"
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_AUTDEM } }
+			}
+		}
+		name = central_america_dictatorship_events.4.a
+		unlock_national_focus = CENmil_laissez_faire
+		add_to_variable = { CENmil_Congress_AuthDem = 1 }
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.03
+		}
+		activate_targeted_decision = { target = CEN decision = CENmil_promote_investments }
+	}
+	option = { # Ubico
+		log = "[GetLogInfo]: event central_america_dictatorship_events.4 option central_america_dictatorship_events.4.b"
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_PATAUT } }
+			}
+		}
+		name = central_america_dictatorship_events.4.b
+		unlock_national_focus = CENmil_laissez_faire
+		add_to_variable = { CENmil_Congress_PatAut = 1 }
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+		activate_targeted_decision = { target = CEN decision = CENmil_promote_investments }
+	}
+	option = { # Martinez
+		log = "[GetLogInfo]: event central_america_dictatorship_events.4 option central_america_dictatorship_events.4.c"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_NATPOP } }
+			}
+		}
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+		name = central_america_dictatorship_events.4.c
+		unlock_national_focus = CENmil_interventionism
+		add_to_variable = { CENmil_Congress_NatPop = 1 }
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.03
+		}
+		activate_targeted_decision = { target = CEN decision = CENmil_buy_up_stuff }
+		activate_targeted_decision = { target = CEN decision = CENmil_nationalize_stuff }
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.5 days = 4 }
+		}
+	}
+}
+country_event = { # Foreign Minister
+	id = central_america_dictatorship_events.5
+	title = central_america_dictatorship_events.5.t
+	desc = {
+		text = central_america_dictatorship_events.5.d.yes.martinez
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.5.d.no.martinez
+		trigger = {
+			NOT = { has_character = ELS_maximiliano_hernandez_martinez }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # Somoza
+		log = "[GetLogInfo]: event central_america_dictatorship_events.5 option central_america_dictatorship_events.5.a"
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_AUTDEM } }
+			}
+		}
+		name = central_america_dictatorship_events.5.a
+		add_to_variable = { CENmil_Congress_AuthDem = 1 }
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.03
+		}
+	}
+	option = { # Ubico
+		log = "[GetLogInfo]: event central_america_dictatorship_events.5 option central_america_dictatorship_events.5.b"
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_PATAUT } }
+			}
+		}
+		name = central_america_dictatorship_events.5.b
+		add_to_variable = { CENmil_Congress_PatAut = 1 }
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+	}
+	option = { # Martinez
+		log = "[GetLogInfo]: event central_america_dictatorship_events.5 option central_america_dictatorship_events.5.c"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_NATPOP } }
+			}
+		}
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+		name = central_america_dictatorship_events.5.c
+		add_to_variable = { CENmil_Congress_NatPop = 1 }
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.03
+		}
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.6 days = 4 }
+		}
+	}
+}
+country_event = { # Interior Minister
+	id = central_america_dictatorship_events.6
+	title = central_america_dictatorship_events.6.t
+	desc = {
+		text = central_america_dictatorship_events.6.d.yes.martinez
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.6.d.no.martinez
+		trigger = {
+			NOT = { has_character = ELS_maximiliano_hernandez_martinez }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # Somoza
+		log = "[GetLogInfo]: event central_america_dictatorship_events.6 option central_america_dictatorship_events.6.a"
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_AUTDEM } }
+			}
+		}
+		name = central_america_dictatorship_events.6.a
+		hidden_effect = {
+			add_to_variable = { CENmil_Congress_AuthDem = 1 }
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.03
+		}
+	}
+	option = { # Ubico
+		log = "[GetLogInfo]: event central_america_dictatorship_events.6 option central_america_dictatorship_events.6.b"
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_PATAUT } }
+			}
+		}
+		name = central_america_dictatorship_events.6.b
+		hidden_effect = {
+			add_to_variable = { CENmil_Congress_PatAut = 1 }
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+	}
+	option = { # Martinez
+		log = "[GetLogInfo]: event central_america_dictatorship_events.6 option central_america_dictatorship_events.6.c"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_NATPOP } }
+			}
+		}
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+		name = central_america_dictatorship_events.6.c
+		hidden_effect = {
+			add_to_variable = { CENmil_Congress_NatPop = 1 }
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.03
+		}
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.7 days = 4 }
+		}
+	}
+}
+country_event = { # Somoza's speech, no effect congress
+	id = central_america_dictatorship_events.7
+	title = central_america_dictatorship_events.7.t
+	desc = central_america_dictatorship_events.7.d
+
+	is_triggered_only = yes
+
+	option = { # Somoza Gang Unite
+		log = "[GetLogInfo]: event central_america_dictatorship_events.7 option central_america_dictatorship_events.7.a"
+		ai_chance = { base = 80 }
+		name = central_america_dictatorship_events.7.a
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.07
+		}
+	}
+	option = { # Sellouts reeeeeeeeeeeeeeeeeeeee
+		log = "[GetLogInfo]: event central_america_dictatorship_events.7 option central_america_dictatorship_events.7.b"
+		ai_chance = { base = 20 }
+		name = central_america_dictatorship_events.7.b
+		add_stability = -0.05
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.03
+		}
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.8 days = 4 }
+		}
+	}
+}
+country_event = { # Chief of Staff
+	id = central_america_dictatorship_events.8
+	title = central_america_dictatorship_events.8.t
+	desc = {
+		text = central_america_dictatorship_events.8.d.yes.martinez
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.8.d.no.martinez
+		trigger = {
+			NOT = { has_character = ELS_maximiliano_hernandez_martinez }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # Somoza
+		log = "[GetLogInfo]: event central_america_dictatorship_events.8 option central_america_dictatorship_events.8.a"
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_AUTDEM } }
+			}
+		}
+		name = central_america_dictatorship_events.8.a
+		add_to_variable = { CENmil_Congress_AuthDem = 1 }
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.03
+		}
+		hidden_effect = {
+			set_country_flag = CENmil_professional_army_doctrine
+		}
+	}
+	option = { # Ubico
+		log = "[GetLogInfo]: event central_america_dictatorship_events.8 option central_america_dictatorship_events.8.b"
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_PATAUT } }
+			}
+		}
+		name = central_america_dictatorship_events.8.b
+		add_to_variable = { CENmil_Congress_PatAut = 1 }
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+		hidden_effect = {
+			set_country_flag = CENmil_mass_assault_doctrine
+		}
+	}
+	option = { # Martinez
+		log = "[GetLogInfo]: event central_america_dictatorship_events.8 option central_america_dictatorship_events.8.c"
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_path option = CEN_MIL_PATH_NATPOP } }
+			}
+		}
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+		name = central_america_dictatorship_events.8.c
+		add_to_variable = { CENmil_Congress_NatPop = 1 }
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.03
+		}
+		hidden_effect = {
+			set_country_flag = CENmil_professional_army_doctrine
+		}
+	}
+	after = {
+		hidden_effect = {
+			if = {
+				limit = { has_character = ELS_maximiliano_hernandez_martinez }
+				country_event = { id = central_america_dictatorship_events.9 days = 4 }
+			}
+			else = {
+				country_event = { id = central_america_dictatorship_events.10 days = 4 }
+			}
+		}
+	}
+}
+country_event = { # Martinez' speech, no effect congress
+	id = central_america_dictatorship_events.9
+	title = central_america_dictatorship_events.9.t
+	desc = central_america_dictatorship_events.9.d
+	picture = GFX_report_event_ELS_speech
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.9 option central_america_dictatorship_events.9.a"
+		ai_chance = { base = 75 }
+		name = central_america_dictatorship_events.9.a
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.07
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.9 option central_america_dictatorship_events.9.b"
+		ai_chance = { base = 25 }
+		name = central_america_dictatorship_events.9.b
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.03
+		}
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.10 days = 4 }
+		}
+	}
+}
+country_event = { # Ubico's speech, no effect congress
+	id = central_america_dictatorship_events.10
+	title = central_america_dictatorship_events.10.t
+	desc = {
+		text = central_america_dictatorship_events.10.d.yes.martinez
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.10.d.no.martinez
+		trigger = {
+			NOT = { has_character = ELS_maximiliano_hernandez_martinez }
+		}
+	}
+	picture = GFX_report_event_GUA_ubico_gang
+
+	is_triggered_only = yes
+
+	option = { # U B I C O G A N G
+		log = "[GetLogInfo]: event central_america_dictatorship_events.10 option central_america_dictatorship_events.10.a"
+		ai_chance = { base = 75 }
+		name = central_america_dictatorship_events.10.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.07
+		}
+		add_war_support = 0.05
+	}
+	option = { # Speech falls on deaf ears
+		log = "[GetLogInfo]: event central_america_dictatorship_events.10 option central_america_dictatorship_events.10.b"
+		ai_chance = { base = 25 }
+		name = central_america_dictatorship_events.10.b
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.11 days = 4 }
+		}
+	}
+}
+country_event = { # Voting
+	id = central_america_dictatorship_events.11
+	title = central_america_dictatorship_events.11.t
+	desc = central_america_dictatorship_events.11.d
+
+	is_triggered_only = yes
+
+	option = { # Let the Voting begin
+		log = "[GetLogInfo]: event central_america_dictatorship_events.11 option central_america_dictatorship_events.11.a"
+		name = central_america_dictatorship_events.11.a
+	}
+}
+country_event = { # Congress Voted
+	id = central_america_dictatorship_events.12
+	title = {
+		text = central_america_dictatorship_events.12.t.somoza
+		trigger = {
+			check_variable = { CENmil_Congress_AuthDem > 2 }
+		}
+	}
+	title = {
+		text = central_america_dictatorship_events.12.t.ubico
+		trigger = {
+			check_variable = { CENmil_Congress_PatAut > 2 }
+		}
+	}
+	title = {
+		text = central_america_dictatorship_events.12.t.martinez
+		trigger = {
+			check_variable = { CENmil_Congress_NatPop > 2 }
+		}
+	}
+	title = {
+		text = central_america_dictatorship_events.12.t.draw
+		trigger = {
+			check_variable = { CENmil_Congress_AuthDem < 3 }
+			check_variable = { CENmil_Congress_PatAut < 3 }
+			check_variable = { CENmil_Congress_NatPop < 3 }
+		}
+	}
+
+	desc = {
+		text = central_america_dictatorship_events.12.d.somoza
+		trigger = {
+			check_variable = { CENmil_Congress_AuthDem > 2 }
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.12.d.ubico
+		trigger = {
+			check_variable = { CENmil_Congress_PatAut > 2 }
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.12.d.martinez
+		trigger = {
+			check_variable = { CENmil_Congress_NatPop > 2 }
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.12.d.draw
+		trigger = {
+			check_variable = { CENmil_Congress_AuthDem < 3 }
+			check_variable = { CENmil_Congress_PatAut < 3 }
+			check_variable = { CENmil_Congress_NatPop < 3 }
+		}
+	}
+
+	trigger = {
+		has_authoritarian_government = yes
+	}
+
+	immediate = {
+		hidden_effect = {
+			NIC = { NIC_anastasio_somoza_garcia = { set_nationality = ROOT } }
+			GUA = { GUA_jorge_ubico_castaneda = { set_nationality = ROOT } }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # AuthDem win
+		log = "[GetLogInfo]: event central_america_dictatorship_events.12 option central_america_dictatorship_events.12.a"
+		trigger = {
+			check_variable = { CENmil_Congress_AuthDem > 2 }
+		}
+		name = central_america_dictatorship_events.12.a
+		ai_chance = { base = 40 }
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.1
+		}
+		unlock_national_focus = CENmil_military_control
+		if = { #Moves capital to Managua
+			limit = { owns_state = 317 }
+			set_capital = { state = 317 remember_old_capital = no }
+		}
+	}
+	option = { # PatAuth win
+		log = "[GetLogInfo]: event central_america_dictatorship_events.12 option central_america_dictatorship_events.12.b"
+		trigger = {
+			check_variable = { CENmil_Congress_PatAut > 2 }
+		}
+		name = central_america_dictatorship_events.12.b
+		ai_chance = { base = 40 }
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+		unlock_national_focus = CENmil_military_centralism
+		if = { #Moves capital to Ciudad de Guatemala
+			limit = { owns_state = 313 }
+			set_capital = { state = 313 remember_old_capital = no }
+		}
+	}
+	option = { # NatPop win
+		log = "[GetLogInfo]: event central_america_dictatorship_events.12 option central_america_dictatorship_events.12.c"
+		name = central_america_dictatorship_events.12.c
+		ai_chance = { base = 20 }
+		trigger = {
+			check_variable = { CENmil_Congress_NatPop > 2 }
+		}
+		set_politics = {
+			ruling_party = national_populist
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.1
+		}
+		unlock_national_focus = CENmil_military_state
+		if = { #Moves capital to San Salvador
+			limit = { owns_state = 314 }
+			set_capital = { state = 314 remember_old_capital = no }
+		}
+	}
+
+	option = { # Draw Somoza Coalition
+		log = "[GetLogInfo]: event central_america_dictatorship_events.12 option central_america_dictatorship_events.12.a.draw"
+		trigger = {
+			check_variable = { CENmil_Congress_AuthDem < 3 }
+			check_variable = { CENmil_Congress_PatAut < 3 }
+			check_variable = { CENmil_Congress_NatPop < 3 }
+		}
+		name = central_america_dictatorship_events.12.a.draw
+		ai_chance = { base = 40 }
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+		unlock_national_focus = CENmil_military_control
+		if = { #Moves capital to Managua
+			limit = { owns_state = 317 }
+			set_capital = { state = 317 remember_old_capital = no }
+		}
+		hidden_effect = {
+			set_country_flag = CENmil_autdem_coallition
+		}
+	}
+	option = { # Draw Ubico Coalition
+		log = "[GetLogInfo]: event central_america_dictatorship_events.12 option central_america_dictatorship_events.12.b.draw"
+		trigger = {
+			check_variable = { CENmil_Congress_AuthDem < 3 }
+			check_variable = { CENmil_Congress_PatAut < 3 }
+			check_variable = { CENmil_Congress_NatPop < 3 }
+		}
+		name = central_america_dictatorship_events.12.b.draw
+		ai_chance = { base = 40 }
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		unlock_national_focus = CENmil_military_centralism
+		if = { #Moves capital to Ciudad de Guatemala
+			limit = { owns_state = 313 }
+			set_capital = { state = 313 remember_old_capital = no }
+		}
+		hidden_effect = {
+			set_country_flag = CENmil_pataut_coallition
+		}
+	}
+	option = { # Draw Martinez Coalition
+		log = "[GetLogInfo]: event central_america_dictatorship_events.12 option central_america_dictatorship_events.12.c.draw"
+		trigger = {
+			has_character = ELS_maximiliano_hernandez_martinez
+			check_variable = { CENmil_Congress_AuthDem < 3 }
+			check_variable = { CENmil_Congress_PatAut < 3 }
+			check_variable = { CENmil_Congress_NatPop < 3 }
+		}
+		name = central_america_dictatorship_events.12.c.draw
+		ai_chance = { base = 40 }
+		set_politics = {
+			ruling_party = national_populist
+			elections_allowed = no
+		}
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+		unlock_national_focus = CENmil_military_state
+		if = { #Moves capital to San Salvador
+			limit = { owns_state = 314 }
+			set_capital = { state = 314 remember_old_capital = no }
+		}
+		hidden_effect = {
+			set_country_flag = CENmil_natpop_coallition
+		}
+	}
+	after = {
+		hidden_effect = {
+			promote_character = {
+				character = NIC_anastasio_somoza_garcia
+				ideology = authoritarian_democrat_subtype
+			}
+			promote_character = {
+				character = GUA_jorge_ubico_castaneda
+				ideology = paternal_autocrat_subtype
+			}
+			if = {
+				limit = { has_character = ELS_maximiliano_hernandez_martinez }
+				promote_character = ELS_maximiliano_hernandez_martinez
+			}
+			country_event = { id = central_america_dictatorship_events.250 days = 300 }
+		}
+	}
+}
+
+### I might as well us these two spots for that one focus event eh
+country_event = { ### Abolishing the congress
+	id = central_america_dictatorship_events.13
+	title = central_america_dictatorship_events.13.t
+	desc = central_america_dictatorship_events.13.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### only we decide now
+		log = "[GetLogInfo]: event central_america_dictatorship_events.13 option central_america_dictatorship_events.13.a"
+		name = central_america_dictatorship_events.13.a
+		ai_chance = { base = 0 }
+		add_political_power = -50
+		add_stability = -0.1
+		if = {
+			limit = { has_dictatorship_government = no }
+			custom_effect_tooltip = cenmil_if_pataut_tt
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = -0.1
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = cenmil_if_natpop_tt
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+		}
+		else_if = {
+			limit = {
+				has_government = paternal_autocrat
+			}
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = -0.1
+			}
+		}
+		else = {
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = -0.1
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+		}
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.14 days = 5 }
+		}
+	}
+	option = { ### The military sticks together
+		log = "[GetLogInfo]: event central_america_dictatorship_events.13 option central_america_dictatorship_events.13.b"
+		name = central_america_dictatorship_events.13.b
+		ai_chance = { base = 0 }
+		add_stability = 0.05
+	}
+}
+country_event = { ### Lads you just banned aren't happy
+	id = central_america_dictatorship_events.14
+	title = central_america_dictatorship_events.14.t
+	desc = central_america_dictatorship_events.14.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### oh well
+		log = "[GetLogInfo]: event central_america_dictatorship_events.14 option central_america_dictatorship_events.14.a"
+		name = central_america_dictatorship_events.14.a
+		add_manpower = -10000
+		add_war_support = -0.1
+	}
+}
+### police manpower
+country_event = {
+	id = central_america_dictatorship_events.15
+	title = central_america_dictatorship_events.15.t
+	desc = central_america_dictatorship_events.15.d
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+	option = { ### Yes
+		log = "[GetLogInfo]: event central_america_dictatorship_events.15 option central_america_dictatorship_events.15.a"
+		name = central_america_dictatorship_events.15.a
+		ai_chance = { base = 100 }
+		add_political_power = -25
+		add_manpower = -3000
+		add_stability = 0.05
+		set_country_flag = CENmil_police_funded
+	}
+	option = { ### No
+		log = "[GetLogInfo]: event central_america_dictatorship_events.15 option central_america_dictatorship_events.15.b"
+		name = central_america_dictatorship_events.15.b
+		ai_chance = { base = 0 }
+	}
+}
+country_event = { ### Somoza' tryina mess with government again smh
+	id = central_america_dictatorship_events.16
+	title = central_america_dictatorship_events.16.t
+	desc = central_america_dictatorship_events.16.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = { ### fine let them in
+		log = "[GetLogInfo]: event central_america_dictatorship_events.16 option central_america_dictatorship_events.16.a"
+		name = central_america_dictatorship_events.16.a
+		ai_chance = { base = 0 }
+		add_stability = 0.1
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.03
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.03
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.02
+		}
+	}
+	option = { ### fine let some in
+		log = "[GetLogInfo]: event central_america_dictatorship_events.16 option central_america_dictatorship_events.16.b"
+		name = central_america_dictatorship_events.16.b
+		ai_chance = { base = 0 }
+		add_stability = 0.03
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.07
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.05
+		}
+	}
+	option = { ### thots begone
+		log = "[GetLogInfo]: event central_america_dictatorship_events.16 option central_america_dictatorship_events.16.c"
+		name = central_america_dictatorship_events.16.c
+		ai_chance = { base = 100 }
+		add_stability = -0.05
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.03
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = -0.03
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = -0.03
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.03
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = -0.03
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = -0.03
+		}
+		add_popularity = {
+			ideology = totalist
+			popularity = -0.03
+		}
+	}
+}
+country_event = { # Somoza does an election Somoza style
+	id = central_america_dictatorship_events.17
+	title = central_america_dictatorship_events.17.t
+	desc = central_america_dictatorship_events.17.d
+	picture = GFX_report_event_GUA_ubico_gang
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.17 option central_america_dictatorship_events.17.a"
+		name = central_america_dictatorship_events.17.a
+	}
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.17 option central_america_dictatorship_events.17.b"
+		name = central_america_dictatorship_events.17.b
+	}
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.17 option central_america_dictatorship_events.17.c"
+		name = central_america_dictatorship_events.17.c
+	}
+	after = {
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.05
+		}
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.18 days = 20 }
+		}
+	}
+}
+country_event = { # People call the election rigged
+	id = central_america_dictatorship_events.18
+	title = central_america_dictatorship_events.18.t
+	desc = central_america_dictatorship_events.18.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### Nonsense
+		log = "[GetLogInfo]: event central_america_dictatorship_events.18 option central_america_dictatorship_events.18.a"
+		name = central_america_dictatorship_events.18.a
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.05
+		}
+	}
+}
+
+country_event = { # Ubico Inauguration
+	id = central_america_dictatorship_events.36
+	title = central_america_dictatorship_events.36.t
+	desc = central_america_dictatorship_events.36.d
+	picture = GFX_report_event_GUA_ubico_gang
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.36 option central_america_dictatorship_events.36.a"
+		name = central_america_dictatorship_events.36.a
+	}
+}
+# Travel big time bois
+country_event = { # Ubico travels
+	id = central_america_dictatorship_events.37
+	title = central_america_dictatorship_events.37.t
+	desc = central_america_dictatorship_events.37.d
+	picture = GFX_report_event_GUA_ubico_travels
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.37 option central_america_dictatorship_events.37.a"
+		name = central_america_dictatorship_events.37.a
+		hidden_effect = {
+			if = {
+				limit = { owns_state = 311 } # Belize
+				country_event = { id = central_america_dictatorship_events.38 days = 7 }
+			}
+			else = { country_event = central_america_dictatorship_events.39 }
+		}
+	}
+}
+country_event = { # Ubico arrives in Belize
+	id = central_america_dictatorship_events.38
+	title = central_america_dictatorship_events.38.t
+	desc = central_america_dictatorship_events.38.d
+	picture = GFX_report_event_GUA_ubico_travels
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.38 option central_america_dictatorship_events.38.a"
+		name = central_america_dictatorship_events.38.a
+		add_political_power = 25
+		add_stability = 0.02
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.39 days = 5 }
+		}
+	}
+}
+country_event = { # Ubico crosses the Honduran countryside
+	id = central_america_dictatorship_events.39
+	title = central_america_dictatorship_events.39.t
+	desc = central_america_dictatorship_events.39.d
+	picture = GFX_report_event_GUA_ubico_travels
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.39 option central_america_dictatorship_events.39.a"
+		name = central_america_dictatorship_events.39.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.40 days = 15 }
+		}
+	}
+}
+country_event = { # Ubico is attacked by Syndicalists
+	id = central_america_dictatorship_events.40
+	title = central_america_dictatorship_events.40.t
+	desc = central_america_dictatorship_events.40.d
+	picture = GFX_report_event_GUA_ubico_travels
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.40 option central_america_dictatorship_events.40.a"
+		name = central_america_dictatorship_events.40.a
+		add_political_power = -10
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.41 days = 10 }
+		}
+	}
+}
+country_event = { # Ubico travels by El Salvadoran Train
+	id = central_america_dictatorship_events.41
+	title = central_america_dictatorship_events.41.t
+	desc = central_america_dictatorship_events.41.d
+	picture = GFX_report_event_GUA_ubico_travels
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.41 option central_america_dictatorship_events.41.a"
+		name = central_america_dictatorship_events.41.a
+		add_political_power = 30
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.42 days = 8 }
+		}
+	}
+}
+country_event = { # Ubico's back
+	id = central_america_dictatorship_events.42
+	title = central_america_dictatorship_events.42.t
+	desc = central_america_dictatorship_events.42.d
+	picture = GFX_report_event_GUA_ubico_travels
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.42 option central_america_dictatorship_events.42.a"
+		name = central_america_dictatorship_events.42.a
+		add_political_power = 20
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+	}
+}
+country_event = { # Ubico's statue is finished, temporary Ubico wank event
+	id = central_america_dictatorship_events.43
+	title = central_america_dictatorship_events.43.t
+	desc = central_america_dictatorship_events.43.d
+	picture = GFX_report_event_GUA_ubico_gang
+	trigger = {
+		tag = CEN
+		has_global_flag = CEN_saviour_statue
+		OR = {
+			AND = {
+				date < 1940.06.04
+				date > 1940.06.10
+			}
+			AND = {
+				date < 1941.06.04
+				date > 1941.06.10
+			}
+			AND = {
+				date < 1942.06.04
+				date > 1942.06.10
+			}
+		}
+	}
+	fire_only_once = yes
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.43 option central_america_dictatorship_events.43.a"
+		name = central_america_dictatorship_events.43.a
+		add_political_power = 25
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.01
+		}
+	}
+}
+
+### Decision events
+## Foreign Policy
+country_event = { # Asking for guarantee
+	id = central_america_dictatorship_events.201
+	title = central_america_dictatorship_events.201.t
+	desc = central_america_dictatorship_events.201.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = { # Guarantee their Independence.
+		log = "[GetLogInfo]: event central_america_dictatorship_events.201 option central_america_dictatorship_events.201.a"
+		name = central_america_dictatorship_events.201.a
+		ai_chance = { base = 100 }
+		effect_tooltip = { give_guarantee = FROM }
+		hidden_effect = {
+			FROM = { country_event = central_america_dictatorship_events.202 }
+		}
+	}
+	option = { # Where is Central America again?
+		log = "[GetLogInfo]: event central_america_dictatorship_events.201 option central_america_dictatorship_events.201.b"
+		name = central_america_dictatorship_events.201.b
+		ai_chance = { base = 0 }
+		reverse_add_opinion_modifier = { target = FROM modifier = KR_displeased }
+		hidden_effect = {
+			FROM = { country_event = central_america_dictatorship_events.203 }
+		}
+	}
+}
+
+country_event = { # CEN: FROM has accepted; gets guarantee
+	id = central_america_dictatorship_events.202
+	title = central_america_dictatorship_events.202.t
+	desc = central_america_dictatorship_events.202.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = { # We now stand together.
+		log = "[GetLogInfo]: event central_america_dictatorship_events.202 option central_america_dictatorship_events.202.a"
+		name = central_america_dictatorship_events.202.a
+		CEN_guarantee_decision_effect = yes
+	}
+}
+
+country_event = { # CEN: FROM has refused
+	id = central_america_dictatorship_events.203
+	title = central_america_dictatorship_events.203.t
+	desc = central_america_dictatorship_events.203.d
+
+	is_triggered_only = yes
+
+	option = { # We'll have to make do without them.
+		log = "[GetLogInfo]: event central_america_dictatorship_events.203 option central_america_dictatorship_events.203.a"
+		name = central_america_dictatorship_events.203.a
+		clr_country_flag = CEN_ongoing_diplomatic_efforts
+		# Align with someone if player refuses
+		clr_country_flag = CENmil_forpol_ENT
+		clr_country_flag = CENmil_forpol_GER
+		clr_country_flag = CENmil_forpol_USA
+	}
+}
+
+country_event = { # Faction leader: CEN wants to join faction
+	id = central_america_dictatorship_events.204
+	title = central_america_dictatorship_events.204.t
+	desc = {
+		text = central_america_dictatorship_events.204.d.nobelize
+		trigger = {
+			OR = {
+				311 = { is_claim_or_core_of_FROM = no } # Belize
+				NOT = {
+					is_in_faction_with = IMP
+					is_in_faction_with = WIF
+				}
+			}
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.204.d.belize
+		trigger = {
+			311 = { is_claim_or_core_of_FROM = yes } # Belize
+			OR = {
+				is_in_faction_with = IMP
+				is_in_faction_with = WIF
+			}
+		}
+	}
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = { # Welcome them in.
+		log = "[GetLogInfo]: event central_america_dictatorship_events.204 option central_america_dictatorship_events.204.a"
+		name = central_america_dictatorship_events.204.a
+		ai_chance = { base = 100 }
+		effect_tooltip = { add_to_faction = FROM }
+		hidden_effect = {
+			FROM = { country_event = central_america_dictatorship_events.205 }
+		}
+	}
+
+	option = { # Central America isn't useful to us.
+		log = "[GetLogInfo]: event central_america_dictatorship_events.204 option central_america_dictatorship_events.204.b"
+		name = central_america_dictatorship_events.204.b
+		ai_chance = { base = 0 }
+		reverse_add_opinion_modifier = { target = FROM modifier = KR_displeased }
+		hidden_effect = {
+			FROM = { country_event = central_america_dictatorship_events.206 }
+		}
+	}
+}
+
+country_event = { # CEN: Faction leader has accepted; join faction
+	id = central_america_dictatorship_events.205
+	title = central_america_dictatorship_events.202.t
+	desc = central_america_dictatorship_events.205.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = { # We now stand together.
+		log = "[GetLogInfo]: event central_america_dictatorship_events.205 option central_america_dictatorship_events.202.a"
+		name = central_america_dictatorship_events.202.a
+		CEN_join_faction_decision_effect = yes
+	}
+}
+
+country_event = { # CEN: Faction leader has refused
+	id = central_america_dictatorship_events.206
+	title = central_america_dictatorship_events.203.t
+	desc = central_america_dictatorship_events.206.d
+
+	is_triggered_only = yes
+
+	option = { # We'll have to make do without them.
+		log = "[GetLogInfo]: event central_america_dictatorship_events.206 option central_america_dictatorship_events.203.a"
+		name = central_america_dictatorship_events.203.a
+		clr_country_flag = CEN_ongoing_diplomatic_efforts
+	}
+}
+
+## Infrastructure
+country_event = { ### IRCA status
+	id = central_america_dictatorship_events.220
+	title = central_america_dictatorship_events.220.t
+	desc = central_america_dictatorship_events.220.d
+
+	is_triggered_only = yes
+	option = { ### Grant them a monopoly in exchange for gov doing whatever they want
+		log = "[GetLogInfo]: event central_america_dictatorship_events.220 option central_america_dictatorship_events.220.a"
+		name = central_america_dictatorship_events.220.a
+		trigger = {
+			has_completed_focus = CENmil_laissez_faire
+		}
+		ai_chance = { base = 50 }
+		add_political_power = 100
+		add_to_variable = {
+			var = UFC_power
+			value = 5
+			tooltip = cenmil_foreign_influence_grows_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	option = { ### Respect signed deals
+		log = "[GetLogInfo]: event central_america_dictatorship_events.220 option central_america_dictatorship_events.220.b"
+		name = central_america_dictatorship_events.220.b
+		ai_chance = { base = 50 }
+		add_political_power = 25
+		add_to_variable = {
+			var = UFC_power
+			value = 1
+			tooltip = cenmil_foreign_influence_grows_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	option = { ### Nationalize it
+		log = "[GetLogInfo]: event central_america_dictatorship_events.220 option central_america_dictatorship_events.220.c"
+		name = central_america_dictatorship_events.220.c
+		trigger = {
+			has_completed_focus = CENmil_interventionism
+		}
+		ai_chance = { base = 50 }
+		add_political_power = -75
+		set_country_flag = CENmil_irca_nationalized
+		subtract_from_variable = {
+			var = UFC_power
+			value = 5
+			tooltip = cenmil_foreign_influence_decreases_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	after = {
+		set_country_flag = CENmil_clarified_irca_flag
+		activate_targeted_decision = { target = CEN decision = CENmil_plan_trans_central_american_rail }
+	}
+}
+country_event = { ### Railway planning
+	id = central_america_dictatorship_events.221
+	title = central_america_dictatorship_events.221.t
+	desc = central_america_dictatorship_events.221.d
+
+	is_triggered_only = yes
+	option = { ### Small Investments
+		log = "[GetLogInfo]: event central_america_dictatorship_events.221 option central_america_dictatorship_events.221.a"
+		name = central_america_dictatorship_events.221.a
+		trigger = {
+			NOT = {
+				has_country_flag = CENmil_irca_nationalized
+			}
+		}
+		ai_chance = { base = 50 }
+		add_ideas = CENmil_small_investments
+		add_to_variable = {
+			var = UFC_power
+			value = 2
+			tooltip = cenmil_foreign_influence_grows_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	option = { ### Medium Investments
+		log = "[GetLogInfo]: event central_america_dictatorship_events.221 option central_america_dictatorship_events.221.b"
+		name = central_america_dictatorship_events.221.b
+		ai_chance = { base = 50 }
+		add_ideas = CENmil_medium_investments
+		subtract_from_variable = {
+			var = UFC_power
+			value = 1
+			tooltip = cenmil_foreign_influence_decreases_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	option = { ### Large Investments
+		log = "[GetLogInfo]: event central_america_dictatorship_events.221 option central_america_dictatorship_events.221.c"
+		name = central_america_dictatorship_events.221.c
+		trigger = {
+			has_country_flag = CENmil_irca_nationalized
+		}
+		ai_chance = { base = 50 }
+		add_ideas = CENmil_large_investments
+		custom_effect_tooltip = cenmil_more_gov_control_tt
+		clr_country_flag = CENmil_irca_nationalized
+		subtract_from_variable = {
+			var = UFC_power
+			value = 3
+			tooltip = cenmil_foreign_influence_decreases_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	after = {
+		if = {
+			limit = { has_country_flag = CENmil_ca_rail_1_finished_flag }
+			add_ideas = CENmil_trans_ca_rail_1
+		}
+		else = {
+			activate_targeted_decision = { target = CEN decision = CENmil_expand_irca_rails }
+		}
+		if = {
+			limit = { has_country_flag = CENmil_ca_rail_2_finished_flag }
+			swap_ideas = {
+				add_idea = CENmil_trans_ca_rail_2
+				remove_idea = CENmil_trans_ca_rail_1
+			}
+		}
+		else = {
+			activate_targeted_decision = { target = CEN decision = CENmil_tegucigalpa_rails }
+		}
+		if = {
+			limit = { has_country_flag = CENmil_ca_rail_3_finished_flag }
+			swap_ideas = {
+				add_idea = CENmil_trans_ca_rail_3
+				remove_idea = CENmil_trans_ca_rail_2
+			}
+			if = { #small fail safe so they can always remove the investement idea
+				limit = { NOT = { has_country_flag = CENmil_pay_for_itself_flag } }
+				set_country_flag = CENmil_pay_for_itself_flag
+			}
+		}
+		else = {
+			activate_targeted_decision = { target = CEN decision = CENmil_managua_rails }
+		}
+		if = {
+			limit = { has_country_flag = CENmil_ca_rail_4_finished_flag }
+			swap_ideas = {
+				add_idea = CENmil_trans_ca_rail_4
+				remove_idea = CENmil_trans_ca_rail_3
+			}
+		}
+		else = {
+			activate_targeted_decision = { target = CEN decision = CENmil_san_jose_rails }
+		}
+		if = {
+			limit = { has_country_flag = CENmil_ca_rail_5_finished_flag }
+			swap_ideas = {
+				add_idea = CENmil_trans_ca_rail_5
+				remove_idea = CENmil_trans_ca_rail_4
+			}
+		}
+		else = {
+			activate_targeted_decision = { target = CEN decision = CENmil_panama_rails }
+		}
+	}
+}
+country_event = { ### Going to Tegucigalpa
+	id = central_america_dictatorship_events.222
+	title = central_america_dictatorship_events.222.t
+	desc = central_america_dictatorship_events.222.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### let the ufc pay
+		log = "[GetLogInfo]: event central_america_dictatorship_events.222 option central_america_dictatorship_events.222.a"
+		name = central_america_dictatorship_events.222.a
+		ai_chance = { base = 50 }
+		add_to_variable = {
+			var = UFC_power
+			value = 1
+			tooltip = cenmil_foreign_influence_grows_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	option = { ### we pay
+		log = "[GetLogInfo]: event central_america_dictatorship_events.222 option central_america_dictatorship_events.222.b"
+		name = central_america_dictatorship_events.222.b
+		ai_chance = { base = 50 }
+		add_political_power = -25
+	}
+	after = {
+		set_country_flag = CENmil_clarified_rail_2_flag
+	}
+}
+country_event = { ### Going to Managua
+	id = central_america_dictatorship_events.223
+	title = central_america_dictatorship_events.223.t
+	desc = central_america_dictatorship_events.223.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### pfff, what could possibly happen
+		log = "[GetLogInfo]: event central_america_dictatorship_events.223 option central_america_dictatorship_events.223.a"
+		name = central_america_dictatorship_events.223.a
+		ai_chance = { base = 50 }
+		hidden_effect = {
+			random_list = {
+				90 = {
+					country_event = { id = central_america_dictatorship_events.224 days = 100 }
+				}
+				10 = {}
+			}
+		}
+	}
+	option = { ### provide guards
+		log = "[GetLogInfo]: event central_america_dictatorship_events.223 option central_america_dictatorship_events.223.b"
+		name = central_america_dictatorship_events.223.b
+		ai_chance = { base = 50 }
+		add_manpower = -3000
+	}
+	after = {
+		set_country_flag = CENmil_clarified_rail_3_flag
+	}
+}
+country_event = { ### Syndies are annoying
+	id = central_america_dictatorship_events.224
+	title = central_america_dictatorship_events.224.t
+	desc = central_america_dictatorship_events.224.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### sad
+		log = "[GetLogInfo]: event central_america_dictatorship_events.224 option central_america_dictatorship_events.224.a"
+		name = central_america_dictatorship_events.224.a
+		add_political_power = -75
+	}
+}
+country_event = { ### Going to San José
+	id = central_america_dictatorship_events.225
+	title = central_america_dictatorship_events.225.t
+	desc = {
+		text = central_america_dictatorship_events.225.d.costa.exists
+		trigger = {
+			country_exists = COS
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.225.d.costa.no.exists
+		trigger = {
+			NOT = {
+				country_exists = COS
+			}
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### let's go
+		log = "[GetLogInfo]: event central_america_dictatorship_events.225 option central_america_dictatorship_events.225.a"
+		name = central_america_dictatorship_events.225.a
+		trigger = {
+			316 = { is_owned_by_ROOT_or_subject = yes }
+		}
+		ai_chance = { base = 100 }
+
+		set_country_flag = CENmil_clarified_rail_4_flag
+	}
+	option = { ### demand permission
+		log = "[GetLogInfo]: event central_america_dictatorship_events.225 option central_america_dictatorship_events.225.b"
+		name = central_america_dictatorship_events.225.b
+		trigger = {
+			country_exists = COS
+			NOT = {
+				has_war_with = COS
+				has_subject = COS
+			}
+		}
+		ai_chance = { base = 50 }
+		COS = {
+			country_event = { id = central_america_dictatorship_events.226 days = 4 }
+		}
+	}
+	option = { ### wait
+		log = "[GetLogInfo]: event central_america_dictatorship_events.225 option central_america_dictatorship_events.225.c"
+		name = central_america_dictatorship_events.225.c
+		trigger = {
+			316 = { is_owned_by_ROOT_or_subject = no }
+		}
+		ai_chance = { base = 50 }
+		custom_effect_tooltip = cenmil_wait_tt
+		set_country_flag = cenmil_wait_railway_costa_rica
+	}
+	option = { ### abandon project
+		log = "[GetLogInfo]: event central_america_dictatorship_events.225 option central_america_dictatorship_events.225.e"
+		name = central_america_dictatorship_events.225.e
+		trigger = {
+			316 = { is_owned_by_ROOT_or_subject = no }
+		}
+		ai_chance = { base = 0 }
+		317 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		remove_targeted_decision = { target = CEN decision = CENmil_san_jose_rails }
+		hidden_effect = {
+			remove_targeted_decision = { target = CEN decision = CENmil_panama_rails }
+		}
+	}
+}
+country_event = { ### permission from COS, yes or no?
+	id = central_america_dictatorship_events.226
+	title = central_america_dictatorship_events.226.t
+	desc = central_america_dictatorship_events.226.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### yes
+		log = "[GetLogInfo]: event central_america_dictatorship_events.226 option central_america_dictatorship_events.226.a"
+		name = central_america_dictatorship_events.226.a
+		ai_chance = { base = 10 }
+		CEN = {
+			country_event = { id = central_america_dictatorship_events.227 days = 2 }
+		}
+	}
+	option = { ### no
+		log = "[GetLogInfo]: event central_america_dictatorship_events.226 option central_america_dictatorship_events.226.b"
+		name = central_america_dictatorship_events.226.b
+		ai_chance = { base = 90 }
+		CEN = {
+			country_event = { id = central_america_dictatorship_events.228 days = 2 }
+		}
+	}
+}
+country_event = { ### COS says yes
+	id = central_america_dictatorship_events.227
+	title = central_america_dictatorship_events.227.t
+	desc = central_america_dictatorship_events.227.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### yay
+		log = "[GetLogInfo]: event central_america_dictatorship_events.227 option central_america_dictatorship_events.227.a"
+		name = central_america_dictatorship_events.227.a
+		set_country_flag = CENmil_permission_rail_4_flag
+	}
+}
+country_event = { ### COS says no
+	id = central_america_dictatorship_events.228
+	title = central_america_dictatorship_events.228.t
+	desc = central_america_dictatorship_events.228.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### wait
+		log = "[GetLogInfo]: event central_america_dictatorship_events.228 option central_america_dictatorship_events.228.a"
+		name = central_america_dictatorship_events.228.a
+		ai_chance = { base = 75 }
+		custom_effect_tooltip = cenmil_wait_tt
+		set_country_flag = cenmil_wait_railway_costa_rica
+	}
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.228 option central_america_dictatorship_events.228.b"
+		name = central_america_dictatorship_events.228.b
+		ai_chance = { base = 25 }
+		317 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		remove_targeted_decision = { target = CEN decision = CENmil_san_jose_rails }
+		hidden_effect = {
+			remove_targeted_decision = { target = CEN decision = CENmil_panama_rails }
+		}
+	}
+}
+country_event = { ### Going to the Canal
+	id = central_america_dictatorship_events.229
+	title = central_america_dictatorship_events.229.t
+	desc = {
+		text = central_america_dictatorship_events.229.d.panama.exists
+		trigger = {
+			country_exists = PAN
+		}
+	}
+	desc = {
+		text = central_america_dictatorship_events.229.d.panama.no.exists
+		trigger = {
+			NOT = { country_exists = PAN }
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { ### let's go
+		log = "[GetLogInfo]: event central_america_dictatorship_events.229 option central_america_dictatorship_events.229.a"
+		name = central_america_dictatorship_events.229.a
+		trigger = {
+			304 = { is_owned_by_ROOT_or_subject = yes }
+		}
+		set_country_flag = CENmil_clarified_rail_5_flag
+	}
+	option = { ### demand permission
+		log = "[GetLogInfo]: event central_america_dictatorship_events.229 option central_america_dictatorship_events.229.b"
+		name = central_america_dictatorship_events.229.b
+		trigger = {
+			country_exists = PAN
+			NOT = {
+				has_war_with = PAN
+				has_subject = PAN
+			}
+		}
+		PAN = { country_event = { id = central_america_dictatorship_events.230 days = 4 } }
+	}
+	option = { ### wait
+		log = "[GetLogInfo]: event central_america_dictatorship_events.229 option central_america_dictatorship_events.229.c"
+		name = central_america_dictatorship_events.229.c
+		trigger = {
+			304 = { is_owned_by_ROOT_or_subject = no }
+		}
+		ai_chance = { base = 0 }
+		custom_effect_tooltip = cenmil_wait_tt
+		set_country_flag = cenmil_wait_railway_panama
+	}
+}
+
+country_event = { ### permission from PAN, yes or no?
+	id = central_america_dictatorship_events.230
+	title = central_america_dictatorship_events.226.t
+	desc = central_america_dictatorship_events.230.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### yes
+		log = "[GetLogInfo]: event central_america_dictatorship_events.230 option central_america_dictatorship_events.226.a"
+		name = central_america_dictatorship_events.226.a
+		ai_chance = { base = 10 }
+		CEN = {
+			country_event = { id = central_america_dictatorship_events.231 days = 2 }
+		}
+	}
+	option = { ### no
+		log = "[GetLogInfo]: event central_america_dictatorship_events.230 option central_america_dictatorship_events.226.b"
+		name = central_america_dictatorship_events.226.b
+		ai_chance = { base = 90 }
+		CEN = {
+			country_event = { id = central_america_dictatorship_events.232 days = 2 }
+		}
+	}
+}
+country_event = { ### PAN says yes
+	id = central_america_dictatorship_events.231
+	title = central_america_dictatorship_events.227.t
+	desc = central_america_dictatorship_events.231.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### yay
+		log = "[GetLogInfo]: event central_america_dictatorship_events.231 option central_america_dictatorship_events.231.a"
+		name = central_america_dictatorship_events.231.a
+		set_country_flag = CENmil_permission_rail_5_flag
+	}
+}
+country_event = { ### PAN says no
+	id = central_america_dictatorship_events.232
+	title = central_america_dictatorship_events.228.t
+	desc = central_america_dictatorship_events.232.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### wait
+		log = "[GetLogInfo]: event central_america_dictatorship_events.232 option central_america_dictatorship_events.232.a"
+		name = central_america_dictatorship_events.232.a
+		ai_chance = { base = 75 }
+		custom_effect_tooltip = cenmil_wait_tt
+		set_country_flag = cenmil_wait_railway_panama
+	}
+	option = {
+		log = "[GetLogInfo]: event central_america_dictatorship_events.232 option central_america_dictatorship_events.232.b"
+		name = central_america_dictatorship_events.232.b
+		ai_chance = { base = 25 }
+		316 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		remove_targeted_decision = { target = CEN decision = CENmil_panama_rails }
+	}
+}
+country_event = { ### yay we have cos
+	id = central_america_dictatorship_events.233
+	title = central_america_dictatorship_events.233.t
+	desc = central_america_dictatorship_events.233.d
+
+	fire_only_once = yes
+	trigger = {
+		tag = CEN
+		has_country_flag = cenmil_wait_railway_costa_rica
+		316 = {
+			OR = {
+				is_owned_by = CEN
+				owner = { is_subject_of = CEN }
+			}
+		}
+	}
+	mean_time_to_happen = {
+		days = 20
+	}
+	option = { ### let's go
+		log = "[GetLogInfo]: event central_america_dictatorship_events.233 option central_america_dictatorship_events.233.a"
+		name = central_america_dictatorship_events.233.a
+		ai_chance = { base = 10 }
+		set_country_flag = CENmil_clarified_rail_4_flag
+	}
+	option = { ### meh too lazy
+		log = "[GetLogInfo]: event central_america_dictatorship_events.233 option central_america_dictatorship_events.233.b"
+		name = central_america_dictatorship_events.233.b
+		ai_chance = { base = 0 }
+		317 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		remove_targeted_decision = { target = CEN decision = CENmil_san_jose_rails }
+		hidden_effect = {
+			remove_targeted_decision = { target = CEN decision = CENmil_panama_rails }
+		}
+	}
+}
+country_event = { ### yay we have pan
+	id = central_america_dictatorship_events.234
+	title = central_america_dictatorship_events.234.t
+	desc = central_america_dictatorship_events.234.d
+
+	fire_only_once = yes
+	trigger = {
+		tag = CEN
+		has_country_flag = cenmil_wait_railway_panama
+		304 = {
+			OR = {
+				is_owned_by = CEN
+				owner = { is_subject_of = CEN }
+			}
+		}
+	}
+	mean_time_to_happen = {
+		days = 20
+	}
+	option = { ### let's go
+		log = "[GetLogInfo]: event central_america_dictatorship_events.234 option central_america_dictatorship_events.234.a"
+		name = central_america_dictatorship_events.234.a
+		ai_chance = { base = 10 }
+		set_country_flag = CENmil_clarified_rail_5_flag
+	}
+	option = { ### meh too lazy
+		log = "[GetLogInfo]: event central_america_dictatorship_events.234 option central_america_dictatorship_events.234.b"
+		name = central_america_dictatorship_events.234.b
+		ai_chance = { base = 0 }
+		304 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		remove_targeted_decision = { target = CEN decision = CENmil_panama_rails }
+	}
+}
+##Random focus events :shrug:
+country_event = { ### Major strike
+	id = central_america_dictatorship_events.250
+	title = central_america_dictatorship_events.250.t
+	desc = central_america_dictatorship_events.250.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### darn syndies
+		log = "[GetLogInfo]: event central_america_dictatorship_events.250 option central_america_dictatorship_events.250.a"
+		name = central_america_dictatorship_events.250.a
+		add_political_power = -25
+		if = {
+			limit = { has_country_flag = CENmil_police_funded }
+			add_timed_idea = {
+				idea = CENmil_major_strike
+				days = 80
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = CENmil_major_strike2
+				days = 80
+			}
+		}
+		activate_targeted_decision = { target = CEN decision = CENmil_major_strike_decision }
+		hidden_effect = {
+			set_country_flag = CENmil_big_strike_happenned
+			if = {
+				limit = { has_completed_focus = CENmil_portuary_expansion }
+				country_event = { id = central_america_dictatorship_events.253 days = 120 random_days = 80 }
+			}
+		}
+	}
+}
+
+country_event = { ### Strike killing
+	id = central_america_dictatorship_events.252
+	title = central_america_dictatorship_events.252.t
+	desc = central_america_dictatorship_events.252.d
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### send in the army
+		log = "[GetLogInfo]: event central_america_dictatorship_events.252 option central_america_dictatorship_events.252.a"
+		name = central_america_dictatorship_events.252.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_manpower < 10000
+			}
+		}
+		add_manpower = -500
+		add_command_power = -25
+		add_stability = -0.05
+	}
+	option = { ### send in the police
+		log = "[GetLogInfo]: event central_america_dictatorship_events.252 option central_america_dictatorship_events.252.b"
+		name = central_america_dictatorship_events.252.b
+		ai_chance = { base = 50 }
+		add_political_power = -30
+		add_stability = -0.02
+		add_war_support = -0.02
+	}
+	option = { ### agree to their demands
+		log = "[GetLogInfo]: event central_america_dictatorship_events.252 option central_america_dictatorship_events.252.c"
+		name = central_america_dictatorship_events.252.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 10
+				has_political_power > 100
+			}
+		}
+		add_political_power = -75
+		add_stability = 0.03
+		subtract_from_variable = {
+			var = UFC_power
+			value = 5
+			tooltip = cenmil_foreign_influence_decreases_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	after = {
+		if = {
+			limit = { has_idea = CENmil_major_strike }
+			remove_ideas = CENmil_major_strike
+		}
+		else = {
+			remove_ideas = CENmil_major_strike2
+		}
+	}
+}
+country_event = { ### Major port strike
+	id = central_america_dictatorship_events.253
+	title = central_america_dictatorship_events.253.t
+	desc = central_america_dictatorship_events.253.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### darn syndies
+		log = "[GetLogInfo]: event central_america_dictatorship_events.253 option central_america_dictatorship_events.253.a"
+		name = central_america_dictatorship_events.253.a
+		add_political_power = -25
+		if = {
+			limit = { has_country_flag = CENmil_police_funded }
+			add_timed_idea = {
+				idea = CENmil_major_port_strike
+				days = 80
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = CENmil_major_port_strike2
+				days = 80
+			}
+		}
+		activate_targeted_decision = { target = CEN decision = CENmil_major_port_strike_decision }
+		hidden_effect = {
+			set_country_flag = CENmil_port_strike_happenned
+			if = {
+				limit = { has_completed_focus = CENmil_roads_and_rails }
+				country_event = { id = central_america_dictatorship_events.257 days = 120 random_days = 80 }
+			}
+		}
+	}
+}
+
+country_event = { ### Port Strike killing
+	id = central_america_dictatorship_events.255
+	title = central_america_dictatorship_events.255.t
+	desc = central_america_dictatorship_events.255.d
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### send in the army
+		log = "[GetLogInfo]: event central_america_dictatorship_events.255 option central_america_dictatorship_events.255.a"
+		name = central_america_dictatorship_events.255.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_manpower < 10000
+			}
+		}
+		add_manpower = -500
+		add_command_power = -25
+		add_stability = -0.05
+	}
+	option = { ### send in the police
+		log = "[GetLogInfo]: event central_america_dictatorship_events.255 option central_america_dictatorship_events.255.b"
+		name = central_america_dictatorship_events.255.b
+		ai_chance = { base = 50 }
+		add_political_power = -30
+		add_stability = -0.02
+		add_war_support = -0.02
+	}
+	option = { ### agree to their demands
+		log = "[GetLogInfo]: event central_america_dictatorship_events.255 option central_america_dictatorship_events.255.c"
+		name = central_america_dictatorship_events.255.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 10
+				has_political_power > 100
+			}
+		}
+		add_political_power = -75
+		add_stability = 0.03
+		subtract_from_variable = {
+			var = UFC_power
+			value = 5
+			tooltip = cenmil_foreign_influence_decreases_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	after = {
+		if = {
+			limit = { has_idea = CENmil_major_port_strike }
+			remove_ideas = CENmil_major_port_strike
+		}
+		else = {
+			remove_ideas = CENmil_major_port_strike2
+		}
+	}
+}
+#lul jumped central_america_dictatorship_events.256
+country_event = { ### Major rail strike
+	id = central_america_dictatorship_events.257
+	title = central_america_dictatorship_events.257.t
+	desc = central_america_dictatorship_events.257.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### darn syndies
+		log = "[GetLogInfo]: event central_america_dictatorship_events.257 option central_america_dictatorship_events.257.a"
+		name = central_america_dictatorship_events.257.a
+		add_political_power = -25
+		if = {
+			limit = { has_country_flag = CENmil_police_funded }
+			add_timed_idea = {
+				idea = CENmil_major_rail_strike
+				days = 80
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = CENmil_major_rail_strike2
+				days = 80
+			}
+		}
+		activate_targeted_decision = { target = CEN decision = CENmil_major_rail_strike_decision }
+	}
+}
+country_event = { ### Rail Strike killing
+	id = central_america_dictatorship_events.259
+	title = central_america_dictatorship_events.259.t
+	desc = central_america_dictatorship_events.259.d
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### send in the army
+		log = "[GetLogInfo]: event central_america_dictatorship_events.259 option central_america_dictatorship_events.259.a"
+		name = central_america_dictatorship_events.259.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				has_manpower < 10000
+			}
+		}
+		add_manpower = -500
+		add_command_power = -25
+		add_stability = -0.05
+	}
+	option = { ### send in the police
+		log = "[GetLogInfo]: event central_america_dictatorship_events.259 option central_america_dictatorship_events.259.b"
+		name = central_america_dictatorship_events.259.b
+		ai_chance = { base = 50 }
+		add_political_power = -30
+		add_stability = -0.02
+		add_war_support = -0.02
+	}
+	option = { ### agree to their demands
+		log = "[GetLogInfo]: event central_america_dictatorship_events.259 option central_america_dictatorship_events.259.c"
+		name = central_america_dictatorship_events.259.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 10
+				has_political_power > 100
+			}
+		}
+		add_political_power = -75
+		add_stability = 0.03
+		subtract_from_variable = {
+			var = UFC_power
+			value = 5
+			tooltip = cenmil_foreign_influence_decreases_tt
+		}
+		hidden_effect = {
+			update_CENmil_UFC = yes
+		}
+	}
+	after = {
+		if = {
+			limit = { has_idea = CENmil_major_rail_strike }
+			remove_ideas = CENmil_major_rail_strike
+		}
+		else = {
+			remove_ideas = CENmil_major_rail_strike2
+		}
+	}
+}
+### Rails start paying
+country_event = { ### rails are being strongly used
+	id = central_america_dictatorship_events.260
+	title = central_america_dictatorship_events.260.t
+	desc = central_america_dictatorship_events.260.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { ### cool
+		log = "[GetLogInfo]: event central_america_dictatorship_events.260 option central_america_dictatorship_events.260.a"
+		name = central_america_dictatorship_events.260.a
+		add_political_power = 25
+	}
+}
+country_event = { ### rails are making cash
+	id = central_america_dictatorship_events.261
+	title = central_america_dictatorship_events.261.t
+	desc = central_america_dictatorship_events.261.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { ### cool
+		log = "[GetLogInfo]: event central_america_dictatorship_events.261 option central_america_dictatorship_events.261.a"
+		name = central_america_dictatorship_events.261.a
+		add_political_power = 75
+		hidden_effect = {
+			if = {
+				limit = {
+					OR = {
+						has_government = paternal_autocrat
+						has_idea = CENmil_large_investments
+					}
+				}
+				country_event = { id = central_america_dictatorship_events.263 days = 200 }
+			}
+			if = {
+				limit = {
+					has_government = national_populist
+					NOT = {
+						has_idea = CENmil_large_investments
+					}
+				}
+				country_event = { id = central_america_dictatorship_events.262 days = 100 }
+			}
+			if = {
+				limit = {
+					has_government = authoritarian_democrat
+					NOT = {
+						has_idea = CENmil_large_investments
+					}
+				}
+				country_event = { id = central_america_dictatorship_events.262 days = 150 }
+			}
+		}
+	}
+}
+country_event = { ### corruption is eating profits
+	id = central_america_dictatorship_events.262
+	title = central_america_dictatorship_events.262.t
+	desc = central_america_dictatorship_events.262.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { ### uncool
+		log = "[GetLogInfo]: event central_america_dictatorship_events.262 option central_america_dictatorship_events.262.a"
+		name = central_america_dictatorship_events.262.a
+		add_political_power = -50
+		hidden_effect = {
+			country_event = { id = central_america_dictatorship_events.263 days = 200 }
+		}
+	}
+}
+country_event = { ### rails bring in enough money to pay for themselves
+	id = central_america_dictatorship_events.263
+	title = central_america_dictatorship_events.263.t
+	desc = central_america_dictatorship_events.263.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { ### cool
+		log = "[GetLogInfo]: event central_america_dictatorship_events.263 option central_america_dictatorship_events.263.a"
+		name = central_america_dictatorship_events.263.a
+		add_political_power = 25
+		set_country_flag = CENmil_pay_for_itself_flag
+	}
+}
+
+### Expansion
+country_event = { ### Event for COS: CEN is doing shit again
+	id = central_america_dictatorship_events.307
+	title = central_america_dictatorship_events.307.t
+	desc = central_america_dictatorship_events.307.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### darn military lads
+		log = "[GetLogInfo]: event central_america_dictatorship_events.307 option central_america_dictatorship_events.307.a"
+		name = central_america_dictatorship_events.307.a
+		COS_create_volunteer_divisions_against_CEN = yes
+		add_war_support = 0.3
+	}
+}
+
+country_event = { ### Event for PAN: CEN is doing shit again
+	id = central_america_dictatorship_events.308
+	title = central_america_dictatorship_events.308.t
+	desc = central_america_dictatorship_events.308.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	option = { ### darn military lads
+		log = "[GetLogInfo]: event central_america_dictatorship_events.308 option central_america_dictatorship_events.308.a"
+		name = central_america_dictatorship_events.308.a
+		add_war_support = 0.1
+	}
+}
+
+country_event = { # Foreign alignment event for the AI
+	id = central_america_dictatorship_events.500
+
+	hidden = yes
+	is_triggered_only = yes
+
+	option = { # Reichspakt
+		log = "[GetLogInfo]: event central_america_dictatorship_events.500 option 1"
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				OR = {
+					GER = { is_faction_leader = no }
+					has_war_with = GER
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_forpol option = CEN_MIL_FORPOL_GER } }
+			}
+		}
+
+		set_country_flag = CENmil_forpol_GER
+	}
+
+	option = { # Entente
+		log = "[GetLogInfo]: event central_america_dictatorship_events.500 option 2"
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				OR = {
+					ENT = { is_faction_leader = no }
+					has_war_with = ENT
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_forpol option = CEN_MIL_FORPOL_ENT } }
+			}
+		}
+
+		set_country_flag = CENmil_forpol_ENT
+	}
+
+	option = { # ACW Winner
+		log = "[GetLogInfo]: event central_america_dictatorship_events.500 option 3"
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				all_country_of = {
+					target = constant:country_groups.usa_non_socialist
+					OR = {
+						exists = no
+						has_war_with = ROOT
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CEN_mil_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CEN_mil_forpol option = CEN_MIL_FORPOL_ACW_VICTOR } }
+			}
+		}
+
+		set_country_flag = CENmil_forpol_USA
+	}
+}
+

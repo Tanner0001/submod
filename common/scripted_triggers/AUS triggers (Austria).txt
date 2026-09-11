@@ -1,0 +1,201 @@
+AUS_no_black_monday = {
+	custom_override_tooltip = {
+		tooltip = AUS_economy_ready_tooltip
+		NOT = {
+			has_idea = AUS_black_monday
+			has_idea = AUS_black_monday_cs-1
+			has_idea = AUS_black_monday_cs-2
+			has_idea = AUS_black_monday_cs-3
+			has_idea = AUS_black_monday_sdap-1
+			has_idea = AUS_black_monday_sdap-2
+			has_idea = AUS_black_monday_sdap-3
+		}
+	}
+}
+
+AUS_is_led_by_habsburgs = {
+	var:country_leader = { AUS_is_habsburg_family_member = yes }
+}
+
+AUS_is_habsburg_family_member = {
+	has_character_flag = AUS_habsburg
+}
+
+AUS_is_unified = {
+	OR = {
+		has_cosmetic_tag = AUS_empire
+		has_cosmetic_tag = AUS_danubia
+		has_cosmetic_tag = AUS_united_states
+	}
+}
+
+AUS_has_integrated_HUN = {
+	AUS = {
+		OR = {
+			has_completed_focus = AUS_am_followup_4
+			has_completed_focus = AUS_us_united
+		}
+	}
+}
+
+AUS_can_annex_german_lands = {
+	if = {
+		limit = { AUS_is_led_by_habsburgs = yes }
+		OR = {
+			has_completed_focus = AUS_status_quo
+			has_completed_focus = AUS_military_occupation
+		}
+	}
+	else = {
+		AUS_is_unified = no
+	}
+}
+
+AUS_can_have_danubian_annexations = {
+	if = {
+		limit = { tag = AUS }
+		OR = {
+			has_completed_focus = AUS_status_quo
+			has_completed_focus = AUS_embrace_pluralism
+			has_completed_focus = AUS_military_occupation
+			NOT = { has_cosmetic_tag = AUS_empire }
+		}
+	}
+}
+
+AUS_has_completed_ausgleich_path = {
+	if = {
+		limit = { tag = AUS }
+		OR = {
+			has_completed_focus = AUS_status_quo
+			has_completed_focus = AUS_embrace_pluralism
+			has_completed_focus = AUS_the_new_Empire #Not AUS_military_occupation, because they only "complete" the path when they actually win the war
+		}
+	}
+	else = {
+		OR = {
+			AUS = { has_completed_focus = AUS_status_quo }
+			AUS = { has_completed_focus = AUS_embrace_pluralism }
+			AUS = { has_completed_focus = AUS_the_new_Empire } #Not AUS_military_occupation, because they only "complete" the path when they actually win the war
+		}
+	}
+}
+
+AUS_can_form_germany = {
+	original_tag = AUS
+	NOT = { has_cosmetic_tag = AUS_germany }
+	AUS_can_annex_german_lands = yes
+	annexations_germany_is_independent_ally_or_puppet_of_ROOT = no
+	is_subject = no
+}
+
+is_controlled_by_BP = {
+	controller = {
+		AUS_is_potential_fifth_balkan_war_participant = yes
+		OR = {
+			is_subject = no
+			overlord = { NOT = { has_war_with = AUS } }
+			overlord = { AUS_is_potential_fifth_balkan_war_participant = yes }
+		}
+		OR = {
+			is_in_faction = no
+			is_faction_leader = yes
+			faction_leader = { NOT = { has_war_with = PREV.PREV } }
+			faction_leader = { AUS_is_potential_fifth_balkan_war_participant = yes }
+		}
+	}
+}
+
+owns_belgrade_pact_claimed_state = {
+	any_owned_state = {
+		OR = {
+			AND = {
+				region = 144 #Transylvania
+				country_exists = ROM
+				ROM = {
+					has_country_flag = AUS_accepts_peace
+					OR = {
+						is_subject = no
+						is_subject_of = BUL
+					}
+					NOT = { has_war_with = ROOT }
+				}
+			}
+			AND = {
+				OR = {
+					region = 143 #Illyria
+					state = 45 #Vojvodina
+				}
+				country_exists = SER
+				SER = {
+					has_country_flag = AUS_accepts_peace
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+			}
+			AND = {
+				OR = {
+					region = 143 #Illyria
+					state = 45 #Vojvodina
+				}
+				country_exists = BUL
+				BUL = {
+					has_completed_focus = BUL_hijack_yugoslavism
+					has_country_flag = AUS_accepts_peace
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+			}
+		}
+	}
+}
+
+AUS_is_potential_fifth_balkan_war_participant = {
+	OR = {
+		original_tag = SER
+		original_tag = BUL
+		original_tag = ROM
+		original_tag = ALB
+		original_tag = GRE
+		original_tag = ITA
+		original_tag = VNC
+		original_tag = CRO
+		original_tag = CZE
+		original_tag = GAL
+	}
+}
+
+AUS_is_temporarily_in_reichspakt = {
+	OR = {
+		has_country_flag = AUS_intervened_in_weltkrieg
+		has_country_flag = AUS_former_faction_member
+	}
+}
+
+AUS_can_join_vienna_circle = {
+	AUS_is_in_donau_adriabund = yes
+	AUS = { is_in_tech_sharing_group = austrian_research }
+	is_tag_in_china_area = no #can't join
+	NOT = { is_in_tech_sharing_group = austrian_research }
+}
+
+AUS_is_in_donau_adriabund = {
+	# make sure to use inside a scope if used as tooltip
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = TRIGGER_HAS_FACTION_TEMPLATE
+			COUNTRY = "[THIS.GetName]"
+			FACTION = faction_donau_adriabund
+		}
+		not_tooltip = {
+			localization_key = TRIGGER_HAS_NOT_FACTION_TEMPLATE
+			COUNTRY = "[THIS.GetName]"
+			FACTION = faction_donau_adriabund
+		}
+		is_in_faction = yes
+		OR = {
+			scope:faction = { has_variable = faction_template_donau_adriabund_var }
+			AUS_is_temporarily_in_reichspakt = yes #Is in reichspakt temporarily
+		}
+	}
+}

@@ -1,0 +1,436 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			CAN = {
+				every_core_state = { remove_core_of = GBR }
+				set_temp_variable = { coalition_partner_var = token:social_liberal }
+				add_to_coalition = yes
+			}
+			every_country = {
+				limit = { has_socialist_government = yes }
+				every_other_country = {
+					limit = { is_ally_with = ENT }
+					embargo_PREV = yes
+					add_opinion_modifier = {
+						target = PREV
+						modifier = KR_hostile
+					}
+					reverse_add_opinion_modifier = {
+						target = PREV
+						modifier = KR_hostile
+					}
+				}
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			FROM = {
+				if = {
+					limit = { tag = event_target:KR_king_base }
+					GBR = { CAN_transfer_king_base = yes }
+				}
+				if = {
+					limit = { tag = ENT }
+					if = {
+						limit = { has_global_flag = CAN_iedc_created }
+						clr_global_flag = CAN_iedc_created
+						every_possible_country = {
+							clr_country_flag = CAN_refused_iedc
+							CAN_remove_from_iedc = yes
+						}
+						event_target:iedc_leader = { remove_ideas = CAN_iedc_main }
+						clear_global_event_target = iedc_leader
+					}
+					if = {
+						limit = { is_in_tech_sharing_group = entente_research }
+						every_possible_country = { remove_from_tech_sharing_group = entente_research }
+					}
+					GBR = { save_global_event_target_as = KR_entente_leader }
+				}
+				else = {
+					clr_country_flag = CAN_refused_iedc
+					CAN_remove_from_iedc = yes
+					remove_from_tech_sharing_group = entente_research
+				}
+			}
+			CAN_temporarily_disable_annexations_britain_france = yes
+		}
+	}
+
+	#ROOT is winner #FROM is loser
+	on_peaceconference_ended = {
+		effect = {
+			CAN_temporarily_disable_annexations_britain_france = yes
+		}
+	}
+
+	# ROOT is the new faction leader FROM is the old faction leader
+	on_assume_faction_leadership = {
+		effect = {
+			if = {
+				limit = { FROM = { tag = ENT } }
+				CAN_transfer_entente_leader = yes
+				if = {
+					limit = { FROM = { has_idea = CAN_iedc_main } }
+					CAN_transfer_iedc_leadership = yes
+				}
+				if = {
+					limit = { COS = { is_guaranteed_by = FROM } }
+					FROM = {
+						diplomatic_relation = {
+							country = COS
+							relation = guarantee
+							active = no
+						}
+					}
+					ROOT = { give_guarantee = COS }
+				}
+			}
+			if = {
+				limit = {
+					FROM = {
+						tag = event_target:KR_king_base
+						OR = {
+							surrender_progress > 0.8
+							NOT = { is_in_faction_with = ROOT }
+							CAN_is_king_base_and_commonwealth = no
+						}
+					}
+				}
+				FROM = { CAN_find_next_king_base = yes }
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			# remove effects of the Halifax Conference if Germany capitulates
+			if = {
+				limit = {
+					tag = GER
+					country_exists = ENT
+					has_global_flag = GER_stay_out_france_uk
+				}
+				every_country = {
+					limit = { is_in_faction_with = ENT }
+					country_event = { id = entente_events.330 days = 5 }
+				}
+			}
+		}
+	}
+
+	#FROM is country getting invited.
+	on_offer_join_faction = {
+		effect = {
+			# removing from IEDC
+			if = {
+				limit = {
+					FROM = { ENT_is_in_iedc = yes }
+					ENT_is_in_iedc = no
+				}
+				FROM = { country_event = entente_events.12 }
+			}
+
+			if = {
+				limit = { is_ally_with = ENT }
+
+				#Add embargoes
+				every_country = {
+					limit = { has_socialist_government = yes }
+					embargo_FROM = yes
+					add_opinion_modifier = {
+						target = FROM
+						modifier = KR_hostile
+					}
+					reverse_add_opinion_modifier = {
+						target = FROM
+						modifier = KR_hostile
+					}
+				}
+
+				#Add ACW support idea
+				if = {
+					limit = {
+						has_idea = ACW_support_USA
+						FROM = {
+							NOT = { has_idea = ACW_support_USA }
+							is_american_tag = no
+						}
+					}
+					FROM = { add_ideas = ACW_support_USA }
+				}
+				else_if = {
+					limit = {
+						has_idea = ACW_support_ACC
+						FROM = {
+							NOT = { has_idea = ACW_support_USA }
+							is_american_tag = no
+						}
+					}
+					FROM = { add_ideas = ACW_support_ACC }
+				}
+				else_if = {
+					limit = {
+						has_idea = ACW_support_APG
+						FROM = {
+							NOT = { has_idea = ACW_support_APG }
+							is_american_tag = no
+						}
+					}
+					FROM = { add_ideas = ACW_support_APG }
+				}
+			}
+		}
+	}
+
+	# FROM = faction leader
+	on_leave_faction = {
+		effect = {
+			if = {
+				limit = { has_country_flag = ENT_on_leave_faction_disabled }
+				clr_country_flag = ENT_on_leave_faction_disabled
+			}
+			else = {
+				country_event = entente_events.12
+				if = {
+					limit = { FROM = { is_ally_with = ENT } }
+					remove_opinion_modifier = { target = CAN modifier = CAN_imperial_pride }
+					every_other_country = {
+						limit = { has_socialist_government = yes }
+						clear_embargo_ROOT = yes
+						remove_opinion_modifier = {
+							target = ROOT
+							modifier = KR_hostile
+						}
+						ROOT = {
+							remove_opinion_modifier = {
+								target = PREV
+								modifier = KR_hostile
+							}
+						}
+					}
+					if = {
+						limit = { owns_state = 326 }
+						593 = { #Qingyuan
+							if = {
+								limit = { controller = { is_chinese_tag = yes } }
+								controller = { country_event = legation_cities_events.70 }
+							}
+							else = {
+								owner = { country_event = legation_cities_events.70 }
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_peace = {
+		effect = {
+			if = {
+				limit = { country_exists = ENT }
+				if = {
+					limit = { has_socialist_government = yes }
+					every_country = {
+						limit = { is_ally_with = ENT }
+						embargo_ROOT = yes
+						add_opinion_modifier = {
+							target = ROOT
+							modifier = KR_hostile
+						}
+						reverse_add_opinion_modifier = {
+							target = ROOT
+							modifier = KR_hostile
+						}
+					}
+				}
+				else = {
+					every_country = {
+						limit = { is_ally_with = ENT }
+						clear_embargo_ROOT = yes
+						remove_opinion_modifier = {
+							target = ROOT
+							modifier = KR_hostile
+						}
+						ROOT = {
+							remove_opinion_modifier = {
+								target = PREV
+								modifier = KR_hostile
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_new_term_election = {
+		effect = {
+			### Australasia ###
+			if = {
+				limit = { tag = AST }
+				country_event = australasia_events.10 #1936
+				country_event = australasia_events.50 #1939
+				country_event = australasia_events.53 #1942+
+				country_event = australasia_events.102 #second socialist congress
+				country_event = australasia_events.103 #third socialist congress
+			}
+			### West Indies ###
+			else_if = {
+				limit = { tag = WIF }
+				country_event = west_indies_federation_politics_events.30
+			}
+			### Canada ###
+			else_if = {
+				limit = { tag = CAN }
+				country_event = canada_events.50 #1936
+				country_event = canada_events.67 #runoff
+				country_event = canada_events.75 #after 1936
+			}
+			### UK ###
+			else_if = {
+				limit = { tag = GBR }
+				country_event = united_kingdom_events.34
+			}
+		}
+	}
+
+	on_ruling_party_change = {
+		effect = {
+			if = {
+				limit = { country_exists = ENT }
+				if = {
+					limit = { has_socialist_government = yes }
+					every_country = {
+						limit = { is_ally_with = ENT }
+						embargo_ROOT = yes
+						add_opinion_modifier = {
+							target = ROOT
+							modifier = KR_hostile
+						}
+						reverse_add_opinion_modifier = {
+							target = ROOT
+							modifier = KR_hostile
+						}
+					}
+				}
+				else = {
+					every_country = {
+						limit = { is_ally_with = ENT }
+						clear_embargo_ROOT = yes
+						remove_opinion_modifier = {
+							target = ROOT
+							modifier = KR_hostile
+						}
+						ROOT = {
+							remove_opinion_modifier = {
+								target = PREV
+								modifier = KR_hostile
+							}
+						}
+					}
+				}
+			}
+			if = {
+				limit = { original_tag = WIF }
+				if = {
+					limit = {
+						has_socialist_government = yes
+						previous_government_was_socialist = no
+					}
+					WIF_remove_entente_commanders = yes
+					WIF_add_caribbean_commanders = yes
+				}
+				else_if = {
+					limit = {
+						has_socialist_government = no
+						previous_government_was_socialist = yes
+					}
+					WIF_add_entente_commanders = yes
+					WIF_remove_caribbean_commanders = yes
+				}
+			}
+			else_if = {
+				limit = { tag = CAN }
+				CAN_add_correct_second_in_command = yes
+			}
+		}
+	}
+
+	#ROOT = attacking side
+	#FROM = defending side
+	#fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						tag = ENT
+						tag = RAJ
+					}
+					FROM = {
+						OR = {
+							tag = ENT
+							tag = RAJ
+						}
+					}
+				}
+				RAJ = { country_event = { id = dominion_of_india_events.25 days = 2 } }
+			}
+			if = {
+				limit = {
+					OR = {
+						tag = GER
+						is_ally_with = ENT
+					}
+					FROM = {
+						OR = {
+							tag = GER
+							is_ally_with = ENT
+						}
+					}
+				}
+				country_event = entente_events.331
+			}
+			if = { # When INT/ENT go to war
+				limit = {
+					OR = {
+						tag = ENT
+						tag = INT
+					}
+					FROM = {
+						OR = {
+							tag = ENT
+							tag = INT
+						}
+					}
+				}
+				entente_add_reclamation_wars_threat = yes
+			}
+			if = {
+				limit = {
+					OR = {
+						is_ally_with = ENT #== attacked by the Entente
+						is_ally_with = event_target:iedc_leader
+					}
+				}
+				FROM = { country_event = entente_events.12 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						FROM = { is_ally_with = ENT } #== attacked the Entente
+						FROM = { is_ally_with = event_target:iedc_leader }
+					}
+				}
+				country_event = entente_events.12
+			}
+		}
+	}
+
+}

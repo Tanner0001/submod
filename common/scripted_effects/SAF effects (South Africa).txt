@@ -1,0 +1,2730 @@
+SAF_reform_segregation_1 = {
+	if = {
+		limit = {
+			NOT = {
+				AND = {
+					has_authoritarian_government = yes
+					has_completed_focus = SAF_implement_apartheid
+				}
+			}
+		}
+		modify_country_flag = { flag = SAF_segregation_reform value = 1 }
+		if = {
+			limit = { has_idea = SAF_segregation_1 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_1
+				add_idea = SAF_segregation_2
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_2 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_2
+				add_idea = SAF_segregation_3
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_3 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_3
+				add_idea = SAF_segregation_4
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_4 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_4
+				add_idea = SAF_segregation_5
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_5 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_5
+				add_idea = SAF_segregation_6
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_6 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_6
+				add_idea = SAF_segregation_7
+			}
+		}
+	}
+}
+
+SAF_increase_segregation_1 = {
+	if = {
+		limit = {
+			NOT = {
+				AND = {
+					has_authoritarian_government = yes
+					has_completed_focus = SAF_implement_apartheid
+				}
+			}
+		}
+		modify_country_flag = { flag = SAF_segregation_reform value = -1 }
+		if = {
+			limit = { has_idea = SAF_segregation_6 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_6
+				add_idea = SAF_segregation_5
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_5 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_5
+				add_idea = SAF_segregation_4
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_4 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_4
+				add_idea = SAF_segregation_3
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_3 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_3
+				add_idea = SAF_segregation_2
+			}
+		}
+		else_if = {
+			limit = { has_idea = SAF_segregation_2 }
+			swap_ideas = {
+				remove_idea = SAF_segregation_2
+				add_idea = SAF_segregation_1
+			}
+		}
+	}
+}
+
+SAF_inflation_events = {
+	hidden_effect = {
+		country_event = { id = south_africa_events.162 days = 2 random_days = 4 }
+		country_event = { id = south_africa_events.163 days = 2 random_days = 4 }
+	}
+}
+
+SAF_puppet_setup = {
+	if = {
+		limit = { has_democratic_government = no }
+		var:tag_to_release = {
+			set_politics = {
+				ruling_party = var:SAF.current_party_ideology_group
+				elections_allowed = no
+			}
+		}
+	}
+	hidden_effect = {
+		if = { #Native South Africa
+			limit = { annexations_AI_will_consider_returning_colonies = no }
+			var:tag_to_release = {
+				drop_cosmetic_tag = yes
+				SAF_remove_governor_general = yes
+				SAF_promote_native_republican_leaders = yes
+				SAF_add_socialist_generals = yes
+				SAF_remove_entente_generals = yes
+				SAF_set_socialist_spymaster = yes
+				if = {
+					limit = {
+						has_socialist_government = yes
+						NOT = { has_focus_tree = SAF_socialist_focus }
+					}
+					load_focus_tree = { tree = SAF_socialist_focus keep_completed = yes }
+					add_ideas = {
+						SAF_idea_reactionary_activities
+						SAF_idea_low_participation
+					}
+				}
+			}
+		}
+		else_if = { #British puppet - South African Federation
+			limit = { is_ally_with = ENT }
+			var:tag_to_release = {
+				set_cosmetic_tag = SAF_federation
+				set_politics = {
+					ruling_party = paternal_autocrat
+					elections_allowed = no
+				}
+				add_popularity = {
+					ideology = paternal_autocrat
+					popularity = 0.3
+				}
+				SAF_promote_white_republican_leaders = yes
+				SAF_federation_party_names = yes
+				SAF_create_governor_general = yes
+				SAF_add_entente_generals = yes
+				SAF_remove_socialist_generals = yes
+				SAF_set_british_spymaster = yes
+				load_focus_tree = { tree = SAF_federation_focus keep_completed = yes }
+				SAF_remove_socialist_ideas = yes
+			}
+		}
+		else_if = { #Dutch/German puppet - South African Republic
+			limit = {
+				OR = {
+					original_tag = HOL
+					original_tag = GER
+					is_ally_with = GER
+				}
+			}
+			var:tag_to_release = {
+				set_cosmetic_tag = SAF_republic_puppet
+				set_politics = {
+					ruling_party = paternal_autocrat
+					elections_allowed = no
+				}
+				add_popularity = {
+					ideology = paternal_autocrat
+					popularity = 0.3
+				}
+				SAF_remove_governor_general = yes
+				SAF_union_party_names = yes
+				SAF_add_socialist_generals = yes
+				SAF_remove_entente_generals = yes
+				SAF_promote_white_republican_leaders = yes
+				SAF_set_boer_spymaster = yes
+				load_focus_tree = { tree = SAF_focus keep_completed = yes }
+				SAF_remove_socialist_ideas = yes
+			}
+		}
+		else = {  #If you don't fulfil the above conditions you're a non-aligned western nation. Just make it a white republic then without shenanigans
+			var:tag_to_release = {
+				set_cosmetic_tag = SAF_union_no_brits
+				SAF_remove_governor_general = yes
+				SAF_promote_white_republican_leaders = yes
+				SAF_union_party_names = yes
+				SAF_add_entente_generals = yes
+				SAF_remove_socialist_generals = yes
+				load_focus_tree = { tree = SAF_focus keep_completed = yes }
+				SAF_remove_socialist_ideas = yes
+				SAF_set_british_spymaster = yes
+			}
+		}
+	}
+}
+
+SAF_remove_socialist_ideas = {
+	remove_ideas = {
+		SAF_idea_converting_to_socialism
+		SAF_idea_converting_to_socialism_1
+		SAF_idea_converting_to_socialism_2
+		SAF_idea_syndicalist_economy
+		SAF_idea_native_republic
+		SAF_idea_slum_formation
+		SAF_idea_slum_formation_2
+		SAF_idea_reactionary_activities
+		SAF_idea_reactionary_activities_1
+		SAF_idea_low_participation
+		SAF_idea_low_participation_1
+		SAF_idea_native_trade_unions
+		SAF_idea_native_education
+		SAF_idea_dismantling_tribal_structures
+		SAF_idea_ethnic_rep_councils
+		SAF_idea_white_flight
+		SAF_idea_new_farmers
+	}
+	remove_targeted_decision = { target = SAF decision = SAF_decision_township_modernisation }
+	if = {
+		limit = {
+			NOT = {
+				has_idea = SAF_segregation_1
+				has_idea = SAF_segregation_2
+				has_idea = SAF_segregation_3
+				has_idea = SAF_segregation_4
+				has_idea = SAF_segregation_5
+				has_idea = SAF_segregation_6
+			}
+		}
+		add_ideas = SAF_segregation_3
+	}
+}
+
+SAF_promote_native_republican_leaders = {
+	event_target:original_south_africa = {
+		SAF_james_arnold_la_guma = {
+			set_nationality = PREV.PREV
+			promote_character = totalist_subtype
+		}
+		SAF_clements_kadalie = {
+			set_nationality = PREV.PREV
+			promote_character = syndicalist_subtype
+		}
+		SAF_moses_mauane_kotane = {
+			set_nationality = PREV.PREV
+			promote_character = radical_socialist_subtype
+		}
+		SAF_josiah_tshangana_gumede = {
+			set_nationality = PREV.PREV
+			promote_character = social_democrat_subtype
+		}
+		SAF_davidson_don_tengo_jabavu = {
+			set_nationality = PREV.PREV
+			promote_character = social_liberal_subtype
+			promote_character = market_liberal_subtype
+		}
+		SAF_alfred_bitini_xuma = {
+			set_nationality = PREV.PREV
+			promote_character = social_conservative_subtype
+			promote_character = authoritarian_democrat_subtype
+		}
+		SAF_anton_muziwakhe_lembede = {
+			set_nationality = PREV.PREV
+			promote_character = paternal_autocrat_subtype
+			promote_character = national_populist_subtype
+		}
+	}
+	SAF_native_party_names = yes
+}
+
+SAF_promote_white_republican_leaders = {
+	event_target:original_south_africa = {
+		SAF_james_arnold_la_guma = {
+			set_nationality = PREV.PREV
+			promote_character = totalist_subtype
+		}
+		SAF_clements_kadalie = {
+			set_nationality = PREV.PREV
+			promote_character = syndicalist_subtype
+		}
+		SAF_moses_mauane_kotane = {
+			set_nationality = PREV.PREV
+			promote_character = radical_socialist_subtype
+		}
+		SAF_walter_bayley_madeley = {
+			set_nationality = PREV.PREV
+			promote_character = social_democrat_subtype
+		}
+		SAF_jan_hendrik_hofmeyr = {
+			set_nationality = PREV.PREV
+			promote_character = social_liberal_subtype
+		}
+		SAF_gideon_brand_van_zyl = {
+			set_nationality = PREV.PREV
+			promote_character = market_liberal_subtype
+		}
+		if = {
+			limit = { has_character = SAF_jan_christian_smuts }
+			SAF_jan_christian_smuts = {
+				set_nationality = PREV.PREV
+				promote_character = social_conservative_subtype
+			}
+		}
+		else = {
+			SAF_jacobus_gideon_nel_strauss = {
+				set_nationality = PREV.PREV
+				promote_character = social_conservative_subtype
+			}
+		}
+		if = {
+			limit = { has_character = SAF_james_barry_munnik_hertzog }
+			SAF_james_barry_munnik_hertzog = {
+				set_nationality = PREV.PREV
+				promote_character = authoritarian_democrat_subtype
+			}
+		}
+		else = {
+			SAF_nicolaas_christiaan_havenga = {
+				set_nationality = PREV.PREV
+				promote_character = authoritarian_democrat_subtype
+			}
+		}
+		SAF_daniel_francois_malan = {
+			set_nationality = PREV.PREV
+			promote_character = paternal_autocrat_subtype
+		}
+		SAF_johannes_frederik_janse_van_rensburg = {
+			set_nationality = PREV.PREV
+			promote_character = national_populist_subtype
+		}
+	}
+}
+
+SAF_native_party_names = {
+	set_party_name = { ideology = radical_socialist name = SAF_party_ANC_socialists long_name = SAF_party_ANC_socialists_long }
+	set_party_name = { ideology = social_democrat name = SAF_party_ANC_socialists long_name = SAF_party_ANC_socialists_long }
+	set_party_name = { ideology = social_liberal name = SAF_party_ANC_liberals long_name = SAF_party_ANC_liberals_long }
+	set_party_name = { ideology = market_liberal name = SAF_party_ANC_liberals long_name = SAF_party_ANC_liberals_long }
+	set_party_name = { ideology = social_conservative name = SAF_party_ANC_conservatives long_name = SAF_party_ANC_conservatives_long }
+	set_party_name = { ideology = authoritarian_democrat name = SAF_party_ANC_conservatives long_name = SAF_party_ANC_conservatives_long }
+	set_party_name = { ideology = paternal_autocrat name = SAF_party_ANC_nationalists long_name = SAF_party_ANC_nationalists_long }
+	set_party_name = { ideology = national_populist name = SAF_party_ANC_nationalists long_name = SAF_party_ANC_nationalists_long }
+}
+
+SAF_federation_party_names = {
+	set_global_flag = SAF_flag_labour_split_mended
+	set_party_name = { ideology = social_democrat name = SAF_party_labour long_name = SAF_party_labour_long }
+	set_party_name = { ideology = social_liberal name = SAF_social_liberal_party long_name = SAF_social_liberal_party_long }
+	set_party_name = { ideology = market_liberal name = SAF_party_union_federal long_name = SAF_party_union_federal_long }
+	set_party_name = { ideology = social_conservative name = SAF_social_conservative_party long_name = SAF_social_conservative_party_long }
+	set_party_name = { ideology = authoritarian_democrat name = SAF_party_national long_name = SAF_party_national_long }
+	set_party_name = { ideology = paternal_autocrat name = SAF_party_dominion long_name = SAF_party_dominion_long }
+	set_party_name = { ideology = national_populist name = SAF_party_purified_national long_name = SAF_party_purified_national_generic }
+}
+
+SAF_union_party_names = {
+	if = {
+		limit = { has_global_flag = SAF_flag_labour_split_mended }
+		set_party_name = { ideology = social_democrat name = SAF_party_labour long_name = SAF_party_labour_long }
+	}
+	else = {
+		set_party_name = { ideology = social_democrat name = SAF_social_democrat_party long_name = SAF_social_democrat_party_long }
+	}
+
+	set_party_name = { ideology = social_liberal name = SAF_social_liberal_party long_name = SAF_social_liberal_party_long }
+	set_party_name = { ideology = market_liberal name = SAF_market_liberal_party long_name = SAF_market_liberal_party_long }
+
+	if = {
+		limit = { has_global_flag = SAF_national_conservative_party_formed }
+		set_party_name = { ideology = social_conservative name = SAF_party_national_conservative long_name = SAF_party_national_conservative_long }
+	}
+	else = {
+		set_party_name = { ideology = social_conservative name = SAF_social_conservative_party long_name = SAF_social_conservative_party_long }
+	}
+	if = {
+		limit = { has_global_flag = SAF_PNP_split }
+		set_party_name = { ideology = authoritarian_democrat name = SAF_party_national long_name = SAF_party_national_long }
+		set_party_name = { ideology = paternal_autocrat name = SAF_party_purified_national long_name = SAF_party_purified_national_nationalist }
+		set_party_name = { ideology = national_populist name = SAF_party_purified_national long_name = SAF_party_purified_national_extremist }
+	}
+	else = {
+		set_party_name = { ideology = authoritarian_democrat name = SAF_authoritarian_democrat_party long_name = SAF_authoritarian_democrat_party_long }
+		set_party_name = { ideology = paternal_autocrat name = SAF_paternal_autocrat_party long_name = SAF_paternal_autocrat_party_long }
+		set_party_name = { ideology = national_populist name = SAF_national_populist_party long_name = SAF_national_populist_party_long }
+	}
+}
+
+SAF_national_party_becomes_pataut = {
+	save_current_party_popularities = yes
+	set_temp_variable = {
+		SAF_new_pataut_value = {
+			value = saved_popularities^7 #authdem
+			add = saved_popularities^8 #pataut
+		}
+	}
+	set_popularities = {
+		totalist = saved_popularities^0
+		syndicalist = saved_popularities^1
+		radical_socialist = saved_popularities^2
+		social_democrat = saved_popularities^3
+		social_liberal = saved_popularities^4
+		market_liberal = saved_popularities^5
+		social_conservative = saved_popularities^6
+		authoritarian_democrat = 0
+		paternal_autocrat = SAF_new_pataut_value
+		national_populist = saved_popularities^9
+	}
+}
+
+SAF_SAP_becomes_soclib = {
+	save_current_party_popularities = yes
+	set_temp_variable = {
+		SAF_new_soclib_value = {
+			value = saved_popularities^4 #soclib
+			add = saved_popularities^6 #soccon
+		}
+	}
+	set_popularities = {
+		totalist = saved_popularities^0
+		syndicalist = saved_popularities^1
+		radical_socialist = saved_popularities^2
+		social_democrat = saved_popularities^3
+		social_liberal = SAF_new_soclib_value
+		market_liberal = saved_popularities^5
+		social_conservative = 0
+		authoritarian_democrat = saved_popularities^7
+		paternal_autocrat = saved_popularities^8
+		national_populist = saved_popularities^9
+	}
+}
+
+SAF_UP_becomes_soclib = {
+	save_current_party_popularities = yes
+	set_temp_variable = {
+		SAF_new_soclib_value = {
+			value = saved_popularities^4 #soclib
+			add = saved_popularities^6 #soccon
+			add = saved_popularities^7 #authdem
+		}
+	}
+	set_popularities = {
+		totalist = saved_popularities^0
+		syndicalist = saved_popularities^1
+		radical_socialist = saved_popularities^2
+		social_democrat = saved_popularities^3
+		social_liberal = SAF_new_soclib_value
+		market_liberal = saved_popularities^5
+		social_conservative = 0
+		authoritarian_democrat = 0
+		paternal_autocrat = saved_popularities^8
+		national_populist = saved_popularities^9
+	}
+}
+
+SAF_UP_becomes_soccon = {
+	save_current_party_popularities = yes
+	set_temp_variable = {
+		SAF_new_soccon_value = {
+			value = saved_popularities^6 #soccon
+			add = saved_popularities^4 #soclib
+			add = saved_popularities^7 #authdem
+		}
+	}
+	set_popularities = {
+		totalist = saved_popularities^0
+		syndicalist = saved_popularities^1
+		radical_socialist = saved_popularities^2
+		social_democrat = saved_popularities^3
+		social_liberal = 0
+		market_liberal = saved_popularities^5
+		social_conservative = SAF_new_soccon_value
+		authoritarian_democrat = 0
+		paternal_autocrat = saved_popularities^8
+		national_populist = saved_popularities^9
+	}
+}
+
+SAF_clear_gg_flag = {
+	SAF_george_herbert_hyde_villiers = { clr_character_flag = SAF_governor_general }
+	SAF_patrick_duncan = { clr_character_flag = SAF_governor_general }
+	SAF_nicolaas_jacobus_de_wet = { clr_character_flag = SAF_governor_general }
+	SAF_ernest_george_jansen = { clr_character_flag = SAF_governor_general }
+}
+
+SAF_create_george_villiers = {
+	hidden_effect = {
+		event_target:original_south_africa = {
+			SAF_clear_gg_flag = yes
+			SAF_george_herbert_hyde_villiers = { set_nationality = PREV.PREV }
+		}
+	}
+	if = {
+		limit = { has_character = SAF_george_herbert_hyde_villiers }
+		SAF_george_herbert_hyde_villiers = {
+			set_character_flag = SAF_governor_general
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_george_herbert_hyde_villiers_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_george_herbert_hyde_villiers_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_george_herbert_hyde_villiers_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_george_herbert_hyde_villiers_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_george_herbert_hyde_villiers_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_george_herbert_hyde_villiers_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+		}
+	}
+}
+
+SAF_create_patrick_duncan = {
+	hidden_effect = {
+		event_target:original_south_africa = {
+			SAF_clear_gg_flag = yes
+			SAF_patrick_duncan = { set_nationality = PREV.PREV }
+		}
+	}
+	if = {
+		limit = { has_character = SAF_patrick_duncan }
+		SAF_patrick_duncan = {
+			set_character_flag = SAF_governor_general
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_patrick_duncan_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_patrick_duncan_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_patrick_duncan_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_patrick_duncan_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_patrick_duncan_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_patrick_duncan_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+		}
+	}
+}
+
+SAF_create_nicolaas_jacobus_de_wet = {
+	hidden_effect = {
+		event_target:original_south_africa = {
+			SAF_clear_gg_flag = yes
+			SAF_nicolaas_jacobus_de_wet = { set_nationality = PREV.PREV }
+		}
+	}
+	if = {
+		limit = { has_character = SAF_nicolaas_jacobus_de_wet }
+		SAF_nicolaas_jacobus_de_wet = {
+			set_character_flag = SAF_governor_general
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_nicolaas_jacobus_de_wet_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_nicolaas_jacobus_de_wet_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_nicolaas_jacobus_de_wet_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_nicolaas_jacobus_de_wet_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_nicolaas_jacobus_de_wet_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_nicolaas_jacobus_de_wet_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+		}
+	}
+}
+
+SAF_create_ernest_jansen = {
+	hidden_effect = {
+		event_target:original_south_africa = {
+			SAF_clear_gg_flag = yes
+			SAF_ernest_george_jansen = { set_nationality = PREV.PREV }
+		}
+	}
+	if = {
+		limit = { has_character = SAF_ernest_george_jansen }
+		SAF_ernest_george_jansen = {
+			set_character_flag = SAF_governor_general
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_ernest_george_jansen_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_ernest_george_jansen_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_ernest_george_jansen_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_ernest_george_jansen_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_ernest_george_jansen_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = SAF_ernest_george_jansen_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+		}
+	}
+}
+
+SAF_create_governor_general = {
+	hidden_effect = {
+		if = {
+			limit = { event_target:original_south_africa = { SAF_patrick_duncan = { has_character_flag = SAF_governor_general } } }
+			SAF_create_patrick_duncan = yes
+		}
+		else_if = {
+			limit = { event_target:original_south_africa = { SAF_nicolaas_jacobus_de_wet = { has_character_flag = SAF_governor_general } } }
+			SAF_create_nicolaas_jacobus_de_wet = yes
+		}
+		else_if = {
+			limit = { event_target:original_south_africa = { SAF_ernest_george_jansen = { has_character_flag = SAF_governor_general } } }
+			SAF_create_ernest_jansen = yes
+		}
+		else = {
+			SAF_create_george_villiers = yes
+		}
+	}
+}
+
+SAF_remove_governor_general = {
+	hidden_effect = {
+		if = {
+			limit = { has_character = SAF_george_herbert_hyde_villiers }
+			retire_character = SAF_george_herbert_hyde_villiers
+		}
+		if = {
+			limit = { has_character = SAF_patrick_duncan }
+			retire_character = SAF_patrick_duncan
+		}
+		if = {
+			limit = { has_character = SAF_nicolaas_jacobus_de_wet }
+			retire_character = SAF_nicolaas_jacobus_de_wet
+		}
+		if = {
+			limit = { has_character = SAF_ernest_george_jansen }
+			retire_character = SAF_ernest_george_jansen
+		}
+	}
+}
+
+SAF_add_entente_generals = {
+	event_target:system = {
+		every_character = {
+			limit = {
+				OR = {
+					has_character_flag = SAF_british_character
+					has_character_flag = SAF_boer_character
+				}
+			}
+			set_nationality = PREV.PREV
+		}
+	}
+	every_unit_leader = {
+		limit = { has_character_flag = SAF_socialist_character }
+		add_unit_leader_trait = hidden_sympathies
+		if = {
+			limit = { has_character_flag = SAF_british_character }
+			add_unit_leader_trait = SAF_british_commander
+		}
+		if = {
+			limit = { has_character_flag = SAF_boer_character }
+			add_unit_leader_trait = SAF_boer_commander
+		}
+	}
+}
+
+SAF_remove_entente_generals = {
+	every_character = {
+		limit = {
+			OR = {
+				has_character_flag = SAF_british_character
+				has_character_flag = SAF_boer_character
+			}
+			OR = {
+				is_unit_leader = yes
+				NOT = { has_advisor_role = political_advisor }
+			}
+			NOT = { has_character_flag = SAF_socialist_character }
+		}
+		set_nationality = event_target:system
+	}
+	every_unit_leader = {
+		limit = { has_character_flag = SAF_socialist_character }
+		if = {
+			limit = { has_trait = SAF_british_commander }
+			remove_unit_leader_trait = SAF_british_commander
+		}
+		if = {
+			limit = { has_trait = SAF_boer_commander }
+			remove_unit_leader_trait = SAF_boer_commander
+		}
+		if = {
+			limit = { has_trait = hidden_sympathies }
+			remove_unit_leader_trait = hidden_sympathies
+		}
+	}
+}
+
+SAF_add_socialist_generals = {
+	event_target:system = {
+		every_character = {
+			limit = { has_character_flag = SAF_socialist_character }
+			set_nationality = PREV.PREV
+		}
+	}
+}
+
+SAF_remove_socialist_generals = {
+	hidden_effect = {
+		every_unit_leader = {
+			limit = {
+				has_character_flag = SAF_socialist_character
+				NOT = { has_character_flag = SAF_british_character }
+				NOT = { has_character_flag = SAF_boer_character }
+			}
+			set_nationality = event_target:system
+		}
+	}
+}
+
+SAF_activate_black_monday_decisions = {
+	activate_targeted_decision = { target = THIS decision = SAF_print_extra_money }
+	activate_targeted_decision = { target = THIS decision = SAF_cut_abandonment_of_the_gold_standard }
+	activate_targeted_decision = { target = THIS decision = SAF_counter_inflation }
+	if = {
+		limit = { has_global_flag = SAF_take_a_loan_enabled }
+		activate_targeted_decision = { target = THIS decision = SAF_take_a_loan }
+	}
+	activate_targeted_decision = { target = THIS decision = SAF_repay_a_loan }
+	activate_targeted_decision = { target = THIS decision = SAF_cut_funding_on_military }
+	activate_targeted_decision = { target = THIS decision = SAF_raise_taxes }
+	activate_targeted_decision = { target = THIS decision = SAF_subsidize_resource_exports }
+	activate_targeted_decision = { target = THIS decision = SAF_nationalize_company }
+	activate_targeted_decision = { target = THIS decision = SAF_implement_tariffs }
+	if = {
+		limit = { has_completed_focus = SAF_repeal_industrial_conciliation_act }
+		activate_targeted_decision = { target = THIS decision = SAF_soften_the_colour_bar }
+	}
+	else_if = {
+		limit = { has_completed_focus = SAF_establish_work_programs }
+		activate_targeted_decision = { target = THIS decision = SAF_public_work_program }
+	}
+}
+
+SAF_disable_black_monday_decisions = {
+	clr_global_flag = SAF_take_a_loan_enabled
+	remove_targeted_decision = { target = THIS decision = SAF_print_extra_money }
+	remove_targeted_decision = { target = THIS decision = SAF_cut_abandonment_of_the_gold_standard }
+	remove_targeted_decision = { target = THIS decision = SAF_counter_inflation }
+	remove_targeted_decision = { target = THIS decision = SAF_take_a_loan }
+	remove_targeted_decision = { target = THIS decision = SAF_repay_a_loan }
+	remove_targeted_decision = { target = THIS decision = SAF_cut_funding_on_military }
+	remove_targeted_decision = { target = THIS decision = SAF_raise_taxes }
+	remove_targeted_decision = { target = THIS decision = SAF_subsidize_resource_exports }
+	remove_targeted_decision = { target = THIS decision = SAF_nationalize_company }
+	remove_targeted_decision = { target = THIS decision = SAF_implement_tariffs }
+	remove_targeted_decision = { target = THIS decision = SAF_soften_the_colour_bar }
+	remove_targeted_decision = { target = THIS decision = SAF_public_work_program }
+}
+
+SAF_enable_nuweweld_decisions = {
+	activate_mission = SAF_yearly_nuweveld_report
+	activate_targeted_decision = { target = THIS decision = SAF_campaign_against_tswana_insurgents }
+	activate_targeted_decision = { target = THIS decision = SAF_increase_settler_attraction }
+	activate_targeted_decision = { target = HOL decision = SAF_ask_for_permission_to_recruit_settlers }
+	activate_targeted_decision = { target = FLA decision = SAF_ask_for_permission_to_recruit_settlers }
+	activate_targeted_decision = { target = BEL decision = SAF_ask_for_permission_to_recruit_settlers }
+	activate_targeted_decision = { target = MAF decision = SAF_ask_for_permission_to_recruit_settlers }
+}
+
+SAF_disable_nuweveld_decisions = {
+	remove_targeted_decision = { target = THIS decision = SAF_campaign_against_tswana_insurgents }
+	remove_targeted_decision = { target = THIS decision = SAF_increase_settler_attraction }
+	remove_targeted_decision = { target = HOL decision = SAF_ask_for_permission_to_recruit_settlers }
+	remove_targeted_decision = { target = FLA decision = SAF_ask_for_permission_to_recruit_settlers }
+	remove_targeted_decision = { target = BEL decision = SAF_ask_for_permission_to_recruit_settlers }
+	remove_targeted_decision = { target = MAF decision = SAF_ask_for_permission_to_recruit_settlers }
+	remove_targeted_decision = { target = HOL decision = SAF_recruit_settlers_from_from }
+	remove_targeted_decision = { target = FLA decision = SAF_recruit_settlers_from_from }
+	remove_targeted_decision = { target = BEL decision = SAF_recruit_settlers_from_from }
+	remove_targeted_decision = { target = MAF decision = SAF_recruit_settlers_from_from }
+	remove_mission = SAF_control_the_tswana_insurgency
+	remove_mission = SAF_yearly_nuweveld_report
+}
+
+SAF_setup_internal_resistance_decisions = {
+	activate_targeted_decision = { target = THIS decision = SAF_suppress_ob }
+	activate_targeted_decision = { target = THIS decision = SAF_suppress_icu }
+	activate_targeted_decision = { target = THIS decision = SAF_construct_detention_camps }
+}
+
+SAF_teardown_internal_resistance_decisions = {
+	remove_targeted_decision = { target = THIS decision = SAF_suppress_ob }
+	remove_targeted_decision = { target = THIS decision = SAF_suppress_icu }
+	remove_targeted_decision = { target = THIS decision = SAF_construct_detention_camps }
+}
+
+SAF_enable_smuts_doctrine_decisions = {
+	activate_targeted_decision = { target = KEN decision = SAF_intervene_kenya }
+	activate_targeted_decision = { target = MZB decision = SAF_intervene_mozambique }
+	activate_targeted_decision = { target = ZAM decision = SAF_intervene_northern_rhodesia }
+	activate_targeted_decision = { target = BRT decision = SAF_intervene_northern_rhodesia }
+	activate_targeted_decision = { target = MLW decision = SAF_intervene_nyasaland }
+	activate_targeted_decision = { target = SWA decision = SAF_intervene_south_west }
+	activate_targeted_decision = { target = NMB decision = SAF_intervene_south_west }
+	activate_targeted_decision = { target = RWA decision = SAF_intervene_taganyika }
+	activate_targeted_decision = { target = BRD decision = SAF_intervene_taganyika }
+	activate_targeted_decision = { target = TZN decision = SAF_intervene_taganyika }
+	activate_targeted_decision = { target = UGA decision = SAF_intervene_uganda }
+	activate_targeted_decision = { target = ZAN decision = SAF_intervene_zanzibar }
+	activate_targeted_decision = { target = KTG decision = SAF_demand_katanga_pulls_back }
+	activate_targeted_decision = { target = KIV decision = SAF_demand_kivu_pulls_back }
+	activate_targeted_decision = { target = SOM decision = SAF_demand_somalia_pulls_back }
+}
+
+SAF_disable_smuts_doctrine_decisions = {
+	remove_targeted_decision = { target = KEN decision = SAF_intervene_kenya }
+	remove_targeted_decision = { target = MZB decision = SAF_intervene_mozambique }
+	remove_targeted_decision = { target = ZAM decision = SAF_intervene_northern_rhodesia }
+	remove_targeted_decision = { target = BRT decision = SAF_intervene_northern_rhodesia }
+	remove_targeted_decision = { target = MLW decision = SAF_intervene_nyasaland }
+	remove_targeted_decision = { target = SWA decision = SAF_intervene_south_west }
+	remove_targeted_decision = { target = NMB decision = SAF_intervene_south_west }
+	remove_targeted_decision = { target = RWA decision = SAF_intervene_taganyika }
+	remove_targeted_decision = { target = BRD decision = SAF_intervene_taganyika }
+	remove_targeted_decision = { target = TZN decision = SAF_intervene_taganyika }
+	remove_targeted_decision = { target = UGA decision = SAF_intervene_uganda }
+	remove_targeted_decision = { target = ZAN decision = SAF_intervene_zanzibar }
+	remove_targeted_decision = { target = KTG decision = SAF_demand_katanga_pulls_back }
+	remove_targeted_decision = { target = KIV decision = SAF_demand_kivu_pulls_back }
+	remove_targeted_decision = { target = SOM decision = SAF_demand_somalia_pulls_back }
+}
+
+SAF_rhodesia_secedes = {
+	if = {
+		limit = { 545 = { owner = { original_tag = SAF } } } #Rhodesia
+		effect_tooltip = {
+			ZIM = {
+				transfer_state = 545
+				declare_war_on = {
+					target = ZAR
+					type = topple_government
+				}
+			}
+		}
+		hidden_effect = {
+			545 = {
+				save_current_factory_count = yes
+				transfer_state_to = ZIM
+				restore_previous_factory_count = yes
+				remove_core_of = NAT
+				remove_core_of = ZAR
+				add_claim_by = ZAR
+			}
+			ZIM = { save_current_party_popularities = yes }
+			NAT = {
+				set_autonomy = {
+					target = ZIM
+					autonomy_state = nominal_puppet
+					end_wars = no
+				}
+			}
+			ZIM = {
+				transfer_technology = yes
+				meta_effect = {
+					text = {
+						set_politics = {
+							ruling_party = social_liberal
+							last_election = "[CURRENT_DATE]"
+							election_frequency = 60
+							elections_allowed = no
+						}
+					}
+					CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+				}
+				set_popularities = {
+					totalist = saved_popularities^0
+					radical_socialist = saved_popularities^1
+					syndicalist = saved_popularities^2
+					social_democrat = saved_popularities^3
+					social_liberal = saved_popularities^4
+					market_liberal = saved_popularities^5
+					social_conservative = saved_popularities^6
+					authoritarian_democrat = saved_popularities^7
+					paternal_autocrat = saved_popularities^8
+					national_populist = saved_popularities^9
+				}
+				set_temp_variable = { coalition_partner_var = token:social_democrat }
+				add_to_coalition = yes
+				set_temp_variable = { coalition_partner_var = token:market_liberal }
+				add_to_coalition = yes
+				ZIM_godfrey_martin_huggins = {
+					set_nationality = ZIM
+					promote_character = authoritarian_democrat_subtype
+				}
+				ZIM_herbert_james_stanley = {
+					promote_character = social_democrat_subtype
+					promote_character = social_liberal_subtype
+					promote_character = market_liberal_subtype
+					promote_character = social_conservative_subtype
+				}
+
+				division_template = {
+					name = "Loyalist Militia"
+					division_names_group = ENGL_MIL_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+					}
+					template_counter = 68
+				}
+				capital_scope = {
+					create_unit = {
+						division = "name = \"Bulawayo Militia\" division_template = \"Loyalist Militia\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						owner = ZIM
+					}
+					create_unit = {
+						division = "name = \"Salisbury Militia\" division_template = \"Loyalist Militia\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						owner = ZIM
+					}
+					create_unit = {
+						division = "name = \"Rhodesia Regiment\" division_template = \"Rifle Division\" start_experience_factor = 0.2"
+						allow_spawning_on_enemy_provs = yes
+						owner = ZIM
+					}
+					create_unit = {
+						division = "name = \"Rhodesian Light Infantry\" division_template = \"Light Infantry\" start_experience_factor = 0.5"
+						allow_spawning_on_enemy_provs = yes
+						owner = ZIM
+					}
+				}
+
+				country_event = { id = rhodesia_events.1 days = 2 } #Southern Rhodesia Introduction event
+				country_event = { id = rhodesia_events.2 days = 15 }
+			}
+			every_other_country = {
+				limit = {
+					OR = {
+						is_ally_with = ENT
+						original_tag = RAJ
+						AND = {
+							original_tag = SRD
+							is_guaranteed_by = NFA
+						}
+					}
+				}
+				ZIM = { set_up_non_faction_ally_relations = yes }
+			}
+			every_other_country = {
+				limit = {
+					ENT = { has_variable = embargoed_@PREV }
+					NOT = { has_war_with = ZIM }
+				}
+				ZIM = { embargo_PREV = yes }
+			}
+			if = {
+				limit = { ENT = { is_in_tech_sharing_group = entente_research } }
+				ZIM = { add_to_tech_sharing_group = entente_research }
+			}
+			if = {
+				limit = { has_event_target = iedc_leader }
+				ZIM = { CAN_add_to_iedc = yes }
+			}
+		}
+	}
+}
+
+SAF_natal_secedes = {
+	set_global_flag = SAF_third_boer_war_happened
+	log = "KR_Event_Logging;3RD BOER WAR"
+	news_event = { id = south_africa_events.503 days = 1 }
+
+	SAF_remove_governor_general = yes
+	SAF_set_boer_spymaster = yes
+	set_victory_points = { province = 13800 value = 12 } #Pietermaritzburg
+
+	if = {
+		limit = { has_character = SAF_jan_christian_smuts }
+		SAF_jan_christian_smuts = { kill_character = yes }
+	}
+
+	civil_war_set_flag_to_restore_elections = yes
+	start_civil_war = {
+		### basics ###
+		ideology = market_liberal
+		size = 0.55
+		navy_ratio = 0
+
+		### states ###
+		capital = 719
+		states = { 719 }
+
+		### characters ###
+		keep_unit_leaders_trigger = { NOT = { has_character_flag = SAF_british_character } }
+		keep_scientists_trigger = { always = yes }
+		keep_political_leader = yes
+		keep_political_party_members = yes
+
+		### effects ###
+		set_country_flag = SAF_is_natal
+		every_state = {
+			limit = { is_claimed_by = ROOT }
+			add_claim_by = PREV
+		}
+		set_temp_variable = { SAF_natal = THIS }
+	}
+
+	every_character = {
+		limit = { has_character_flag = SAF_british_character }
+		set_nationality = var:SAF_natal
+	}
+	var:SAF_natal = {
+		set_cosmetic_tag = SAF_natal
+		set_stability = var:ROOT.stability
+		set_war_support = var:ROOT.has_war_support
+		add_war_support = 0.15
+		SAF_set_correct_shared_character_names = yes
+		every_character = {
+			limit = {
+				can_be_country_leader = yes
+				NOT = { has_character_flag = SAF_british_character } #== generico
+				NOT = { has_character_flag = SAF_boer_character }
+			}
+			retire = yes
+		}
+		every_character = {
+			limit = { has_character_flag = SAF_boer_character }
+			set_nationality = ROOT
+		}
+		every_unit_leader = {
+			limit = { has_trait = SAF_british_commander }
+			remove_unit_leader_trait = SAF_british_commander
+		}
+		every_unit_leader = {
+			limit = { has_trait = hidden_sympathies }
+			remove_unit_leader_trait = hidden_sympathies
+		}
+		set_popularities = {
+			totalist = 0
+			radical_socialist = 0
+			syndicalist = 0
+			social_democrat = 10
+			social_liberal = 0
+			market_liberal = 42
+			social_conservative = 10
+			authoritarian_democrat = 2
+			paternal_autocrat = 36
+			national_populist = 0
+		}
+		if = {
+			limit = { has_elections = yes }
+			set_politics = {
+				ruling_party = var:current_party_ideology_group #triggers on_ruling_party_change to set the right 2IC
+				elections_allowed = yes
+			}
+		}
+		else = {
+			set_politics = {
+				ruling_party = var:current_party_ideology_group #triggers on_ruling_party_change to set the right 2IC
+				elections_allowed = no
+			}
+		}
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+		SAF_federation_party_names = yes
+		SAF_create_governor_general = yes
+
+		uncomplete_national_focus = {
+			focus = SAF_establish_nuweveld
+			uncomplete_children = yes
+		}
+		load_focus_tree = {
+			tree = SAF_federation_focus
+			keep_completed = yes
+		}
+		if = {
+			limit = {
+				has_completed_focus = SAF_black_monday_crisis
+				SAF_has_black_monday = yes
+			}
+			set_variable = { saf_var_budget = ROOT.saf_var_budget }
+			set_variable = { saf_var_inflation = ROOT.saf_var_inflation }
+			set_variable = { saf_var_unemployment = ROOT.saf_var_unemployment }
+			set_variable = { saf_var_debt = ROOT.saf_var_debt }
+			SAF_activate_black_monday_decisions = yes
+		}
+
+		SAF_spawn_natalian_starting_divisions = yes
+	}
+	every_other_country = {
+		limit = {
+			OR = {
+				is_ally_with = ENT
+				original_tag = RAJ
+				AND = {
+					original_tag = SRD
+					is_guaranteed_by = NFA
+				}
+			}
+		}
+		clear_relations_with_PREV = yes
+		embargo_PREV = yes
+		var:SAF_natal = { set_up_non_faction_ally_relations = yes }
+	}
+	every_other_country = {
+		limit = {
+			ENT = { has_variable = embargoed_@PREV }
+			NOT = { has_war_with = var:SAF_natal }
+		}
+		var:SAF_natal = { embargo_PREV = yes }
+		clear_embargo_ROOT = yes
+	}
+	if = {
+		limit = { ENT = { is_in_tech_sharing_group = entente_research } }
+		var:SAF_natal = { add_to_tech_sharing_group = entente_research }
+	}
+	if = {
+		limit = { has_event_target = iedc_leader }
+		var:SAF_natal = { CAN_add_to_iedc = yes }
+	}
+
+	SAF_fire_initial_boer_events = yes
+	every_enemy_country = {
+		limit = {
+			is_in_africa = yes
+			var:SAF_natal = { can_declare_war_on = PREV }
+			NOT = {
+				original_tag = PREV
+				original_tag = ZIM
+			}
+		}
+		var:SAF_natal = {
+			create_wargoal = {
+				target = PREV
+				type = annex_everything
+			}
+		}
+	}
+	var:SAF_natal = {
+		if = {
+			limit = { has_wargoal_against = PREV }
+			remove_wargoal = { target = PREV type = all }
+		}
+		PREV = {
+			if = {
+				limit = { has_wargoal_against = PREV }
+				remove_wargoal = { target = PREV type = all }
+			}
+		}
+		every_unit_leader = {
+			limit = { has_trait = SAF_boer_commander }
+			remove_unit_leader_trait = SAF_boer_commander
+		}
+		every_unit_leader = {
+			limit = { has_trait = hidden_sympathies }
+			remove_unit_leader_trait = hidden_sympathies
+		}
+
+		SAF_set_british_spymaster = yes
+		activate_advisor = SAF_south_african_parliament_sic
+		SAF_fire_initial_natal_events = yes
+	}
+
+	### Rhodesia setup ###
+	SAF_rhodesia_secedes = yes
+
+	### unit spawns ###
+	SAF_spawn_boer_reinforcements = yes
+}
+
+SAF_natal_secedes_play_as_natal = {
+	set_global_flag = SAF_third_boer_war_happened
+	log = "KR_Event_Logging;3RD BOER WAR"
+	news_event = { id = south_africa_events.503 days = 1 }
+
+	set_victory_points = { province = 13800 value = 12 } #Pietermaritzburg
+	set_capital = { state = 719 }
+	set_country_flag = SAF_is_natal
+	set_cosmetic_tag = SAF_natal
+
+	save_current_party_popularities = yes
+	save_current_coalitions = yes
+
+	if = {
+		limit = { has_character = SAF_jan_christian_smuts }
+		SAF_jan_christian_smuts = { kill_character = yes }
+	}
+
+	civil_war_set_flag_to_restore_elections = yes
+	start_civil_war = {
+		### basics ###
+		ruling_party = market_liberal
+		ideology = var:SAF.current_party_ideology_group
+		size = 0.5
+		navy_ratio = 1
+
+		### states ###
+		capital = 275
+		states = all
+		states_filter = { NOT = { state = 719 } } #Natal
+
+		### characters ###
+		keep_unit_leaders_trigger = { NOT = { has_character_flag = SAF_boer_character } }
+		keep_scientists_trigger = { always = yes }
+		keep_political_leader = yes
+		keep_political_party_members = yes
+
+		### effects ###
+		every_state = {
+			limit = { is_claimed_by = ROOT }
+			add_claim_by = PREV
+		}
+		set_temp_variable = { SAF_boers = THIS }
+	}
+
+	### Natal setup ###
+	SAF_federation_party_names = yes
+	SAF_create_governor_general = yes
+	SAF_set_british_spymaster = yes
+	every_character = {
+		limit = { has_character_flag = SAF_boer_character }
+		set_nationality = var:SAF_boers
+	}
+	set_popularities = {
+		totalist = 0
+		radical_socialist = 0
+		syndicalist = 0
+		social_democrat = 10
+		social_liberal = 0
+		market_liberal = 42
+		social_conservative = 10
+		authoritarian_democrat = 2
+		paternal_autocrat = 36
+		national_populist = 0
+	}
+	set_temp_variable = { coalition_partner_var = token:social_democrat }
+	add_to_coalition = yes
+	set_temp_variable = { coalition_partner_var = token:social_conservative }
+	add_to_coalition = yes
+	set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+	add_to_coalition = yes
+
+	uncomplete_national_focus = {
+		focus = SAF_establish_nuweveld
+		uncomplete_children = yes
+	}
+	load_focus_tree = {
+		tree = SAF_federation_focus
+		keep_completed = yes
+	}
+
+	SAF_spawn_natalian_starting_divisions = yes
+	SAF_fire_initial_natal_events = yes
+
+	### Boer setup ###
+	var:SAF_boers = {
+		reserve_dynamic_country = yes
+		set_country_flag = reserved_dynamic_tag
+		set_cosmetic_tag = SAF_republic
+		set_stability = var:ROOT.stability
+		set_war_support = var:ROOT.has_war_support
+		add_war_support = -0.15
+		SAF_set_correct_shared_character_names = yes
+		if = {
+			limit = { ROOT = { has_country_flag = had_elections } }
+			set_country_flag = had_elections
+		}
+		every_character = {
+			limit = {
+				can_be_country_leader = yes
+				NOT = { has_character_flag = SAF_british_character } #== generico
+				NOT = { has_character_flag = SAF_boer_character }
+			}
+			retire = yes
+		}
+		every_character = {
+			limit = { has_character_flag = SAF_british_character }
+			set_nationality = ROOT
+		}
+		every_unit_leader = {
+			limit = { has_trait = SAF_boer_commander }
+			remove_unit_leader_trait = SAF_boer_commander
+		}
+		every_unit_leader = {
+			limit = { has_trait = hidden_sympathies }
+			remove_unit_leader_trait = hidden_sympathies
+		}
+		set_popularities = {
+			totalist = saved_popularities^0
+			radical_socialist = saved_popularities^1
+			syndicalist = saved_popularities^2
+			social_democrat = saved_popularities^3
+			social_liberal = saved_popularities^4
+			market_liberal = saved_popularities^5
+			social_conservative = saved_popularities^6
+			authoritarian_democrat = saved_popularities^7
+			paternal_autocrat = saved_popularities^8
+			national_populist = saved_popularities^9
+		}
+		if = {
+			limit = { has_elections = yes }
+			set_politics = {
+				ruling_party = var:current_party_ideology_group #triggers on_ruling_party_change to set the right 2IC
+				elections_allowed = yes
+			}
+		}
+		else = {
+			set_politics = {
+				ruling_party = var:current_party_ideology_group #triggers on_ruling_party_change to set the right 2IC
+				elections_allowed = no
+			}
+		}
+		if = {
+			limit = { has_variable = saved_coalitions }
+			for_each_loop = {
+				array = saved_coalitions
+				set_variable = { coalitions_array^i = v }
+			}
+			for_each_loop = {
+				array = saved_coalitions_stability
+				set_variable = { coalition_stability_array^i = v }
+			}
+		}
+		if = {
+			limit = {
+				has_completed_focus = SAF_black_monday_crisis
+				SAF_has_black_monday = yes
+			}
+			set_variable = { saf_var_budget = ROOT.saf_var_budget }
+			set_variable = { saf_var_inflation = ROOT.saf_var_inflation }
+			set_variable = { saf_var_unemployment = ROOT.saf_var_unemployment }
+			set_variable = { saf_var_debt = ROOT.saf_var_debt }
+			SAF_activate_black_monday_decisions = yes
+		}
+		if = {
+			limit = { has_completed_focus = SAF_establish_nuweveld }
+			SAF_enable_nuweweld_decisions = yes
+		}
+		if = {
+			limit = { has_wargoal_against = PREV }
+			remove_wargoal = { target = PREV type = all }
+		}
+		ROOT = {
+			if = {
+				limit = { has_wargoal_against = PREV }
+				remove_wargoal = { target = PREV type = all }
+			}
+		}
+		SAF_spawn_boer_reinforcements = yes
+		SAF_fire_initial_boer_events = yes
+	}
+
+	### diplomacy setup ###
+	every_other_country = {
+		limit = {
+			NOT = { is_ally_with = ENT }
+			NOT = { original_tag = RAJ }
+			NOT = {
+				AND = {
+					original_tag = SRD
+					is_guaranteed_by = NFA
+				}
+			}
+		}
+		if = {
+			limit = { has_non_aggression_pact_with = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = non_aggression_pact
+				active = no
+			}
+			var:SAF_boers = {
+				diplomatic_relation = {
+					country = PREV
+					relation = non_aggression_pact
+				}
+			}
+		}
+		if = {
+			limit = { has_military_access_to = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = military_access
+				active = no
+			}
+			var:SAF_boers = {
+				PREV = {
+					diplomatic_relation = {
+						country = PREV
+						relation = military_access
+					}
+				}
+			}
+		}
+		if = {
+			limit = { gives_military_access_to = ROOT }
+			ROOT = {
+				diplomatic_relation = {
+					country = PREV
+					relation = military_access
+					active = no
+				}
+			}
+			var:SAF_boers = {
+				diplomatic_relation = {
+					country = PREV
+					relation = military_access
+				}
+			}
+		}
+		if = {
+			limit = { has_market_access_with = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = market_access_rights
+				active = no
+			}
+			var:SAF_boers = {
+				diplomatic_relation = {
+					country = PREV
+					relation = market_access_rights
+				}
+			}
+		}
+		if = {
+			limit = { has_variable = embargoed_@ROOT }
+			clear_embargo_ROOT = yes
+			var:SAF_boers = { embargo_PREV = yes }
+		}
+	}
+	every_other_country = {
+		limit = {
+			ENT = { has_variable = embargoed_@PREV }
+			NOT = { has_war_with = ROOT }
+		}
+		embargo_ROOT = yes
+		var:SAF_boers = { clear_embargo_PREV = yes }
+	}
+	var:SAF_boers = {
+		remove_from_tech_sharing_group = entente_research
+		CAN_remove_from_iedc = yes
+	}
+	if = {
+		limit = { ENT = { is_faction_leader = yes } }
+		if = {
+			limit = { ENT = { is_in_tech_sharing_group = entente_research } }
+			add_to_tech_sharing_group = entente_research
+		}
+		if = {
+			limit = { ENT = { ENT_is_in_iedc = yes } }
+			CAN_add_to_iedc = yes
+		}
+		if = {
+			limit = {
+				CAN = {
+					is_in_faction_with = ENT
+					any_allied_country = { has_opinion_modifier = CAN_imperial_pride }
+				}
+			}
+			add_opinion_modifier = { target = CAN modifier = CAN_imperial_pride }
+		}
+		every_country = {
+			limit = {
+				OR = {
+					is_ally_with = ENT
+					original_tag = RAJ
+					AND = {
+						original_tag = SRD
+						is_guaranteed_by = NFA
+					}
+				}
+			}
+			set_up_non_faction_ally_relations = yes
+			var:SAF_boers = {
+				clear_relations_with_PREV = yes
+				embargo_PREV = yes
+			}
+		}
+	}
+
+	### Rhodesia setup ###
+	SAF_rhodesia_secedes = yes
+}
+
+SAF_fire_initial_natal_events = {
+	country_event = { id = natal_events.1 days = 2 } #Natal's Secessionist Force
+	country_event = { id = natal_events.4 days = 4 } #Rejoining the Empire
+}
+
+SAF_fire_initial_boer_events = {
+	country_event = { id = natal_events.2 days = 1 } #Loyalist Militias Rise!
+	country_event = { id = natal_events.11 days = 3 } #The Naval Volunteer Reserve Defects
+
+	country_event = { id = south_africa_events.55 days = 2 } #General Smuts Announces His Retirement
+	country_event = { id = south_africa_events.54 days = 5 } #The Third Boer War?
+	country_event = { id = south_africa_events.254 days = 14 }
+}
+
+SAF_spawn_natalian_starting_divisions = {
+	division_template = {
+		name = "Loyalist Militia"
+		is_locked = yes
+		division_names_group = SAF_GAR_01
+		regiments = {
+			militia = { x = 0 y = 0 }
+			militia = { x = 0 y = 1 }
+			militia = { x = 0 y = 2 }
+			militia = { x = 1 y = 0 }
+			militia = { x = 1 y = 1 }
+			militia = { x = 1 y = 2 }
+			militia = { x = 2 y = 0 }
+			militia = { x = 2 y = 1 }
+			militia = { x = 2 y = 2 }
+		}
+	}
+	division_template = {
+		name = "Rifle Division"
+		division_names_group = SAF_CAV_01
+		regiments = {
+			cavalry = { x = 0 y = 0 }
+			cavalry = { x = 0 y = 1 }
+			cavalry = { x = 0 y = 2 }
+			cavalry = { x = 1 y = 0 }
+			cavalry = { x = 1 y = 1 }
+			cavalry = { x = 1 y = 2 }
+		}
+		support = {
+			recon = { x = 0 y = 0 }
+		}
+	}
+	random_owned_controlled_state = {
+		prioritize = { 719 }
+		limit = { is_in_home_area = yes }
+		create_unit = {
+			division = "name = \"Newcastle Militia\" division_template = \"Loyalist Militia\" start_experience_factor = 0.1"
+			prioritize_location = 1494
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"Durban Militia\" division_template = \"Loyalist Militia\" start_experience_factor = 0.1"
+			prioritize_location = 1468
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"Pietermaritzburg Militia\" division_template = \"Loyalist Militia\" start_experience_factor = 0.1"
+			prioritize_location = 13800
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"Natal Mounted Rifles\" division_template = \"Rifle Division\" start_experience_factor = 0.1"
+			prioritize_location = 1468
+			owner = PREV
+		}
+	}
+}
+
+SAF_spawn_natalian_militias = {
+	set_province_controller = 1833
+	set_province_controller = 4696
+	set_province_controller = 7576
+	set_province_controller = 13764
+	set_province_controller = 13765
+	if = {
+		limit = { 946 = { is_owned_by = ROOT } }
+		946 = {
+			create_unit = {
+				division = "name = \"Port Elizabeth Militia\" division_template = \"Loyalist Militia\" start_experience_factor = 0.3"
+				allow_spawning_on_enemy_provs = yes
+				prioritize_location = 4696
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"East London Militia\" division_template = \"Loyalist Militia\" start_experience_factor = 0.2"
+				allow_spawning_on_enemy_provs = yes
+				prioritize_location = 13764
+				owner = PREV
+			}
+		}
+	}
+	set_division_template_lock = { division_template = "Loyalist Militia" is_locked = no }
+}
+
+SAF_spawn_boer_reinforcements = {
+	division_template = {
+		name = "Reserve Unit"
+		division_names_group = SAF_GAR_01
+		regiments = {
+			militia = { x = 0 y = 0 }
+			militia = { x = 0 y = 1 }
+			militia = { x = 0 y = 2 }
+			militia = { x = 1 y = 0 }
+			militia = { x = 1 y = 1 }
+			militia = { x = 1 y = 2 }
+			militia = { x = 2 y = 0 }
+			militia = { x = 2 y = 1 }
+			militia = { x = 2 y = 2 }
+		}
+	}
+	division_template = {
+		name = "Commando Division"
+		division_names_group = SAF_INF_01
+		regiments = {
+			infantry = { x = 0 y = 0 }
+			infantry = { x = 0 y = 1 }
+			infantry = { x = 0 y = 2 }
+			infantry = { x = 1 y = 0 }
+			infantry = { x = 1 y = 1 }
+			infantry = { x = 1 y = 2 }
+			infantry = { x = 2 y = 0 }
+			infantry = { x = 2 y = 1 }
+			infantry = { x = 2 y = 2 }
+		}
+		support = {
+			engineer = { x = 0 y = 0 }
+			artillery = { x = 0 y = 1 }
+		}
+		template_counter = 91
+	}
+	division_template = {
+		name = "Afrikaner Scouts"
+		priority = 2
+		division_names_group = SAF_MTN_01
+		regiments = {
+			mountaineers = { x = 0 y = 0 }
+			mountaineers = { x = 0 y = 1 }
+			mountaineers = { x = 0 y = 2 }
+			mountaineers = { x = 1 y = 0 }
+			mountaineers = { x = 1 y = 1 }
+			mountaineers = { x = 1 y = 2 }
+			mountaineers = { x = 2 y = 0 }
+			mountaineers = { x = 2 y = 1 }
+			mountaineers = { x = 2 y = 2 }
+		}
+		support = {
+			recon = { x = 0 y = 0 }
+		}
+	}
+	275 = {
+		create_unit = {
+			division = "name = \"I. Stormjaers\" division_template = \"Afrikaner Scouts\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			prioritize_location = 10400
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"II. Stormjaers\" division_template = \"Afrikaner Scouts\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			prioritize_location = 10400
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"Pretoria Reserves\" division_template = \"Reserve Unit\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			prioritize_location = 10400
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"Johannesburg Reserves\" division_template = \"Reserve Unit\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			prioritize_location = 4859
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"Transvaal Reserves\" division_template = \"Reserve Unit\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			prioritize_location = 4859
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"De La Rey Kommando\" division_template = \"Commando Division\" start_experience_factor = 0.5"
+			allow_spawning_on_enemy_provs = yes
+			prioritize_location = 8035
+			owner = PREV
+		}
+	}
+	947 = {
+		create_unit = {
+			division = "name = \"Bloemfontein Reserves\" division_template = \"Reserve Unit\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			prioritize_location = 5231
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"Vrystaat Reserves\" division_template = \"Reserve Unit\" start_experience_factor = 0.1"
+			allow_spawning_on_enemy_provs = yes
+			owner = PREV
+		}
+	}
+}
+
+SAF_transfer_cores_claims_to_PREV = {
+	every_core_state = { add_core_of = PREV.PREV }
+	every_state = {
+		limit = {
+			is_claimed_by = PREV
+			NOT = { is_core_of = PREV }
+			NOT = { is_core_of = PREV.PREV }
+			NOT = { owner = { is_ally_with = PREV.PREV.PREV } }
+		}
+		add_claim_by = PREV.PREV
+	}
+}
+
+SAF_clear_dynamic_tag = {
+	if = {
+		limit = { has_country_flag = reserved_dynamic_tag }
+		every_state = {
+			remove_core_of = PREV
+			remove_claim_by = PREV
+		}
+		drop_cosmetic_tag = yes
+		clear_government_flags = yes
+		clr_country_flag = reserved_dynamic_tag
+		reserve_dynamic_country = no
+	}
+}
+
+SAF_load_natal_content = {
+	effect_tooltip = { load_focus_tree = { tree = natal_focus keep_completed = yes } }
+	mark_focus_tree_layout_dirty = yes
+	add_ideas = NAT_idea_syndicalism_zulu
+	add_ideas = NAT_idea_indian_diaspora
+	add_ideas = NAT_his_majestys_most_loyal_servants_1
+	if = {
+		limit = { has_idea = SAF_black_monday_0 }
+		remove_ideas = SAF_black_monday_0
+	}
+	else_if = {
+		limit = { has_idea = SAF_black_monday_1 }
+		remove_ideas = SAF_black_monday_1
+	}
+	else_if = {
+		limit = { has_idea = SAF_black_monday_2 }
+		remove_ideas = SAF_black_monday_2
+	}
+	if = {
+		limit = { has_idea = SAF_idea_slavery }
+		remove_ideas = SAF_idea_slavery
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_slavery }
+	}
+	if = {
+		limit = { has_idea = SAF_african_gold_idea }
+		remove_ideas = SAF_african_gold_idea
+		add_to_array = { SAF_previous_ideas = token:SAF_african_gold_idea }
+	}
+	if = {
+		limit = { has_idea = SAF_idea_native_trust_and_land_act }
+		remove_ideas = SAF_idea_native_trust_and_land_act
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_native_trust_and_land_act }
+	}
+	if = {
+		limit = { has_idea = SAF_idea_asiatic_land_tenure_act }
+		remove_ideas = SAF_idea_asiatic_land_tenure_act
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_asiatic_land_tenure_act }
+	}
+	if = {
+		limit = { has_idea = SAF_idea_krugerpark }
+		remove_ideas = SAF_idea_krugerpark
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_krugerpark }
+	}
+	if = {
+		limit = { has_idea = SAF_idea_agrarian_focus }
+		remove_ideas = SAF_idea_agrarian_focus
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_agrarian_focus }
+	}
+	else_if = {
+		limit = { has_idea = SAF_idea_agrarian_focus_2 }
+		remove_ideas = SAF_idea_agrarian_focus_2
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_agrarian_focus_2 }
+	}
+	else_if = {
+		limit = { has_idea = SAF_idea_agrarian_focus_3 }
+		remove_ideas = SAF_idea_agrarian_focus_3
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_agrarian_focus_3 }
+	}
+	else_if = {
+		limit = { has_idea = SAF_idea_agrarian_focus_4 }
+		remove_ideas = SAF_idea_agrarian_focus_4
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_agrarian_focus_4 }
+	}
+	else_if = {
+		limit = { has_idea = SAF_idea_granary_of_africa }
+		remove_ideas = SAF_idea_granary_of_africa
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_granary_of_africa }
+	}
+	if = {
+		limit = { has_idea = SAF_industrial_farming }
+		remove_ideas = SAF_industrial_farming
+		add_to_array = { SAF_previous_ideas = token:SAF_industrial_farming }
+	}
+	if = {
+		limit = { has_idea = SAF_idea_industrial_focus }
+		remove_ideas = SAF_idea_industrial_focus
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_industrial_focus }
+	}
+	else_if = {
+		limit = { has_idea = SAF_idea_industrial_focus_1 }
+		remove_ideas = SAF_idea_industrial_focus_1
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_industrial_focus_1 }
+	}
+	else_if = {
+		limit = { has_idea = SAF_idea_great_repairshop }
+		remove_ideas = SAF_idea_great_repairshop
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_great_repairshop }
+	}
+	else_if = {
+		limit = { has_idea = SAF_idea_economic_boom }
+		remove_ideas = SAF_idea_economic_boom
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_economic_boom }
+	}
+	if = {
+		limit = { has_idea = SAF_idea_kariba_dam }
+		remove_ideas = SAF_idea_kariba_dam
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_kariba_dam }
+	}
+	if = {
+		limit = { has_idea = SAF_sabc_idea }
+		remove_ideas = SAF_sabc_idea
+		add_to_array = { SAF_previous_ideas = token:SAF_sabc_idea }
+	}
+	if = {
+		limit = { has_idea = SAF_idea_sa_mathematical_society }
+		remove_ideas = SAF_idea_sa_mathematical_society
+		add_to_array = { SAF_previous_ideas = token:SAF_idea_sa_mathematical_society }
+	}
+	if = {
+		limit = { has_idea = SAF_expanded_cape_corps }
+		remove_ideas = SAF_expanded_cape_corps
+		add_to_array = { SAF_previous_ideas = token:SAF_expanded_cape_corps }
+	}
+	if = {
+		limit = { has_idea = SAF_troop_specialisation_idea }
+		remove_ideas = SAF_troop_specialisation_idea
+		add_to_array = { SAF_previous_ideas = token:SAF_troop_specialisation_idea }
+	}
+	else_if = {
+		limit = { has_idea = SAF_special_boat_service_idea }
+		remove_ideas = SAF_special_boat_service_idea
+		add_to_array = { SAF_previous_ideas = token:SAF_special_boat_service_idea }
+	}
+	if = {
+		limit = { has_idea = SAF_improved_retrofitting }
+		remove_ideas = SAF_improved_retrofitting
+		add_to_array = { SAF_previous_ideas = token:SAF_improved_retrofitting }
+	}
+	if = {
+		limit = { has_idea = SAF_trade_protection_idea }
+		remove_ideas = SAF_trade_protection_idea
+		add_to_array = { SAF_previous_ideas = token:SAF_trade_protection_idea }
+	}
+	else_if = {
+		limit = { has_idea = SAF_trade_protection_idea_2 }
+		remove_ideas = SAF_trade_protection_idea_2
+		add_to_array = { SAF_previous_ideas = token:SAF_trade_protection_idea_2 }
+	}
+	if = {
+		limit = { has_idea = SAF_domestic_aircraft_production }
+		remove_ideas = SAF_domestic_aircraft_production
+		add_to_array = { SAF_previous_ideas = token:SAF_domestic_aircraft_production }
+	}
+	if = {
+		limit = { has_idea = SAF_integrated_air_recon_idea }
+		remove_ideas = SAF_integrated_air_recon_idea
+		add_to_array = { SAF_previous_ideas = token:SAF_integrated_air_recon_idea }
+	}
+	if = {
+		limit = { has_idea = SAF_mechanised_focus_1 }
+		remove_ideas = SAF_mechanised_focus_1
+		add_to_array = { SAF_previous_ideas = token:SAF_mechanised_focus_1 }
+	}
+	else_if = {
+		limit = { has_idea = SAF_mechanised_focus_2 }
+		remove_ideas = SAF_mechanised_focus_2
+		add_to_array = { SAF_previous_ideas = token:SAF_mechanised_focus_2 }
+	}
+	else_if = {
+		limit = { has_idea = SAF_mechanised_focus_3 }
+		remove_ideas = SAF_mechanised_focus_3
+		add_to_array = { SAF_previous_ideas = token:SAF_mechanised_focus_3 }
+	}
+	if = {
+		limit = { has_idea = SAF_heavy_armour_focus_1 }
+		remove_ideas = SAF_heavy_armour_focus_1
+		add_to_array = { SAF_previous_ideas = token:SAF_heavy_armour_focus_1 }
+	}
+	else_if = {
+		limit = { has_idea = SAF_heavy_armour_focus_2 }
+		remove_ideas = SAF_heavy_armour_focus_2
+		add_to_array = { SAF_previous_ideas = token:SAF_heavy_armour_focus_2 }
+	}
+	else_if = {
+		limit = { has_idea = SAF_heavy_armour_focus_3 }
+		remove_ideas = SAF_heavy_armour_focus_3
+		add_to_array = { SAF_previous_ideas = token:SAF_heavy_armour_focus_3 }
+	}
+	if = {
+		limit = { has_idea = SAF_rapid_warfare_idea }
+		remove_ideas = SAF_rapid_warfare_idea
+		add_to_array = { SAF_previous_ideas = token:SAF_rapid_warfare_idea }
+	}
+}
+
+SAF_nzula_sic = {
+	if = {
+		limit = { SAF_albert_thomas_nzula = { is_second_in_command = no } }
+		activate_advisor = SAF_albert_thomas_nzula_sic
+	}
+}
+
+SAF_sachs_sic = {
+	if = {
+		limit = { SAF_emil_solomon_sachs = { is_second_in_command = no } }
+		activate_advisor = SAF_emil_solomon_sachs_sic
+	}
+}
+
+SAF_kotane_sic = {
+	if = {
+		limit = { SAF_moses_mauane_kotane = { is_second_in_command = no } }
+		activate_advisor = SAF_moses_mauane_kotane_sic
+	}
+}
+
+SAF_gomas_sic = {
+	if = {
+		limit = { SAF_john_stephen_gomas = { is_second_in_command = no } }
+		activate_advisor = SAF_john_stephen_gomas_sic
+	}
+}
+
+SAF_madeley_sic = {
+	if = {
+		limit = { SAF_walter_bayley_madeley = { is_second_in_command = no } }
+		activate_advisor = SAF_walter_bayley_madeley_sic
+	}
+}
+
+SAF_hofmeyr_sic = {
+	if = {
+		limit = { is_monarchy = no }
+		SAF_parliament_sic = yes
+	}
+	else_if = {
+		limit = { SAF_jan_hendrik_hofmeyr = { is_second_in_command = no } }
+		activate_advisor = SAF_jan_hendrik_hofmeyr_sic
+	}
+}
+
+SAF_smuts_sic = {
+	if = {
+		limit = { is_monarchy = no }
+		SAF_parliament_sic = yes
+	}
+	else_if = {
+		limit = { has_character = SAF_jan_christian_smuts }
+		if = {
+			limit = { SAF_jan_christian_smuts = { is_second_in_command = no } }
+			activate_advisor = SAF_jan_christian_smuts_sic
+		}
+	}
+	else_if = {
+		limit = { SAF_jacobus_gideon_nel_strauss = { is_second_in_command = no } }
+		activate_advisor = SAF_jacobus_gideon_nel_strauss_sic
+	}
+	if = {
+		limit = { NOT = { has_global_flag = SAF_fusion } }
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+	}
+	if = {
+		limit = { NOT = { has_global_flag = SAF_liberal_split } }
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+	}
+	#if = {
+	#	limit = { has_global_flag = SAF_fusion } #another if instead of else to have the correct tooltip order
+	#	set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+	#	add_to_coalition = yes
+	#}
+	#The UP doesn't work with coalition partners but with ping-ponging party popularities
+}
+
+SAF_strauss_sic = {
+	if = {
+		limit = { is_monarchy = no }
+		SAF_parliament_sic = yes
+	}
+	else_if = {
+		limit = { SAF_jacobus_gideon_nel_strauss = { is_second_in_command = no } }
+		activate_advisor = SAF_jacobus_gideon_nel_strauss_sic
+	}
+}
+
+SAF_hertzog_sic = {
+	if = {
+		limit = { is_monarchy = no }
+		SAF_parliament_sic = yes
+	}
+	else_if = {
+		limit = { has_character = SAF_james_barry_munnik_hertzog }
+		if = {
+			limit = { SAF_james_barry_munnik_hertzog = { is_second_in_command = no } }
+			activate_advisor = SAF_james_barry_munnik_hertzog_sic
+		}
+	}
+	else_if = {
+		limit = { SAF_nicolaas_christiaan_havenga = { is_second_in_command = no } }
+		activate_advisor = SAF_nicolaas_christiaan_havenga_sic
+	}
+	if = {
+		limit = { NOT = { has_global_flag = SAF_PNP_split } }
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+	}
+}
+
+SAF_havenga_sic = {
+	if = {
+		limit = { is_monarchy = no }
+		SAF_parliament_sic = yes
+	}
+	else_if = {
+		limit = { SAF_nicolaas_christiaan_havenga = { is_second_in_command = no } }
+		activate_advisor = SAF_nicolaas_christiaan_havenga_sic
+	}
+	if = {
+		limit = { NOT = { has_global_flag = SAF_PNP_split } }
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+	}
+}
+
+SAF_malan_sic = {
+	if = {
+		limit = { is_monarchy = no }
+		SAF_parliament_sic = yes
+	}
+	else_if = {
+		limit = { SAF_daniel_francois_malan = { is_second_in_command = no } }
+		activate_advisor = SAF_daniel_francois_malan_sic
+	}
+	set_temp_variable = { coalition_partner_var = token:national_populist }
+	add_to_coalition = yes
+}
+
+SAF_parliament_sic = {
+	if = {
+		limit = { SAF_south_african_parliament = { is_second_in_command = no } }
+		activate_advisor = SAF_south_african_parliament_sic
+	}
+}
+
+SAF_UP_won = {
+	if = {
+		limit = { has_global_flag = SAF_fusion_havenga }
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+		}
+		SAF_havenga_sic = yes
+		hidden_effect = {
+			save_current_party_popularities = yes
+			set_temp_variable = {
+				SAF_new_authdem_value = {
+					value = saved_popularities^7 #authdem
+					add = saved_popularities^6 #soccon
+				}
+			}
+			set_popularities = {
+				totalist = saved_popularities^0
+				syndicalist = saved_popularities^1
+				radical_socialist = saved_popularities^2
+				social_democrat = saved_popularities^3
+				social_liberal = saved_popularities^4
+				market_liberal = saved_popularities^5
+				social_conservative = 0
+				authoritarian_democrat = SAF_new_authdem_value
+				paternal_autocrat = saved_popularities^8
+				national_populist = saved_popularities^9
+			}
+		}
+	}
+	else_if = {
+		limit = { has_global_flag = SAF_fusion_smuts }
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		SAF_smuts_sic = yes
+		hidden_effect = {
+			save_current_party_popularities = yes
+			set_temp_variable = {
+				SAF_new_soccon_value = {
+					value = saved_popularities^7 #authdem
+					add = saved_popularities^6 #soccon
+					add = saved_popularities^4 #soclib
+				}
+			}
+			set_popularities = {
+				totalist = saved_popularities^0
+				syndicalist = saved_popularities^1
+				radical_socialist = saved_popularities^2
+				social_democrat = saved_popularities^3
+				social_liberal = 0
+				market_liberal = saved_popularities^5
+				social_conservative = SAF_new_soccon_value
+				authoritarian_democrat = 0
+				paternal_autocrat = saved_popularities^8
+				national_populist = saved_popularities^9
+			}
+		}
+	}
+	else_if = {
+		limit = { has_global_flag = SAF_fusion_hofmeyr }
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		SAF_hofmeyr_sic = yes
+		hidden_effect = {
+			save_current_party_popularities = yes
+			set_temp_variable = {
+				SAF_new_soclib_value = {
+					value = saved_popularities^4 #soclib
+					add = saved_popularities^6 #soccon
+				}
+			}
+			set_popularities = {
+				totalist = saved_popularities^0
+				syndicalist = saved_popularities^1
+				radical_socialist = saved_popularities^2
+				social_democrat = saved_popularities^3
+				social_liberal = SAF_new_soclib_value
+				market_liberal = saved_popularities^5
+				social_conservative = 0
+				authoritarian_democrat = saved_popularities^7
+				paternal_autocrat = saved_popularities^8
+				national_populist = saved_popularities^9
+			}
+		}
+	}
+}
+
+SAF_modify_united_popularity_by_pop_var = {
+	if = {
+		limit = { has_global_flag = SAF_fusion_hofmeyr }
+		add_popularity = { ideology = social_liberal popularity = SAF_united_pop_var }
+	}
+	else_if = {
+		limit = { has_global_flag = SAF_fusion_smuts }
+		add_popularity = { ideology = social_conservative popularity = SAF_united_pop_var }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_global_flag = SAF_fusion_havenga
+				has_global_flag = SAF_fusion
+			}
+		}
+		add_popularity = { ideology = authoritarian_democrat popularity = SAF_united_pop_var }
+	}
+}
+
+SAF_set_socialist_spymaster = {
+	if = {
+		limit = { has_character = SAF_head_of_intelligence } #prevents error log from on action firing mid-civil war spawn
+		SAF_head_of_intelligence = {
+			set_character_name = SAF_james_shields
+			set_portraits = {
+				civilian = { small = GFX_portrait_SAF_james_shields_civilian_small }
+			}
+		}
+	}
+}
+
+SAF_set_british_spymaster = {
+	if = {
+		limit = { has_character = SAF_head_of_intelligence } #prevents error log from on action firing mid-civil war spawn
+		SAF_head_of_intelligence = {
+			set_character_name = SAF_henry_landau
+			set_portraits = {
+				civilian = { small = GFX_portrait_SAF_henry_landau_civilian_small }
+			}
+		}
+	}
+}
+
+SAF_set_boer_spymaster = {
+	if = {
+		limit = { has_character = SAF_head_of_intelligence } #prevents error log from on action firing mid-civil war spawn
+		SAF_head_of_intelligence = {
+			set_character_name = SAF_francois_christiaan_erasmus
+			set_portraits = {
+				civilian = { small = GFX_portrait_SAF_francois_christiaan_erasmus_civilian_small }
+			}
+		}
+	}
+}
+
+SAF_set_correct_spymaster = {
+	if = {
+		limit = { has_socialist_government = yes }
+		SAF_set_socialist_spymaster = yes
+	}
+	else_if = {
+		limit = { is_monarchy = yes }
+		SAF_set_british_spymaster = yes
+	}
+	else = {
+		SAF_set_boer_spymaster = yes
+	}
+}
+
+SAF_start_socialist_civil_war = {
+	set_war_support = 0.6
+	if = {
+		limit = { has_elections = yes }
+		set_temp_variable = { SAF_had_elections = 1 }
+	}
+	save_current_party_popularities = yes
+	save_current_coalitions = yes
+	if = {
+		limit = { has_idea = SAF_wavering_dominion }
+		remove_ideas = SAF_wavering_dominion
+	}
+	if = {
+		limit = { has_idea = SAF_idea_general_strike }
+		remove_ideas = SAF_idea_general_strike
+	}
+	if = {
+		limit = { is_in_faction = yes }
+		set_country_flag = ENT_on_leave_faction_disabled
+		set_temp_variable = { former_faction_leader = faction_leader }
+	}
+
+	every_state = {
+		limit = {
+			NOT = { is_owned_by = ROOT }
+			NOT = { is_on_continent = africa }
+			owner = {
+				OR = {
+					is_in_faction_with = ROOT
+					has_war_with = ROOT
+				}
+			}
+		}
+		teleport_armies = {
+			limit = { tag = ROOT }
+			to_state_array = owned_controlled_states
+		}
+	}
+	every_owned_state = {
+		teleport_armies = {
+			limit = { NOT = { tag = ROOT } }
+			to_state_array = owned_controlled_states
+		}
+	}
+
+	set_cosmetic_tag = SAF_socialist_civil_war
+	start_civil_war = {
+		### basics ###
+		ruling_party = radical_socialist
+		ideology = var:SAF.current_party_ideology_group
+		size = 0.3
+		navy_ratio = 0
+
+		### states ###
+		capital = 946
+		states = all
+		states_filter = {
+			NOT = { state = 275 } #Transvaal
+			NOT = { state = 681 } #Eastern Cape
+			NOT = { state = 719 } #Natal
+			NOT = { state = 738 } #Swaziland
+		}
+
+		### unit leaders ###
+		keep_unit_leaders_trigger = { has_character_flag = SAF_socialist_character }
+		keep_scientists_trigger = { always = yes }
+		keep_political_leader = yes
+		keep_political_party_members = yes
+
+		### effects ###
+		every_state = {
+			limit = { is_claimed_by = ROOT }
+			add_claim_by = PREV
+		}
+		set_temp_variable = { SAF_old_government = THIS }
+	}
+
+	### socialist setup ###
+	#set_cosmetic_tag = SAF_socialist_civil_war
+	SAF_madeley_sic = yes
+	SAF_set_socialist_spymaster = yes
+	SAF_add_socialist_generals = yes
+	every_character = {
+		limit = {
+			OR = {
+				has_character_flag = SAF_british_character
+				has_character_flag = SAF_boer_character
+			}
+			NOT = { has_character_flag = SAF_socialist_character }
+		}
+		set_nationality = var:SAF_old_government
+	}
+	every_unit_leader = {
+		limit = { has_trait = SAF_british_commander }
+		remove_unit_leader_trait = SAF_british_commander
+	}
+	every_unit_leader = {
+		limit = { has_trait = SAF_boer_commander }
+		remove_unit_leader_trait = SAF_boer_commander
+	}
+	every_unit_leader = {
+		limit = { has_trait = hidden_sympathies }
+		remove_unit_leader_trait = hidden_sympathies
+	}
+	SAF_native_party_names = yes
+	set_party_name = {
+		ideology = radical_socialist
+		name = SAF_party_SALC
+		long_name = SAF_party_SALC_long
+	}
+	set_party_name = {
+		ideology = social_democrat
+		name = SAF_party_SALC
+		long_name = SAF_party_SALC_long
+	}
+	promote_character = {
+		character = SAF_william_henry_andrews
+		ideology = radical_socialist_subtype
+	}
+	set_popularities = {
+		totalist = saved_popularities^0
+		radical_socialist = saved_popularities^1
+		syndicalist = saved_popularities^2
+		social_democrat = saved_popularities^3
+		social_liberal = saved_popularities^4
+		market_liberal = saved_popularities^5
+		social_conservative = saved_popularities^6
+		authoritarian_democrat = saved_popularities^7
+		paternal_autocrat = saved_popularities^8
+		national_populist = saved_popularities^9
+	}
+	add_popularity = {
+		ideology = totalist
+		popularity = 0.1
+	}
+	add_popularity = {
+		ideology = radical_socialist
+		popularity = 0.3
+	}
+	add_popularity = {
+		ideology = syndicalist
+		popularity = 0.2
+	}
+	add_popularity = {
+		ideology = social_democrat
+		popularity = 0.1
+	}
+	set_temp_variable = { coalition_partner_var = token:social_democrat }
+	add_to_coalition = yes
+	load_focus_tree = { tree = SAF_socialist_focus keep_completed = yes }
+	if = {
+		limit = { has_idea = SAF_idea_minority_government }
+		remove_ideas = SAF_idea_minority_government
+	}
+	add_ideas = {
+		SAF_idea_reactionary_activities
+		SAF_idea_low_participation
+	}
+	SAF_disable_black_monday_decisions = yes
+	SAF_disable_nuweveld_decisions = yes
+
+	### anti-socialist setup ###
+	var:SAF_old_government = {
+		if = {
+			limit = { has_variable = SAF_had_elections }
+			set_country_flag = had_elections
+		}
+		set_cosmetic_tag = SAF_union
+		SAF_set_correct_shared_character_names = yes
+		every_character = {
+			limit = {
+				can_be_country_leader = yes
+				NOT = { has_character_flag = SAF_british_character } #== generico
+				NOT = { has_character_flag = SAF_boer_character }
+				NOT = { has_ideology_group = totalist } #== in SAF, so retiring will just create a new generico
+				NOT = { has_ideology_group = syndicalist }
+				NOT = { has_ideology_group = radical_socialist }
+			}
+			retire = yes
+		}
+		SAF_create_governor_general = yes
+		every_character = {
+			limit = { has_character_flag = SAF_socialist_character }
+			set_nationality = ROOT
+		}
+		every_unit_leader = {
+			limit = { has_trait = SAF_british_commander }
+			remove_unit_leader_trait = SAF_british_commander
+		}
+		every_unit_leader = {
+			limit = { has_trait = SAF_boer_commander }
+			remove_unit_leader_trait = SAF_boer_commander
+		}
+		set_popularities = {
+			totalist = saved_popularities^0
+			radical_socialist = saved_popularities^1
+			syndicalist = saved_popularities^2
+			social_democrat = saved_popularities^3
+			social_liberal = saved_popularities^4
+			market_liberal = saved_popularities^5
+			social_conservative = saved_popularities^6
+			authoritarian_democrat = saved_popularities^7
+			paternal_autocrat = saved_popularities^8
+			national_populist = saved_popularities^9
+		}
+		set_political_party = { ideology = totalist popularity = 0 }
+		set_political_party = { ideology = syndicalist popularity = 0 }
+		set_political_party = { ideology = radical_socialist popularity = 0 }
+		if = {
+			limit = { has_elections = yes }
+			set_politics = {
+				ruling_party = var:current_party_ideology_group #triggers on_ruling_party_change to set the right 2IC
+				elections_allowed = yes
+			}
+		}
+		else = {
+			set_politics = {
+				ruling_party = var:current_party_ideology_group #triggers on_ruling_party_change to set the right 2IC
+				elections_allowed = no
+			}
+		}
+		if = {
+			limit = { has_variable = saved_coalitions }
+			for_each_loop = {
+				array = saved_coalitions
+				set_variable = { coalitions_array^i = v }
+			}
+			for_each_loop = {
+				array = saved_coalitions_stability
+				set_variable = { coalition_stability_array^i = v }
+			}
+		}
+		if = {
+			limit = {
+				has_completed_focus = SAF_black_monday_crisis
+				SAF_has_black_monday = yes
+			}
+			set_variable = { saf_var_budget = ROOT.saf_var_budget }
+			set_variable = { saf_var_inflation = ROOT.saf_var_budget }
+			set_variable = { saf_var_unemployment = ROOT.saf_var_unemployment }
+			set_variable = { saf_var_debt = ROOT.saf_var_debt }
+			SAF_activate_black_monday_decisions = yes
+		}
+		if = {
+			limit = { has_completed_focus = SAF_establish_nuweveld }
+			SAF_enable_nuweweld_decisions = yes
+		}
+	}
+
+	### diplomacy setup ###
+	var:SAF_old_government = {
+		if = {
+			limit = { is_in_faction = yes }
+			set_country_flag = ENT_on_leave_faction_disabled
+			leave_faction = yes
+		}
+	}
+	if = {
+		limit = { has_opinion_modifier = CAN_imperial_pride }
+		remove_opinion_modifier = { target = CAN modifier = CAN_imperial_pride }
+		var:SAF_old_government = { add_opinion_modifier = { target = CAN modifier = CAN_imperial_pride } }
+	}
+	if = {
+		limit = { is_in_tech_sharing_group = entente_research }
+		remove_from_tech_sharing_group = entente_research
+		var:SAF_old_government = { add_to_tech_sharing_group = entente_research }
+	}
+	if = {
+		limit = { ENT_is_in_iedc = yes }
+		var:SAF_old_government = {
+			set_variable = { iedc_contribution = ROOT.iedc_contribution }
+			CAN_add_to_iedc = yes
+		}
+		CAN_remove_from_iedc = yes
+	}
+	every_other_country = {
+		limit = {
+			OR = {
+				is_ally_with = ENT
+				original_tag = RAJ
+				AND = {
+					original_tag = SRD
+					is_guaranteed_by = NFA
+				}
+			}
+		}
+		clear_relations_with_PREV = yes
+		embargo_PREV = yes
+		var:SAF_old_government = {
+			set_up_non_faction_ally_relations = yes
+			add_opinion_modifier = {
+				target = PREV
+				modifier = KR_hostile
+			}
+			PREV = {
+				add_opinion_modifier = {
+					target = PREV
+					modifier = KR_hostile
+				}
+			}
+		}
+	}
+	every_other_country = {
+		limit = { has_socialist_government = yes }
+		clear_embargo_PREV = yes
+		remove_opinion_modifier = {
+			target = PREV
+			modifier = KR_hostile
+		}
+		ROOT = {
+			remove_opinion_modifier = {
+				target = PREV
+				modifier = KR_hostile
+			}
+		}
+	}
+	every_other_country = {
+		limit = {
+			ENT = { has_variable = embargoed_@PREV }
+			NOT = { has_war_with = var:SAF_old_government }
+		}
+		var:SAF_old_government = { embargo_PREV = yes }
+	}
+
+	### front line setup ###
+	set_province_controller = 4556
+	set_province_controller = 10415
+	set_province_controller = 12064
+	set_province_controller = 13773
+	set_province_controller = 13774
+	set_province_controller = 13796
+
+	var:SAF_old_government = {
+		set_province_controller = 2213
+		set_province_controller = 10291
+		set_province_controller = 10234
+		set_province_controller = 12547
+
+		if = {
+			limit = { has_wargoal_against = PREV }
+			remove_wargoal = { target = PREV type = all }
+		}
+		ROOT = {
+			if = {
+				limit = { has_wargoal_against = PREV }
+				remove_wargoal = { target = PREV type = all }
+			}
+		}
+	}
+
+	### events ###
+	if = {
+		limit = { has_variable = former_faction_leader }
+		save_event_target_as = south_africa
+		var:former_faction_leader = {
+			if = {
+				limit = { any_allied_country = { is_ai = no } }
+				random_allied_country = {
+					limit = { is_ai = no }
+					country_event = south_africa_events.175
+				}
+			}
+			else = {
+				country_event = south_africa_events.176
+			}
+		}
+	}
+}
+
+SAF_set_correct_shared_character_names = {
+	SAF_south_african_parliament = { set_character_name = SAF_south_african_parliament }
+	SAF_union_defence_council = { set_character_name = SAF_union_defence_council }
+	SAF_set_correct_spymaster = yes
+}

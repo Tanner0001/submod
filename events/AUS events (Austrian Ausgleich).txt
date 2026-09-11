@@ -1,0 +1,3637 @@
+###########################
+# Ausgleich Events 3.0
+###########################
+# By ~mw~
+###########################
+
+add_namespace = ausgleich_events
+
+# hidden event to determine AI path (doesn't use on_startup to prevent save determinism)
+country_event = {
+	id = ausgleich_events.99
+
+	trigger = {
+		NOT = { has_global_flag = AUS_AI_ausgleich_pluralism }
+		NOT = { has_global_flag = AUS_AI_ausgleich_status_quo }
+		NOT = { has_global_flag = AUS_AI_ausgleich_military_occupation }
+	}
+
+	hidden = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.99 option 1"
+		ai_chance = { base = 50 }
+		set_global_flag = AUS_AI_ausgleich_pluralism
+	}
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.99 option 2"
+		ai_chance = { base = 20 }
+		set_global_flag = AUS_AI_ausgleich_status_quo
+	}
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.99 option 3"
+		ai_chance = { base = 30 }
+		set_global_flag = AUS_AI_ausgleich_military_occupation
+	}
+}
+
+### Ausgleich Preparations
+country_event = {
+	id = ausgleich_events.100
+	title = ausgleich_events.100.t
+	desc = ausgleich_events.100.d
+
+	trigger = {
+		tag = AUS
+		is_subject = no
+	}
+
+	is_triggered_only = yes
+
+	option = { # very well
+		log = "[GetLogInfo]: event ausgleich_events.100 option ausgleich_events.100.a"
+		name = ausgleich_events.100.a
+		hidden_effect = {
+			HUN = {
+				country_event = { id = ausgleich_events.101 days = 2 }
+			}
+			country_event = { id = ausgleich_events.200 days = 2 }
+
+			if = {
+				limit = { has_game_rule = { rule = AUS_ausgleich option = AUS_AUSGLEICH_STATUS_QUO } }
+				set_global_flag = AUS_AI_ausgleich_status_quo
+			}
+			else_if = {
+				limit = { has_game_rule = { rule = AUS_ausgleich option = AUS_AUSGLEICH_PATAUT } }
+				set_global_flag = AUS_AI_ausgleich_military_occupation
+			}
+			else_if = {
+				limit = {
+					OR = {
+						has_game_rule = { rule = AUS_ausgleich option = AUS_AUSGLEICH_FEDERATE_CIVIL_WAR }
+						has_game_rule = { rule = AUS_ausgleich option = AUS_AUSGLEICH_FEDERATE_SUCCESS }
+					}
+				}
+				set_global_flag = AUS_AI_ausgleich_pluralism
+			}
+			else = {
+				country_event = { id = ausgleich_events.99 days = 1 }
+			}
+		}
+	}
+}
+
+### Hungary receives an invitation
+country_event = {
+	id = ausgleich_events.101
+	title = ausgleich_events.101.t
+	desc = ausgleich_events.101.d
+
+	is_triggered_only = yes
+
+	option = { # we'll see what comes of this
+		log = "[GetLogInfo]: event ausgleich_events.101 option ausgleich_events.101.a"
+		name = ausgleich_events.101.a
+		hidden_effect = {
+			AUS = {
+				country_event = { id = ausgleich_events.102 days = 2 }
+			}
+		}
+	}
+}
+
+### Hungary agrees to come
+country_event = {
+	id = ausgleich_events.102
+	title = ausgleich_events.102.t
+	desc = ausgleich_events.102.d
+
+	is_triggered_only = yes
+
+	option = { # we'll see what comes of this
+		log = "[GetLogInfo]: event ausgleich_events.102 option ausgleich_events.102.a"
+		name = ausgleich_events.102.a
+	}
+}
+
+### Invite not only Hungary?
+country_event = {
+	id = ausgleich_events.200
+	title = ausgleich_events.200.t
+	desc = ausgleich_events.200.d
+
+	is_triggered_only = yes
+
+	option = { # No way. This is between us and the Magyars.
+		log = "[GetLogInfo]: event ausgleich_events.200 option ausgleich_events.200.a"
+		name = ausgleich_events.200.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = AUS_AI_ausgleich_status_quo }
+			}
+		}
+		add_political_power = 20
+		set_global_flag = AUS_ausgleich_hungary_only
+		hidden_effect = {
+			country_event = { id = ausgleich_events.300 days = 2 }
+		}
+	}
+	option = { # You are right. Invite the Bohemians, Galicians and Illyrians.
+		log = "[GetLogInfo]: event ausgleich_events.200 option ausgleich_events.200.b"
+		name = ausgleich_events.200.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+		}
+		add_political_power = -20
+		set_global_flag = AUS_ausgleich_kingdoms
+		hidden_effect = {
+			HUN = {
+				country_event = { id = ausgleich_events.201 days = 2 }
+			}
+			CZE = {
+				country_event = { id = ausgleich_events.202 days = 2 }
+			}
+			GAL = {
+				country_event = { id = ausgleich_events.202 days = 2 }
+			}
+			CRO = {
+				country_event = { id = ausgleich_events.202 days = 2 }
+			}
+		}
+	}
+	option = { # You are right. Invite all peoples of the Dual Monarchy.
+		log = "[GetLogInfo]: event ausgleich_events.200 option ausgleich_events.200.c"
+		name = ausgleich_events.200.c
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+		}
+		add_political_power = -100
+		set_global_flag = AUS_ausgleich_peoples
+		hidden_effect = {
+			HUN = {
+				country_event = { id = ausgleich_events.201 days = 2 }
+			}
+			CZE = {
+				country_event = { id = ausgleich_events.202 days = 2 }
+			}
+			GAL = {
+				country_event = { id = ausgleich_events.202 days = 2 }
+			}
+			CRO = {
+				country_event = { id = ausgleich_events.202 days = 2 }
+			}
+		}
+	}
+}
+
+### HUN: Austria invites other delegations to the Ausgleich
+country_event = {
+	id = ausgleich_events.201
+
+	title = {
+		text = ausgleich_events.201.t_kingdoms
+		trigger = {
+			has_global_flag = AUS_ausgleich_kingdoms
+		}
+	}
+	title = {
+		text = ausgleich_events.201.t_peoples
+		trigger = {
+			has_global_flag = AUS_ausgleich_peoples
+		}
+	}
+	desc = {
+		text = ausgleich_events.201.d_kingdoms
+		trigger = {
+			has_global_flag = AUS_ausgleich_kingdoms
+		}
+	}
+	desc = {
+		text = ausgleich_events.201.d_peoples
+		trigger = {
+			has_global_flag = AUS_ausgleich_peoples
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # formally protest
+		log = "[GetLogInfo]: event ausgleich_events.201 option ausgleich_events.201.a"
+		name = ausgleich_events.201.a
+		ai_chance = { base = 60 }
+
+		#small opinion modifiers
+		hidden_effect = {
+			AUS = {
+				country_event = { id = ausgleich_events.203 days = 2 }
+			}
+		}
+	}
+	option = { # boycott the ausgleich
+		log = "[GetLogInfo]: event ausgleich_events.201 option ausgleich_events.201.b"
+		name = ausgleich_events.201.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 3
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+
+		#heavy opinion modifiers
+		set_global_flag = AUS_ausgleich_boycott
+		hidden_effect = {
+			AUS = {
+				country_event = { id = ausgleich_events.203 days = 2 }
+			}
+		}
+	}
+	option = { # do nothing
+		log = "[GetLogInfo]: event ausgleich_events.201 option ausgleich_events.201.c"
+		name = ausgleich_events.201.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.5
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+		hidden_effect = {
+			AUS = {
+				country_event = { id = ausgleich_events.300 days = 2 }
+			}
+		}
+	}
+}
+
+### BOH/CZE/GAL is invited to the Ausgleich
+country_event = {
+	id = ausgleich_events.202
+	title = ausgleich_events.202.t
+	desc = ausgleich_events.202.d
+	picture = GFX_report_event_AUS_Ausgleich_prag
+
+	is_triggered_only = yes
+
+	option = { # very good
+		log = "[GetLogInfo]: event ausgleich_events.202 option ausgleich_events.202.a"
+		trigger = {
+			has_global_flag = AUS_ausgleich_kingdoms
+		}
+		name = ausgleich_events.202.a
+	}
+	option = { # Agree and send a mixed delegation
+		log = "[GetLogInfo]: event ausgleich_events.202 option ausgleich_events.202.b"
+		name = ausgleich_events.202.b
+		trigger = {
+			has_global_flag = AUS_ausgleich_peoples
+		}
+	}
+	option = { # Send a majority-dominated delegation
+		log = "[GetLogInfo]: event ausgleich_events.202 option ausgleich_events.202.c"
+		name = ausgleich_events.202.c
+		trigger = {
+			has_global_flag = AUS_ausgleich_peoples
+		}
+	}
+	after = {
+		hidden_effect = {
+			AUS = {
+				country_event = { id = ausgleich_events.203 days = 2 }
+			}
+		}
+	}
+}
+
+### Reactions to the invitations
+country_event = {
+	id = ausgleich_events.203
+
+	title = {
+		text = ausgleich_events.203.t_HUN
+		trigger = {
+			FROM = { tag = HUN }
+		}
+	}
+	title = {
+		text = ausgleich_events.203.t_other
+		trigger = {
+			NOT = { FROM = { tag = HUN } }
+		}
+	}
+	desc = {
+		text = ausgleich_events.203.d_HUN
+		trigger = {
+			FROM = { tag = HUN }
+		}
+	}
+	desc = {
+		text = ausgleich_events.203.d_other
+		trigger = {
+			NOT = { FROM = { tag = HUN } }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # It's the way forward
+		log = "[GetLogInfo]: event ausgleich_events.203 option ausgleich_events.203.a"
+		name = ausgleich_events.203.a
+		trigger = {
+			FROM = { tag = HUN }
+		}
+		add_political_power = -10
+		hidden_effect = {
+			country_event = { id = ausgleich_events.300 days = 2 }
+		}
+	}
+	option = { # Excellent
+		log = "[GetLogInfo]: event ausgleich_events.203 option ausgleich_events.203.b"
+		name = ausgleich_events.203.b
+		trigger = {
+			NOT = { FROM = { tag = HUN } }
+		}
+		add_political_power = 10
+	}
+}
+
+#########################
+### AUSGLEICH of 1937 ###
+#########################
+
+### Ausgleich begins
+country_event = {
+	id = ausgleich_events.300
+
+	title = {
+		text = ausgleich_events.300.t_hungary
+		trigger = {
+			has_global_flag = AUS_ausgleich_hungary_only
+		}
+	}
+	title = {
+		text = ausgleich_events.300.t_delegations_no_boycott
+		trigger = {
+			NOT = {
+				has_global_flag = AUS_ausgleich_boycott
+			}
+			OR = {
+				has_global_flag = AUS_ausgleich_kingdoms
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+	}
+	title = {
+		text = ausgleich_events.300.t_delegations_boycott
+		trigger = {
+			has_global_flag = AUS_ausgleich_boycott
+			OR = {
+				has_global_flag = AUS_ausgleich_kingdoms
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+	}
+
+	desc = {
+		text = ausgleich_events.300.d_hungary
+		trigger = {
+			has_global_flag = AUS_ausgleich_hungary_only
+		}
+	}
+	desc = {
+		text = ausgleich_events.300.d_delegations_no_boycott
+		trigger = {
+			NOT = {
+				has_global_flag = AUS_ausgleich_boycott
+			}
+			OR = {
+				has_global_flag = AUS_ausgleich_kingdoms
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+	}
+	desc = {
+		text = ausgleich_events.300.d_delegations_boycott
+		trigger = {
+			has_global_flag = AUS_ausgleich_boycott
+			OR = {
+				has_global_flag = AUS_ausgleich_kingdoms
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { # Excellent
+		log = "[GetLogInfo]: event ausgleich_events.300 option ausgleich_events.300.a"
+		name = ausgleich_events.300.a
+		trigger = {
+			NOT = {
+				has_global_flag = AUS_ausgleich_boycott
+			}
+		}
+		add_political_power = 10
+		hidden_effect = {
+			country_event = { id = ausgleich_events.310 days = 2 }
+		}
+	}
+	option = { # Excellent
+		log = "[GetLogInfo]: event ausgleich_events.300 option ausgleich_events.300.b"
+		name = ausgleich_events.300.b
+		trigger = {
+			has_global_flag = AUS_ausgleich_boycott
+		}
+		add_political_power = 10
+		hidden_effect = {
+			country_event = { id = ausgleich_events.312 days = 2 }
+		}
+	}
+}
+
+### Hungarian delegate makes speech
+country_event = {
+	id = ausgleich_events.310
+	title = ausgleich_events.310.t
+	desc = ausgleich_events.310.d
+
+	is_triggered_only = yes
+
+	option = { # how insolent
+		log = "[GetLogInfo]: event ausgleich_events.310 option ausgleich_events.310.a"
+		name = ausgleich_events.310.a
+		ai_chance = { base = 1 }
+	}
+	option = { # send him home
+		log = "[GetLogInfo]: event ausgleich_events.310 option ausgleich_events.310.b"
+		name = ausgleich_events.310.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+		}
+		if = {
+			limit = {
+				has_global_flag = AUS_ausgleich_kingdoms
+			}
+			add_political_power = 15
+		}
+		else_if = {
+			limit = {
+				has_global_flag = AUS_ausgleich_peoples
+			}
+			add_political_power = 30
+		}
+	}
+	option = { # he's right though, isn't he?
+		log = "[GetLogInfo]: event ausgleich_events.310 option ausgleich_events.310.c"
+		name = ausgleich_events.310.c
+		ai_chance = { base = 0 }
+		if = {
+			limit = {
+				has_global_flag = AUS_ausgleich_kingdoms
+			}
+			add_political_power = -15
+		}
+		else_if = {
+			limit = {
+				has_global_flag = AUS_ausgleich_peoples
+			}
+			add_political_power = -30
+		}
+		else_if = {
+			limit = {
+				has_global_flag = AUS_ausgleich_hungary_only
+			}
+			set_country_flag = AUS_ausgleich_dualism
+		}
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = ausgleich_events.311 days = 2 }
+		}
+	}
+}
+
+country_event = { #Hungarian Demands - Reparation Payments
+	id = ausgleich_events.311
+	title = ausgleich_events.311.t
+	desc = ausgleich_events.311.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # offer to pay from your own coffers
+		log = "[GetLogInfo]: event ausgleich_events.311 option ausgleich_events.311.a"
+		name = ausgleich_events.311.a
+		ai_chance = { base = 5 }
+		set_global_flag = AUS_ausgleich_austrian_payments
+	}
+	option = { # the Illyrians should pay (absent)
+		log = "[GetLogInfo]: event ausgleich_events.311 option ausgleich_events.311.b"
+		name = ausgleich_events.311.b
+		trigger = {
+			has_global_flag = AUS_ausgleich_hungary_only
+		}
+		ai_chance = { base = 15 }
+
+		set_global_flag = AUS_ausgleich_illyrian_payments
+		set_global_flag = AUS_ausgleich_absent_demands
+	}
+	option = { # the Illyrians should pay (present)
+		log = "[GetLogInfo]: event ausgleich_events.311 option ausgleich_events.311.c"
+		name = ausgleich_events.311.c
+		trigger = {
+			OR = {
+				has_global_flag = AUS_ausgleich_kingdoms
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+		ai_chance = { base = 15 }
+
+		set_global_flag = AUS_ausgleich_illyrian_payments
+	}
+	option = { # point out that they pay less taxes
+		log = "[GetLogInfo]: event ausgleich_events.311 option ausgleich_events.311.e"
+		name = ausgleich_events.311.e
+		ai_chance = { base = 80 }
+	}
+	option = { # secretly offer them to take back Croatia
+		log = "[GetLogInfo]: event ausgleich_events.311 option ausgleich_events.311.f"
+		name = ausgleich_events.311.f
+		trigger = {
+			has_country_flag = AUS_ausgleich_dualism
+		}
+		ai_chance = { base = 0 }
+		set_global_flag = AUS_ausgleich_secret_deal
+		every_state = {
+			limit = {
+				OR = {
+					region = 22 #Bohemia
+					region = 27 #Hungary
+					region = 143 #Illyria
+					region = 144 #Transylvania
+					is_galicia = yes
+					is_core_of = SLO
+					is_core_of = CZE
+					is_core_of = GAL
+					is_core_of = CRO
+				}
+				NOT = {
+					is_core_of = HUN
+					is_claimed_by = HUN
+				}
+			}
+			add_claim_by = ROOT
+		}
+	}
+	after = {
+		hidden_effect = {
+			if = {
+				limit = {
+					has_global_flag = AUS_ausgleich_hungary_only
+				}
+				country_event = { id = ausgleich_events.320 days = 2 }
+			}
+			else = {
+				country_event = { id = ausgleich_events.312 days = 2 }
+			}
+		}
+	}
+}
+
+#CZE Demands - Slovakia
+country_event = {
+	id = ausgleich_events.312
+	title = ausgleich_events.312.t
+	desc = ausgleich_events.312.d
+
+	is_triggered_only = yes
+
+	option = { #Ask Hungary
+		log = "[GetLogInfo]: event ausgleich_events.312 option ausgleich_events.312.a"
+		name = ausgleich_events.312.a
+		trigger = {
+			NOT = { has_global_flag = AUS_ausgleich_boycott }
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = AUS_AI_ausgleich_status_quo }
+			}
+		}
+	}
+	option = { # Let's do this - Slovak majority territory
+		log = "[GetLogInfo]: event ausgleich_events.312 option ausgleich_events.312.b"
+		name = ausgleich_events.312.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_ausgleich_boycott
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+		set_global_flag = AUS_ausgleich_slovakia
+		if = {
+			limit = {
+				NOT = { has_global_flag = AUS_ausgleich_boycott }
+			}
+			country_event = ausgleich_events.317
+			set_global_flag = AUS_ausgleich_boycott
+		}
+		71 = { set_state_flag = AUS_to_hungary }
+	}
+	option = { # Let's do this - down to the Danube
+		log = "[GetLogInfo]: event ausgleich_events.312 option ausgleich_events.312.c"
+		name = ausgleich_events.312.c
+		trigger = {
+			has_global_flag = AUS_ausgleich_boycott
+		}
+		ai_chance = { base = 1 }
+		set_global_flag = AUS_ausgleich_slovakia
+	}
+	after = {
+		hidden_effect = {
+			if = {
+				limit = { has_global_flag = AUS_ausgleich_peoples }
+				country_event = { id = ausgleich_events.315 days = 2 }
+			}
+			else = {
+				country_event = { id = ausgleich_events.313 days = 2 }
+			}
+		}
+	}
+}
+
+#GAL demands - Transcarpathia
+country_event = {
+	id = ausgleich_events.313
+	title = ausgleich_events.313.t
+	desc = ausgleich_events.313.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Ask Hungary
+		log = "[GetLogInfo]: event ausgleich_events.313 option ausgleich_events.313.a"
+		name = ausgleich_events.313.a
+		trigger = {
+			NOT = { has_global_flag = AUS_ausgleich_boycott }
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = AUS_AI_ausgleich_status_quo }
+			}
+		}
+	}
+	option = { # Let's do this
+		log = "[GetLogInfo]: event ausgleich_events.313 option ausgleich_events.313.b"
+		name = ausgleich_events.313.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+		}
+		set_global_flag = AUS_ausgleich_transcarpathia
+		GAL = { add_state_core = 73 }
+		if = {
+			limit = {
+				NOT = {
+					has_global_flag = AUS_ausgleich_boycott
+				}
+			}
+			country_event = ausgleich_events.317
+			set_global_flag = AUS_ausgleich_boycott
+		}
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = ausgleich_events.314 days = 2 }
+		}
+	}
+}
+
+#CRO demands - Backa
+country_event = {
+	id = ausgleich_events.314
+	title = ausgleich_events.314.t
+	desc = ausgleich_events.314.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Ask Hungary
+		log = "[GetLogInfo]: event ausgleich_events.314 option ausgleich_events.314.a"
+		name = ausgleich_events.314.a
+		trigger = {
+			NOT = { has_global_flag = AUS_ausgleich_boycott }
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = AUS_AI_ausgleich_status_quo }
+			}
+		}
+	}
+	option = { # Let's do this - Majority territory
+		log = "[GetLogInfo]: event ausgleich_events.314 option ausgleich_events.314.b"
+		name = ausgleich_events.314.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_ausgleich_boycott
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+		set_global_flag = AUS_ausgleich_backa
+		if = {
+			limit = {
+				NOT = { has_global_flag = AUS_ausgleich_boycott }
+			}
+			country_event = ausgleich_events.317
+			set_global_flag = AUS_ausgleich_boycott
+		}
+	}
+	option = { # Let's do this - All of the Backa
+		log = "[GetLogInfo]: event ausgleich_events.314 option ausgleich_events.314.c"
+		name = ausgleich_events.314.c
+		trigger = {
+			has_global_flag = AUS_ausgleich_boycott
+		}
+		ai_chance = { base = 1 }
+		set_global_flag = AUS_ausgleich_backa
+		CRO = { add_state_core = 875 }
+	}
+	after = {
+		hidden_effect = {
+			if = {
+				limit = { has_global_flag = AUS_ausgleich_peoples }
+				country_event = { id = ausgleich_events.316 days = 2 }
+			}
+			else = {
+				country_event = { id = ausgleich_events.320 days = 2 }
+			}
+		}
+	}
+}
+
+#POL demands
+country_event = {
+	id = ausgleich_events.315
+	title = ausgleich_events.315.t
+	desc = ausgleich_events.315.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Interesting
+		log = "[GetLogInfo]: event ausgleich_events.315 option ausgleich_events.315.a"
+		name = ausgleich_events.315.a
+		hidden_effect = {
+			country_event = { id = ausgleich_events.313 days = 2 }
+		}
+	}
+}
+
+#ROM demands
+country_event = {
+	id = ausgleich_events.316
+	title = ausgleich_events.316.t
+	desc = ausgleich_events.316.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Ask Hungary
+		log = "[GetLogInfo]: event ausgleich_events.316 option ausgleich_events.316.a"
+		name = ausgleich_events.316.a
+		trigger = {
+			NOT = { has_global_flag = AUS_ausgleich_boycott }
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_global_flag = AUS_AI_ausgleich_status_quo }
+			}
+		}
+	}
+	option = { # Let's do this - Majority territory
+		log = "[GetLogInfo]: event ausgleich_events.316 option ausgleich_events.316.b"
+		name = ausgleich_events.316.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_ausgleich_boycott
+				has_global_flag = AUS_ausgleich_peoples
+			}
+		}
+		set_global_flag = AUS_ausgleich_transylvania
+		if = {
+			limit = {
+				NOT = { has_global_flag = AUS_ausgleich_boycott }
+			}
+			country_event = ausgleich_events.317
+			set_global_flag = AUS_ausgleich_boycott
+		}
+	}
+	option = { # Let's do this - All of it
+		log = "[GetLogInfo]: event ausgleich_events.316 option ausgleich_events.316.c"
+		name = ausgleich_events.316.c
+		trigger = {
+			has_global_flag = AUS_ausgleich_boycott
+		}
+		ai_chance = { base = 1 }
+		set_global_flag = AUS_ausgleich_transylvania
+		set_global_flag = AUS_ausgleich_transylvania_full
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = ausgleich_events.320 days = 2 }
+		}
+	}
+}
+
+#Hungary boycotts the ausgleich (AUS)
+country_event = {
+	id = ausgleich_events.317
+	title = ausgleich_events.317.t
+	desc = ausgleich_events.317.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # That could've gone better
+		log = "[GetLogInfo]: event ausgleich_events.317 option ausgleich_events.317.a"
+		name = ausgleich_events.317.a
+		add_political_power = -50
+		set_global_flag = AUS_ausgleich_boycott
+		hidden_effect = {
+			HUN = { country_event = { id = ausgleich_events.318 days = 2 } }
+		}
+	}
+}
+
+#Hungary boycotts the ausgleich (HUN)
+country_event = {
+	id = ausgleich_events.318
+	title = ausgleich_events.318.t
+	desc = ausgleich_events.318.d
+
+	is_triggered_only = yes
+
+	option = { # Good to know.
+		log = "[GetLogInfo]: event ausgleich_events.318 option ausgleich_events.318.a"
+		name = ausgleich_events.318.a
+	}
+}
+
+###End of the Ausgleich
+country_event = {
+	id = ausgleich_events.320
+	immediate = { hidden_effect = { HUN = { activate_targeted_decision = { target = GER decision = CZE_join_germany } } } }
+	title = ausgleich_events.320.t
+
+	desc = {
+		text = ausgleich_events.320.d_hungary_success
+		trigger = {
+			has_global_flag = AUS_ausgleich_hungary_only
+			NOT = {
+				has_global_flag = AUS_ausgleich_boycott
+			}
+		}
+	}
+	desc = {
+		text = ausgleich_events.320.d_hungary_failure
+		trigger = {
+			has_global_flag = AUS_ausgleich_hungary_only
+			has_global_flag = AUS_ausgleich_boycott
+		}
+	}
+	desc = {
+		text = ausgleich_events.320.d_other_success
+		trigger = {
+			OR = {
+				has_global_flag = AUS_ausgleich_kingdoms
+				has_global_flag = AUS_ausgleich_peoples
+			}
+			NOT = {
+				has_global_flag = AUS_ausgleich_boycott
+			}
+		}
+	}
+	desc = {
+		text = ausgleich_events.320.d_other_failure
+		trigger = {
+			OR = {
+				has_global_flag = AUS_ausgleich_kingdoms
+				has_global_flag = AUS_ausgleich_peoples
+			}
+			has_global_flag = AUS_ausgleich_boycott
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Great
+		log = "[GetLogInfo]: event ausgleich_events.320 option ausgleich_events.320.a"
+		name = ausgleich_events.320.a
+		trigger = {
+			NOT = {
+				has_global_flag = AUS_ausgleich_boycott
+			}
+		}
+		remove_ideas = AUS_financial_ties_broken
+		add_political_power = 50
+		complete_national_focus = AUS_ausgleich
+		hidden_effect = {
+			HUN = {
+				country_event = { id = ausgleich_events.321 days = 2 } #Success
+			}
+			if = {
+				limit = {
+					has_global_flag = AUS_ausgleich_secret_deal
+				}
+				CRO = {
+					country_event = { id = ausgleich_events.325 days = 2 } #HUN demands payment
+				}
+			}
+			else_if = {
+				limit = {
+					OR = {
+						has_global_flag = AUS_ausgleich_illyrian_payments
+						has_global_flag = AUS_ausgleich_austrian_payments
+					}
+				}
+				HUN = {
+					country_event = { id = ausgleich_events.322 days = 2 } #Payments
+				}
+			}
+		}
+	}
+	option = { # Could have been worse...
+		log = "[GetLogInfo]: event ausgleich_events.320 option ausgleich_events.320.b"
+		name = ausgleich_events.320.b
+		trigger = {
+			has_global_flag = AUS_ausgleich_boycott
+		}
+		add_political_power = -50
+		complete_national_focus = AUS_ausgleich
+		hidden_effect = {
+			if = {
+				limit = {
+					has_global_flag = AUS_ausgleich_secret_deal
+				}
+				HUN = {
+					country_event = { id = ausgleich_events.325 days = 2 } #Illyrian Conflict
+				}
+			}
+			else_if = {
+				limit = {
+					OR = {
+						has_global_flag = AUS_ausgleich_illyrian_payments
+						has_global_flag = AUS_ausgleich_austrian_payments
+					}
+				}
+				HUN = {
+					country_event = { id = ausgleich_events.322 days = 2 } #Payments
+				}
+			}
+		}
+	}
+	after = {
+		hidden_effect = {
+			if = {
+				limit = {
+					OR = {
+						has_global_flag = AUS_ausgleich_backa
+						has_global_flag = AUS_ausgleich_transcarpathia
+						has_global_flag = AUS_ausgleich_transylvania
+						has_global_flag = AUS_ausgleich_slovakia
+					}
+				}
+				CZE = {
+					country_event = { id = ausgleich_events.332 days = 2 }
+				}
+				GAL = {
+					country_event = { id = ausgleich_events.332 days = 2 }
+				}
+				CRO = {
+					country_event = { id = ausgleich_events.332 days = 2 }
+				}
+				HUN = {
+					country_event = { id = ausgleich_events.340 days = 2 } #Riots
+				}
+			}
+		}
+	}
+}
+
+#Success at the Ausgleich (HUN)
+country_event = {
+	id = ausgleich_events.321
+	title = ausgleich_events.321.t
+	desc = ausgleich_events.321.d
+
+	is_triggered_only = yes
+
+	option = { # Well, what can you do
+		log = "[GetLogInfo]: event ausgleich_events.321 option ausgleich_events.321.a"
+		name = ausgleich_events.321.a
+		remove_ideas = HUN_financial_ties_broken
+	}
+}
+
+#HUN demands payments
+country_event = {
+	id = ausgleich_events.322
+	title = ausgleich_events.322.t
+	desc = ausgleich_events.322.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Send the demands
+		log = "[GetLogInfo]: event ausgleich_events.322 option ausgleich_events.322.a"
+		name = ausgleich_events.322.a
+		hidden_effect = {
+			if = {
+				limit = {
+					has_global_flag = AUS_ausgleich_illyrian_payments
+					has_global_flag = AUS_ausgleich_absent_demands
+				}
+				CRO = {
+					country_event = { id = ausgleich_events.325 days = 2 }
+				}
+			}
+			else_if = {
+				limit = {
+					has_global_flag = AUS_ausgleich_illyrian_payments
+					NOT = {
+						has_global_flag = AUS_ausgleich_absent_demands
+					}
+				}
+				CRO = {
+					country_event = { id = ausgleich_events.323 days = 2 }
+				}
+			}
+			else = {
+				AUS = {
+					country_event = { id = ausgleich_events.323 days = 2 }
+				}
+			}
+		}
+	}
+}
+
+#AUS/CRO receives demand for agreed payments
+country_event = {
+	id = ausgleich_events.323
+	title = ausgleich_events.323.t
+	desc = ausgleich_events.323.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Well, can't do a thing.
+		log = "[GetLogInfo]: event ausgleich_events.323 option ausgleich_events.323.a"
+		name = ausgleich_events.323.a
+		add_timed_idea = {
+			idea = AUS_paid_reparations
+			days = 365
+		}
+		hidden_effect = {
+			HUN = {
+				country_event = { id = ausgleich_events.324 days = 2 }
+			}
+		}
+	}
+}
+
+#HUN receives reparations
+country_event = {
+	id = ausgleich_events.324
+	title = ausgleich_events.324.t
+	desc = ausgleich_events.324.d
+
+	is_triggered_only = yes
+
+	option = { # Good to know.
+		log = "[GetLogInfo]: event ausgleich_events.324 option ausgleich_events.324.a"
+		name = ausgleich_events.324.a
+	}
+}
+
+###Illyrian Conflict (CRO)
+country_event = {
+	id = ausgleich_events.325
+	title = ausgleich_events.325.t
+	desc = ausgleich_events.325.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Wait, what?
+		log = "[GetLogInfo]: event ausgleich_events.325 option ausgleich_events.325.a"
+		name = ausgleich_events.325.a
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+		}
+		hidden_effect = {
+			HUN = {
+				country_event = { id = ausgleich_events.326 days = 2 }
+			}
+		}
+	}
+	option = { # If that has been decided...
+		log = "[GetLogInfo]: event ausgleich_events.325 option ausgleich_events.325.b"
+		name = ausgleich_events.325.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_ausgleich_secret_deal
+			}
+		}
+		add_timed_idea = {
+			idea = AUS_paid_reparations
+			days = 365
+		}
+		hidden_effect = {
+			HUN = {
+				country_event = { id = ausgleich_events.324 days = 2 }
+			}
+		}
+	}
+}
+
+#CRO refuses annexation (HUN)
+country_event = {
+	id = ausgleich_events.326
+	title = ausgleich_events.326.t
+	desc = ausgleich_events.326.d
+
+	is_triggered_only = yes
+
+	option = { # Well, let's do this then
+		log = "[GetLogInfo]: event ausgleich_events.326 option ausgleich_events.326.a"
+		name = ausgleich_events.326.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+		}
+		AUS = {
+			set_autonomy = {
+				target = HUN
+				autonomy_state = autonomy_free
+			}
+			set_autonomy = {
+				target = CRO
+				autonomy_state = autonomy_free
+			}
+		}
+		hidden_effect = {
+			AUS = { country_event = ausgleich_events.328 }
+			CRO = {
+				set_cosmetic_tag = CRO_illyria
+				leave_faction = yes
+				clear_rule = { can_not_declare_war = yes }
+				separate_peace_all_wars = yes
+				GER_remove_from_mitteleuropa = yes
+				country_event = ausgleich_events.327
+				every_owned_state = {
+					teleport_armies = {
+						limit = { NOT = { tag = CRO } }
+						to_state_array = owned_controlled_states
+					}
+					add_to_temp_array = { croatian_owned_states = THIS }
+				}
+			}
+			remove_ideas = HUN_financial_ties_broken
+			every_state = {
+				limit = {
+					owner = { is_ally_with = AUS }
+				}
+				teleport_armies = {
+					limit = { tag = CRO }
+					to_state_array = croatian_owned_states
+				}
+			}
+		}
+		declare_war_on = {
+			target = CRO
+			type = annex_everything
+		}
+	}
+	option = { # Well, can't do anything about it
+		log = "[GetLogInfo]: event ausgleich_events.326 option ausgleich_events.326.b"
+		name = ausgleich_events.326.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				has_global_flag = AUS_AI_ausgleich_status_quo
+			}
+		}
+	}
+}
+
+#HUN declares war (CRO)
+country_event = {
+	id = ausgleich_events.327
+	title = ausgleich_events.327.t
+	desc = ausgleich_events.327.d
+
+	is_triggered_only = yes
+
+	option = { # Crap.
+		log = "[GetLogInfo]: event ausgleich_events.327 option ausgleich_events.327.a"
+		name = ausgleich_events.327.a
+	}
+}
+
+#HUN declares war (AUS)
+country_event = {
+	id = ausgleich_events.328
+	title = ausgleich_events.328.t
+	desc = ausgleich_events.328.d
+
+	is_triggered_only = yes
+
+	option = { # This is outrageous.
+		log = "[GetLogInfo]: event ausgleich_events.328 option ausgleich_events.328.a"
+		name = ausgleich_events.328.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_global_flag = AUS_ausgleich_secret_deal
+			}
+		}
+		hidden_effect = {
+			random_other_country = {
+				news_event = { id = world_news_events.7 days = 1 }
+			}
+			set_autonomy = {
+				target = HUN
+				autonomy_state = autonomy_free
+			}
+			HUN = {
+				drop_cosmetic_tag = yes
+				leave_faction = yes
+				every_owned_state = {
+					teleport_armies = {
+						limit = { is_ally_with = AUS }
+						to_state_array = owned_controlled_states
+					}
+				}
+				AUS_remove_monarchy = yes
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "1888.6.15"
+					election_frequency = 48
+					elections_allowed = no
+				}
+				add_popularity = {
+					ideology = social_conservative
+					popularity = 0.2
+				}
+			}
+			CRO = {
+				set_cosmetic_tag = CRO_illyria_habsburg
+				get_current_government_type = yes
+			}
+			set_autonomy = {
+				target = CRO
+				autonomy_state = crownland
+				end_wars = no
+			}
+			CRO = { restore_previous_government_type = yes }
+			every_state = {
+				limit = {
+					owner = {
+						is_ally_with = AUS
+						NOT = { has_war_with = HUN }
+					}
+				}
+				teleport_armies = {
+					limit = { tag = HUN }
+					to_state = 43
+				}
+			}
+		}
+		add_ideas = AUS_crownland_revolt
+		declare_war_on = {
+			target = HUN
+			type = civil_war
+		}
+		hidden_effect = { add_civil_war_target = HUN }
+	}
+	option = { # Leave them to it
+		log = "[GetLogInfo]: event ausgleich_events.328 option ausgleich_events.328.b"
+		name = ausgleich_events.328.b
+		ai_chance = { base = 0 }
+		trigger = {
+			NOT = { has_global_flag = AUS_ausgleich_secret_deal }
+		}
+		add_political_power = -200
+	}
+	option = { # It's happening
+		log = "[GetLogInfo]: event ausgleich_events.328 option ausgleich_events.328.c"
+		name = ausgleich_events.328.c
+		trigger = {
+			has_global_flag = AUS_ausgleich_secret_deal
+		}
+		hidden_effect = {
+			set_global_flag = AUS_enacted_military_occupation
+			log = "KR_Event_Logging;AUS ENACTED MILITARY OCCUPATION"
+			HUN = {
+				set_cosmetic_tag = HUN_habsburg
+				get_current_government_type = yes
+			}
+			set_autonomy = {
+				target = HUN
+				autonomy_state = crownland
+				end_wars = no
+			}
+			HUN = { restore_previous_government_type = yes }
+			CRO = {
+				every_owned_state = {
+					teleport_armies = {
+						limit = { is_ally_with = AUS }
+						to_state_array = owned_controlled_states
+					}
+				}
+				activate_targeted_decision = { target = GER decision = CZE_join_germany }
+			}
+			CZE = { country_event = ausgleich_events.900 }
+			GAL = { country_event = ausgleich_events.900 }
+			SER = { activate_targeted_decision = { target = CRO decision = SER_Ultimatum_To_Illyria } }
+			random_other_country = {
+				news_event = { id = world_news_events.7 days = 1 }
+			}
+		}
+		declare_war_on = {
+			target = CRO
+			type = civil_war
+		}
+		hidden_effect = {
+			add_civil_war_target = CRO
+			HUN = { add_civil_war_target = CRO }
+		}
+	}
+}
+
+#CRO annexation mission
+country_event = {
+	id = ausgleich_events.330
+	title = ausgleich_events.330.t
+	desc = ausgleich_events.330.d
+
+	trigger = {
+		OR = {
+			owns_state = 109
+			HUN = { owns_state = 109 }
+		}
+		HUN = { has_autonomy_state = crownland }
+	}
+
+	is_triggered_only = yes
+
+	option = { # Restore the 1921 borders
+		log = "[GetLogInfo]: event ausgleich_events.330 option ausgleich_events.330.a"
+		name = ausgleich_events.330.a
+		if = {
+			limit = { has_subject = 163.owner }
+			163 = {
+				set_state_owner_to = ROOT
+				set_state_province_controller = {
+					controller = owner
+					limit = { NOT = { has_war_with = PREV.owner } }
+				}
+			}
+		}
+		every_state = {
+			limit = {
+				is_owned_by_ROOT_or_subject = yes
+				NOT = { is_owned_by = HUN }
+				OR = {
+					state = 103 #Rijeka
+					state = 109 #Central Croatia
+					state = 794 #Syrmia
+					state = 1125 #Slavonia
+				}
+			}
+			set_state_owner_to = HUN
+			set_state_province_controller = {
+				controller = owner
+				limit = { NOT = { has_war_with = PREV.owner } }
+			}
+		}
+		set_temp_variable = { tag_to_release = BOS }
+		every_owned_state = {
+			limit = {
+				is_core_of = var:tag_to_release
+				NOT = { is_core_of = ROOT }
+			}
+			transfer_state_without_overriding_occupation = yes
+		}
+		puppet_released_tag = yes
+		set_autonomy = {
+			target = var:tag_to_release
+			autonomy_state = crownland
+			end_wars = no
+		}
+		hidden_effect = {
+			var:tag_to_release = { set_cosmetic_tag = BOS_habsburg }
+		}
+	}
+	option = { # Croatia-Slavonia to Hungary, Illyrian Condominium
+		log = "[GetLogInfo]: event ausgleich_events.330 option ausgleich_events.330.b"
+		name = ausgleich_events.330.b
+		every_state = {
+			limit = {
+				is_owned_by_ROOT_or_subject = yes
+				NOT = { is_owned_by = HUN }
+				OR = {
+					state = 103 #Rijeka
+					state = 109 #Central Croatia
+					state = 794 #Syrmia
+					state = 1125 #Slavonia
+				}
+			}
+			set_state_owner_to = HUN
+			set_state_province_controller = {
+				controller = owner
+				limit = { NOT = { has_war_with = PREV.owner } }
+			}
+		}
+		set_temp_variable = { tag_to_release = CRO }
+		every_owned_state = {
+			limit = {
+				is_core_of = var:tag_to_release
+				NOT = { is_core_of = ROOT }
+			}
+			transfer_state_without_overriding_occupation = yes
+		}
+		puppet_released_tag = yes
+		set_autonomy = {
+			target = var:tag_to_release
+			autonomy_state = crownland
+			end_wars = no
+		}
+		hidden_effect = {
+			var:tag_to_release = { set_cosmetic_tag = CRO_illyria_habsburg }
+		}
+	}
+	option = { # Occupy the whole thing for now
+		log = "[GetLogInfo]: event ausgleich_events.330 option ausgleich_events.330.c"
+		name = ausgleich_events.330.c
+		every_state = {
+			limit = {
+				owner = { is_subject_of = ROOT }
+				OR = {
+					state = 103 #Rijeka
+					state = 105 #Montenegro
+					state = 109 #Central Croatia
+					state = 163 #Dalmatia
+					state = 794 #Syrmia
+					state = 1125 #Slavonia
+					is_bosnia = yes
+				}
+			}
+			set_state_owner_to = ROOT
+			set_state_province_controller = {
+				controller = owner
+				limit = { NOT = { has_war_with = PREV.owner } }
+			}
+		}
+		HUN = {
+			country_event = { id = ausgleich_events.331 days = 2 }
+		}
+	}
+}
+
+#Austria breaks secret deal (HUN)
+country_event = {
+	id = ausgleich_events.331
+	title = ausgleich_events.331.t
+	desc = ausgleich_events.331.d
+
+	is_triggered_only = yes
+
+	option = { # They can't do that!
+		log = "[GetLogInfo]: event ausgleich_events.331 option ausgleich_events.331.a"
+		name = ausgleich_events.331.a
+		AUS = {
+			set_autonomy = {
+				target = HUN
+				autonomy_state = autonomy_free
+			}
+		}
+		hidden_effect = {
+			HUN = { AUS_remove_monarchy = yes }
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			last_election = "1888.6.15"
+			election_frequency = 48
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.2
+		}
+		hidden_effect = {
+			drop_cosmetic_tag = yes
+			leave_faction = yes
+			clear_rule = { can_not_declare_war = yes }
+			separate_peace_all_wars = yes
+			GER_remove_from_mitteleuropa = yes
+			every_owned_state = {
+				teleport_armies = {
+					limit = { is_ally_with = AUS }
+					to_state_array = owned_controlled_states
+				}
+			}
+			every_state = {
+				limit = { owner = { is_ally_with = AUS } }
+				teleport_armies = {
+					limit = { tag = HUN }
+					to_state = 43
+				}
+			}
+		}
+		declare_war_on = {
+			target = AUS
+			type = civil_war
+		}
+		hidden_effect = { add_civil_war_target = AUS }
+	}
+}
+
+#Notify Ausgleich results to CZE/GAL/CRO
+country_event = {
+	id = ausgleich_events.332
+	title = ausgleich_events.332.t
+
+	desc = {
+		text = ausgleich_events.332.d_no_claims
+		trigger = {
+			OR = {
+				AND = {
+					tag = CZE
+					NOT = {
+						has_global_flag = AUS_ausgleich_slovakia
+					}
+				}
+				AND = {
+					tag = GAL
+					NOT = {
+						has_global_flag = AUS_ausgleich_transcarpathia
+					}
+				}
+				AND = {
+					tag = CRO
+					NOT = {
+						has_global_flag = AUS_ausgleich_backa
+					}
+				}
+			}
+		}
+	}
+	desc = {
+		text = ausgleich_events.332.d_claims
+		trigger = {
+			OR = {
+				AND = {
+					tag = CZE
+					has_global_flag = AUS_ausgleich_slovakia
+				}
+				AND = {
+					tag = GAL
+					has_global_flag = AUS_ausgleich_transcarpathia
+				}
+				AND = {
+					tag = CRO
+					has_global_flag = AUS_ausgleich_backa
+				}
+			}
+		}
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Certainly a valuable lesson for them.
+		log = "[GetLogInfo]: event ausgleich_events.332 option ausgleich_events.332.a"
+		name = ausgleich_events.332.a
+		trigger = {
+			OR = {
+				AND = {
+					tag = CZE
+					NOT = {
+						has_global_flag = AUS_ausgleich_slovakia
+					}
+				}
+				AND = {
+					tag = GAL
+					NOT = {
+						has_global_flag = AUS_ausgleich_transcarpathia
+					}
+				}
+				AND = {
+					tag = CRO
+					NOT = {
+						has_global_flag = AUS_ausgleich_backa
+					}
+				}
+			}
+		}
+	}
+	option = { # Great!
+		log = "[GetLogInfo]: event ausgleich_events.332 option ausgleich_events.332.b"
+		name = ausgleich_events.332.b
+		trigger = {
+			OR = {
+				AND = {
+					tag = CZE
+					has_global_flag = AUS_ausgleich_slovakia
+				}
+				AND = {
+					tag = GAL
+					has_global_flag = AUS_ausgleich_transcarpathia
+				}
+				AND = {
+					tag = CRO
+					has_global_flag = AUS_ausgleich_backa
+				}
+			}
+		}
+
+		add_political_power = 100
+		if = {
+			limit = {
+				tag = CZE
+			}
+			add_ideas = CZE_ausgleich_slovak_state
+		}
+		else_if = {
+			limit = {
+				tag = GAL
+			}
+			add_ideas = GAL_ausgleich_transcarpathian_claims
+		}
+		else = {
+			add_ideas = CRO_ausgleich_backan_claims
+		}
+	}
+}
+
+#Austria notified of CZE/GAL betrayal
+country_event = {
+	id = ausgleich_events.333
+	title = ausgleich_events.333.t
+	desc = ausgleich_events.333.d
+
+	is_triggered_only = yes
+
+	option = { # How dare they!
+		log = "[GetLogInfo]: event ausgleich_events.333 option ausgleich_events.333.a"
+		name = ausgleich_events.333.a
+		add_political_power = -15
+	}
+}
+
+### Austrian Civil War
+#Demonstrations in Hungary
+country_event = {
+	id = ausgleich_events.340
+	title = ausgleich_events.340.t
+	desc = ausgleich_events.340.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			AUS = {
+				country_event = { id = ausgleich_events.341 days = 2 }
+			}
+		}
+	}
+
+	option = { # Good to know.
+		log = "[GetLogInfo]: event ausgleich_events.340 option ausgleich_events.340.a"
+		name = ausgleich_events.340.a
+		if = {
+			limit = {
+				has_global_flag = AUS_ausgleich_slovakia
+			}
+			add_timed_idea = {
+				idea = HUN_slovak_demonstrations
+				days = 365
+			}
+		}
+		if = {
+			limit = {
+				has_global_flag = AUS_ausgleich_transylvania
+			}
+			add_timed_idea = {
+				idea = HUN_transylvanian_demonstrations
+				days = 365
+			}
+		}
+	}
+}
+
+#Protests put down violently (AUS)
+country_event = {
+	id = ausgleich_events.341
+	title = ausgleich_events.341.t
+	desc = ausgleich_events.341.d
+
+	is_triggered_only = yes
+
+	option = { # Demand the Hungarians cede the territories
+		log = "[GetLogInfo]: event ausgleich_events.341 option ausgleich_events.341.a"
+		name = ausgleich_events.341.a
+		ai_chance = { base = 100 }
+		HUN = {
+			country_event = { id = ausgleich_events.342 days = 2 }
+		}
+	}
+	option = { # do nothing
+		log = "[GetLogInfo]: event ausgleich_events.341 option ausgleich_events.341.b"
+		name = ausgleich_events.341.b
+		ai_chance = { base = 0 }
+		if = {
+			limit = {
+				has_global_flag = AUS_ausgleich_slovakia
+				has_global_flag = AUS_ausgleich_transylvania
+			}
+			add_political_power = -120
+		}
+		else = {
+			add_political_power = -60
+		}
+	}
+}
+
+#Austrian ultimatum (HUN)
+country_event = {
+	id = ausgleich_events.342
+	title = ausgleich_events.342.t
+	desc = ausgleich_events.342.d
+
+	is_triggered_only = yes
+
+	option = { # Do as they say.
+		log = "[GetLogInfo]: event ausgleich_events.342 option ausgleich_events.342.a"
+		name = ausgleich_events.342.a
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				has_game_rule = { rule = AUS_ausgleich option = AUS_AUSGLEICH_FEDERATE_SUCCESS }
+			}
+		}
+
+		add_political_power = -100
+		AUS = {
+			country_event = { id = ausgleich_events.343 days = 2 }
+		}
+	}
+	option = { # No way.
+		log = "[GetLogInfo]: event ausgleich_events.342 option ausgleich_events.342.b"
+		name = ausgleich_events.342.b
+		trigger = {
+			has_capitulated = no
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = AUS_ausgleich option = AUS_AUSGLEICH_FEDERATE_SUCCESS }
+			}
+		}
+
+		AUS = {
+			country_event = { id = ausgleich_events.344 days = 2 }
+		}
+	}
+}
+
+#Hungary accepts ultimatum (AUS)
+country_event = {
+	id = ausgleich_events.343
+	title = ausgleich_events.343.t
+	desc = ausgleich_events.343.d
+
+	is_triggered_only = yes
+
+	option = { # Great.
+		log = "[GetLogInfo]: event ausgleich_events.343 option ausgleich_events.343.a"
+		name = ausgleich_events.343.a
+		set_temp_variable = { target = ROOT }
+		HUN = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						is_core_of = ROOT
+						is_claimed_by = ROOT
+						is_core_of = SLO
+						AND = {
+							is_core_of = TRS
+							OR = {
+								has_global_flag = AUS_ausgleich_transylvania_full
+								NOT = {
+									state = 82 #Banat
+									state = 83 #Partium
+									state = 875 #West Banat
+								}
+							}
+						}
+					}
+				}
+				remove_core_of = PREV
+				transfer_state_during_war = yes
+			}
+			if = {
+				limit = { has_idea = HUN_slovak_demonstrations }
+				remove_ideas = HUN_slovak_demonstrations
+			}
+			if = {
+				limit = { has_idea = HUN_transylvanian_demonstrations }
+				remove_ideas = HUN_transylvanian_demonstrations
+			}
+		}
+		hidden_effect = {
+			CRO = {
+				every_owned_state = { remove_claim_by = HUN }
+			}
+			TRS = { set_cosmetic_tag = TRS_habsburg }
+			SLO = { set_cosmetic_tag = SLO_habsburg }
+		}
+	}
+}
+
+#Hungary refuses ultimatum (AUS)
+country_event = {
+	id = ausgleich_events.344
+	title = ausgleich_events.344.t
+	desc = ausgleich_events.344.d
+
+	is_triggered_only = yes
+
+	option = { # you know what this means!
+		log = "[GetLogInfo]: event ausgleich_events.344 option ausgleich_events.344.a"
+		name = ausgleich_events.344.a
+		ai_chance = { base = 100 }
+		set_autonomy = {
+			target = HUN
+			autonomy_state = autonomy_free
+		}
+		hidden_effect = {
+			news_event = { id = world_news_events.7 days = 1 }
+			HUN = {
+				drop_cosmetic_tag = yes
+				leave_faction = yes
+				every_owned_state = {
+					add_claim_of_ROOT = yes
+					teleport_armies = {
+						limit = { is_ally_with = AUS }
+						to_state_array = owned_controlled_states
+					}
+				}
+				AUS_remove_monarchy = yes
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "1888.6.15"
+					election_frequency = 48
+					elections_allowed = no
+				}
+				add_popularity = {
+					ideology = social_conservative
+					popularity = 0.2
+				}
+				clear_rule = { can_not_declare_war = yes }
+				separate_peace_all_wars = yes
+				GER_remove_from_mitteleuropa = yes
+				if = {
+					limit = { NOT = { has_idea = HUN_financial_ties_broken } }
+					add_ideas = HUN_financial_ties_broken
+				}
+				every_owned_state = {
+					teleport_armies = {
+						limit = { is_ally_with = AUS }
+						to_state_array = owned_controlled_states
+					}
+				}
+			}
+			every_state = {
+				limit = {
+					owner = { is_ally_with = AUS }
+				}
+				teleport_armies = {
+					limit = { tag = HUN }
+					to_state = 43
+				}
+			}
+		}
+		declare_war_on = {
+			target = HUN
+			type = civil_war
+		}
+		hidden_effect = {
+			add_ideas = has_scripted_peace
+			add_civil_war_target = HUN
+		}
+		CZE = {
+			add_to_war = {
+				targeted_alliance = AUS
+				enemy = HUN
+			}
+			hidden_effect = { add_civil_war_target = HUN }
+		}
+		GAL = {
+			add_to_war = {
+				targeted_alliance = AUS
+				enemy = HUN
+			}
+			hidden_effect = { add_civil_war_target = HUN }
+		}
+		CRO = {
+			add_to_war = {
+				targeted_alliance = AUS
+				enemy = HUN
+			}
+			hidden_effect = { add_civil_war_target = HUN }
+		}
+	}
+
+	option = { # oh well.
+		log = "[GetLogInfo]: event ausgleich_events.344 option ausgleich_events.344.b"
+		name = ausgleich_events.344.b
+		ai_chance = { base = 0 }
+		add_political_power = -40
+	}
+}
+
+#Austria surrender event because Hungary wins the revolt
+country_event = {
+	id = ausgleich_events.345
+	title = ausgleich_events.345.t
+	desc = ausgleich_events.345.d
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = AUS
+		AND = {
+			has_war_with = HUN
+			HUN = { is_valid_peace_target_against_PREV = yes }
+		}
+		is_subject = no
+		OR = {
+			NOT = { controls_state = 4 } #Vienna
+			surrender_progress > 0.4
+		}
+	}
+
+	option = { #Surrender
+		log = "[GetLogInfo]: event ausgleich_events.345 option ausgleich_events.345.a"
+		name = ausgleich_events.345.a
+		ai_chance = { base = 100 }
+		HUN = {
+			country_event = { id = ausgleich_events.346 days = 1 }
+		}
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			every_state = {
+				limit = {
+					is_owned_by_ROOT_or_subject = yes
+					OR = {
+						is_claimed_by = HUN
+						is_core_of = HUN
+					}
+				}
+				transfer_state_to = HUN
+			}
+			set_autonomy = {
+				target = HUN
+				autonomy_state = crownland
+				end_wars = no
+			}
+		}
+	}
+
+	option = { #Dont surrender
+		log = "[GetLogInfo]: event ausgleich_events.345 option ausgleich_events.345.b"
+		name = ausgleich_events.345.b
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		hidden_effect = {
+			remove_ideas = has_scripted_peace
+		}
+	}
+}
+
+#Hungary victory event because Hungary wins the revolt
+country_event = {
+	id = ausgleich_events.346
+	title = ausgleich_events.346.t
+	desc = ausgleich_events.346.d
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event ausgleich_events.346 option ausgleich_events.346.a"
+		name = ausgleich_events.346.a
+		ai_chance = { base = 100 }
+		effect_tooltip = {
+			white_peace = AUS
+			every_state = {
+				limit = {
+					OR = {
+						is_owned_by = AUS
+						owner = { is_subject_of = AUS }
+					}
+					OR = {
+						is_claimed_by = HUN
+						is_core_of = HUN
+					}
+				}
+				transfer_state_to = HUN
+			}
+			AUS = {
+				set_autonomy = {
+					target = HUN
+					autonomy_state = crownland
+					end_wars = no
+				}
+			}
+		}
+		hidden_effect = {
+			AUS = { remove_civil_war_target = HUN }
+			CRO = { remove_civil_war_target = HUN }
+			CZE = { remove_civil_war_target = HUN }
+			GAL = { remove_civil_war_target = HUN }
+			white_peace = AUS
+			set_temp_variable = { target = HUN }
+			every_state = {
+				limit = {
+					OR = {
+						is_owned_by = AUS
+						owner = { is_subject_of = AUS }
+					}
+					OR = {
+						is_claimed_by = HUN
+						is_core_of = HUN
+					}
+				}
+				transfer_state_during_war = yes
+			}
+			set_temp_variable = { target = AUS }
+			every_controlled_state = {
+				limit = {
+					is_owned_by = AUS
+					is_controlled_by = HUN
+				}
+				transfer_state_during_war = yes
+			}
+			AUS_joseph_august_von_habsburg = {
+				set_nationality = PREV #in case he gets retired
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = AUS_joseph_august_von_habsburg_leader_desc
+						ideology = social_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = AUS_joseph_august_von_habsburg_leader_desc
+						ideology = social_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = AUS_joseph_august_von_habsburg_leader_desc
+						ideology = market_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = AUS_joseph_august_von_habsburg_leader_desc
+						ideology = social_conservative_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = AUS_joseph_august_von_habsburg_leader_desc
+						ideology = authoritarian_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = AUS_joseph_august_von_habsburg_leader_desc
+						ideology = paternal_autocrat_subtype
+					}
+					promote_leader = yes
+				}
+			}
+			AUS = {
+				set_autonomy = {
+					target = HUN
+					autonomy_state = crownland
+					end_wars = no
+				}
+			}
+			set_politics = {
+				ruling_party = paternal_autocrat
+				last_election = "1930.11.9"
+				election_frequency = 48
+				elections_allowed = no
+			}
+			set_popularities = {
+				totalist = 1
+				radical_socialist = 0
+				syndicalist = 1
+				social_democrat = 9
+				social_liberal = 3
+				market_liberal = 24
+				social_conservative = 12
+				authoritarian_democrat = 9
+				paternal_autocrat = 32
+				national_populist = 9
+			}
+			set_cosmetic_tag = HUN_habsburg
+			if = {
+				limit = { AUS = { GER_is_in_mitteleuropa = yes } }
+				GER_add_to_mitteleuropa = yes
+			}
+			if = {
+				limit = {
+					NOT = { AUS = { has_war_with = ITA } }
+					NOT = { AUS = { has_war_with = ROM } }
+					NOT = { AUS = { has_war_with = BPL } }
+					NOT = { AUS = { has_war_with = BUL } }
+				}
+				AUS = { remove_ideas = has_scripted_peace }
+			}
+		}
+	}
+
+	option = { #Refuse
+		log = "[GetLogInfo]: event ausgleich_events.346 option ausgleich_events.346.b"
+		name = ausgleich_events.346.b
+		ai_chance = { base = 0 }
+		add_political_power = -100
+		hidden_effect = {
+			AUS = { remove_ideas = has_scripted_peace }
+		}
+	}
+}
+
+###Integration of the Constituents
+country_event = {
+	id = ausgleich_events.700
+	title = ausgleich_events.700.t
+	desc = ausgleich_events.700.d
+
+	is_triggered_only = yes
+
+	option = { #okay
+		log = "[GetLogInfo]: event ausgleich_events.700 option ausgleich_events.700.a"
+		name = ausgleich_events.700.a
+		ai_chance = { base = 100 }
+		add_political_power = -100
+		AUS = {
+			country_event = { id = ausgleich_events.701 days = 2 }
+		}
+	}
+	option = { #no
+		log = "[GetLogInfo]: event ausgleich_events.700 option ausgleich_events.700.b"
+		name = ausgleich_events.700.b
+		ai_chance = { base = 0 }
+		add_political_power = -100
+	}
+	option = { #independence
+		log = "[GetLogInfo]: event ausgleich_events.700 option ausgleich_events.700.c"
+		name = ausgleich_events.700.c
+		ai_chance = { base = 0 }
+		add_political_power = -300
+		hidden_effect = {
+			clear_rule = { can_not_declare_war = yes }
+			GER_remove_from_mitteleuropa = yes
+			separate_peace_all_wars = yes
+		}
+		remove_puppet_and_leave_faction = yes
+		declare_war_on = {
+			target = AUS
+			type = civil_war
+		}
+		if = {
+			limit = { has_cosmetic_tag = CRO_illyria_habsburg }
+			set_cosmetic_tag = CRO_illyria
+		}
+		else = {
+			drop_cosmetic_tag = yes
+		}
+	}
+}
+
+country_event = { #integrating the subjects
+	id = ausgleich_events.701
+	title = ausgleich_events.701.t
+	desc = ausgleich_events.701.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.701 option ausgleich_events.701.a"
+		name = ausgleich_events.701.a
+		add_political_power = 20
+		FROM = {
+			every_core_state = {
+				limit = {
+					OR = {
+						is_owned_by = ROOT
+						owner = { has_autonomy_state = crownland }
+					}
+					NOT = { is_core_of = SER }
+					NOT = { is_core_of = ALB }
+					NOT = { is_core_of = BUL }
+				}
+				add_core_of = ROOT
+			}
+			hidden_effect = {
+				if = {
+					limit = { tag = HUN }
+					AUS_remove_monarchy = yes
+				}
+				else_if = {
+					limit = { tag = GAL }
+					GAL_remove_karl_albrecht = yes
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			every_unit_leader = {
+				limit = { has_variable = nationality } #ignore AI-generated generics
+				set_nationality = ROOT
+				demote_to_general = yes
+			}
+			custom_effect_tooltip = tooltip_white_line
+			every_scientist = {
+				limit = { has_variable = nationality } #ignore AI-generated generics
+				set_nationality = ROOT
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = AUS_transfer_puppet_divisions
+		}
+		custom_effect_tooltip = tooltip_white_line
+		annex_country = {
+			target = FROM
+			transfer_troops = yes
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.701 option ausgleich_events.701.b"
+		name = ausgleich_events.701.b
+		ai_chance = { base = 0 }
+		add_political_power = 20
+		FROM = {
+			every_core_state = {
+				limit = {
+					OR = {
+						is_owned_by = ROOT
+						owner = { has_autonomy_state = crownland }
+					}
+					NOT = { is_core_of = SER }
+					NOT = { is_core_of = ALB }
+					NOT = { is_core_of = BUL }
+				}
+				add_core_of = ROOT
+			}
+			hidden_effect = {
+				if = {
+					limit = { tag = HUN }
+					AUS_remove_monarchy = yes
+				}
+				else_if = {
+					limit = { tag = GAL }
+					GAL_remove_karl_albrecht = yes
+				}
+				delete_unit = { disband = yes }
+			}
+			custom_effect_tooltip = tooltip_white_line
+			every_unit_leader = {
+				limit = { has_variable = nationality } #ignore AI-generated generics
+				set_nationality = ROOT
+				demote_to_general = yes
+			}
+			custom_effect_tooltip = tooltip_white_line
+			every_scientist = {
+				limit = { has_variable = nationality } #ignore AI-generated generics
+				set_nationality = ROOT
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = AUS_transfer_puppet_equipment_and_manpower
+		}
+		custom_effect_tooltip = tooltip_white_line
+		annex_country = {
+			target = FROM
+			transfer_troops = yes
+		}
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = { has_idea = AUS_military_integration }
+			modify_timed_idea = {
+				idea = AUS_military_integration
+				days = 90
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = AUS_military_integration
+				days = 120
+			}
+		}
+	}
+}
+
+country_event = { #ROM attacks revolter HUN
+	id = ausgleich_events.702
+	title = ausgleich_events.702.t
+	desc = ausgleich_events.702.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.702 option ausgleich_events.702.a"
+		name = ausgleich_events.702.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				add = -75
+				surrender_progress > 0.4
+			}
+			modifier = {
+				add = -50
+				any_enemy_country = {
+					is_actual_major = yes
+				}
+			}
+		}
+		declare_war_on = {
+			target = FROM
+			type = annex_everything
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.702 option ausgleich_events.702.b"
+		name = ausgleich_events.702.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 75
+				surrender_progress > 0.4
+			}
+			modifier = {
+				add = 50
+				any_enemy_country = {
+					is_actual_major = yes
+				}
+			}
+		}
+		add_political_power = -100
+	}
+}
+
+### Austrian Collapse events ###
+
+country_event = { #MilOcc revolts
+	id = ausgleich_events.900
+
+	title = {
+		text = ausgleich_events.900.t.CRO
+		trigger = { tag = CRO }
+	}
+	title = {
+		text = ausgleich_events.900.t.CZE_broken_promise
+		trigger = {
+			tag = CZE
+			NOT = { country_exists = HUN }
+		}
+	}
+	title = {
+		text = ausgleich_events.900.t.CZE_secret_deal
+		trigger = {
+			tag = CZE
+			country_exists = HUN
+		}
+	}
+	title = {
+		text = ausgleich_events.900.t.GAL_broken_promise
+		trigger = {
+			tag = GAL
+			NOT = { country_exists = HUN }
+		}
+	}
+	title = {
+		text = ausgleich_events.900.t.GAL_secret_deal
+		trigger = {
+			tag = GAL
+			country_exists = HUN
+		}
+	}
+
+	desc = {
+		text = ausgleich_events.900.d.CRO
+		trigger = { tag = CRO }
+	}
+	desc = {
+		text = ausgleich_events.900.d.CZE_broken_promise
+		trigger = {
+			tag = CZE
+			NOT = { country_exists = HUN }
+		}
+	}
+	desc = {
+		text = ausgleich_events.900.d.CZE_secret_deal
+		trigger = {
+			tag = CZE
+			country_exists = HUN
+		}
+	}
+	desc = {
+		text = ausgleich_events.900.d.GAL_broken_promise
+		trigger = {
+			tag = GAL
+			NOT = { country_exists = HUN }
+		}
+	}
+	desc = {
+		text = ausgleich_events.900.d.GAL_secret_deal
+		trigger = {
+			tag = GAL
+			country_exists = HUN
+		}
+	}
+
+	picture = GFX_report_event_generic_towar
+
+	trigger = {
+		is_subject_of = AUS
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { tag = CZE }
+				event_target:system = {
+					every_character = {
+						limit = { ROOT = { original_tag = var:PREV.nationality } }
+						set_character_flag = { flag = CZE_character value = 1 days = 16 }
+						set_nationality = CZE
+					}
+				}
+			}
+		}
+	}
+
+	option = { # yes.
+		log = "[GetLogInfo]: event ausgleich_events.900 option ausgleich_events.900.a"
+		name = ausgleich_events.900.a
+		if = {
+			limit = { tag = CZE }
+			SLO = {
+				every_core_state = {
+					limit = { NOT = { is_core_of = ROOT } }
+					add_claim_by = ROOT
+				}
+			}
+			CZE_change_portraits = yes
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = characters_will_be_recruited
+			character_list_tooltip = {
+				limit = { has_character_flag = CZE_character }
+			}
+			unlock_decision_tooltip = CZE_join_belgrade_pact
+			custom_effect_tooltip = tooltip_white_line
+		}
+		else_if = {
+			limit = { tag = GAL }
+			GAL_remove_karl_albrecht = yes
+			GAL_wladyslaw_sikorski = { promote_leader = yes }
+			GAL_set_polish_portraits = yes
+			GAL_set_ukrainian_portraits = yes
+		}
+		hidden_effect = {
+			if = {
+				limit = { has_cosmetic_tag = CRO_illyria_habsburg }
+				set_cosmetic_tag = CRO_illyria
+			}
+			else = {
+				drop_cosmetic_tag = yes
+			}
+			leave_faction = yes
+			every_owned_state = {
+				teleport_armies = {
+					limit = { is_ally_with = AUS }
+					to_state_array = owned_controlled_states
+				}
+			}
+			every_state = {
+				limit = {
+					owner = { is_ally_with = AUS }
+				}
+				teleport_armies = {
+					limit = { tag = ROOT }
+					to_state_array = owned_controlled_states
+				}
+			}
+			clear_rule = { can_not_declare_war = yes }
+			separate_peace_all_wars = yes
+			GER_remove_from_mitteleuropa = yes
+		}
+		AUS = {
+			set_autonomy = {
+				target = ROOT
+				autonomy_state = autonomy_free
+			}
+			country_event = ausgleich_events.9000
+		}
+		if = {
+			limit = {
+				country_exists = GAL
+			}
+			CZE = { give_military_access = GAL }
+			GAL = { give_military_access = CZE }
+		}
+	}
+}
+
+country_event = { #MilOcc revolts (for AUS)
+	id = ausgleich_events.9000
+
+	title = {
+		text = ausgleich_events.9000.t.occupation
+		trigger = { NOT = { country_exists = HUN } }
+	}
+	title = {
+		text = ausgleich_events.9000.t.secret_deal
+		trigger = { country_exists = HUN }
+	}
+
+	desc = {
+		text = ausgleich_events.9000.d.CZE
+		trigger = { FROM = { tag = CZE } }
+	}
+	desc = {
+		text = ausgleich_events.9000.d.GAL
+		trigger = { FROM = { tag = GAL } }
+	}
+	desc = {
+		text = ausgleich_events.9000.d.CRO
+		trigger = { FROM = { tag = CRO } }
+	}
+
+	picture = GFX_report_event_ger_civil_war
+
+	trigger = {
+		can_declare_war_on = FROM
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_ideas = has_scripted_peace
+			FROM = {
+				declare_war_on = {
+					target = ROOT #inverted to account for guarantees
+					type = annex_everything
+				}
+			}
+			add_civil_war_target = FROM
+			if = {
+				limit = { has_subject = HUN }
+				HUN = {
+					add_to_war = {
+						targeted_alliance = ROOT
+						enemy = FROM
+					}
+				}
+			}
+			if = {
+				limit = { FROM = { tag = CZE } }
+				CZE = {
+					if = {
+						limit = { country_exists = BPL }
+						activate_targeted_decision = { target = BPL decision = CZE_join_belgrade_pact }
+					}
+					activate_targeted_decision = { target = GER decision = CZE_join_germany }
+					activate_targeted_decision = { target = THIS decision = CZE_form_czechoslovakia }
+				}
+				AUS = { activate_targeted_decision = { target = GER decision = AUS_unite_with_germany } }
+			}
+			else_if = {
+				limit = { FROM = { tag = GAL } }
+				GAL = {
+					if = {
+						limit = { country_exists = BPL }
+						activate_targeted_decision = { target = BPL decision = GAL_join_belgrade_pact }
+					}
+					activate_targeted_decision = { target = POL decision = GAL_unite_with_poland }
+				}
+			}
+			else_if = {
+				limit = { FROM = { tag = CRO } }
+				CRO = { activate_targeted_decision = { target = GER decision = CZE_join_germany } }
+				SER = { activate_targeted_decision = { target = CRO decision = SER_Ultimatum_To_Illyria } }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.9000 option ausgleich_events.9000.a"
+		name = ausgleich_events.9000.a
+		trigger = { NOT = { country_exists = HUN } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.9000 option ausgleich_events.9000.b"
+		name = ausgleich_events.9000.b
+		trigger = { country_exists = HUN }
+	}
+
+	after = {
+		if = {
+			limit = { has_idea = AUS_crownland_revolt }
+			swap_ideas = {
+				remove_idea = AUS_crownland_revolt
+				add_idea = AUS_crownland_revolt_2
+			}
+		}
+		else_if = {
+			limit = { NOT = { has_idea = AUS_crownland_revolt_2 } }
+			add_ideas = AUS_crownland_revolt_2
+		}
+		effect_tooltip = {
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+	}
+}
+
+# CZE events
+country_event = { #Czechia pleads for support
+	id = ausgleich_events.901
+	title = ausgleich_events.901.t
+	desc = ausgleich_events.901.d
+	picture = GFX_report_event_gre_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.901 option ausgleich_events.901.a"
+		name = ausgleich_events.901.a #This is our chance! To war!
+		ai_chance = { base = 100 }
+		add_to_faction = FROM
+		FROM = {
+			country_event = { id = ausgleich_events.902 days = 1 }
+			activate_targeted_decision = { target = ROOT decision = CZE_leave_belgrade_pact }
+		}
+		if = {
+			limit = { can_declare_war_on = HUN }
+			declare_war_on = {
+				target = HUN
+				type = annex_everything
+			}
+		}
+		if = {
+			limit = { can_declare_war_on = AUS }
+			declare_war_on = {
+				target = AUS
+				type = annex_everything
+			}
+		}
+		hidden_effect = {
+			SER = { SER_add_balkan_claims = yes }
+			every_allied_country = {
+				country_event = ausgleich_events.9010
+			}
+			if = {
+				limit = {
+					has_war_with = BUL
+				}
+				AUS = { give_military_access = BUL }
+				BUL = { give_military_access = AUS }
+			}
+			if = {
+				limit = {
+					has_war_with = ALB
+				}
+				AUS = { give_military_access = ALB }
+				ALB = { give_military_access = AUS }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.901 option ausgleich_events.901.b"
+		name = ausgleich_events.901.b #Austria is too strong...
+		ai_chance = { base = 0 }
+		FROM = { country_event = { id = ausgleich_events.903 days = 2 } }
+	}
+}
+
+country_event = { #BPL has attacked AUS, should we join?
+	id = ausgleich_events.9010
+	title = ausgleich_events.9010.t
+	desc = ausgleich_events.9010.d
+	picture = GFX_report_event_gre_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.9010 option ausgleich_events.9010.a"
+		name = ausgleich_events.9010.a #This is our chance! To war!
+		if = {
+			limit = { can_declare_war_on = HUN }
+			declare_war_on = {
+				target = HUN
+				type = annex_everything
+			}
+		}
+		if = {
+			limit = { can_declare_war_on = AUS }
+			declare_war_on = {
+				target = AUS
+				type = annex_everything
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.9010 option ausgleich_events.9010.b"
+		name = ausgleich_events.9010.b #Austria is too strong...
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #SER has attacked CRO, should we join?
+	id = ausgleich_events.9011
+	title = ausgleich_events.9011.t
+	desc = ausgleich_events.9011.d
+	picture = GFX_report_event_gre_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.9011 option ausgleich_events.9011.a"
+		name = ausgleich_events.9011.a #This is our chance! To war!
+		if = {
+			limit = { original_tag = AUS }
+			declare_war_on = {
+				target = SER
+				type = annex_everything
+			}
+		}
+		else = {
+			declare_war_on = {
+				target = CRO
+				type = annex_everything
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.9011 option ausgleich_events.9011.b"
+		name = ausgleich_events.9011.b #On second thought...
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #Serbia accepts
+	id = ausgleich_events.902
+	title = ausgleich_events.902.t
+
+	desc = {
+		text = ausgleich_events.902.d.CZE
+		trigger = { tag = CZE }
+	}
+	desc = {
+		text = ausgleich_events.902.d.other
+		trigger = { NOT = { tag = CZE } }
+	}
+
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.902 option ausgleich_events.902.a"
+		name = ausgleich_events.902.a
+		trigger = { tag = CZE }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.902 option ausgleich_events.902.b"
+		name = ausgleich_events.902.b
+		trigger = { NOT = { tag = CZE } }
+	}
+}
+
+country_event = { #Serbia refuses
+	id = ausgleich_events.903
+	title = ausgleich_events.903.t
+	desc = ausgleich_events.903.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.903 option ausgleich_events.903.a"
+		name = ausgleich_events.903.a
+		add_opinion_modifier = { target = FROM modifier = KR_hates_govt }
+	}
+}
+
+# GAL events
+country_event = { #Galicia wishes to join the Pact
+	id = ausgleich_events.906
+	title = ausgleich_events.906.t
+
+	desc = {
+		text = ausgleich_events.906.d.bucovina
+		trigger = {
+			is_in_faction_with = ROM
+			FROM = {
+				OR = {
+					owns_state = 80 #Cernauti
+					owns_state = 713 #Suceava
+				}
+			}
+		}
+	}
+	desc = {
+		text = ausgleich_events.906.d.no_bucovina
+		trigger = {
+			OR = {
+				NOT = { is_in_faction_with = ROM }
+				FROM = {
+					NOT = {
+						owns_state = 80 #Cernauti
+						owns_state = 713 #Suceava
+					}
+				}
+			}
+		}
+	}
+
+	picture = GFX_report_event_generic_big_city
+
+	trigger = {
+		is_faction_leader = yes
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.906 option ausgleich_events.906.a"
+		name = ausgleich_events.906.a #We welcome them, but they must cede Bucovina
+		ai_chance = { base = 100 }
+		trigger = {
+			is_in_faction_with = ROM
+			FROM = {
+				OR = {
+					owns_state = 80 #Cernauti
+					owns_state = 713 #Suceava
+				}
+			}
+			ROM = { has_capitulated = no }
+		}
+		FROM = { country_event = { id = ausgleich_events.907 days = 1 } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.906 option ausgleich_events.906.b"
+		name = ausgleich_events.906.b #Allies are always welcome
+		ai_chance = { base = 100 }
+		trigger = {
+			OR = {
+				NOT = { is_in_faction_with = ROM }
+				FROM = {
+					NOT = {
+						owns_state = 80 #Cernauti
+						owns_state = 713 #Suceava
+					}
+				}
+				ROM = { has_capitulated = yes }
+			}
+		}
+		add_to_faction = FROM
+		FROM = {
+			country_event = { id = ausgleich_events.902 days = 1 }
+			activate_targeted_decision = { target = ROOT decision = CZE_leave_belgrade_pact }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.906 option ausgleich_events.906.c"
+		name = ausgleich_events.906.c #We don't need them
+		ai_chance = { base = 0 }
+		FROM = { country_event = { id = ausgleich_events.903 days = 1 } }
+	}
+}
+
+country_event = { #The Pact demands Bucovina
+	id = ausgleich_events.907
+	title = ausgleich_events.907.t
+	desc = ausgleich_events.907.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.907 option ausgleich_events.907.a"
+		name = ausgleich_events.907.a #Gladly
+		ai_chance = { base = 100 }
+		effect_tooltip = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 80 #Cernauti
+						state = 713 #Suceava
+					}
+				}
+				if = {
+					limit = { is_core_of = ROOT }
+					remove_core_of = ROOT
+				}
+				if = {
+					limit = { is_claimed_by = ROOT }
+					remove_claim_by = ROOT
+				}
+				transfer_state_to = ROM
+			}
+		}
+		ROM = { country_event = { id = ausgleich_events.908 days = 1 } }
+		FROM = { country_event = { id = ausgleich_events.909 days = 1 } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.907 option ausgleich_events.907.b"
+		name = ausgleich_events.907.b #Bukowina is a rightful Galician territory!
+		ai_chance = { base = 0 }
+		add_state_claim = 80 #Cernauti
+		add_state_claim = 713 #Suceava
+		FROM = { country_event = { id = ausgleich_events.910 days = 1 } }
+	}
+}
+
+country_event = { #Romania gets Bucovina
+	id = ausgleich_events.908
+	title = ausgleich_events.908.t
+	desc = ausgleich_events.908.d
+	picture = GFX_report_event_finnish_letter
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.908 option ausgleich_events.908.a"
+		name = ausgleich_events.908.a
+		FROM = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 80 #Cernauti
+						state = 713 #Suceava
+					}
+				}
+				hidden_effect = {
+					if = {
+						limit = { is_core_of = FROM }
+						remove_core_of = FROM
+					}
+					if = {
+						limit = { is_claimed_by = FROM }
+						remove_claim_by = FROM
+					}
+				}
+				transfer_state_to = ROOT
+			}
+		}
+		if = {
+			limit = {
+				has_capitulated = yes
+			}
+			if = {
+				limit = {
+					owns_state = 713
+				}
+				var:79.controller = {
+					set_province_controller = 11689
+					set_province_controller = 6761
+				}
+			}
+			if = {
+				limit = {
+					owns_state = 80
+				}
+				var:79.controller = {
+					set_province_controller = 9548
+					set_province_controller = 577
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Galicia accepts
+	id = ausgleich_events.909
+	title = ausgleich_events.909.t
+	desc = ausgleich_events.909.d
+	picture = GFX_report_event_finnish_letter
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.909 option ausgleich_events.909.a"
+		name = ausgleich_events.909.a
+		add_to_faction = FROM
+		hidden_effect = {
+			FROM = { activate_targeted_decision = { target = ROOT decision = CZE_leave_belgrade_pact } }
+		}
+	}
+}
+
+country_event = { #Galicia refuses
+	id = ausgleich_events.910
+	title = ausgleich_events.910.t
+	desc = ausgleich_events.910.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.910 option ausgleich_events.910.a"
+		name = ausgleich_events.910.a
+		add_opinion_modifier = { target = FROM modifier = KR_hates_govt }
+	}
+}
+
+# CRO events
+country_event = { #The Serbian Ultimatum
+	id = ausgleich_events.911
+	title = ausgleich_events.911.t
+	desc = ausgleich_events.911.d
+	picture = GFX_report_event_yugoslavian_split
+
+	trigger = {
+		NOT = { has_war_with = FROM }
+		FROM = {
+			owns_state = 105 #Serbia won't have Montenegro if it peaced out
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.911 option ausgleich_events.911.a"
+		name = ausgleich_events.911.a #We have no choice...
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 2
+				surrender_progress > 0.2
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_war = no
+					SER = { has_war_with = BUL }
+				}
+			}
+		}
+		every_owned_state = {
+			limit = {
+				is_core_of = ROOT
+				NOT = { is_core_of = FROM }
+			}
+			add_claim_by = FROM
+		}
+		effect_tooltip = {
+			FROM = {
+				annex_country = {
+					target = ROOT
+					transfer_troops = yes
+				}
+			}
+			if = {
+				limit = { is_ai = no }
+				FROM = { change_tag_from = ROOT }
+			}
+		}
+		FROM = { country_event = { id = ausgleich_events.912 days = 1 } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.911 option ausgleich_events.911.b"
+		name = ausgleich_events.911.b #We will not replace one tyrant for another!
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				surrender_progress > 0.2
+				NOT = { SER = { has_war_with = BUL } }
+			}
+		}
+		FROM = { country_event = { id = ausgleich_events.913 days = 1 } }
+	}
+}
+
+country_event = { #Illyria accepts
+	id = ausgleich_events.912
+	title = ausgleich_events.912.t
+	desc = ausgleich_events.912.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	trigger = {
+		NOT = { has_war_with = FROM }
+		owns_state = 105 #Serbia won't have Montenegro if it peaced out
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.912 option ausgleich_events.912.a"
+		name = ausgleich_events.912.a
+		if = {
+			limit = {
+				AUS = { has_war_with = CRO }
+				NOT = { has_global_flag = AUS_treaty_of_budapest }
+			}
+			AUS = { country_event = ausgleich_events.920 }
+		}
+		effect_tooltip = {
+			every_state = {
+				limit = { is_core_of = FROM }
+				add_claim_by = ROOT
+			}
+		}
+		annex_country = {
+			target = FROM
+			transfer_troops = yes
+		}
+		if = {
+			limit = { FROM = { is_ai = no } }
+			ROOT = { change_tag_from = FROM }
+		}
+	}
+}
+
+country_event = { #Illyria refuses
+	id = ausgleich_events.913
+	title = ausgleich_events.913.t
+	desc = ausgleich_events.913.d
+	picture = GFX_report_event_generic_towar
+
+	trigger = {
+		NOT = { has_war_with = FROM }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.913 option ausgleich_events.913.a"
+		name = ausgleich_events.913.a
+	}
+}
+
+country_event = { #FROM Leaves the Pact
+	id = ausgleich_events.914
+	title = ausgleich_events.914.t
+	desc = ausgleich_events.914.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.914 option ausgleich_events.914.a"
+		name = ausgleich_events.914.a
+		add_opinion_modifier = { target = FROM modifier = KR_outraged }
+	}
+}
+
+# AUS events
+country_event = { #Fall of the Habsburgs
+	id = ausgleich_events.915
+	title = ausgleich_events.915.t
+	desc = ausgleich_events.915.d
+	picture = GFX_report_event_AUS_Ausgleich_dip_agree
+
+	is_triggered_only = yes
+
+	trigger = {
+		country_exists = CZE
+		NOT = { has_subject = CZE }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.915 option ausgleich_events.915.a"
+		name = ausgleich_events.915.a
+		effect_tooltip = {
+			every_character = {
+				limit = { AUS_is_habsburg_family_member = yes }
+				retire = yes
+			}
+		}
+		hidden_effect = {
+			AUS_remove_monarchy = yes
+			news_event = ausgleich_events.918
+			if = {
+				limit = {
+					has_completed_focus = AUS_military_occupation
+				}
+				uncomplete_national_focus = {
+					focus = AUS_military_occupation
+					uncomplete_children = yes
+				}
+			}
+		}
+		drop_cosmetic_tag = yes
+		custom_effect_tooltip = tooltip_white_line
+		effect_tooltip = {
+			every_state = {
+				limit = { is_claimed_by = ROOT }
+				remove_claim_by = ROOT
+			}
+			every_core_state = {
+				limit = {
+					NOT = { is_owned_by = ROOT }
+					is_core_austria = no
+				}
+				remove_core_of = ROOT
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		every_owned_state = {
+			limit = {
+				OR = {
+					is_core_of = HUN
+					is_core_of = TRS
+				}
+			}
+			transfer_state_to = HUN
+			add_core_of = HUN
+		}
+		if = {
+			limit = { owns_state = 45 } #Vojvodina
+			45 = {
+				transfer_state_to = HUN
+				add_core_of = HUN
+			}
+		}
+		transfer_units_fraction = {
+			target = HUN
+			target_organization = 1
+			source_organization = 1
+			size = 0.9
+			stockpile_ratio = 0.9
+			army_ratio = 0.9
+			navy_ratio = 0
+			air_ratio = 0.9
+			keep_unit_leaders_trigger = { always = yes }
+		}
+		hidden_effect = {
+			HUN = {
+				drop_cosmetic_tag = yes
+				remove_ideas = HUN_financial_ties_broken
+				AUS_remove_monarchy = yes
+			}
+			every_state = {
+				limit = { is_core_austria = no }
+				remove_core_of = ROOT
+				remove_claim_by = ROOT
+				clear_variable = ambition_area_@ROOT
+			}
+		}
+	}
+}
+
+country_event = { #Austria seeks union with Germany
+	id = ausgleich_events.916
+	title = ausgleich_events.916.t
+	desc = ausgleich_events.916.d
+	picture = GFX_report_event_AUS_Ausgleich_prag
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.916 option ausgleich_events.916.a"
+		log = "KR_Event_Logging;AUSTRIA ANNEXED INTO GERMANY"
+		name = ausgleich_events.916.a #Greater Germany has been achieved.
+		every_state = {
+			limit = { is_core_austria = yes }
+			add_claim_of_ROOT = yes
+			enable_state_integration_50_compliance = yes
+		}
+		annex_country = {
+			target = FROM
+			transfer_troops = yes
+		}
+		hidden_effect = {
+			1090 = { enable_state_integration_80_compliance = yes } #Pressburg
+			country_event = germany_flavour_events.76
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.916 option ausgleich_events.916.b"
+		name = ausgleich_events.916.b #We don't need them
+		ai_chance = { base = 0 }
+		FROM = { country_event = { id = ausgleich_events.917 days = 2 } }
+	}
+}
+
+country_event = { #Germany refuses
+	id = ausgleich_events.917
+	title = ausgleich_events.917.t
+	desc = ausgleich_events.917.d
+	picture = GFX_report_event_german_reichstag_gathering
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.917 option ausgleich_events.917.a"
+		name = ausgleich_events.917.a
+		add_opinion_modifier = { target = FROM modifier = KR_outraged }
+	}
+}
+
+#Austria Collapses Into Anarchy
+news_event = {
+	id = ausgleich_events.918
+	immediate = { log = "[GetLogInfo]: event ausgleich_events.918" }
+	title = ausgleich_events.918.t
+	desc = {
+		text = ausgleich_events.918.d.belgrade #Belgrade Pact wins the Balkan War
+		trigger = {
+			BPL = { is_faction_leader = yes }
+			has_global_flag = balkan_war_ended
+			NOT = { SER = { has_war_with = BUL } }
+			SER = { SER_has_stabilized_macedonia = yes }
+		}
+	}
+	desc = {
+		text = ausgleich_events.918.d.bulgaria #Bulgaria wins the Balkan War
+		trigger = {
+			BUL = { has_completed_focus = BUL_balkan_war_victory }
+		}
+	}
+	desc = {
+		text = ausgleich_events.918.d.crownlands #No clear winner in the Balkan War
+		trigger = {
+			OR = {
+				SER = { has_war_with = BUL }
+				NOT = { has_global_flag = balkan_war_ended }
+				SER = { SER_has_stabilized_macedonia = no }
+			}
+		}
+	}
+	picture = GFX_news_event_ger_civil_war
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	show_major = {
+		NOT = { tag = AUS }
+		NOT = { tag = HUN }
+	}
+
+	option = {
+		name = ausgleich_events.918.a
+		trigger = { is_in_faction_with = BPL }
+	}
+
+	option = {
+		name = ausgleich_events.918.b
+		trigger = {
+			NOT = { is_in_faction_with = BPL }
+			has_socialist_government = no
+		}
+	}
+
+	option = {
+		name = ausgleich_events.918.c
+		trigger = {
+			NOT = { is_in_faction_with = BPL }
+			has_socialist_government = yes
+		}
+	}
+}
+
+#Chaos in the Balkans
+news_event = {
+	id = ausgleich_events.919
+	immediate = { log = "[GetLogInfo]: event ausgleich_events.919" }
+	title = ausgleich_events.919.t
+	desc = ausgleich_events.919.d
+	picture = GFX_news_event_ger_civil_war
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	show_major = {
+		OR = {
+			CZE = { has_war_with = AUS }
+			CRO = { has_war_with = AUS }
+			GAL = { has_war_with = AUS }
+			HUN = { has_war_with = AUS }
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			add_named_threat = {
+				threat = 6
+				name = ausgleich_events.919.t
+			}
+		}
+	}
+
+	option = {
+		name = ausgleich_events.919.a
+		trigger = { is_ally_with = AUS }
+	}
+
+	option = {
+		name = ausgleich_events.919.b
+		trigger = { has_war_with = AUS }
+	}
+
+	option = {
+		name = ausgleich_events.919.c
+		trigger = {
+			NOT = {
+				is_ally_with = AUS
+				has_war_with = AUS
+			}
+		}
+	}
+
+	after = {
+		effect_tooltip = {
+			add_named_threat = {
+				threat = 6
+				name = ausgleich_events.919.t
+			}
+		}
+	}
+}
+
+country_event = { #Serbia Annexes Illyria
+	id = ausgleich_events.920
+	title = ausgleich_events.920.t
+	desc = ausgleich_events.920.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.920 option ausgleich_events.920.a"
+		name = ausgleich_events.920.a
+		trigger = {
+			can_declare_war_on = FROM
+		}
+		ai_chance = { base = 100 }
+		declare_war_on = {
+			target = FROM
+			type = annex_everything
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					SER = {
+						has_war_with = BUL
+					}
+				}
+				AUS = { give_military_access = BUL }
+				BUL = { give_military_access = AUS }
+			}
+			if = {
+				limit = {
+					SER = {
+						has_war_with = ALB
+					}
+				}
+				AUS = { give_military_access = ALB }
+				ALB = { give_military_access = AUS }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.920 option ausgleich_events.920.b"
+		name = ausgleich_events.920.b
+		trigger = {
+			can_declare_war_on = FROM
+		}
+		ai_chance = { base = 0 }
+		add_political_power = -100
+	}
+
+	option = {
+		log = "[GetLogInfo]: event ausgleich_events.920 option ausgleich_events.920.c"
+		name = ausgleich_events.920.c
+		trigger = {
+			NOT = { can_declare_war_on = FROM }
+		}
+	}
+}
+
+country_event = { #Vienna gone insane
+	id = ausgleich_events.1000
+	title = ausgleich_events.1000.t
+	desc = ausgleich_events.1000.d
+	picture = GFX_report_event_gre_diplomacy
+
+	is_triggered_only = yes
+
+	option = { #Inform Vienna of our decision.
+		log = "[GetLogInfo]: event ausgleich_events.1000 option ausgleich_events.1000.a"
+		name = ausgleich_events.1000.a
+		leave_faction = yes
+		if = {
+			limit = { original_tag = POL }
+			country_event = poland_events.284 #GER asks POL to join RP
+		}
+		else_if = {
+			limit = { original_tag = UKR }
+			country_event = ukraine_foreign_policy_events.34 #GER asks UKR to join RP
+		}
+	}
+}

@@ -1,0 +1,912 @@
+HNN_provincial_redoubts_effect = {
+	if = {
+		limit = { china_is_aligned_with_kmt = yes }
+		custom_effect_tooltip = HNN_provincial_redoubts_kmt_tt
+		602 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					province = 9999
+					level = 1
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = bunker
+					NUMBER = 1
+					VP = 9999
+				}
+			}
+		}
+		1013 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					province = {
+						all_provinces = yes
+						limit_to_border_country = QIE
+					}
+					level = 1
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_border_provinces_with_tag
+					BUILDING = bunker
+					NUMBER = 1
+					TAG = "[QIE.GetTag]"
+				}
+			}
+		}
+		add_command_power = -10
+	}
+	else_if = {
+		limit = { china_is_aligned_with_federalists = yes }
+		custom_effect_tooltip = HNN_provincial_redoubts_zhao_tt
+		602 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					province = {
+						all_provinces = yes
+						limit_to_border_country = var:613.owner
+					}
+					level = 1
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_border_provinces_with_tag
+					BUILDING = bunker
+					NUMBER = 1
+					TAG = "[613.owner.GetTag]"
+				}
+			}
+		}
+		add_command_power = -25
+	}
+	else = {
+		custom_effect_tooltip = HNN_provincial_redoubts_tang_tt
+		602 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					province = {
+						all_provinces = yes
+						limit_to_border_country = var:613.owner
+					}
+					level = 1
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_border_provinces_with_tag
+					BUILDING = bunker
+					NUMBER = 1
+					TAG = "[613.owner.GetTag]"
+				}
+			}
+		}
+		1052 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					province = {
+						all_provinces = yes
+						limit_to_border_country = var:603.owner
+					}
+					level = 1
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_border_provinces_with_tag
+					BUILDING = bunker
+					NUMBER = 1
+					TAG = "[603.owner.GetTag]"
+				}
+			}
+		}
+		add_command_power = -30
+	}
+}
+
+HNN_calculate_new_opposition_strength = {
+	set_temp_variable = { HNN_opposition_calculation = { value = HNN_opposition_strength add = 10 } }
+	if = {
+		limit = {
+			check_variable = { HNN_opposition_calculation > 0 }
+			check_variable = { HNN_opposition_calculation < 29 }
+		}
+		custom_effect_tooltip = HNN_opposition_change_nothing
+	}
+	else_if = {
+		limit = {
+			check_variable = { HNN_opposition_calculation > 29 }
+			check_variable = { HNN_opposition_calculation < 40 }
+		}
+		custom_effect_tooltip = HNN_opposition_change_moderate
+	}
+	else_if = {
+		limit = {
+			check_variable = { HNN_opposition_calculation > 39 }
+			check_variable = { HNN_opposition_calculation < 60 }
+		}
+		custom_effect_tooltip = HNN_opposition_change_nothing
+	}
+	else_if = {
+		limit = {
+			check_variable = { HNN_opposition_calculation > 49 }
+			check_variable = { HNN_opposition_calculation < 70 }
+		}
+		custom_effect_tooltip = HNN_opposition_change_high
+	}
+	else_if = {
+		limit = {
+			check_variable = { HNN_opposition_calculation > 60 }
+			check_variable = { HNN_opposition_calculation < 90 }
+		}
+		custom_effect_tooltip = HNN_opposition_change_nothing
+	}
+	else_if = {
+		limit = {
+			OR = {
+				check_variable = { HNN_opposition_calculation = 90 }
+				check_variable = { HNN_opposition_calculation > 90 }
+			}
+		}
+		if = {
+			limit = {
+				is_ai = no
+			}
+			country_event = hunan_zhili_events.1
+			remove_mission = HNN_opposition_growing
+			remove_mission = HNN_arrest_tang_xiangming
+			add_to_variable = { HNN_opposition_strength = -100 }
+		}
+		else = {
+			country_event = hunan_federalist_events.4
+			remove_mission = HNN_opposition_growing
+			remove_mission = HNN_arrest_tang_xiangming
+			add_to_variable = { HNN_opposition_strength = -100 }
+		}
+	}
+}
+
+HNN_purge_advisors_effect = {
+	if = {
+		limit = { HNN = { has_character = PREV } }
+		retire = yes
+	}
+}
+
+### Character Shenanigans
+HNN_recruit_KMT_advisors_effect = {
+	every_character = {
+		limit = {
+			has_character_flag = HNN_KMT_loyalist_flag
+		}
+		set_nationality = HNN
+		demote_to_general = yes
+	}
+}
+
+HNN_recruit_zhili_advisors_effect = {
+	every_character = {
+		limit = {
+			has_character_flag = HNN_zhili_loyalist_flag
+		}
+		set_nationality = HNN
+		demote_to_general = yes
+	}
+}
+
+HNN_purge_KMT_advisors_effect = {
+	HNN_qin_zhen = { HNN_purge_advisors_effect = yes }
+	HNN_huang_gonglue = { HNN_purge_advisors_effect = yes }
+	HNN_men_bingyue = { HNN_purge_advisors_effect = yes }
+	HNN_tang_duo = { HNN_purge_advisors_effect = yes }
+	HNN_li_shizhang = { HNN_purge_advisors_effect = yes }
+}
+
+HNN_purge_federalist_advisors_effect = {
+	HNN_li_jiannong = { HNN_purge_advisors_effect = yes }
+	HNN_huang_yanpei = { HNN_purge_advisors_effect = yes }
+	HNN_qian_yongming = { HNN_purge_advisors_effect = yes }
+	HNN_zhong_boyi = { HNN_purge_advisors_effect = yes }
+	HNN_zhao_junmai = { HNN_purge_advisors_effect = yes }
+}
+
+HNN_purge_independent_republicans_effect = {
+	HNN_huang_yanpei = { HNN_purge_advisors_effect = yes }
+	HNN_qian_yongming = { HNN_purge_advisors_effect = yes }
+	HNN_zhou_shizhao = { HNN_purge_advisors_effect = yes }
+	HNN_wang_tianpei = { HNN_purge_advisors_effect = yes }
+	HNN_lu_diping = { HNN_purge_advisors_effect = yes }
+	HNN_tan_yankai = { HNN_purge_advisors_effect = yes }
+	HNN_lu_dangping = { HNN_purge_advisors_effect = yes }
+	HNN_zhang_huizan = { HNN_purge_advisors_effect = yes }
+	HNN_tan_daoyuan = { HNN_purge_advisors_effect = yes }
+}
+
+HNN_purge_zhili_advisors_effect = {
+	HNN_tang_hualong = { HNN_purge_advisors_effect = yes }
+}
+
+HNN_purge_KMT = {
+	every_character = {
+		limit = {
+			has_character_flag = HNN_KMT_loyalist_flag
+		}
+		demote_to_general = yes
+		retire = yes
+	}
+}
+
+HNN_purge_federalists = {
+	every_character = {
+		limit = {
+			has_character_flag = HNN_fed_loyalist_flag
+		}
+		demote_to_general = yes
+		retire = yes
+	}
+}
+
+HNN_purge_zhili = {
+	every_character = {
+		limit = {
+			has_character_flag = HNN_zhili_loyalist_flag
+		}
+		demote_to_general = yes
+		retire = yes
+	}
+}
+
+HNN_recruit_sixth_army_generals_effect = {
+	HNN_cheng_qian = { CHN_recruit_character_effect = yes }
+	HNN_yang_jie = { CHN_recruit_character_effect = yes }
+	HNN_song_xilian = { CHN_recruit_character_effect = yes }
+}
+
+HNN_recruit_eighth_army_generals_effect = {
+	HNN_tang_shengzhi = { CHN_recruit_character_effect = yes }
+	HNN_peng_dehuai = { CHN_recruit_character_effect = yes }
+	HNN_he_long = { CHN_recruit_character_effect = yes }
+}
+
+HNN_recruit_kmt_generals_effect = {
+	HNN_he_jian = { CHN_recruit_character_effect = yes }
+	HNN_liu_jianxu = { CHN_recruit_character_effect = yes }
+	HNN_li_minghao = { CHN_recruit_character_effect = yes }
+	HNN_liu_xing = { CHN_recruit_character_effect = yes }
+	HNN_gong_hao = { CHN_recruit_character_effect = yes }
+	HNN_tao_guang = { CHN_recruit_character_effect = yes }
+	HNN_li_pinxian = { CHN_recruit_character_effect = yes }
+}
+
+HNN_recruit_federalist_generals_effect = {
+	HNN_jiang_chuou = { CHN_recruit_character_effect = yes }
+	HNN_tao_zhiyue = { CHN_recruit_character_effect = yes }
+	HNN_gong_xian = { CHN_recruit_character_effect = yes }
+}
+
+###Election Percentage Shenanigans
+HNN_election_update_percentage_effect = {
+	clamp_variable = { var = hnn_zhao_popularity min = 0 max = 15 }
+	clamp_variable = { var = hnn_tang_popularity min = 0 max = 15 }
+	clamp_variable = { var = hnn_chen_popularity min = 0 max = 15 }
+
+	#Get the Total Strength Points of election mechanic
+	set_temp_variable = {
+		HNN_election_total_strength_temp_var = {
+			value = hnn_zhao_popularity
+			add = hnn_tang_popularity
+			add = hnn_chen_popularity
+		}
+	}
+	#Get the % zhao support
+	set_variable = { HNN_zhao_election_percentage_var = { value = hnn_zhao_popularity divide = HNN_election_total_strength_temp_var } }
+	#Get the % tang support
+	set_variable = { HNN_tang_election_percentage_var = { value = hnn_tang_popularity divide = HNN_election_total_strength_temp_var } }
+	#Get the % cheng support
+	set_variable = { HNN_cheng_election_percentage_var = { value = hnn_chen_popularity divide = HNN_election_total_strength_temp_var } }
+	#Get combined KMT support
+	set_variable = {
+		HNN_kmt_election_percentage_var = {
+			value = hnn_tang_popularity
+			add = hnn_chen_popularity
+			divide = HNN_election_total_strength_temp_var
+		}
+	}
+}
+HNN_zhao_pop_effect = {
+	add_to_variable = {
+		var = hnn_zhao_popularity
+		value = 1
+		tooltip = HNN_add_zhao_votes_tt
+	}
+	HNN_election_update_percentage_effect = yes
+}
+HNN_zhao_remove_pop_effect = {
+	subtract_from_variable = {
+		var = hnn_zhao_popularity
+		value = 1
+		tooltip = HNN_remove_zhao_votes_tt
+	}
+	clamp_variable = {
+		var = hnn_zhao_popularity
+		min = 0
+		max = 100
+	}
+	HNN_election_update_percentage_effect = yes
+}
+HNN_tang_pop_effect = {
+	add_to_variable = {
+		var = hnn_tang_popularity
+		value = 1
+		tooltip = HNN_add_tang_votes_tt
+	}
+	HNN_election_update_percentage_effect = yes
+}
+HNN_tang_remove_pop_effect = {
+	subtract_from_variable = {
+		var = hnn_tang_popularity
+		value = 1
+		tooltip = HNN_remove_tang_votes_tt
+	}
+	clamp_variable = {
+		var = hnn_tang_popularity
+		min = 0
+		max = 100
+	}
+	HNN_election_update_percentage_effect = yes
+}
+HNN_cheng_pop_effect = {
+	add_to_variable = {
+		var = hnn_chen_popularity
+		value = 1
+		tooltip = HNN_add_chen_votes_tt
+	}
+	HNN_election_update_percentage_effect = yes
+}
+HNN_cheng_remove_pop_effect = {
+	subtract_from_variable = {
+		var = hnn_chen_popularity
+		value = 1
+		tooltip = HNN_remove_chen_votes_tt
+	}
+	clamp_variable = {
+		var = hnn_chen_popularity
+		min = 0
+		max = 100
+	}
+	HNN_election_update_percentage_effect = yes
+}
+HNN_kmt_pop_effect = {
+	random_list = {
+		50 = {
+			add_to_variable = {
+				var = hnn_chen_popularity
+				value = 1
+				tooltip = HNN_add_chen_votes_tt
+			}
+			clamp_variable = {
+				var = hnn_chen_popularity
+				min = 0
+				max = 100
+			}
+		}
+		50 = {
+			add_to_variable = {
+				var = hnn_tang_popularity
+				value = 1
+				tooltip = HNN_add_tang_votes_tt
+			}
+			clamp_variable = {
+				var = hnn_tang_popularity
+				min = 0
+				max = 100
+			}
+		}
+	}
+	HNN_election_update_percentage_effect = yes
+}
+HNN_kmt_remove_pop_effect = {
+	random_list = {
+		50 = {
+			subtract_from_variable = {
+				var = hnn_chen_popularity
+				value = 1
+				tooltip = HNN_remove_chen_votes_tt
+			}
+		}
+		50 = {
+			subtract_from_variable = {
+				var = hnn_tang_popularity
+				value = 1
+				tooltip = HNN_remove_tang_votes_tt
+			}
+		}
+	}
+	HNN_election_update_percentage_effect = yes
+}
+
+HNN_calculate_winner_effect = {
+	if = {
+		limit = {
+			check_variable = { HNN_zhao_election_percentage_var > HNN_kmt_election_percentage_var }
+		}
+		country_event = { id = hunan_federalist_events.1 days = 2 } #Zhao Hengti wins
+	}
+	else_if = {
+		limit = {
+			check_variable = { HNN_kmt_election_percentage_var > HNN_zhao_election_percentage_var }
+		}
+		country_event = { id = hunan_kuomintang_events.1 days = 2 } #KMT WIN
+	}
+	else_if = { #How the hell would you even get a 50/50 split I haven't done the math but okay
+		limit = {
+			NOT = {
+				AND = {
+					check_variable = { HNN_kmt_election_percentage_var > HNN_zhao_election_percentage_var }
+					check_variable = { HNN_zhao_election_percentage_var > HNN_kmt_election_percentage_var }
+				}
+			}
+		}
+		set_country_flag = HNN_electiontie
+		country_event = { id = hunan_federalist_events.1 days = 2 }
+	}
+}
+
+HNN_march_south_effect = {
+	GXC = { every_core_state = { add_claim_by = HNN } }
+	if = {
+		limit = {
+			GXC = { china_is_aligned_with_federalists = no }
+			HNN = { china_is_aligned_with_federalists = yes }
+			YUN = { china_is_aligned_with_federalists = yes }
+			YUN = { is_subject = no }
+		}
+		activate_targeted_decision = { target = YUN decision = china_joint_strike_GXC_decision }
+	}
+	else = {
+		unlock_decision_tooltip = CHN_war_for_guangzhou
+	}
+}
+
+@HNN_size_small_var = 0.04
+@HNN_size_medium_var = 0.06
+@HNN_size_large_var = 0.08
+
+#Tang Shengzhi
+
+HNN_add_eight_army_effect = {
+	add_popularity = {
+		ideology = social_democrat
+		popularity = var:HNN_size_var
+	}
+}
+HNN_eight_army_small_effect = {
+	if = {
+		limit = { has_any_power_balance = yes }
+		add_power_balance_value = {
+			id = HNN_power_balance
+			value = -0.06
+			tooltip_side = HNN_eighth_army_winning_side
+		}
+	}
+	set_temp_variable = { HNN_size_var = @HNN_size_small_var }
+	HNN_add_eight_army_effect = yes
+}
+HNN_eight_army_medium_effect = {
+	if = {
+		limit = { has_any_power_balance = yes }
+		add_power_balance_value = {
+			id = HNN_power_balance
+			value = -0.08
+			tooltip_side = HNN_eighth_army_winning_side
+		}
+	}
+	set_temp_variable = { HNN_size_var = @HNN_size_medium_var }
+	HNN_add_eight_army_effect = yes
+}
+HNN_eight_army_large_effect = {
+	if = {
+		limit = { has_any_power_balance = yes }
+		add_power_balance_value = {
+			id = HNN_power_balance
+			value = -0.12
+			tooltip_side = HNN_eighth_army_winning_side
+		}
+	}
+	set_temp_variable = { HNN_size_var = @HNN_size_large_var }
+	HNN_add_eight_army_effect = yes
+}
+
+#Cheng Qian
+
+HNN_add_sixth_army_effect = {
+	add_popularity = {
+		ideology = authoritarian_democrat
+		popularity = var:HNN_size_var
+	}
+}
+HNN_sixth_army_small_effect = {
+	if = {
+		limit = { has_any_power_balance = yes }
+		add_power_balance_value = {
+			id = HNN_power_balance
+			value = 0.06
+			tooltip_side = HNN_sixth_army_winning_side
+		}
+	}
+	set_temp_variable = { HNN_size_var = @HNN_size_small_var }
+	HNN_add_sixth_army_effect = yes
+}
+HNN_sixth_army_medium_effect = {
+	if = {
+		limit = { has_any_power_balance = yes }
+		add_power_balance_value = {
+			id = HNN_power_balance
+			value = 0.08
+			tooltip_side = HNN_sixth_army_winning_side
+		}
+	}
+	set_temp_variable = { HNN_size_var = @HNN_size_medium_var }
+	HNN_add_sixth_army_effect = yes
+}
+HNN_sixth_army_large_effect = {
+	if = {
+		limit = { has_any_power_balance = yes }
+		add_power_balance_value = {
+			id = HNN_power_balance
+			value = 0.12
+			tooltip_side = HNN_sixth_army_winning_side
+		}
+	}
+	set_temp_variable = { HNN_size_var = @HNN_size_large_var }
+	HNN_add_sixth_army_effect = yes
+}
+
+HNN_improve_legitimacy_effect = {
+	if = {
+		limit = { has_idea = HNN_popular_support_1 }
+		swap_ideas = {
+			remove_idea = HNN_popular_support_1
+			add_idea = HNN_popular_support_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = HNN_popular_support_2 }
+		swap_ideas = {
+			remove_idea = HNN_popular_support_2
+			add_idea = HNN_popular_support_3
+		}
+	}
+	else = {
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+	}
+}
+
+HNN_merge_kmt_spirits_cheng = {
+	if = {
+		limit = {
+			has_idea = HNN_supporting_unions
+			has_idea = HNN_a_peoples_administration
+			has_idea = HNN_revolutionary_progress_corps
+		}
+		remove_ideas = {
+			HNN_a_peoples_administration
+			HNN_supporting_unions
+			HNN_revolutionary_progress_corps
+			HNN_intellectual_safehaven
+			HNN_assurances_of_dangguo
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_cheng_1
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_peoples_administration
+			has_idea = HNN_expanded_social_services
+			has_idea = HNN_revolutionary_progress_corps
+		}
+		remove_ideas = {
+			HNN_a_peoples_administration
+			HNN_expanded_social_services
+			HNN_revolutionary_progress_corps
+			HNN_intellectual_safehaven
+			HNN_assurances_of_dangguo
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_cheng_2
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_peoples_administration
+			has_idea = HNN_supporting_unions
+			has_idea = HNN_peace_preservation_corps
+		}
+		remove_ideas = {
+			HNN_a_peoples_administration
+			HNN_supporting_unions
+			HNN_peace_preservation_corps
+			HNN_intellectual_safehaven
+			HNN_assurances_of_dangguo
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_cheng_3
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_peoples_administration
+			has_idea = HNN_expanded_social_services
+			has_idea = HNN_peace_preservation_corps
+		}
+		remove_ideas = {
+			HNN_a_peoples_administration
+			HNN_expanded_social_services
+			HNN_peace_preservation_corps
+			HNN_intellectual_safehaven
+			HNN_assurances_of_dangguo
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_cheng_4
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_reformed_administration
+			has_idea = HNN_supporting_unions
+			has_idea = HNN_revolutionary_progress_corps
+		}
+		remove_ideas = {
+			HNN_a_reformed_administration
+			HNN_supporting_unions
+			HNN_revolutionary_progress_corps
+			HNN_intellectual_safehaven
+			HNN_assurances_of_dangguo
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_cheng_5
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_reformed_administration
+			has_idea = HNN_expanded_social_services
+			has_idea = HNN_revolutionary_progress_corps
+		}
+		remove_ideas = {
+			HNN_a_reformed_administration
+			HNN_expanded_social_services
+			HNN_revolutionary_progress_corps
+			HNN_intellectual_safehaven
+			HNN_assurances_of_dangguo
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_cheng_6
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_reformed_administration
+			has_idea = HNN_supporting_unions
+			has_idea = HNN_peace_preservation_corps
+		}
+		remove_ideas = {
+			HNN_a_reformed_administration
+			HNN_supporting_unions
+			HNN_peace_preservation_corps
+			HNN_intellectual_safehaven
+			HNN_assurances_of_dangguo
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_cheng_7
+	}
+	else = {
+		remove_ideas = {
+			HNN_a_reformed_administration
+			HNN_expanded_social_services
+			HNN_peace_preservation_corps
+			HNN_intellectual_safehaven
+			HNN_assurances_of_dangguo
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_cheng_8
+	}
+}
+
+HNN_merge_kmt_spirits_tang = {
+	if = {
+		limit = {
+			has_idea = HNN_supporting_unions
+			has_idea = HNN_a_peoples_administration
+			has_idea = HNN_revolutionary_progress_corps
+		}
+		remove_ideas = {
+			HNN_a_peoples_administration
+			HNN_supporting_unions
+			HNN_revolutionary_progress_corps
+			HNN_intellectual_safehaven
+			HNN_revolution_in_the_countryside_idea
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_tang_1
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_peoples_administration
+			has_idea = HNN_expanded_social_services
+			has_idea = HNN_revolutionary_progress_corps
+		}
+		remove_ideas = {
+			HNN_a_peoples_administration
+			HNN_expanded_social_services
+			HNN_revolutionary_progress_corps
+			HNN_intellectual_safehaven
+			HNN_revolution_in_the_countryside_idea
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_tang_2
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_peoples_administration
+			has_idea = HNN_supporting_unions
+			has_idea = HNN_peace_preservation_corps
+		}
+		remove_ideas = {
+			HNN_a_peoples_administration
+			HNN_supporting_unions
+			HNN_peace_preservation_corps
+			HNN_intellectual_safehaven
+			HNN_revolution_in_the_countryside_idea
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_tang_3
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_peoples_administration
+			has_idea = HNN_expanded_social_services
+			has_idea = HNN_peace_preservation_corps
+		}
+		remove_ideas = {
+			HNN_a_peoples_administration
+			HNN_expanded_social_services
+			HNN_peace_preservation_corps
+			HNN_intellectual_safehaven
+			HNN_revolution_in_the_countryside_idea
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_tang_4
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_reformed_administration
+			has_idea = HNN_supporting_unions
+			has_idea = HNN_revolutionary_progress_corps
+		}
+		remove_ideas = {
+			HNN_a_reformed_administration
+			HNN_supporting_unions
+			HNN_revolutionary_progress_corps
+			HNN_intellectual_safehaven
+			HNN_revolution_in_the_countryside_idea
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_tang_5
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_reformed_administration
+			has_idea = HNN_expanded_social_services
+			has_idea = HNN_revolutionary_progress_corps
+		}
+		remove_ideas = {
+			HNN_a_reformed_administration
+			HNN_expanded_social_services
+			HNN_revolutionary_progress_corps
+			HNN_intellectual_safehaven
+			HNN_revolution_in_the_countryside_idea
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_tang_6
+	}
+	else_if = {
+		limit = {
+			has_idea = HNN_a_reformed_administration
+			has_idea = HNN_supporting_unions
+			has_idea = HNN_peace_preservation_corps
+		}
+		remove_ideas = {
+			HNN_a_reformed_administration
+			HNN_supporting_unions
+			HNN_peace_preservation_corps
+			HNN_intellectual_safehaven
+			HNN_revolution_in_the_countryside_idea
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_tang_7
+	}
+	else = {
+		remove_ideas = {
+			HNN_a_reformed_administration
+			HNN_expanded_social_services
+			HNN_peace_preservation_corps
+			HNN_intellectual_safehaven
+			HNN_revolution_in_the_countryside_idea
+			HNN_nationalist_youth_organisations
+		}
+		add_ideas = HNN_rule_of_the_kuomintang_tang_8
+	}
+}
+HNN_southern_political_council_effect = {
+	add_state_core = 592 #Guangzhou
+	set_capital = {
+		state = 592 #Guangzhou
+		remember_old_capital = no
+	}
+	if = {
+		limit = { HNN_no_cosmetic_flag_check = yes }
+		set_cosmetic_tag = HNN_SCPC
+	}
+	if = {
+		limit = { SZC = { china_is_aligned_with_zhili = no } }
+		activate_targeted_decision = { target = SZC decision = HNN_attack_SZC }
+	}
+	activate_targeted_decision = { target = YUN decision = HNN_attack_YUN }
+}
+
+HNN_political_council_claim_effect = {
+	if = {
+		limit = { THIS = { NOT = { is_ally_with = QIE } } }
+		THIS = {
+			every_core_state = { add_claim_by = HNN }
+		}
+	}
+}
+
+HNN_recruit_GXC_KMT_generals = {
+	custom_effect_tooltip = HNN_recruit_aligned_generals_tt
+	GXC = {
+		GXC_chen_jitang = { custom_effect_tooltip = character_becomes_a_general }
+		custom_effect_tooltip = tooltip_white_line
+		GXC_yu_hanmou = { custom_effect_tooltip = character_becomes_a_general }
+		custom_effect_tooltip = tooltip_white_line
+		GXC_li_hanhun = { custom_effect_tooltip = character_becomes_a_general }
+		hidden_effect = {
+			GXC_chen_jitang = { CHN_recruit_character_effect = yes }
+			GXC_yu_hanmou = { CHN_recruit_character_effect = yes }
+			GXC_li_hanhun = { CHN_recruit_character_effect = yes }
+		}
+	}
+}
+
+HNN_recruit_upc_generals = {
+	custom_effect_tooltip = HNN_recruit_aligned_generals_tt
+	GXC = {
+		GXC_hong_zhaolin = { custom_effect_tooltip = character_becomes_a_general }
+		custom_effect_tooltip = tooltip_white_line
+		GXC_deng_benyin = { custom_effect_tooltip = character_becomes_a_general }
+		custom_effect_tooltip = tooltip_white_line
+		GXC_ye_ju = { custom_effect_tooltip = character_becomes_a_general }
+		hidden_effect = {
+			GXC_hong_zhaolin = { CHN_recruit_character_effect = yes }
+			GXC_deng_benyin = { CHN_recruit_character_effect = yes }
+			GXC_ye_ju = { CHN_recruit_character_effect = yes }
+		}
+	}
+}
+
+HNN_recruit_beiyang_generals = {
+	custom_effect_tooltip = HNN_recruit_aligned_generals_tt
+	GXC = {
+		GXC_ma_ji = { custom_effect_tooltip = character_becomes_a_general }
+		custom_effect_tooltip = tooltip_white_line
+		GXC_yang_ruxuan = { custom_effect_tooltip = character_becomes_a_general }
+		custom_effect_tooltip = tooltip_white_line
+		GXC_yang_chisheng = { custom_effect_tooltip = character_becomes_a_general }
+		hidden_effect = {
+			GXC_ma_ji = { CHN_recruit_character_effect = yes }
+			GXC_yang_ruxuan = { CHN_recruit_character_effect = yes }
+			GXC_yang_chisheng = { CHN_recruit_character_effect = yes }
+		}
+	}
+}

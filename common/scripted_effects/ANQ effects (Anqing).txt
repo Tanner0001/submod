@@ -1,0 +1,1206 @@
+
+ANQ_spawn_anqing_clique = {
+	if = {
+		limit = { has_template = "Anhui Qibing Xie" }
+		delete_unit_template_and_units = { division_template = "Anhui Qibing Xie" }
+	}
+	if = {
+		limit = { has_template = "Anhui Bubing Xie" }
+		delete_unit_template_and_units = { division_template = "Anhui Bubing Xie" }
+	}
+	if = {
+		limit = { has_template = "Anhui Bubing Zhen" }
+		delete_unit_template_and_units = { division_template = "Anhui Bubing Zhen" }
+	}
+	custom_effect_tooltip = tooltip_white_line
+	effect_tooltip = { release = ANQ }
+	hidden_effect = {
+		ANQ = {
+			606 = { #Anqing
+				add_core_of = PREV
+				remove_core_of = ROOT
+				add_claim_by = ROOT
+				transfer_state_to = PREV
+				create_unit = {
+					division = "name = \"Anhui Bubing Di 1 Zhen\" division_template = \"Bubing Zhen\" start_experience_factor = 0.2 start_equipment_factor = 0.75"
+					prioritize_location = 1146
+					owner = PREV
+				}
+				create_unit = {
+					division = "name = \"Anhui Bubing Di 2 Zhen\" division_template = \"Bubing Zhen\" start_experience_factor = 0.2 start_equipment_factor = 0.75"
+					prioritize_location = 1146
+					owner = PREV
+				}
+
+				create_unit = {
+					division = "name = \"Anhui Bubing Di 1 Xie\" division_template = \"Bubing Xie\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+					prioritize_location = 7035
+					owner = PREV
+				}
+				create_unit = {
+					division = "name = \"Anhui Bubing Di 2 Xie\" division_template = \"Bubing Xie\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+					prioritize_location = 7035
+					owner = PREV
+				}
+			}
+			1014 = { #Wuhu
+				add_core_of = PREV
+				remove_core_of = ROOT
+				add_claim_by = ROOT
+				transfer_state_to = PREV
+				create_unit = {
+					division = "name = \"Anhui Bubing Di 3 Xie\" division_template = \"Bubing Xie\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+					prioritize_location = 7104
+					owner = PREV
+				}
+				create_unit = {
+					division = "name = \"Anhui Bubing Di 4 Xie\" division_template = \"Bubing Xie\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+					prioritize_location = 7104
+					owner = PREV
+				}
+			}
+			1050 = { #Huasi
+				add_core_of = PREV
+				remove_core_of = ROOT
+				add_claim_by = ROOT
+				transfer_state_to = PREV
+				create_unit = {
+					division = "name = \"Anhui Bubing Di 1 Zhen\" division_template = \"Bubing Zhen\" start_experience_factor = 0.2 start_equipment_factor = 0.75"
+					prioritize_location = 9937
+					owner = PREV
+				}
+				create_unit = {
+					division = "name = \"Anhui Bubing Di 2 Zhen\" division_template = \"Bubing Zhen\" start_experience_factor = 0.2 start_equipment_factor = 0.75"
+					prioritize_location = 9937
+					owner = PREV
+				}
+
+				create_unit = {
+					division = "name = \"Yangzhou Qibing Xie\" division_template = \"Qibing Xie\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+					prioritize_location = 4148
+					owner = PREV
+				}
+				create_unit = {
+					division = "name = \"Yangzhou Qibing Di 2 Xie\" division_template = \"Qibing Xie\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+					prioritize_location = 4148
+					owner = PREV
+				}
+			}
+			set_cosmetic_tag = ANH
+			activate_advisor = ANQ_gao_shidu_sic
+			add_ai_strategy = {
+				type = conquer
+				id = LEP
+				value = 100
+			}
+			add_ai_strategy = {
+				type = antagonize
+				id = LEP
+				value = 200
+			}
+			load_oob = "ANQ_rolling_dice"
+			country_lock_all_division_template = yes
+		}
+		every_state = {
+			limit = {
+				is_claim_or_core_of_ROOT = yes
+				NOT = { is_claimed_by = ANQ }
+				NOT = { is_core_of = ANQ }
+			}
+			add_claim_by = ANQ
+		}
+		set_temp_variable = { target = ANQ }
+		QIE = { puppet_country_without_changing_government = yes }
+	}
+}
+
+ANQ_remove_beijing_spirit = {
+	hidden_effect = {
+		if = {
+			limit = { has_variable = ANQ_beijing_level }
+			# ANQ_beijing_level == QIE_anqing_level
+			# 0 == 0
+			# 1,2 == 1
+			# 3,4 == 2
+			# 5,6 == 3
+			# 7,8 == 4
+			# 9,10 == 5
+			# 11,12 == 6
+
+			# Calculate QIE_anqing_level
+			# Find remainder of ANQ_beijing_level
+			set_temp_variable = { ANQ_beijing_level_remainder = ANQ_beijing_level }
+			modulo_temp_variable = { ANQ_beijing_level_remainder = 2 }
+
+			set_temp_variable = {
+				QIE_anqing_level = {
+					value = ANQ_beijing_level
+					multiply = 0.5
+					#For if earlier division results in decimal number
+					if = { limit = { value = ANQ_beijing_level_remainder not_equals = 0 } add = 0.5 }
+				}
+			}
+			### Removal of Ideas ###
+			meta_effect = {
+				text = {
+					remove_ideas = ANQ_beijing_cooperation[BEIJING_LEVEL]
+					QIE = { remove_ideas = QIE_anqing_cooperation[ANQING_LEVEL] }
+				}
+				BEIJING_LEVEL = "[?ANQ_beijing_level]"
+				ANQING_LEVEL = "[?QIE_anqing_level]"
+			}
+			clear_variable = ANQ_beijing_level
+		}
+	}
+}
+
+ANQ_modify_beijing_spirit = {
+	if = {
+		limit = { has_variable = ANQ_beijing_level }
+		### Calculation ###
+		# Get Old ANQ_beijing_level for meta effect later
+		set_temp_variable = { ANQ_beijing_level_old = ANQ_beijing_level }
+
+		# Get new ANQ party pop before effect for party pop executes
+		set_temp_variable = { ANQ_var_bei_pop = { value = party_popularity@market_liberal add = ANQ_beijing_influence_change } }
+
+		set_temp_variable = {
+			ANQ_beijing_level_new = {
+				value = 0
+				if = { limit = { value = ANQ_var_bei_pop less_than = 0.05 } add = 0 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.15 } add = 1 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.20 } add = 2 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.25 } add = 3 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.30 } add = 4 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.35 } add = 5 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.39 } add = 6 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.42 } add = 7 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.45 } add = 8 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.48 } add = 9 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.50 } add = 10 }
+				else_if = { limit = { value = ANQ_var_bei_pop less_than = 0.60 } add = 11 }
+				else = { add = 12 }
+			}
+		}
+
+		# Qing Calculation
+		# ANQ_beijing_level == QIE_anqing_level
+		# 0 == 0
+		# 1,2 == 1
+		# 3,4 == 2
+		# 5,6 == 3
+		# 7,8 == 4
+		# 9,10 == 5
+		# 11,12 == 6
+
+		# Calculate QIE_anqing_level_old
+		# Find remainder of ANQ_beijing_level_old
+		set_temp_variable = { ANQ_beijing_level_remainder = ANQ_beijing_level_old }
+		modulo_temp_variable = { ANQ_beijing_level_remainder = 2 }
+
+		set_temp_variable = {
+			QIE_anqing_level_temp_old = {
+				value = ANQ_beijing_level_old
+				multiply = 0.5
+				#For if earlier division results in decimal number
+				if = { limit = { value = ANQ_beijing_level_remainder not_equals = 0 } add = 0.5 }
+			}
+		}
+
+		# Calculate QIE_anqing_level_new
+		# Find remainder of ANQ_beijing_level_new
+		set_temp_variable = { ANQ_beijing_level_remainder = ANQ_beijing_level_new }
+		modulo_temp_variable = { ANQ_beijing_level_remainder = 2 }
+
+		set_temp_variable = {
+			QIE_anqing_level_temp_new = {
+				value = ANQ_beijing_level_new
+				multiply = 0.5
+				#For if earlier division results in decimal number
+				if = { limit = { value = ANQ_beijing_level_remainder not_equals = 0 } add = 0.5 }
+			}
+		}
+
+		### Tooltip ###
+		if = {
+			limit = { NOT = { check_variable = { ANQ_beijing_influence_change = 0 } } }
+			custom_override_tooltip = {
+				tooltip = ANQ_change_beijing_influence_tt
+				add_popularity = { ideology = market_liberal popularity = ANQ_beijing_influence_change }
+			}
+		}
+		if = {
+			limit = {
+				NOT = { check_variable = { ANQ_beijing_level_new = ANQ_beijing_level_old } }
+			}
+			meta_effect = {
+				text = {
+					swap_ideas = {
+						remove_idea = ANQ_beijing_cooperation[BEIJING_LEVEL_OLD]
+						add_idea = ANQ_beijing_cooperation[BEIJING_LEVEL_NEW]
+					}
+				}
+				BEIJING_LEVEL_OLD = "[?ANQ_beijing_level_old]"
+				BEIJING_LEVEL_NEW = "[?ANQ_beijing_level_new]"
+			}
+			# Notify Qing of Change in the Idea Effects
+			if = {
+				limit = { NOT = { check_variable = { QIE_anqing_level_temp_new = QIE_anqing_level_temp_old } } }
+				hidden_effect = {
+					QIE = {
+						meta_effect = {
+							text = {
+								swap_ideas = {
+									remove_idea = QIE_anqing_cooperation[ANQING_LEVEL_OLD]
+									add_idea = QIE_anqing_cooperation[ANQING_LEVEL_NEW]
+								}
+							}
+							ANQING_LEVEL_OLD = "[?QIE_anqing_level_temp_old]"
+							ANQING_LEVEL_NEW = "[?QIE_anqing_level_temp_new]"
+						}
+						set_variable = { QIE_anqing_level_old = QIE_anqing_level_temp_old }
+						set_variable = { QIE_anqing_level_new = QIE_anqing_level_temp_new }
+						country_event = anqing_events.234
+					}
+				}
+			}
+		}
+		else = {
+			meta_effect = {
+				text = {
+					custom_effect_tooltip = {
+						localization_key = ANQ_beijing_cooperation_idea_unchanged
+						IDEA = ANQ_beijing_cooperation[BEIJING_LEVEL_OLD]
+					}
+				}
+				BEIJING_LEVEL_OLD = "[?ANQ_beijing_level_old]"
+			}
+		}
+
+		### Effects ###
+		hidden_effect = {
+			set_variable = { ANQ_beijing_level = ANQ_beijing_level_new }
+			if = {
+				limit = {
+					check_variable = { ANQ_beijing_level > 1 }
+				}
+				QIE = {
+					if = {
+						limit = { NOT = { has_military_access_to = ANQ } }
+						diplomatic_relation = {
+							country = ANQ
+							relation = military_access
+							active = yes
+						}
+						diplomatic_relation = {
+							country = ANQ
+							relation = docking_rights
+							active = yes
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { ANQ_beijing_level > 3 }
+				}
+				if = {
+					limit = {
+						NOT = { has_country_flag = ANQ_wuchang_anqing_railway }
+						has_completed_focus = ANQ_renovate_longhai_railway
+					}
+					country_event = { id = anqing_events.71 days = 50 random_days = 40 }
+					set_country_flag = ANQ_wuchang_anqing_railway
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { ANQ_beijing_level > 4 }
+				}
+				if = {
+					limit = {
+						NOT = { has_country_flag = ANQ_banditry_troops_qing }
+						has_completed_focus = ANQ_rural_outreach
+					}
+					country_event = { id = anqing_events.75 days = 30 random_days = 20 }
+					set_country_flag = ANQ_banditry_troops_qing
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { ANQ_beijing_level > 5 }
+				}
+				if = {
+					limit = {
+						NOT = { has_country_flag = ANQ_can_qing_river_canal }
+						has_country_flag = ANQ_subei_canal_completed
+					}
+					country_event = { id = anqing_events.92 days = 50 random_days = 25 }
+					set_country_flag = ANQ_can_qing_river_canal
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { ANQ_beijing_level > 6 }
+				}
+				if = {
+					limit = {
+						NOT = { has_country_flag = ANQ_qie_businesses_rights }
+						has_completed_focus = ANQ_caifa_contracts
+					}
+					country_event = { id = anqing_events.83 days = 50 random_days = 40 }
+					set_country_flag = ANQ_qie_businesses_rights
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { ANQ_beijing_level > 7 }
+				}
+				if = {
+					limit = {
+						NOT = { has_country_flag = ANQ_qie_legalrights }
+					}
+					country_event = { id = anqing_events.81 days = 100 random_days = 90 }
+					set_country_flag = ANQ_qie_legalrights
+				}
+			}
+		}
+	}
+	else = {
+		if = {
+			limit = { NOT = { check_variable = { ANQ_beijing_influence_change = 0 } } }
+			custom_effect_tooltip = ANQ_change_beijing_influence_tt
+		}
+	}
+}
+
+ANQ_increase_beijing_anger = {
+	# set temp var ANQ_beijing_anger_change_factor
+	add_to_variable = {
+		ANQ_beijing_anger = {
+			# ANQ_beijing_anger_change: ANQ_temp_beijing_anger_multiplier * ANQ_beijing_anger_change_factor
+			# ANQ_temp_beijing_anger_multiplier = ( 1 + ANQ_beijing_level ) * 1.3
+			value = 1
+			add = ANQ_beijing_level
+			multiply = 1.3
+			multiply = ANQ_beijing_anger_change_factor
+		}
+		tooltip = ANQ_beijing_anger_increase_tt
+	}
+	if = {
+		limit = {
+			OR = {
+				AND = {
+					check_variable = { ANQ_beijing_anger_change_factor = 0.5 }
+					check_variable = { ANQ_beijing_level > 6 }
+				}
+				AND = {
+					check_variable = { ANQ_beijing_anger_change_factor = 1 }
+					check_variable = { ANQ_beijing_level > 4 }
+				}
+				AND = {
+					check_variable = { ANQ_beijing_anger_change_factor = 2 }
+					check_variable = { ANQ_beijing_level > 3 }
+				}
+				AND = {
+					check_variable = { ANQ_beijing_anger_change_factor = 3 }
+					check_variable = { ANQ_beijing_level > 2 }
+				}
+			}
+		}
+		custom_effect_tooltip = ANQ_high_anger_risk_tt
+	}
+}
+
+ANQ_recalculate_beijing_anger = {
+	# Reduction of ANQ_beijing_anger by 1 every week
+	subtract_from_variable = { ANQ_beijing_anger = 2 }
+	clamp_variable = { var = ANQ_beijing_anger min = 0 }
+
+	### Calculation ###
+	# Determine new anger level
+	# ANQ_beijing_anger_product = ( 1 + ANQ_beijing_level) * ANQ_beijing_anger
+	set_temp_variable = {
+		ANQ_beijing_anger_product = {
+			value = ANQ_beijing_level
+			add = 1
+			multiply = ANQ_beijing_anger
+		}
+	}
+
+	if = {
+		limit = { NOT = { has_variable = ANQ_beijing_anger_level_old } }
+		set_variable = { ANQ_beijing_anger_level_old = 0 }
+	}
+	else = {
+		# Set previous value as the old value
+		set_variable = { ANQ_beijing_anger_level_old = ANQ_beijing_anger_level_new }
+	}
+
+	#400+ means anger = 4
+	#300+ means anger = 3
+	#130+ means anger = 2
+	# 50+ means anger = 1
+	# 50< means anger = 0
+
+	set_variable = {
+		ANQ_beijing_anger_level_new = {
+			value = 0 #Default
+			if = { limit = { value = ANQ_beijing_anger_product greater_than = 400 } add = 4 }
+			else_if = { limit = { value = ANQ_beijing_anger_product greater_than = 300 } add = 3 }
+			else_if = { limit = { value = ANQ_beijing_anger_product greater_than = 130 } add = 2 }
+			else_if = { limit = { value = ANQ_beijing_anger_product greater_than = 50 } add = 1 }
+		}
+	}
+
+	if = {
+		limit = { NOT = { check_variable = { ANQ_beijing_anger_level_new = ANQ_beijing_anger_level_old } } }
+		if = {
+			limit = { check_variable = { ANQ_beijing_anger_level_new = 0 } }
+			country_event = { id = anqing_events.117 hours = 2 }
+		}
+		else = {
+			country_event = { id = anqing_events.113 hours = 2 }
+		}
+	}
+}
+
+ANQ_remove_anger_effects = {
+	hidden_effect = {
+		if = {
+			limit = { has_variable = ANQ_beijing_anger }
+			if = {
+				limit = { has_idea = ANQ_beijing_angry1 }
+				remove_ideas = ANQ_beijing_angry1
+			}
+			else_if = {
+				limit = { has_idea = ANQ_beijing_angry2 }
+				remove_ideas = ANQ_beijing_angry2
+			}
+			else_if = {
+				limit = { has_idea = ANQ_beijing_angry3 }
+				remove_ideas = ANQ_beijing_angry3
+			}
+			else_if = {
+				limit = { has_idea = ANQ_beijing_angry4 }
+				remove_ideas = ANQ_beijing_angry4
+			}
+			clear_variable = ANQ_beijing_anger
+			clear_variable = ANQ_beijing_anger_level_old
+			clear_variable = ANQ_beijing_anger_level_new
+		}
+	}
+}
+
+ANQ_remove_fengtian_spirit = {
+	hidden_effect = {
+		if = {
+			limit = { has_variable = ANQ_fengtian_level }
+			meta_effect = {
+				text = {
+					remove_ideas = ANQ_fengtian_cooperationNOJAP[FENGTIAN_LEVEL]
+					remove_ideas = ANQ_fengtian_cooperation[FENGTIAN_LEVEL]
+				}
+				FENGTIAN_LEVEL = "[?ANQ_fengtian_level]"
+			}
+			clear_variable = ANQ_fengtian_level
+		}
+	}
+}
+
+ANQ_modify_fengtian_spirit = {
+	if = {
+		limit = { has_variable = ANQ_fengtian_level }
+		### Calculation ###
+		# Get Old ANQ_fengtian_level for meta effect later
+		set_temp_variable = { ANQ_fengtian_level_old = ANQ_fengtian_level }
+
+		# Get new ANQ party pop before effect for party pop executes
+		set_temp_variable = { ANQ_var_fng_pop = { value = party_popularity@market_liberal add = ANQ_fengtian_influence_change } }
+
+		set_temp_variable = {
+			ANQ_fengtian_level_new = {
+				value = 0
+				if = { limit = { value = ANQ_var_fng_pop less_than = 0.05 } add = 0 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.15 } add = 1 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.20 } add = 2 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.25 } add = 3 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.30 } add = 4 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.35 } add = 5 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.40 } add = 6 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.45 } add = 7 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.50 } add = 8 }
+				else_if = { limit = { value = ANQ_var_fng_pop less_than = 0.60 } add = 9 }
+				else = { add = 10 }
+			}
+		}
+
+		### Tooltip ###
+		if = {
+			limit = { NOT = { check_variable = { ANQ_fengtian_influence_change = 0 } } }
+			custom_override_tooltip = {
+				tooltip = ANQ_change_fengtian_influence_tt
+				add_popularity = { ideology = market_liberal popularity = ANQ_fengtian_influence_change }
+			}
+		}
+		if = {
+			limit = {
+				NOT = { check_variable = { ANQ_fengtian_level_new = ANQ_fengtian_level_old } }
+			}
+			meta_effect = {
+				text = {
+					if = {
+						limit = {
+							OR = {
+								NOT = { has_country_flag = ANQ_friendly_japan }
+								FNG_JAP_hostile = yes
+							}
+						}
+						swap_ideas = {
+							remove_idea = ANQ_fengtian_cooperationNOJAP[FENGTIAN_LEVEL_OLD]
+							add_idea = ANQ_fengtian_cooperationNOJAP[FENGTIAN_LEVEL_NEW]
+						}
+					}
+					else = {
+						swap_ideas = {
+							remove_idea = ANQ_fengtian_cooperation[FENGTIAN_LEVEL_OLD]
+							add_idea = ANQ_fengtian_cooperation[FENGTIAN_LEVEL_NEW]
+						}
+					}
+				}
+				FENGTIAN_LEVEL_OLD = "[?ANQ_fengtian_level_old]"
+				FENGTIAN_LEVEL_NEW = "[?ANQ_fengtian_level_new]"
+			}
+		}
+		else = {
+			meta_effect = {
+				text = {
+					custom_effect_tooltip = {
+						localization_key = ANQ_fengtian_cooperation_idea_unchanged
+						IDEA = ANQ_fengtian_cooperation[FENGTIAN_LEVEL_OLD]
+					}
+				}
+				FENGTIAN_LEVEL_OLD = "[?ANQ_fengtian_level_old]"
+			}
+		}
+
+		### Additonal Hidden Effects ###
+		hidden_effect = {
+			set_variable = { ANQ_fengtian_level = ANQ_fengtian_level_new }
+
+			if = {
+				limit = { check_variable = { ANQ_fengtian_level > 2 } }
+				FNG = {
+					if = {
+						limit = { NOT = { has_military_access_to = ANQ } }
+						diplomatic_relation = {
+							country = ANQ
+							relation = military_access
+							active = yes
+						}
+						diplomatic_relation = {
+							country = ANQ
+							relation = docking_rights
+							active = yes
+						}
+					}
+				}
+			}
+			if = {
+				limit = { check_variable = { ANQ_fengtian_level > 3 } }
+				JAP = {
+					if = {
+						limit = { NOT = { has_military_access_to = ANQ } }
+						diplomatic_relation = {
+							country = ANQ
+							relation = military_access
+							active = yes
+						}
+						diplomatic_relation = {
+							country = ANQ
+							relation = docking_rights
+							active = yes
+						}
+					}
+				}
+			}
+		}
+	}
+	else = {
+		if = {
+			limit = { NOT = { check_variable = { ANQ_fengtian_influence_change = 0 } } }
+			custom_effect_tooltip = ANQ_change_fengtian_influence_tt
+		}
+	}
+}
+
+ANQ_increase_kmt_unrest_level = {
+	add_to_variable = { anq_kmt_unrest_level = 1 }
+	clamp_variable = { var = anq_kmt_unrest_level min = 0 max = 3 }
+
+	set_variable = {
+		anq_suppress_kmt_mission_timeout = {
+			value = 120
+			subtract = { value = 20 multiply = anq_kmt_unrest_level }
+		}
+	}
+}
+ANQ_decrease_kmt_unrest_level = {
+	add_to_variable = { anq_kmt_unrest_level = -1 }
+	clamp_variable = { var = anq_kmt_unrest_level min = 0 max = 3 }
+
+	set_variable = {
+		anq_suppress_kmt_mission_timeout = {
+			value = 120
+			subtract = { value = 20 multiply = anq_kmt_unrest_level }
+		}
+	}
+}
+ANQ_increase_yiguandao_unrest_level = {
+	add_to_variable = { anq_yiguandao_unrest_level = 1 }
+	clamp_variable = { var = anq_yiguandao_unrest_level min = 0 max = 2 }
+
+	set_variable = {
+		anq_suppress_yiguandao_mission_timeout = {
+			value = 120
+			subtract = { value = 20 multiply = anq_yiguandao_unrest_level }
+		}
+	}
+}
+ANQ_decrease_yiguandao_unrest_level = {
+	add_to_variable = { anq_yiguandao_unrest_level = -1 }
+	clamp_variable = { var = anq_yiguandao_unrest_level min = 0 max = 2 }
+
+	set_variable = {
+		anq_suppress_yiguandao_mission_timeout = {
+			value = 120
+			subtract = { value = 20 multiply = anq_yiguandao_unrest_level }
+		}
+	}
+}
+
+ANQ_negative_kmt_event = {
+	# Pick Random Location
+	random_owned_state = {
+		limit = { region = 217 } #Dongnan
+		set_variable = { PREV.ANQ_KMT_attack_location = THIS }
+	}
+	# Pick Random Event
+	if = {
+		limit = { has_variable = ANQ_KMT_attack_location } #To avoid error log spam
+		random_list = {
+			11 = { #ambush
+				country_event = anqing_events.41
+			}
+			11 = { #railway bomb
+				country_event = anqing_events.42
+			}
+			11 = { #assassination
+				country_event = anqing_events.43
+			}
+			11 = { #factory bomb
+				country_event = anqing_events.44
+			}
+			11 = { #gunfight
+				country_event = anqing_events.45
+			}
+			11 = { #heavy factory bomb
+				country_event = anqing_events.46
+			}
+			11 = { #battle
+				country_event = anqing_events.47
+			}
+			11 = { #series of bombings, train
+				country_event = anqing_events.48
+			}
+			11 = { #series of bombings, factories
+				country_event = anqing_events.49
+			}
+		}
+	}
+}
+
+ANQ_negative_yiguandao_event = {
+	random_list = {
+		14 = { #opium storage attack
+			country_event = anqing_events.51
+		}
+		14 = { #assault on caravan
+			country_event = anqing_events.52
+		}
+		14 = { #patrol attack
+			country_event = anqing_events.53
+		}
+		14 = { #barracks attack
+			country_event = anqing_events.54
+		}
+		14 = { #town assault
+			country_event = anqing_events.55
+		}
+		14 = { #railway occupation
+			country_event = anqing_events.56
+		}
+		14 = { #army clashes
+			country_event = anqing_events.57
+		}
+	}
+}
+
+ANQ_recalculate_chens_credibility = {
+	set_temp_variable = {
+		ANQ_credibility_factor_new = {
+			value = ANQ_credibility_factor
+			add = ANQ_credibility_factor_change
+			clamp = { min = 0 max = 160 }
+		}
+	}
+
+	set_variable = { ANQ_credibility_factor = ANQ_credibility_factor_new }
+	# ANQ_credibility_factor modifiers range between 0 and 120
+	clamp_temp_variable = { var = ANQ_credibility_factor_new min = 0 max = 120 }
+
+	### Political Power Gain ###
+	# ANQ_credibility_political_power_factor = (ANQ_credibility_factor - 60) / 200
+	# Range: -30% to 30%
+	set_temp_variable = {
+		ANQ_credibility_political_power_factor_change = {
+			value = ANQ_credibility_factor_new
+			subtract = 60
+			multiply = 0.005
+			subtract = ANQ_credibility_political_power_factor
+		}
+	}
+
+	### Stability Factor ###
+	# ANQ_credibility_stability_factor = (ANQ_credibility_factor - 60) / 400
+	# Range: -15% to 15%
+	set_temp_variable = {
+		ANQ_credibility_stability_factor_change = {
+			value = ANQ_credibility_factor_new
+			subtract = 60
+			multiply = 0.0025
+			subtract = ANQ_credibility_stability_factor
+		}
+	}
+
+	### Army Org Factor ###
+	# If ANQ_credibility_factor > 59, ANQ_credibility_army_org_factor = 0%
+	# Else, ANQ_credibility_army_org_factor = (ANQ_credibility_factor - 60) / 200
+	# Range: -30% to 0%
+	set_temp_variable = {
+		ANQ_credibility_army_org_factor_change = {
+			value = ANQ_credibility_factor_new
+			if = {
+				limit = { value = ANQ_credibility_factor_new greater_than = 59 }
+				subtract = ANQ_credibility_factor_new
+			}
+			else = {
+				subtract = 60
+				multiply = 0.005
+			}
+			subtract = ANQ_credibility_army_org_factor
+		}
+	}
+
+	### Conscription Factor ###
+	# If ANQ_credibility_factor > 59, ANQ_credibility_conscription_factor = 0%
+	# Else, ANQ_credibility_army_org_factor = (ANQ_credibility_factor - 60) / 200
+	# Range: -30% to 0%
+	set_temp_variable = {
+		ANQ_credibility_conscription_factor_change = {
+			value = ANQ_credibility_factor_new
+			if = {
+				limit = { value = ANQ_credibility_factor_new greater_than = 59 }
+				subtract = ANQ_credibility_factor_new
+			}
+			else = {
+				subtract = 60
+				multiply = 0.005
+			}
+			subtract = ANQ_credibility_conscription_factor
+		}
+	}
+
+	if = {
+		limit = {
+			NOT = {
+				AND = {
+					check_variable = { ANQ_credibility_political_power_factor_change = 0 }
+					check_variable = { ANQ_credibility_stability_factor_change = 0 }
+					check_variable = { ANQ_credibility_army_org_factor_change = 0 }
+					check_variable = { ANQ_credibility_conscription_factor_change = 0 }
+				}
+			}
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = ANQ_credibility_modifier
+		}
+	}
+	if = {
+		limit = { NOT = { check_variable = { ANQ_credibility_political_power_factor_change = 0 } } }
+		add_to_variable = { ANQ_credibility_political_power_factor = ANQ_credibility_political_power_factor_change tooltip = political_power_factor_tooltip }
+	}
+	if = {
+		limit = { NOT = { check_variable = { ANQ_credibility_stability_factor_change = 0 } } }
+		add_to_variable = { ANQ_credibility_stability_factor = ANQ_credibility_stability_factor_change tooltip = stability_factor_tooltip }
+	}
+	if = {
+		limit = { NOT = { check_variable = { ANQ_credibility_army_org_factor_change = 0 } } }
+		add_to_variable = { ANQ_credibility_army_org_factor = ANQ_credibility_army_org_factor_change tooltip = army_org_factor_tooltip }
+	}
+	if = {
+		limit = { NOT = { check_variable = { ANQ_credibility_conscription_factor_change = 0 } } }
+		add_to_variable = { ANQ_credibility_conscription_factor = ANQ_credibility_conscription_factor_change tooltip = conscription_factor_tooltip }
+	}
+	force_update_dynamic_modifier = yes
+}
+
+ANQ_reduce_derelict_industry = {
+	if = {
+		limit = {
+			has_idea = ANQ_derelict_industry
+		}
+		swap_ideas = {
+			remove_idea = ANQ_derelict_industry
+			add_idea = ANQ_derelict_industry1
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = ANQ_derelict_industry1
+		}
+		swap_ideas = {
+			remove_idea = ANQ_derelict_industry1
+			add_idea = ANQ_derelict_industry2
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = ANQ_derelict_industry2
+		}
+		swap_ideas = {
+			remove_idea = ANQ_derelict_industry2
+			add_idea = ANQ_derelict_industry3
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = ANQ_derelict_industry3
+		}
+		remove_ideas = ANQ_derelict_industry3
+		if = {
+			limit = {
+				has_country_flag = ANQ_fixed_destruction
+			}
+			country_event = { id = anqing_events.180 days = 1 }
+			clr_country_flag = ANQ_fixed_destruction
+		}
+		else = {
+			set_country_flag = ANQ_fixed_industry
+		}
+	}
+}
+
+ANQ_reduce_widespread_destruction = {
+	if = {
+		limit = {
+			has_idea = ANQ_widespread_destruction
+		}
+		swap_ideas = {
+			remove_idea = ANQ_widespread_destruction
+			add_idea = ANQ_widespread_destruction1
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = ANQ_widespread_destruction1
+		}
+		swap_ideas = {
+			remove_idea = ANQ_widespread_destruction1
+			add_idea = ANQ_widespread_destruction2
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = ANQ_widespread_destruction2
+		}
+		remove_ideas = ANQ_widespread_destruction2
+		if = {
+			limit = {
+				has_country_flag = ANQ_fixed_industry
+			}
+			country_event = { id = anqing_events.180 days = 1 }
+			clr_country_flag = ANQ_fixed_industry
+		}
+		else = {
+			set_country_flag = ANQ_fixed_destruction
+		}
+	}
+}
+
+ANQ_break_relations_japan = {
+	hidden_effect = {
+		if = {
+			limit = { has_country_flag = ANQ_friendly_japan }
+			clr_country_flag = ANQ_friendly_japan
+			diplomatic_relation = {
+				country = JAP
+				relation = docking_rights
+				active = no
+			}
+			diplomatic_relation = {
+				country = JAP
+				relation = military_access
+				active = no
+			}
+			JAP = {
+				if = {
+					limit = {
+						has_idea = JAP_ANQ_Reconstruction_Plan
+					}
+					remove_ideas = JAP_ANQ_Reconstruction_Plan
+				}
+				diplomatic_relation = {
+					country = ANQ
+					relation = docking_rights
+					active = no
+				}
+				diplomatic_relation = {
+					country = ANQ
+					relation = military_access
+					active = no
+				}
+			}
+			meta_effect = {
+				text = {
+					if = {
+						limit = {
+							ANQ_is_profengtian = yes
+							has_idea = ANQ_fengtian_cooperation[FENGTIAN_LEVEL]
+						}
+						swap_ideas = {
+							remove_idea = ANQ_fengtian_cooperation[FENGTIAN_LEVEL]
+							add_idea = ANQ_fengtian_cooperationNOJAP[FENGTIAN_LEVEL]
+						}
+					}
+				}
+				FENGTIAN_LEVEL = "[?ANQ_fengtian_level]"
+			}
+		}
+	}
+}
+
+ANQ_break_relations_fengtian = {
+	hidden_effect = {
+		if = {
+			limit = { china_is_aligned_with_fengtian = yes }
+			### ANQ Handling ###
+			ANQ_chen_tiaoyuan = {
+				swap_country_leader_traits = {
+					remove = CHN_anguojun_aligned
+					add = CHN_non_aligned
+					ideology = paternal_autocrat_subtype
+				}
+			}
+			var:country_leader = { china_set_character_alignment_unaligned = yes }
+			# Ideas
+			ANQ_remove_fengtian_spirit = yes
+			if = {
+				limit = { has_idea = ANQ_reconstruction_plan }
+				remove_ideas = ANQ_reconstruction_plan
+			}
+			else_if = {
+				limit = { has_idea = ANQ_reconstruction_plan1 }
+				remove_ideas = ANQ_reconstruction_plan1
+			}
+			if = {
+				limit = { NOT = { has_country_flag = ANQ_reclamation_decided } }
+				set_country_flag = ANQ_reclamation_decided
+			}
+			if = {
+				limit = { has_idea = ANQ_Fengtian_troop_training }
+				remove_ideas = ANQ_Fengtian_troop_training
+			}
+			# Vars and Flags
+			set_country_flag = ANQ_chen_alone
+			set_country_flag = FNG_hostile
+			clr_country_flag = ANQ_commits_reclamation
+			if = {
+				limit = { has_completed_focus = ANQ_reconstruction_cooperation }
+				add_to_variable = {
+					var = anq_reconstruction_decision_cost?30
+					value = 5
+				}
+				add_to_variable = {
+					var = anq_reconstruction_decision_time?80
+					value = 10
+				}
+			}
+			# Decisions
+			remove_targeted_decision = { target = FNG decision = ANQ_reduce_fng_influence }
+			remove_targeted_decision = { target = FNG decision = ANQ_closer_fng_cooperation }
+			remove_targeted_decision = { target = THIS decision = ANQ_xinhai_loyalists }
+			remove_targeted_decision = { target = JAP decision = ANQ_redirect_criticism_japan }
+
+			activate_targeted_decision = { target = FNG decision = ANQ_attack_FNG }
+
+			#Diplomacy
+			diplomatic_relation = {
+				country = FNG
+				relation = docking_rights
+				active = no
+			}
+			diplomatic_relation = {
+				country = FNG
+				relation = military_access
+				active = no
+			}
+
+			# Events
+			country_event = { id = anqing_events.179 days = 4 }
+			country_event = { id = anqing_events.215 days = 1 }
+			news_event = { id = anqing_events.231 days = 5 }
+
+			### FNG and JAP Handling ###
+			FNG = {
+				if = {
+					limit = { has_idea = FNG_ANQ_Reconstruction_Plan }
+					remove_ideas = FNG_ANQ_Reconstruction_Plan
+				}
+				diplomatic_relation = {
+					country = ANQ
+					relation = guarantee
+					active = no
+				}
+				diplomatic_relation = {
+					country = ANQ
+					relation = docking_rights
+					active = no
+				}
+				diplomatic_relation = {
+					country = ANQ
+					relation = military_access
+					active = no
+				}
+				country_event = { id = anqing_events.215 days = 1 }
+			}
+			JAP = { country_event = { id = anqing_events.214 days = 1 } }
+		}
+	}
+}
+
+ANQ_break_relations_qing = {
+	hidden_effect = {
+		if = {
+			limit = { china_is_aligned_with_northern_zhili = yes }
+			var:country_leader = { china_set_character_alignment_unaligned = yes }
+			ANQ_chen_tiaoyuan = {
+				swap_country_leader_traits = {
+					remove = CHN_northern_zhili_aligned
+					add = CHN_non_aligned
+					ideology = authoritarian_democrat_subtype
+				}
+			}
+			set_country_flag = ANQ_chen_alone
+			# Remove decisions
+			remove_targeted_decision = { target = QIE decision = ANQ_reduce_qie_influence }
+			remove_targeted_decision = { target = QIE decision = ANQ_closer_qie_cooperation }
+			remove_targeted_decision = { target = QIE decision = ANQ_coordinated_qie_industrialisation }
+			remove_targeted_decision = { target = QIE decision = ANQ_placate_qing }
+			remove_targeted_decision = { target = QIE decision = ANQ_join_QIE_alliance }
+			remove_targeted_decision = { target = FNG decision = ANQ_join_war_vs_FNG_self }
+			# Remove national spirits
+			ANQ_remove_beijing_spirit = yes
+			ANQ_remove_anger_effects = yes
+			# reduce QIE influence popularity
+			set_political_party = {
+				ideology = market_liberal
+				popularity = 0
+			}
+
+			# QIE Handling
+			QIE = {
+				if = {
+					limit = { has_idea = QIE_anqing_training }
+					remove_ideas = QIE_anqing_training
+				}
+				if = {
+					limit = { has_idea = QIE_anqing_loans }
+					remove_ideas = QIE_anqing_loans
+				}
+				if = {
+					limit = { has_idea = QIE_anqing_reconstruction_aid }
+					remove_ideas = QIE_anqing_reconstruction_aid
+				}
+
+				remove_targeted_decision = { target = ANQ decision = QIE_anq_visit_nanjing }
+				remove_targeted_decision = { target = ANQ decision = QIE_anq_wu_and_chen_decision }
+				remove_targeted_decision = { target = ANQ decision = QIE_anq_send_delegation }
+				remove_targeted_decision = { target = ANQ decision = QIE_anq_organise_intellectual_meeting }
+				remove_targeted_decision = { target = ANQ decision = QIE_anq_contact_anticoncessions_leaders }
+				remove_targeted_decision = { target = ANQ decision = QIE_reach_out_to_anqing_before }
+				remove_targeted_decision = { target = ANQ decision = QIE_reach_out_to_anqing_during }
+				remove_targeted_decision = { target = ANQ decision = QIE_integrate_anqing_before }
+				remove_targeted_decision = { target = ANQ decision = QIE_anqing_attempt_training_again }
+				remove_targeted_decision = { target = ANQ decision = QIE_integrate_anqing_after }
+				remove_targeted_decision = { target = ANQ decision = QIE_integrate_anqing_after_again }
+				remove_targeted_decision = { target = ANQ decision = QIE_war_goal_anqing_for_refusal_faction }
+				remove_targeted_decision = { target = ANQ decision = QIE_reach_out_to_anqing_after }
+				remove_targeted_decision = { target = ANQ decision = QIE_reach_out_to_anqing_after_again }
+			}
+		}
+	}
+}
+
+ANQ_create_QIE_support_units = {
+	division_template = {
+		name = "Anhui Paobing Zhen"
+		division_names_group = QIE_INF_01
+		regiments = { # Elite German-style division
+			infantry = { x = 0 y = 0 }
+			infantry = { x = 0 y = 1 }
+			infantry = { x = 0 y = 2 }
+			infantry = { x = 1 y = 0 }
+			infantry = { x = 1 y = 1 }
+			infantry = { x = 1 y = 2 }
+		}
+		support = {
+			artillery = { x = 0 y = 0 }
+			engineer = { x = 0 y = 1 }
+		}
+	}
+	606 = {
+		create_unit = {
+			division = "name = \"Anhui Paobing Zhen\" division_template = \"Anhui Paobing Zhen\" start_experience_factor = 0.6"
+			prioritize_location = 1083
+			owner = ANQ
+		}
+		create_unit = {
+			division = "name = \"Anhui Paobing Zhen\" division_template = \"Anhui Paobing Zhen\" start_experience_factor = 0.6"
+			prioritize_location = 1083
+			owner = ANQ
+		}
+		create_unit = {
+			division = "name = \"Anhui Paobing Zhen\" division_template = \"Anhui Paobing Zhen\" start_experience_factor = 0.6"
+			prioritize_location = 1083
+			owner = ANQ
+		}
+		create_unit = {
+			division = "division_template = \"Bubing Xie\" start_experience_factor = 0.3"
+			prioritize_location = 1083
+			owner = ANQ
+		}
+		create_unit = {
+			division = "division_template = \"Bubing Xie\" start_experience_factor = 0.3"
+			prioritize_location = 1083
+			owner = ANQ
+		}
+		create_unit = {
+			division = "division_template = \"Bubing Xie\" start_experience_factor = 0.3"
+			prioritize_location = 1083
+			owner = ANQ
+		}
+	}
+}
+

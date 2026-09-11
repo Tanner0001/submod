@@ -1,0 +1,3835 @@
+######################
+###Dominican Events###
+######################
+###By Pietrus      ###
+######################
+
+add_namespace = dominican_republic_events
+
+### Coup & Election ###
+
+country_event = { #Urena-Trujillo negotiate coup
+	id = dominican_republic_events.1
+	title = dominican_republic_events.1.t
+	desc = dominican_republic_events.1.d
+	picture = GFX_report_event_generic_diplomacy3
+	is_triggered_only = yes
+
+	option = { #talks fail
+		log = "[GetLogInfo]: event dominican_republic_events.1 option dominican_republic_events.1.a"
+		name = dominican_republic_events.1.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DOM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DOM_path option = DOM_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DOM_path option = DOM_PATH_SOCCON } }
+			}
+		}
+		add_stability = 0.05
+		add_political_power = 10
+	}
+
+	option = { #talks succeed
+		log = "[GetLogInfo]: event dominican_republic_events.1 option dominican_republic_events.1.b"
+		name = dominican_republic_events.1.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DOM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT } }
+				NOT = { has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM } }
+			}
+		}
+
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.2 days = 30 }
+		}
+	}
+}
+
+country_event = { #Urena-Trujillo coup attempt
+	id = dominican_republic_events.2
+	title = dominican_republic_events.2.t
+	desc = dominican_republic_events.2.d
+	picture = GFX_report_event_USA_police
+	is_triggered_only = yes
+
+	option = { #coup fails
+		log = "[GetLogInfo]: event dominican_republic_events.2 option dominican_republic_events.2.a"
+		name = dominican_republic_events.2.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = DOM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = DOM_path option = DOM_PATH_MARLIB } }
+				NOT = { has_game_rule = { rule = DOM_path option = DOM_PATH_SOCCON } }
+			}
+		}
+
+		add_stability = 0.05
+		add_political_power = 10
+		DOM_remove_trujillo_as_general = yes
+		set_country_flag = DOM_coup_fails
+	}
+
+	option = { #coup succeeds
+		log = "[GetLogInfo]: event dominican_republic_events.2 option dominican_republic_events.2.b"
+		name = dominican_republic_events.2.b
+		ai_chance = { base = 50 }
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		set_country_flag = DOM_coup_succeeds
+		add_country_leader_role = {
+			character = DOM_rafael_estrella_urena
+			country_leader = {
+				desc = DOM_rafael_estrella_urena_leader_desc
+				ideology = authoritarian_democrat_subtype
+			}
+			promote_leader = yes
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.15
+		}
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.4 days = 14 }
+		}
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.5 days = 60 }
+		}
+	}
+}
+
+country_event = { #Election
+	id = dominican_republic_events.3
+	title = dominican_republic_events.3.t
+	desc = {
+		text = dominican_republic_events.3.d_1
+		trigger = {
+			NOT = { has_country_flag = DOM_coup_fails }
+		}
+	}
+	desc = {
+		text = dominican_republic_events.3.d_2
+		trigger = {
+			has_country_flag = DOM_coup_fails
+		}
+	}
+
+	trigger = {
+		NOT = { has_country_flag = DOM_coup_succeeds }
+	}
+	immediate = {
+		hidden_effect = {
+			complete_national_focus = DOM_election
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #Rojo
+		log = "[GetLogInfo]: event dominican_republic_events.3 option dominican_republic_events.3.a"
+		name = dominican_republic_events.3.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_MARLIB }
+			}
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+		set_country_flag = DOM_rojo_election
+	}
+
+	option = { #Republicano
+		log = "[GetLogInfo]: event dominican_republic_events.3 option dominican_republic_events.3.b"
+		name = dominican_republic_events.3.b
+		trigger = {
+			NOT = { has_country_flag = DOM_coup_fails }
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_SOCCON }
+			}
+		}
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+		set_country_flag = DOM_repub_election
+	}
+
+	after = {
+		add_political_power = 20
+	}
+}
+
+country_event = { #Estrella considers staying loyal to Trujillo
+	id = dominican_republic_events.4
+	title = dominican_republic_events.4.t
+	desc = dominican_republic_events.4.d
+	is_triggered_only = yes
+
+	option = { #disloyal
+		log = "[GetLogInfo]: event dominican_republic_events.4 option dominican_republic_events.4.a"
+		name = dominican_republic_events.4.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+					has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+				}
+			}
+		}
+		set_country_flag = DOM_disloyal_estrella
+		add_political_power = 10
+		add_stability = -0.01
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.6 days = 10 }
+		}
+	}
+
+	option = { #loyal
+		log = "[GetLogInfo]: event dominican_republic_events.4 option dominican_republic_events.4.b"
+		name = dominican_republic_events.4.b
+		ai_chance = { base = 50 }
+		add_political_power = -10
+		add_stability = 0.01
+	}
+}
+
+country_event = { #Estrella replaced by Trujillo's puppet as President
+	id = dominican_republic_events.5
+	title = dominican_republic_events.5.t
+	desc = dominican_republic_events.5.d
+
+	trigger = {
+		NOT = { has_country_flag = DOM_disloyal_estrella }
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.5 option dominican_republic_events.5.a"
+		name = dominican_republic_events.5.a
+		if = {
+			limit = { DOM_rafael_estrella_urena = { has_ideology = authoritarian_democrat_subtype } }
+			promote_character = DOM_manuel_troncoso_concha
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+		set_party_name = {
+			ideology = paternal_autocrat
+			name = DOM_authoritarian_democrat_party
+			long_name = DOM_authoritarian_democrat_party_long
+		}
+		hidden_effect = {
+			set_country_flag = { flag = domadscore value = 0 }
+			set_country_flag = { flag = dompascore value = 0 }
+			set_country_flag = { flag = domtmscore value = 0 }
+		}
+		set_country_flag = DOM_estrella_gone
+	}
+}
+
+country_event = { #Estrella replaces Trujillo friends
+	id = dominican_republic_events.6
+	title = dominican_republic_events.6.t
+	desc = dominican_republic_events.6.d
+	is_triggered_only = yes
+
+	option = { #it begins
+		log = "[GetLogInfo]: event dominican_republic_events.6 option dominican_republic_events.6.a"
+		name = dominican_republic_events.6.a
+
+		add_political_power = 30
+		add_stability = -0.03
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.7 days = 12 }
+		}
+	}
+}
+
+country_event = { #Estrella and Trujillo come to a head
+	id = dominican_republic_events.7
+	title = dominican_republic_events.7.t
+	desc = dominican_republic_events.7.d
+	is_triggered_only = yes
+
+	option = { #Estrella Wins
+		log = "[GetLogInfo]: event dominican_republic_events.7 option dominican_republic_events.7.a"
+		name = dominican_republic_events.7.a
+		ai_chance = { base = 50 }
+		add_political_power = 30
+		add_stability = 0.05
+		if = {
+			limit = { DOM_rafael_estrella_urena = { has_ideology = authoritarian_democrat_subtype } }
+			promote_character = DOM_manuel_troncoso_concha
+		}
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+		DOM_remove_trujillo_as_general = yes
+		set_country_flag = DOM_estrella_wins
+	}
+
+	option = { #Trujillo Wins
+		log = "[GetLogInfo]: event dominican_republic_events.7 option dominican_republic_events.7.b"
+		name = dominican_republic_events.7.b
+		ai_chance = { base = 50 }
+		add_political_power = 30
+		add_stability = 0.05
+		if = {
+			limit = { DOM_rafael_estrella_urena = { has_ideology = authoritarian_democrat_subtype } }
+			promote_character = DOM_manuel_troncoso_concha
+		}
+		add_country_leader_role = {
+			character = DOM_manuel_troncoso_concha
+			country_leader = {
+				desc = DOM_manuel_troncoso_concha_leader_desc
+				ideology = paternal_autocrat_subtype
+			}
+			promote_leader = yes
+		}
+		set_party_name = {
+			ideology = paternal_autocrat
+			name = DOM_authoritarian_democrat_party
+			long_name = DOM_authoritarian_democrat_party_long
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+		set_country_flag = DOM_trujillo_wins
+		hidden_effect = {
+			set_country_flag = { flag = domadscore value = 0 }
+			set_country_flag = { flag = dompascore value = 0 }
+			set_country_flag = { flag = domtmscore value = 0 }
+		}
+	}
+}
+
+country_event = { #Black Monday
+	id = dominican_republic_events.8
+	title = dominican_republic_events.8.t
+	desc = dominican_republic_events.8.d
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			swap_ideas = {
+				remove_idea = DOM_depression
+				add_idea = DOM_depression_bm
+			}
+		}
+	}
+
+	option = { #Yikes
+		log = "[GetLogInfo]: event dominican_republic_events.8 option dominican_republic_events.8.a"
+		name = dominican_republic_events.8.a
+		add_political_power = -50
+		add_stability = -0.05
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = DOM_depression
+				add_idea = DOM_depression_bm
+			}
+		}
+	}
+}
+
+### Rojo Path ###
+
+country_event = { # Start of constitutional convention
+	id = dominican_republic_events.9
+	title = dominican_republic_events.9.t
+	desc = dominican_republic_events.9.d
+	is_triggered_only = yes
+
+	option = { #old
+		log = "[GetLogInfo]: event dominican_republic_events.9 option dominican_republic_events.9.a"
+		name = dominican_republic_events.9.a
+		army_experience = 10
+		add_political_power = 10
+		modify_country_flag = { flag = domoldscore value = 1 }
+	}
+	option = { #new
+		log = "[GetLogInfo]: event dominican_republic_events.9 option dominican_republic_events.9.b"
+		name = dominican_republic_events.9.b
+		add_political_power = -10
+		add_stability = 0.03
+		modify_country_flag = { flag = domnewscore value = 1 }
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.10 days = 3 }
+		}
+	}
+}
+
+country_event = { # convention issue 2
+	id = dominican_republic_events.10
+	title = dominican_republic_events.10.t
+	desc = dominican_republic_events.10.d
+	is_triggered_only = yes
+
+	option = { #old
+		log = "[GetLogInfo]: event dominican_republic_events.10 option dominican_republic_events.10.a"
+		name = dominican_republic_events.10.a
+		add_political_power = -10
+		add_stability = 0.03
+		modify_country_flag = { flag = domoldscore value = 1 }
+	}
+	option = { #new
+		log = "[GetLogInfo]: event dominican_republic_events.10 option dominican_republic_events.10.b"
+		name = dominican_republic_events.10.b
+		add_political_power = 20
+		modify_country_flag = { flag = domnewscore value = 1 }
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.11 days = 3 }
+		}
+	}
+}
+
+country_event = { # convention issue 3
+	id = dominican_republic_events.11
+	title = dominican_republic_events.11.t
+	desc = dominican_republic_events.11.d
+	is_triggered_only = yes
+
+	option = { #old
+		log = "[GetLogInfo]: event dominican_republic_events.11 option dominican_republic_events.11.a"
+		name = dominican_republic_events.11.a
+		modify_country_flag = { flag = domoldscore value = 1 }
+	}
+
+	option = { #new
+		log = "[GetLogInfo]: event dominican_republic_events.11 option dominican_republic_events.11.b"
+		name = dominican_republic_events.11.b
+		modify_country_flag = { flag = domnewscore value = 1 }
+	}
+	after = {
+		hidden_effect = {
+			if = {
+				limit = {
+					has_country_flag = { flag = domoldscore value > 2 }
+				}
+				set_country_flag = DOM_constitution_retained
+			}
+			if = {
+				limit = {
+					has_country_flag = { flag = domoldscore value > 1 }
+					has_country_flag = { flag = domnewscore value > 0 }
+				}
+				set_country_flag = DOM_constitution_reform
+			}
+			if = {
+				limit = {
+					has_country_flag = { flag = domnewscore value > 2 }
+				}
+				set_country_flag = DOM_newconst_mod
+			}
+			if = {
+				limit = {
+					has_country_flag = { flag = domnewscore value > 1 }
+					has_country_flag = { flag = domoldscore value > 0 }
+				}
+				set_country_flag = DOM_newconst_rad
+			}
+		}
+	}
+}
+
+country_event = { #Trial of Trujillo & Estrella
+	id = dominican_republic_events.12
+	title = dominican_republic_events.12.t
+	desc = {
+		text = dominican_republic_events.12.d_1
+		trigger = {
+			NOT = {
+				has_country_flag = DOM_coup_fails
+			}
+		}
+	}
+	desc = {
+		text = dominican_republic_events.12.d_2
+		trigger = {
+			has_country_flag = DOM_coup_fails
+		}
+	}
+	is_triggered_only = yes
+
+	option = { #harsh
+		log = "[GetLogInfo]: event dominican_republic_events.12 option dominican_republic_events.12.a"
+		name = dominican_republic_events.12.a
+		add_political_power = 25
+		add_stability = 0.05
+		DOM_remove_trujillo_as_general = yes
+	}
+
+	option = { #lenient
+		log = "[GetLogInfo]: event dominican_republic_events.12 option dominican_republic_events.12.b"
+		name = dominican_republic_events.12.b
+		add_war_support = 0.05
+		army_experience = 25
+		if = {
+			limit = { has_country_flag = DOM_coup_fails }
+			DOM_remove_trujillo_as_general = yes
+		}
+	}
+}
+
+### Republicano Path ###
+
+country_event = { #Dealing With Trujillo Republicano Edition
+	id = dominican_republic_events.13
+	title = dominican_republic_events.13.t
+	desc = {
+		text = dominican_republic_events.13.d_1
+		trigger = {
+			NOT = {
+				has_country_flag = DOM_repub_election
+			}
+		}
+	}
+	desc = {
+		text = dominican_republic_events.13.d_2
+		trigger = {
+			has_country_flag = DOM_repub_election
+		}
+	}
+	is_triggered_only = yes
+
+	option = { #bye bye
+		log = "[GetLogInfo]: event dominican_republic_events.13 option dominican_republic_events.13.a"
+		name = dominican_republic_events.13.a
+		add_political_power = 50
+		add_stability = 0.05
+		promote_character = {
+			character = DOM_ramon_vasquez_rivera
+			ideology = paternal_autocrat_subtype
+		}
+		DOM_remove_trujillo_as_general = yes
+	}
+}
+
+country_event = { #Estrella Meets With Backers
+	id = dominican_republic_events.14
+	title = dominican_republic_events.14.t
+	desc = dominican_republic_events.14.d
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.14 option dominican_republic_events.14.a"
+		name = dominican_republic_events.14.a
+		add_political_power = 25
+		set_country_flag = DOM_estrella_rich
+	}
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.14 option dominican_republic_events.14.b"
+		name = dominican_republic_events.14.b
+		add_stability = -0.05
+		add_political_power = -25
+		set_country_flag = DOM_estrella_checkmate
+	}
+}
+
+### Trujillo Path ###
+
+country_event = { #Formalizing Regime
+	id = dominican_republic_events.15
+	title = dominican_republic_events.15.t
+	desc = dominican_republic_events.15.d
+	is_triggered_only = yes
+
+	option = { #Keep Puppet Pres
+		log = "[GetLogInfo]: event dominican_republic_events.15 option dominican_republic_events.15.a"
+		name = dominican_republic_events.15.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+			}
+		}
+		add_stability = -0.03
+		add_political_power = 30
+		set_country_flag = DOM_kept_puppet_pres
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+	}
+
+	option = { #Push for Trujillo now
+		log = "[GetLogInfo]: event dominican_republic_events.15 option dominican_republic_events.15.b"
+		name = dominican_republic_events.15.b
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		if = {
+			limit = { DOM_manuel_troncoso_concha = { has_ideology = paternal_autocrat_subtype } }
+			promote_character = DOM_rafael_trujillo_molina
+		}
+		add_stability = 0.03
+		add_political_power = -30
+		set_country_flag = DOM_immediate_trujillo
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+	}
+	after = {
+		set_party_name = {
+			ideology = authoritarian_democrat
+			name = DOM_trujillo_partido_dominicano
+			long_name = DOM_trujillo_partido_dominicano_long
+		}
+		set_party_name = {
+			ideology = paternal_autocrat
+			name = DOM_trujillo_partido_dominicano
+			long_name = DOM_trujillo_partido_dominicano_long
+		}
+	}
+}
+
+country_event = { #Militarized Bureau Starting
+	id = dominican_republic_events.16
+	title = dominican_republic_events.16.t
+	desc = dominican_republic_events.16.d
+	is_triggered_only = yes
+
+	option = { #A Formal Security Department
+		log = "[GetLogInfo]: event dominican_republic_events.16 option dominican_republic_events.16.a"
+		name = dominican_republic_events.16.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+			}
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.02
+		}
+		add_political_power = 20
+		if = {
+			limit = { has_dlc_lar = yes }
+			add_ideas = DOM_ad_security_idea
+		}
+		else = {
+			add_ideas = DOM_ad_security_idea_nolar
+		}
+		modify_country_flag = {
+			flag = domadscore
+			value = 1
+		}
+	}
+
+	option = { #Mil Security Service
+		log = "[GetLogInfo]: event dominican_republic_events.16 option dominican_republic_events.16.b"
+		name = dominican_republic_events.16.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		add_political_power = 20
+		army_experience = 20
+		if = {
+			limit = { has_dlc_lar = yes }
+			add_ideas = DOM_pa_security_idea
+		}
+		else = {
+			add_ideas = DOM_pa_security_idea_nolar
+		}
+		modify_country_flag = {
+			flag = dompascore
+			value = 1
+		}
+	}
+
+	option = { #Expand the 42
+		log = "[GetLogInfo]: event dominican_republic_events.16 option dominican_republic_events.16.c"
+		name = dominican_republic_events.16.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+					has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+				}
+			}
+		}
+		add_political_power = 20
+		army_experience = 20
+		if = {
+			limit = { has_dlc_lar = yes }
+			add_ideas = DOM_tm_security_idea
+		}
+		else = {
+			add_ideas = DOM_tm_security_idea_nolar
+		}
+		modify_country_flag = {
+			flag = domtmscore
+			value = 1
+		}
+	}
+	after = {
+		country_event = { id = dominican_republic_events.17 days = 3 }
+	}
+}
+
+country_event = { #
+	id = dominican_republic_events.17
+	title = dominican_republic_events.17.t
+	desc = dominican_republic_events.17.d
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.17 option dominican_republic_events.17.a"
+		name = dominican_republic_events.17.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+			}
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.02
+		}
+		add_political_power = 50
+		add_stability = 0.05
+		add_war_support = 0.05
+		modify_country_flag = {
+			flag = domadscore
+			value = 1
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.17 option dominican_republic_events.17.b"
+		name = dominican_republic_events.17.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+		add_ideas = DOM_pa_discipline_idea
+		add_political_power = 20
+		modify_country_flag = {
+			flag = dompascore
+			value = 1
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.17 option dominican_republic_events.17.c"
+		name = dominican_republic_events.17.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+					has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+				}
+			}
+		}
+		add_war_support = 0.05
+		add_political_power = 20
+		modify_country_flag = {
+			flag = domtmscore
+			value = 1
+		}
+		if = {
+			limit = { has_dlc_lar = yes }
+			if = {
+				limit = {
+					has_idea = DOM_ad_security_idea
+				}
+				swap_ideas = {
+					remove_idea = DOM_ad_security_idea
+					add_idea = DOM_ad_security_2_idea
+				}
+			}
+			if = {
+				limit = {
+					has_idea = DOM_pa_security_idea
+				}
+				swap_ideas = {
+					remove_idea = DOM_pa_security_idea
+					add_idea = DOM_pa_security_2_idea
+				}
+			}
+			if = {
+				limit = {
+					has_idea = DOM_tm_security_idea
+				}
+				swap_ideas = {
+					remove_idea = DOM_tm_security_idea
+					add_idea = DOM_tm_security_2_idea
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = {
+					has_idea = DOM_ad_security_idea_nolar
+				}
+				swap_ideas = {
+					remove_idea = DOM_ad_security_idea_nolar
+					add_idea = DOM_ad_security_2_idea_nolar
+				}
+			}
+			if = {
+				limit = {
+					has_idea = DOM_pa_security_idea_nolar
+				}
+				swap_ideas = {
+					remove_idea = DOM_pa_security_idea_nolar
+					add_idea = DOM_pa_security_2_idea_nolar
+				}
+			}
+			if = {
+				limit = {
+					has_idea = DOM_tm_security_idea_nolar
+				}
+				swap_ideas = {
+					remove_idea = DOM_tm_security_idea_nolar
+					add_idea = DOM_tm_security_2_idea_nolar
+				}
+			}
+		}
+	}
+	after = {
+		country_event = { id = dominican_republic_events.18 days = 3 }
+	}
+}
+
+country_event = { #Militarized Economy
+	id = dominican_republic_events.18
+	title = dominican_republic_events.18.t
+	desc = dominican_republic_events.18.d
+	is_triggered_only = yes
+
+	option = { #No
+		log = "[GetLogInfo]: event dominican_republic_events.18 option dominican_republic_events.18.a"
+		name = dominican_republic_events.18.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				NOT = {
+					AND = {
+						has_government = authoritarian_democrat
+						has_country_flag = DOM_kept_puppet_pres
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+			}
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.05
+		}
+		add_political_power = 50
+		modify_country_flag = {
+			flag = domadscore
+			value = 1
+		}
+		add_stability = 0.05
+	}
+
+	option = { #Yes
+		log = "[GetLogInfo]: event dominican_republic_events.18 option dominican_republic_events.18.b"
+		name = dominican_republic_events.18.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				NOT = {
+					AND = {
+						has_government = authoritarian_democrat
+						has_country_flag = DOM_kept_puppet_pres
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.02
+		}
+		add_political_power = 20
+		add_war_support = 0.1
+		army_experience = 30
+		modify_country_flag = {
+			flag = dompascore
+			value = 1
+		}
+		modify_country_flag = {
+			flag = domtmscore
+			value = 1
+		}
+	}
+	after = {
+		country_event = { id = dominican_republic_events.19 days = 3 }
+	}
+}
+
+country_event = { #Foreign Ministry
+	id = dominican_republic_events.19
+	title = dominican_republic_events.19.t
+	desc = dominican_republic_events.19.d
+	is_triggered_only = yes
+
+	option = { #Gradual
+		log = "[GetLogInfo]: event dominican_republic_events.19 option dominican_republic_events.19.a"
+		name = dominican_republic_events.19.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+			}
+		}
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.05
+		}
+		add_stability = 0.05
+		add_political_power = 50
+		modify_country_flag = {
+			flag = domadscore
+			value = 1
+		}
+	}
+
+	option = { #Quick
+		log = "[GetLogInfo]: event dominican_republic_events.19 option dominican_republic_events.19.b"
+		name = dominican_republic_events.19.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.05
+		}
+		add_political_power = 100
+		modify_country_flag = {
+			flag = dompascore
+			value = 1
+		}
+	}
+
+	option = { #Total
+		log = "[GetLogInfo]: event dominican_republic_events.19 option dominican_republic_events.19.c"
+		name = dominican_republic_events.19.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+					has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+				}
+			}
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+		add_political_power = 100
+		add_stability = -0.05
+		modify_country_flag = {
+			flag = domtmscore
+			value = 1
+		}
+	}
+	after = {
+		set_country_flag = DOM_bureau_complete
+	}
+}
+
+country_event = { #Engage Elites
+	id = dominican_republic_events.20
+	title = dominican_republic_events.20.t
+	desc = dominican_republic_events.20.d
+	is_triggered_only = yes
+
+	option = { #Reconciliation
+		log = "[GetLogInfo]: event dominican_republic_events.20 option dominican_republic_events.20.a"
+		name = dominican_republic_events.20.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+			}
+		}
+		set_country_flag = DOM_elites_complete
+		add_stability = 0.2
+		swap_ideas = {
+			remove_idea = DOM_angryrich
+			add_idea = DOM_angryrich_3
+		}
+		modify_country_flag = {
+			flag = domadscore
+			value = 1
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.20 option dominican_republic_events.20.b"
+		name = dominican_republic_events.20.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		set_country_flag = DOM_elites_complete
+		add_stability = 0.1
+		swap_ideas = {
+			remove_idea = DOM_angryrich
+			add_idea = DOM_angryrich_2
+		}
+		modify_country_flag = {
+			flag = dompascore
+			value = 1
+		}
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.20 option dominican_republic_events.20.c"
+		name = dominican_republic_events.20.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+					has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+				}
+			}
+		}
+		modify_country_flag = {
+			flag = domtmscore
+			value = 1
+		}
+		set_country_flag = DOM_elites_complete
+		add_political_power = -25
+		add_stability = -0.05
+		remove_ideas = DOM_angryrich
+	}
+}
+
+country_event = { #Institutionalize Party
+	id = dominican_republic_events.21
+	title = dominican_republic_events.21.t
+	desc = dominican_republic_events.21.d
+
+	is_triggered_only = yes
+
+	option = { #Promote
+		log = "[GetLogInfo]: event dominican_republic_events.21 option dominican_republic_events.21.a"
+		name = dominican_republic_events.21.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+			}
+		}
+		add_political_power = 25
+		add_stability = 0.1
+		modify_country_flag = {
+			flag = domadscore
+			value = 1
+		}
+	}
+
+	option = { #Only For Officers
+		log = "[GetLogInfo]: event dominican_republic_events.21 option dominican_republic_events.21.b"
+		name = dominican_republic_events.21.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		add_political_power = 25
+		add_stability = 0.05
+		add_ideas = DOM_pa_party_idea
+		modify_country_flag = {
+			flag = dompascore
+			value = 1
+		}
+	}
+
+	option = { #Institutionalize ie Iron Guard
+		log = "[GetLogInfo]: event dominican_republic_events.21 option dominican_republic_events.21.c"
+		name = dominican_republic_events.21.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+					has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+				}
+			}
+		}
+		add_political_power = -100
+		add_war_support = 0.05
+		add_stability = 0.05
+		add_ideas = DOM_tm_party_idea
+		modify_country_flag = {
+			flag = domtmscore
+			value = 1
+		}
+	}
+	after = {
+		set_country_flag = DOM_party_complete
+	}
+}
+
+country_event = { #Electrification
+	id = dominican_republic_events.22
+	title = dominican_republic_events.22.t
+	desc = dominican_republic_events.22.d
+
+	is_triggered_only = yes
+
+	option = { #Business
+		log = "[GetLogInfo]: event dominican_republic_events.22 option dominican_republic_events.22.a"
+		name = dominican_republic_events.22.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+			}
+		}
+		modify_country_flag = { flag = domadscore value = 1 }
+		add_political_power = 30
+		set_country_flag = DOM_authecon1
+	}
+
+	option = { #Military
+		log = "[GetLogInfo]: event dominican_republic_events.22 option dominican_republic_events.22.b"
+		name = dominican_republic_events.22.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		modify_country_flag = { flag = dompascore value = 1 }
+		army_experience = 30
+		set_country_flag = DOM_authecon2
+	}
+
+	option = { #Full
+		log = "[GetLogInfo]: event dominican_republic_events.22 option dominican_republic_events.22.c"
+		name = dominican_republic_events.22.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.3
+				has_government = authoritarian_democrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 0.3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_kept_puppet_pres
+			}
+			modifier = {
+				factor = 3
+				has_government = paternal_autocrat
+				has_country_flag = DOM_immediate_trujillo
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = DOM_path option = DOM_PATH_PATAUT }
+					has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+				}
+			}
+		}
+		modify_country_flag = { flag = domtmscore value = 1 }
+		add_political_power = -15
+		army_experience = -15
+		set_country_flag = DOM_authecon3
+	}
+	after = {
+		set_country_flag = DOM_electricity_complete
+		if = {
+			limit = {
+				has_idea = DOM_depression_bm_4
+			}
+			remove_ideas = DOM_depression_bm_4
+			set_country_flag = DOM_depover
+			add_timed_idea = {
+				idea = DOM_depression_bm_5
+				days = 180
+			}
+		}
+		if = {
+			limit = {
+				has_idea = DOM_depression_bm_3
+			}
+			swap_ideas = {
+				remove_idea = DOM_depression_bm_3
+				add_idea = DOM_depression_bm_4
+			}
+		}
+		if = {
+			limit = {
+				has_idea = DOM_depression_bm_2
+			}
+			swap_ideas = {
+				remove_idea = DOM_depression_bm_2
+				add_idea = DOM_depression_bm_3
+			}
+		}
+		if = {
+			limit = {
+				has_idea = DOM_depression_bm
+			}
+			swap_ideas = {
+				remove_idea = DOM_depression_bm
+				add_idea = DOM_depression_bm_2
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_idea = DOM_depression_bm
+					has_idea = DOM_depression_bm_2
+					has_idea = DOM_depression_bm_3
+					has_idea = DOM_depression_bm_4
+					has_idea = DOM_depression_bm_5
+				}
+			}
+			custom_effect_tooltip = DOM_labourrelief_tooltip
+		}
+		country_event = { id = dominican_republic_events.23 days = 90 }
+	}
+}
+
+country_event = { #Electrification Finished
+	id = dominican_republic_events.23
+	title = dominican_republic_events.23.t
+	desc = {
+		text = dominican_republic_events.23.d_1
+		trigger = {
+			has_country_flag = DOM_authecon1
+		}
+	}
+	desc = {
+		text = dominican_republic_events.23.d_2
+		trigger = {
+			has_country_flag = DOM_authecon2
+		}
+	}
+	desc = {
+		text = dominican_republic_events.23.d_3
+		trigger = {
+			has_country_flag = DOM_authecon3
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.23 option dominican_republic_events.23.a"
+		name = dominican_republic_events.23.a
+
+		if = {
+			limit = {
+				has_country_flag = DOM_authecon1
+			}
+			319 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_country_flag = DOM_authecon2
+			}
+			319 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_country_flag = DOM_authecon3
+			}
+			319 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+}
+
+#dominican_republic_events.24
+
+#dominican_republic_events.25
+
+#dominican_republic_events.26
+
+country_event = { #Special Election
+	id = dominican_republic_events.27
+	title = dominican_republic_events.27.t
+	desc = {
+		text = dominican_republic_events.27.d_1
+		trigger = {
+			has_completed_focus = DOM_guided_democracy
+		}
+	}
+	desc = {
+		text = dominican_republic_events.27.d_2
+		trigger = {
+			has_completed_focus = DOM_maintain_the_status_quo
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #Carlos Manuel Bonetti Burgos
+		log = "[GetLogInfo]: event dominican_republic_events.27 option dominican_republic_events.27.a"
+		name = dominican_republic_events.27.a
+		trigger = {
+			has_completed_focus = DOM_guided_democracy
+		}
+		ai_chance = { base = 100 }
+		if = {
+			limit = { NOT = { has_government = authoritarian_democrat } }
+			set_politics = {
+				ruling_party = authoritarian_democrat
+				elections_allowed = no
+			}
+		}
+		add_political_power = -25
+		promote_character = DOM_carlos_manuel_bonetti_burgos
+	}
+	option = { #Ramon Vazques Rivera
+		log = "[GetLogInfo]: event dominican_republic_events.27 option dominican_republic_events.27.b"
+		name = dominican_republic_events.27.b
+		ai_chance = { base = 100 }
+		if = {
+			limit = { has_completed_focus = DOM_guided_democracy }
+			add_political_power = 5
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.02
+			}
+			set_politics = {
+				ruling_party = authoritarian_democrat
+				elections_allowed = no
+			}
+			promote_character = {
+				character = DOM_ramon_vasquez_rivera
+				ideology = authoritarian_democrat_subtype
+			}
+		}
+		else = {
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+			set_politics = {
+				ruling_party = paternal_autocrat
+				elections_allowed = no
+			}
+			promote_character = {
+				character = DOM_ramon_vasquez_rivera
+				ideology = paternal_autocrat_subtype
+			}
+		}
+	}
+
+	option = { #Trujillo Last Minute Candidacy
+		log = "[GetLogInfo]: event dominican_republic_events.27 option dominican_republic_events.27.c"
+		name = dominican_republic_events.27.c
+		trigger = {
+			has_completed_focus = DOM_maintain_the_status_quo
+		}
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = DOM_path option = DOM_PATH_AUTDEM }
+			}
+		}
+		add_political_power = -25
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		promote_character = DOM_rafael_trujillo_molina
+	}
+}
+
+country_event = { #Control Legislature
+	id = dominican_republic_events.28
+	title = dominican_republic_events.28.t
+	desc = dominican_republic_events.28.d
+
+	is_triggered_only = yes
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.28 option dominican_republic_events.28.a"
+		name = dominican_republic_events.28.a
+		add_stability = 0.05
+		add_war_support = 0.05
+		add_political_power = 50
+	}
+
+	option = { #
+		log = "[GetLogInfo]: event dominican_republic_events.28 option dominican_republic_events.28.b"
+		name = dominican_republic_events.28.b
+		add_stability = 0.1
+		add_war_support = 0.1
+		add_political_power = -50
+	}
+}
+
+### Military Events ###
+
+country_event = { #Flagship
+	id = dominican_republic_events.30
+	title = dominican_republic_events.30.t
+	desc = dominican_republic_events.30.d
+
+	is_triggered_only = yes
+
+	option = { #small ships
+		log = "[GetLogInfo]: event dominican_republic_events.30 option dominican_republic_events.30.a"
+		name = dominican_republic_events.30.a
+		add_political_power = -50
+		add_timed_idea = {
+			idea = DOM_navconst_idea
+			days = 360
+		}
+	}
+
+	option = { #cruisers
+		log = "[GetLogInfo]: event dominican_republic_events.30 option dominican_republic_events.30.b"
+		name = dominican_republic_events.30.b
+		add_political_power = -75
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.303 days = 90 }
+		}
+	}
+
+	option = { #thicc
+		log = "[GetLogInfo]: event dominican_republic_events.30 option dominican_republic_events.30.c"
+		name = dominican_republic_events.30.c
+		trigger = {
+			has_authdem_or_pataut_government = yes
+		}
+		add_political_power = -100
+		add_ideas = DOM_buildingship_dom_idea
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.301 days = 120 }
+		}
+	}
+}
+
+country_event = { #DomRep capship 2
+	id = dominican_republic_events.301
+	title = dominican_republic_events.301.t
+	desc = dominican_republic_events.301.d
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event dominican_republic_events.301 option dominican_republic_events.301.a"
+		name = dominican_republic_events.301.a
+		swap_ideas = {
+			remove_idea = DOM_buildingship_dom_idea
+			add_idea = DOM_buildingship_dom_idea2
+		}
+		hidden_effect = {
+			set_technology = { coastal_defense_ships = 1 popup = no }
+		}
+		create_equipment_variant = {
+			name = "Española Class"
+			type = ship_hull_cruiser_coastal_defense_ship
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_medium_battery_1
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = cruiser_ship_engine_1
+				fixed_ship_armor_slot = ship_armor_cruiser_2
+				fixed_ship_secondaries_slot = ship_secondaries_1
+				mid_1_custom_slot = empty
+				mid_2_custom_slot = empty
+				rear_1_custom_slot = ship_torpedo_1
+			}
+		}
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.302 days = 360 }
+		}
+	}
+}
+
+country_event = { #DomRep finishes ship
+	id = dominican_republic_events.302
+	title = dominican_republic_events.302.t
+	desc = dominican_republic_events.302.d
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event dominican_republic_events.302 option dominican_republic_events.302.a"
+		name = dominican_republic_events.302.a
+		add_political_power = 50
+		remove_ideas = DOM_buildingship_dom_idea2
+		create_ship = { name = "Española" type = ship_hull_cruiser_coastal_defense_ship equipment_variant = "Española Class" }
+	}
+}
+
+country_event = { #DomRep cruisers 1
+	id = dominican_republic_events.303
+	title = dominican_republic_events.303.t
+	desc = dominican_republic_events.303.d
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event dominican_republic_events.303 option dominican_republic_events.301.a"
+		name = dominican_republic_events.301.a
+		swap_ideas = {
+			remove_idea = DOM_buildingships_dom_idea
+			add_idea = DOM_buildingships_dom_idea2
+		}
+		set_technology = { early_ship_hull_cruiser = 1 }
+		create_equipment_variant = {
+			name = "Yuna Class"
+			type = ship_hull_cruiser_1
+			modules = {
+				fixed_ship_battery_slot = ship_light_medium_battery_1
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+				fixed_ship_radar_slot = empty
+				fixed_ship_engine_slot = cruiser_ship_engine_1
+				fixed_ship_armor_slot = ship_armor_cruiser_1
+				mid_1_custom_slot = ship_torpedo_1
+				mid_2_custom_slot = ship_airplane_launcher_1
+				rear_1_custom_slot = ship_light_medium_battery_1
+			}
+		}
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.304 days = 270 }
+		}
+	}
+}
+
+country_event = { #DomRep finishes ships
+	id = dominican_republic_events.304
+	title = dominican_republic_events.304.t
+	desc = dominican_republic_events.304.d
+
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event dominican_republic_events.304 option dominican_republic_events.302.a"
+		name = dominican_republic_events.302.a
+		add_political_power = 25
+		remove_ideas = DOM_buildingships_dom_idea2
+		create_ship = { name = "Ozama" type = ship_hull_cruiser_1 equipment_variant = "Yuna Class" }
+		create_ship = { name = "Yuna" type = ship_hull_cruiser_1 equipment_variant = "Yuna Class" }
+	}
+}
+
+country_event = { #Aviation Overhaul
+	id = dominican_republic_events.31
+	title = dominican_republic_events.31.t
+	desc = dominican_republic_events.31.d
+
+	is_triggered_only = yes
+
+	option = { #Bases
+		log = "[GetLogInfo]: event dominican_republic_events.31 option dominican_republic_events.31.a"
+		name = dominican_republic_events.31.a
+		add_political_power = -25
+		319 = {
+			add_building_construction = {
+				type = air_base
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+
+	option = { #Production
+		log = "[GetLogInfo]: event dominican_republic_events.31 option dominican_republic_events.31.b"
+		name = dominican_republic_events.31.b
+		add_political_power = -50
+		add_equipment_to_stockpile = {
+			type = small_plane_airframe
+			amount = 20
+			producer = USA
+		}
+	}
+}
+
+### Haitian-Dominican War ###
+
+country_event = { #Monte Christi Affair
+	id = dominican_republic_events.32
+	immediate = {
+		hidden_effect = {
+			HAI = {
+				set_country_flag = HAI_monte_christi_affair
+			}
+		}
+	}
+	title = dominican_republic_events.32.t
+	desc = {
+		text = dominican_republic_events.32.d_1
+		trigger = {
+			has_government = social_conservative
+		}
+	}
+	desc = {
+		text = dominican_republic_events.32.d_2
+		trigger = {
+			has_government = market_liberal
+		}
+	}
+	desc = {
+		text = dominican_republic_events.32.d_3
+		trigger = {
+			has_authdem_or_pataut_government = yes
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #discipline them
+		log = "[GetLogInfo]: event dominican_republic_events.32 option dominican_republic_events.32.a"
+		name = dominican_republic_events.32.a
+		trigger = {
+			has_authdem_or_pataut_government = no
+		}
+	}
+
+	option = { #do nothing
+		log = "[GetLogInfo]: event dominican_republic_events.32 option dominican_republic_events.32.b"
+		name = dominican_republic_events.32.b
+	}
+
+	option = { #commend them
+		log = "[GetLogInfo]: event dominican_republic_events.32 option dominican_republic_events.32.c"
+		name = dominican_republic_events.32.c
+		trigger = {
+			NOT = { has_government = social_conservative }
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			HAI = { country_event = { id = dominican_republic_events.33 days = 5 } }
+		}
+	}
+}
+
+country_event = { #Haitian Response
+	id = dominican_republic_events.33
+	title = dominican_republic_events.33.t
+
+	desc = {
+		text = dominican_republic_events.33.d_1
+		trigger = {
+			OR = {
+				has_government = authoritarian_democrat
+				has_government = social_democrat
+			}
+		}
+	}
+
+	desc = {
+		text = dominican_republic_events.33.d_2
+		trigger = {
+			has_soccon_or_marlib_government = yes
+		}
+	}
+	is_triggered_only = yes
+
+	option = { #Rattle Sabers
+		log = "[GetLogInfo]: event dominican_republic_events.33 option dominican_republic_events.33.a"
+		name = dominican_republic_events.33.a
+		trigger = {
+			has_soccon_or_marlib_government = no
+			check_variable = { HAI.HAI_corruption < 0.3 } #balance this
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 5
+				OR = {
+					has_government = authoritarian_democrat
+					has_government = social_democrat
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_soccon_or_marlib_government = yes
+			}
+		}
+
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.36 days = 5 }
+			}
+		}
+	}
+
+	option = { #Strong Response
+		log = "[GetLogInfo]: event dominican_republic_events.33 option dominican_republic_events.33.b"
+		name = dominican_republic_events.33.b
+		ai_chance = { base = 20 }
+		trigger = {
+			check_variable = { HAI.HAI_corruption < 0.5 } #balance this
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.37 days = 5 }
+			}
+		}
+	}
+
+	option = { #Weak Response
+		log = "[GetLogInfo]: event dominican_republic_events.33 option dominican_republic_events.33.c"
+		name = dominican_republic_events.33.c
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 20
+				OR = {
+					has_government = authoritarian_democrat
+					has_government = social_democrat
+				}
+			}
+			modifier = {
+				factor = 10
+				has_soccon_or_marlib_government = yes
+			}
+		}
+
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.38 days = 5 }
+			}
+		}
+	}
+
+	option = { #Petition a Foreign Power
+		log = "[GetLogInfo]: event dominican_republic_events.33 option dominican_republic_events.33.d"
+		name = dominican_republic_events.33.d
+		trigger = {
+			OR = {
+				AND = {
+					is_in_faction = yes
+					faction_leader = { is_actual_major = yes }
+				}
+				AND = {
+					has_global_flag = USA_civil_war_over_flag
+					if = {
+						limit = { has_socialist_government = yes }
+						country_exists = WCA
+					}
+					else = {
+						OR = {
+							country_exists = USA
+							country_exists = ACC
+							AND = {
+								country_exists = NEE
+								NEE = { has_country_flag = NEE_claimed_america }
+							}
+							AND = {
+								country_exists = APG
+								NOT = { APG = { has_government = national_populist } }
+							}
+						}
+					}
+				}
+			}
+		}
+		ai_chance = { base = 10 }
+		country_event = dominican_republic_events.34
+	}
+}
+
+country_event = { #(Haiti) Who should we appeal to?
+	id = dominican_republic_events.34
+	title = dominican_republic_events.34.t
+	desc = dominican_republic_events.34.d
+
+	is_triggered_only = yes
+
+	option = { #Our benefactor
+		log = "[GetLogInfo]: event dominican_republic_events.34 option dominican_republic_events.34.a"
+		name = dominican_republic_events.34.a
+		trigger = {
+			is_in_faction = yes
+			faction_leader = { is_actual_major = yes }
+		}
+		ai_chance = { base = 100 }
+		DOM = { country_event = { id = dominican_republic_events.39 days = 7 } }
+		faction_leader = { country_event = { id = dominican_republic_events.47 days = 14 } }
+	}
+	option = { #The Americans
+		log = "[GetLogInfo]: event dominican_republic_events.34 option dominican_republic_events.34.b"
+		name = dominican_republic_events.34.b
+		trigger = {
+			has_global_flag = USA_civil_war_over_flag
+			if = {
+				limit = { has_socialist_government = yes }
+				country_exists = WCA
+			}
+			else = {
+				OR = {
+					country_exists = USA
+					country_exists = ACC
+					AND = {
+						country_exists = NEE
+						NEE = { has_country_flag = NEE_claimed_america }
+					}
+					AND = {
+						country_exists = APG
+						NOT = { APG = { has_government = national_populist } }
+					}
+				}
+			}
+		}
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				is_in_faction = yes
+				faction_leader = { is_actual_major = yes }
+			}
+		}
+		DOM = { country_event = { id = dominican_republic_events.39 days = 7 } }
+		if = {
+			limit = { has_socialist_government = yes }
+			WCA = { country_event = { id = dominican_republic_events.47 days = 14 } }
+		}
+		else = {
+			random_other_country = {
+				limit = {
+					OR = {
+						original_tag = USA
+						original_tag = ACC
+						AND = {
+							original_tag = NEE
+							has_country_flag = NEE_claimed_america
+						}
+						AND = {
+							original_tag = APG
+							NOT = { has_government = national_populist }
+						}
+					}
+				}
+				country_event = { id = dominican_republic_events.47 days = 14 }
+			}
+		}
+	}
+}
+
+country_event = { #Dominican Response (Haiti Rattles Sabers)
+	id = dominican_republic_events.36
+	title = dominican_republic_events.36.t
+	desc = {
+		text = dominican_republic_events.36.d_1
+		trigger = {
+			has_global_flag = USA_civil_war_over_flag
+		}
+	}
+	desc = {
+		text = dominican_republic_events.36.d_2
+		trigger = {
+			NOT = {
+				has_global_flag = USA_civil_war_over_flag
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #secure the border
+		log = "[GetLogInfo]: event dominican_republic_events.36 option dominican_republic_events.36.a"
+		name = dominican_republic_events.36.a
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.40 days = 7 }
+			}
+		}
+	}
+
+	option = { #call their bluff
+		log = "[GetLogInfo]: event dominican_republic_events.36 option dominican_republic_events.36.b"
+		name = dominican_republic_events.36.b
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.41 days = 7 }
+			}
+		}
+	}
+}
+
+country_event = { #Dominican Response (Haiti Strong Response)
+	id = dominican_republic_events.37
+	title = dominican_republic_events.37.t
+	desc = dominican_republic_events.37.d
+
+	is_triggered_only = yes
+
+	option = { #secure the border
+		log = "[GetLogInfo]: event dominican_republic_events.37 option dominican_republic_events.37.a"
+		name = dominican_republic_events.37.a
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.43 days = 7 }
+			}
+		}
+	}
+
+	option = { #accept demands
+		log = "[GetLogInfo]: event dominican_republic_events.37 option dominican_republic_events.37.b"
+		name = dominican_republic_events.37.b
+		add_political_power = -75
+		add_stability = -0.05
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.44 days = 7 }
+			}
+		}
+	}
+}
+
+country_event = { #Dominican Response (Haiti Weak Response)
+	id = dominican_republic_events.38
+	title = dominican_republic_events.38.t
+	desc = dominican_republic_events.38.d
+
+	is_triggered_only = yes
+
+	option = { #secure the border
+		log = "[GetLogInfo]: event dominican_republic_events.38 option dominican_republic_events.38.a"
+		name = dominican_republic_events.38.a
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.45 days = 7 }
+			}
+		}
+	}
+
+	option = { #push for diplomatic settlement
+		log = "[GetLogInfo]: event dominican_republic_events.38 option dominican_republic_events.38.b"
+		name = dominican_republic_events.38.b
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.46 days = 7 }
+			}
+		}
+	}
+}
+
+country_event = { #Dominican Response
+	id = dominican_republic_events.39
+	title = dominican_republic_events.39.t
+	desc = dominican_republic_events.39.d
+
+	is_triggered_only = yes
+
+	option = { #wait and see
+		log = "[GetLogInfo]: event dominican_republic_events.39 option dominican_republic_events.39.a"
+		name = dominican_republic_events.39.a
+	}
+}
+
+country_event = { #Dominicans Prepare For War
+	id = dominican_republic_events.40
+	title = dominican_republic_events.40.t
+	desc = dominican_republic_events.40.d
+
+	is_triggered_only = yes
+
+	option = { #declare war
+		log = "[GetLogInfo]: event dominican_republic_events.40 option dominican_republic_events.40.a"
+		name = dominican_republic_events.40.a
+		ai_chance = { base = 6 }
+		if = {
+			limit = { is_subject_of = DOM }
+			clear_all_relations = yes
+		}
+		declare_war_on = {
+			target = DOM
+			type = annex_everything
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.48 days = 7 }
+			}
+		}
+	}
+
+	option = { #back down
+		log = "[GetLogInfo]: event dominican_republic_events.40 option dominican_republic_events.40.b"
+		name = dominican_republic_events.40.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = HAI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = HAI_path option = HAI_PATH_CIVIL_WAR } }
+			}
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.49 days = 7 }
+			}
+		}
+	}
+	after = {
+		HAI = {
+			if = {
+				limit = { has_idea = HAI_border_clashes_idea }
+				remove_ideas = HAI_border_clashes_idea
+			}
+		}
+	}
+}
+
+country_event = { #Dominicans Disregard Threat
+	id = dominican_republic_events.41
+	title = dominican_republic_events.41.t
+	desc = dominican_republic_events.41.d
+
+	is_triggered_only = yes
+
+	option = { #declare war
+		log = "[GetLogInfo]: event dominican_republic_events.41 option dominican_republic_events.41.a"
+		name = dominican_republic_events.41.a
+		ai_chance = { base = 7 }
+		set_global_flag = DOM_surprisewar
+		if = {
+			limit = { is_subject_of = DOM }
+			clear_all_relations = yes
+		}
+		declare_war_on = {
+			target = DOM
+			type = annex_everything
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.48 days = 7 }
+			}
+		}
+	}
+
+	option = { #back down
+		log = "[GetLogInfo]: event dominican_republic_events.41 option dominican_republic_events.41.b"
+		name = dominican_republic_events.41.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = HAI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = HAI_path option = HAI_PATH_CIVIL_WAR } }
+			}
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.49 days = 7 }
+			}
+		}
+	}
+	after = {
+		HAI = {
+			if = {
+				limit = { has_idea = HAI_border_clashes_idea }
+				remove_ideas = HAI_border_clashes_idea
+			}
+		}
+	}
+}
+
+country_event = { #Dominicans Disregard Demand
+	id = dominican_republic_events.43
+	title = dominican_republic_events.43.t
+	desc = dominican_republic_events.43.d
+
+	is_triggered_only = yes
+
+	option = { #Sanction Them
+		log = "[GetLogInfo]: event dominican_republic_events.43 option dominican_republic_events.43.a"
+		name = dominican_republic_events.43.a
+		ai_chance = { base = 3 }
+		add_opinion_modifier = {
+			target = DOM
+			modifier = KR_trade_sanctions
+		}
+		reverse_add_opinion_modifier = {
+			target = DOM
+			modifier = KR_trade_sanctions
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.53 days = 7 }
+			}
+		}
+	}
+
+	option = { #Back Down
+		log = "[GetLogInfo]: event dominican_republic_events.43 option dominican_republic_events.43.b"
+		name = dominican_republic_events.43.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = HAI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = HAI_path option = HAI_PATH_CIVIL_WAR } }
+			}
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.49 days = 7 }
+			}
+		}
+	}
+
+	option = { #War
+		log = "[GetLogInfo]: event dominican_republic_events.43 option dominican_republic_events.43.c"
+		name = dominican_republic_events.43.c
+		ai_chance = { base = 5 }
+		HAI = {
+			if = {
+				limit = { has_idea = HAI_border_clashes_idea }
+				remove_ideas = HAI_border_clashes_idea
+			}
+		}
+		declare_war_on = {
+			target = DOM
+			type = annex_everything
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.48 days = 7 }
+			}
+		}
+	}
+}
+
+country_event = { #Dominicans Accept Demands
+	id = dominican_republic_events.44
+	title = dominican_republic_events.44.t
+	desc = dominican_republic_events.44.d
+
+	is_triggered_only = yes
+
+	option = { #yay
+		log = "[GetLogInfo]: event dominican_republic_events.44 option dominican_republic_events.44.a"
+		name = dominican_republic_events.44.a
+		HAI = {
+			if = {
+				limit = { has_idea = HAI_border_clashes_idea }
+				remove_ideas = HAI_border_clashes_idea
+			}
+		}
+		add_political_power = 30
+		add_stability = 0.03
+	}
+}
+
+country_event = { #Dominicans Disregard Demand
+	id = dominican_republic_events.45
+	title = dominican_republic_events.45.t
+	desc = dominican_republic_events.45.d
+
+	is_triggered_only = yes
+
+	option = { #back down
+		log = "[GetLogInfo]: event dominican_republic_events.45 option dominican_republic_events.45.a"
+		name = dominican_republic_events.45.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = HAI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = HAI_path option = HAI_PATH_CIVIL_WAR } }
+			}
+		}
+		HAI = {
+			if = {
+				limit = { has_idea = HAI_border_clashes_idea }
+				remove_ideas = HAI_border_clashes_idea
+			}
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.49 days = 7 }
+			}
+		}
+	}
+	option = { #Ask for Mediation
+		log = "[GetLogInfo]: event dominican_republic_events.45 option dominican_republic_events.45.b"
+		name = dominican_republic_events.45.b
+		trigger = {
+			OR = {
+				AND = {
+					has_global_flag = USA_civil_war_over_flag
+					OR = {
+						AND = {
+							country_exists = WCA
+							WCA = {
+								has_government = radical_socialist
+								has_government = syndicalist
+							}
+						}
+						AND = {
+							country_exists = APG
+							APG = {
+								NOT = {
+									has_government = national_populist
+								}
+							}
+						}
+						country_exists = USA
+					}
+				}
+				is_in_faction = yes
+			}
+		}
+		ai_chance = { base = 3 }
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.34 days = 7 }
+			}
+		}
+	}
+	option = { #War
+		log = "[GetLogInfo]: event dominican_republic_events.45 option dominican_republic_events.45.c"
+		name = dominican_republic_events.45.c
+		ai_chance = { base = 5 }
+		HAI = {
+			if = {
+				limit = { has_idea = HAI_border_clashes_idea }
+				remove_ideas = HAI_border_clashes_idea
+			}
+		}
+		declare_war_on = {
+			target = DOM
+			type = annex_everything
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.48 days = 7 }
+			}
+		}
+	}
+}
+
+country_event = { #Haiti reacts to Dominican Diplomatic Summit Proposal
+	id = dominican_republic_events.46
+	title = dominican_republic_events.46.t
+	desc = dominican_republic_events.46.d
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event dominican_republic_events.46 option dominican_republic_events.46.a"
+		name = dominican_republic_events.46.a
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.55 days = 7 }
+			}
+		}
+	}
+
+	option = { #Decline
+		log = "[GetLogInfo]: event dominican_republic_events.46 option dominican_republic_events.46.b"
+		name = dominican_republic_events.46.b
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.56 days = 7 }
+			}
+		}
+	}
+}
+
+country_event = { #(Foreign Power) Haiti asks for Mediation
+	id = dominican_republic_events.47
+	title = dominican_republic_events.47.t
+	desc = dominican_republic_events.47.d
+
+	is_triggered_only = yes
+
+	option = { #Mediate
+		log = "[GetLogInfo]: event dominican_republic_events.47 option dominican_republic_events.47.a"
+		name = dominican_republic_events.47.a
+		DOM = { country_event = { id = dominican_republic_events.57 days = 7 } }
+		HAI = { country_event = { id = dominican_republic_events.57 days = 7 } }
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.64 days = 14 }
+		}
+	}
+
+	option = { #dont mediate
+		log = "[GetLogInfo]: event dominican_republic_events.47 option dominican_republic_events.47.b"
+		name = dominican_republic_events.47.b
+		DOM = { country_event = { id = dominican_republic_events.58 days = 7 } }
+		HAI = { country_event = { id = dominican_republic_events.58 days = 7 } }
+	}
+
+	option = { #side with Haiti
+		log = "[GetLogInfo]: event dominican_republic_events.47 option dominican_republic_events.47.c"
+		name = dominican_republic_events.47.c
+		trigger = {
+			OR = {
+				tag = WCA
+				tag = ENT
+				tag = GER
+				tag = INT
+			}
+		}
+		DOM = { country_event = { id = dominican_republic_events.59 days = 7 } }
+		HAI = { country_event = { id = dominican_republic_events.60 days = 7 } }
+	}
+
+	option = { #side with DR
+		log = "[GetLogInfo]: event dominican_republic_events.47 option dominican_republic_events.47.e"
+		name = dominican_republic_events.47.e
+		trigger = {
+			OR = {
+				tag = APG
+				tag = USA
+			}
+		}
+		DOM = { country_event = { id = dominican_republic_events.61 days = 7 } }
+		HAI = { country_event = { id = dominican_republic_events.62 days = 7 } }
+	}
+}
+
+country_event = { #Haiti declaring war
+	id = dominican_republic_events.48
+	title = dominican_republic_events.48.t
+	desc = {
+		text = dominican_republic_events.48.d_1
+		trigger = {
+			has_global_flag = DOM_surprisewar
+		}
+	}
+	desc = {
+		text = dominican_republic_events.48.d_2
+		trigger = {
+			NOT = { has_global_flag = DOM_surprisewar }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #Haiti Declares War
+		log = "[GetLogInfo]: event dominican_republic_events.48 option dominican_republic_events.48.a"
+		name = dominican_republic_events.48.a
+	}
+}
+
+country_event = { #Haiti Backs Down
+	id = dominican_republic_events.49
+	title = dominican_republic_events.49.t
+	desc = dominican_republic_events.49.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.49 option dominican_republic_events.49.a"
+		name = dominican_republic_events.49.a
+		hidden_effect = {
+			HAI = {
+				country_event = { id = haiti_events.52 days = 20 }
+				if = {
+					limit = { is_ai = no }
+					activate_targeted_decision = { target = DOM decision = HAI_attack_DOM }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Haiti Issues Sanctions
+	id = dominican_republic_events.53
+	title = dominican_republic_events.53.t
+	desc = dominican_republic_events.53.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.53 option dominican_republic_events.53.a"
+		name = dominican_republic_events.53.a
+		set_country_flag = DOM_false_bypass
+		hidden_effect = {
+			if = {
+				limit = { has_authdem_or_pataut_government = yes }
+				country_event = { id = dominican_republic_events.63 days = 30 }
+			}
+			else = {
+				country_event = { id = dominican_republic_events.66 days = 30 }
+			}
+		}
+	}
+}
+
+country_event = { #Haiti not honouring deal via demands accepted/declines summit
+	id = dominican_republic_events.54
+	title = {
+		text = dominican_republic_events.54.t_1
+		trigger = {
+			has_global_flag = DOMHAI_summitdecline
+		}
+	}
+	title = {
+		text = dominican_republic_events.54.t_2
+		trigger = {
+			NOT = {
+				has_global_flag = DOMHAI_summitdecline
+			}
+		}
+	}
+	desc = {
+		text = dominican_republic_events.54.d_1
+		trigger = {
+			has_global_flag = DOMHAI_summitdecline
+		}
+	}
+	desc = {
+		text = dominican_republic_events.54.d_2
+		trigger = {
+			NOT = {
+				has_global_flag = DOMHAI_summitdecline
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #prepare for war
+		log = "[GetLogInfo]: event dominican_republic_events.54 option dominican_republic_events.54.a"
+		name = dominican_republic_events.54.a
+		HAI = {
+			country_event = { id = dominican_republic_events.40 days = 7 }
+			if = {
+				limit = { is_ai = no }
+				activate_targeted_decision = { target = DOM decision = HAI_attack_DOM }
+			}
+		}
+	}
+}
+
+country_event = { #Haiti accepted summit
+	id = dominican_republic_events.55
+	title = dominican_republic_events.55.t
+	desc = dominican_republic_events.55.d
+
+	is_triggered_only = yes
+
+	option = { #great!
+		log = "[GetLogInfo]: event dominican_republic_events.55 option dominican_republic_events.55.a"
+		name = dominican_republic_events.55.a
+	}
+}
+
+country_event = { #Haiti declined summit
+	id = dominican_republic_events.56
+	title = dominican_republic_events.56.t
+	desc = dominican_republic_events.56.d
+
+	is_triggered_only = yes
+
+	option = { #great!
+		log = "[GetLogInfo]: event dominican_republic_events.56 option dominican_republic_events.56.a"
+		name = dominican_republic_events.56.a
+
+		set_global_flag = DOMHAI_summitdecline
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.54 days = 30 }
+		}
+	}
+}
+
+country_event = { #American Mediation
+	id = dominican_republic_events.57
+	title = dominican_republic_events.57.t
+	desc = dominican_republic_events.57.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.57 option dominican_republic_events.57.a"
+		name = dominican_republic_events.57.a
+	}
+}
+
+country_event = { #American Mediation Declined
+	id = dominican_republic_events.58
+	title = dominican_republic_events.58.t
+	desc = dominican_republic_events.58.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.58 option dominican_republic_events.58.a"
+		name = dominican_republic_events.58.a
+		hidden_effect = {
+			if = {
+				limit = { has_authdem_or_pataut_government = yes }
+				country_event = { id = dominican_republic_events.63 days = 30 }
+			}
+			else = {
+				country_event = { id = dominican_republic_events.66 days = 30 }
+			}
+		}
+	}
+}
+
+country_event = { #WCA sides with Syn Haiti
+	id = dominican_republic_events.59
+	title = dominican_republic_events.59.t
+	desc = dominican_republic_events.59.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.59 option dominican_republic_events.59.a"
+		name = dominican_republic_events.59.a
+	}
+}
+
+country_event = { #WCA sides with Syn Haiti (Haiti)
+	id = dominican_republic_events.60
+	title = dominican_republic_events.60.t
+	desc = dominican_republic_events.60.d
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.60 option dominican_republic_events.60.a"
+		name = dominican_republic_events.60.a
+
+		add_political_power = 30
+		add_stability = 0.03
+		add_war_support = 0.03
+	}
+}
+
+country_event = { #APG sides with DR
+	id = dominican_republic_events.61
+	title = dominican_republic_events.61.t
+	desc = dominican_republic_events.61.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.61 option dominican_republic_events.61.a"
+		name = dominican_republic_events.61.a
+	}
+}
+
+country_event = { #APG sides with DR (Haiti)
+	id = dominican_republic_events.62
+	title = dominican_republic_events.62.t
+	desc = dominican_republic_events.62.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.62 option dominican_republic_events.62.a"
+		name = dominican_republic_events.62.a
+
+		add_political_power = -30
+		add_stability = -0.03
+		add_war_support = -0.03
+	}
+}
+
+country_event = { #Trujillo Considers Unthinkable
+	id = dominican_republic_events.63
+	title = dominican_republic_events.63.t
+	desc = dominican_republic_events.63.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.63 option dominican_republic_events.63.a"
+		name = dominican_republic_events.63.a
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.65 days = 14 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.63 option dominican_republic_events.63.b"
+		name = dominican_republic_events.63.b
+		HAI = {
+			if = {
+				limit = { has_idea = HAI_border_clashes_idea }
+				remove_ideas = HAI_border_clashes_idea
+			}
+		}
+	}
+}
+
+country_event = { #Mediation Start
+	id = dominican_republic_events.64
+	title = dominican_republic_events.64.t
+	desc = dominican_republic_events.64.d
+
+	is_triggered_only = yes
+
+	option = { #Side with DR
+		log = "[GetLogInfo]: event dominican_republic_events.64 option dominican_republic_events.64.a"
+		name = dominican_republic_events.64.a
+		set_global_flag = USA_domborder
+	}
+	option = { #Side with Haiti
+		log = "[GetLogInfo]: event dominican_republic_events.64 option dominican_republic_events.64.b"
+		name = dominican_republic_events.64.b
+		set_global_flag = USA_haiborder
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.67 days = 14 }
+		}
+	}
+}
+
+country_event = { #RIP
+	id = dominican_republic_events.65
+	title = dominican_republic_events.65.t
+	desc = dominican_republic_events.65.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.65 option dominican_republic_events.65.a"
+		name = dominican_republic_events.65.a
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.68 days = 7 }
+			}
+		}
+	}
+}
+
+country_event = { #mediation failure
+	id = dominican_republic_events.66
+	title = {
+		text = dominican_republic_events.66.t_1
+		trigger = {
+			has_country_flag = DOM_false_bypass
+		}
+	}
+	title = {
+		text = dominican_republic_events.66.t_2
+		trigger = {
+			NOT = {
+				has_country_flag = DOM_false_bypass
+			}
+		}
+	}
+	desc = {
+		text = dominican_republic_events.66.d_1
+		trigger = {
+			has_country_flag = DOM_false_bypass
+		}
+	}
+	desc = {
+		text = dominican_republic_events.66.d_2
+		trigger = {
+			NOT = {
+				has_country_flag = DOM_false_bypass
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #prepare for war
+		log = "[GetLogInfo]: event dominican_republic_events.66 option dominican_republic_events.66.a"
+		name = dominican_republic_events.66.a
+		hidden_effect = {
+			HAI = {
+				country_event = { id = dominican_republic_events.40 days = 14 }
+				if = {
+					limit = { is_ai = no }
+					activate_targeted_decision = { target = DOM decision = HAI_attack_DOM }
+				}
+			}
+		}
+	}
+
+	option = { #diplomatic solution
+		log = "[GetLogInfo]: event dominican_republic_events.66 option dominican_republic_events.66.b"
+		name = dominican_republic_events.66.b
+		add_political_power = -30
+	}
+}
+
+country_event = { #American Mediation Final
+	id = dominican_republic_events.67
+	title = dominican_republic_events.67.t
+	desc = dominican_republic_events.67.d
+
+	is_triggered_only = yes
+
+	option = { #Side with DR
+		log = "[GetLogInfo]: event dominican_republic_events.67 option dominican_republic_events.67.a"
+		name = dominican_republic_events.67.a
+		set_global_flag = USA_dompopulation
+	}
+
+	option = { #Side with Haiti
+		log = "[GetLogInfo]: event dominican_republic_events.67 option dominican_republic_events.67.b"
+		name = dominican_republic_events.67.b
+		set_global_flag = USA_haipopulation
+	}
+
+	after = {
+		hidden_effect = {
+			HAI = { country_event = { id = dominican_republic_events.69 days = 14 } }
+			DOM = { country_event = { id = dominican_republic_events.69 days = 14 } }
+		}
+	}
+}
+
+country_event = { #Haiti hears of parsley
+	id = dominican_republic_events.68
+	title = dominican_republic_events.68.t
+	desc = dominican_republic_events.68.d
+
+	is_triggered_only = yes
+
+	option = { #war
+		log = "[GetLogInfo]: event dominican_republic_events.68 option dominican_republic_events.68.a"
+		name = dominican_republic_events.68.a
+		ai_chance = { base = 7 }
+		add_war_support = 0.05
+		if = {
+			limit = { is_subject_of = DOM }
+			clear_all_relations = yes
+		}
+		declare_war_on = {
+			target = DOM
+			type = annex_everything
+		}
+		custom_effect_tooltip = DOMHAI_volunteers
+		hidden_effect = {
+			### Delete templates if existed before - no cheating
+			if = {
+				limit = { has_template = "Brigade des Volontaires Haïtiens" }
+				delete_unit_template_and_units = { division_template = "Brigade des Volontaires Haïtiens" disband = yes }
+			}
+			### Create templates
+			division_template = {
+				name = "Brigade des Volontaires Haïtiens"
+				division_names_group = FREN_INF_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+				}
+				template_counter = 68
+			}
+			### Create divisions
+			capital_scope = {
+				create_unit = {
+					division = "division_template = \"Brigade des Volontaires Haïtiens\" start_experience_factor = 0.05"
+					owner = ROOT
+				}
+			}
+			DOM = {
+				country_event = { id = dominican_republic_events.70 days = 14 }
+			}
+		}
+	}
+
+	option = { #fully back down
+		log = "[GetLogInfo]: event dominican_republic_events.68 option dominican_republic_events.68.b"
+		name = dominican_republic_events.68.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = HAI_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = HAI_path option = HAI_PATH_CIVIL_WAR } }
+			}
+		}
+		add_political_power = -30
+		add_stability = -0.03
+		hidden_effect = {
+			DOM = {
+				country_event = { id = dominican_republic_events.71 days = 14 }
+			}
+			HAI = {
+				country_event = { id = haiti_events.52 days = 21 }
+			}
+		}
+	}
+
+	after = {
+		HAI = {
+			if = {
+				limit = { has_idea = HAI_border_clashes_idea }
+				remove_ideas = HAI_border_clashes_idea
+			}
+		}
+	}
+}
+
+country_event = { #Haiti/Dom get America's decision
+	id = dominican_republic_events.69
+	title = dominican_republic_events.69.t
+	desc = {
+		text = dominican_republic_events.69.d_1
+		trigger = {
+			OR = {
+				AND = {
+					tag = HAI
+					has_global_flag = USA_haiborder
+					has_global_flag = USA_haipopulation
+				}
+				AND = {
+					tag = DOM
+					has_global_flag = USA_domborder
+					has_global_flag = USA_dompopulation
+				}
+			}
+		}
+	}
+	desc = {
+		text = dominican_republic_events.69.d_2
+		trigger = {
+			OR = {
+				AND = {
+					has_global_flag = USA_dompopulation
+					has_global_flag = USA_haiborder
+				}
+				AND = {
+					has_global_flag = USA_domborder
+					has_global_flag = USA_haipopulation
+				}
+			}
+		}
+	}
+	desc = {
+		text = dominican_republic_events.69.d_3
+		trigger = {
+			OR = {
+				AND = {
+					tag = HAI
+					has_global_flag = USA_domborder
+					has_global_flag = USA_dompopulation
+				}
+				AND = {
+					tag = DOM
+					has_global_flag = USA_haiborder
+					has_global_flag = USA_haipopulation
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #Good outcome
+		log = "[GetLogInfo]: event dominican_republic_events.69 option dominican_republic_events.69.a"
+		name = dominican_republic_events.69.a
+		trigger = {
+			OR = {
+				AND = {
+					tag = HAI
+					has_global_flag = USA_haiborder
+					has_global_flag = USA_haipopulation
+				}
+				AND = {
+					tag = DOM
+					has_global_flag = USA_domborder
+					has_global_flag = USA_dompopulation
+				}
+			}
+		}
+		if = {
+			limit = { tag = HAI }
+			HAI = {
+				if = {
+					limit = { has_idea = HAI_border_clashes_idea }
+					remove_ideas = HAI_border_clashes_idea
+				}
+			}
+			add_stability = 0.02
+			add_war_support = 0.02
+			add_political_power = 20
+		}
+	}
+
+	option = { #Mixed Outcome
+		log = "[GetLogInfo]: event dominican_republic_events.69 option dominican_republic_events.69.b"
+		name = dominican_republic_events.69.b
+		trigger = {
+			OR = {
+				AND = {
+					has_global_flag = USA_dompopulation
+					has_global_flag = USA_haiborder
+				}
+				AND = {
+					has_global_flag = USA_domborder
+					has_global_flag = USA_haipopulation
+				}
+			}
+		}
+		if = {
+			limit = { tag = HAI }
+			HAI = {
+				if = {
+					limit = { has_idea = HAI_border_clashes_idea }
+					remove_ideas = HAI_border_clashes_idea
+				}
+			}
+			add_stability = 0.01
+			add_war_support = 0.01
+			add_political_power = 10
+		}
+	}
+
+	option = { #Bad Outcome
+		log = "[GetLogInfo]: event dominican_republic_events.69 option dominican_republic_events.69.c"
+		name = dominican_republic_events.69.c
+		trigger = {
+			OR = {
+				AND = {
+					tag = HAI
+					has_global_flag = USA_domborder
+					has_global_flag = USA_dompopulation
+				}
+				AND = {
+					tag = DOM
+					has_global_flag = USA_haiborder
+					has_global_flag = USA_haipopulation
+				}
+			}
+		}
+		if = {
+			limit = { tag = HAI }
+			HAI = {
+				if = {
+					limit = { has_idea = HAI_border_clashes_idea }
+					remove_ideas = HAI_border_clashes_idea
+				}
+			}
+			add_stability = -0.02
+			add_war_support = -0.02
+			add_political_power = -20
+		}
+	}
+}
+
+country_event = { #Haiti declares war for parsley
+	id = dominican_republic_events.70
+	title = dominican_republic_events.70.t
+	desc = dominican_republic_events.70.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.70 option dominican_republic_events.70.a"
+		name = dominican_republic_events.70.a
+	}
+}
+
+country_event = { #Haiti does nothing for parsley
+	id = dominican_republic_events.71
+	title = dominican_republic_events.71.t
+	desc = dominican_republic_events.71.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.71 option dominican_republic_events.71.a"
+		name = dominican_republic_events.71.a
+		add_political_power = -20
+		add_stability = 0.02
+	}
+}
+
+country_event = { #Dominican Resistance Organising
+	id = dominican_republic_events.80
+	title = dominican_republic_events.80.t
+	desc = {
+		text = dominican_republic_events.80.d_1
+		trigger = { NOT = { has_government = social_democrat } }
+	}
+	desc = {
+		text = dominican_republic_events.80.d_2
+		trigger = { has_government = social_democrat }
+	}
+
+	trigger = {
+		OR = {
+			has_subject = DOM
+			319 = { is_owned_and_controlled_by = ROOT } #Santo Domingo
+		}
+		has_capitulated = no
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.80 option dominican_republic_events.80.a"
+		name = dominican_republic_events.80.a
+		add_political_power = -10
+		DOM = {
+			every_core_state = {
+				add_resistance_target = {
+					amount = 40
+					occupier = ROOT
+					days = 3650
+					tooltip = DOM_occupation_of_haiti
+				}
+			}
+			if = {
+				limit = { is_subject_of = ROOT }
+				add_political_power = -30
+				add_stability = -0.3
+				add_war_support = -0.3
+				add_popularity = {
+					ideology = social_democrat
+					popularity = 0.1
+				}
+				add_popularity = {
+					ideology = paternal_autocrat
+					popularity = 0.05
+				}
+			}
+		}
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.82 days = 45 random_days = 45 }
+		}
+	}
+}
+
+country_event = { #Dominican Government Seized
+	id = dominican_republic_events.82
+	title = dominican_republic_events.82.t
+	desc = dominican_republic_events.82.d
+
+	trigger = {
+		OR = {
+			has_subject = DOM
+			319 = { is_owned_and_controlled_by = ROOT } #Santo Domingo
+		}
+		has_capitulated = no
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.82 option dominican_republic_events.82.a"
+		name = dominican_republic_events.82.a
+		add_stability = -0.02
+		add_political_power = -20
+		if = {
+			limit = { has_subject = DOM }
+			DOM = { clear_all_relations = yes }
+		}
+		else = {
+			release = DOM
+		}
+		DOM = {
+			every_controlled_state = {
+				teleport_armies = { limit = { is_ally_with = ROOT } }
+			}
+			set_politics = {
+				ruling_party = social_democrat
+				elections_allowed = no
+			}
+			hidden_effect = {
+				add_political_power = 30
+				add_stability = 0.3
+				add_war_support = 0.3
+				add_popularity = {
+					ideology = social_democrat
+					popularity = 0.15
+				}
+				add_popularity = {
+					ideology = paternal_autocrat
+					popularity = 0.1
+				}
+				division_template = {
+					name = "Brigada de Milicia"
+					division_names_group = SPAN_MIL_01
+					regiments = {
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+					}
+				}
+				set_temp_variable = { DOM_num_rebel_units = ROOT.num_divisions }
+				subtract_from_temp_variable = { DOM_num_rebel_units = HAI.num_divisions }
+				capital_scope = {
+					create_unit = {
+						division = "name = \"Brigada de Infantería 'Trinitarios'\" division_template = \"Brigada de Milicia\" start_experience_factor = 0.05"
+						owner = DOM
+					}
+					create_unit = {
+						division = "name = \"Brigada de Infantería 'Separación'\" division_template = \"Brigada de Milicia\" start_experience_factor = 0.05"
+						owner = DOM
+					}
+					if = {
+						limit = { check_variable = { DOM_num_rebel_units > 0 } }
+						create_unit = {
+							division = "division_template = \"Brigada de Milicia\" start_experience_factor = 0.05"
+							owner = DOM
+						}
+					}
+				}
+			}
+			declare_war_on = {
+				target = ROOT
+				type = independence_wargoal
+			}
+			hidden_effect = {
+				every_state = {
+					teleport_armies = { limit = { tag = DOM } }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Haitian Resistance Organising
+	id = dominican_republic_events.84
+	title = dominican_republic_events.84.t
+	desc = dominican_republic_events.84.d
+
+	trigger = {
+		OR = {
+			has_subject = HAI
+			318 = { is_owned_and_controlled_by = ROOT } #Haiti
+		}
+		has_capitulated = no
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.84 option dominican_republic_events.80.a"
+		name = dominican_republic_events.80.a
+		add_political_power = -10
+		HAI = {
+			every_core_state = {
+				add_resistance_target = {
+					amount = 40
+					occupier = ROOT
+					days = 3650
+					tooltip = DOM_occupation_of_haiti
+				}
+			}
+			if = {
+				limit = { is_subject_of = ROOT }
+				add_political_power = -30
+				add_stability = -0.3
+				add_war_support = -0.3
+				add_popularity = {
+					ideology = social_democrat
+					popularity = 0.05
+				}
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.1
+				}
+			}
+		}
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.86 days = 45 random_days = 45 }
+		}
+	}
+}
+
+country_event = { #Haitian Government Seized
+	id = dominican_republic_events.86
+	title = dominican_republic_events.86.t
+	desc = dominican_republic_events.86.d
+
+	trigger = {
+		OR = {
+			has_subject = HAI
+			318 = { is_owned_and_controlled_by = ROOT } #Haiti
+		}
+		has_capitulated = no
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.86 option dominican_republic_events.82.a"
+		name = dominican_republic_events.82.a
+		add_stability = -0.02
+		add_political_power = -20
+		if = {
+			limit = { has_subject = HAI }
+			HAI = { clear_all_relations = yes }
+		}
+		else = {
+			release = HAI
+		}
+		HAI = {
+			every_controlled_state = {
+				teleport_armies = { limit = { is_ally_with = ROOT } }
+			}
+			set_politics = {
+				ruling_party = national_populist
+				elections_allowed = no
+			}
+			hidden_effect = {
+				add_political_power = 30
+				add_stability = 0.3
+				add_war_support = 0.3
+				add_popularity = {
+					ideology = social_democrat
+					popularity = 0.1
+				}
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.15
+				}
+				division_template = {
+					name = "Brigade de Milice Haïtienne"
+					division_names_group = FREN_MIL_01
+					regiments = {
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+					}
+				}
+				set_temp_variable = { DOM_num_rebel_units = ROOT.num_divisions }
+				subtract_from_temp_variable = { DOM_num_rebel_units = HAI.num_divisions }
+				clamp_temp_variable = { var = DOM_num_rebel_units min = 0 }
+				if = {
+					limit = { check_variable = { DOM_num_rebel_units > 0 } }
+					capital_scope = {
+						create_unit = {
+							division = "division_template = \"Brigade de Milice Haïtienne\" start_experience_factor = 0.05"
+							owner = HAI
+							count = var:DOM_num_rebel_units
+						}
+					}
+				}
+			}
+			declare_war_on = {
+				target = ROOT
+				type = independence_wargoal
+			}
+			hidden_effect = {
+				every_state = {
+					teleport_armies = { limit = { tag = HAI } }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #DOM-HAI war peace event - Haiti Victory
+	id = dominican_republic_events.88
+	title = dominican_republic_events.88.t
+	desc = dominican_republic_events.88.d
+	picture = GFX_report_event_PRF_war
+
+	trigger = {
+		OR = {
+			has_subject = DOM
+			319 = { is_owned_and_controlled_by = ROOT } #Santo Domingo
+		}
+		has_capitulated = no
+	}
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # puppet and release
+		log = "[GetLogInfo]: event dominican_republic_events.88 option dominican_republic_events.88.a"
+		name = dominican_republic_events.88.a
+		add_political_power = 100
+		add_stability = 0.1
+		add_war_support = -0.1
+		if = {
+			limit = { has_idea = HAI_border_clashes_idea }
+			remove_ideas = HAI_border_clashes_idea
+		}
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.80 days = 60 random_days = 60 }
+		}
+	}
+}
+
+country_event = { #DOM-HAI war peace event - Dominican Victory
+	id = dominican_republic_events.89
+	title = dominican_republic_events.89.t
+	desc = dominican_republic_events.89.d
+	picture = GFX_report_event_PRF_war
+
+	trigger = {
+		OR = {
+			has_subject = HAI
+			318 = { is_owned_and_controlled_by = ROOT } #Haiti
+		}
+		has_capitulated = no
+	}
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event dominican_republic_events.89 option dominican_republic_events.88.a"
+		name = dominican_republic_events.88.a
+		add_political_power = 100
+		add_stability = 0.1
+		add_war_support = -0.1
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.84 days = 60 random_days = 60 }
+			HAI = {
+				if = {
+					limit = { has_idea = HAI_border_clashes_idea }
+					remove_ideas = HAI_border_clashes_idea
+				}
+			}
+		}
+	}
+}
+
+### DOM-COS War
+
+country_event = { #trujillo notice of Ferrer going crusader
+	id = dominican_republic_events.94
+	title = dominican_republic_events.94.t
+	desc = dominican_republic_events.94.d
+
+	is_triggered_only = yes
+
+	option = { #kill him
+		log = "[GetLogInfo]: event dominican_republic_events.94 option dominican_republic_events.94.a"
+		name = dominican_republic_events.94.a
+		add_political_power = -10
+		hidden_effect = {
+			COS = {
+				country_event = { id = dominican_republic_events.95 days = 7 }
+			}
+			country_event = { id = dominican_republic_events.96 days = 8 }
+		}
+	}
+
+	option = { #bitch out
+		log = "[GetLogInfo]: event dominican_republic_events.94 option dominican_republic_events.94.b"
+		name = dominican_republic_events.94.b
+		set_global_flag = DOMCOS_decwarallow
+	}
+}
+
+country_event = { #COS notice of failed assassination
+	id = dominican_republic_events.95
+	title = dominican_republic_events.95.t
+	desc = dominican_republic_events.95.d
+
+	is_triggered_only = yes
+
+	option = { #prepare for war
+		log = "[GetLogInfo]: event dominican_republic_events.95 option dominican_republic_events.95.a"
+		name = dominican_republic_events.95.a
+		add_political_power = -10
+		hidden_effect = {
+			country_event = { id = dominican_republic_events.97 days = 14 }
+		}
+	}
+
+	option = { #later...
+		log = "[GetLogInfo]: event dominican_republic_events.95 option dominican_republic_events.95.b"
+		name = dominican_republic_events.95.b
+		set_global_flag = DOMCOS_decwarallow_2
+	}
+}
+
+country_event = { #Trujillo notice of failed assassination
+	id = dominican_republic_events.96
+	title = dominican_republic_events.96.t
+	desc = dominican_republic_events.96.d
+
+	is_triggered_only = yes
+
+	option = { #welp
+		log = "[GetLogInfo]: event dominican_republic_events.96 option dominican_republic_events.96.a"
+		name = dominican_republic_events.96.a
+
+		add_political_power = -10
+	}
+}
+
+country_event = { #COS war ready
+	id = dominican_republic_events.97
+	title = dominican_republic_events.97.t
+	desc = dominican_republic_events.97.d
+
+	is_triggered_only = yes
+
+	option = { #welp
+		log = "[GetLogInfo]: event dominican_republic_events.97 option dominican_republic_events.97.a"
+		name = dominican_republic_events.97.a
+
+		declare_war_on = {
+			type = topple_government
+			target = DOM
+		}
+		COS_create_democratic_rebels_divisions = yes
+		add_timed_idea = {
+			idea = DOM_cosinvasion_idea
+			days = 10
+		}
+		hidden_effect = {
+			DOM = {
+				country_event = dominican_republic_events.98
+			}
+		}
+	}
+}
+
+country_event = { #Costa Rica Declares War
+	id = dominican_republic_events.98
+	title = dominican_republic_events.98.t
+	desc = dominican_republic_events.98.d
+
+	is_triggered_only = yes
+
+	option = { #welp
+		log = "[GetLogInfo]: event dominican_republic_events.98 option dominican_republic_events.98.a"
+		name = dominican_republic_events.98.a
+
+		add_political_power = -30
+		add_stability = -0.03
+		add_war_support = 0.06
+	}
+}
+
+country_event = { #Costa Rica Declares War 2
+	id = dominican_republic_events.99
+	title = dominican_republic_events.99.t
+	desc = {
+		text = dominican_republic_events.99.d_1
+		trigger = {
+			NOT = {
+				has_global_flag = DOMCOS_decwarallow_2
+			}
+		}
+	}
+	desc = {
+		text = dominican_republic_events.99.d_2
+		trigger = {
+			has_global_flag = DOMCOS_decwarallow_2
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #welp
+		log = "[GetLogInfo]: event dominican_republic_events.99 option dominican_republic_events.99.a"
+		name = dominican_republic_events.99.a
+
+		if = {
+			limit = {
+				has_global_flag = DOMCOS_decwarallow_2
+			}
+			add_political_power = -30
+			add_stability = -0.03
+			add_war_support = 0.06
+		}
+	}
+}
+

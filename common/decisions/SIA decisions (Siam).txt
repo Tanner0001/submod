@@ -1,0 +1,2183 @@
+###########################
+# Siamese Decisions
+###########################
+# By PPsyrius
+###########################
+
+war_measures = {
+	SIA_capital_relocation = {
+		icon = GFX_decision_generic_construction
+
+		allowed = {
+			original_tag = SIA
+		}
+
+		available = {
+			has_full_control_of_state = 822 #Lan Na
+		}
+
+		visible = {
+			has_war = yes
+			has_civil_war = no
+			has_capitulated = no
+			capital_scope = { state = 289 } #Siam
+			controls_state = 822 #Lan Na
+		}
+
+		cancel_trigger = {
+			OR = {
+				has_war = no
+				has_civil_war = yes
+				has_capitulated = yes
+				NOT = { controls_state = 289 } #Siam
+				NOT = { controls_state = 822 } #Lan Na
+			}
+		}
+
+		cost = 25
+		days_remove = 15
+
+		highlight_states = {
+			highlight_provinces = { 1488 }
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10
+				enemies_strength_ratio > 1
+				OR = {
+					NOT = { has_full_control_of_state = 289 } #Siam
+					NOT = { has_full_control_of_state = 824 } #Rayong
+				}
+			}
+			modifier = {
+				add = 100 #lost control of any Bangkok-adjacent provinces
+				OR = {
+					NOT = { controls_province = 1427 }
+					NOT = { controls_province = 7225 }
+					NOT = { controls_province = 7367 }
+					NOT = { controls_province = 10250 }
+					NOT = { controls_province = 12224 }
+				}
+			}
+			modifier = {
+				factor = 0
+				756 = { controller = { has_war_with = ROOT } } #Lower Shan
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SIA_capital_relocation"
+			add_political_power = 25
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_capital_relocation"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_capital_relocation"
+			set_country_flag = SIA_byebye_Bangkok
+			set_capital = { state = 822 }
+			289 = { #Siam
+				remove_building = {
+					type = arms_factory
+					level = 1
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				add_victory_points = { province = 7408 value = -8 } #Bangkok
+			}
+			822 = { #Lan Na
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				damage_building = { type = arms_factory damage = 0.1 }
+				damage_building = { type = industrial_complex damage = 0.1 }
+				add_victory_points = { province = 1488 value = 8 } #Chiang Mai
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SIA_Siamese_Burmese_War_category = {
+	SIA_capture_Taunggyi = {
+		icon = GFX_decision_hand_grab
+		allowed = { original_tag = SIA }
+		highlight_states = {
+			highlight_provinces = { 7603 }
+		}
+
+		is_good = no
+
+		activation = {
+			SIA = { has_war_with = BRM }
+			NOT = { controls_province = 7603 } # Taunggyi
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		visible = {
+			SIA = {
+				has_war_with = BRM
+				NOT = { controls_province = 7603 } # Taunggyi
+			}
+			BRM = { has_capitulated = no }
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 30
+
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SIA_capture_Taunggyi"
+			SIA = { add_war_support = -0.01 }
+			BRM = { add_war_support = 0.01 }
+		}
+		fixed_random_seed = no
+	}
+
+	SIA_capture_Mandalay = {
+		icon = GFX_decision_hand_grab
+		allowed = { original_tag = SIA }
+		highlight_states = {
+			highlight_provinces = { 1492 }
+		}
+
+		is_good = no
+
+		activation = {
+			SIA = { has_war_with = BRM }
+			NOT = { controls_province = 1492 } # Mandalay
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		visible = {
+			SIA = {
+				has_war_with = BRM
+				NOT = { controls_province = 1492 } # Mandalay
+			}
+			BRM = { has_capitulated = no }
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 30
+
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SIA_capture_Mandalay"
+			SIA = { add_war_support = -0.02 }
+			BRM = { add_war_support = 0.02 }
+		}
+		fixed_random_seed = no
+	}
+
+	SIA_capture_Taungoo = {
+		icon = GFX_decision_hand_grab
+		allowed = { original_tag = SIA }
+		highlight_states = {
+			highlight_provinces = { 12256 }
+		}
+
+		is_good = no
+
+		activation = {
+			SIA = { has_war_with = BRM }
+			NOT = { controls_province = 12256 } # Taungoo
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		visible = {
+			SIA = {
+				has_war_with = BRM
+				NOT = { controls_province = 12256 } # Taungoo
+			}
+			BRM = { has_capitulated = no }
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 30
+
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SIA_capture_Taungoo"
+			SIA = { add_war_support = -0.01 }
+			BRM = { add_war_support = 0.01 }
+		}
+		fixed_random_seed = no
+	}
+
+	SIA_capture_Yangon = {
+		icon = GFX_decision_hand_grab
+		allowed = { original_tag = SIA }
+		highlight_states = {
+			highlight_provinces = { 1330 }
+		}
+
+		is_good = no
+
+		activation = {
+			SIA = { has_war_with = BRM }
+			NOT = { controls_province = 1330 } # Yangon
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		visible = {
+			SIA = {
+				has_war_with = BRM
+				NOT = { controls_province = 1330 } # Yangon
+			}
+			BRM = { has_capitulated = no }
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 30
+
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SIA_capture_Yangon"
+			SIA = { add_war_support = -0.02 }
+			BRM = { add_war_support = 0.02 }
+		}
+		fixed_random_seed = no
+	}
+
+	BRM_capture_Mawlamyine = {
+		icon = GFX_decision_hand_grab
+		allowed = { original_tag = BRM }
+		highlight_states = {
+			highlight_provinces = { 1403 }
+		}
+
+		is_good = no
+
+		activation = {
+			BRM = { has_war_with = SIA }
+			NOT = { controls_province = 1403 } # Mawlamyine
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		visible = {
+			BRM = {
+				has_war_with = SIA
+				NOT = { controls_province = 1403 } # Mawlamyine
+			}
+			SIA = { has_capitulated = no }
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 30
+
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout BRM_capture_Mawlamyine"
+			BRM = { add_war_support = -0.02 }
+			SIA = { add_war_support = 0.02 }
+		}
+		fixed_random_seed = no
+	}
+
+	BRM_capture_Kengtung = {
+		icon = GFX_decision_hand_grab
+		allowed = { original_tag = BRM }
+		highlight_states = {
+			highlight_provinces = { 7909 }
+		}
+
+		is_good = no
+
+		activation = {
+			BRM = { has_war_with = SIA }
+			NOT = { controls_province = 7909 } # Kengtung
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		visible = {
+			BRM = {
+				has_war_with = SIA
+				NOT = { controls_province = 7909 } # Kengtung
+			}
+			SIA = { has_capitulated = no }
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 30
+
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout BRM_capture_Kengtung"
+			BRM = { add_war_support = -0.01 }
+			SIA = { add_war_support = 0.01 }
+		}
+		fixed_random_seed = no
+	}
+
+	BRM_capture_Chiang_Mai = {
+		icon = GFX_decision_hand_grab
+		allowed = { original_tag = BRM }
+		highlight_states = {
+			highlight_provinces = { 1488 }
+		}
+
+		is_good = no
+
+		activation = {
+			BRM = { has_war_with = SIA }
+			NOT = { controls_province = 1488 } # Chiang Mai
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		visible = {
+			BRM = {
+				has_war_with = SIA
+				NOT = { controls_province = 1488 } # Chiang Mai
+			}
+			SIA = { has_capitulated = no }
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 30
+
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout BRM_capture_Chiang_Mai"
+			BRM = { add_war_support = -0.02 }
+			SIA = { add_war_support = 0.02 }
+		}
+		fixed_random_seed = no
+	}
+
+	BRM_capture_Dawei = {
+		icon = GFX_decision_hand_grab
+		allowed = { original_tag = BRM }
+		highlight_states = {
+			highlight_provinces = { 1315 }
+		}
+
+		is_good = no
+
+		activation = {
+			BRM = { has_war_with = SIA }
+			NOT = { controls_province = 1315 } # Dawei
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		visible = {
+			BRM = {
+				has_war_with = SIA
+				NOT = { controls_province = 1315 } # Dawei
+			}
+			SIA = { has_capitulated = no }
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 30
+
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout BRM_capture_Dawei"
+			BRM = { add_war_support = -0.01 }
+			SIA = { add_war_support = 0.01 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+political_actions = {
+	SIA_move_capital_back = {
+		icon = GFX_decision_generic_construction
+
+		allowed = {
+			original_tag = SIA
+		}
+
+		available = {
+			OR = {
+				has_war = no
+				NOT = { any_home_area_neighbor_country = { has_war_with = ROOT } }
+			}
+		}
+
+		visible = {
+			has_country_flag = SIA_byebye_Bangkok
+			capital_scope = { state = 822 } #Lan Na
+			controls_state = 289 #Bangkok
+		}
+
+		highlight_states = {
+			highlight_provinces = { 7408 }
+		}
+
+		cost = 0
+		days_remove = 30
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_move_capital_back"
+			clr_country_flag = SIA_byebye_Bangkok
+			set_capital = { state = 289 remember_old_capital = no }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_move_capital_back"
+			822 = { #Lan Na
+				add_extra_state_shared_building_slots = -2
+				remove_building = {
+					type = arms_factory
+					level = 1
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				add_victory_points = { province = 1488 value = -8 } #Chiang Mai
+			}
+			289 = { #Siam
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_victory_points = { province = 7408 value = 8 } #Bangkok
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SIA_country_namechange_decision = {
+		icon = GFX_decision_generic_nationalism
+		allowed = { original_tag = SIA }
+		available = {
+			hidden_trigger = {
+				is_ai = no
+			}
+			is_subject = no
+		}
+
+		cost = 100
+
+		visible = {
+			SIA_is_thailand = no
+			date > 1939.1.1
+		}
+
+		ai_will_do = { base = 0 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_country_namechange_decision"
+			if = {
+				limit = {
+					OR = {
+						has_cosmetic_tag = SIA_REP
+						has_cosmetic_tag = SIA_Parliament
+					}
+				}
+				set_cosmetic_tag = THI_REP
+			}
+			else = {
+				set_cosmetic_tag = THI
+			}
+
+			add_stability = 0.03 # Fck cheesy players for using this as a stab farm, since this isn't intended as one
+
+			hidden_effect = {
+				set_party_name = { # CPT
+					ideology = totalist
+					long_name = SIA_totalist_party_TH_long
+					name = SIA_totalist_party_TH
+				}
+				set_party_name = { # KST
+					ideology = syndicalist
+					long_name = SIA_syndicalist_party_TH_long
+					name = SIA_syndicalist_party_TH
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SIA_country_namechange_back_decision = {
+		icon = GFX_decision_generic_nationalism
+		allowed = { original_tag = SIA }
+		available = {
+			hidden_trigger = {
+				is_ai = no
+			}
+			is_subject = no
+		}
+
+		cost = 100
+
+		visible = {
+			SIA_is_thailand = yes
+			date > 1939.1.1
+		}
+
+		ai_will_do = { base = 0 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_country_namechange_back_decision"
+			if = {
+				limit = { has_cosmetic_tag = THI_REP }
+				set_cosmetic_tag = SIA_REP
+			}
+			else = {
+				set_cosmetic_tag = SIA_default
+			}
+
+			hidden_effect = {
+				set_party_name = { # CPS
+					ideology = totalist
+					long_name = SIA_totalist_party_long
+					name = SIA_totalist_party
+				}
+				set_party_name = { # KSS
+					ideology = syndicalist
+					long_name = SIA_syndicalist_party_long
+					name = SIA_syndicalist_party
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SIA_tarutao = {
+		icon = GFX_decision_oppression
+		highlight_states = {
+			highlight_provinces = { 10156 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			has_country_flag = SIA_Civil_War_Ended
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 180
+
+		ai_will_do = { base = 0 }
+
+		visible = {
+			has_country_flag = SIA_Civil_War_Ended
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_tarutao"
+
+			country_event = { id = siam_events.62 hours = 6 } # Openning of the Tarutao Correction Center
+		}
+		fixed_random_seed = no
+	}
+
+	SIA_resume_research_funding = {
+		icon = GFX_decision_generic_research
+		allowed = { always = no } #activated by effect
+		available = {
+			OR = {
+				has_idea = SIA_military_expense_cut
+				has_idea = SIA_military_expense_cut_rifle
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 150
+		days_remove = 7
+
+		ai_will_do = { factor = 1000 }
+
+		visible = {
+			OR = {
+				has_country_flag = SIA_PRAJADHIPOK_REFORM # TEMPORARY MEASURE
+				has_country_flag = SIA_no_civil_war
+				has_country_flag = SIA_post_war_reconstruction
+			}
+			OR = {
+				has_idea = SIA_military_expense_cut
+				has_idea = SIA_military_expense_cut_rifle
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_resume_research_funding"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_resume_research_funding"
+			if = {
+				limit = { has_idea = SIA_military_expense_cut }
+				remove_ideas = SIA_military_expense_cut
+			}
+			if = {
+				limit = { has_idea = SIA_military_expense_cut_rifle }
+				remove_ideas = SIA_military_expense_cut_rifle
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SIA_reclaim_left_bank_mekong = {
+		icon = GFX_decision_hand_grab
+
+		allowed = { original_tag = SIA }
+
+		available = {
+			threat > 0.6
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+			}
+			NOT = { has_rule = can_not_declare_war }
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+			FROM = {
+				owns_any_state_of = {
+					670 #Laos
+					826 #Stung Treng
+				}
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				is_subject = yes
+				FROM = {
+					NOT = {
+						owns_any_state_of = {
+							670 #Laos
+							826 #Stung Treng
+						}
+					}
+				}
+				is_in_faction_but_not_leader = yes
+				has_rule = can_not_declare_war
+				has_non_aggression_pact_with = FROM
+				has_guaranteed = FROM
+			}
+		}
+
+		cost = 20
+		days_remove = 35
+		fire_only_once = no
+		war_with_target_on_remove = yes
+
+		targets = { 670.OWNER 826.OWNER }
+		target_root_trigger = {
+			has_completed_focus = SIA_ratthaniyomdecrees
+			is_subject = no
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_any_state_of = {
+					670 #Laos
+					826 #Stung Treng
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					FROM = { default_attack_AI_trigger = yes }
+					AND = {
+						has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_CHN }
+						has_game_rule = { rule = INC_forpol option = INC_FORPOL_CHN }
+					}
+					AND = {
+						has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_HND }
+						has_game_rule = { rule = INC_forpol option = INC_FORPOL_HND }
+					}
+					AND = {
+						has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_INT }
+						has_game_rule = { rule = INC_forpol option = INC_FORPOL_INT }
+					}
+				}
+			}
+			modifier = {
+				factor = 0.5
+				date < 1940.6.1
+			}
+			modifier = {
+				factor = 0.5
+				date < 1941.1.1
+			}
+			modifier = {
+				factor = 0.5
+				date < 1941.6.1
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SIA_reclaim_left_bank_mekong"
+			add_political_power = 20
+			clear_decision_attack_AI = yes
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SIA_reclaim_left_bank_mekong"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SIA_reclaim_left_bank_mekong"
+			clear_decision_attack_AI = yes
+			if = {
+				limit = {
+					670 = { is_owned_by = FROM }
+					826 = { is_owned_by = FROM }
+				}
+				declare_war_on = {
+					target = FROM
+					type = take_state_focus
+					generator = { 670 826 }
+				}
+			}
+			else_if = {
+				limit = { 670 = { is_owned_by = FROM } }
+				add_state_claim = 670
+				declare_war_on = {
+					target = FROM
+					type = take_state_focus
+					generator = { 670 }
+				}
+			}
+			else_if = {
+				limit = { 826 = { is_owned_by = FROM } }
+				add_state_claim = 826
+				declare_war_on = {
+					target = FROM
+					type = take_state_focus
+					generator = { 826 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SIA_infrastructure_category = {
+	SIA_hire_foreign_engineers = {
+		icon = GFX_decision_hol_attract_foreign_investors
+		allowed = { always = no } #activated by effect
+
+		fire_only_once = yes
+
+		cost = 75
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_hire_foreign_engineers"
+			remove_ideas = SIA_engineer_shortage
+		}
+		fixed_random_seed = no
+	}
+	SIA_north_road_1 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 289 state = 831 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 831
+			controls_state = 289
+		}
+		visible = {
+			owns_state = 831
+			owns_state = 289
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_north_road_1"
+			set_country_flag = SIA_north_road_1_done
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 831 } #Moulmein
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 289 } #Siam
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_north_road_2 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 822 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 822
+		}
+		visible = {
+			owns_state = 822
+			has_country_flag = SIA_north_road_1_done
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_north_road_2"
+			set_country_flag = SIA_north_road_2_done
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 822 } #Lanna
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_north_road_3 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 822 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 822
+		}
+		visible = {
+			owns_state = 822
+			has_country_flag = SIA_north_road_2_done
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_north_road_3"
+			set_country_flag = SIA_north_road_3_done
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 822 } #Lanna
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_north_road_4 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 756 state = 72 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 756
+			controls_state = 72
+		}
+		visible = {
+			owns_state = 756
+			owns_state = 72
+			has_country_flag = SIA_north_road_3_done
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_north_road_4"
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 756 } #Lower Shan
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 72 } #Upper Shan
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_isan_road_1 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 289 state = 823 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 289
+			controls_state = 823
+		}
+		visible = {
+			owns_state = 289
+			owns_state = 823
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_isan_road_1"
+			set_country_flag = SIA_isan_road_1_done
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 289 } #Siam
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 823 } #Isan
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_isan_road_2 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 823 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 823
+		}
+		visible = {
+			owns_state = 823
+			has_country_flag = SIA_isan_road_1_done
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_isan_road_2"
+			set_country_flag = SIA_isan_road_2_done
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 823 } #Isan
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_isan_road_3 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 670 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 670
+		}
+		visible = {
+			owns_state = 670
+			has_country_flag = SIA_isan_road_2_done
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_isan_road_3"
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 670 } #Laos
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_east_road_2 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 824 state = 825 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 824
+			controls_state = 825
+		}
+		visible = {
+			owns_state = 824
+			owns_state = 825
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_east_road_2"
+			set_country_flag = SIA_east_road_2_done
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 824 } #Rayong
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 825 } #Phra Tabong
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_east_road_3 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 825 state = 750 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 825
+			controls_state = 750
+		}
+		visible = {
+			owns_state = 825
+			owns_state = 750
+			has_country_flag = SIA_east_road_2_done
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_east_road_3"
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 825 } #Phra Tabong
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 750 } #Phnom Penh
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_pakt_road_1 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 289 state = 724 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 289
+			controls_state = 724
+		}
+		visible = {
+			owns_state = 289
+			owns_state = 724
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_pakt_road_1"
+			set_country_flag = SIA_pakt_road_1_done
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 289 } #Siam
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 724 } #Kra Isthmus
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_pakt_road_2 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 724 state = 830 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 724
+			controls_state = 830
+		}
+		visible = {
+			owns_state = 724
+			owns_state = 830
+			has_country_flag = SIA_pakt_road_1_done
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_pakt_road_2"
+			set_country_flag = SIA_pakt_road_2_done
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 724 } #Kra Isthmus
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 830 } #Pattani
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_pakt_road_3 = {
+		icon = GFX_decision_road
+		highlight_states = {
+			highlight_state_targets = { state = 999 state = 751 }
+		}
+		allowed = { always = no } #activated by effect
+		available = {
+			controls_state = 999
+			controls_state = 751
+		}
+		visible = {
+			owns_state = 999
+			owns_state = 751
+			has_country_flag = SIA_pakt_road_2_done
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 180
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_political_power < 200
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_pakt_road_3"
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 999 } #Alor Setar
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				prioritize = { 751 } #Kedah-Perlis
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_Electrification = {
+		icon = GFX_decision_electrify
+
+		allowed = {
+			original_tag = SIA
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+		}
+
+		fire_only_once = yes
+
+		days_remove = 720
+		cost = 150
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		ai_will_do = { factor = 15 }
+
+		cancel_if_not_visible = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_Electrification"
+			add_stability = 0.02
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_Electrification"
+			add_stability = 0.05
+			add_ideas = SIA_electrified_1
+			every_owned_state = {
+				tooltip = SIA_increase_state_cat_tt
+				limit = { is_core_of = ROOT }
+				increase_state_category_by_one_level = yes
+			}
+			if = {
+				limit = {
+					289 = {
+						energy_infrastructure < 1
+						industrial_infrastructure < 1
+					}
+				}
+				289 = {
+					add_building_construction = {
+						type = energy_infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			hidden_effect = {
+				SIA = { country_event = { id = siam_events.56 days = 1095 } } # 3 years
+			}
+		}
+		fixed_random_seed = no
+	}
+	SIA_Electrification_2 = {
+		icon = GFX_decision_electrify
+
+		allowed = {
+			original_tag = SIA
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 3
+			has_idea = SIA_electrified_1
+		}
+
+		visible = {
+			OR = {
+				date > 1940.1.1
+				num_of_controlled_factories > 50
+			}
+		}
+
+		fire_only_once = yes
+
+		days_remove = 720
+		cost = 200
+
+		modifier = {
+			civilian_factory_use = 4
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				factor = 10
+				OR = {
+					date > 1945.1.1 # Post-war
+					num_of_civilian_factories_available_for_projects > 8 # Time to put these free civ fac to good use
+					num_of_controlled_factories > 50 # Demand outpaces the output
+				}
+			}
+		}
+
+		cancel_if_not_visible = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_Electrification_2"
+			add_stability = 0.03
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SIA_Electrification_2"
+			add_stability = 0.07
+			swap_ideas = { remove_idea = SIA_electrified_1 add_idea = SIA_electrified_2 }
+			every_owned_state = {
+				tooltip = SIA_increase_state_cat_tt
+				limit = { is_core_of = ROOT }
+				increase_state_category_by_one_level = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SIA_diplomatic_matters_category = {
+	SIA_join_internationale = {
+		icon = generic_civil_support
+
+		allowed = { original_tag = SIA }
+
+		available = {
+			at_peace_or_same_enemies_as_INT = yes
+			NOT = { has_idea = SIA_war_reparation_paid_idea }
+		}
+
+		visible = {
+			has_socialist_government = yes
+			is_subject = no
+			is_in_faction = no
+			INT = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		targets = { INT }
+		target_root_trigger = {
+			has_completed_focus = SIA_people_assembly
+		}
+
+		target_trigger = {
+			has_socialist_government = yes
+			is_subject = no
+			is_in_faction = no
+			INT = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				country_exists = HND
+				NOT = { has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_INT } }
+			}
+			modifier = {
+				factor = 0
+				INT = { surrender_progress > 0.3 }
+				NOT = { has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_INT } }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SIA_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_INT } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SIA_join_internationale"
+			INT = { country_event = siam_events.74 }
+		}
+		fixed_random_seed = no
+	}
+	SIA_join_reichspakt = {
+		name = join_faction
+		icon = generic_civil_support
+
+		allowed = { always = no } #activated by SIA_prestigious_senate
+
+		available = {
+			at_peace_or_same_enemies_as_GER = yes
+			NOT = { has_idea = SIA_war_reparation_paid_idea }
+		}
+
+		visible = {
+			has_completed_focus = SIA_prestigious_senate
+			has_socialist_government = no
+			is_subject = no
+			is_in_faction = no
+			FROM = {
+				is_faction_leader = yes
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.3 }
+				NOT = { has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_GER } }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SIA_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_GER } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SIA_join_reichspakt"
+			GER = { ask_to_join_faction = yes }
+		}
+		fixed_random_seed = no
+	}
+	SIA_join_copro = {
+		name = join_faction
+		icon = generic_civil_support
+
+		allowed = { always = no } #activated by SIA_ratthaniyomdecrees
+
+		available = {
+			at_peace_or_same_enemies_as_JAP = yes
+			if = {
+				limit = { has_democratic_government = yes }
+				has_war_with = GER
+				JAP = { has_war_with = GER }
+			}
+			NOT = { has_idea = SIA_war_reparation_paid_idea }
+		}
+
+		visible = {
+			has_socialist_government = no
+			is_subject = no
+			is_in_faction = no
+			FROM = {
+				is_faction_leader = yes
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.3 }
+				NOT = { has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_JAP } }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = SIA_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_JAP } }
+			}
+			modifier = { #Player PatAut/NatPop can join whenever as they can actively attack Germany, Dems only get the option defensively
+				add = 1000
+				has_war_with = GER
+				JAP = { has_war_with = GER }
+			}
+			modifier = {
+				add = 1000
+				has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_JAP }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SIA_join_copro"
+			JAP = { ask_to_join_faction = yes }
+		}
+		fixed_random_seed = no
+	}
+	SIA_surrender = {
+		icon = generic_break_treaty
+		allowed = { original_tag = SIA }
+
+		available = {
+			surrender_progress > 0.4
+			OR = {
+				alliance_strength_ratio < 0.6
+				surrender_progress > 0.8
+				any_enemy_country = { is_actual_major = yes }
+			}
+		}
+
+		visible = {
+			has_war = yes
+			has_civil_war = no
+			is_subject = no
+			has_capitulated = no
+		}
+
+		cost = 20
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SIA_surrender"
+			add_ideas = has_scripted_peace
+			effect_tooltip = {
+				every_enemy_country = { country_event = siam_events.67 }
+			}
+			hidden_effect = { SIA_peace_treaty_next_event = yes }
+		}
+		fixed_random_seed = no
+	}
+}
+
+crisis = {
+	SIA_secure_bangkok = { # Appear for Rebels at CW start
+		icon = GFX_decision_hand_grab
+		highlight_states = {
+			highlight_provinces = { 7408 }
+		}
+
+		is_good = no
+		allowed = { always = no }
+
+		available = {
+			controls_province = 7408
+		}
+
+		visible = {
+			has_civil_war = yes
+		}
+
+		fire_only_once = no
+		selectable_mission = no
+		days_mission_timeout = 14
+		cancel_if_not_visible = yes
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SIA_secure_bangkok"
+			hidden_effect = {
+				if = {
+					limit = { NOT = { has_idea = SIA_faltering_political_movement_idea } }
+					add_ideas = SIA_faltering_political_movement_idea
+				}
+				random_other_country = {
+					limit = {
+						original_tag = ROOT
+						has_war_with = ROOT
+						has_idea = SIA_faltering_political_movement_idea
+					}
+					remove_ideas = SIA_faltering_political_movement_idea
+				}
+				subtract_from_variable = { SIA_MORAL_LEVEL = 0.01 }
+				add_to_variable = { SIA_SUPCON_LEVEL = 0.02 }
+				clamp_variable = {
+					var = SIA_MORAL_LEVEL
+					max = -0.01
+					min = -0.30
+				}
+				clamp_variable = {
+					var = SIA_SUPCON_LEVEL
+					max = 0.60
+					min = 0.02
+				}
+				activate_mission = SIA_secure_bangkok
+			}
+			custom_effect_tooltip = SIA_secure_bangkok_tt
+			add_war_support = -0.01
+		}
+		fixed_random_seed = no
+	}
+}
+
+SIA_integration_decisions = {
+	SIA_implement_municipal_reform_state = {
+		icon = GFX_decision_generic_operation
+
+		available = {
+			has_stability > 0
+			has_full_control_of_state = FROM
+			FROM = {
+				resistance < 30
+				any_neighbor_state = {
+					is_owned_and_controlled_by = ROOT
+					is_core_of = ROOT
+				}
+			}
+		}
+
+		visible = {
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+				hidden_trigger = {
+					# tidy up tooltip
+					NOT = { has_state_flag = SIA_municipal_reform_implemented }
+				}
+			}
+		}
+
+		cost = 25
+		days_remove = 90
+		fire_only_once = no
+		cancel_if_not_visible = yes
+		on_map_mode = map_and_decisions_view
+
+		state_target = yes
+		target_array = SIA_coreable_array
+		target_trigger = {
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+				NOT = {
+					is_core_of = ROOT
+					has_state_flag = SIA_municipal_reform_implemented
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SIA_implement_municipal_reform_state"
+			add_stability = -0.03
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SIA_implement_municipal_reform_state"
+			add_stability = 0.02
+			FROM = {
+				set_state_flag = SIA_municipal_reform_implemented
+				if = {
+					limit = { has_resistance = yes }
+					add_compliance = 5
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = SIA_integration_more_unlocked_tt
+		}
+
+		ai_will_do = { factor = 120 }
+		fixed_random_seed = no
+	}
+	SIA_reinforce_local_police_state = {
+		icon = GFX_decision_generic_military
+
+		available = {
+			has_stability > 0
+			has_full_control_of_state = FROM
+			FROM = {
+				resistance < 50
+				any_neighbor_state = {
+					is_owned_and_controlled_by = ROOT
+					is_core_of = ROOT
+				}
+			}
+		}
+
+		visible = {
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+				hidden_trigger = {
+					# tidy up tooltip
+					has_state_flag = SIA_municipal_reform_implemented
+					NOT = { has_state_flag = SIA_local_police_reinforced }
+				}
+			}
+		}
+
+		custom_cost_trigger = {
+			NOT = { command_power < 10 }
+			NOT = { has_equipment = { infantry_equipment < 250 } }
+		}
+		custom_cost_text = SIA_250_inf_10_CP
+
+		days_remove = 60
+		fire_only_once = no
+		cancel_if_not_visible = yes
+		on_map_mode = map_and_decisions_view
+
+		state_target = yes
+		target_array = SIA_coreable_array
+		target_trigger = {
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+				NOT = {
+					is_core_of = ROOT
+					has_state_flag = SIA_local_police_reinforced
+				}
+			}
+		}
+
+		modifier = { resistance_activity = -0.3 resistance_target = -0.1 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SIA_reinforce_local_police_state"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -250
+			}
+			add_command_power = -10
+			FROM = { set_state_flag = SIA_local_police_reinforced }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SIA_reinforce_local_police_state"
+			FROM = {
+				clr_state_flag = SIA_civil_service_expanded
+				if = {
+					limit = { has_resistance = yes }
+					add_resistance = -5
+					add_compliance = 1
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = SIA_integration_repeatable_tt
+		}
+
+		ai_will_do = { factor = 110 }
+		fixed_random_seed = no
+	}
+	SIA_expand_civil_service_state = {
+		icon = GFX_decision_eng_trade_unions_support
+
+		available = {
+			has_stability > 0
+			has_full_control_of_state = FROM
+			FROM = {
+				resistance < 10
+				any_neighbor_state = {
+					is_owned_and_controlled_by = ROOT
+					is_core_of = ROOT
+				}
+			}
+		}
+
+		visible = {
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+				hidden_trigger = {
+					# tidy up tooltip
+					has_state_flag = SIA_municipal_reform_implemented
+					NOT = {
+						is_core_of = ROOT
+						has_state_flag = SIA_civil_service_expanded
+					}
+				}
+			}
+		}
+
+		cost = 50
+		days_remove = 60
+		fire_only_once = no
+		cancel_if_not_visible = yes
+		on_map_mode = map_and_decisions_view
+
+		state_target = yes
+		target_array = SIA_coreable_array
+		target_trigger = {
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+				NOT = { has_state_flag = SIA_civil_service_expanded }
+			}
+		}
+
+		modifier = { political_power_gain = -0.10 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SIA_expand_civil_service_state"
+			FROM = { set_state_flag = SIA_civil_service_expanded }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SIA_expand_civil_service_state"
+			FROM = {
+				clr_state_flag = SIA_civil_service_expanded
+				if = {
+					limit = { has_resistance = yes }
+					add_compliance = 5
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = SIA_integration_repeatable_tt
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+	SIA_integrate_state = {
+		icon = eng_trade_unions_demand
+
+		available = {
+			has_stability > 0
+			has_full_control_of_state = FROM
+			FROM = {
+				resistance < 60
+				any_neighbor_state = {
+					is_owned_and_controlled_by = ROOT
+					is_core_of = ROOT
+				}
+			}
+		}
+
+		visible = {
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+				NOT = { is_core_of = ROOT }
+				NOT = { has_variable = can_integrate_@ROOT }
+			}
+		}
+
+		cost = 50
+		fire_only_once = no
+		on_map_mode = map_and_decisions_view
+
+		state_target = yes
+		target_array = SIA_coreable_array
+		target_trigger = {
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SIA_integrate_state"
+			FROM = {
+				add_claim_by = ROOT
+				if = {
+					limit = {
+						OR = {
+							state = 751 #Kelantan-Terengganu
+							state = 756 #Lower Shan
+							state = 825 #Battambang
+							state = 830 #Pattani
+							state = 882 #Samabuli
+							state = 999 #Kedah
+						}
+					}
+					# Inner Claims
+					enable_state_integration_50_compliance = yes
+				}
+				else = {
+					# Outer Claims
+					enable_state_integration_80_compliance = yes
+				}
+			}
+		}
+
+		ai_will_do = { factor = 200 }
+		fixed_random_seed = no
+	}
+}

@@ -1,0 +1,198 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			KAZ = {
+				if = {
+					limit = { is_ai = no }
+					TRK = { change_tag_from = PREV }
+				}
+			}
+			BUK = {
+				set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+				add_to_coalition = yes
+				set_variable = { BUK.coalition_stability = 0.5 }
+			}
+			TRK = {
+				set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+				add_to_coalition = yes
+				set_variable = { TRK.coalition_stability = 0.5 }
+			}
+
+			#Central Asian integration
+			every_state = {
+				limit = { is_central_asia = yes }
+				KAZ = { PREV = { enable_state_integration_50_compliance = yes } }
+				TRK = { PREV = { enable_state_integration_50_compliance = yes } }
+				BUK = { PREV = { enable_state_integration_50_compliance = yes } }
+				KHI = { PREV = { enable_state_integration_50_compliance = yes } }
+				ETS = { PREV = { enable_state_integration_80_compliance = yes } }
+			}
+			every_state = {
+				limit = { is_xinjiang = yes }
+				KAZ = { PREV = { enable_state_integration_80_compliance = yes } }
+				TRK = { PREV = { enable_state_integration_80_compliance = yes } }
+				BUK = { PREV = { enable_state_integration_80_compliance = yes } }
+				KHI = { PREV = { enable_state_integration_80_compliance = yes } }
+			}
+			418 = { #Ashkhabad
+				KAZ = { PREV = { enable_state_integration_80_compliance = yes } }
+				TRK = { PREV = { enable_state_integration_80_compliance = yes } }
+				BUK = { PREV = { enable_state_integration_80_compliance = yes } }
+				KHI = { PREV = { enable_state_integration_80_compliance = yes } }
+				ETS = { PREV = { enable_state_integration_80_compliance = yes } }
+			}
+		}
+	}
+	on_war = {
+		effect = {
+			if = {
+				limit = {
+					FROM = { tag = BUK }
+					ROOT = { tag = TRK }
+				}
+				BUK = {
+					activate_targeted_decision = { target = THIS decision = BUK_prep_stockpile_equipment }
+					activate_targeted_decision = { target = THIS decision = BUK_prep_sell_supplies }
+				}
+			}
+		}
+	}
+
+	#ROOT is winner #FROM is loser
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = {
+					FROM = { tag = TRK }
+					tag = RUS
+					NOT = { has_global_flag = CA_turkestan_victorious }
+				}
+				BUK = {
+					if = {
+						limit = { exists = yes }
+						country_event = bukhara_events.700
+					}
+				}
+				if = {
+					limit = {
+						has_socialist_government = yes
+						NOT = { has_completed_focus = RUS_coordinate_development }
+					}
+					country_event = russia_events.578
+				}
+				else_if = {
+					limit = { #failsafe in case somehow BUK still alive
+						has_completed_focus = RUS_coordinate_development
+						is_ally_with = BUK
+					}
+					annex_country = { target = BUK }
+				}
+				TRK = { set_major = no }
+				KHI = { set_major = no }
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			if = {
+				limit = {
+					FROM = { tag = TRK }
+					ROOT = { tag = KHI }
+				}
+				KHI = {
+					country_event = khiva_events.700
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = KHI }
+					ROOT = { tag = TRK }
+				}
+				TRK = {
+					country_event = turkestan_republic_events.700
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = TRK }
+					ROOT = { tag = RUS }
+				}
+				TRK = { clr_country_flag = TRK_central_asia_conflict_active }
+			}
+		}
+	}
+	# FROM = country receiving volunteers, ROOT = country sending volunteers
+	on_send_volunteers = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						OR = {
+							tag = TRK
+							tag = KHI
+							tag = KAZ
+						}
+						has_war_with = RUS
+					}
+					OR = {
+						is_in_faction_with = GER
+						is_in_faction_with = AUS
+					}
+					NOT = { has_country_flag = CA_sent_volunteers }
+				}
+				country_event = russia_foreign_policy_events.1403
+				if = {
+					limit = { RUS = { has_active_mission = RUS_defeat_central_asia } }
+					RUS = {
+						add_days_mission_timeout = {
+							mission = RUS_defeat_central_asia
+							days = 40
+						}
+					}
+					every_other_country = {
+						limit = {
+							OR = {
+								tag = TRK
+								tag = KHI
+								tag = KAZ
+							}
+						}
+						add_days_mission_timeout = {
+							mission = CA_hold_out_vs_russia
+							days = 40
+						}
+					}
+				}
+				else = {
+					RUS = {
+						add_days_mission_timeout = {
+							mission = RUS_Socialist_liberate_central_asia
+							days = 40
+						}
+					}
+					every_other_country = {
+						limit = {
+							OR = {
+								tag = TRK
+								tag = KHI
+							}
+						}
+						add_days_mission_timeout = {
+							mission = CA_hold_out_vs_socialist_russia
+							days = 40
+						}
+					}
+					BUK = {
+						add_days_mission_timeout = {
+							mission = CA_our_russian_ally_withdraws
+							days = 40
+						}
+					}
+				}
+			}
+		}
+	}
+}
+

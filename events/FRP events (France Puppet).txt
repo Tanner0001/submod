@@ -1,0 +1,320 @@
+###########################
+# Puppet France Events
+###########################
+# By Noot
+###########################
+
+add_namespace = france_puppet_events
+
+country_event = { #bounce to choose path
+	id = france_puppet_events.1
+	is_triggered_only = yes
+	hidden = yes
+
+	immediate = {
+		if = {
+			limit = { FRP_henri_de_borbon = { is_country_leader = yes } }
+			FRP_henri_de_borbon = {
+				remove_all_country_leader_roles = yes
+				retire = yes
+			}
+			drop_cosmetic_tag = yes
+		}
+		set_popularities = {
+			totalist = 9
+			radical_socialist = 18
+			syndicalist = 18
+			social_democrat = 7
+			social_liberal = 12
+			market_liberal = 4
+			social_conservative = 13
+			authoritarian_democrat = 15
+			paternal_autocrat = 4
+			national_populist = 0
+		}
+		FRP_add_debuff = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event france_puppet_events.1 option 1"
+		trigger = {
+			overlord = {
+				NOT = { has_country_flag = SPA_has_claimed_france }
+				has_elected_government = yes
+			}
+		}
+		country_event = france_puppet_events.2
+		promote_character = FRP_pierre_mathe
+	}
+	option = {
+		log = "[GetLogInfo]: event france_puppet_events.1 option 2"
+		trigger = {
+			overlord = {
+				NOT = { has_country_flag = SPA_has_claimed_france }
+				has_elected_government = no
+			}
+		}
+		country_event = france_puppet_events.3
+		promote_character = FRP_henri_dorgeres
+	}
+	option = {
+		log = "[GetLogInfo]: event france_puppet_events.1 option 3"
+		trigger = {
+			overlord = { has_country_flag = SPA_has_claimed_france }
+		}
+		FRP_henri_de_borbon = {
+			set_nationality = FRP
+			set_character_as_monarch = yes
+			remove_all_country_leader_roles = yes
+			add_country_leader_role = {
+				country_leader = {
+					desc = FRP_henri_de_borbon_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = FRP_henri_de_borbon_leader_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = FRP_henri_de_borbon_leader_desc
+					ideology = national_populist_subtype
+				}
+				promote_leader = yes
+			}
+		}
+		set_cosmetic_tag = FRP_spa_kingdom
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+			name = FRP_authoritarian_democrat_party
+			long_name = FRP_authoritarian_democrat_party_long
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.01
+		}
+		remove_ideas = {
+			FRP_republican_front
+			FRP_new_national_bloc
+			FRP_bloc_of_rights
+			FRP_bloc_of_rights_authdem
+		}
+		overlord = { clr_country_flag = SPA_has_claimed_france }
+	}
+}
+
+country_event = { #democratic elections
+	id = france_puppet_events.2
+	is_triggered_only = yes
+	hidden = yes
+
+	immediate = {
+		hidden_effect = {
+			set_party_name = {
+				ideology = authoritarian_democrat
+				name = FRP_authoritarian_democrat_party_parliamentary
+				long_name = FRP_authoritarian_democrat_party_parliamentary_long
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event france_puppet_events.2 option 1"
+		ai_chance = { base = 10 }
+		end_coalition = yes
+		remove_ideas = {
+			FRP_republican_front
+			FRP_new_national_bloc
+			FRP_bloc_of_rights
+			FRP_bloc_of_rights_authdem
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes #elections are done in on_actions_Internationale
+		}
+
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		add_ideas = FRP_republican_front
+	}
+
+	option = {
+		log = "[GetLogInfo]: event france_puppet_events.2 option 2"
+		ai_chance = { base = 5 }
+		end_coalition = yes
+		remove_ideas = {
+			FRP_republican_front
+			FRP_new_national_bloc
+			FRP_bloc_of_rights
+			FRP_bloc_of_rights_authdem
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		add_ideas = FRP_new_national_bloc
+	}
+
+	option = {
+		log = "[GetLogInfo]: event france_puppet_events.2 option 3"
+		ai_chance = { base = 5 }
+		end_coalition = yes
+		remove_ideas = {
+			FRP_republican_front
+			FRP_new_national_bloc
+			FRP_bloc_of_rights
+			FRP_bloc_of_rights_authdem
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		add_ideas = FRP_bloc_of_rights
+	}
+
+	option = {
+		log = "[GetLogInfo]: event france_puppet_events.2 option 4"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0.5
+				has_elected_government = yes
+			}
+		}
+		end_coalition = yes
+		remove_ideas = {
+			FRP_republican_front
+			FRP_new_national_bloc
+			FRP_bloc_of_rights
+			FRP_bloc_of_rights_authdem
+		}
+		promote_character = FRP_pierre_mathe
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		add_ideas = FRP_bloc_of_rights_authdem
+	}
+}
+
+country_event = { #Dorgeres takes power
+	id = france_puppet_events.3
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		log = "[GetLogInfo]: event france_puppet_events.3 option 1"
+		end_coalition = yes
+		remove_ideas = {
+			FRP_republican_front
+			FRP_new_national_bloc
+			FRP_bloc_of_rights
+			FRP_bloc_of_rights_authdem
+		}
+		add_ideas = FRP_coalition_of_expertise
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+			name = FRP_authoritarian_democrat_party
+			long_name = FRP_authoritarian_democrat_party_long
+		}
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+		if = {
+			limit = {
+				is_monarchy = yes
+				overlord = { is_monarchy = yes } #if repuppeted by a republican authoritarian regime, the monarchy will be removed
+			}
+			set_temp_variable = { coalition_partner_var = token:national_populist }
+			add_to_coalition = yes
+		}
+		else = {
+			if = {
+				limit = { is_monarchy = yes }
+				retire_country_leader = yes
+			}
+			drop_cosmetic_tag = yes
+		}
+	}
+}
+
+country_event = { #Henri de Borbon restored if possible. Spain's Jaime monarchy handled through focus, will need to be reconsidered in rework
+	id = france_puppet_events.4
+	is_triggered_only = yes
+	hidden = yes
+
+	option = {
+		name = france_puppet_events.4.a
+		log = "[GetLogInfo]: event france_puppet_events.4 option france_puppet_events.4.a"
+		set_cosmetic_tag = NFA_kingdom
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		NFA = {
+			NFA_henri_vi = {
+				hidden_effect = {
+					set_nationality = PREV.PREV
+					remove_all_country_leader_roles = yes
+				}
+				effect_tooltip = {
+					add_country_leader_role = {
+						country_leader = {
+							ideology = authoritarian_democrat_subtype
+							traits = { NFA_Young_Prince }
+						}
+						promote_leader = yes
+					}
+				}
+				hidden_effect = {
+					for_each_loop = {
+						array = global.ideology_groups
+						if = {
+							limit = { ideology_group_is_socialist = no }
+							meta_effect = {
+								text = {
+									add_country_leader_role = {
+										country_leader = {
+											desc = NFA_henri_vi_leader_desc
+											ideology = [IDEOLOGY]
+											traits = { NFA_Young_Prince }
+										}
+										promote_leader = yes
+									}
+								}
+								IDEOLOGY = "[?v.GetTokenKey]_subtype"
+							}
+						}
+					}
+				}
+			}
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.01
+		}
+	}
+}

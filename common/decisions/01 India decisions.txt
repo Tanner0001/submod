@@ -1,0 +1,353 @@
+foreign_politics = {
+	########################
+	### Shared Decisions ###
+	########################
+
+	india_invade_tawang_decision = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			OR = {
+				original_tag = HND
+				original_tag = PRF
+				original_tag = RAJ
+			}
+		}
+
+		available = {
+			is_neighbor_of = FROM
+			NOT = { has_non_aggression_pact_with = FROM }
+			if = {
+				limit = { FROM = { is_subject = yes } }
+				NOT = { has_non_aggression_pact_with = FROM.overlord }
+			}
+			if = {
+				limit = { FROM = { is_in_faction = yes } }
+				NOT = { has_non_aggression_pact_with = FROM.faction_leader }
+			}
+			NOT = { has_guaranteed = FROM }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				NOT = { FROM = { owns_state = 858 } } #Tawang
+				is_subject = yes
+				NOT = { is_neighbor_of = FROM }
+				has_non_aggression_pact_with = FROM
+				has_guaranteed = FROM
+			}
+		}
+
+		targets = { 858.OWNER }
+		target_root_trigger = { has_country_flag = india_can_claim_tawang }
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_state = 858 #Tawang
+				NOT = { has_country_flag = india_refused_territory_transfer_flag }
+			}
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel india_invade_tawang_decision"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete india_invade_tawang_decision"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove india_invade_tawang_decision"
+			clear_decision_attack_AI = yes
+			india_claim_tibet_effect = yes
+		}
+		fixed_random_seed = no
+	}
+
+	india_invade_aksai_chin_decision = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			OR = {
+				original_tag = HND
+				original_tag = PRF
+				original_tag = RAJ
+			}
+		}
+
+		available = {
+			is_neighbor_of = FROM
+			NOT = { has_non_aggression_pact_with = FROM }
+			if = {
+				limit = { FROM = { is_subject = yes } }
+				NOT = { has_non_aggression_pact_with = FROM.overlord }
+			}
+			if = {
+				limit = { FROM = { is_in_faction = yes } }
+				NOT = { has_non_aggression_pact_with = FROM.faction_leader }
+			}
+			NOT = { has_guaranteed = FROM }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				NOT = { FROM = { owns_state = 897 } } #Aksai Chin
+				is_subject = yes
+				NOT = { is_neighbor_of = FROM }
+				has_non_aggression_pact_with = FROM
+				has_guaranteed = FROM
+			}
+		}
+
+		targets = { 897.OWNER }
+		target_root_trigger = { has_country_flag = india_can_claim_aksai_chin }
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_state = 897 #Aksai Chin
+				NOT = { has_country_flag = india_refused_territory_transfer_flag }
+			}
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel india_invade_aksai_chin_decision"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete india_invade_aksai_chin_decision"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove india_invade_aksai_chin_decision"
+			clear_decision_attack_AI = yes
+			india_claim_aksai_chin_effect = yes
+		}
+		fixed_random_seed = no
+	}
+}
+
+india_reintegration_category = {
+	india_tackle_resistance_decision = {
+		icon = GFX_decision_generic_arrest
+
+		available = {
+			india_resistance_ongoing = yes
+		}
+
+		visible = {
+			OR = {
+				has_completed_focus = HND_integrating_the_reclaimed_lands
+				has_completed_focus = PRF_fate_of_the_loyalist_rulers
+				has_completed_focus = RAJ_reintegration
+			}
+			india_resistance_ongoing = yes
+		}
+		priority = 300
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = no
+		days_re_enable = 3
+
+		cost = 50
+
+		days_remove = 75
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove india_tackle_resistance_decision"
+			india_resistance_recovery = yes
+		}
+		fixed_random_seed = no
+	}
+
+	india_increase_integration_efforts_in_state_decision = {
+		icon = GFX_decision_infiltrate_state
+		allowed = { always = no }
+
+		available = {
+			FROM = {
+				is_fully_controlled_by = ROOT
+				is_owned_by = ROOT
+			}
+		}
+		visible = {
+			FROM = {
+				NOT = { is_core_of = ROOT }
+			}
+		}
+		priority = 5
+
+		cost = 25
+		days_remove = 50
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		state_target = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel india_increase_integration_efforts_in_state_decision"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove india_increase_integration_efforts_in_state_decision"
+			FROM = {
+				add_resistance = -15
+				add_compliance = 15
+			}
+		}
+
+		ai_will_do = { base = 50 }
+		fixed_random_seed = no
+	}
+}
+
+operations = {
+	NEP_hold_out_vs_india = {
+		icon = generic_ignite_civil_war
+		allowed = { always = no } #manually activated
+
+		available = {
+			has_capitulated = yes
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_valid_peace_target = no
+				NOT = { has_war_with = var:NEP_indian_attacker }
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel NEP_hold_out_vs_india"
+			hidden_effect = { remove_targeted_decision = { target = var:NEP_indian_attacker decision = NEP_defeat_india } }
+		}
+
+		selectable_mission = no
+		is_good = no
+		days_mission_timeout = 180
+		priority = 100
+		fire_only_once = yes
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NEP_hold_out_vs_india"
+			effect_tooltip = {
+				var:NEP_indian_attacker = { country_event = nepal_war_events.20 }
+			}
+			hidden_effect = { remove_targeted_decision = { target = var:NEP_indian_attacker decision = NEP_defeat_india } }
+		}
+		fixed_random_seed = no
+	}
+
+	NEP_defeat_nepal = {
+		icon = generic_ignite_civil_war
+		allowed = { always = no } #manually activated
+
+		available = {
+			NEP = { has_capitulated = yes }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NEP = { is_valid_peace_target = no }
+				NOT = { has_war_with = NEP }
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel NEP_defeat_nepal"
+			hidden_effect = { remove_targeted_decision = { target = FROM decision = NEP_defeat_india } }
+		}
+
+		selectable_mission = no
+		is_good = no
+		days_mission_timeout = 180
+		priority = 100
+		fire_only_once = yes
+
+		timeout_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision timeout NEP_defeat_nepal"
+			country_event = nepal_war_events.20
+			hidden_effect = {
+				NEP = {
+					remove_targeted_decision = { target = FROM decision = NEP_defeat_india }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NEP_defeat_india = {
+		icon = generic_ignite_civil_war
+		allowed = { always = no } #manually activated
+
+		available = {
+			surrender_progress < 0.20
+			FROM = { surrender_progress > 0.40 }
+		}
+
+		visible = {
+			has_war_with = FROM
+			is_valid_peace_target = yes
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		targets = { RAJ PRF HND }
+		target_trigger = {
+			has_war_with = FROM
+		}
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NEP_defeat_india"
+			add_political_power = 100
+			add_stability = 0.10
+			country_event = nepal_war_events.9
+			remove_mission = NEP_hold_out_vs_india
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NEP_defeat_india }
+				FROM = { remove_mission = NEP_defeat_nepal }
+			}
+		}
+		fixed_random_seed = no
+	}
+}

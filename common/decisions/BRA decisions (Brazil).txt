@@ -1,0 +1,1958 @@
+###########################
+# Brazil Decisions
+###########################
+# By Rylock & Zim
+###########################
+
+economy_decisions = {
+	BRA_new_civilian_factory = {
+		icon = GFX_decision_factories
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		modifier = {
+			production_speed_buildings_factor = 0.03
+		}
+
+		fire_only_once = yes
+		state_target = yes
+		days_remove = 90
+		cost = 40
+
+		ai_will_do = { base = 2500 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_new_civilian_factory"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+political_actions = {
+	BRA_join_internationale = {
+		icon = generic_prepare_civil_war
+		allowed = { tag = BRA }
+
+		available = {
+			second_weltkrieg_has_begun = yes
+			has_civil_war = no
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		targets = { INT }
+		target_trigger = {
+			has_socialist_government = yes
+			OR = {
+				has_country_flag = BRA_provincial_revolt_happened
+				NOT = {
+					owns_any_state_of = {
+						499 #Bahia
+						502 #Rio Grande do Sul
+					}
+				}
+			}
+			FROM = { is_faction_leader = yes }
+			is_subject = no
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 10000
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FOP_path option = FOP_PATH_UGARTISTAS_BOOSTED_RADSOC }
+				FOP = {
+					exists = yes
+					is_subject = no
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = WCA_forpol option = WCA_FORPOL_BOOSTED_WCA }
+				OR = {
+					NOT = { has_global_flag = USA_civil_war_begun_flag }
+					WCA = {
+						exists = yes
+						is_subject = no
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					ARG = { is_in_faction_with = ENT }
+					ARG = { is_in_faction_with = GER }
+					FOP = { is_in_faction_with = INT }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_join_internationale"
+			FROM = { country_event = brazil_events.505 }
+		}
+		fixed_random_seed = no
+	}
+
+	BRA_join_reichspakt = {
+		icon = generic_prepare_civil_war
+		allowed = { tag = BRA }
+
+		available = {
+			second_weltkrieg_has_begun = yes
+			has_civil_war = no
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		targets = { GER }
+		target_trigger = {
+			FROM = { is_faction_leader = yes }
+			has_socialist_government = no
+			is_subject = no
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+			}
+			if = {
+				limit = { has_government = national_populist }
+				has_country_flag = BRA_refused_by_entente
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 10000
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.20 }
+				NOT = { has_game_rule = { rule = BRA_forpol option = BRA_FORPOL_GER } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BRA_forpol option = BRA_FORPOL_ENT_GUYANA }
+			}
+			modifier = {
+				factor = 0
+				USA_has_boosted_loas_game_rule = yes
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					ARG = { is_in_faction_with = ENT }
+					ARG = { is_in_faction_with = GER }
+					FOP = { is_in_faction_with = INT }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_join_reichspakt"
+			FROM = { country_event = brazil_events.717 }
+		}
+		fixed_random_seed = no
+	}
+
+	BRA_join_entente = {
+		icon = generic_prepare_civil_war
+
+		allowed = { tag = BRA }
+
+		available = {
+			second_weltkrieg_has_begun = yes
+			has_civil_war = no
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		targets = { ENT }
+		target_trigger = {
+			OR = {
+				has_country_flag = BRA_refused_by_germany
+				has_government = national_populist
+			}
+			FROM = { is_faction_leader = yes }
+			has_socialist_government = no
+			is_subject = no
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+			}
+		}
+
+		ai_will_do = {
+			base = 10000
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.20 }
+				NOT = { has_game_rule = { rule = BRA_forpol option = BRA_FORPOL_ENT } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = BRA_forpol option = BRA_FORPOL_ENT_GUYANA }
+			}
+			modifier = {
+				factor = 0
+				USA_has_boosted_loas_game_rule = yes
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					ARG = { is_in_faction_with = ENT }
+					ARG = { is_in_faction_with = GER }
+					FOP = { is_in_faction_with = INT }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_join_entente"
+			FROM = {
+				country_event = brazil_events.717
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	BRA_establish_relations_with_WCA = {
+		icon = generic_flags
+		allowed = { always = no }
+
+		available = {
+			NOT = { has_war_with = FROM }
+		}
+
+		visible = {
+			has_socialist_government = yes
+			FROM = {
+				exists = yes
+				has_socialist_government = yes
+				has_capitulated = no
+			}
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = { base = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_establish_relations_with_WCA"
+			FROM = { country_event = brazil_events.511 }
+		}
+		fixed_random_seed = no
+	}
+
+	BRA_aid_socialist_peru = {
+		icon = generic_flags
+		allowed = { always = no }
+
+		available = {
+			has_manpower > 5000
+		}
+
+		visible = {
+			has_socialist_government = yes
+			FROM = {
+				exists = yes
+				has_socialist_government = yes
+			}
+		}
+
+		fire_only_once = yes
+		cost = 100
+
+		ai_will_do = {
+			base = 5000
+			modifier = {
+				factor = 0
+				has_stability < 0.25
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_aid_socialist_peru"
+			add_manpower = -5000
+			reverse_add_opinion_modifier = { target = FROM modifier = KR_diplomatic_mission }
+			FROM = { country_event = brazil_events.520 }
+		}
+		fixed_random_seed = no
+	}
+
+	BRA_become_brazil = {
+		icon = generic_flags
+
+		allowed = {
+			OR = {
+				tag = PIR
+				tag = BAH
+				tag = AMA
+				tag = SPO
+				tag = VCR
+				tag = GRP
+				tag = GOY
+			}
+		}
+
+		available = {
+			has_war = no
+			500 = {
+				is_owned_and_controlled_by = ROOT
+				is_core_of = ROOT
+			}
+			any_state_of = {
+				count = 3
+				target = { 498 499 501 502 505 898 } #Northeastern Brazil, Bahia, São Paulo, Rio Grande do Sul, Goyaz, Para
+				is_owned_and_controlled_by = ROOT
+				is_core_of = ROOT
+			}
+		}
+
+		visible = {
+			NOT = {
+				country_exists = BRA
+				has_cosmetic_tag = BRA
+			}
+		}
+
+		fire_only_once = yes
+		cost = 50
+		priority = 100
+
+		ai_will_do = { base = 25000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_become_brazil"
+			set_capital = { state = 500 }
+			add_stability = 0.10
+			hidden_effect = {
+				every_other_country = {
+					limit = {
+						has_cosmetic_tag = BRA
+						OR = {
+							tag = PIR
+							tag = BAH
+							tag = AMA
+							tag = SPO
+							tag = VCR
+							tag = GRP
+							tag = GOY
+						}
+					}
+					drop_cosmetic_tag = yes
+				}
+			}
+			set_cosmetic_tag = BRA
+			every_state = {
+				limit = { is_brazil = yes }
+				remove_claim_and_add_core_of_ROOT = yes
+			}
+			hidden_effect = {
+				BRA = { clear_cores_of_tag_if_possible = yes }
+				if = {
+					limit = { NOT = { country_exists = PIR } }
+					PIR_move_leaders_back = yes
+				}
+				if = {
+					limit = { NOT = { country_exists = SPO } }
+					SPO_move_leaders_back = yes
+				}
+				if = {
+					limit = { NOT = { country_exists = VCR } }
+					VCR_move_leaders_back = yes
+				}
+				if = {
+					limit = { NOT = { country_exists = BAH } }
+					BAH_move_leaders_back = yes
+				}
+				if = {
+					limit = { NOT = { country_exists = GRP } }
+					GRP_move_leaders_back = yes
+				}
+				if = {
+					limit = { NOT = { country_exists = GOY } }
+					GOY_move_leaders_back = yes
+				}
+				if = {
+					limit = { NOT = { country_exists = AMA } }
+					AMA_move_leaders_back = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	BRA_enact_conscription = {			# Special decision to raise conscription due to PP hunger
+		icon = GFX_decision_eng_blackshirt_march
+
+		allowed = { tag = BRA }
+
+		available = {
+			OR = {
+				ARG = {
+					exists = yes
+					is_subject = no
+					has_government = national_populist
+					FOP = { exists = no }
+				}
+				FOP = {
+					exists = yes
+					is_subject = no
+					ARG = { exists = no }
+					ROOT = { has_socialist_government = no }
+				}
+				PAR = {
+					OR = {
+						has_subject = ARG
+						has_subject = FOP
+						has_subject = PRU
+					}
+				}
+			}
+		}
+
+		visible = {
+			has_idea = volunteer_only
+		}
+
+		fire_only_once = yes
+
+		cost = 100
+
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				factor = 25
+				has_war = yes
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_enact_conscription"
+			add_ideas = limited_conscription
+		}
+		fixed_random_seed = no
+	}
+}
+
+BRA_estado_novo_decisions = {
+	BRA_limit_supreme_court = {
+		icon = GFX_decision_eng_trade_unions_demand
+		allowed = { always = no }
+		available = {
+			custom_override_tooltip = {
+				tooltip = BRA_consolidation_decision_active
+				NOT = { has_country_flag = BRA_consolidation_decision_active }
+			}
+		}
+
+		ai_will_do = { base = 3000 }
+
+		fire_only_once = yes
+		days_remove = 60
+		cost = 50
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_limit_supreme_court"
+			set_country_flag = BRA_consolidation_decision_active
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_limit_supreme_court"
+
+			if = { #congress + police
+				limit = {
+					has_idea = BRA_constitution_fixed_7
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_7
+					add_idea = BRA_constitution_fixed_8
+				}
+			}
+			else_if = { #police
+				limit = {
+					has_idea = BRA_constitution_fixed_4
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_4
+					add_idea = BRA_constitution_fixed_6
+				}
+			}
+			else_if = { #congress
+				limit = {
+					has_idea = BRA_constitution_fixed_3
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_3
+					add_idea = BRA_constitution_fixed_5
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_1
+					add_idea = BRA_constitution_fixed_2
+				}
+			}
+			clr_country_flag = BRA_consolidation_decision_active
+		}
+		fixed_random_seed = no
+	}
+	BRA_disempower_congress = {
+		icon = GFX_decision_generic_break_treaty
+		allowed = { always = no }
+		available = {
+			custom_override_tooltip = {
+				tooltip = BRA_consolidation_decision_active
+				NOT = { has_country_flag = BRA_consolidation_decision_active }
+			}
+		}
+
+		ai_will_do = { base = 15000 }
+
+		fire_only_once = yes
+		days_remove = 60
+		cost = 50
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_disempower_congress"
+			set_country_flag = BRA_consolidation_decision_active
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_disempower_congress"
+
+			if = { #court + police
+				limit = {
+					has_idea = BRA_constitution_fixed_6
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_6
+					add_idea = BRA_constitution_fixed_8
+				}
+			}
+			else_if = { #police
+				limit = {
+					has_idea = BRA_constitution_fixed_4
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_4
+					add_idea = BRA_constitution_fixed_7
+				}
+			}
+			else_if = { #court
+				limit = {
+					has_idea = BRA_constitution_fixed_2
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_2
+					add_idea = BRA_constitution_fixed_5
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_1
+					add_idea = BRA_constitution_fixed_3
+				}
+			}
+			hidden_effect = { activate_advisor = BRA_congresso_nacional_sic }
+			clr_country_flag = BRA_consolidation_decision_active
+		}
+		fixed_random_seed = no
+	}
+	BRA_deploy_police = {
+		icon = GFX_decision_generic_police_action
+		allowed = { always = no }
+		available = {
+			custom_override_tooltip = {
+				tooltip = BRA_consolidation_decision_active
+				NOT = { has_country_flag = BRA_consolidation_decision_active }
+			}
+		}
+
+		ai_will_do = { base = 2900 }
+
+		fire_only_once = yes
+		days_remove = 60
+		cost = 50
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_deploy_police"
+			set_country_flag = BRA_consolidation_decision_active
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_deploy_police"
+
+			if = { #court + congress
+				limit = {
+					has_idea = BRA_constitution_fixed_5
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_5
+					add_idea = BRA_constitution_fixed_8
+				}
+			}
+			else_if = { #congress
+				limit = {
+					has_idea = BRA_constitution_fixed_3
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_3
+					add_idea = BRA_constitution_fixed_7
+				}
+			}
+			else_if = { #court
+				limit = {
+					has_idea = BRA_constitution_fixed_2
+				}
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_2
+					add_idea = BRA_constitution_fixed_6
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = BRA_constitution_fixed_1
+					add_idea = BRA_constitution_fixed_4
+				}
+			}
+			clr_country_flag = BRA_consolidation_decision_active
+		}
+		fixed_random_seed = no
+	}
+	BRA_populist_rallies = {
+		icon = GFX_decision_generic_political_rally
+		allowed = { always = no }
+		available = {
+			custom_override_tooltip = {
+				tooltip = BRA_consolidation_decision_active
+				NOT = { has_country_flag = BRA_consolidation_decision_active }
+			}
+		}
+
+		ai_will_do = {
+			base = 2500
+			modifier = {
+				factor = 0
+				paternal_autocrat > 0.4
+			}
+		}
+
+		modifier = {
+			political_power_gain = -0.04
+		}
+
+		days_remove = 90
+		cost = 30
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_populist_rallies"
+			set_country_flag = BRA_consolidation_decision_active
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_populist_rallies"
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+			clr_country_flag = BRA_consolidation_decision_active
+		}
+		fixed_random_seed = no
+	}
+	BRA_youth_groups = {
+		icon = GFX_decision_eng_blackshirt_march
+		allowed = { always = no }
+		available = {
+			NOT = {
+				has_idea = BRA_youth_group_idea
+			}
+		}
+
+		ai_will_do = {
+			base = 2400
+			modifier = {
+				factor = 0
+				has_war = no
+			}
+		}
+
+		modifier = {
+			political_power_gain = -0.02
+		}
+
+		days_remove = 60
+		cost = 20
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_youth_groups"
+			add_timed_idea = {
+				idea = BRA_youth_group_idea
+				days = 365
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_military_alliance = {
+		icon = GFX_decision_generic_army_support
+		allowed = { always = no }
+
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				factor = 3
+				has_war = yes
+			}
+		}
+
+		cost = 75
+		fire_only_once = yes
+		days_remove = 60
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_military_alliance"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_military_alliance"
+			add_ideas = BRA_military_alliance_idea
+		}
+		fixed_random_seed = no
+	}
+}
+
+BRA_brazil_war_decisions = {
+	BRA_fight_for_patagonia = {
+		icon = generic_prepare_civil_war
+		allowed = { always = no }			# Activated by event
+
+		available = {
+			second_weltkrieg_has_begun = yes
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+				FROM = { is_in_faction = no }
+			}
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			has_government = national_populist
+			can_declare_war_on = FROM
+			is_subject = no
+			any_state_of = {
+				target = { 507 512 1029 } #Magallanes, Chubut, Santa Cruz
+				is_owned_and_controlled_by = FROM
+			}
+		}
+
+		cost = 100
+		days_remove = 25
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			base = 5000
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel BRA_fight_for_patagonia"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_fight_for_patagonia"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_fight_for_patagonia"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SPO_recruit_supporters = {
+		icon = generic_prepare_civil_war
+		allowed = { always = no }			# Activated by SPO spawn
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = SPO_controls_neighbour_noncore_state
+				BRA = {
+					any_owned_state = {
+						is_core_of = BRA
+						NOT = { is_core_of = ROOT }
+						is_controlled_by = ROOT
+						any_neighbor_state = {
+							is_core_of = ROOT
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+		}
+
+		visible = {
+			has_war_with = BRA
+			BRA = {
+				has_government = paternal_autocrat
+			}
+		}
+
+		days_remove = 30
+		days_re_enable = 30
+
+		modifier = {
+			command_power_gain = -0.25
+			experience_gain_army = 0.05
+		}
+
+		ai_will_do = { base = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SPO_recruit_supporters"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SPO_recruit_supporters"
+			random_controlled_state = {
+				limit = {
+					is_core_of = BRA
+					NOT = { is_core_of = ROOT }
+					is_owned_by = BRA
+					any_neighbor_state = {
+						is_core_of = ROOT
+						is_controlled_by = ROOT
+					}
+				}
+				add_core_of = ROOT
+				create_unit = {
+					division = "name = \"Constitutionalist Militia\" division_template = \"Constitutionalist Militia\" start_experience_factor = 0.8"
+					owner = ROOT
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+BRA_Resource_decisions = {
+	BRA_rubber_army = {
+		icon = rubber
+		allowed = { always = no }
+		available = {
+			has_tech = excavation1
+			num_of_civilian_factories_available_for_projects > 1
+			has_manpower > 50000
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT } #Amazons
+		}
+
+		days_remove = 120
+		fire_only_once = yes
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_rubber_army"
+			add_manpower = -50000
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_rubber_army"
+			add_manpower = 50000
+			FROM = {
+				add_resource = {
+					type = rubber
+					amount = 50
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_lobato = {
+		icon = oil
+		allowed = { always = no }
+		available = {
+			has_tech = excavation1
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT } #Bahia
+		}
+
+		days_remove = 42
+		fire_only_once = yes
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+
+		ai_will_do = { base = 2500 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_lobato"
+			FROM = {
+				add_resource = {
+					type = oil
+					amount = 6
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_ram_eater = {
+		icon = chromium
+		allowed = { always = no }
+		available = {
+			has_tech = excavation1
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT } #Bahia
+		}
+
+		days_remove = 42
+		fire_only_once = yes
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+
+		ai_will_do = { base = 3000 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_ram_eater"
+			FROM = {
+				add_resource = {
+					type = chromium
+					amount = 20
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_CSI = {
+		icon = steel
+		allowed = { always = no }
+		visible = {
+			FROM = { is_owned_and_controlled_by = ROOT } #Bahia
+		}
+
+		cost = 50
+		days_remove = 7
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 4000 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_CSI"
+			country_event = brazil_events.223
+			hidden_effect = {
+				country_event = { id = brazil_events.31 days = 360 random_days = 35 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_CSN_decision = {
+		desc = [BRA_CSN_decision_scripted_loc]
+		icon = steel
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+		visible = {
+			NOT = { has_country_flag = BRA_CSN_already_selected }
+		}
+		days_remove = 60
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 4000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_CSN_decision"
+			set_country_flag = BRA_CSN_already_selected
+			FROM = { set_state_flag = BRA_CSN_location }
+			if = {
+				limit = { NOT = { FROM = { state = 499 } } }
+				remove_targeted_decision = { target = 499 decision = BRA_CSN_decision }
+			}
+			if = {
+				limit = { NOT = { FROM = { state = 500 } } }
+				remove_targeted_decision = { target = 500 decision = BRA_CSN_decision }
+			}
+			if = {
+				limit = { NOT = { FROM = { state = 501 } } }
+				remove_targeted_decision = { target = 501 decision = BRA_CSN_decision }
+			}
+			if = {
+				limit = { NOT = { FROM = { state = 502 } } }
+				remove_targeted_decision = { target = 502 decision = BRA_CSN_decision }
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_CSN_decision"
+			add_resource = {
+				type = steel
+				amount = 20
+				state = FROM
+			}
+			hidden_effect = {
+				country_event = { id = brazil_events.228 days = 2 }
+				country_event = { id = brazil_events.229 days = 180 random_days = 60 }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+BRA_Army_Reform_Soft = {
+	BRA_deal_with_Minas_Gerais = {
+		icon = GFX_decision_hand_out
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		ai_hint_pp_cost = 25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+			NOT = { has_political_power < 25 }
+		}
+		custom_cost_text = CP_25_PP_25
+
+		days_remove = 180
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_deal_with_Minas_Gerais"
+			hidden_effect = {
+				add_political_power = -25
+				add_command_power = -25
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_deal_with_Minas_Gerais"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_deal_with_Rio_Grande_do_Sul = {
+		icon = GFX_decision_hand_out
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		ai_hint_pp_cost = 25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+			NOT = { has_political_power < 25 }
+		}
+		custom_cost_text = CP_25_PP_25
+
+		days_remove = 180
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_deal_with_Rio_Grande_do_Sul"
+			hidden_effect = {
+				add_political_power = -25
+				add_command_power = -25
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_deal_with_Rio_Grande_do_Sul"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_deal_with_Nordeste = {
+		icon = GFX_decision_hand_out
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		ai_hint_pp_cost = 25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+			NOT = { has_political_power < 25 }
+		}
+		custom_cost_text = CP_25_PP_25
+
+		days_remove = 180
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_deal_with_Nordeste"
+			hidden_effect = {
+				add_political_power = -25
+				add_command_power = -25
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_deal_with_Nordeste"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_deal_with_Sao_Paulo = {
+		icon = GFX_decision_hand_out
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		ai_hint_pp_cost = 25
+		custom_cost_trigger = {
+			NOT = { command_power < 25 }
+			NOT = { has_political_power < 25 }
+		}
+		custom_cost_text = CP_25_PP_25
+
+		days_remove = 180
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_deal_with_Sao_Paulo"
+			hidden_effect = {
+				add_political_power = -25
+				add_command_power = -25
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_deal_with_Sao_Paulo"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_equipment_standardisation = {
+		icon = GFX_decision_ger_military_buildup
+		allowed = { always = no }
+		custom_cost_text = support_100
+		custom_cost_trigger = {
+			NOT = { has_equipment = { support_equipment < 100 } }
+		}
+
+		days_remove = 180
+		fire_only_once = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_equipment_standardisation"
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = support_equipment
+					amount = -100
+				}
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_equipment_standardisation"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_unified_officer_curriculum = {
+		icon = GFX_decision_generic_army_support
+		allowed = { always = no }
+		cost = 25
+		days_remove = 180
+		fire_only_once = yes
+
+		ai_will_do = { base = 5000 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_unified_officer_curriculum"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_local_talent = {
+		icon = GFX_decision_soldierly_discipline
+		allowed = { always = no }
+		cost = 25
+		days_remove = 180
+		fire_only_once = yes
+
+		ai_will_do = { base = 5000 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_local_talent"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_merging_regional_commands = {
+		icon = GFX_decision_infiltrate_state
+		allowed = { always = no }
+		cost = 25
+		days_remove = 180
+		fire_only_once = yes
+
+		ai_will_do = { base = 5000 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_merging_regional_commands"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_better_barracks = {
+		icon = GFX_decision_generic_construction
+		allowed = { always = no }
+		custom_cost_text = 500_guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 500 } }
+		}
+
+		cost = 25
+		days_remove = 180
+		fire_only_once = yes
+
+		ai_will_do = { base = 6000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_better_barracks"
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -500
+				}
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_better_barracks"
+			army_experience = 10
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+			hidden_effect = {
+				if = {
+					limit = { has_war = no }
+					country_event = { id = brazil_events.7 days = 30 random_days = 6 }
+				}
+
+				else = {
+					country_event = { id = brazil_events.7 days = 15 random_days = 3 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_reservist_exercises = {
+		icon = GFX_decision_eng_trade_unions_demand
+		allowed = { always = no }
+		custom_cost_text = army_xp_25
+		custom_cost_trigger = {
+			NOT = { has_army_experience < 25 }
+		}
+
+		cost = 25
+		days_remove = 180
+		fire_only_once = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_reservist_exercises"
+			hidden_effect = { army_experience = -25 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_reservist_exercises"
+			set_temp_variable = { BRA_soft_change = 10 }
+			BRA_change_soft = yes
+		}
+		fixed_random_seed = no
+	}
+}
+
+BRA_Army_Reform_Hard = {
+	BRA_crush_Minas_Gerais = {
+		icon = GFX_decision_oppression
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		custom_cost_text = CP_35
+		custom_cost_trigger = {
+			NOT = { command_power < 35 }
+		}
+
+		days_remove = 90
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_crush_Minas_Gerais"
+			add_stability = -0.05
+			hidden_effect = {
+				add_command_power = -35
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_crush_Minas_Gerais"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_crush_Rio_Grande_do_Sul = {
+		icon = GFX_decision_oppression
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		custom_cost_text = CP_35
+		custom_cost_trigger = {
+			NOT = { command_power < 35 }
+		}
+
+		days_remove = 90
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_crush_Rio_Grande_do_Sul"
+			add_stability = -0.05
+			hidden_effect = {
+				add_command_power = -35
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_crush_Rio_Grande_do_Sul"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_crush_Nordeste = {
+		icon = GFX_decision_oppression
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		custom_cost_text = CP_35
+		custom_cost_trigger = {
+			NOT = { command_power < 35 }
+		}
+
+		days_remove = 90
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_crush_Nordeste"
+			add_stability = -0.05
+			hidden_effect = {
+				add_command_power = -35
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_crush_Nordeste"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_crush_Sao_Paulo = {
+		icon = GFX_decision_oppression
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+		}
+
+		custom_cost_text = CP_35
+		custom_cost_trigger = {
+			NOT = { command_power < 35 }
+		}
+
+		days_remove = 90
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 5000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_crush_Sao_Paulo"
+			add_stability = -0.05
+			hidden_effect = {
+				add_command_power = -35
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_crush_Sao_Paulo"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_replace_officers = {
+		icon = GFX_decision_generic_army_support
+		allowed = { always = no }
+		cost = 50
+		days_remove = 90
+		fire_only_once = yes
+
+		custom_cost_text = war_support5
+		custom_cost_trigger = {
+			NOT = { has_war_support < 0.05 }
+		}
+
+		ai_will_do = {
+			base = 4000
+			modifier = {
+				factor = 0
+				has_war_support < 0.25
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_replace_officers"
+			hidden_effect = {
+				add_war_support = -0.05
+			}
+		}
+		modifier = {
+			land_reinforce_rate = -0.05
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_replace_officers"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_forced_standardisation = {
+		icon = GFX_decision_ger_military_buildup
+		allowed = { always = no }
+		cost = 50
+		days_remove = 90
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 6000
+			modifier = {
+				factor = 0.2
+				has_war = yes
+			}
+		}
+
+		modifier = {
+			conscription_factor = -0.05
+			industrial_capacity_factory = -0.2
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_forced_standardisation"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_central_conscription = {
+		icon = GFX_decision_generic_political_discourse
+		allowed = { always = no }
+		cost = 50
+		days_remove = 90
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 6000
+			modifier = {
+				factor = 0.2
+				has_war = yes
+			}
+		}
+
+		modifier = {
+			conscription_factor = -0.1
+			mobilization_speed = -0.2
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_central_conscription"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_central_command = {
+		icon = GFX_decision_binoculars
+		allowed = { always = no }
+		custom_cost_text = CP_35
+		custom_cost_trigger = {
+			NOT = { command_power < 35 }
+		}
+
+		days_remove = 90
+		fire_only_once = yes
+
+		ai_will_do = { base = 5000 }
+
+		modifier = {
+			command_power_gain = -0.5
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_central_command"
+			hidden_effect = {
+				add_command_power = -35
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_central_command"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+	BRA_better_barracks_faster = {
+		icon = GFX_decision_generic_construction
+		allowed = { always = no }
+		days_remove = 90
+		fire_only_once = yes
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+
+		ai_will_do = { base = 5000 }
+
+		modifier = {
+			civilian_factory_use = 5
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_better_barracks_faster"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+			hidden_effect = {
+				if = {
+					limit = { has_war = no }
+					country_event = { id = brazil_events.7 days = 30 random_days = 6 }
+				}
+
+				else = {
+					country_event = { id = brazil_events.7 days = 15 random_days = 3 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_mandatory_excercies = {
+		icon = GFX_decision_eng_blackshirt_march
+		allowed = { always = no }
+		days_remove = 90
+		fire_only_once = yes
+
+		custom_cost_text = army_xp_50
+		custom_cost_trigger = {
+			NOT = { has_army_experience < 50 }
+		}
+
+		ai_will_do = { base = 5000 }
+
+		modifier = {
+			experience_gain_army_factor = -0.5
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_mandatory_excercies"
+			hidden_effect = { army_experience = -50 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove BRA_mandatory_excercies"
+			set_temp_variable = { BRA_hard_change = 10 }
+			BRA_change_hard = yes
+		}
+		fixed_random_seed = no
+	}
+}
+
+BRA_Army_Reform_Top_Down = {
+	BRA_crush_state_armies = {
+		icon = GFX_decision_generic_arrest
+		allowed = { always = no }
+		fire_only_once = yes
+
+		ai_will_do = { base = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete BRA_crush_state_armies"
+			add_political_power = -200
+			add_stability = -0.2
+			if = {
+				limit = { has_idea = BRA_state_armies1 }
+				swap_ideas = {
+					remove_idea = BRA_state_armies1
+					add_idea = BRA_army_reformed
+				}
+			}
+			else_if = {
+				limit = { has_idea = BRA_state_armies2 }
+				swap_ideas = {
+					remove_idea = BRA_state_armies2
+					add_idea = BRA_army_reformed
+				}
+			}
+			unlock_national_focus = BRA_federal_army
+			unlock_national_focus = BRA_modern_army_corps_organisation
+			unlock_national_focus = BRA_promote_military_invation
+			unlock_national_focus = BRA_stronger_together
+		}
+		fixed_random_seed = no
+	}
+}
+
+BRA_naval_infra_expansion = {
+	BRA_Arsenal_de_Marinha_do_Rio_de_Janeiro = {
+		icon = GFX_decision_generic_naval_base
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 1
+		}
+		days_remove = 90
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 500 }
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_Arsenal_de_Marinha_do_Rio_de_Janeiro"
+			add_to_variable = { BRA_port_refit_completed = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_Arsenal_de_Marinha_do_Rio_de_Janeiro"
+			FROM = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 2
+						province = 10980
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 2
+						VP = 10980
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = 10980
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 10980
+					}
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { BRA_port_refit_completed > 3 }
+				}
+				effect_tooltip = {
+					add_ideas = BRA_upgraded_ports
+				}
+			}
+			hidden_effect = {
+				country_event = { id = brazil_events.214 days = 90 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_Base_Naval_de_Val_de_Caes = {
+		icon = GFX_decision_generic_naval_base
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 0
+		}
+		days_remove = 90
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 500 }
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_Base_Naval_de_Val_de_Caes"
+			add_to_variable = { BRA_port_refit_completed = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_Base_Naval_de_Val_de_Caes"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 2
+						province = 12853
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 2
+						VP = 12853
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = 12853
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 12853
+					}
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { BRA_port_refit_completed > 3 }
+				}
+				effect_tooltip = {
+					add_ideas = BRA_upgraded_ports
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_Base_Naval_em_Natal = {
+		icon = GFX_decision_generic_naval_base
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 0
+		}
+		days_remove = 90
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 500 }
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_Base_Naval_em_Natal"
+			add_to_variable = { BRA_port_refit_completed = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_Base_Naval_em_Natal"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 2
+						province = 10933
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 2
+						VP = 10933
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = 10933
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 10933
+					}
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { BRA_port_refit_completed > 3 }
+				}
+				effect_tooltip = {
+					add_ideas = BRA_upgraded_ports
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	BRA_Base_Naval_de_Aratu = {
+		icon = GFX_decision_generic_naval_base
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 0
+		}
+		days_remove = 90
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { base = 500 }
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete BRA_Base_Naval_de_Aratu"
+			add_to_variable = { BRA_port_refit_completed = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove BRA_Base_Naval_de_Aratu"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						level = 2
+						province = 10946
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = coastal_bunker
+						NUMBER = 2
+						VP = 10946
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = 10946
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 10946
+					}
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { BRA_port_refit_completed > 3 }
+				}
+				add_ideas = BRA_upgraded_ports
+			}
+		}
+		fixed_random_seed = no
+	}
+}

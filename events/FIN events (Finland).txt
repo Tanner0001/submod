@@ -1,0 +1,2508 @@
+###########################
+# Finnish Events
+###########################
+# Old events by hyvinvointinionvaakalaudalla
+###########################
+# New events by VirtualHummingbird
+###########################
+
+add_namespace = finland_events
+
+country_event = { #Black Monday hits Finland
+	id = finland_events.2
+	title = finland_events.2.t
+	desc = finland_events.2.d
+	picture = GFX_report_event_FIN_black_monday
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = { add_ideas = FIN_black_monday_idea_1 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.2 option finland_events.2.a"
+		name = finland_events.2.a
+		add_stability = -0.1
+		effect_tooltip = { add_ideas = FIN_black_monday_idea_1 }
+		unlock_decision_category_tooltip = FIN_black_monday_decisions
+		hidden_effect = {
+			activate_targeted_decision = { decision = FIN_relief_fortification_work target = ROOT }
+			activate_targeted_decision = { decision = FIN_road_building_programme target = ROOT }
+			activate_targeted_decision = { decision = FIN_forgive_farmer_debts target = ROOT }
+			activate_targeted_decision = { decision = FIN_seek_new_markets target = ROOT }
+			activate_targeted_decision = { decision = FIN_inflation_control_measures target = ROOT }
+			country_event = { id = finland_events.4 days = 25 }
+		}
+	}
+}
+
+country_event = { #Lapua Movement rally
+	id = finland_events.4
+	title = finland_events.4.t
+	desc = finland_events.4.d
+	picture = GFX_report_event_FIN_lapua_nationalist_rally
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.4 option finland_events.4.a"
+		name = finland_events.4.a
+		add_political_power = -45
+		add_popularity = { ideology = national_populist popularity = 0.03 }
+		hidden_effect = {
+			country_event = { id = finland_events.5 days = 25 }
+		}
+	}
+}
+
+country_event = { #Finnish People's Delegation protest
+	id = finland_events.5
+	title = finland_events.5.t
+	desc = finland_events.5.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.5 option finland_events.5.a"
+		name = finland_events.5.a
+		add_political_power = -75
+		add_popularity = { ideology = syndicalist popularity = 0.03 }
+		hidden_effect = {
+			country_event = { id = finland_events.6 days = 15 }
+		}
+	}
+}
+
+country_event = { #Lapua Movement and Red Guard clash
+	id = finland_events.6
+	title = finland_events.6.t
+	desc = finland_events.6.d
+	picture = GFX_report_event_FIN_red_guard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = FIN
+					industrial_complex > 0
+				}
+				save_event_target_as = factory_state
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.6 option finland_events.6.a"
+		name = finland_events.6.a
+		add_stability = -0.02
+			#Clash is in Karelia
+		if = {
+			limit = { 146 = { industrial_complex > 0 } }
+			146 = {
+				damage_building = { type = industrial_complex damage = 0.5 }
+			}
+		}
+		else = {
+			event_target:factory_state = {
+				damage_building = { type = industrial_complex damage = 0.5 }
+			}
+		}
+		add_popularity = { ideology = totalist popularity = 0.01 }
+		add_popularity = { ideology = national_populist popularity = 0.01 }
+		hidden_effect = {
+			country_event = { id = finland_events.7 days = 10 }
+		}
+	}
+}
+
+country_event = { #The King makes his decision
+	id = finland_events.7
+	title = finland_events.7.t
+	desc = finland_events.7.d
+	picture = GFX_report_event_military_planning
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Send the Etsivä Keskuspoliisi
+		log = "[GetLogInfo]: event finland_events.7 option finland_events.7.a"
+		name = finland_events.7.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_AUTDEM } }
+			}
+		}
+		add_stability = -0.05
+		add_political_power = -20
+		set_country_flag = FIN_sent_police
+	}
+
+	option = { #The situation will sort itself out
+		log = "[GetLogInfo]: event finland_events.7 option finland_events.7.b"
+		name = finland_events.7.b
+		ai_chance = { base = 50 }
+		add_stability = -0.02
+		add_political_power = 45
+		set_country_flag = FIN_did_not_send_police
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = finland_events.8 days = 15 }
+		}
+	}
+}
+
+country_event = { #The King's Speech
+	id = finland_events.8
+	title = finland_events.8.t
+	desc = {
+		text = finland_events.8.d.disunity
+
+		trigger = {
+			has_country_flag = FIN_sent_police
+		}
+	}
+	desc = {
+		text = finland_events.8.d.unity
+
+		trigger = {
+			has_country_flag = FIN_did_not_send_police
+		}
+	}
+	picture = GFX_report_event_FIN_parliament_house
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #He has bought the country needed time
+		log = "[GetLogInfo]: event finland_events.8 option finland_events.8.a"
+		name = finland_events.8.a
+		if = {
+			limit = { has_country_flag = FIN_sent_police }
+			add_stability = 0.03
+			add_popularity = { ideology = authoritarian_democrat popularity = 0.05 }
+		}
+		if = {
+			limit = { has_country_flag = FIN_did_not_send_police }
+			add_stability = 0.06
+			add_popularity = { ideology = authoritarian_democrat popularity = 0.03 }
+			add_popularity = { ideology = social_conservative popularity = 0.01 }
+			add_popularity = { ideology = social_democrat popularity = 0.01 }
+		}
+		hidden_effect = {
+			country_event = { id = finland_events.9 days = 20 }
+		}
+	}
+}
+
+country_event = { #Wallenius rallies his troops
+	id = finland_events.9
+	title = finland_events.9.t
+	desc = finland_events.9.d
+	picture = GFX_report_event_FIN_white_guard_intro
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.9 option finland_events.9.a"
+		name = finland_events.9.a
+		add_political_power = -50
+		add_popularity = { ideology = national_populist popularity = 0.02 }
+		hidden_effect = {
+			country_event = { id = finland_events.10 days = 15 }
+		}
+	}
+}
+
+country_event = { #Factory workers strike
+	id = finland_events.10
+	title = finland_events.10.t
+	desc = finland_events.10.d
+	picture = GFX_report_event_generic_factory
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #We must concede
+		log = "[GetLogInfo]: event finland_events.10 option finland_events.10.a"
+		name = finland_events.10.a
+		add_political_power = -100
+	}
+
+	option = { #Let them strike
+		log = "[GetLogInfo]: event finland_events.10 option finland_events.10.b"
+		name = finland_events.10.b
+		add_timed_idea = {
+			idea = FIN_labour_strike_idea
+			days = 80
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			if = {
+				limit = { has_country_flag = FIN_sent_police }
+				country_event = { id = finland_events.11 days = 15 }
+			}
+			if = {
+				limit = { has_country_flag = FIN_did_not_send_police }
+				country_event = { id = finland_events.13 days = 15 }
+			}
+		}
+	}
+}
+
+country_event = { #The state police stop the Lapua Movement's plot
+	id = finland_events.11
+	title = finland_events.11.t
+	desc = finland_events.11.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.11 option finland_events.11.a"
+		name = finland_events.11.a
+		add_stability = 0.15
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.13 }
+		add_popularity = { ideology = social_conservative popularity = 0.05 }
+		add_popularity = { ideology = social_liberal popularity = 0.02 }
+		add_popularity = { ideology = national_populist popularity = -0.2 }
+		set_party_name = {
+			ideology = national_populist
+			name = FIN_party_patriotic_peoples_movement
+			long_name = FIN_party_patriotic_peoples_movement_long
+		}
+		retire_character = FIN_kurt_martti_wallenius
+		hidden_effect = {
+			country_event = { id = finland_events.12 days = 20 }
+		}
+	}
+}
+
+country_event = { #The socialists forced underground
+	id = finland_events.12
+	title = finland_events.12.t
+	desc = finland_events.12.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.12 option finland_events.12.a"
+		name = finland_events.12.a
+		add_stability = 0.05
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.04 }
+		add_popularity = { ideology = social_conservative popularity = 0.02 }
+		add_popularity = { ideology = market_liberal popularity = 0.01 }
+		add_popularity = { ideology = syndicalist popularity = -0.05 }
+		add_popularity = { ideology = totalist popularity = -0.02 }
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+	}
+}
+
+country_event = { #Lapua Movement marchs on Parliament
+	id = finland_events.13
+	title = finland_events.13.t
+	desc = finland_events.13.d
+	picture = GFX_report_event_FIN_mantsala_rebellion
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #The Lapua Movement takes power!
+		log = "[GetLogInfo]: event finland_events.13 option finland_events.13.a"
+		name = finland_events.13.a
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_NATPOP } }
+			}
+		}
+		drop_cosmetic_tag = yes
+		complete_national_focus = FIN_the_rebellion_succeeds
+		add_popularity = { ideology = national_populist popularity = 0.4 }
+		set_politics = { ruling_party = national_populist elections_allowed = no }
+		effect_tooltip = { activate_advisor = FIN_bruno_salmiala_sic }
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+		clear_all_relations_except_wars = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+		hidden_effect = {
+			promote_character = FIN_juho_kusti_paasikivi
+			country_event = { id = finland_events.14 days = 6 }
+			random_other_country = { news_event = finland_events.133 }
+		}
+	}
+
+	option = { #The socialists clash with them!
+		log = "[GetLogInfo]: event finland_events.13 option finland_events.13.b"
+		name = finland_events.13.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FIN_path option = FIN_PATH_AUTDEM }
+			}
+		}
+		add_stability = -0.05
+		add_political_power = -50
+		hidden_effect = {
+			country_event = { id = finland_events.15 days = 6 }
+		}
+	}
+
+	option = { #The National Coalition manages to win!
+		log = "[GetLogInfo]: event finland_events.13 option finland_events.13.c"
+		name = finland_events.13.c
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_AUTDEM } }
+			}
+		}
+		add_stability = 0.05
+		add_political_power = -50
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+		hidden_effect = {
+			country_event = { id = finland_events.16 days = 6 }
+		}
+	}
+}
+
+country_event = { #Lapua Movement purges socialists and monarchists
+	id = finland_events.14
+	title = finland_events.14.t
+	desc = finland_events.14.d
+	picture = GFX_report_event_FIN_purges
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.14 option finland_events.14.a"
+		name = finland_events.14.a
+		add_stability = -0.05
+		add_political_power = 150
+		add_popularity = { ideology = totalist popularity = -0.1 }
+		add_popularity = { ideology = syndicalist popularity = -0.1 }
+		add_popularity = { ideology = authoritarian_democrat popularity = -0.5 }
+	}
+}
+
+country_event = { #Socialists clash with Lapua Movement
+	id = finland_events.15
+	title = finland_events.15.t
+	desc = finland_events.15.d
+	picture = GFX_report_event_FIN_red_guard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #The socialists take power!
+		log = "[GetLogInfo]: event finland_events.15 option finland_events.15.a"
+		name = finland_events.15.a
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_SYNDIE } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_TOTALIST } }
+			}
+		}
+		drop_cosmetic_tag = yes
+		complete_national_focus = FIN_socialist_victory
+		add_popularity = { ideology = syndicalist popularity = 0.35 }
+		add_popularity = { ideology = totalist popularity = 0.1 }
+		set_politics = {
+			ruling_party = syndicalist
+			election_frequency = 36
+			elections_allowed = yes
+		}
+		effect_tooltip = { activate_advisor = FIN_adolf_taimi_sic }
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+		clear_all_relations_except_wars = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+		add_named_threat = {
+			threat = 1
+			name = FIN_revolution_threat
+		}
+		hidden_effect = {
+			promote_character = FIN_juho_kusti_paasikivi
+			country_event = { id = finland_events.17 days = 6 }
+			random_other_country = { news_event = finland_events.133 }
+			remove_targeted_decision = { target = GER decision = FIN_join_reichspakt }
+			remove_targeted_decision = { target = SWE decision = FIN_join_nordic_council }
+			remove_targeted_decision = { target = DEN decision = FIN_join_nordic_council }
+			remove_targeted_decision = { target = NOR decision = FIN_join_nordic_council }
+		}
+	}
+
+	option = { #The Lapua Movement takes power!
+		log = "[GetLogInfo]: event finland_events.15 option finland_events.15.b"
+		name = finland_events.15.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_NATPOP } }
+			}
+		}
+		drop_cosmetic_tag = yes
+		complete_national_focus = FIN_the_rebellion_succeeds
+		add_popularity = { ideology = national_populist popularity = 0.4 }
+		set_politics = { ruling_party = national_populist elections_allowed = no }
+		effect_tooltip = { activate_advisor = FIN_bruno_salmiala_sic }
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+		clear_all_relations_except_wars = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+		add_named_threat = {
+			threat = 1
+			name = FIN_coup_threat
+		}
+		hidden_effect = {
+			promote_character = FIN_juho_kusti_paasikivi
+			country_event = { id = finland_events.14 days = 6 }
+			random_other_country = { news_event = finland_events.133 }
+		}
+	}
+
+	option = { #Mannerheim successfully rallies the White Guard!
+		log = "[GetLogInfo]: event finland_events.15 option finland_events.15.c"
+		name = finland_events.15.c
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = FIN_path option = FIN_PATH_AUTDEM }
+					has_game_rule = { rule = FIN_path option = FIN_PATH_NATPOP }
+					has_game_rule = { rule = FIN_path option = FIN_PATH_SYNDIE }
+					has_game_rule = { rule = FIN_path option = FIN_PATH_TOTALIST }
+				}
+			}
+		}
+		show_unit_leaders_tooltip = FIN_carl_gustaf_mannerheim
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = available_chief_of_army
+		show_ideas_tooltip = FIN_carl_gustaf_mannerheim_army_chief
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = FIN_carl_gustaf_mannerheim_advisor
+		add_popularity = { ideology = national_populist popularity = -0.2 }
+		add_popularity = { ideology = paternal_autocrat popularity = 0.15 }
+		hidden_effect = {
+			leave_faction = yes
+			FIN_carl_gustaf_mannerheim = { set_character_flag = FIN_mannerheim_available }
+			country_event = { id = finland_events.18 days = 6 }
+		}
+	}
+
+	option = { #Mannerheim fails to rally the White Guard!
+		log = "[GetLogInfo]: event finland_events.15 option finland_events.15.e"
+		name = finland_events.15.e
+		ai_chance = {
+			base = 0
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_NATPOP } }
+			}
+		}
+		drop_cosmetic_tag = yes
+		complete_national_focus = FIN_the_rebellion_succeeds
+		add_popularity = { ideology = national_populist popularity = 0.4 }
+		add_popularity = { ideology = paternal_autocrat popularity = -0.15 }
+		set_politics = { ruling_party = national_populist elections_allowed = no }
+		effect_tooltip = { activate_advisor = FIN_bruno_salmiala_sic }
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+		clear_all_relations_except_wars = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+		hidden_effect = {
+			promote_character = FIN_juho_kusti_paasikivi
+			country_event = { id = finland_events.14 days = 6 }
+		}
+	}
+}
+
+country_event = { #Monarchists purge nationalists and socialists
+	id = finland_events.16
+	title = finland_events.16.t
+	desc = finland_events.16.d
+	picture = GFX_report_event_FIN_purges
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.16 option finland_events.16.a"
+		name = finland_events.16.a
+		add_stability = -0.05
+		add_political_power = 150
+		add_popularity = { ideology = national_populist popularity = -0.2 }
+		add_popularity = { ideology = syndicalist popularity = -0.2 }
+		add_popularity = { ideology = totalist popularity = -0.1 }
+	}
+}
+
+country_event = { #Socialists purge nationalists and monarchists
+	id = finland_events.17
+	title = finland_events.17.t
+	desc = finland_events.17.d
+	picture = GFX_report_event_FIN_red_guard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.17 option finland_events.17.a"
+		name = finland_events.17.a
+		add_stability = -0.05
+		add_political_power = 150
+		add_popularity = { ideology = national_populist popularity = -0.2 }
+		add_popularity = { ideology = authoritarian_democrat popularity = -0.5 }
+		hidden_effect = {
+			country_event = { id = finland_events.33 days = 10 }
+		}
+	}
+}
+
+country_event = { #Lapua Movement taken out and White Guard clash with socialists
+	id = finland_events.18
+	title = finland_events.18.t
+	desc = finland_events.18.d
+	picture = GFX_report_event_FIN_white_guard_intro
+
+	fire_only_once = yes
+	is_triggered_only = yes
+	immediate = {
+		hidden_effect = {
+			add_popularity = { ideology = national_populist popularity = -0.2 }
+		}
+	}
+
+	option = { #The socialists win!
+		log = "[GetLogInfo]: event finland_events.18 option finland_events.18.a"
+		name = finland_events.18.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_SYNDIE } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_TOTALIST } }
+			}
+		}
+		drop_cosmetic_tag = yes
+		complete_national_focus = FIN_socialist_victory
+		add_popularity = { ideology = syndicalist popularity = 0.35 }
+		add_popularity = { ideology = totalist popularity = 0.1 }
+		set_politics = {
+			ruling_party = syndicalist
+			election_frequency = 36
+			elections_allowed = yes
+		}
+		effect_tooltip = { activate_advisor = FIN_adolf_taimi_sic }
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+		clear_all_relations_except_wars = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+		hidden_effect = {
+			promote_character = FIN_juho_kusti_paasikivi
+			country_event = { id = finland_events.19 days = 6 }
+			random_other_country = { news_event = finland_events.133 }
+			remove_targeted_decision = { target = GER decision = FIN_join_reichspakt }
+			remove_targeted_decision = { target = SWE decision = FIN_join_nordic_council }
+			remove_targeted_decision = { target = DEN decision = FIN_join_nordic_council }
+			remove_targeted_decision = { target = NOR decision = FIN_join_nordic_council }
+		}
+	}
+
+	option = { #Mannerheim wins!
+		log = "[GetLogInfo]: event finland_events.18 option finland_events.18.b"
+		name = finland_events.18.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = FIN_path option = FIN_PATH_SYNDIE }
+					has_game_rule = { rule = FIN_path option = FIN_PATH_TOTALIST }
+				}
+			}
+		}
+		drop_cosmetic_tag = yes
+		add_popularity = { ideology = paternal_autocrat popularity = 0.25 }
+		add_popularity = { ideology = social_democrat popularity = 0.05 }
+		add_popularity = { ideology = social_liberal popularity = 0.03 }
+		set_politics = { ruling_party = paternal_autocrat elections_allowed = no }
+		effect_tooltip = { activate_advisor = FIN_erik_heinrichs_sic }
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+		clear_all_relations_except_wars = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+		hidden_effect = {
+			drop_cosmetic_tag = yes
+			promote_character = FIN_juho_kusti_paasikivi
+			country_event = { id = finland_events.20 days = 6 }
+		}
+	}
+}
+
+country_event = { #Socialists purge White Guard and monarchists
+	id = finland_events.19
+	title = finland_events.19.t
+	desc = finland_events.19.d
+	picture = GFX_report_event_FIN_red_guard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.19 option finland_events.19.a"
+		name = finland_events.19.a
+		add_stability = -0.05
+		add_popularity = { ideology = paternal_autocrat popularity = -0.1 }
+		add_popularity = { ideology = national_populist popularity = -0.2 }
+		add_popularity = { ideology = authoritarian_democrat popularity = -0.5 }
+		hidden_effect = {
+			country_event = { id = finland_events.33 days = 10 }
+		}
+	}
+}
+
+country_event = { #Mannerheim's decision
+	id = finland_events.20
+	title = finland_events.20.t
+	desc = finland_events.20.d
+	picture = GFX_report_event_FIN_mannerheim
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Mannerheim holds on to power
+		log = "[GetLogInfo]: event finland_events.20 option finland_events.20.a"
+		name = finland_events.20.a
+		ai_chance = {
+			base = 55
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_PATAUT } }
+			}
+		}
+		complete_national_focus = FIN_mannerheims_ascendancy
+		add_stability = 0.1
+		add_political_power = 50
+	}
+
+	option = { #Mannerheim relinquishes power
+		log = "[GetLogInfo]: event finland_events.20 option finland_events.20.b"
+		name = finland_events.20.b
+		ai_chance = {
+			base = 45
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FIN_path option = FIN_PATH_PATAUT }
+			}
+		}
+		add_political_power = 100
+		hidden_effect = {
+			country_event = { id = finland_events.21 days = 10 }
+		}
+	}
+
+	after = {
+		hidden_effect = { news_event = finland_events.133 }
+	}
+}
+
+country_event = { #Finnish snap elections
+	id = finland_events.21
+	title = finland_events.21.t
+	desc = finland_events.21.d
+	picture = GFX_report_event_election_vote
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #The Social Democrats win!
+		log = "[GetLogInfo]: event finland_events.21 option finland_events.21.a"
+		name = finland_events.21.a
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_SDP_SOCDEM } }
+			}
+		}
+		complete_national_focus = FIN_democracy_triumphant
+		add_political_power = 150
+		add_popularity = { ideology = social_democrat popularity = 0.35 }
+		set_politics = {
+			ruling_party = social_democrat
+			election_frequency = 36
+			elections_allowed = yes
+		}
+		effect_tooltip = { activate_advisor = FIN_karl_august_fagerholm_sic }
+	}
+
+	option = { #A joint Red-Earth Government wins!
+		log = "[GetLogInfo]: event finland_events.21 option finland_events.21.b"
+		name = finland_events.21.b
+		ai_chance = {
+			base = 35
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_RED_EARTH_SOCDEM } }
+			}
+		}
+		complete_national_focus = FIN_democracy_triumphant
+		add_stability = 0.1
+		add_political_power = 25
+		add_popularity = { ideology = social_democrat popularity = 0.25 }
+		add_popularity = { ideology = social_liberal popularity = 0.15 }
+		set_politics = {
+			ruling_party = social_democrat
+			election_frequency = 36
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		activate_advisor = FIN_kyosti_kallio_sic
+	}
+
+	option = { #The Agrarians win!
+		log = "[GetLogInfo]: event finland_events.21 option finland_events.21.c"
+		name = finland_events.21.c
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_SOCLIB } }
+			}
+		}
+		complete_national_focus = FIN_democracy_triumphant
+		add_political_power = 150
+		add_popularity = { ideology = social_liberal popularity = 0.35 }
+		set_politics = {
+			ruling_party = social_liberal
+			election_frequency = 36
+			elections_allowed = yes
+		}
+		effect_tooltip = { activate_advisor = FIN_juho_sunila_sic }
+	}
+
+	option = { #The National Coalition wins!
+		log = "[GetLogInfo]: event finland_events.21 option finland_events.21.e"
+		name = finland_events.21.e
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FIN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FIN_path option = FIN_PATH_SOCCON } }
+			}
+		}
+		complete_national_focus = FIN_the_old_order
+		add_political_power = 150
+		add_popularity = { ideology = social_conservative popularity = 0.35 }
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 36
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		effect_tooltip = { activate_advisor = FIN_edwin_flinck_sic }
+	}
+
+	after = {
+		if = {
+			limit = { has_idea = FIN_mounting_dissent_idea }
+			remove_ideas = FIN_mounting_dissent_idea
+		}
+	}
+}
+
+country_event = { #Explanation about the Red-Earth government
+	id = finland_events.22
+	title = finland_events.22.t
+	desc = finland_events.22.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.22 option finland_events.22.a"
+		name = finland_events.22.a
+	}
+}
+
+country_event = { #Getting rid of radicalism
+	id = finland_events.23
+	title = finland_events.23.t
+	desc = finland_events.23.d
+	picture = GFX_report_event_election_vote
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.23 option finland_events.23.a"
+		name = finland_events.23.a
+		add_stability = 0.02
+	}
+}
+
+country_event = { #Mending divisions from the civil war
+	id = finland_events.25
+	title = finland_events.25.t
+	desc = finland_events.25.d
+	picture = GFX_report_event_generic_read_write
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.25 option finland_events.25.a"
+		name = finland_events.25.a
+		add_stability = 0.03
+	}
+}
+
+country_event = { #Favouring the workers/farmers (Red-Earth)
+	id = finland_events.26
+	title = finland_events.26.t
+	desc = {
+		text = finland_events.26.d.socdem
+
+		trigger = {
+			has_completed_focus = FIN_favour_the_workers
+		}
+	}
+	desc = {
+		text = finland_events.26.d.soclib
+
+		trigger = {
+			has_completed_focus = FIN_favour_the_farmers
+		}
+	}
+	picture = GFX_report_event_FIN_parliament_house
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.26 option finland_events.26.a"
+		name = finland_events.26.a
+		add_political_power = -50
+		end_coalition = yes
+		if = {
+			limit = { has_completed_focus = FIN_favour_the_workers }
+			add_ideas = FIN_favouring_the_workers_idea
+			add_popularity = { ideology = social_democrat popularity = -0.04 }
+		}
+		if = {
+			limit = { has_completed_focus = FIN_favour_the_farmers }
+			add_ideas = FIN_favouring_the_farmers_idea
+			add_popularity = { ideology = social_liberal popularity = -0.04 }
+			set_politics = { ruling_party = social_liberal elections_allowed = no }
+		}
+	}
+}
+
+country_event = { #Preserving the Red-Earth government
+	id = finland_events.27
+	title = finland_events.27.t
+	desc = finland_events.27.d
+	picture = GFX_report_event_FIN_parliament_house
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.27 option finland_events.27.a"
+		name = finland_events.27.a
+		add_political_power = 25
+		add_ideas = FIN_preserving_the_coalition_idea
+	}
+}
+
+country_event = { #Favouring the workers/farmers (Agrarian/SocDem)
+	id = finland_events.28
+	title = finland_events.28.t
+	desc = {
+		text = finland_events.28.d.socdem
+
+		trigger = {
+			has_government = social_democrat
+		}
+	}
+	desc = {
+		text = finland_events.28.d.soclib
+
+		trigger = {
+			has_government = social_liberal
+		}
+	}
+	picture = GFX_report_event_FIN_parliament_house
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.28 option finland_events.28.a"
+		name = finland_events.28.a
+		add_political_power = -100
+		if = {
+			limit = { has_government = social_democrat }
+			add_ideas = FIN_favouring_the_workers_idea
+			add_popularity = { ideology = social_democrat popularity = 0.02 }
+		}
+		if = {
+			limit = { has_government = social_liberal }
+			add_ideas = FIN_favouring_the_farmers_idea
+			add_popularity = { ideology = social_liberal popularity = 0.02 }
+		}
+	}
+}
+
+country_event = { #Explanation about the Social Democrats
+	id = finland_events.29
+	title = finland_events.29.t
+	desc = finland_events.29.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.29 option finland_events.29.a"
+		name = finland_events.29.a
+	}
+}
+
+country_event = { #Explanation about the Agrarians
+	id = finland_events.31
+	title = finland_events.31.t
+	desc = finland_events.31.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.31 option finland_events.31.a"
+		name = finland_events.31.a
+	}
+}
+
+country_event = { #Curtailing Swedish rights
+	id = finland_events.32
+	title = finland_events.32.t
+	desc = finland_events.32.d
+	picture = GFX_report_event_generic_read_write
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Go forth with it
+		log = "[GetLogInfo]: event finland_events.32 option finland_events.32.a"
+		name = finland_events.32.a
+		ai_chance = { base = 75 }
+		add_political_power = 50
+		retire_character = FIN_lauri_malmberg
+		retire_character = FIN_paul_von_gerich
+		SWE = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = FIN_curtailed_swedish_rights
+			}
+		}
+		hidden_effect = { country_event = finland_events.56 }
+	}
+
+	option = { #Allow them to retain autonomy
+		log = "[GetLogInfo]: event finland_events.32 option finland_events.32.b"
+		name = finland_events.32.b
+		ai_chance = { base = 25 }
+		add_political_power = -50
+		add_popularity = { ideology = social_liberal popularity = -0.1 }
+		SWE = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = FIN_let_them_be
+			}
+		}
+	}
+}
+
+country_event = { #Freeing Kullervo Manner
+	id = finland_events.33
+	title = finland_events.33.t
+	desc = finland_events.33.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.33 option finland_events.33.a"
+		name = finland_events.33.a
+		add_political_power = 100
+		add_stability = 0.02
+	}
+}
+
+country_event = { #The socialist constitution
+	id = finland_events.36
+	title = finland_events.36.t
+	desc = {
+		text = finland_events.36.d.syndicalist
+
+		trigger = {
+			has_government = syndicalist
+		}
+	}
+	desc = {
+		text = finland_events.36.d.totalist
+
+		trigger = {
+			has_government = totalist
+		}
+	}
+	picture = GFX_report_event_generic_read_write
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.36 option finland_events.36.a"
+		name = finland_events.36.a
+	}
+}
+
+country_event = { #Explanation about the Finnish People's Delegation
+	id = finland_events.37
+	title = finland_events.37.t
+	desc = finland_events.37.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.37 option finland_events.37.a"
+		name = finland_events.37.a
+	}
+}
+
+country_event = { #Weakening the Red Guard
+	id = finland_events.38
+	title = finland_events.38.t
+	desc = finland_events.38.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = FIN
+		focus_progress = { focus = FIN_disband_the_red_guard progress > 0.2 }
+	}
+	mean_time_to_happen = {
+		days = 5
+	}
+
+	option = { #Our operation has succeeded
+		log = "[GetLogInfo]: event finland_events.38 option finland_events.38.a"
+		name = finland_events.38.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FIN_path option = FIN_PATH_TOTALIST }
+			}
+		}
+		add_ideas = FIN_weakened_red_guard_idea
+		set_country_flag = FIN_red_guard_weakening_success
+	}
+
+	option = { #The Red Guard have caught on
+		log = "[GetLogInfo]: event finland_events.38 option finland_events.38.b"
+		name = finland_events.38.b
+		ai_chance = { base = 50 }
+		add_political_power = -50
+		set_country_flag = FIN_red_guard_weakening_fail
+		hidden_effect = {
+			country_event = { id = finland_events.39 days = 10 }
+		}
+	}
+}
+
+country_event = { #The Red Guard's response
+	id = finland_events.39
+	title = finland_events.39.t
+	desc = finland_events.39.d
+	picture = GFX_report_event_FIN_red_guard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #The Red Guard are successfully ousted
+		log = "[GetLogInfo]: event finland_events.39 option finland_events.39.a"
+		name = finland_events.39.a
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FIN_path option = FIN_PATH_TOTALIST }
+			}
+		}
+		add_stability = -0.1
+		add_political_power = 100
+		set_country_flag = FIN_red_guard_ousted
+		remove_ideas = FIN_weakened_red_guard_idea
+		add_timed_idea = {
+			idea = FIN_red_guard_disbanded_idea
+			days = 80
+		}
+	}
+
+	option = { #The Red Guard take power
+		log = "[GetLogInfo]: event finland_events.39 option finland_events.39.b"
+		name = finland_events.39.b
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FIN_path option = FIN_PATH_SYNDIE }
+			}
+		}
+		add_political_power = -100
+		add_popularity = { ideology = syndicalist popularity = -0.2 }
+		add_popularity = { ideology = totalist popularity = 0.35 }
+		set_politics = { ruling_party = totalist elections_allowed = no }
+		effect_tooltip = { activate_advisor = FIN_tuomas_hyrskymurto_sic }
+	}
+}
+
+country_event = { #Disbanding the Red Guard
+	id = finland_events.40
+	title = finland_events.40.t
+	desc = finland_events.40.d
+	picture = GFX_report_event_FIN_red_guard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #The Red Guard are disbanded
+		log = "[GetLogInfo]: event finland_events.40 option finland_events.40.a"
+		name = finland_events.40.a
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FIN_path option = FIN_PATH_TOTALIST }
+			}
+		}
+		add_stability = -0.1
+		add_political_power = 100
+		remove_ideas = FIN_weakened_red_guard_idea
+		add_timed_idea = {
+			idea = FIN_red_guard_disbanded_idea
+			days = 80
+		}
+	}
+
+	option = { #The Red Guard take power
+		log = "[GetLogInfo]: event finland_events.40 option finland_events.40.b"
+		name = finland_events.40.b
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FIN_path option = FIN_PATH_SYNDIE }
+			}
+		}
+		add_political_power = -100
+		add_popularity = { ideology = syndicalist popularity = -0.2 }
+		add_popularity = { ideology = totalist popularity = 0.35 }
+		set_politics = { ruling_party = totalist elections_allowed = no }
+		effect_tooltip = { activate_advisor = FIN_tuomas_hyrskymurto_sic }
+	}
+}
+
+country_event = { #Explanation about the Red Guard
+	id = finland_events.43
+	title = finland_events.43.t
+	desc = finland_events.43.d
+	picture = GFX_report_event_FIN_red_guard
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.43 option finland_events.43.a"
+		name = finland_events.43.a
+	}
+}
+
+country_event = { #The question of our military high command
+	id = finland_events.48
+	title = finland_events.48.t
+	desc = finland_events.48.d
+	picture = GFX_report_event_military_planning
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Purge them
+		log = "[GetLogInfo]: event finland_events.48 option finland_events.48.a"
+		name = finland_events.48.a
+		ai_chance = { base = 0 }
+		add_political_power = 100
+		custom_effect_tooltip = characters_will_be_retired
+		character_list_tooltip = {
+			limit = {
+				OR = {
+					is_character = FIN_karl_lennart_oesch
+					is_character = FIN_ruben_lagus
+					is_character = FIN_hjalmar_siilasvuo
+					is_character = FIN_erik_heinrichs
+					is_character = FIN_harald_ohquist
+					is_character = FIN_lauri_malmberg
+				}
+			}
+		}
+		hidden_effect = {
+			retire_character = FIN_karl_lennart_oesch
+			retire_character = FIN_ruben_lagus
+			retire_character = FIN_hjalmar_siilasvuo
+			retire_character = FIN_erik_heinrichs
+			retire_character = FIN_harald_ohquist
+			retire_character = FIN_lauri_malmberg
+		}
+		add_timed_idea = {
+			idea = FIN_military_purges_idea
+			days = 250
+		}
+	}
+
+	option = { #We could use their expertise
+		log = "[GetLogInfo]: event finland_events.48 option finland_events.48.b"
+		name = finland_events.48.b
+		ai_chance = { base = 100 }
+		add_political_power = -50
+	}
+}
+
+country_event = { #Finland remilitarises the Aaland Islands
+	id = finland_events.52
+	title = finland_events.52.t
+	desc = finland_events.52.d
+	picture = GFX_report_event_generic_conference
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Declare war!
+		log = "[GetLogInfo]: event finland_events.52 option finland_events.52.a"
+		name = finland_events.52.a
+
+		trigger = {
+			can_declare_war_on = FIN
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				has_war = yes
+				factor = 0
+			}
+			modifier = {
+				has_idea = SWE_black_monday
+				factor = 0
+			}
+			modifier = {
+				strength_ratio = { tag = FIN ratio > 2.0 }
+				factor = 0
+			}
+		}
+		add_political_power = -100
+		create_wargoal = {
+			type = annex_everything
+			target = FIN
+		}
+	}
+
+	option = { #Pressure Finland to hand over the islands
+		log = "[GetLogInfo]: event finland_events.52 option finland_events.52.b"
+		name = finland_events.52.b
+		ai_chance = { base = 100 }
+		add_political_power = 50
+		hidden_effect = {
+			FIN = { country_event = { id = finland_events.53 days = 5 } }
+		}
+	}
+}
+
+country_event = { #Sweden demands the Aaland islands
+	id = finland_events.53
+	title = finland_events.53.t
+	desc = finland_events.53.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.53 option finland_events.53.a"
+		name = finland_events.53.a
+		SWE = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = FIN_snubbed_us
+			}
+		}
+	}
+}
+
+country_event = { #Explanation about the Social Conservatives
+	id = finland_events.54
+	title = finland_events.54.t
+	desc = finland_events.54.d
+	picture = GFX_report_event_generic_conference
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.54 option finland_events.54.a"
+		name = finland_events.54.a
+	}
+}
+
+country_event = { #Aaland-ers(?) react
+	id = finland_events.56
+	title = finland_events.56.t
+	desc = finland_events.56.d
+	picture = GFX_report_event_generic_riot
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.56 option finland_events.56.a"
+		name = finland_events.56.a
+		add_popularity = { ideology = national_populist popularity = 0.05 }
+		if = {
+			limit = { 145 = { is_core_of = FIN } }
+			145 = {
+				remove_core_of = FIN
+				add_claim_by = FIN
+			}
+		}
+	}
+}
+
+country_event = { #Explanation about the Paternal Autocrats
+	id = finland_events.57
+	title = finland_events.57.t
+	desc = finland_events.57.d
+	picture = GFX_report_event_generic_conference
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.57 option finland_events.57.a"
+		name = finland_events.57.a
+	}
+}
+
+country_event = { #Supporting the King
+	id = finland_events.58
+	title = finland_events.58.t
+	desc = finland_events.58.d
+	picture = GFX_report_event_FIN_king_fredrik
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.58 option finland_events.58.a"
+		name = finland_events.58.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Expanding the state police
+	id = finland_events.59
+	title = finland_events.59.t
+	desc = finland_events.59.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.59 option finland_events.59.a"
+		name = finland_events.59.a
+		add_war_support = 0.03
+	}
+}
+
+country_event = { #Constitution of Finland
+	id = finland_events.61
+	title = finland_events.61.t
+	desc = finland_events.61.d
+	picture = GFX_report_event_generic_read_write
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.61 option finland_events.61.a"
+		name = finland_events.61.a
+		add_stability = 0.05
+	}
+}
+
+country_event = { #Recognising Finnish independence
+	id = finland_events.63
+	title = finland_events.63.t
+	desc = finland_events.63.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Sure
+		log = "[GetLogInfo]: event finland_events.63 option finland_events.63.a"
+		name = finland_events.63.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.5
+				is_in_faction_with = GER
+				FIN = {
+					NOT = {
+						has_government = authoritarian_democrat
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_war_with = FIN
+			}
+			modifier = {
+				factor = 0.25
+				tag = GER
+			}
+			modifier = {
+				factor = 0.75
+				has_war = yes
+			}
+		}
+		FIN = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = FIN_recognised_our_independence
+			}
+		}
+		hidden_effect = {
+			FIN = { country_event = { id = finland_events.64 days = 10 } }
+		}
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event finland_events.63 option finland_events.63.b"
+		name = finland_events.63.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.5
+				is_in_faction_with = GER
+				FIN = {
+					NOT = {
+						has_government = authoritarian_democrat
+					}
+				}
+			}
+			modifier = {
+				factor = 100
+				has_war_with = FIN
+			}
+			modifier = {
+				factor = 0.75
+				tag = GER
+			}
+			modifier = {
+				factor = 0.25
+				has_war = yes
+			}
+		}
+		FIN = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = FIN_did_not_recognise_our_independence
+			}
+		}
+		hidden_effect = {
+			FIN = { country_event = { id = finland_events.65 days = 10 } }
+		}
+	}
+}
+
+country_event = { #FROM has recognised us!
+	id = finland_events.64
+	title = finland_events.64.t
+	desc = finland_events.64.d
+	picture = GFX_report_event_FIN_parliament_house
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.64 option finland_events.64.a"
+		name = finland_events.64.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #FROM has not recognised us...
+	id = finland_events.65
+	title = finland_events.65.t
+	desc = finland_events.65.d
+	picture = GFX_report_event_FIN_parliament_house
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.65 option finland_events.65.a"
+		name = finland_events.65.a
+		add_political_power = -50
+	}
+}
+
+country_event = { #White peace with Sweden
+	id = finland_events.108
+	title = finland_events.108.t
+	desc = finland_events.108.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = FIN
+		has_war_with = SWE
+		is_valid_peace_target = yes
+		surrender_progress < 0.10
+		SWE = {
+			is_valid_peace_target = yes
+			surrender_progress > 0.20
+		}
+		909 = {
+			is_owned_by = SWE
+			is_controlled_by = FIN
+		}
+	}
+	mean_time_to_happen = {
+		days = 30
+	}
+
+	option = { #Make peace
+		log = "[GetLogInfo]: event finland_events.108 option finland_events.108.a"
+		name = finland_events.108.a
+		ai_chance = { base = 100 }
+		hidden_effect = {
+			SWE = { country_event = { id = finland_events.109 days = 5 } }
+		}
+	}
+
+	option = { #Continue the war
+		log = "[GetLogInfo]: event finland_events.108 option finland_events.108.b"
+		name = finland_events.108.b
+		ai_chance = { base = 0 }
+		add_political_power = -50
+	}
+}
+
+country_event = { #Finland wants to peace out?
+	id = finland_events.109
+	title = finland_events.109.t
+	desc = finland_events.109.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = FIN
+	}
+
+	option = { #Yes
+		log = "[GetLogInfo]: event finland_events.109 option finland_events.109.a"
+		name = finland_events.109.a
+		ai_chance = { base = 40 }
+		FIN = {
+			transfer_state = 909
+			white_peace_with_ROOT = yes
+		}
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event finland_events.109 option finland_events.109.b"
+		name = finland_events.109.b
+		ai_chance = { base = 60 }
+		add_political_power = -25
+		hidden_effect = {
+			FIN = { country_event = { id = finland_events.110 days = 5 } }
+		}
+	}
+}
+
+country_event = { #Sweden is continuing the fight
+	id = finland_events.110
+	title = finland_events.110.t
+	desc = finland_events.110.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Their loss
+		log = "[GetLogInfo]: event finland_events.110 option finland_events.110.a"
+		name = finland_events.110.a
+	}
+}
+
+country_event = { #White peace with Norway
+	id = finland_events.111
+	title = finland_events.111.t
+	desc = finland_events.111.d
+	picture = GFX_report_event_soldiers_marching
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = FIN
+		has_war_with = NOR
+		is_valid_peace_target = yes
+		NOR = {
+			is_valid_peace_target = yes
+			surrender_progress > 0.20
+		}
+		NOT = { surrender_progress > 0 }
+		937 = {
+			is_owned_by = NOR
+			is_controlled_by = FIN
+		}
+	}
+	mean_time_to_happen = {
+		days = 30
+	}
+
+	option = { #Make peace
+		log = "[GetLogInfo]: event finland_events.111 option finland_events.111.a"
+		name = finland_events.111.a
+		ai_chance = { base = 100 }
+		hidden_effect = {
+			NOR = { country_event = { id = finland_events.112 days = 5 } }
+		}
+	}
+
+	option = { #Continue the war
+		log = "[GetLogInfo]: event finland_events.111 option finland_events.111.b"
+		name = finland_events.111.b
+		ai_chance = { base = 0 }
+		add_political_power = -50
+	}
+}
+
+country_event = { #Finland wants to peace out?
+	id = finland_events.112
+	title = finland_events.112.t
+	desc = finland_events.112.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event finland_events.112 option finland_events.112.a"
+		name = finland_events.112.a
+		ai_chance = { base = 70 }
+		FIN = {
+			transfer_state = 937
+			white_peace_with_ROOT = yes
+		}
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event finland_events.112 option finland_events.112.b"
+		name = finland_events.112.b
+		ai_chance = { base = 30 }
+		add_political_power = -25
+		hidden_effect = {
+			FIN = { country_event = { id = finland_events.113 days = 5 } }
+		}
+	}
+}
+
+country_event = { #Norway is continuing the fight
+	id = finland_events.113
+	title = finland_events.113.t
+	desc = finland_events.113.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Their loss
+		log = "[GetLogInfo]: event finland_events.113 option finland_events.113.a"
+		name = finland_events.113.a
+	}
+}
+
+country_event = { #White peace with Russia
+	id = finland_events.114
+	title = finland_events.114.t
+	desc = finland_events.114.d
+	picture = GFX_report_event_soldiers_marching
+
+	trigger = {
+		original_tag = FIN
+		has_war_with = RUS
+		is_valid_peace_target = yes
+		RUS = { is_valid_peace_target_against_PREV = yes }
+		OR = {
+			RUS = { surrender_progress > 0.2 }
+			195 = { #Petrograd
+				is_controlled_by = ROOT
+				owner = { is_ally_with = RUS }
+			}
+			AND = {
+				RUS = { surrender_progress > 0.1 }
+				213 = { #Murmansk
+					is_controlled_by = ROOT
+					owner = { is_ally_with = RUS }
+				}
+				215 = { #White Karelia
+					is_controlled_by = ROOT
+					owner = { is_ally_with = RUS }
+				}
+				216 = { #Petrozavodsk
+					is_controlled_by = ROOT
+					owner = { is_ally_with = RUS }
+				}
+				722 = { #Petsamo
+					is_controlled_by = ROOT
+					owner = { is_ally_with = RUS }
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 30
+	}
+
+	fire_only_once = yes
+
+	option = { #Make peace
+		log = "[GetLogInfo]: event finland_events.114 option finland_events.114.a"
+		name = finland_events.114.a
+		RUS = { country_event = { id = finland_events.115 days = 5 } }
+	}
+
+	option = { #Continue the war
+		log = "[GetLogInfo]: event finland_events.114 option finland_events.114.b"
+		name = finland_events.114.b
+		ai_chance = { base = 0 }
+		add_political_power = -50
+	}
+}
+
+country_event = { #Finland wants to peace out?
+	id = finland_events.115
+	title = finland_events.115.t
+	desc = finland_events.115.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event finland_events.115 option finland_events.115.a"
+		name = finland_events.115.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_war_with_major = no
+				enemies_strength_ratio < 1
+				surrender_progress < 0.1
+				controls_state = 195 #Petrograd
+			}
+		}
+		set_temp_variable = { target = FROM }
+		every_owned_state = {
+			limit = {
+				OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
+					region = 215 #Karelia
+					state = 213 #Murmansk
+					state = 215 #White Karelia
+					state = 216 #Petrozavodsk
+					state = 722 #Petsamo
+				}
+			}
+			transfer_state_during_war = yes
+		}
+		FROM = { white_peace_with_ROOT = yes }
+	}
+
+	option = { #No
+		log = "[GetLogInfo]: event finland_events.115 option finland_events.115.b"
+		name = finland_events.115.b
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				enemies_strength_ratio > 2
+			}
+			modifier = {
+				factor = 0
+				surrender_progress > 0.2
+			}
+			modifier = {
+				factor = 0
+				capital_scope = { any_neighbor_state = { controller = { has_war_with = ROOT } } } #Moscow
+			}
+			modifier = {
+				factor = 0.5
+				has_war_with_major = yes
+			}
+			modifier = {
+				factor = 0.5
+				enemies_strength_ratio > 1
+			}
+			modifier = {
+				factor = 0.5
+				enemies_strength_ratio > 1.5
+			}
+			modifier = {
+				factor = 0.5
+				surrender_progress > 0.1
+			}
+			modifier = {
+				factor = 0.5
+				NOT = { controls_state = 195 } #Petrograd
+			}
+		}
+		add_political_power = -25
+		hidden_effect = {
+			FIN = { country_event = { id = finland_events.116 days = 5 } }
+		}
+	}
+}
+
+country_event = { #Russia is continuing the fight
+	id = finland_events.116
+	title = finland_events.116.t
+	desc = finland_events.116.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Their loss
+		log = "[GetLogInfo]: event finland_events.116 option finland_events.116.a"
+		name = finland_events.116.a
+	}
+}
+
+country_event = { #Finland petitions to join the Nordic Council
+	id = finland_events.117
+	title = finland_events.117.t
+	desc = finland_events.117.d
+	picture = GFX_report_event_SWE_military_meeting
+
+	is_triggered_only = yes
+
+	option = { #Welcome!
+		log = "[GetLogInfo]: event finland_events.117 option finland_events.117.a"
+		name = finland_events.117.a
+		ai_chance = { base = 100 }
+		if = {
+			limit = { is_in_faction = no }
+			create_faction_from_template = { template = faction_template_defender_of_democracy name = nordic_council }
+			add_to_faction = FROM
+		}
+		else_if = {
+			limit = { is_faction_leader = no }
+			faction_leader = { add_to_faction = FROM }
+		}
+		else = {
+			add_to_faction = FROM
+		}
+		FROM = {
+			effect_tooltip = { add_ideas = SCA_nordic_council_idea }
+			country_event = finland_events.118
+		}
+	}
+
+	option = { #I think not!
+		log = "[GetLogInfo]: event finland_events.117 option finland_events.117.b"
+		name = finland_events.117.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = finland_events.119 }
+	}
+}
+
+country_event = { #Sweden accepts
+	id = finland_events.118
+	title = finland_events.118.t
+	desc = finland_events.118.d
+	picture = GFX_report_event_SWE_military_meeting
+
+	is_triggered_only = yes
+
+	option = { #Welcome
+		log = "[GetLogInfo]: event finland_events.118 option finland_events.118.a"
+		name = finland_events.118.a
+		add_ideas = SCA_nordic_council_idea
+		effect_tooltip = {
+			FROM = { add_to_faction = ROOT }
+		}
+		if = {
+			limit = { FROM = { is_in_tech_sharing_group = scandinavian_research } }
+			add_to_tech_sharing_group = scandinavian_research
+		}
+	}
+}
+
+country_event = { #Sweden rejects us
+	id = finland_events.119
+	title = finland_events.119.t
+	desc = finland_events.119.d
+	picture = GFX_report_event_SWE_military_meeting
+
+	is_triggered_only = yes
+
+	option = { #Your loss
+		log = "[GetLogInfo]: event finland_events.119 option finland_events.119.a"
+		name = finland_events.119.a
+	}
+}
+
+country_event = { #Finland wants to join the Third Internationale
+	id = finland_events.120
+	title = finland_events.120.t
+	desc = finland_events.120.d
+	picture = GFX_report_event_SWE_Adalen
+
+	is_triggered_only = yes
+
+	option = { #Welcome, camarades!
+		log = "[GetLogInfo]: event finland_events.120 option finland_events.120.a"
+		name = finland_events.120.a
+		add_to_faction = FROM
+		FROM = { country_event = finland_events.121 }
+	}
+
+	option = { #Finns? In the Internationale? Why?
+		log = "[GetLogInfo]: event finland_events.120 option finland_events.120.b"
+		name = finland_events.120.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = finland_events.122 }
+		if = {
+			limit = {
+				tag = RUS
+				NOT = { tag = INT }
+				country_exists = INT
+			}
+			INT = { add_to_faction = FROM }
+		}
+	}
+}
+
+country_event = { #Finland decides if it wants to ask Russia for land to join the Eastern Front of the Third Internationale
+	id = finland_events.1200
+	title = finland_events.1200.t
+	desc = finland_events.1200.request
+	picture = GFX_report_event_SWE_Adalen
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.1200 option finland_events.1200.a"
+		name = finland_events.1200.a #We shall join them
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_government = totalist
+			}
+		}
+		RUS = { country_event = finland_events.120 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.1200 option finland_events.1200.b"
+		name = finland_events.1200.b # We'd rather join The Commune of France
+		ai_chance = { base = 0 }
+		INT = { country_event = finland_events.120 }
+	}
+}
+
+country_event = { #Finland joins the Third Internationale
+	id = finland_events.121
+	title = finland_events.121.t
+	desc = finland_events.121.d
+	picture = GFX_report_event_SWE_Adalen
+
+	is_triggered_only = yes
+
+	option = { #We are glad to be part of the global struggle!
+		log = "[GetLogInfo]: event finland_events.121 option finland_events.121.a"
+		name = finland_events.121.a
+		add_political_power = 25
+	}
+}
+
+country_event = { #Finland will not join the Third Internationale
+	id = finland_events.122
+	title = finland_events.122.t
+	desc = finland_events.122.d
+	picture = GFX_report_event_SWE_Adalen
+
+	is_triggered_only = yes
+
+	option = { #Curse those traitors
+		log = "[GetLogInfo]: event finland_events.122 option finland_events.122.a"
+		name = finland_events.122.a
+		add_political_power = -25
+	}
+}
+
+country_event = { #Finland petitions to join the Nordic Federation
+	id = finland_events.123
+	title = finland_events.123.t
+	desc = finland_events.123.d
+	picture = GFX_report_event_SWE_military_meeting
+
+	is_triggered_only = yes
+
+	option = { #Welcome!
+		log = "[GetLogInfo]: event finland_events.123 option finland_events.123.a"
+		name = finland_events.123.a
+		if = {
+			limit = { FROM = { has_government = social_democrat } }
+			add_to_variable = { SCA.socdem_gov_var = 1 }
+		}
+		else_if = {
+			limit = { FROM = { has_marlib_or_soclib_government = yes } }
+			add_to_variable = { SCA.liberal_gov_var = 1 }
+		}
+		else_if = {
+			limit = { FROM = { has_government = social_conservative } }
+			add_to_variable = { SCA.soccon_gov_var = 1 }
+		}
+		FROM = {
+			hidden_effect = { every_owned_state = { save_current_factory_count = yes } }
+			every_subject_country = {
+				set_temp_variable = { target = THIS }
+				ROOT = { puppet_country_without_changing_government = yes }
+			}
+			every_core_state = { add_core_of = ROOT }
+			every_character = {
+				limit = { has_character_flag = FIN_leader }
+				set_nationality = ROOT
+			}
+		}
+		annex_country = {
+			target = FROM
+			transfer_troops = yes
+		}
+		145 = { #Militarise Åland
+			if = {
+				limit = { is_demilitarized_zone = yes }
+				set_demilitarized_zone = no
+			}
+		}
+		hidden_effect = { every_owned_state = { restore_previous_factory_count = yes } }
+		if = {
+			limit = { FROM = { is_ai = no } }
+			ROOT = { change_tag_from = FROM }
+		}
+	}
+
+	option = { #I think not!
+		log = "[GetLogInfo]: event finland_events.123 option finland_events.123.b"
+		name = finland_events.123.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = finland_events.124 }
+	}
+}
+
+country_event = { #Nordic Federation Rejects
+	id = finland_events.124
+	title = finland_events.124.t
+	desc = finland_events.124.d
+	picture = GFX_report_event_SWE_military_meeting
+
+	is_triggered_only = yes
+
+	option = { #Gah
+		log = "[GetLogInfo]: event finland_events.124 option finland_events.124.a"
+		name = finland_events.124.a
+	}
+}
+
+country_event = { #Death of Fredrik Kaarle
+	id = finland_events.128
+	title = finland_events.128.t
+	desc = finland_events.128.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.128 option finland_events.128.a"
+		name = finland_events.128.a
+		FIN_friedrich_karl_von_hessen_kassel = { kill_character = yes }
+		FIN_wolfgang_von_hessen_kassel = {
+			hidden_effect = { set_nationality = ROOT }
+			set_character_name = FIN_wolfgang_von_hessen_kassel_regnal
+			promote_character = authoritarian_democrat_subtype
+		}
+	}
+}
+
+country_event = { #Death of Fredrik Kaarle (after they've been chased out of the country so no one in Finland cares, but still, what if you're puppeted later?)
+	id = finland_events.129
+	is_triggered_only = yes
+	hidden = yes
+
+	trigger = {
+		FIN_friedrich_karl_von_hessen_kassel = { is_dead = no }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.129 option 1"
+		if = {
+			limit = { has_country_leader = { character = FIN_friedrich_karl_von_hessen_kassel } }
+			country_event = finland_events.128
+		}
+		else = {
+			FIN_friedrich_karl_von_hessen_kassel = { kill_character = yes }
+			FIN_wolfgang_von_hessen_kassel = { set_character_name = FIN_wolfgang_von_hessen_kassel_regnal }
+		}
+	}
+}
+
+country_event = { #Germans are asked to let Finland in
+	id = finland_events.130
+	title = finland_events.130.t
+	desc = finland_events.130.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.130 option finland_events.130.a"
+		name = finland_events.130.a
+		add_to_faction = FIN
+		FIN = { country_event = finland_events.132 }
+		ai_chance = { base = 100 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event finland_events.130 option finland_events.130.b"
+		name = finland_events.130.b
+		FIN = { country_event = finland_events.131 }
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #Germans say no
+	id = finland_events.131
+	title = finland_events.131.t
+	desc = finland_events.131.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	option = { #I see
+		log = "[GetLogInfo]: event finland_events.131 option finland_events.131.a"
+		name = finland_events.131.a
+	}
+}
+
+country_event = { #Germans say yes
+	id = finland_events.132
+	title = finland_events.132.t
+	desc = finland_events.132.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	option = { #I see
+		log = "[GetLogInfo]: event finland_events.132 option finland_events.132.a"
+		name = finland_events.132.a
+	}
+}
+
+# Overthrow of the Kingdom of Finland
+news_event = {
+	id = finland_events.133
+	immediate = { log = "[GetLogInfo]: event finland_events.133" }
+	title = finland_events.133.t
+	picture = GFX_news_event_FIN_republic
+	major = yes
+	is_triggered_only = yes
+
+	show_major = {
+		OR = {
+			regional_europe_news = yes
+			AND = {
+				has_socialist_government = yes
+				FIN = { has_socialist_government = yes }
+			}
+		}
+	}
+
+	trigger = { wants_world_news = yes }
+
+	desc = { #NatPop
+		text = finland_events.133.d.natpop
+		trigger = {
+			FIN = {
+				has_government = national_populist
+			}
+		}
+	}
+
+	desc = { #Syndie
+		text = finland_events.133.d.syndicalist
+		trigger = {
+			FIN = {
+				has_government = syndicalist
+			}
+		}
+	}
+
+	desc = { #Mannherheim
+		text = finland_events.133.d.mannerheim
+		trigger = {
+			FIN = {
+				has_completed_focus = FIN_mannerheims_ascendancy
+			}
+		}
+	}
+
+	desc = { #Democracy
+		text = finland_events.133.d.democracy
+		trigger = {
+			FIN = {
+				has_government = paternal_autocrat
+				NOT = { has_completed_focus = FIN_mannerheims_ascendancy }
+			}
+		}
+	}
+
+	option = {
+		name = finland_events.133.a
+		trigger = {
+			is_in_faction_with = GER
+			NOT = {
+				tag = FIN
+			}
+		}
+	}
+
+	option = {
+		name = finland_events.133.b
+		trigger = {
+			FIN = {
+				has_socialist_government = no
+			}
+			has_socialist_government = yes
+			NOT = {
+				tag = FIN
+			}
+		}
+		effect_tooltip = {
+			add_named_threat = {
+				threat = 1
+				name = FIN_revolution_threat
+			}
+		}
+	}
+
+	option = {
+		name = finland_events.133.c
+		trigger = {
+			NOT = {
+				is_in_faction_with = GER
+				tag = FIN
+			}
+			has_socialist_government = no
+		}
+	}
+
+	option = {
+		name = finland_events.133.d
+		trigger = {
+			tag = FIN
+		}
+	}
+
+	option = {
+		name = finland_events.133.e
+		trigger = {
+			FIN = {
+				has_socialist_government = yes
+			}
+			has_socialist_government = yes
+			NOT = {
+				tag = FIN
+			}
+		}
+		effect_tooltip = {
+			add_named_threat = {
+				threat = 1
+				name = FIN_revolution_threat
+			}
+		}
+	}
+}
+
+country_event = { # FIN asks to not be a puppet anymore
+	id = finland_events.140
+	title = finland_events.140.t
+
+	desc = {
+		text = finland_events.140.d.kaarle
+		trigger = { has_country_leader = { character = FIN_friedrich_karl_von_hessen_kassel } }
+	}
+	desc = {
+		text = finland_events.140.d.vaino
+		trigger = { has_country_leader = { character = FIN_wolfgang_von_hessen_kassel } }
+	}
+
+	picture = GFX_report_event_FIN_parliament_house
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # Sure
+		log = "[GetLogInfo]: event finland_events.140 option finland_events.140.a"
+		name = finland_events.140.a
+		ai_chance = { base = 100 }
+		end_puppet = FIN
+		FIN = { country_event = finland_events.141 }
+	}
+	option = { # Pffft no
+		log = "[GetLogInfo]: event finland_events.140 option finland_events.140.b"
+		name = finland_events.140.b
+		ai_chance = { base = 0 }
+		add_political_power = -25
+		FIN = {
+			country_event = finland_events.142
+			effect_tooltip = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = KR_hates_govt
+				}
+			}
+		}
+	}
+}
+
+country_event = { # FIN no longer a puppet
+	id = finland_events.141
+	title = finland_events.141.t
+	desc = finland_events.141.d
+	picture = GFX_report_event_FIN_parliament_house
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # Hurray!
+		log = "[GetLogInfo]: event finland_events.141 option finland_events.141.a"
+		name = finland_events.141.a
+		add_political_power = 50
+		effect_tooltip = {
+			GER = { end_puppet = FIN }
+		}
+	}
+}
+
+country_event = { # Release request refused
+	id = finland_events.142
+	title = finland_events.142.t
+	desc = finland_events.142.d
+	picture = GFX_report_event_FIN_parliament_house
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { # GER pls...
+		log = "[GetLogInfo]: event finland_events.142 option finland_events.142.a"
+		name = finland_events.142.a
+		add_political_power = -25
+		add_stability = -0.10
+		add_war_support = -0.15
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_hates_govt
+		}
+	}
+}

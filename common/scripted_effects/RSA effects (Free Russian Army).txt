@@ -1,0 +1,399 @@
+RSA_setup_boldyrev = {
+	hidden_effect = {
+		RUS = {
+			every_owned_state = { #Transfer occupied states if they exist
+				limit = {
+					controller = {
+						OR = {
+							tag = GER
+							is_subject_of = GER
+						}
+					}
+					is_fully_controlled_by = controller
+					NOT = {
+						is_claimed_by = BAT
+						is_claimed_by = BLR
+						is_claimed_by = LIT
+						is_claimed_by = UKR
+						has_variable = ambition_area_@BAT
+						has_variable = ambition_area_@BLR
+						has_variable = ambition_area_@LIT
+						has_variable = ambition_area_@UKR
+					}
+				}
+				transfer_state_to = RSA
+			}
+			if = {
+				limit = { NOT = { country_exists = RSA } }
+				random_owned_controlled_state = { #Transfer states to make RSA exist on map (GiE purposes)
+					prioritize = { 235 } #Stavropol
+					limit = {
+						region = 135 #North Caucasus
+						is_core_of = RUS
+					}
+					add_core_of = RSA
+					set_state_owner_to = RSA
+				}
+			}
+			RUS_nikolay_martyanov = { set_nationality = RSA }
+		}
+		RUS = {
+			if = {
+				limit = { has_country_flag = RUS_semyonov_killed }
+				RUS_pavel_bermondt_avalov = { set_nationality = RSA }
+			}
+		}
+		set_cosmetic_tag = RSA_army
+		RUS_vasily_boldyrev = {
+			promote_character = authoritarian_democrat_subtype
+		}
+		get_current_government_type = yes
+		GER = {
+			puppet = RSA
+			add_to_faction = RSA
+		}
+		restore_previous_government_type = yes
+		activate_advisor = RUS_nikolay_martyanov_sic
+		activate_advisor = RUS_vasily_boldyrev_army_chief
+		add_country_leader_role = { #Purely to make party leaders show properly
+			promote_leader = yes
+			character = RUS_nikolay_martyanov
+			country_leader = {
+				desc = RUS_nikolay_martyanov_sic_desc
+				ideology = social_liberal_subtype
+			}
+		}
+		add_ideas = {
+			RSA_legitimacy_1
+			RSA_army_without_state
+			war_economy
+		}
+
+		#For debug reasons
+		#GER = {
+		#	if = {
+		#		limit = { NOT = { has_war_with = RUS } }
+		#		declare_war_on = {
+		#			target = RUS
+		#			type = annex_everything
+		#		}
+		#	}
+		#}
+		if = {
+			limit = { NOT = { has_war_with = RUS } }
+			declare_war_on = {
+				target = RUS
+				type = civil_war
+			}
+		}
+
+		add_civil_war_target = RUS
+		every_state = {
+			limit = {
+				is_russia = yes
+				NOT = { is_core_of = RSA }
+			}
+			#add_contested_owner = RSA
+			add_core_of = RSA
+		}
+		become_exiled_in = { target = GER legitimacy = 25 }
+		transfer_technology = yes #Prio russian techs
+		GER = { RSA = { transfer_technology_without_doctrines = yes } }
+		set_variable = { RUS.coalition_stability = 0.5 } #Reseting this
+		enable_tech_irregulars = yes
+		enable_tech_militias = yes
+		set_variable = { RSA_lootbox_cost = 20 }
+		if = {
+			limit = { RUS = { has_socialist_government = yes } }
+			set_party_name = {
+				ideology = totalist
+				name = RSA_empty_party
+				long_name = RSA_empty_party_long
+			}
+			set_party_name = {
+				ideology = syndicalist
+				name = RSA_empty_party
+				long_name = RSA_empty_party_long
+			}
+			set_party_name = {
+				ideology = radical_socialist
+				name = RSA_empty_party
+				long_name = RSA_empty_party_long
+			}
+		}
+		else = {
+			set_party_name = {
+				ideology = national_populist
+				name = RSA_empty_party
+				long_name = RSA_empty_party_long
+			}
+		}
+		country_event = russia_free_army_events.1
+		if = {
+			limit = {
+				RUS = {
+					has_socialist_government = yes
+					has_country_flag = RUS_pavlov_rebellion_flag
+				}
+			}
+			country_event = { id = russia_socialist_events.159 days = 30 random_days = 60 } #The Pavlovites join Free Russian Army
+		}
+	}
+}
+
+#legitimacy mechanic
+RSA_increase_legitimacy = {
+	if = {
+		limit = { has_idea = RSA_legitimacy_1 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_1
+			add_idea = RSA_legitimacy_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_2 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_2
+			add_idea = RSA_legitimacy_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_3 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_3
+			add_idea = RSA_legitimacy_4
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_4 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_4
+			add_idea = RSA_legitimacy_5
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_5 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_5
+			add_idea = RSA_legitimacy_6
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_6 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_6
+			add_idea = RSA_legitimacy_7
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_7 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_7
+			add_idea = RSA_legitimacy_8
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_8 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_9
+			add_idea = RSA_legitimacy_9
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_9 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_9
+			add_idea = RSA_legitimacy_10
+		}
+	}
+	add_popularity = { ideology = paternal_autocrat popularity = -0.03 }
+}
+
+RSA_decrease_legitimacy = {
+	if = {
+		limit = { has_idea = RSA_legitimacy_10 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_10
+			add_idea = RSA_legitimacy_9
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_9 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_9
+			add_idea = RSA_legitimacy_8
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_8 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_8
+			add_idea = RSA_legitimacy_7
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_7 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_7
+			add_idea = RSA_legitimacy_6
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_6 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_6
+			add_idea = RSA_legitimacy_5
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_5 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_5
+			add_idea = RSA_legitimacy_4
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_4 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_4
+			add_idea = RSA_legitimacy_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_3 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_3
+			add_idea = RSA_legitimacy_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_legitimacy_2 }
+		swap_ideas = {
+			remove_idea = RSA_legitimacy_2
+			add_idea = RSA_legitimacy_1
+		}
+	}
+}
+
+RSA_check_legitimacy = {
+	if = {
+		limit = { paternal_autocrat > 0.4 }
+		country_event = russia_free_army_events.16
+	}
+}
+
+RSA_rebuilding = {
+	if = {
+		limit = { has_idea = RSA_rebuilding }
+		swap_ideas = {
+			remove_idea = RSA_rebuilding
+			add_idea = RSA_rebuilding_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_rebuilding_2 }
+		swap_ideas = {
+			remove_idea = RSA_rebuilding_2
+			add_idea = RSA_rebuilding_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = RSA_rebuilding_3 }
+		remove_ideas = RSA_rebuilding_3
+		add_timed_idea = {
+			idea = RSA_rebuilding_4
+			days = 365
+		}
+	}
+}
+
+RSA_counter_claims_effect = {
+	if = {
+		limit = {
+			FROM = { tag = UKR }
+		}
+		260 = { set_state_flag = RSA_claimed_state } #Voronezh
+		220 = { set_state_flag = RSA_claimed_state } #Kursk
+		218 = { set_state_flag = RSA_claimed_state } #Rostov
+		for_each_scope_loop = {
+			array = UKR.UKR_claims_array
+			if = {
+				limit = {
+					is_core_of = RSA
+					OR = {
+						region = 135 #North Caucasus
+						region = 137 #Caspian Lowlands
+					}
+				}
+				set_state_flag = RSA_claimed_state
+			}
+		}
+		custom_effect_tooltip = RSA_claimed_ukrainian_states
+	}
+	if = {
+		limit = {
+			FROM = {
+				OR = {
+					tag = BLR
+					tag = LIT
+				}
+			}
+		}
+		242 = { set_state_flag = RSA_claimed_state } #Smolensk
+		custom_effect_tooltip = RSA_claimed_belarusian_state
+	}
+	if = {
+		limit = {
+			FROM = { tag = FIN }
+		}
+		216 = { set_state_flag = RSA_claimed_state } #Olonets
+		custom_effect_tooltip = RSA_claimed_finnish_states
+	}
+}
+
+#Unused for now
+#RSA_relocate_capital = {
+#	if = {
+#		limit = { check_variable = { owned_controlled_states^num = 0 } }
+#		log = "RSA ERROR: no valid states for capital"
+#	}
+#	else = {
+#		for_each_scope_loop = {
+#			array = controlled_states
+#			if = {
+#				limit = {
+#					is_core_of = ROOT
+#					is_on_continent = europe
+#					is_in_home_area = yes
+#					NOT = { region = 12 } #Lapland
+#					NOT = { region = 150 } #Arctic Russia
+#				}
+#				add_to_temp_array = { RSA_potential_capital_states = THIS }
+#
+#				set_temp_variable = { score = state_strategic_value }
+#				if = {
+#					limit = { state_population_k > 1000 }
+#					add_to_temp_variable = { score = 5 }
+#				}
+#				add_to_temp_variable = { score = building_level@arms_factory }
+#				if = {
+#					limit = {
+#						OR = {
+#							region = 132 #Western Russia
+#							region = 133 #Central Russia
+#							region = 137 #Caspian
+#							state = 238 #Velikoknyazhesk
+#							state = 234 #Yekaterinodar
+#						}
+#					}
+#					add_to_temp_variable = { score = 2 }
+#				}
+#				add_to_temp_array = { RSA_potential_capital_states_scores = score }
+#			}
+#		}
+#		find_highest_in_array = { array = RSA_potential_capital_states_scores }
+#		var:RSA_potential_capital_states^i = {
+#			ROOT = { set_capital = { state = PREV remember_old_capital = no } }
+#		}
+#	}
+#}

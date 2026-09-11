@@ -1,0 +1,132 @@
+ ##############################
+ # Northern Ireland Decisions #
+ ##############################
+ # By Cazadorian 			  #
+ ##############################
+
+CAN_returning_home_decisions = {
+	NIR_send_rifles = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = { tag = CAN }
+
+		targets = { NIR }
+		target_trigger = {
+			FROM = { has_war_with = IRE }
+		}
+
+		custom_cost_text = 1000_guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 1000 } }
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NIR_send_rifles"
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -1000
+				}
+			}
+			FROM = {
+				event_option_tooltip = northern_ireland_events.4.a
+				country_event = northern_ireland_events.4
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NIR_send_advisors = {
+		icon = GFX_decision_generic_army_support
+
+		allowed = { tag = CAN }
+
+		targets = { NIR }
+		target_trigger = {
+			FROM = { has_war_with = IRE }
+		}
+
+		custom_cost_trigger = {
+			NOT = { command_power < 10 }
+		}
+		custom_cost_text = CP_10
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NIR_send_advisors"
+			hidden_effect = { add_command_power = -10 }
+			FROM = {
+				event_option_tooltip = northern_ireland_events.5.a
+				country_event = northern_ireland_events.5
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+foreign_politics = {
+	NIR_alliance_with_entente = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			if = {
+				limit = { IRE = { has_socialist_government = yes } }
+				INT = { has_war_with = FROM }
+			}
+			else = {
+				at_peace_or_same_enemies_as_FROM = yes
+			}
+		}
+
+		visible = {
+			is_subject = no
+			is_in_faction = no
+			has_socialist_government = no
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NIR_alliance_with_entente"
+			FROM = { country_event = united_kingdom_events.143 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+CAN_returning_home_decisions = {
+	NIR_capitulation_mission = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+		available = { NIR = { has_capitulated = no } }
+		priority = 0
+		selectable_mission = no
+		days_mission_timeout = 180
+
+		fire_only_once = no
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NIR_capitulation_mission"
+			effect_tooltip = {
+				IRE = { annex_country = { target = NIR } }
+			}
+		}
+		fixed_random_seed = no
+	}
+}

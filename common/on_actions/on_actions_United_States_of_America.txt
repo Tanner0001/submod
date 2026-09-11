@@ -1,0 +1,550 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			PUE = {
+				country_event = { id = puerto_rico_events.205 days = 1433 }
+			}
+
+			USA = {
+				set_temp_variable = { coalition_partner_var = token:social_conservative }
+				add_to_coalition = yes
+				set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+				add_to_coalition = yes
+				set_temp_variable = { coalition_partner_var = token:national_populist }
+				add_to_coalition = yes
+
+				WCA_jack_reed = { promote_character = syndicalist_subtype }
+				WCA_norman_thomas = { promote_character = radical_socialist_subtype }
+				USA_douglas_macarthur = { promote_character = paternal_autocrat_subtype }
+				APG_huey_long = { promote_character = national_populist_subtype }
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			if = {
+				limit = {
+					FROM = { has_country_flag = ACW_has_deal_with_devil }
+				}
+				clr_global_flag = ACW_deal_with_devil
+				FROM = { clr_country_flag = ACW_has_deal_with_devil }
+				every_country = {
+					limit = { has_country_flag = ACW_deal_with_devil_@FROM }
+					clr_country_flag = ACW_has_deal_with_devil
+					clr_country_flag = ACW_deal_with_devil_@FROM
+					FROM = { clr_country_flag = ACW_deal_with_devil_@PREV }
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						is_american_tag = yes
+						FROM = { is_american_tag = yes }
+					}
+				}
+				random_country = {
+					limit = { is_american_tag_except_new_england = yes }
+					country_event = { id = american_civil_war_events.2400 hours = 22 }
+				}
+				NEE = { country_event = { id = american_civil_war_events.2400 hours = 23 } }
+				var:361.owner = { country_event = { id = american_civil_war_events.2400 hours = 24 } }
+			}
+			FROM = {
+				if = {
+					limit = { tag = APG }
+					if = {
+						limit = { has_country_flag = APG_war_committee_factories }
+						clr_country_flag = APG_war_committee_factories
+						add_offsite_building = { type = arms_factory level = -3 }
+					}
+
+					### Restore the APG VPs to their original values
+					USA_reset_southern_VP_values = yes
+					if = {
+						limit = { has_country_flag = APG_baton_rouge_kept }
+						clr_country_flag = APG_baton_rouge_kept
+						set_victory_points = { province = 1453 value = 12 }
+					}
+				}
+				if = {
+					limit = {
+						tag = NEE
+						ROOT = {
+							OR = {
+								tag = USA
+								tag = ACC
+								tag = APG
+							}
+						}
+					}
+					country_event = { id = american_civil_war_events.768 days = 25 } #Trial event for NEE generals
+				}
+			}
+			if = {
+				limit = { FROM = { has_completed_focus = USA_cooperation_treaties } }
+				FROM = { USA_disable_league_of_american_states = yes }
+			}
+			else = {
+				FROM = {
+					clr_country_flag = USA_sent_league_invite
+					if = {
+						limit = { has_idea = USA_league_of_america_1 }
+						remove_ideas = USA_league_of_america_1
+					}
+					else_if = {
+						limit = { has_idea = USA_league_of_america_2 }
+						remove_ideas = USA_league_of_america_2
+					}
+					if = {
+						limit = { is_in_tech_sharing_group = us_research }
+						remove_from_tech_sharing_group = us_research
+					}
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			### Rebuilding the US Navy
+			if = {
+				limit = {
+					is_american_tag = yes
+					FROM = { is_american_tag = yes }
+				}
+				transfer_navy = { target = FROM }
+			}
+
+			### JAP-INT peace over HAW
+			if = {
+				limit = {
+					tag = HAW
+					has_war_with = JAP
+					is_in_faction_with = INT
+				}
+				JAP = { activate_mission = JAP_hold_hawaii }
+			}
+
+			### Restore Denver to its original VP value
+			if = {
+				limit = {
+					tag = USA
+					has_country_flag = ACW_denver_made_capital
+				}
+				clr_country_flag = ACW_denver_made_capital
+				set_victory_points = {
+					province = 1827
+					value = 20
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation = {
+		effect = {
+			if = {
+				limit = {
+					tag = USA
+					is_in_faction = no
+					has_global_flag = USA_civil_war_begun_flag
+					NOT = { has_global_flag = USA_civil_war_over_flag }
+				}
+				news_event = american_civil_war_events.607
+			}
+			else_if = {
+				limit = {
+					tag = WCA
+					is_in_faction = no
+					has_global_flag = USA_civil_war_begun_flag
+					NOT = { has_global_flag = USA_civil_war_over_flag }
+				}
+				news_event = american_civil_war_events.608
+			}
+			else_if = {
+				limit = {
+					tag = APG
+					is_in_faction = no
+					has_global_flag = USA_civil_war_begun_flag
+					NOT = { has_global_flag = USA_civil_war_over_flag }
+				}
+				news_event = american_civil_war_events.609
+			}
+			else_if = {
+				limit = {
+					tag = ACC
+					is_in_faction = no
+					has_global_flag = USA_civil_war_begun_flag
+					NOT = { has_global_flag = USA_civil_war_over_flag }
+				}
+				news_event = american_civil_war_events.610
+			}
+			if = {
+				limit = {
+					is_american_tag = yes
+					ROOT = { is_american_tag = yes }
+				}
+				set_global_flag = { flag = ACW_recent_peace_conference days = 15 value = 1 }
+			}
+		}
+	}
+
+	#FROM is war target
+	on_declare_war = {
+		effect = {
+			# Attacking an American country post-ACW while it's in recovery
+			if = {
+				limit = {
+					ROOT = {
+						is_american_tag = no
+						NOT = {
+							AND = {
+								tag = NEE
+								is_in_faction = no
+							}
+						}
+					}
+					FROM = { is_american_tag_except_new_england = yes }
+				}
+				FROM = { country_event = american_civil_war_events.615 }
+			}
+		}
+	}
+
+	on_new_term_election = {
+		effect = {
+			### Pacific States of America ###
+			if = {
+				limit = { tag = ACC }
+				country_event = new_england_events.410 #1940
+				country_event = new_england_events.411 #1944
+				country_event = new_england_events.414 #1948
+				country_event = new_england_events.418 #1952
+			}
+			### Workers' Congress of America ###
+			else_if = {
+				limit = { tag = WCA }
+				country_event = america_workers_congress_events.25 #1940
+				country_event = america_workers_congress_events.28 #1944
+				country_event = america_workers_congress_events.35 #1948
+				country_event = america_workers_congress_events.43 #1952
+				country_event = america_workers_congress_events.51 #Totalist "elections"
+			}
+			### Hawaii ###
+			else_if = {
+				limit = { tag = HAW }
+				country_event = hawaii_events.27 #monarchy
+				country_event = hawaii_events.34 #republic
+				country_event = hawaii_events.64 #socialist
+			}
+			### New England ###
+			else_if = {
+				limit = { tag = NEE }
+				#default
+				country_event = new_england_events.200 #provisional
+				country_event = new_england_events.600 #1940
+				country_event = new_england_events.604 #1944
+				country_event = new_england_events.607 #1948
+				country_event = new_england_events.611 #1952
+				#dominant ACC
+				country_event = new_england_events.410 #1940
+				country_event = new_england_events.411 #1944
+				country_event = new_england_events.414 #1948
+				country_event = new_england_events.418 #1952
+			}
+			### American People's Government ###
+			else_if = {
+				limit = { tag = APG }
+				country_event = america_peoples_government_events.10
+			}
+			### United States of America ###
+			else_if = {
+				limit = { tag = USA }
+				country_event = united_states_leadup_events.50 #1936
+				country_event = united_states_events.200 #1940
+				country_event = united_states_events.205 #1944
+				country_event = united_states_events.212 #1948
+				country_event = united_states_events.218 #1952
+				country_event = united_states_events.198 #MacArthur 1940
+			}
+		}
+	}
+
+	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
+	on_state_control_changed = {
+		effect = {
+			# Fate of Captured Politicians (WCA event)
+			if = {
+				limit = { tag = WCA }
+				FROM = { save_event_target_as = capture_tag }
+				FROM.FROM = { save_event_target_as = capture_state }
+				country_event = { id = american_civil_war_events.39 days = 15 random_days = 30 }
+			}
+		}
+	}
+
+	on_peace = {
+		effect = {
+			if = {
+				limit = { is_american_tag = yes }
+				country_event = { id = american_civil_war_events.2400 days = 1 } #End of the Civil War
+				country_event = { id = american_civil_war_events.616 days = 2 random_days = 3 } #Remove emergency USA units
+			}
+		}
+	}
+
+	#ROOT is winner #FROM is loser
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = { is_american_tag = yes }
+				random_country = {
+					limit = { is_american_tag_except_new_england = yes }
+					country_event = { id = american_civil_war_events.2400 hours = 22 }
+				}
+				NEE = { country_event = { id = american_civil_war_events.2400 hours = 23 } }
+				var:361.owner = { country_event = { id = american_civil_war_events.2400 hours = 24 } }
+			}
+			else_if = {
+				limit = { FROM = { is_american_tag = yes } }
+				random_country = {
+					limit = { is_american_tag_except_new_england = yes }
+					country_event = { id = american_civil_war_events.2400 hours = 22 }
+				}
+				NEE = { country_event = { id = american_civil_war_events.2400 hours = 23 } }
+				var:361.owner = { country_event = { id = american_civil_war_events.2400 hours = 24 } }
+			}
+		}
+	}
+
+	on_ruling_party_change_immediate = {
+		# temp var old_ideology_token is available for effects
+		effect = {
+			if = {
+				limit = { tag = USA }
+				if = {
+					limit = { has_dictatorship_government = yes }
+					USA_united_states_congress = {
+						if = {
+							limit = { has_trait = KR_parliament_sic }
+							remove_trait = {
+								trait = KR_parliament_sic
+								slot = second_in_command
+							}
+						}
+						if = {
+							limit = { NOT = { has_trait = KR_authoritarian_sic } }
+							add_trait = {
+								trait = KR_authoritarian_sic
+								slot = second_in_command
+							}
+						}
+					}
+				}
+				else = {
+					USA_united_states_congress = {
+						if = {
+							limit = { has_trait = KR_authoritarian_sic }
+							remove_trait = {
+								trait = KR_authoritarian_sic
+								slot = second_in_command
+							}
+						}
+						if = {
+							limit = { NOT = { has_trait = KR_parliament_sic } }
+							add_trait = {
+								trait = KR_parliament_sic
+								slot = second_in_command
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_ruling_party_change = {
+		effect = {
+			if = {
+				limit = { tag = ACC }
+				country_event = { id = america_constitutional_coalition_events.74 days = 120 }
+				country_event = { id = america_constitutional_coalition_events.50 days = 180 random_days = 60 }
+			}
+		}
+	}
+
+	on_war_relation_added = {
+		effect = {
+			# WCA events
+			if = {
+				limit = {
+					OR = {
+						tag = CAN
+						tag = WCA
+					}
+					FROM = {
+						OR = {
+							tag = CAN
+							tag = WCA
+						}
+					}
+				}
+				WCA = { country_event = { id = american_civil_war_events.42 hours = 8 } }
+			}
+			# Clear ceasefire global flag
+			if = {
+				limit = {
+					has_global_flag = ACC_rockies_ceasefire
+					is_american_tag_except_new_england = yes
+					FROM = { is_american_tag_except_new_england = yes }
+				}
+				clr_global_flag = ACC_rockies_ceasefire
+			}
+
+			# Clear Deal with the Devil flags
+			if = {
+				limit = {
+					FROM = {
+						has_country_flag = ACW_has_deal_with_devil
+						has_country_flag = ACW_deal_with_devil_@ROOT
+					}
+				}
+				clr_global_flag = ACW_deal_with_devil
+				FROM = {
+					clr_country_flag = ACW_has_deal_with_devil
+					clr_country_flag = ACW_deal_with_devil_@ROOT
+				}
+				ROOT = {
+					clr_country_flag = ACW_has_deal_with_devil
+					clr_country_flag = ACW_deal_with_devil_@FROM
+				}
+				if = {
+					limit = {
+						CAN = {
+							has_country_flag = CAN_deal_with_devil_@ROOT
+							NOT = {
+								has_war_with = ROOT
+								has_war_with = FROM
+							}
+						}
+					}
+					save_event_target_as = can_ally
+					FROM = { save_event_target_as = can_enemy }
+					CAN = {
+						country_event = { id = american_civil_war_events.526 hours = 4 }
+					}
+				}
+				else_if = {
+					limit = {
+						CAN = {
+							has_country_flag = CAN_deal_with_devil_@FROM
+							NOT = {
+								has_war_with = ROOT
+								has_war_with = FROM
+							}
+						}
+					}
+					save_event_target_as = can_enemy
+					FROM = { save_event_target_as = can_ally }
+					CAN = {
+						country_event = { id = american_civil_war_events.526 hours = 4 }
+					}
+				}
+			}
+		}
+	}
+
+	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
+	on_state_control_changed = { #Desertions on state control changing
+		effect = {
+			if = {
+				limit = {
+					FROM.FROM = {
+						is_mainland_america = yes
+						NOT = { has_state_flag = ACW_recruited_militias }
+					}
+					has_global_flag = USA_leadup_to_the_war
+					NOT = { has_global_flag = USA_civil_war_over_flag }
+				}
+				if = {
+					limit = {
+						OR = {
+							original_tag = USA
+							original_tag = WCA
+							original_tag = APG
+							original_tag = ACC
+						}
+					}
+					activate_targeted_decision = { decision = ACW_recruit_in_state target = FROM.FROM }
+				}
+				FROM = {
+					if = {
+						limit = {
+							OR = {
+								original_tag = USA
+								original_tag = WCA
+								original_tag = APG
+								original_tag = ACC
+							}
+						}
+						remove_targeted_decision = { decision = ACW_recruit_in_state target = FROM.FROM }
+					}
+				}
+			}
+			if = {
+				limit = { #desertions only occur betwen American tags
+					has_war_with = FROM
+					is_american_tag = yes
+					date > 1938.1.1 #Wait a couple months before desertions start
+					FROM = {
+						is_american_tag = yes
+						surrender_progress < 0.9
+					}
+					FROM.FROM = {
+						NOT = { has_state_flag = ACW_recent_desertions } #Timed flag to stop mass desertions over a city that is frequently changing hands
+					}
+					NOT = { has_global_flag = ACW_recent_peace_conference }
+					NOT = {
+						has_country_flag = NEE_Leader
+						has_country_flag = ACC_Leader
+						has_country_flag = USA_Leader
+					}
+				}
+				FROM.FROM = {
+					save_event_target_as = acw_state_control_changed
+					set_state_flag = { flag = ACW_recent_desertions days = 175 value = 1 }
+				}
+				save_event_target_as = acw_new_controller
+				FROM = {
+					save_event_target_as = acw_old_controller
+					set_country_flag = acw_old_controller_flag
+					country_event = american_civil_war_events.801
+				}
+			}
+		}
+	}
+
+	# FROM = faction leader
+	on_leave_faction = {
+		effect = {
+			if = {
+				limit = { FROM = { tag = global.USA_league_of_america_leader } }
+				if = {
+					limit = { has_idea = USA_league_of_america_1 }
+					remove_ideas = USA_league_of_america_1
+				}
+				else_if = {
+					limit = { has_idea = USA_league_of_america_2 }
+					remove_ideas = USA_league_of_america_2
+				}
+				if = {
+					limit = { is_in_tech_sharing_group = us_research }
+					remove_from_tech_sharing_group = us_research
+				}
+			}
+		}
+	}
+}

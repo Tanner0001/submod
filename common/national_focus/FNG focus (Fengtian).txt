@@ -1,0 +1,6010 @@
+###########################
+# Fengtian Focus Tree
+# By Flamefang
+###########################
+
+focus_tree = {
+	id = KR_Fengtian
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = FNG
+		}
+	}
+	default = no
+
+	continuous_focus_position = { x = 20 y = 1300 }
+
+	focus = {
+		id = FNG_Preservation_of_the_Xinhai_Order
+		icon = GFX_goal_ANQ_fengtian_loyalty
+		cost = 8
+
+		x = 15
+		y = 0
+
+		ai_will_do = { factor = 90 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Preservation_of_the_Xinhai_Order"
+			add_political_power = 35
+			army_experience = 10
+			#Allow FNG to ally with SHD
+			effect_tooltip = { activate_targeted_decision = { decision = china_offer_alliance target = SHD } }
+			add_to_array = { china_possible_allies_array = SHD }
+			hidden_effect = {
+				country_event = { id = fengtian_events.110 days = 13 random_days = 52 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Suppress_Regionalist_Sentiment
+		icon = YUN_GFX_Goal_Secure_Northern_China
+		cost = 3
+
+		relative_position_id = FNG_Preservation_of_the_Xinhai_Order
+		x = -3
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Preservation_of_the_Xinhai_Order
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				add = 15
+				has_war_support < 0.40
+			}
+			modifier = {
+				add = 15
+				has_war_support < 0.55
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Suppress_Regionalist_Sentiment"
+			add_political_power = 20
+			country_event = fengtian_events.3
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Silence_Targeted_Subversives
+		icon = GFX_goal_LEP_selective_enforcement
+		cost = 4
+
+		relative_position_id = FNG_Suppress_Regionalist_Sentiment
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Suppress_Regionalist_Sentiment
+		}
+		prerequisite = {
+			focus = FNG_Fuguo_Qiangbing
+		}
+		ai_will_do = {
+			factor = 90
+			modifier = {
+				add = 10
+				has_war_support < 0.55
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Silence_Targeted_Subversives"
+			add_political_power = 50
+			add_stability = 0.05
+			set_temp_variable = { RLPOP = -3 }
+			FNG_RLPOP = yes
+			hidden_effect = {
+				country_event = { id = fengtian_events.8 days = 48 }
+				country_event = { id = fengtian_events.9 days = 5 }
+			}
+			custom_effect_tooltip = FNG_remove_regionalists
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_Justify_Mass_Arrests
+		icon = GFX_goal_generic_imprison_people
+		cost = 4
+
+		relative_position_id = FNG_Suppress_Regionalist_Sentiment
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Suppress_Regionalist_Sentiment
+		}
+		prerequisite = {
+			focus = FNG_Fuguo_Qiangbing
+		}
+		ai_will_do = {
+			factor = 90
+			modifier = {
+				add = 10
+				has_war_support < 0.55
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Justify_Mass_Arrests"
+			add_political_power = 20
+			add_stability = 0.05
+			hidden_effect = {
+				country_event = { id = fengtian_events.4 days = 5 random_days = 125 }
+				country_event = { id = fengtian_events.8 days = 40 }
+			}
+			custom_effect_tooltip = FNG_remove_regionalists
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_Fuguo_Qiangbing
+		icon = GFX_goal_beiyang_flags
+		cost = 4
+
+		relative_position_id = FNG_Preservation_of_the_Xinhai_Order
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Preservation_of_the_Xinhai_Order
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Fuguo_Qiangbing"
+			add_political_power = 20
+			country_event = fengtian_events.53
+			hidden_effect = {
+				country_event = { id = fengtian_events.111 days = 13 random_days = 52 }
+			}
+			set_temp_variable = { RLPOP = 3 }
+			FNG_RLPOP = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	### Economy Branch ###
+	focus = {
+		id = FNG_Develop_the_Three_Northeast_Provinces
+		icon = GFX_goal_develop_provinces
+		cost = 5
+
+		relative_position_id = FNG_Fuguo_Qiangbing
+		x = -9
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Fuguo_Qiangbing
+		}
+		ai_will_do = { factor = 90 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Develop_the_Three_Northeast_Provinces"
+			328 = { increase_state_category_by_one_level = yes }
+			715 = { increase_state_category_by_one_level = yes }
+			885 = { increase_state_category_by_one_level = yes }
+			886 = { increase_state_category_by_one_level = yes }
+			custom_effect_tooltip = tooltip_white_line
+			add_one_random_civilian_factory = yes
+			custom_effect_tooltip = tooltip_white_line
+			unlock_decision_tooltip = FNG_Liaoning_Infrastructure
+			unlock_decision_tooltip = FNG_Liaobei_Jilin_Infrastructure
+			unlock_decision_tooltip = FNG_Nenjiang_Songjiang_Infrastructure
+			custom_effect_tooltip = tooltip_white_line
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Wang_Yongjiangs_Legacy
+		icon = GFX_goal_generic_neutrality_focus
+		cost = 5
+
+		relative_position_id = FNG_Develop_the_Three_Northeast_Provinces
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Develop_the_Three_Northeast_Provinces
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Wang_Yongjiangs_Legacy"
+			add_political_power = 50
+			add_stability = 0.10
+			add_war_support = 0.10
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = FNG_pan_fu_advisor
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = FNG_li_shaogeng_advisor
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = FNG_sun_qichang_advisor
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = FNG_ruan_zhenduo_advisor
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_unlock_investment_decisions_focus
+			hidden_effect = {
+				activate_targeted_decision = { target = THIS decision = FNG_Centralise_the_Banks }
+				activate_targeted_decision = { target = THIS decision = FNG_Re_Introduce_the_Fengtian_Dollar }
+				activate_targeted_decision = { target = THIS decision = FNG_Fill_the_Silver_Reserve }
+				activate_targeted_decision = { target = THIS decision = FNG_Encourage_Japanese_Investment }
+				activate_targeted_decision = { target = THIS decision = FNG_Encourage_Chinese_Investment }
+				activate_targeted_decision = { target = THIS decision = FNG_Encourage_Russian_Investment }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_Yamato_Hotel_Licenses
+		icon = GFX_goal_yamato_hotel
+		cost = 5
+		dynamic = yes
+
+		relative_position_id = FNG_Develop_the_Three_Northeast_Provinces
+		x = -4
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Develop_the_Three_Northeast_Provinces
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Yamato_Hotel_Licenses"
+			if = {
+				limit = { has_country_flag = enrich_country }
+				custom_effect_tooltip = BONUS_PP_30
+				hidden_effect = { add_political_power = 30 }
+			}
+			if = {
+				limit = { FNG_JAP_hostile = no }
+				custom_effect_tooltip = FNG_jpn_hostile_econ_notice
+				custom_effect_tooltip = tooltip_white_line
+				add_stability = 0.10
+				country_event = fengtian_events.58
+				custom_effect_tooltip = tooltip_white_line
+			}
+			else = {
+				add_political_power = 30
+			}
+
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = dongbei_aircraft_manufacturing_company
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = manchuria_aviation_company
+			}
+			else = {
+				mio:FNG_manchuria_aviation_company_organisation = {
+					add_mio_size = 1
+					add_mio_funds = 500
+				}
+				if = {
+					limit = { mio:CHN_aviation_industry_organisation = { is_mio_available = no } }
+					custom_effect_tooltip = tooltip_white_line
+					custom_effect_tooltip = available_mio_tt
+					show_mio_tooltip = CHN_aviation_industry_organisation
+				}
+				mio:CHN_aviation_industry_organisation = {
+					set_mio_flag = CHN_mio_unlocked
+					add_mio_size = 1
+					add_mio_funds = 500
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = FNG_Mantetsu_Research_Wing
+		icon = {
+			GFX_focus_generic_university_2 = {
+				FNG_JAP_hostile = yes
+			}
+			GFX_focus_generic_university_3 = yes
+		}
+		cost = 6
+		dynamic = yes
+
+		relative_position_id = FNG_Yamato_Hotel_Licenses
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Yamato_Hotel_Licenses
+		}
+
+		ai_will_do = { factor = 90 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Mantetsu_Research_Wing"
+			if = {
+				limit = { FNG_JAP_hostile = no }
+				custom_effect_tooltip = FNG_jpn_hostile_econ_notice
+				custom_effect_tooltip = tooltip_white_line
+				country_event = fengtian_events.60
+				china_add_research_slots = yes
+			}
+			else = {
+				china_add_research_slots = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Mantetsu_Collaboration
+		icon = {
+			GFX_goal_generic_seize_money = {
+				FNG_JAP_hostile = yes
+			}
+			GFX_goal_mantetsu_collaboration = yes
+		}
+		cost = 5
+		dynamic = yes
+
+		relative_position_id = FNG_Develop_the_Three_Northeast_Provinces
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Develop_the_Three_Northeast_Provinces
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Mantetsu_Collaboration"
+			if = {
+				limit = { FNG_JAP_hostile = no }
+				custom_effect_tooltip = FNG_jpn_hostile_econ_notice
+				custom_effect_tooltip = tooltip_white_line
+				add_stability = 0.10
+				custom_effect_tooltip = FNG_mantetsu_collaboration_unlock
+				custom_effect_tooltip = tooltip_white_line
+				add_offsite_building = {
+					type = industrial_complex
+					level = 1
+				}
+				add_opinion_modifier = {
+					target = JAP
+					modifier = FNG_mantetsu_collab
+				}
+				custom_effect_tooltip = tooltip_white_line
+				set_temp_variable = { ZCPOP = -5 }
+				FNG_ZCPOP = yes
+				FNG_JAP_investment_large = yes
+				if = {
+					limit = { has_dlc_lar = yes }
+					JAP = {
+						add_intel = {
+							target = FNG
+							civilian_intel = 5
+						}
+					}
+				}
+			}
+			else = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = 1
+				}
+				set_temp_variable = { CCPOP = 3 }
+				FNG_CCPOP = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Japanese_Electrical_Expertise
+		icon = GFX_goal_generic_radar
+		cost = 6
+
+		relative_position_id = FNG_Mantetsu_Collaboration
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Mantetsu_Collaboration
+		}
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		bypass = {
+			OR = {
+				FNG_JAP_hostile = yes
+				JAP = { is_faction_leader = no }
+			}
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Japanese_Electrical_Expertise"
+			FNG_JAP_investment_medium = yes
+			add_tech_bonus = {
+				name = FNG_Japanese_Electrical_Expertise
+				bonus = 0.50
+				uses = 2
+				category = electronics
+			}
+			hidden_effect = {
+				country_event = { id = fengtian_events.115 days = 13 random_days = 52 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Found_the_Northeast_IDC
+		icon = GFX_goal_social_reforms
+		cost = 5
+
+		relative_position_id = FNG_Develop_the_Three_Northeast_Provinces
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Develop_the_Three_Northeast_Provinces
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Found_the_Northeast_IDC"
+			country_event = fengtian_events.59
+			add_stability = 0.10
+			add_tech_bonus = {
+				name = FNG_Found_the_Northeast_IDC
+				bonus = 0.5
+				uses = 1
+				category = industry
+			}
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { CCPOP = 5 }
+			FNG_CCPOP = yes
+			FNG_JAP_investment_large = yes
+			add_offsite_building = {
+				type = industrial_complex
+				level = 1
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_STABILITY FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Expand_the_Anshan_Mines
+		icon = GFX_focus_generic_steel
+		cost = 6
+
+		relative_position_id = FNG_Found_the_Northeast_IDC
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Found_the_Northeast_IDC
+		}
+		ai_will_do = { factor = 70 }
+		bypass = {
+			hidden_trigger = {
+				716 = { has_state_flag = FNG_steel_mines_developed }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Expand_the_Anshan_Mines"
+			FNG_JAP_spend_medium = yes
+			716 = {
+				set_state_flag = FNG_steel_mines_developed		# Needed for FNG/MAN focus bypasses
+				add_resource = {
+					type = steel
+					amount = 20
+				}
+			}
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			hidden_effect = {
+				for_each_scope_loop = {
+					array = global.china_tags_array
+					THIS = { remove_targeted_decision = { target = 716 decision = FNG_Expand_the_Anshan_Mines } }
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Reorganise_the_NTC
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 5
+
+		relative_position_id = FNG_Develop_the_Three_Northeast_Provinces
+		x = 4
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Develop_the_Three_Northeast_Provinces
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Reorganise_the_NTC"
+			unlock_decision_tooltip = FNG_Railway_Construction_Jilin_Shenyang
+			unlock_decision_tooltip = FNG_Railway_Construction_Pingqi
+			unlock_decision_tooltip = FNG_Railway_Construction_Shenyang_Chengde
+			if = {
+				limit = {
+					has_country_flag = enrich_country
+				}
+				hidden_effect = {
+					add_political_power = 30
+				}
+				custom_effect_tooltip = BONUS_PP_30
+			}
+			add_stability = 0.10
+			FNG_JAP_spend_large = yes
+			set_temp_variable = { CCPOP = 5 }
+			FNG_CCPOP = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_Develop_the_Northern_Frontier
+		icon = GFX_Goal_YUN_The_Mountain_Economy
+		cost = 6
+
+		relative_position_id = FNG_Reorganise_the_NTC
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Reorganise_the_NTC
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Develop_the_Northern_Frontier"
+			if = {
+				limit = {
+					has_country_flag = enrich_country
+				}
+				hidden_effect = {
+					add_political_power = 30
+				}
+				custom_effect_tooltip = BONUS_PP_30
+			}
+			883 = { #Aigun
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			884 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			FNG_JAP_spend_medium = yes
+			set_temp_variable = { CCPOP = 3 }
+			FNG_CCPOP = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Fengtian_Society_for_Light_Metals
+		icon = GFX_goal_fengtian_light_metals
+		cost = 6
+
+		relative_position_id = FNG_Mantetsu_Research_Wing
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Japanese_Electrical_Expertise
+		}
+		prerequisite = {
+			focus = FNG_Mantetsu_Research_Wing
+		}
+		available = {
+			716 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = { factor = 60 }
+		bypass = {
+			hidden_trigger = {
+				716 = { has_state_flag = FNG_aluminium_mines_developed }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Fengtian_Society_for_Light_Metals"
+			716 = {
+				add_resource = {
+					type = aluminium
+					amount = 16
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			FNG_JAP_investment_large = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Mantetsu_Civil_Engineering_Projects
+		icon = GFX_focus_SOV_south_manchuria_railway
+		cost = 7
+
+		relative_position_id = FNG_Fengtian_Society_for_Light_Metals
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Fengtian_Society_for_Light_Metals
+		}
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		bypass = {
+			OR = {
+				FNG_JAP_hostile = yes
+				JAP = { is_faction_leader = no }
+			}
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Mantetsu_Civil_Engineering_Projects"
+			add_stability = 0.10
+			JAP = {
+				add_intel = {
+					target = fng
+					army_intel = 10
+				}
+			}
+			716 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			715 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			886 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			714 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			885 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = {
+					has_country_flag = enrich_country
+				}
+				hidden_effect = {
+					add_political_power = 50
+				}
+				custom_effect_tooltip = BONUS_PP_50
+			}
+			set_temp_variable = { CCPOP = -5 }
+			FNG_CCPOP = yes
+			FNG_JAP_investment_large = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_Establish_the_Jinzhou_Industrial_Zone
+		icon = GFX_goal_generic_production2
+		cost = 6
+
+		relative_position_id = FNG_Expand_the_Anshan_Mines
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Expand_the_Anshan_Mines
+		}
+		prerequisite = {
+			focus = FNG_Develop_the_Northern_Frontier
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Establish_the_Jinzhou_Industrial_Zone"
+			add_offsite_building = {
+				type = industrial_complex
+				level = 1
+			}
+			custom_effect_tooltip = tooltip_white_line
+			country_event = fengtian_events.69
+			if = {
+				limit = {
+					has_country_flag = enrich_country
+				}
+				hidden_effect = {
+					add_political_power = 30
+				}
+				custom_effect_tooltip = BONUS_PP_30
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Expand_the_Fushun_Mines
+		icon = GFX_goal_generic_coal_mining
+		cost = 7
+
+		relative_position_id = FNG_Establish_the_Jinzhou_Industrial_Zone
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Establish_the_Jinzhou_Industrial_Zone
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Expand_the_Fushun_Mines"
+			FNG_JAP_spend_large = yes
+			716 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = industrial_complex
+					level = 3
+					instant_build = yes
+				}
+				add_resource = {
+					type = coal
+					amount = 12
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Yalu_and_Songhua_Hydroelectricity
+		icon = GFX_goal_economic_control
+		cost = 7
+
+		relative_position_id = FNG_Mantetsu_Civil_Engineering_Projects
+		x = 1
+		y = 1
+
+		available = {
+			has_full_control_of_state = 328
+			has_full_control_of_state = 886
+			has_full_control_of_state = 885
+		}
+		bypass = {
+			328 = { dam > 0 }
+			886 = { dam > 0 }
+			885 = { dam > 0 }
+		}
+		prerequisite = {
+			focus = FNG_Mantetsu_Civil_Engineering_Projects
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Yalu_and_Songhua_Hydroelectricity"
+			add_political_power = 20
+			FNG_JAP_spend_large = yes
+			add_one_random_civilian_factory = yes
+			if = {
+				limit = {
+					has_completed_focus = FNG_Yingkou_Commercial_Development
+					has_idea = FNG_Backward_Industry
+				}
+				remove_ideas = FNG_Backward_Industry
+				custom_effect_tooltip = tooltip_white_line
+			}
+			else = {
+				custom_effect_tooltip = FNG_remove_backward_industry
+				custom_effect_tooltip = tooltip_white_line
+			}
+			FNG_yalu_and_songhua_hydroelectricity_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Yingkou_Commercial_Development
+		icon = GFX_goal_generic_construction
+		cost = 7
+
+		relative_position_id = FNG_Expand_the_Fushun_Mines
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Expand_the_Fushun_Mines
+		}
+		ai_will_do = { factor = 65 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Yingkou_Commercial_Development"
+			FNG_JAP_spend_large = yes
+			custom_effect_tooltip = FNG_remove_backward_industry
+			if = {
+				limit = {
+					has_completed_focus = FNG_Yalu_and_Songhua_Hydroelectricity
+				}
+				remove_ideas = FNG_Backward_Industry
+			}
+			716 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 1
+						province = 11764
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 1
+						VP = 11764
+					}
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Support_Sino-Japanese_Joint_Companies
+		icon = GFX_goal_generic_national_unity
+		cost = 6
+
+		relative_position_id = FNG_Develop_the_Three_Northeast_Provinces
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = FNG_Japanese_Electrical_Expertise
+		}
+		prerequisite = {
+			focus = FNG_Expand_the_Anshan_Mines
+		}
+		prerequisite = {
+			focus = FNG_Wang_Yongjiangs_Legacy
+		}
+		available = {
+			FNG_JAP_hostile = no
+			country_exists = JAP
+			NOT = {
+				has_idea = FNG_Investment_Dearth
+				has_idea = FNG_Limited_Investment
+			}
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Support_Sino-Japanese_Joint_Companies"
+			if = {
+				limit = {
+					has_country_flag = enrich_country
+				}
+				hidden_effect = {
+					add_political_power = 20
+				}
+				custom_effect_tooltip = BONUS_PP_20
+			}
+			add_tech_bonus = {
+				name = FNG_Support_Sino-Japanese_Joint_Companies
+				bonus = 0.50
+				uses = 1
+				category = industry
+			}
+			716 = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			FNG_JAP_investment_large = yes
+			set_temp_variable = { CCPOP = 5 }
+			FNG_CCPOP = yes
+			hidden_effect = {
+				country_event = { id = fengtian_events.32 days = 20 random_days = 30 }
+				FNG_trigger_tang_yulin_leak_event = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Japanese_Coal_Gasification_Methods
+		icon = GFX_goal_generic_oil_refinery
+		cost = 7
+
+		relative_position_id = FNG_Support_Sino-Japanese_Joint_Companies
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Mantetsu_Civil_Engineering_Projects
+		}
+		prerequisite = {
+			focus = FNG_Expand_the_Fushun_Mines
+		}
+		available = {
+			FNG_JAP_hostile = no
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Japanese_Coal_Gasification_Methods"
+			set_technology = { synth_oil_experiments = 1 }
+			set_technology = { oil_processing = 1 }
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = fuel_silo
+					level = 2
+					instant_build = yes
+				}
+			}
+			set_temp_variable = { CCPOP = -3 }
+			FNG_CCPOP = yes
+			FNG_JAP_investment_medium = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Manchurian_Model_Cities
+		icon = GFX_goal_model_cities
+		cost = 8
+
+		relative_position_id = FNG_Support_Sino-Japanese_Joint_Companies
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = FNG_Yalu_and_Songhua_Hydroelectricity
+		}
+		prerequisite = {
+			focus = FNG_Yingkou_Commercial_Development
+		}
+		available = {
+			custom_override_tooltip = {
+				tooltip = FNG_JAP_influence_above_25_tooltip
+				OR = {
+					FNG_mantetsu_level_medium = yes
+					FNG_mantetsu_level_high = yes
+					FNG_mantetsu_level_very_high = yes
+				}
+			}
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		cancel = {
+			OR = {
+				FNG_JAP_hostile = yes
+				JAP = { is_faction_leader = no }
+			}
+		}
+		continue_if_invalid = yes
+		ai_will_do = { factor = 90 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Manchurian_Model_Cities"
+			FNG_increase_legitimacy = yes
+			add_ideas = FNG_Manchurian_Model_Cities
+			716 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			886 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			885 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = {
+					has_country_flag = enrich_country
+				}
+				hidden_effect = {
+					add_political_power = 100
+				}
+				custom_effect_tooltip = BONUS_PP_100
+			}
+			set_temp_variable = { RLPOP = -5 }
+			FNG_RLPOP = yes
+			FNG_JAP_investment_mega = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	### Unification Branch ###
+	focus = {
+		id = FNG_Open_the_Propaganda_Front
+		icon = GFX_goal_ANQ_promote_nationalist_thought
+		cost = 8
+
+		relative_position_id = FNG_Fuguo_Qiangbing
+		x = 2
+		y = 1
+
+		available = {
+			has_country_flag = FNG_regionalists_suppressed
+		}
+		bypass = {
+			has_war_with = 608.owner
+		}
+		prerequisite = {
+			focus = FNG_Fuguo_Qiangbing
+		}
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Open_the_Propaganda_Front"
+			add_war_support = 0.05
+			add_political_power = 50
+			add_command_power = 50
+			set_temp_variable = { RLPOP = 3 }
+			FNG_RLPOP = yes
+			unlock_decision_category_tooltip = FNG_foreign_policy
+			hidden_effect = {
+				activate_targeted_decision = { decision = FNG_Denounce_Qing_Monarchism target = QIE }
+				activate_targeted_decision = { decision = FNG_Denounce_German_Imperialism target = GER }
+				activate_targeted_decision = { decision = FNG_National_Irredentism target = THIS }
+				activate_targeted_decision = { decision = FNG_Wu_Wang_Zai_Ju target = THIS }
+				activate_targeted_decision = { decision = FNG_Escalate_the_Propaganda_War target = THIS }
+				activate_targeted_decision = { decision = FNG_The_Yanshan_Plan target = THIS }
+				activate_targeted_decision = { decision = FNG_Shanhaiguan_Infiltration target = THIS }
+			}
+			FNG_trigger_tang_yulin_leak_event = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Begin_the_War_of_National_Reclamation
+		icon = GFX_goal_FNG_Reclamation_War
+		cost = 5
+
+		relative_position_id = FNG_Fuguo_Qiangbing
+		x = 0
+		y = 2
+
+		available = {
+			date > 1937.1.1 #Shanxi winning the Central Plains War won't cause FNG to go to war with QIE in 1936
+			is_subject = no
+			can_declare_war_on = 608.owner
+			NOT = { has_non_aggression_pact_with = 608.owner }
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = FNG_The_Grand_Marshals_Proclamation }
+				has_country_flag = FNG_preparing_war_of_national_reclamation
+			}
+		}
+		bypass = {
+			OR = {
+				is_subject = yes
+				owns_state = 608
+				has_war_with_wargoal_against = 608.owner
+				var:608.owner = { has_war_with_wargoal_against = ROOT }
+			}
+		}
+
+		prerequisite = {
+			focus = FNG_Fuguo_Qiangbing
+		}
+
+		continue_if_invalid = yes
+		cancel = {
+			OR = {
+				is_subject = yes
+				NOT = { can_declare_war_on = 608.owner }
+				has_non_aggression_pact_with = 608.owner
+			}
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		will_lead_to_war_with = QIE
+		will_lead_to_war_with = SHX
+		will_lead_to_war_with = SHD
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Begin_the_War_of_National_Reclamation"
+			FNG_zhifeng_war_threat = yes
+			create_wargoal = {
+				target = 608.owner
+				type = annex_everything
+			}
+			#These two decisions give FNG fallbacks so they can continue the war should they take Beijing but someone snipes Wuhan.
+			effect_tooltip = {
+				activate_targeted_decision = { decision = china_demand_submission target = SHD }
+				activate_targeted_decision = { decision = china_demand_submission target = SHX }
+			}
+			SHD = { add_to_array = { ROOT.china_possible_targets_array = THIS } }
+			SHX = { add_to_array = { ROOT.china_possible_targets_array = THIS } }
+			unlock_decision_tooltip = CHN_nanjing_expedition
+			unlock_decision_tooltip = CHN_storming_of_wuhan
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = china_can_core_through_compliance
+			set_country_flag = { flag = FNG_war_began_three_months days = 90 value = 1 }
+			set_country_flag = { flag = FNG_war_began_one_year days = 365 value = 1 }
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = FNG_From_Beijing_to_the_Begonia_Leaf
+		icon = GFX_focus_CHI_restore_the_old_republic
+		cost = 10
+
+		relative_position_id = FNG_Begin_the_War_of_National_Reclamation
+		x = 0
+		y = 1
+
+		available = {
+			controls_state = 608
+		}
+		prerequisite = {
+			focus = FNG_Begin_the_War_of_National_Reclamation
+		}
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_From_Beijing_to_the_Begonia_Leaf"
+			608 = { remove_claim_and_add_core_of_ROOT = yes } #Beijing
+			set_capital = { state = 608 remember_old_capital = no }
+			CHN_setup_lategame_debuffs_effect = yes
+			FNG_JAP_spend_large = yes
+			set_temp_variable = { RLPOP = 3 }
+			FNG_RLPOP = yes
+			set_temp_variable = { ZCPOP = 3 }
+			FNG_ZCPOP = yes
+			custom_effect_tooltip = tooltip_white_line
+			FNG_setup_legitimacy = yes
+			hidden_effect = {
+				activate_targeted_decision = { target = THIS decision = FNG_Rebuild_the_Second_Army }
+			}
+			china_enable_alliances_decisions = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_against_imperialism_of_all_forms
+		icon = GFX_goal_ANQ_end_century_humiliation
+		cost = 8
+
+		relative_position_id = FNG_From_Beijing_to_the_Begonia_Leaf
+		x = -3
+		y = 1
+
+		prerequisite = {
+			focus = FNG_From_Beijing_to_the_Begonia_Leaf
+		}
+
+		mutually_exclusive = {
+			focus = FNG_the_marshal_and_the_emperor
+		}
+		available = {
+			has_global_flag = FNG_relations_JAP_broke
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_against_imperialism_of_all_forms"
+			set_temp_variable = { RLPOP = 5 }
+			FNG_RLPOP = yes
+			set_temp_variable = { ZCPOP = 5 }
+			FNG_ZCPOP = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_political_power = 25
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = FNG_factionalism_modifier
+			}
+			add_to_variable = {
+				FNG_factionalism_war_support = 0.1
+				tooltip = war_support_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_stability = 0.05
+				tooltip = stability_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_pp_factor = 0.1
+				tooltip = political_power_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_conscription_factor = 0.1
+				tooltip = conscription_factor_tooltip
+			}
+			custom_effect_tooltip = tooltip_white_line
+			JAP = {
+				add_opinion_modifier = {
+					target = FNG
+					modifier = KR_diplomatic_row
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_faith_in_the_anguojun
+		icon = GFX_goal_FNG_fengtian_army
+		cost = 6
+
+		relative_position_id = FNG_against_imperialism_of_all_forms
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_against_imperialism_of_all_forms
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_faith_in_the_anguojun"
+			add_war_support = 0.05
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.5
+				name = FNG_faith_in_the_anguojun
+				uses = 2
+				category = land_doctrine
+				category = air_doctrine
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_timed_idea = {
+				idea = FNG_pacification_by_chinese_might
+				days = 280
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = FNG_the_marshal_and_the_emperor
+		icon = GFX_focus_jap_spiritual_mobilization
+		cost = 8
+
+		relative_position_id = FNG_From_Beijing_to_the_Begonia_Leaf
+		x = 3
+		y = 1
+
+		prerequisite = {
+			focus = FNG_From_Beijing_to_the_Begonia_Leaf
+		}
+
+		mutually_exclusive = {
+			focus = FNG_against_imperialism_of_all_forms
+		}
+		available = {
+			is_in_faction_with = JAP
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_marshal_and_the_emperor"
+			FNG_JAP_investment_large = yes
+			set_temp_variable = { CCPOP = 3 }
+			FNG_CCPOP = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_political_power = 25
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = FNG_factionalism_modifier
+			}
+			add_to_variable = {
+				FNG_factionalism_pp_factor = 0.1
+				tooltip = political_power_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_stability = 0.05
+				tooltip = stability_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_war_support = 0.1
+				tooltip = war_support_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_conscription_factor = 0.1
+				tooltip = conscription_factor_tooltip
+			}
+			custom_effect_tooltip = tooltip_white_line
+			JAP = {
+				add_opinion_modifier = {
+					target = FNG
+					modifier = KR_approves_of_govt
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_following_the_kingly_way
+		icon = GFX_goal_QIE_forbiddenpalace
+		cost = 6
+
+		relative_position_id = FNG_the_marshal_and_the_emperor
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_the_marshal_and_the_emperor
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_following_the_kingly_way"
+			FNG_JAP_investment_medium = yes
+			set_temp_variable = { CCPOP = 2 }
+			FNG_CCPOP = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = {
+					FNG_ruan_zhenduo = { is_hired_as_advisor = no }
+					has_free_political_advisor_slot = yes
+				}
+				hidden_effect = {
+					activate_advisor = FNG_ruan_zhenduo_advisor
+				}
+				custom_effect_tooltip = if_not_yet_hired_will_hire
+				show_ideas_tooltip = FNG_ruan_zhenduo_advisor
+			}
+			else = {
+				add_political_power = 70
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_stability = 0.05
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1500
+				producer = JAP
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Suppress_the_Bandits_Collect_the_Harvest
+		icon = GFX_goal_agrarian_soldiers
+		cost = 5
+
+		relative_position_id = FNG_against_imperialism_of_all_forms
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_the_marshal_and_the_emperor
+			focus = FNG_against_imperialism_of_all_forms
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Suppress_the_Bandits_Collect_the_Harvest"
+			if = {
+				limit = { FNG_yuan_jinkai = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_yuan_jinkai_was_helpful_tt
+				add_political_power = 50
+				add_stability = 0.03
+			}
+			else = {
+				custom_effect_tooltip = FNG_yuan_jinkai_will_be_helpful_tt
+				add_political_power = 30
+			}
+			custom_effect_tooltip = tooltip_white_line
+			activate_mission = FNG_Looting_Beijing_Baoding
+			activate_mission = FNG_Looting_Zhengzhou_Luoyang
+			activate_mission = FNG_Looting_Wuhan
+			custom_effect_tooltip = tooltip_white_line
+			CHN_improve_economic_devastation_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Continue_the_Reclamation_War
+		icon = GFX_goal_generic_join_faction
+		cost = 4
+
+		relative_position_id = FNG_against_imperialism_of_all_forms
+		x = 3
+		y = 1
+
+		prerequisite = {
+			focus = FNG_the_marshal_and_the_emperor
+			focus = FNG_against_imperialism_of_all_forms
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Continue_the_Reclamation_War"
+			if = {
+				limit = { FNG_wang_yitang = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_wang_yitang_was_helpful_tt
+				add_political_power = 100
+				add_war_support = 0.03
+				set_temp_variable = { RLPOP = 5 }
+				FNG_RLPOP = yes
+			}
+			else = {
+				custom_effect_tooltip = FNG_wang_yitang_will_be_helpful_tt
+				add_political_power = 30
+			}
+			custom_effect_tooltip = tooltip_white_line
+			china_enable_all_demand_submission_decisions = yes
+			FNG_trigger_tang_yulin_leak_event = yes
+			set_country_flag = { flag = FNG_war_continued_one_year days = 365 value = 1 }
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Secure_the_Rear_Area
+		icon = GFX_goal_generic_intense_warfare
+		cost = 5
+
+		relative_position_id = FNG_the_marshal_and_the_emperor
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_the_marshal_and_the_emperor
+			focus = FNG_against_imperialism_of_all_forms
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Secure_the_Rear_Area"
+			custom_effect_tooltip = FNG_prevent_resistance_events
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { FNG_yuan_jinkai = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_yuan_jinkai_was_helpful_tt
+				every_controlled_state = {
+					limit = {
+						is_china_claim_area = yes
+						has_resistance = yes
+					}
+					add_resistance = -10
+				}
+			}
+			else = {
+				custom_effect_tooltip = FNG_yuan_jinkai_will_be_helpful_tt
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_lar = no }
+				add_political_power = 50
+				add_tech_bonus = {
+					name = FNG_Secure_the_Rear_Area
+					category = military_police_tech
+					uses = 2
+					bonus = 0.5
+				}
+			}
+			else_if = {
+				limit = { has_intelligence_agency = no }
+				create_intelligence_agency = yes
+			}
+			else_if = {
+				limit = { NOT = { has_done_agency_upgrade = upgrade_form_department } }
+				upgrade_intelligence_agency = upgrade_form_department
+			}
+			else_if = {
+				limit = { NOT = { has_done_agency_upgrade = upgrade_psycho_warfare } }
+				upgrade_intelligence_agency = upgrade_psycho_warfare
+			}
+			else_if = {
+				limit = { NOT = { has_done_agency_upgrade = upgrade_anti_partisan } }
+				upgrade_intelligence_agency = upgrade_anti_partisan
+			}
+			else_if = {
+				limit = { NOT = { has_done_agency_upgrade = upgrade_commando_training } }
+				upgrade_intelligence_agency = upgrade_commando_training
+			}
+			else = {
+				add_political_power = 50
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_RESISTANCE }
+	}
+
+	focus = {
+		id = FNG_Crush_Flies_and_Capture_Pigs
+		icon = GFX_focus_generic_oppression
+		cost = 7
+
+		relative_position_id = FNG_Suppress_the_Bandits_Collect_the_Harvest
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Suppress_the_Bandits_Collect_the_Harvest
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Crush_Flies_and_Capture_Pigs"
+			if = {
+				limit = { FNG_wu_junsheng = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_wu_junsheng_was_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				every_character = {
+					limit = {
+						is_unit_leader = yes
+						has_trait = irregulars_officer
+					}
+					add_timed_unit_leader_trait = {
+						trait = disgruntled
+						days = 75
+					}
+				}
+			}
+			else = {
+				custom_effect_tooltip = FNG_wu_junsheng_will_be_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				add_stability = -0.05
+				add_war_support = -0.05
+				every_character = {
+					limit = {
+						is_unit_leader = yes
+						has_trait = irregulars_officer
+					}
+					add_timed_unit_leader_trait = {
+						trait = disgruntled
+						days = 180
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { check_variable = { CHN_military_disarray_fixes_needed_var > 0 } }
+				subtract_from_variable = { CHN_military_disarray_fixes_needed_var = 1 }
+				CHN_improve_military_disarray_effect = yes
+			}
+			FNG_increase_legitimacy = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Centralize_Provincial_Revenues
+		icon = GFX_focus_generic_monetary_union
+		cost = 7
+
+		relative_position_id = FNG_Suppress_the_Bandits_Collect_the_Harvest
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Suppress_the_Bandits_Collect_the_Harvest
+		}
+
+		ai_will_do = { factor = 80 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Centralize_Provincial_Revenues"
+			if = {
+				limit = { FNG_sun_qichang = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_sun_qichang_was_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				add_timed_idea = {
+					idea = FNG_Centralized_Provincial_Revenues
+					days = 420
+				}
+			}
+			else = {
+				custom_effect_tooltip = FNG_sun_qichang_will_be_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				add_timed_idea = {
+					idea = FNG_Centralized_Provincial_Revenues
+					days = 280
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_one_random_civilian_factory = yes
+			add_one_random_military_factory = yes
+			custom_effect_tooltip = tooltip_white_line
+			every_subject_country = {
+				limit = { is_chinese_or_potential_chinese_tag = yes }
+				add_opinion_modifier = {
+					target = THIS
+					modifier = KR_displeased
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_ensuring_efficient_procurement
+		icon = GFX_focus_generic_military_industry
+		cost = 7
+
+		relative_position_id = FNG_Crush_Flies_and_Capture_Pigs
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Crush_Flies_and_Capture_Pigs
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_ensuring_efficient_procurement"
+			add_tech_bonus = {
+				name = FNG_ensuring_efficient_procurement
+				bonus = 0.6
+				uses = 3
+				category = cat_production
+				category = mio_cat_all_artillery_equipment
+				category = infantry_tech
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { FNG_ding_jianxiu = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_ding_jianxiu_was_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				add_timed_idea = {
+					idea = FNG_maximising_production_line_efficiency_idea
+					days = 365
+				}
+			}
+			else = {
+				custom_effect_tooltip = FNG_ding_jianxiu_will_be_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				add_timed_idea = {
+					idea = FNG_maximising_production_line_efficiency_idea
+					days = 275
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Integrate_Occupied_Arsenals
+		icon = GFX_goal_QIE_gongxian_arsenal
+		cost = 10
+
+		relative_position_id = FNG_Centralize_Provincial_Revenues
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Centralize_Provincial_Revenues
+		}
+
+		available = {
+			OR = {
+				1062 = { is_controlled_by_ROOT_or_ally = yes }
+				1048 = { is_controlled_by_ROOT_or_ally = yes }
+				613 = { is_controlled_by_ROOT_or_ally = yes }
+			}
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Integrate_Occupied_Arsenals"
+			FNG_occupied_arsenals_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_revitalise_the_bank_of_communications
+		icon = GFX_goal_generic_banking_legislation
+		cost = 7
+
+		relative_position_id = FNG_Centralize_Provincial_Revenues
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Centralize_Provincial_Revenues
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_revitalise_the_bank_of_communications"
+			if = {
+				limit = { FNG_zhang_zongxiang = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_zhang_zongxiang_was_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				set_temp_variable = { CCPOP = 5 }
+				FNG_CCPOP = yes
+				FNG_JAP_investment_large = yes
+				add_one_random_infrastructure = yes
+				add_one_random_infrastructure = yes
+				add_one_random_civilian_factory = yes
+				add_one_random_civilian_factory = yes
+			}
+			else = {
+				custom_effect_tooltip = FNG_zhang_zongxiang_will_be_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				set_temp_variable = { CCPOP = 3 }
+				FNG_CCPOP = yes
+				add_one_random_infrastructure = yes
+				add_one_random_civilian_factory = yes
+			}
+			CHN_improve_economic_devastation_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_renewing_trust_in_industry
+		icon = GFX_generic_heavy_industry
+		cost = 8
+
+		relative_position_id = FNG_revitalise_the_bank_of_communications
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_revitalise_the_bank_of_communications
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_renewing_trust_in_industry"
+			custom_effect_tooltip = FNG_renewing_trust_in_industry_tt
+			custom_effect_tooltip = tooltip_white_line
+			CHN_add_civilian_industry_northerner_effect = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = {
+					FNG_ding_jianxiu = { is_political_advisor = yes }
+				}
+				custom_effect_tooltip = FNG_ding_jianxiu_was_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				FNG_JAP_investment_medium = yes
+				add_timed_idea = {
+					idea = FNG_reviving_chinese_financial_stability
+					days = 180
+				}
+			}
+			else = {
+				custom_effect_tooltip = FNG_ding_jianxiu_will_be_helpful_tt
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_militarise_the_student_body
+		icon = GFX_goal_generic_paramilitary
+		cost = 6
+
+		relative_position_id = FNG_Continue_the_Reclamation_War
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Continue_the_Reclamation_War
+			focus = FNG_Secure_the_Rear_Area
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_militarise_the_student_body"
+			remove_ideas = CHN_national_illiteracy1_idea
+			custom_effect_tooltip = tooltip_white_line
+			china_add_research_slots = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { FNG_feng_yong = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_feng_yong_was_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.08
+				}
+				add_timed_idea = {
+					idea = FNG_preparing_the_students
+					days = 220
+				}
+			}
+			else = {
+				custom_effect_tooltip = FNG_feng_yong_will_be_helpful_tt
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Incorporate_Local_Patronage_Networks
+		icon = GFX_goal_collaborate_local_elites
+		cost = 7
+
+		relative_position_id = FNG_Continue_the_Reclamation_War
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Continue_the_Reclamation_War
+		}
+		available = {
+			any_state_of = {
+				target = { 613 1048 1062 }
+				is_controlled_by_ROOT_or_ally = yes
+			}
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Incorporate_Local_Patronage_Networks"
+			add_political_power = 50
+			custom_effect_tooltip = FNG_unlock_southern_companies
+			FNG_increase_legitimacy = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = wusong_locomotive_works_FNG
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = china_aviation_corporation_FNG
+			}
+			else = {
+				if = {
+					limit = { mio:CHN_aviation_industry_organisation = { is_mio_available = no } }
+					custom_effect_tooltip = available_mio_tt
+					show_mio_tooltip = CHN_aviation_industry_organisation
+				}
+				mio:CHN_aviation_industry_organisation = {
+					set_mio_flag = CHN_mio_unlocked
+					add_mio_size = 2
+				}
+				if = {
+					limit = { mio:CHN_armour_industry_organisation = { is_mio_available = no } }
+					custom_effect_tooltip = tooltip_white_line
+					custom_effect_tooltip = available_mio_tt
+					show_mio_tooltip = CHN_armour_industry_organisation
+				}
+				mio:CHN_armour_industry_organisation = {
+					set_mio_flag = CHN_mio_unlocked
+					add_mio_size = 3
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			CHN_improve_economic_devastation_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Expand_the_Baojia_System
+		icon = GFX_goal_COS_War
+		cost = 6
+
+		relative_position_id = FNG_Secure_the_Rear_Area
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Secure_the_Rear_Area
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Expand_the_Baojia_System"
+			add_stability = 0.05
+			add_ideas = FNG_Baojia_System
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { FNG_zhang_zuoxiang = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_zhang_zuoxiang_was_helpful_tt
+				custom_effect_tooltip = tooltip_white_line
+				set_temp_variable = { ZCPOP = 5 }
+				FNG_ZCPOP = yes
+				add_tech_bonus = {
+					name = FNG_Expand_the_Baojia_System
+					uses = 1
+					bonus = 2
+					category = military_police_tech
+				}
+			}
+			else = {
+				custom_effect_tooltip = FNG_zhang_zuoxiang_will_be_helpful_tt
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_dictatorship_of_the_transport_ministry
+		icon = GFX_goal_generic_railway_construction
+		cost = 6
+
+		relative_position_id = FNG_Expand_the_Baojia_System
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Expand_the_Baojia_System
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_dictatorship_of_the_transport_ministry"
+			custom_effect_tooltip = FNG_dictatorship_of_the_transport_ministry_tt
+			custom_effect_tooltip = tooltip_white_line
+			CHN_add_infra_northerner_effect = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_tech_bonus = {
+				name = FNG_dictatorship_of_the_transport_ministry
+				uses = 1
+				bonus = 1
+				category = train_tech
+			}
+			build_railway = {
+				level = 1
+				start_province = 11771
+				target_province = 9843
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { FNG_chang_yinhuai = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_chang_yinhuai_was_helpful_tt
+				add_political_power = 50
+				FNG_JAP_spend_medium = yes
+			}
+			else = {
+				custom_effect_tooltip = FNG_chang_yinhuai_will_be_helpful_tt
+			}
+			custom_effect_tooltip = tooltip_white_line
+			set_variable = { FNG_mantetsu_rails = 0 }
+			set_variable = { FNG_national_rails = 0 }
+			activate_targeted_decision = { target = THIS decision = FNG_The_Jinhan_Railway }
+			activate_targeted_decision = { target = THIS decision = FNG_The_Jinpu_Railway }
+			activate_targeted_decision = { target = THIS decision = FNG_The_Yuehan_Railway }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_The_Generals_Know_Best
+		icon = GFX_focus_generic_military_mission
+		cost = 6
+
+		relative_position_id = FNG_dictatorship_of_the_transport_ministry
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_dictatorship_of_the_transport_ministry
+		}
+
+		mutually_exclusive = {
+			focus = FNG_One_Army_One_Republic
+		}
+
+		available = {
+			OR = {
+				has_country_leader = {
+					character = FNG_zhang_xueliang
+				}
+				has_country_leader = {
+					character = FNG_zhang_zuolin
+				}
+			}
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_The_Generals_Know_Best"
+			add_ideas = FNG_primacy_of_the_loyalists
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { ZCPOP = 5 }
+			FNG_ZCPOP = yes
+			every_character = {
+				limit = {
+					is_unit_leader = yes
+					has_trait = CHN_zhang_officer_trait
+				}
+				add_timed_unit_leader_trait = {
+					trait = energised_temp_trait
+					days = 200
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = FNG_One_Army_One_Republic
+		icon = GFX_goal_China_Beiyang_training
+		cost = 6
+
+		relative_position_id = FNG_dictatorship_of_the_transport_ministry
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_dictatorship_of_the_transport_ministry
+		}
+
+		mutually_exclusive = {
+			focus = FNG_The_Generals_Know_Best
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_One_Army_One_Republic"
+			army_experience = 15
+			add_timed_idea = {
+				idea = FNG_Command_Reforms
+				days = 250
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = after_idea_expires
+			effect_tooltip = { add_ideas = FNG_triumph_of_the_model_officers }
+			custom_effect_tooltip = tooltip_white_line
+			FNG_JAP_investment_large = yes
+			every_character = {
+				limit = {
+					is_unit_leader = yes
+					has_trait = CHN_shikan_officer_trait
+				}
+				gain_xp = 200
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = FNG_Institute_Labour_Discipline
+		icon = GFX_focus_generic_full_employment
+		cost = 6
+
+		relative_position_id = FNG_dictatorship_of_the_transport_ministry
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_dictatorship_of_the_transport_ministry
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Institute_Labour_Discipline"
+			custom_effect_tooltip = FNG_remove_labour_unrest
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { FNG_chang_yinhuai = { is_political_advisor = yes } }
+				custom_effect_tooltip = FNG_chang_yinhuai_was_helpful_tt
+				FNG_JAP_investment_medium = yes
+				add_timed_idea = {
+					idea = FNG_Suppressed_Labour_Movement
+					days = 220
+				}
+			}
+			else = {
+				custom_effect_tooltip = FNG_chang_yinhuai_will_be_helpful_tt
+				add_timed_idea = {
+					idea = FNG_Suppressed_Labour_Movement
+					days = 300
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = after_idea_expires
+			effect_tooltip = { add_ideas = FNG_Worker_Loyalty }
+		}
+		search_filters = { FOCUS_FILTER_PRODUCTION }
+	}
+
+	focus = {
+		id = FNG_dongbeis_final_victory
+		icon = GFX_goal_FNG_unification_by_subjugation
+		cost = 8
+
+		relative_position_id = FNG_Incorporate_Local_Patronage_Networks
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Incorporate_Local_Patronage_Networks
+		}
+		available = {
+			owns_state = 608
+			china_is_the_unifier_of_china_trigger = yes
+		}
+		allow_branch = {
+			NOT = { is_subject_of = JAP }
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_dongbeis_final_victory"
+			if = {
+				limit = { has_country_leader = { character = FNG_zhang_zuolin } }
+				set_politics = {
+					ruling_party = authoritarian_democrat
+					elections_allowed = no
+				}
+				promote_character = {
+					character = FNG_zhang_xueliang
+					ideology = authoritarian_democrat_subtype
+				}
+				clear_army_chief = yes
+				activate_advisor = FNG_zhang_zuolin_army_chief
+				custom_effect_tooltip = tooltip_white_line
+				set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+				add_to_coalition = yes
+			}
+			else = {
+				set_temp_variable = { coalition_partner_var = token:social_conservative }
+				add_to_coalition = yes
+			}
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = FNG_factionalism_modifier
+			}
+			add_to_variable = {
+				FNG_factionalism_pp_factor = 0.05
+				tooltip = political_power_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_stability = 0.10
+				tooltip = stability_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_war_support = 0.05
+				tooltip = war_support_factor_tooltip
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_remove_industry_debuffs
+			hidden_effect = {
+				set_party_name = {
+					ideology = social_liberal
+					long_name = CHN_republicans_party_long
+					name = CHN_republicans_party
+				}
+				set_party_name = {
+					ideology = social_democrat
+					long_name = CHN_FCDP_party_long
+					name = CHN_FCDP_party
+				}
+				set_party_name = {
+					ideology = market_liberal
+					long_name = CHN_CCP_party_long
+					name = CHN_CCP_party
+				}
+				promote_character = {
+					character = FNG_assorted_leaders
+					ideology = social_democrat_subtype
+				}
+				promote_character = {
+					character = FNG_assorted_leaders
+					ideology = market_liberal_subtype
+				}
+				remove_ideas = {
+					FNG_Backward_Industry
+					FNG_Investment_Dearth
+					FNG_Limited_Investment
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			china_enable_outskirts_decisions = yes
+			KUM = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			ETS = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			SIK = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			TIB = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			MON = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			add_state_claim = 1111
+			add_state_claim = 1042
+			add_state_claim = 329
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_the_moral_republic
+		icon = {
+			GFX_goal_ANQ_convince_intellectuals = {
+				NOT = {
+					has_country_leader = { character = FNG_zhang_xueliang }
+					has_country_leader = { character = FNG_zhang_zuolin }
+				}
+			}
+			GFX_goal_QIE_confucianism = yes
+		}
+		cost = 8
+
+		relative_position_id = FNG_dongbeis_final_victory
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_dongbeis_final_victory
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_moral_republic"
+			add_political_power = 100
+			china_generic_land_reform_setup = yes
+			custom_effect_tooltip = tooltip_white_line
+			remove_ideas = FNG_intolerable_political_realities
+			custom_effect_tooltip = tooltip_white_line
+			FNG_increase_legitimacy = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_rulership_as_a_family_business
+		icon = GFX_goal_ANQ_centralization
+		cost = 8
+
+		relative_position_id = FNG_dongbeis_final_victory
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_dongbeis_final_victory
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_rulership_as_a_family_business"
+			QIE = {
+				QIE_wellington_koo = { CHN_recruit_character_effect = yes }
+				QIE_huang_fu = { CHN_recruit_character_effect = yes }
+				QIE_gu_zhongxiu = { CHN_recruit_character_effect = yes }
+				QIE_wu_xianzi = { CHN_recruit_character_effect = yes }
+				QIE_yan_huiqing = { CHN_recruit_character_effect = yes }
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_political_power = 35
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = market_liberal
+				popularity = 0.05
+			}
+			custom_effect_tooltip = tooltip_white_line
+			remove_ideas = FNG_endemic_economic_malaise
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_denouncing_imperialist_vultures
+		icon = {
+			GFX_goal_RUS_symphony_of_authorities = {
+				NOT = {
+					has_country_leader = { character = FNG_zhang_xueliang }
+					has_country_leader = { character = FNG_zhang_zuolin }
+				}
+			}
+			GFX_goal_ANQ_hunt_hanjian_2 = yes
+		}
+		cost = 8
+
+		relative_position_id = FNG_dongbeis_final_victory
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_dongbeis_final_victory
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_denouncing_imperialist_vultures"
+			add_war_support = 0.05
+			add_stability = 0.05
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.08
+			}
+			custom_effect_tooltip = tooltip_white_line
+			remove_ideas = FNG_crippling_army_rivalries
+			custom_effect_tooltip = tooltip_white_line
+			FNG_increase_legitimacy = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_from_poverty_to_extravagance
+		icon = GFX_goal_FNG_grand_marshal
+		cost = 8
+
+		relative_position_id = FNG_the_moral_republic
+		x = -1
+		y = 1
+
+		prerequisite = { focus = FNG_the_moral_republic }
+		prerequisite = { focus = FNG_rulership_as_a_family_business }
+		prerequisite = { focus = FNG_denouncing_imperialist_vultures }
+
+		mutually_exclusive = { focus = FNG_the_president_of_providence }
+
+		available = {
+			has_country_leader = { character = FNG_zhang_xueliang }
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_from_poverty_to_extravagance"
+			if = {
+				limit = { FNG_JAP_hostile = no }
+				custom_effect_tooltip = FNG_from_poverty_to_extravagance_tt
+				set_temp_variable = { FNG_stability_loss_temp_var = FNG.FNG_JAP_influence_variable }
+				multiply_temp_variable = { FNG_stability_loss_temp_var = -0.5 }
+				clamp_temp_variable = {
+					var = FNG_stability_loss_temp_var
+					min = -1
+					max = 0
+				}
+				add_stability = FNG_stability_loss_temp_var
+			}
+			custom_effect_tooltip = tooltip_white_line
+			china_add_research_slots = yes
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = FNG_factionalism_modifier
+			}
+			add_to_variable = {
+				FNG_factionalism_pp_factor = 0.05
+				tooltip = political_power_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_stability = 0.05
+				tooltip = stability_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_war_support = 0.05
+				tooltip = war_support_factor_tooltip
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_commencing_true_recovery
+		icon = GFX_goal_China_Beiyang_coat_of_arms
+		cost = 8
+
+		relative_position_id = FNG_from_poverty_to_extravagance
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_from_poverty_to_extravagance }
+
+		mutually_exclusive = {
+			focus = FNG_clear_cut_political_economics
+			focus = FNG_in_the_spirit_of_1912
+		}
+
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0
+				OR = {
+					#has_game_rule = { rule = FNG_path option = FNG_PATH_RECOVERY_AUTDEM }
+					has_game_rule = { rule = FNG_path option = FNG_PATH_COMMUNICATIONS_AUTDEM }
+					has_game_rule = { rule = FNG_path option = FNG_PATH_TWIN_DRAGONS_AUTDEM }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_commencing_true_recovery"
+			army_experience = 25
+			add_political_power = 25
+			add_war_support = 0.05
+			set_temp_variable = { RLPOP = 5 }
+			FNG_RLPOP = yes
+			custom_effect_tooltip = tooltip_white_line
+			effect_tooltip = { activate_advisor = FNG_pan_fu_sic }
+			custom_effect_tooltip = tooltip_white_line
+			add_one_random_civilian_factory = yes
+			add_one_random_military_factory = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { SHD = { exists = no } }
+				if = {
+					limit = { NOT = { has_character = SHD_jin_yune } }
+					SHD = {
+						SHD_jin_yune = { custom_effect_tooltip = character_becomes_a_general }
+						hidden_effect = {
+							SHD_jin_yune = { CHN_recruit_character_effect = yes }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { has_character = SHD_sun_dianying } }
+					SHD = {
+						SHD_sun_dianying = { custom_effect_tooltip = character_becomes_a_general }
+						hidden_effect = {
+							SHD_sun_dianying = { CHN_recruit_character_effect = yes }
+						}
+					}
+				}
+				if = {
+					limit = { NOT = { has_character = SHD_qu_yingguang } }
+					SHD = {
+						SHD_qu_yingguang = { CHN_recruit_character_effect = yes }
+						hidden_effect = {
+							SHD_qu_yingguang = { remove_unit_leader_role = yes }
+						}
+					}
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						has_character = GXC_zhang_junmai
+					}
+					if = {
+						limit = { GXC_zhang_junmai = { is_second_in_command = yes } }
+						UPC = {
+							clr_country_flag = FNG_twin_dragon_subjugation_flag
+							country_event = { id = UPC.twindragonevents.005 days = 3 }
+						}
+						GXC = { GXC_zhang_junmai = { CHN_recruit_character_effect = yes } }
+						activate_advisor = FNG_pan_fu_sic
+					}
+				}
+				else = {
+					activate_advisor = FNG_pan_fu_sic
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_harmonising_the_social_classes
+		icon = GFX_goal_GER_Fundamental_Rights
+		cost = 8
+
+		relative_position_id = FNG_commencing_true_recovery
+		x = -1
+		y = 1
+
+		prerequisite = { focus = FNG_commencing_true_recovery }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_harmonising_the_social_classes"
+			add_stability = 0.05
+			add_popularity = {
+				ideology = social_liberal
+				popularity = 0.08
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.08
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.08
+			}
+			add_popularity = {
+				ideology = market_liberal
+				popularity = 0.08
+			}
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { coalition_partner_var = token:social_democrat }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:social_liberal }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:market_liberal }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:national_populist }
+			add_to_coalition = yes
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_harmonising_the_social_classes_tt
+			hidden_effect = {
+				set_temp_variable = { coalition_stability_var = 0.25 }
+				set_coalition_stability_social_democrat = yes
+				set_temp_variable = { coalition_stability_var = 0.25 }
+				set_coalition_stability_social_liberal = yes
+				set_temp_variable = { coalition_stability_var = 0.25 }
+				set_coalition_stability_market_liberal = yes
+				set_temp_variable = { coalition_stability_var = 0.25 }
+				set_coalition_stability_national_populist = yes
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_one_random_infrastructure = yes
+			add_one_random_infrastructure = yes
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_the_first_party_of_the_state
+		icon = GFX_goal_China_twelve_symbols
+		cost = 8
+
+		relative_position_id = FNG_commencing_true_recovery
+		x = 0
+		y = 2
+
+		prerequisite = { focus = FNG_commencing_true_recovery }
+
+		available = {
+			has_completed_focus = FNG_harmonising_the_social_classes
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_first_party_of_the_state"
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_lose_legitimacy_management_tt
+			add_ideas = FNG_popular_support_in_the_eye_of_the_beiyang_tiger
+			hidden_effect = {
+				FNG_clear_legitimacy_ideas = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_clear_cut_political_economics
+		icon = GFX_goal_China_five_races_flag
+		cost = 8
+
+		relative_position_id = FNG_from_poverty_to_extravagance
+		x = -4
+		y = 1
+
+		prerequisite = { focus = FNG_from_poverty_to_extravagance }
+
+		mutually_exclusive = {
+			focus = FNG_commencing_true_recovery
+			focus = FNG_in_the_spirit_of_1912
+		}
+
+		ai_will_do = {
+			base = 80
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = FNG_path option = FNG_PATH_RECOVERY_AUTDEM }
+					#has_game_rule = { rule = FNG_path option = FNG_PATH_COMMUNICATIONS_AUTDEM }
+					has_game_rule = { rule = FNG_path option = FNG_PATH_TWIN_DRAGONS_AUTDEM }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_clear_cut_political_economics"
+			add_political_power = 50
+			set_temp_variable = { CCPOP = 10 }
+			FNG_CCPOP = yes
+			FNG_JAP_investment_medium = yes
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { coalition_partner_var = token:social_conservative }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_stability_var = 0.75 }
+			set_coalition_stability_social_conservative = yes
+			custom_effect_tooltip = tooltip_white_line
+			effect_tooltip = { activate_advisor = FNG_lu_zongyu_sic }
+			custom_effect_tooltip = tooltip_white_line
+			FNG_clear_cut_political_economics_recruitment_effect = yes
+			hidden_effect = {
+				if = {
+					limit = {
+						has_character = GXC_zhang_junmai
+					}
+					if = {
+						limit = { GXC_zhang_junmai = { is_second_in_command = yes } }
+						UPC = {
+							clr_country_flag = FNG_twin_dragon_subjugation_flag
+							country_event = { id = UPC.twindragonevents.005 days = 3 }
+						}
+						GXC = { GXC_zhang_junmai = { CHN_recruit_character_effect = yes } }
+						activate_advisor = FNG_lu_zongyu_sic
+					}
+				}
+				else = {
+					activate_advisor = FNG_lu_zongyu_sic
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_alliance_of_state_and_business
+		icon = GFX_focus_generic_industrialists
+		cost = 10
+
+		relative_position_id = FNG_clear_cut_political_economics
+		x = 1
+		y = 1
+
+		prerequisite = { focus = FNG_clear_cut_political_economics }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_alliance_of_state_and_business"
+			add_ideas = FNG_the_new_oligarchy
+			custom_effect_tooltip = tooltip_white_line
+			FNG_alliance_of_state_and_business_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_government_as_a_machine
+		icon = GFX_goal_China_Beiyang_coat_of_arms
+		cost = 8
+
+		relative_position_id = FNG_clear_cut_political_economics
+		x = 0
+		y = 2
+
+		prerequisite = { focus = FNG_clear_cut_political_economics }
+		prerequisite = { focus = FNG_alliance_of_state_and_business }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_government_as_a_machine"
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_lose_legitimacy_management_tt
+			add_ideas = FNG_popular_support_the_finely_oiled_machine
+			hidden_effect = {
+				FNG_clear_legitimacy_ideas = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_in_the_spirit_of_1912
+		icon = GFX_goal_China_GRA
+		cost = 8
+
+		relative_position_id = FNG_from_poverty_to_extravagance
+		x = -6
+		y = 1
+
+		prerequisite = { focus = FNG_from_poverty_to_extravagance }
+
+		mutually_exclusive = {
+			focus = FNG_commencing_true_recovery
+			focus = FNG_clear_cut_political_economics
+		}
+
+		available = {
+			if = {
+				limit = {
+					has_character = GXC_zhang_junmai
+				}
+				GXC_zhang_junmai = { is_second_in_command = yes }
+			}
+			else = {
+				has_character = GXC_zhang_junmai
+			}
+		}
+
+		ai_will_do = {
+			factor = 80
+
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = FNG_path option = FNG_PATH_RECOVERY_AUTDEM }
+					has_game_rule = { rule = FNG_path option = FNG_PATH_COMMUNICATIONS_AUTDEM }
+					#has_game_rule = { rule = FNG_path option = FNG_PATH_TWIN_DRAGONS_AUTDEM }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_in_the_spirit_of_1912"
+			set_party_name = {
+				ideology = authoritarian_democrat
+				name = FNG_national_unity_league
+				long_name = FNG_national_unity_league_tt
+			}
+			set_party_name = {
+				ideology = social_democrat
+				long_name = GXC_UPC_CDL_DSP_party_long_tt
+				name = GXC_UPC_CDL_DSP_party
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.10
+			}
+			FNG_JAP_spend_large = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_idea = FNG_Centralized_Provincial_Revenues }
+				add_stability = -0.05
+				remove_ideas = FNG_Centralized_Provincial_Revenues
+				custom_effect_tooltip = tooltip_white_line
+			}
+			add_timed_idea = {
+				idea = FNG_Negotiated_Provincial_Revenues
+				days = 400
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_event_target = FNG_federalist_leader }
+				event_target:FNG_federalist_leader = { save_event_target_as = target }
+			}
+			else = {
+				GXC = { save_event_target_as = target }
+			}
+			china_integrate_TARGET_effect = yes
+			hidden_effect = {
+				set_party_name = {
+					ideology = authoritarian_democrat
+					name = FNG_national_unity_league
+					long_name = FNG_national_unity_league_long
+				}
+				set_party_name = {
+					ideology = social_democrat
+					long_name = GXC_UPC_CDL_DSP_party_long
+					name = GXC_UPC_CDL_DSP_party
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_reconstruction_through_autonomy
+		icon = GFX_goal_china_negotiations
+		cost = 8
+
+		relative_position_id = FNG_in_the_spirit_of_1912
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_in_the_spirit_of_1912 }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_reconstruction_through_autonomy"
+			custom_effect_tooltip = FNG_reconstruction_through_autonomy_tt
+			custom_effect_tooltip = tooltip_white_line
+			CHN_add_resource_northerner_effects = yes
+			add_tech_bonus = {
+				name = FNG_reconstruction_through_autonomy
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+			custom_effect_tooltip = tooltip_white_line
+			every_owned_state = {
+				limit = {
+					is_china_claim_area = yes
+					OR = {
+						has_state_flag = guangdong_province_state
+						has_state_flag = guangxi_province_state
+						has_state_flag = yunnan_province_state
+						has_state_flag = hunan_province_state
+						has_state_flag = sichuan_province_state
+						has_state_flag = jiangxi_province_state
+						has_state_flag = fujian_province_state
+						has_state_flag = zhejiang_province_state
+					}
+				}
+				add_dynamic_modifier = {
+					modifier = FNG_enshrined_regionalism
+				}
+			}
+			add_stability = 0.08
+			add_war_support = 0.08
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Twin_Dragons_Taming_the_Water
+		icon = GFX_goal_QIE_zhili_unite_china
+		cost = 8
+
+		relative_position_id = FNG_reconstruction_through_autonomy
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_reconstruction_through_autonomy }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Twin_Dragons_Taming_the_Water"
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_lose_legitimacy_management_tt
+			add_ideas = FNG_popular_support_twin_dragons_taming_the_water
+			hidden_effect = {
+				FNG_clear_legitimacy_ideas = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_the_president_of_providence
+		icon = GFX_goal_China_Beiyang_soldier_five_colour_flag
+		cost = 8
+
+		relative_position_id = FNG_denouncing_imperialist_vultures
+		x = 1
+		y = 1
+
+		prerequisite = { focus = FNG_the_moral_republic }
+		prerequisite = { focus = FNG_rulership_as_a_family_business }
+		prerequisite = { focus = FNG_denouncing_imperialist_vultures }
+
+		mutually_exclusive = { focus = FNG_from_poverty_to_extravagance }
+
+		available = {
+			has_country_leader = { character = FNG_yang_yuting }
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_president_of_providence"
+			custom_effect_tooltip = FNG_the_president_of_providence_tt
+			set_temp_variable = { FNG_stability_loss_temp_var = ROOT.party_popularity@authoritarian_democrat }
+			multiply_temp_variable = { FNG_stability_loss_temp_var = -0.33 }
+			clamp_temp_variable = {
+				var = FNG_stability_loss_temp_var
+				min = -1
+				max = 0
+			}
+			add_stability = FNG_stability_loss_temp_var
+			custom_effect_tooltip = tooltip_white_line
+			effect_tooltip = {
+				FNG_yang_yuting = {
+					add_trait = {
+						trait = FNG_marshal_of_destiny
+						ideology = paternal_autocrat_subtype
+					}
+				}
+			}
+			hidden_effect = {
+				set_temp_variable = { trait_token = token:FNG_marshal_of_destiny }
+				FNG_yang_yuting = { add_trait_to_all_country_leader_roles = yes }
+			}
+			custom_effect_tooltip = tooltip_white_line
+			china_add_research_slots = yes
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = FNG_factionalism_modifier
+			}
+			add_to_variable = {
+				FNG_factionalism_consumer_goods = -0.15
+				tooltip = consumer_goods_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_stability = 0.05
+				tooltip = stability_factor_tooltip
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_the_dragons_gambit
+		icon = GFX_goal_China_five_colour_beiyang_star_auth
+		cost = 8
+
+		relative_position_id = FNG_the_president_of_providence
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_the_president_of_providence }
+		mutually_exclusive = {
+			focus = FNG_concord_of_nationalities
+		}
+
+		available = {
+			if = {
+				limit = {
+					OR = {
+						is_ai = no
+						NOT = { has_game_rule = { rule = FNG_path option = FNG_PATH_GAMBIT_PATAUT } }
+					}
+				}
+				custom_override_tooltip = {
+					tooltip = FNG_JAP_influence_below_50_tooltip
+					FNG_mantetsu_level_very_high = no
+					FNG_mantetsu_level_high = no
+				}
+			}
+			else = { always = yes }
+		}
+
+		ai_will_do = {
+			factor = 80
+
+			modifier = {
+				factor = 0
+				#has_game_rule = { rule = FNG_path option = FNG_PATH_GAMBIT_PATAUT }
+				has_game_rule = { rule = FNG_path option = FNG_PATH_CONCORD_PATAUT }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_dragons_gambit"
+			add_political_power = 25
+			army_experience = 25
+			add_popularity = {
+				ideology = social_conservative
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+			FNG_JAP_spend_mega = yes
+			custom_effect_tooltip = tooltip_white_line
+			reduce_propaganda_decision_cost_twenty_five_percent = yes
+			custom_effect_tooltip = {
+				localization_key = reduce_propaganda_decision_cost_tt
+				NUMBER = 25%
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_redeeming_the_lost_patriots
+		icon = GFX_goal_FNG_unification_conference
+		cost = 8
+
+		relative_position_id = FNG_the_dragons_gambit
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_the_dragons_gambit }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_redeeming_the_lost_patriots"
+			add_stability = 0.05
+			add_war_support = 0.05
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { coalition_partner_var = token:national_populist }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_stability_var = 0.75 }
+			set_coalition_stability_national_populist = yes
+			custom_effect_tooltip = tooltip_white_line
+			QIE = {
+				QIE_li_huang = {
+					CHN_recruit_character_effect = yes
+					add_advisor_role = {
+						advisor = {
+							slot = political_advisor
+							idea_token = QIE_li_huang_advisor
+							desc = QIE_li_huang_sic_desc
+							traits = { KR_pragmatic_statesman }
+						}
+					}
+				}
+				QIE_zeng_qi = { CHN_recruit_character_effect = yes }
+				QIE_zhang_yinwu = { CHN_recruit_character_effect = yes }
+			}
+			if = {
+				limit = { SHX = { exists = no } }
+				if = {
+					limit = { NOT = { has_character = SHX_liang_huazhi } }
+					SHX = {
+						SHX_liang_huazhi = { CHN_recruit_character_effect = yes }
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_timed_idea = {
+				idea = FNG_achieving_national_statism
+				days = 320
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_the_rising_sun_and_the_waking_tiger
+		icon = GFX_focus_chi_one_china_policy
+		cost = 8
+
+		relative_position_id = FNG_redeeming_the_lost_patriots
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_redeeming_the_lost_patriots }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_rising_sun_and_the_waking_tiger"
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_lose_legitimacy_management_tt
+			add_ideas = FNG_popular_support_stewardship_of_providence
+			hidden_effect = {
+				FNG_clear_legitimacy_ideas = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_concord_of_nationalities
+		icon = GFX_goal_ANQ_fengtian_loyalty
+		cost = 8
+
+		relative_position_id = FNG_the_president_of_providence
+		x = 2
+		y = 1
+
+		prerequisite = { focus = FNG_the_president_of_providence }
+		mutually_exclusive = {
+			focus = FNG_the_dragons_gambit
+		}
+
+		ai_will_do = {
+			factor = 80
+
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FNG_path option = FNG_PATH_GAMBIT_PATAUT }
+				#has_game_rule = { rule = FNG_path option = FNG_PATH_CONCORD_PATAUT }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_concord_of_nationalities"
+			add_political_power = 50
+			add_stability = 0.05
+			set_temp_variable = { CCPOP = 10 }
+			FNG_CCPOP = yes
+			FNG_JAP_investment_large = yes
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { coalition_stability_var = 0.75 }
+			set_coalition_stability_social_conservative = yes
+			custom_effect_tooltip = tooltip_white_line
+			activate_advisor = FNG_ruan_zhenduo_sic
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_freedom_of_the_five_races
+		icon = GFX_goal_ANQ_panasian
+		cost = 8
+
+		relative_position_id = FNG_concord_of_nationalities
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_concord_of_nationalities }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_freedom_of_the_five_races"
+			add_stability = 0.03
+			add_war_support = 0.03
+			FNG_JAP_investment_medium = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = FNG_true_equality_of_the_five_races
+			custom_effect_tooltip = tooltip_white_line
+			FNG_freedom_of_the_five_races_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_the_chinese_shogunate
+		icon = GFX_goal_Japanese_Glory
+		cost = 8
+
+		relative_position_id = FNG_freedom_of_the_five_races
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_freedom_of_the_five_races }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_chinese_shogunate"
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_lose_legitimacy_management_tt
+			add_ideas = FNG_popular_support_a_chinese_shogun
+			hidden_effect = {
+				FNG_clear_legitimacy_ideas = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_disavow_tokyo
+		icon = GFX_goal_ANQ_promote_nationalist_thought
+		cost = 6
+
+		relative_position_id = FNG_from_poverty_to_extravagance
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_from_poverty_to_extravagance
+			#focus = FNG_the_president_of_providence #Yang Yuting + the direct puppets cannot take this path
+		}
+
+		mutually_exclusive = {
+			focus = FNG_Chunchi-Xiangyi
+		}
+
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+			custom_override_tooltip = {
+				tooltip = FNG_JAP_influence_below_50_tooltip
+				FNG_mantetsu_level_very_high = no
+				FNG_mantetsu_level_high = no
+			}
+		}
+
+		bypass = {
+			FNG_JAP_hostile = yes
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_disavow_tokyo"
+			add_war_support = 0.10
+			FNG_JAP_spend_large = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_The_Ultimatum
+		icon = GFX_focus_attack_japan
+		cost = 5
+
+		relative_position_id = FNG_disavow_tokyo
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_disavow_tokyo }
+
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0
+				is_in_faction_with = JAP
+			}
+			modifier = {
+				factor = 0
+				JAP = { default_attack_AI_trigger = yes }
+			}
+		}
+		available = {
+			china_is_the_unifier_of_china_trigger = yes
+			if = {
+				limit = { has_global_flag = FNG_projapan }
+				NOT = { has_global_flag = FNG_projapan }
+			}
+			else = {
+				FNG_JAP_hostile = no
+				JAP = { is_faction_leader = yes }
+				custom_override_tooltip = {
+					tooltip = FNG_JAP_influence_below_25_tooltip
+					OR = {
+						FNG_mantetsu_level_low = yes
+						FNG_mantetsu_level_none = yes
+					}
+				}
+			}
+		}
+		bypass = {
+			if = {
+				limit = { has_global_flag = FNG_projapan }
+				hidden_trigger = {
+					has_global_flag = FNG_projapan
+				}
+			}
+			else = {
+				FNG_JAP_hostile = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_The_Ultimatum"
+			set_country_flag = { flag = china_demanding_concession days = 30 value = 1 }
+			if = {
+				limit = { has_global_flag = FNG_projapan }
+				custom_effect_tooltip = FNG_projapan_tooltip
+			}
+			else = {
+				JAP = {
+					set_JAP_FNG_hostile_AI = yes
+					country_event = { id = fengtian_events.285 days = 2 }
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = FNG_split_from_japan
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = FNG_entering_the_international_scene
+		icon = GFX_goal_CHN_china_beiyang_militarism
+		cost = 3
+
+		relative_position_id = FNG_disavow_tokyo
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = FNG_disavow_tokyo
+			focus = FNG_Chunchi-Xiangyi
+		}
+
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0
+				is_in_faction = yes
+			}
+		}
+		available = {
+			china_is_the_unifier_of_china_trigger = yes
+			is_in_faction = no
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_entering_the_international_scene"
+			set_country_flag = { flag = china_demanding_concession days = 30 value = 1 }
+			activate_targeted_decision = { target = THIS decision = CHN_found_our_faction_decision }
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = FNG_Chunchi-Xiangyi
+		icon = GFX_goal_JAP_yen
+		cost = 6
+
+		relative_position_id = FNG_the_president_of_providence
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_from_poverty_to_extravagance
+			focus = FNG_the_president_of_providence
+		}
+
+		mutually_exclusive = {
+			focus = FNG_disavow_tokyo
+		}
+
+		available = {
+			JAP = { is_faction_leader = yes }
+			is_in_faction_with = JAP
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Chunchi-Xiangyi"
+			FNG_JAP_investment_mega = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Treaty_of_Friendship_and_Cooperation
+		icon = GFX_goal_JAP_tokyo_conf
+		cost = 5
+
+		relative_position_id = FNG_Chunchi-Xiangyi
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_Chunchi-Xiangyi }
+		available = {
+			OR = {
+				FNG_JAP_hostile = no
+				has_country_leader = { character = FNG_yang_yuting }
+			}
+			JAP = { is_faction_leader = yes }
+			is_in_faction_with = JAP
+			china_is_the_unifier_of_china_trigger = yes
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Treaty_of_Friendship_and_Cooperation"
+			FNG_decrease_legitimacy = yes
+			add_ideas = FNG_Japanese_Economic_Union
+			if = {
+				limit = {
+					JAP = {
+						is_economic_sphere_leader = yes
+						is_leader_of_economic_sphere_of_ROOT = no
+					}
+				}
+				custom_effect_tooltip = FNG_join_japanese_econ_sphere
+				hidden_effect = { JAP_add_to_economic_sphere = yes }
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_from_the_ashes
+		icon = GFX_goal_DOM_The_Phoenix
+		cost = 6
+
+		relative_position_id = FNG_Incorporate_Local_Patronage_Networks
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Incorporate_Local_Patronage_Networks
+		}
+
+		allow_branch = {
+			is_subject_of = JAP
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_from_the_ashes"
+			add_stability = 0.05
+			add_war_support = 0.05
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = FNG_factionalism_modifier
+			}
+			add_to_variable = {
+				FNG_factionalism_pp_factor = 0.05
+				tooltip = political_power_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_stability = 0.10
+				tooltip = stability_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_war_support = 0.05
+				tooltip = war_support_factor_tooltip
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_extinguish_the_partisan_threat
+		icon = GFX_goal_generic_barricades
+		cost = 7
+
+		relative_position_id = FNG_from_the_ashes
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_from_the_ashes
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_extinguish_the_partisan_threat"
+			remove_ideas = FNG_an_army_of_traitors
+			custom_effect_tooltip = tooltip_white_line
+			add_timed_idea = {
+				idea = FNG_waging_the_war_of_minds_and_bodies
+				days = 280
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = FNG_martyrdom_of_an_old_idealist
+		icon = GFX_goal_LEP_coercion
+		cost = 8
+
+		relative_position_id = FNG_from_the_ashes
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_from_the_ashes
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_martyrdom_of_an_old_idealist"
+			add_political_power = 25
+			add_popularity = {
+				ideology = social_liberal
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = market_liberal
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = FNG_factionalism_modifier
+			}
+			add_to_variable = {
+				FNG_factionalism_pp_factor = 0.05
+				tooltip = political_power_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_stability = 0.05
+				tooltip = stability_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_war_support = 0.05
+				tooltip = war_support_factor_tooltip
+			}
+			add_to_variable = {
+				FNG_factionalism_consumer_goods = -0.10
+				tooltip = consumer_goods_factor_tooltip
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = FNG_rebuilding_the_shattered_nation
+		icon = GFX_goal_ANQ_use_anticoncessionists
+		cost = 10
+
+		relative_position_id = FNG_from_the_ashes
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_from_the_ashes
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_rebuilding_the_shattered_nation"
+			remove_ideas = FNG_hollowed_out_economy
+			custom_effect_tooltip = tooltip_white_line
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+			add_one_random_infrastructure = yes
+			add_one_random_infrastructure = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_political_power = 100
+			china_generic_land_reform_setup = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_unification_by_the_subjugated
+		icon = GFX_goal_ANQ_panasian
+		cost = 6
+
+		relative_position_id = FNG_extinguish_the_partisan_threat
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_extinguish_the_partisan_threat
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_unification_by_the_subjugated"
+			add_stability = 0.06
+			add_war_support = 0.06
+			custom_effect_tooltip = tooltip_white_line
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Heping Jianguojun"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 8 }
+					SUPPORT_1 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+					SUPPORT_2 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+				}
+				if = {
+					limit = { has_template = "Heping Jianguojun" }
+					delete_unit_template_and_units = { division_template = "Heping Jianguojun" disband = yes } #No cheating
+				}
+				division_template = {
+					name = "Heping Jianguojun"
+					division_names_group = FNG_INF_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+						artillery = { x = 0 y = 1 }
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 5
+						TYPE = "Heping Jianguojun"
+					}
+					create_unit = {
+						division = "name = \"Heping Jianguojun Di 1 Shi\" division_template = \"Heping Jianguojun\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Heping Jianguojun Di 2 Shi\" division_template = \"Heping Jianguojun\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Heping Jianguojun Di 3 Shi\" division_template = \"Heping Jianguojun\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Heping Jianguojun Di 4 Shi\" division_template = \"Heping Jianguojun\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Heping Jianguojun Di 5 Shi\" division_template = \"Heping Jianguojun\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_timed_idea = {
+				idea = FNG_war_of_national_pacification
+				days = 280
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_STABILITY FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = FNG_treaty_of_eternal_friendship
+		icon = GFX_goal_japanese_investment
+		cost = 8
+
+		relative_position_id = FNG_rebuilding_the_shattered_nation
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_rebuilding_the_shattered_nation
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_treaty_of_eternal_friendship"
+			FNG_JAP_investment_large = yes
+			add_ideas = FNG_Japanese_Economic_Union
+			custom_effect_tooltip = tooltip_white_line
+			swap_ideas = {
+				remove_idea = FNG_The_Kwantung_Army
+				add_idea = FNG_The_Kwantung_Army_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_a_reformed_government
+		icon = GFX_goal_JAP_co_prosperity_sphere
+		cost = 8
+
+		relative_position_id = FNG_martyrdom_of_an_old_idealist
+		x = 0
+		y = 2
+
+		prerequisite = { focus = FNG_unification_by_the_subjugated }
+		prerequisite = { focus = FNG_martyrdom_of_an_old_idealist }
+		prerequisite = { focus = FNG_treaty_of_eternal_friendship }
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_a_reformed_government"
+			country_event = fengtian_endgame_events.006
+			custom_effect_tooltip = tooltip_white_line
+			remove_ideas = FNG_collaboration_the_great_evil
+			custom_effect_tooltip = tooltip_white_line
+			FNG_increase_legitimacy = yes
+			if = {
+				limit = {
+					GXC = { exists = no }
+				}
+				custom_effect_tooltip = tooltip_white_line
+				if = {
+					limit = { NOT = { has_character = GXC_huang_Dawei } }
+					GXC = { GXC_huang_Dawei = { CHN_recruit_character_effect = yes } }
+				}
+				if = {
+					limit = { NOT = { has_character = GXC_chen_lianbo } }
+					GXC = { GXC_chen_lianbo = { CHN_recruit_character_effect = yes } }
+				}
+				if = {
+					limit = { NOT = { has_character = GXC_chen_gongshou } }
+					GXC = { GXC_chen_gongshou = { CHN_recruit_character_effect = yes } }
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_tofu_on_puppet_strings
+		icon = GFX_goal_RUS_dominate_japan
+		cost = 8
+
+		relative_position_id = FNG_a_reformed_government
+		x = -4
+		y = 1
+
+		prerequisite = { focus = FNG_a_reformed_government }
+
+		mutually_exclusive = {
+			focus = FNG_rule_of_the_commercial_cabal
+			focus = FNG_reign_of_the_old_politicians
+		}
+
+		available = {
+			has_country_leader = { character = FNG_zhang_jinghui }
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_tofu_on_puppet_strings"
+			army_experience = 50
+			FNG_JAP_investment_large = yes
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.10
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = FNG_true_equality_of_the_five_races
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = {
+					FNG_ruan_zhenduo = { is_hired_as_advisor = no }
+					has_free_political_advisor_slot = yes
+				}
+				hidden_effect = {
+					activate_advisor = FNG_ruan_zhenduo_advisor
+				}
+				custom_effect_tooltip = if_not_yet_hired_will_hire
+				show_ideas_tooltip = FNG_ruan_zhenduo_advisor
+			}
+			else = {
+				add_political_power = 70
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_tokyos_rubber_stamp
+		icon = GFX_focus_chi_collaboration_with_the_japanese
+		cost = 8
+
+		relative_position_id = FNG_tofu_on_puppet_strings
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_tofu_on_puppet_strings }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_tokyos_rubber_stamp"
+			add_stability = 0.06
+			FNG_JAP_investment_large = yes
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_reconstruction_through_autonomy_tt
+			custom_effect_tooltip = tooltip_white_line
+			CHN_add_resource_northerner_effects = yes
+			add_tech_bonus = {
+				name = FNG_tokyos_rubber_stamp
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+			custom_effect_tooltip = tooltip_white_line
+			swap_ideas = {
+				remove_idea = FNG_true_equality_of_the_five_races
+				add_idea = FNG_true_equality_of_the_five_races_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_at_the_whims_of_the_puppeteer
+		icon = GFX_goal_JAP_samurai
+		cost = 8
+
+		relative_position_id = FNG_tokyos_rubber_stamp
+		x = 0
+		y = 1
+
+		prerequisite = { focus = FNG_tokyos_rubber_stamp }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_at_the_whims_of_the_puppeteer"
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_lose_legitimacy_management_tt
+			add_ideas = FNG_popular_support_the_marionette_regime
+			hidden_effect = {
+				FNG_clear_legitimacy_ideas = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_rule_of_the_commercial_cabal
+		icon = GFX_focus_GER_strengthen_the_proletarian_international
+		cost = 8
+
+		relative_position_id = FNG_a_reformed_government
+		x = -1
+		y = 1
+
+		prerequisite = { focus = FNG_a_reformed_government }
+
+		mutually_exclusive = {
+			focus = FNG_tofu_on_puppet_strings
+			focus = FNG_reign_of_the_old_politicians
+		}
+
+		available = {
+			has_country_leader = { character = FNG_zhang_zongxiang }
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_rule_of_the_commercial_cabal"
+			add_political_power = 25
+			army_experience = 25
+			set_temp_variable = { CCPOP = 10 }
+			FNG_CCPOP = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { GXC = { exists = no } }
+				GXC = { GXC_chen_lianbo = { CHN_recruit_character_effect = yes } }
+			}
+			QIE = {
+				QIE_wang_kemin = { CHN_recruit_character_effect = yes }
+				QIE_upgrade_wang_kemin_advisor_effect = yes
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = FNG_financing_reformed_reconstruction
+			custom_effect_tooltip = tooltip_white_line
+			add_timed_idea = {
+				idea = FNG_financing_reformed_reconstruction
+				days = 420
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_looking_toward_the_zaibatsu
+		icon = GFX_focus_jap_zaibatsu
+		cost = 10
+
+		relative_position_id = FNG_rule_of_the_commercial_cabal
+		x = -1
+		y = 1
+
+		prerequisite = { focus = FNG_rule_of_the_commercial_cabal }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_looking_toward_the_zaibatsu"
+			add_stability = 0.08
+			set_temp_variable = { CCPOP = 5 }
+			FNG_CCPOP = yes
+			custom_effect_tooltip = tooltip_white_line
+			FNG_alliance_of_state_and_business_effect = yes
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_looking_toward_the_zaibatsu_tt
+			if = {
+				limit = { controls_state = 743 } #Shanghai
+				743 = { add_dynamic_modifier = { modifier = FNG_constructing_the_chinese_zaibatsu_modifier } }
+			}
+			if = {
+				limit = { controls_state = 613 } #Nanjing
+				613 = { add_dynamic_modifier = { modifier = FNG_constructing_the_chinese_zaibatsu_modifier } }
+			}
+			if = {
+				limit = { controls_state = 716 } #Shenyang
+				716 = { add_dynamic_modifier = { modifier = FNG_constructing_the_chinese_zaibatsu_modifier } }
+			}
+			if = {
+				limit = { controls_state = 608 } #Beijing
+				608 = { add_dynamic_modifier = { modifier = FNG_constructing_the_chinese_zaibatsu_modifier } }
+			}
+			if = {
+				limit = { controls_state = 650 } #Chongqing
+				650 = { add_dynamic_modifier = { modifier = FNG_constructing_the_chinese_zaibatsu_modifier } }
+			}
+			if = {
+				limit = { controls_state = 596 } #Hangzhou
+				596 = { add_dynamic_modifier = { modifier = FNG_constructing_the_chinese_zaibatsu_modifier } }
+			}
+			if = {
+				limit = { controls_state = 609 } #Tianjin
+				609 = { add_dynamic_modifier = { modifier = FNG_constructing_the_chinese_zaibatsu_modifier } }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_the_corporate_state
+		icon = GFX_goal_China_Beiyang_coat_of_arms
+		cost = 8
+
+		relative_position_id = FNG_rule_of_the_commercial_cabal
+		x = 0
+		y = 2
+
+		prerequisite = { focus = FNG_rule_of_the_commercial_cabal }
+
+		available = {
+			has_completed_focus = FNG_looking_toward_the_zaibatsu
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_corporate_state"
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_lose_legitimacy_management_tt
+			add_ideas = FNG_popular_support_governance_of_monopolies
+			hidden_effect = {
+				FNG_clear_legitimacy_ideas = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_reign_of_the_old_politicians
+		icon = GFX_goal_QIE_assembly
+		cost = 8
+
+		relative_position_id = FNG_a_reformed_government
+		x = 1
+		y = 1
+
+		prerequisite = { focus = FNG_a_reformed_government }
+
+		mutually_exclusive = {
+			focus = FNG_rule_of_the_commercial_cabal
+			focus = FNG_tofu_on_puppet_strings
+		}
+
+		available = {
+			has_country_leader = { character = FNG_wang_yitang }
+		}
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_reign_of_the_old_politicians"
+			add_political_power = 50
+			add_stability = 0.08
+			add_war_support = 0.08
+			set_temp_variable = { RLPOP = 8 }
+			FNG_RLPOP = yes
+			custom_effect_tooltip = tooltip_white_line
+			QIE = { QIE_gao_lingwei = { CHN_recruit_character_effect = yes } }
+			if = {
+				limit = {
+					SHD = { exists = no }
+				}
+				if = {
+					limit = { NOT = { has_character = SHD_qu_yingguang } }
+					SHD = { SHD_qu_yingguang = { CHN_recruit_character_effect = yes } }
+				}
+				if = {
+					limit = { NOT = { has_character = SHD_jin_yune } }
+					SHD = { SHD_jin_yune = { CHN_recruit_character_effect = yes } }
+				}
+				if = {
+					limit = { NOT = { has_character = SHD_sun_dianying } }
+					SHD = { SHD_sun_dianying = { CHN_recruit_character_effect = yes } }
+				}
+			}
+			if = {
+				limit = {
+					ANQ = { exists = no }
+				}
+				if = {
+					limit = { NOT = { has_character = ANQ_chen_lu } }
+					ANQ = { ANQ_chen_lu = { CHN_recruit_character_effect = yes } }
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_the_state_socialist_regime
+		icon = GFX_focus_GER_proletarian_dictatorship
+		cost = 8
+
+		relative_position_id = FNG_reign_of_the_old_politicians
+		x = 1
+		y = 1
+
+		prerequisite = { focus = FNG_reign_of_the_old_politicians }
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_state_socialist_regime"
+			add_stability = 0.05
+			add_popularity = {
+				ideology = social_liberal
+				popularity = 0.10
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.10
+			}
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.10
+			}
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { coalition_partner_var = token:social_democrat }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:social_liberal }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:national_populist }
+			add_to_coalition = yes
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_harmonising_the_social_classes_tt
+			hidden_effect = {
+				set_temp_variable = { coalition_stability_var = 0.25 }
+				set_coalition_stability_social_democrat = yes
+				set_temp_variable = { coalition_stability_var = 0.25 }
+				set_coalition_stability_social_liberal = yes
+				set_temp_variable = { coalition_stability_var = 0.25 }
+				set_coalition_stability_national_populist = yes
+			}
+			custom_effect_tooltip = tooltip_white_line
+			FNG_the_state_socialist_regime_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_the_winner_takes_it_all
+		icon = GFX_goal_RUS_solidify_power
+		cost = 8
+
+		relative_position_id = FNG_reign_of_the_old_politicians
+		x = 0
+		y = 2
+
+		prerequisite = { focus = FNG_reign_of_the_old_politicians }
+
+		available = {
+			has_completed_focus = FNG_the_state_socialist_regime
+		}
+
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_the_winner_takes_it_all"
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = FNG_lose_legitimacy_management_tt
+			add_ideas = FNG_popular_support_beiyangs_compradors
+			hidden_effect = {
+				FNG_clear_legitimacy_ideas = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Found_the_Shenyang_National_Academy
+		icon = GFX_goal_FNG_shenyang_academy
+		cost = 8
+
+		relative_position_id = FNG_Fuguo_Qiangbing
+		x = 16
+		y = 1
+
+		available = {
+			FNG = {
+				controls_state = 716
+			}
+		}
+		prerequisite = {
+			focus = FNG_Fuguo_Qiangbing
+		}
+		prerequisite = {
+			focus = FNG_Suppress_Regionalist_Sentiment
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				add = 20
+				has_war_support < 0.50
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Found_the_Shenyang_National_Academy"
+			add_political_power = 50
+			add_command_power = 50
+			add_war_support = 0.05
+			army_experience = 15
+			add_doctrine_cost_reduction = {
+				name = FNG_Found_the_Shenyang_National_Academy
+				cost_reduction = 0.50
+				uses = 1
+				category = land_doctrine
+			}
+			country_event = fengtian_events.75
+			FNG_trigger_tang_yulin_leak_event = yes
+			add_ideas = FNG_shared_army_reform_1
+			hidden_effect = {
+				country_event = { id = fengtian_events.751 days = 14 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = FNG_Shikan_Clique_Chosen
+		icon = GFX_goal_japanese_officer
+		cost = 5
+
+		relative_position_id = FNG_Found_the_Shenyang_National_Academy
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Found_the_Shenyang_National_Academy
+		}
+		available = {
+			OR = { has_character = FNG_yang_yuting }
+		}
+		mutually_exclusive = {
+			focus = FNG_Zhang_Clique
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Shikan_Clique_Chosen"
+			if = {
+				limit = {
+					NOT = { any_character = { is_army_chief = yes } }
+				}
+				if = {
+					limit = { FNG_yang_yuting = { is_hired_as_advisor = yes } }
+					deactivate_advisor = FNG_yang_yuting_advisor
+				}
+				clear_army_chief = yes
+				activate_advisor = FNG_yang_yuting_army_chief
+			}
+			FNG_JAP_investment_small = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = FNG_shikan_clique_army_1
+			custom_effect_tooltip = tooltip_white_line
+			FNG_yang_yuting = {
+				promote_leader = yes
+			}
+			MAN_fu_shuangying = { custom_effect_tooltip = character_becomes_a_general }
+			hidden_effect = {
+				MAN_fu_shuangying = { set_nationality = ROOT }
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Zhang_Clique
+		icon = GFX_goal_QIE_baoding
+		cost = 5
+
+		relative_position_id = FNG_Found_the_Shenyang_National_Academy
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Found_the_Shenyang_National_Academy
+		}
+		available = {
+			OR = {
+				has_country_leader = { character = FNG_zhang_xueliang }
+				has_country_leader = { character = FNG_zhang_zuolin }
+			}
+		}
+		mutually_exclusive = {
+			focus = FNG_Shikan_Clique_Chosen
+		}
+		ai_will_do = { factor = 70 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Zhang_Clique"
+			if = {
+				limit = {
+					NOT = { any_character = { is_army_chief = yes } }
+				}
+				if = {
+					limit = { FNG_zhang_zuoxiang = { is_hired_as_advisor = yes } }
+					deactivate_advisor = FNG_zhang_zuoxiang_advisor
+				}
+				clear_army_chief = yes
+				activate_advisor = FNG_zhang_zuoxiang_army_chief
+			}
+			set_temp_variable = { ZCPOP = 2 }
+			FNG_ZCPOP = yes
+			FNG_JAP_spend_small = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = { FNG_zhang_clique_army_1 }
+			custom_effect_tooltip = tooltip_white_line
+			FNG_zhang_xueliang = {
+				promote_leader = yes
+			}
+			FNG_bao_wenyue = { custom_effect_tooltip = character_becomes_a_general }
+			hidden_effect = {
+				FNG_bao_wenyue = { set_nationality = ROOT }
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Promote_Young_Officers
+		icon = GFX_focus_generic_military_mission
+		cost = 5
+
+		relative_position_id = FNG_Found_the_Shenyang_National_Academy
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Shikan_Clique_Chosen
+			focus = FNG_Zhang_Clique
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Promote_Young_Officers"
+			swap_ideas = {
+				add_idea = FNG_shared_army_reform_2
+				remove_idea = FNG_shared_army_reform_1
+			}
+			FNG_improve_army_problem_effect = yes
+			add_political_power = 50
+			custom_effect_tooltip = FNG_young_officer_tt
+			if = {
+				limit = { FNG_zhang_zuoxiang = { is_army_chief = yes } }
+				custom_effect_tooltip = tooltip_white_line
+				set_temp_variable = { ZCPOP = 2 }
+				FNG_ZCPOP = yes
+				FNG_liu_zhendong = { custom_effect_tooltip = character_becomes_a_general }
+				FNG_zhou_fucheng = { custom_effect_tooltip = character_becomes_a_general }
+				hidden_effect = {
+					FNG_liu_zhendong = { set_nationality = ROOT }
+					FNG_zhou_fucheng = { set_nationality = ROOT }
+				}
+			}
+			else_if = {
+				limit = { FNG_yang_yuting = { is_army_chief = yes } }
+				custom_effect_tooltip = tooltip_white_line
+				FNG_JAP_investment_small = yes
+				FNG_guo_enlin = { custom_effect_tooltip = character_becomes_a_general }
+				FNG_guo_xipeng = { custom_effect_tooltip = character_becomes_a_general }
+				hidden_effect = {
+					FNG_guo_enlin = { set_nationality = ROOT }
+					FNG_guo_xipeng = { set_nationality = ROOT }
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			FNG_he_zhuguo = { custom_effect_tooltip = character_becomes_a_general }
+			hidden_effect = {
+				FNG_he_zhuguo = { set_nationality = ROOT }
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Obtain_Japanese_Instructors
+		icon = GFX_goal_japanese_instructors
+		cost = 5
+
+		relative_position_id = FNG_Found_the_Shenyang_National_Academy
+		x = -1
+		y = 3
+
+		prerequisite = {
+			focus = FNG_Promote_Young_Officers
+		}
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		bypass = {
+			FNG_JAP_hostile = yes
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Obtain_Japanese_Instructors"
+			if = {
+				limit = {
+					has_country_flag = strengthen_army
+				}
+				hidden_effect = {
+					add_political_power = 50
+				}
+				custom_effect_tooltip = BONUS_PP_50
+			}
+			army_experience = 50
+			add_mastery_bonus = {
+				name = FNG_Obtain_Japanese_Instructors
+				bonus = 0.1
+				days = 365
+				folder = land
+			}
+			add_mastery_bonus = {
+				name = FNG_Obtain_Japanese_Instructors
+				bonus = 0.1
+				days = 365
+				track = operations
+			}
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { ZCPOP = -1 }
+			FNG_ZCPOP = yes
+			FNG_JAP_investment_medium = yes
+			JAP = {
+				add_intel = {
+					target = FNG
+					army_intel = 10
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = FNG_Japanese_Instructors
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Modernized_Curriculum
+		icon = GFX_goal_generic_forceful_treaty
+		cost = 8
+
+		relative_position_id = FNG_Found_the_Shenyang_National_Academy
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = FNG_Promote_Young_Officers
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Modernized_Curriculum"
+			army_experience = 25
+			add_war_support = 0.10
+			china_add_research_slots = yes
+			if = {
+				limit = {
+					has_country_flag = strengthen_army
+				}
+				hidden_effect = {
+					add_political_power = 50
+				}
+				custom_effect_tooltip = BONUS_PP_50
+			}
+			add_tech_bonus = {
+				name = FNG_Modernized_Curriculum
+				bonus = 1
+				uses = 1
+				category = support_tech
+			}
+			FNG_improve_army_problem_effect = yes
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL FOCUS_FILTER_RESEARCH FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = FNG_Improve_Logistics
+		icon = GFX_goal_generic_seize_railway
+		cost = 5
+
+		relative_position_id = FNG_Promote_Young_Officers
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Obtain_Japanese_Instructors
+			focus = FNG_Modernized_Curriculum
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Improve_Logistics"
+			swap_ideas = {
+				add_idea = FNG_shared_army_reform_3
+				remove_idea = FNG_shared_army_reform_2
+			}
+			add_tech_bonus = {
+				name = FNG_Improve_Logistics
+				category = logistics_tech
+				bonus = 0.5
+				uses = 1
+			}
+			add_equipment_to_stockpile = {
+				type = train_equipment
+				amount = 20
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Modernise_Infantry_Tactics
+		icon = GFX_focus_ETH_peacekeeping_forces
+		cost = 5
+
+		relative_position_id = FNG_Promote_Young_Officers
+		x = 2
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Obtain_Japanese_Instructors
+		}
+		prerequisite = {
+			focus = FNG_Modernized_Curriculum
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Modernise_Infantry_Tactics"
+			enable_tech_strengthened_support_companies = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_tech_bonus = {
+				name = FNG_Modernise_Infantry_Tactics
+				bonus = 0.5
+				uses = 2
+				category = infantry_weapons
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Collaborative_Equipment_Design
+		icon = GFX_JAP_tank
+		cost = 8
+
+		relative_position_id = FNG_Promote_Young_Officers
+		x = -1
+		y = 3
+
+		prerequisite = {
+			focus = FNG_Obtain_Japanese_Instructors
+		}
+		prerequisite = {
+			focus = FNG_Modernized_Curriculum
+		}
+
+		mutually_exclusive = {
+			focus = FNG_Learn_From_The_Russians
+		}
+
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Collaborative_Equipment_Design"
+			add_tech_bonus = {
+				name = FNG_Collaborative_Equipment_Design
+				bonus = 1.00
+				uses = 2
+				category = armor
+			}
+			add_one_random_military_factory = yes
+			FNG_JAP_investment_small = yes
+			add_ideas = FNG_chinese_tanks
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Artillery_Reform
+		icon = GFX_goal_generic_army_superior_firepower
+		cost = 5
+
+		relative_position_id = FNG_Promote_Young_Officers
+		x = 1.5
+		y = 3
+
+		prerequisite = {
+			focus = FNG_Modernise_Infantry_Tactics
+		}
+		prerequisite = {
+			focus = FNG_Improve_Logistics
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Artillery_Reform"
+			if = {
+				limit = { has_completed_focus = FNG_Zhang_Clique }
+				swap_ideas = {
+					add_idea = FNG_shared_army_reform_zhang_clique_artillery
+					remove_idea = FNG_shared_army_reform_3
+				}
+				enable_tech_anti_fortification_artillery = yes
+				custom_effect_tooltip = tooltip_white_line
+			}
+			else_if = {
+				limit = { has_completed_focus = FNG_Shikan_Clique_Chosen }
+				swap_ideas = {
+					add_idea = FNG_shared_army_reform_shikan_clique_artillery
+					remove_idea = FNG_shared_army_reform_3
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = FNG_Zhang_Clique
+				}
+				swap_ideas = {
+					add_idea = FNG_shared_army_reform_zhang_clique_artillery
+					remove_idea = FNG_shared_army_reform_3
+				}
+				enable_tech_anti_fortification_artillery = yes
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = FNG_Shikan_Clique_Chosen
+				}
+				swap_ideas = {
+					add_idea = FNG_shared_army_reform_shikan_clique_artillery
+					remove_idea = FNG_shared_army_reform_3
+				}
+			}
+			add_tech_bonus = {
+				name = FNG_Artillery_Reform
+				bonus = 1
+				uses = 1
+				category = artillery
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Train_New_Field_Officers
+		icon = GFX_goal_officers
+		cost = 5
+
+		relative_position_id = FNG_Zhang_Clique
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Zhang_Clique
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Train_New_Field_Officers"
+			if = { #if already took Non-Commissioned Officers
+				limit = { has_idea = FNG_zhang_clique_army_3 }
+				swap_ideas = {
+					remove_idea = FNG_zhang_clique_army_3
+					add_idea = FNG_zhang_clique_army_4
+				}
+			}
+			else = { #just give base idea
+				swap_ideas = {
+					remove_idea = FNG_zhang_clique_army_1
+					add_idea = FNG_zhang_clique_army_2
+				}
+			}
+
+			add_command_power = 25
+			army_experience = 30
+			set_temp_variable = { ZCPOP = 1 }
+			FNG_ZCPOP = yes
+			FNG_JAP_spend_small = yes
+		}
+	}
+
+	focus = {
+		id = FNG_Promote_New_Non-Commissioned_Officers
+		icon = GFX_goal_agrarian_soldiers
+		cost = 5
+
+		relative_position_id = FNG_Zhang_Clique
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Zhang_Clique
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Promote_New_Non-Commissioned_Officers"
+			if = { #if already took field Officers
+				limit = { has_idea = FNG_zhang_clique_army_2 }
+				swap_ideas = {
+					remove_idea = FNG_zhang_clique_army_2
+					add_idea = FNG_zhang_clique_army_4
+				}
+			}
+			else = { #just give base idea
+				swap_ideas = {
+					remove_idea = FNG_zhang_clique_army_1
+					add_idea = FNG_zhang_clique_army_3
+				}
+			}
+			add_command_power = 10
+			add_war_support = 0.05
+			FNG_JAP_spend_small = yes
+		}
+	}
+
+	focus = {
+		id = FNG_Modernise_The_Cavalry
+		icon = GFX_goal_SHX_Destiny
+		cost = 5
+
+		relative_position_id = FNG_Zhang_Clique
+		x = -3
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Promote_New_Non-Commissioned_Officers
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Modernise_The_Cavalry"
+			custom_effect_tooltip = FNG_cavalry_reform_tt
+			if = {
+				limit = { FNG_ma_zhanshan = { is_high_command = yes } }
+				set_temp_variable = { ZCPOP = 1 }
+				add_ideas = FNG_cavalry_reform_1
+			}
+			else = {
+				add_ideas = FNG_cavalry_reforms
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Model_Soldiers
+		icon = GFX_focus_MAN_the_new_fengtian_army
+		cost = 5
+
+		relative_position_id = FNG_Zhang_Clique
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Train_New_Field_Officers
+		}
+		prerequisite = {
+			focus = FNG_Promote_New_Non-Commissioned_Officers
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Model_Soldiers"
+			swap_ideas = {
+				remove_idea = FNG_zhang_clique_army_4
+				add_idea = FNG_zhang_clique_army_5
+			}
+			add_stability = 0.1
+			army_experience = 15
+			add_tech_bonus = {
+				name = FNG_Model_Soldiers
+				bonus = 1
+				uses = 1
+				category = mountaineers_tech
+			}
+			custom_effect_tooltip = tooltip_white_line
+			enable_tech_assault_battalion = yes
+		}
+	}
+
+	focus = {
+		id = FNG_Mobilise_The_People
+		icon = GFX_goal_China_Beiyang_Mass_Assault
+		cost = 5
+
+		relative_position_id = FNG_Zhang_Clique
+		x = -2
+		y = 3
+
+		prerequisite = {
+			focus = FNG_Promote_New_Non-Commissioned_Officers
+		}
+
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Mobilise_The_People"
+			add_war_support = 0.1
+			add_political_power = 50
+			add_manpower = 100000
+			add_timed_idea = {
+				idea = FNG_Mobilisation_Of_The_Northeast
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Learn_From_The_Russians
+		icon = GFX_goal_generic_railway_gun
+		cost = 5
+
+		relative_position_id = FNG_Zhang_Clique
+		x = -1
+		y = 4
+
+		prerequisite = {
+			focus = FNG_Model_Soldiers
+		}
+
+		mutually_exclusive = {
+			focus = FNG_Collaborative_Equipment_Design
+		}
+
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Learn_From_The_Russians"
+			if = {
+				limit = { has_dlc_nsb = yes }
+				if = {
+					limit = { NOT = { has_tech = armored_train } }
+					set_technology = { armored_train = 1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = railway_gun } }
+					set_technology = { railway_gun = 1 }
+				}
+				add_ideas = FNG_railway_gun
+				add_timed_idea = {
+					idea = FNG_railway_gun_production
+					days = 100
+				}
+				custom_effect_tooltip = FNG_railway_gun_tt
+				set_temp_variable = { ZCPOP = 2 }
+				FNG_ZCPOP = yes
+				FNG_JAP_spend_small = yes
+			}
+			if = {
+				limit = { has_dlc_nsb = no }
+				add_equipment_to_stockpile = {
+					type = artillery_equipment_1
+					amount = 200
+					producer = JAP
+				}
+				set_temp_variable = { ZCPOP = 2 }
+				FNG_ZCPOP = yes
+				FNG_JAP_spend_small = yes
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Absorb_Canmou_Clique_Remnants
+		icon = GFX_goal_beiyang_star
+
+		cost = 5
+
+		relative_position_id = FNG_Zhang_Clique
+		x = -3
+		y = 4
+
+		prerequisite = {
+			focus = FNG_Mobilise_The_People
+		}
+		prerequisite = {
+			focus = FNG_Model_Soldiers
+		}
+
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Absorb_Canmou_Clique_Remnants"
+			swap_ideas = {
+				remove_idea = FNG_zhang_clique_army_5
+				add_idea = FNG_zhang_clique_army_6
+			}
+			FNG_improve_army_problem_effect = yes
+			add_mastery_bonus = {
+				name = FNG_Absorb_Canmou_Clique_Remnants
+				bonus = 0.1
+				days = 365
+				track = operations
+			}
+			army_experience = 15
+			FNG_the_young_marshals_clique = {
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_modify_character_trait
+						ROLE = theorist TRAIT = FNG_on_daring_wings
+					}
+					remove_trait = {
+						character = FNG_the_young_marshals_clique
+						slot = theorist
+						trait = FNG_on_daring_wings
+					}
+					add_trait = {
+						character = FNG_the_young_marshals_clique
+						slot = theorist
+						trait = FNG_on_daring_wings_2
+					}
+				}
+				effect_tooltip = {
+					set_temp_variable = { modifier_change_tt = 0.05 tooltip = army_infantry_attack_factor_tooltip }
+					set_temp_variable = { modifier_change_tt = -0.05 tooltip = air_weather_penalty_tooltip }
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Exchange_Programs_With_Japan
+		icon = GFX_goal_align_japan
+		cost = 5
+
+		relative_position_id = FNG_Shikan_Clique_Chosen
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Shikan_Clique_Chosen
+		}
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+
+		bypass = {
+			FNG_JAP_hostile = yes
+		}
+
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Exchange_Programs_With_Japan"
+			add_mastery_bonus = {
+				name = FNG_Exchange_Programs_With_Japan
+				bonus = 0.1
+				days = 365
+				track = combat_support
+			}
+			FNG_JAP_investment_small = yes
+			JAP = {
+				add_intel = {
+					target = FNG
+					army_intel = 10
+				}
+			}
+			army_experience = 15
+			FNG_JAP_investment_small = yes
+		}
+	}
+
+	focus = {
+		id = FNG_Lessons_of_the_Weltkrieg
+		icon = GFX_goal_ENG_lessons_of_the_weltkrieg
+		cost = 5
+
+		relative_position_id = FNG_Shikan_Clique_Chosen
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Shikan_Clique_Chosen
+		}
+
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Lessons_of_the_Weltkrieg"
+			army_experience = 15
+			swap_ideas = {
+				remove_idea = FNG_shikan_clique_army_1
+				add_idea = FNG_shikan_clique_army_2
+			}
+			enable_tech_expanded_engineer_corps = yes
+		}
+	}
+
+	focus = {
+		id = FNG_Study_Japanese_Infantry_Tactics
+		icon = GFX_goal_JAP_Army
+		cost = 5
+
+		relative_position_id = FNG_Shikan_Clique_Chosen
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Lessons_of_the_Weltkrieg
+		}
+		prerequisite = {
+			focus = FNG_Exchange_Programs_With_Japan
+		}
+
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Study_Japanese_Infantry_Tactics"
+			swap_ideas = {
+				remove_idea = FNG_shikan_clique_army_2
+				add_idea = FNG_shikan_clique_army_3
+			}
+			add_tech_bonus = {
+				name = FNG_Study_Japanese_Infantry_Tactics
+				bonus = 0.5
+				uses = 2
+				category = cat_special_forces_generic
+			}
+			custom_effect_tooltip = tooltip_white_line
+			FNG_JAP_investment_small = yes
+			enable_tech_extensive_reconnaissance = yes
+		}
+	}
+
+	focus = {
+		id = FNG_New_Generation_Of_Chinese_Officers
+		icon = GFX_focus_CHI_political_advisors_in_every_division
+		cost = 5
+
+		relative_position_id = FNG_Shikan_Clique_Chosen
+		x = 3
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Lessons_of_the_Weltkrieg
+		}
+		prerequisite = {
+			focus = FNG_Exchange_Programs_With_Japan
+		}
+
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_New_Generation_Of_Chinese_Officers"
+			army_experience = 30
+			add_mastery_bonus = {
+				name = FNG_New_Generation_Of_Chinese_Officers
+				bonus = 0.1
+				days = 365
+				track = infantry
+			}
+			FNG_the_shikan_clique = {
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_modify_character_trait
+						ROLE = theorist TRAIT = FNG_spirit_and_steel
+					}
+					remove_trait = {
+						character = FNG_the_shikan_clique
+						slot = theorist
+						trait = FNG_spirit_and_steel
+					}
+					add_trait = {
+						character = FNG_the_shikan_clique
+						slot = theorist
+						trait = FNG_spirit_and_steel_2
+					}
+				}
+				effect_tooltip = {
+					set_temp_variable = { modifier_change_tt = 0.05 tooltip = special_forces_attack_factor_tooltip }
+					set_temp_variable = { modifier_change_tt = 0.05 tooltip = max_planning_tooltip }
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Modern_General_Staff
+		icon = GFX_goal_generic_army_high_command
+		cost = 5
+
+		relative_position_id = FNG_Shikan_Clique_Chosen
+		x = 2
+		y = 3
+
+		prerequisite = {
+			focus = FNG_Study_Japanese_Infantry_Tactics
+		}
+		prerequisite = {
+			focus = FNG_New_Generation_Of_Chinese_Officers
+		}
+
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Modern_General_Staff"
+			swap_ideas = {
+				remove_idea = FNG_shikan_clique_army_3
+				add_idea = FNG_shikan_clique_army_4
+			}
+			random_army_leader = {
+				limit = {
+					NOT = {
+						has_trait = old_guard
+						has_trait = trait_engineer
+						is_character = FNG_tang_yulin
+					}
+				}
+				add_trait = { trait = trait_engineer }
+			}
+			random_army_leader = {
+				limit = {
+					NOT = {
+						has_trait = old_guard
+						has_trait = trait_engineer
+						is_character = FNG_tang_yulin
+					}
+				}
+				add_trait = { trait = trait_engineer }
+			}
+		}
+	}
+
+	focus = {
+		id = FNG_Methodical_Approach_To_War
+		icon = GFX_focus_chi_army_reform
+		cost = 5
+
+		relative_position_id = FNG_Shikan_Clique_Chosen
+		x = 2
+		y = 4
+
+		prerequisite = {
+			focus = FNG_Modern_General_Staff
+		}
+		ai_will_do = { factor = 50 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Methodical_Approach_To_War"
+			swap_ideas = {
+				remove_idea = FNG_shikan_clique_army_4
+				add_idea = FNG_shikan_clique_army_5
+			}
+			FNG_improve_army_problem_effect = yes
+		}
+	}
+
+	focus = {
+		id = FNG_Reorganise_the_Coastal_Defence_Forces
+		icon = GFX_goal_navy_hat_ships
+		cost = 5
+
+		relative_position_id = FNG_Found_the_Shenyang_National_Academy
+		x = -7
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Found_the_Shenyang_National_Academy
+		}
+		ai_will_do = { factor = 20 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Reorganise_the_Coastal_Defence_Forces"
+			navy_experience = 15
+			add_war_support = 0.05
+			add_doctrine_cost_reduction = {
+				name = FNG_Reorganise_the_Coastal_Defence_Forces
+				cost_reduction = 0.5
+				uses = 1
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = FNG_Expand_Yingkou_Naval_Yard
+		icon = GFX_goal_generic_construct_naval_dockyard
+		cost = 5
+
+		relative_position_id = FNG_Reorganise_the_Coastal_Defence_Forces
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Reorganise_the_Coastal_Defence_Forces
+		}
+		prerequisite = {
+			focus = FNG_Rearming_the_Northeast
+		}
+		available = {
+			FNG = {
+				controls_state = 716
+			}
+		}
+		ai_will_do = { factor = 20 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Expand_Yingkou_Naval_Yard"
+			FNG_JAP_spend_medium = yes
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = 11764
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 11764
+					}
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = yingkou_naval_yard
+			}
+			else = {
+				mio:CHN_naval_industry_organisation = {
+					add_mio_size = 1
+					add_mio_funds = 500
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_NAVY_BONUS }
+	}
+
+	focus = {
+		id = FNG_The_Nine_Points_Strategy
+		icon = GFX_goal_nested_fortifications
+		cost = 5
+
+		relative_position_id = FNG_Expand_Yingkou_Naval_Yard
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Regular_River_Patrols
+			focus = FNG_Expand_Yingkou_Naval_Yard
+		}
+		available = {
+			FNG = {
+				controls_state = 716
+			}
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_The_Nine_Points_Strategy"
+			716 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						province = {
+							all_provinces = yes
+							limit_to_coastal = yes
+						}
+						level = 2
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_coastal_provinces
+						BUILDING = coastal_bunker
+						NUMBER = 2
+					}
+				}
+			}
+			328 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = coastal_bunker
+						province = {
+							all_provinces = yes
+							limit_to_coastal = yes
+						}
+						level = 2
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_coastal_provinces
+						BUILDING = coastal_bunker
+						NUMBER = 2
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_BONUS }
+	}
+
+	focus = {
+		id = FNG_Regular_River_Patrols
+		icon = GFX_goal_generic_navy_cruiser
+		cost = 5
+
+		relative_position_id = FNG_Reorganise_the_Coastal_Defence_Forces
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Reorganise_the_Coastal_Defence_Forces
+		}
+		ai_will_do = { factor = 20 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Regular_River_Patrols"
+			navy_experience = 30
+			add_mastery_bonus = {
+				name = FNG_Regular_River_Patrols
+				bonus = 0.1
+				days = 365
+				folder = naval
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Re-Forming_the_Marine_Corps
+		icon = GFX_goal_generic_amphibious_assault
+		cost = 5
+
+		relative_position_id = FNG_The_Nine_Points_Strategy
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = FNG_The_Nine_Points_Strategy
+		}
+		ai_will_do = { factor = 20 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Re-Forming_the_Marine_Corps"
+			add_tech_bonus = {
+				name = FNG_Re-Forming_the_Marine_Corps
+				bonus = 1.50
+				uses = 1
+				category = marine_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_NAVY_BONUS }
+	}
+
+	focus = {
+		id = FNG_The_Kwantung_Protocol
+		icon = GFX_focus_chi_collaboration_with_the_japanese
+		cost = 4
+
+		relative_position_id = FNG_Fuguo_Qiangbing
+		x = 25
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Fuguo_Qiangbing
+		}
+		prerequisite = {
+			focus = FNG_Suppress_Regionalist_Sentiment
+		}
+		available = {
+			has_idea = FNG_The_Kwantung_Army
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		bypass = {
+			FNG_JAP_hostile = yes
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_The_Kwantung_Protocol"
+			if = {
+				limit = {
+					has_country_flag = strengthen_army
+				}
+				hidden_effect = {
+					add_political_power = 50
+				}
+				custom_effect_tooltip = BONUS_PP_50
+			}
+			add_offsite_building = {
+				type = arms_factory
+				level = 1
+			}
+			custom_effect_tooltip = tooltip_white_line
+			unlock_decision_tooltip = FNG_Request_Japanese_Small_Arms
+			unlock_decision_tooltip = FNG_Request_Japanese_Artillery
+			unlock_decision_tooltip = FNG_Request_Japanese_Tanks
+			unlock_decision_tooltip = FNG_Study_Japanese_Manufacturing_Methods
+			set_temp_variable = { ZCPOP = -3 }
+			FNG_ZCPOP = yes
+			FNG_JAP_investment_medium = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = FNG_Jigyou_Hikaku
+		icon = GFX_goal_JAP_industry
+		cost = 5
+
+		relative_position_id = FNG_The_Kwantung_Protocol
+		x = 0
+		y = 1
+
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		prerequisite = {
+			focus = FNG_The_Kwantung_Protocol
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Jigyou_Hikaku"
+			if = {
+				limit = {
+					has_country_flag = strengthen_army
+				}
+				hidden_effect = {
+					add_political_power = 25
+				}
+				custom_effect_tooltip = BONUS_PP_25
+			}
+			add_tech_bonus = {
+				name = FNG_Jigyou_Hikaku
+				bonus = 0.5
+				uses = 1
+				category = industry
+			}
+			add_one_random_civilian_factory = yes
+			set_temp_variable = { ZCPOP = -3 }
+			FNG_ZCPOP = yes
+			FNG_JAP_investment_medium = yes
+			if = {
+				limit = { has_dlc_lar = yes }
+				JAP = {
+					add_intel = {
+						target = FNG
+						civilian_intel = 20
+						army_intel = 5
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Zaibatsu_Investments
+		icon = GFX_focus_jap_zaibatsu
+		cost = 6
+
+		relative_position_id = FNG_Jigyou_Hikaku
+		x = 1
+		y = 1
+
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		prerequisite = {
+			focus = FNG_Jigyou_Hikaku
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Zaibatsu_Investments"
+			if = {
+				limit = { has_country_flag = strengthen_army }
+				custom_effect_tooltip = BONUS_PP_25
+				hidden_effect = { add_political_power = 25 }
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					free_building_slots = { building = arms_factory size > 0 include_locked = yes }
+					prefer_home_area_states_unless_filled = yes
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			set_temp_variable = { ZCPOP = -5 }
+			FNG_ZCPOP = yes
+			FNG_JAP_investment_large = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = mitsubishi_heavy_industries
+			}
+			else = {
+				custom_effect_tooltip = available_mio_tt
+				show_mio_tooltip = FNG_mitsubishi_heavy_industries_organisation
+				mio:FNG_mitsubishi_heavy_industries_organisation = { add_mio_size = 2 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Commission_Japanese_Ships
+		icon = GFX_goal_FNG_commission_japanese_ships
+		cost = 6
+
+		relative_position_id = FNG_Zaibatsu_Investments
+		x = 0
+		y = 2
+
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		prerequisite = {
+			focus = FNG_Zaibatsu_Investments
+		}
+		ai_will_do = { factor = 20 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Commission_Japanese_Ships"
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = sasebo_naval_arsenal_FNG
+				show_ideas_tooltip = kure_naval_arsenal_FNG
+			}
+			else = {
+				custom_effect_tooltip = available_mio_tt
+				show_mio_tooltip = FNG_sasebo_naval_arsenal_organisation
+				show_mio_tooltip = FNG_kure_naval_arsenal_organisation
+				mio:FNG_sasebo_naval_arsenal_organisation = { add_mio_size = 2 }
+				mio:FNG_kure_naval_arsenal_organisation = { add_mio_size = 2 }
+			}
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = JAP decision = FNG_JAP_destroyers }
+			activate_targeted_decision = { target = JAP decision = FNG_JAP_subs }
+			activate_targeted_decision = { target = JAP decision = FNG_JAP_cruisers }
+			if = {
+				limit = { has_dlc_aat = no } #can buy on market
+				activate_targeted_decision = { target = JAP decision = FNG_JAP_convoys }
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_NAVY_BONUS }
+	}
+
+	focus = {
+		id = FNG_The_China_Flying_Corps
+		icon = GFX_goal_FNG_chinese_flying_corps
+		cost = 5
+
+		relative_position_id = FNG_The_Kwantung_Protocol
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Found_the_Shenyang_National_Academy
+		}
+		ai_will_do = { factor = 20 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_The_China_Flying_Corps"
+			air_experience = 35
+			add_doctrine_cost_reduction = {
+				name = FNG_The_China_Flying_Corps
+				cost_reduction = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = FNG_Shoutai_Tactics
+		icon = GFX_focus_jap_zero
+		cost = 5
+
+		relative_position_id = FNG_The_China_Flying_Corps
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_The_China_Flying_Corps
+		}
+		prerequisite = {
+			focus = FNG_Jigyou_Hikaku
+		}
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		ai_will_do = { factor = 30 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Shoutai_Tactics"
+			air_experience = 25
+			add_mastery_bonus = {
+				name = FNG_Shoutai_Tactics
+				bonus = 0.1
+				days = 365
+				folder = air
+			}
+			FNG_JAP_investment_medium = yes
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = FNG_Expand_the_Shenyang_Aerodrome
+		icon = GFX_focus_generic_air_bases
+		cost = 5
+
+		relative_position_id = FNG_The_China_Flying_Corps
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_The_China_Flying_Corps
+		}
+		available = {
+			FNG = {
+				controls_state = 716
+			}
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Expand_the_Shenyang_Aerodrome"
+			716 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+			set_temp_variable = { ZCPOP = 3 }
+			FNG_ZCPOP = yes
+			FNG_JAP_spend_medium = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = FNG_Request_Air_Shipment
+		icon = GFX_goal_ELS_Plane_Lease
+		cost = 7
+
+		relative_position_id = FNG_Shoutai_Tactics
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Expand_the_Shenyang_Aerodrome
+		}
+		prerequisite = {
+			focus = FNG_Shoutai_Tactics
+		}
+		available = {
+			has_idea = FNG_The_Kwantung_Army
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+			JAP = { has_design_based_on = small_plane_airframe }
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Request_Air_Shipment"
+			if = {
+				limit = { has_country_flag = strengthen_army }
+				custom_effect_tooltip = BONUS_PP_50
+				hidden_effect = { add_political_power = 50 }
+			}
+			add_equipment_to_stockpile = {
+				type = small_plane_airframe
+				amount = 150
+				producer = JAP
+			}
+			set_temp_variable = { ZCPOP = -3 }
+			FNG_ZCPOP = yes
+			FNG_JAP_investment_medium = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = tachikawa_FNG
+			}
+			else = {
+				custom_effect_tooltip = available_mio_tt
+				show_mio_tooltip = FNG_tachikawa_organisation
+				mio:FNG_tachikawa_organisation = { add_mio_size = 2 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = FNG_Reverse_Engineering_Efforts
+		icon = GFX_goal_generic_design_equipment_standards
+		cost = 10
+
+		relative_position_id = FNG_Expand_the_Shenyang_Aerodrome
+		x = 0
+		y = 2
+
+		mutually_exclusive = {
+			focus = FNG_Order_New_Aircraft
+		}
+		prerequisite = {
+			focus = FNG_Expand_the_Shenyang_Aerodrome
+		}
+		ai_will_do = { factor = 40 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Reverse_Engineering_Efforts"
+			add_tech_bonus = {
+				name = FNG_Reverse_Engineering_Efforts
+				bonus = 0.50
+				uses = 1
+				category = cas_bomber
+			}
+			add_offsite_building = {
+				type = arms_factory
+				level = 1
+			}
+			set_temp_variable = { ZCPOP = 5 }
+			FNG_ZCPOP = yes
+			FNG_JAP_spend_large = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = FNG_Order_New_Aircraft
+		icon = GFX_focus_generic_copy_plane_designs
+		cost = 7
+
+		relative_position_id = FNG_Request_Air_Shipment
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Request_Air_Shipment
+		}
+		mutually_exclusive = {
+			focus = FNG_Reverse_Engineering_Efforts
+		}
+		available = {
+			FNG_JAP_hostile = no
+			JAP = { is_faction_leader = yes }
+		}
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Order_New_Aircraft"
+			add_tech_bonus = {
+				name = FNG_Order_New_Aircraft
+				bonus = 1
+				uses = 1
+				category = light_fighter
+			}
+			add_tech_bonus = {
+				name = FNG_Order_New_Aircraft
+				bonus = 1
+				uses = 1
+				category = cas_bomber
+			}
+			add_offsite_building = {
+				type = arms_factory
+				level = 1
+			}
+			set_temp_variable = { ZCPOP = -5 }
+			FNG_ZCPOP = yes
+			FNG_JAP_investment_large = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = FNG_Rearming_the_Northeast
+		icon = GFX_goal_Focus_Military_Mobilisation
+		cost = 5
+
+		relative_position_id = FNG_Fuguo_Qiangbing
+		x = 7
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Fuguo_Qiangbing
+		}
+		prerequisite = {
+			focus = FNG_Suppress_Regionalist_Sentiment
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Rearming_the_Northeast"
+			add_political_power = 20
+			FNG_JAP_spend_medium = yes
+			if = {
+				limit = {
+					has_country_flag = strengthen_army
+				}
+				hidden_effect = {
+					add_political_power = 30
+				}
+				custom_effect_tooltip = BONUS_PP_30
+			}
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Expand_the_Shenyang_Arsenal
+		icon = GFX_goal_shenyang_arsenal
+		cost = 6
+
+		relative_position_id = FNG_Rearming_the_Northeast
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Rearming_the_Northeast
+		}
+		available = {
+			FNG = {
+				controls_state = 716
+			}
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Expand_the_Shenyang_Arsenal"
+			if = {
+				limit = { has_country_flag = strengthen_army }
+				custom_effect_tooltip = BONUS_PP_25
+				hidden_effect = { add_political_power = 25 }
+			}
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			set_temp_variable = { ZCPOP = 3 }
+			FNG_ZCPOP = yes
+			FNG_JAP_spend_medium = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = shenyang_arsenal
+			}
+			else = {
+				mio:CHN_small_arms_industry_organisation = {
+					add_mio_funds_gain_factor = 0.10
+					complete_mio_trait = China_mio_trait_integrated_shenyang
+					set_mio_flag = integrated_shenyang
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Diversify_Armament_Production
+		icon = GFX_focus_DEN_limited_regulations
+		cost = 7
+
+		relative_position_id = FNG_Expand_the_Shenyang_Arsenal
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Expand_the_Shenyang_Arsenal
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Diversify_Armament_Production"
+			if = {
+				limit = {
+					has_country_flag = strengthen_army
+				}
+				hidden_effect = {
+					add_political_power = 25
+				}
+				custom_effect_tooltip = BONUS_PP_25
+			}
+			add_one_random_military_factory = yes
+			add_tech_bonus = {
+				name = FNG_Diversify_Armament_Production
+				bonus = 0.50
+				uses = 1
+				category = infantry_weapons
+			}
+			add_tech_bonus = {
+				name = FNG_Diversify_Armament_Production
+				bonus = 0.50
+				uses = 1
+				category = cat_anti_tank
+			}
+			add_tech_bonus = {
+				name = FNG_Diversify_Armament_Production
+				bonus = 0.50
+				uses = 1
+				category = cat_anti_air
+			}
+			set_temp_variable = { ZCPOP = 3 }
+			FNG_ZCPOP = yes
+			FNG_JAP_spend_medium = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = FNG_Develop_the_Dadong_Artillery_Complex
+		icon = GFX_goal_GEO_Artillery_Tactics
+		cost = 7
+
+		relative_position_id = FNG_Diversify_Armament_Production
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = FNG_Diversify_Armament_Production
+		}
+		available = {
+			FNG = {
+				controls_state = 716
+			}
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Develop_the_Dadong_Artillery_Complex"
+			if = {
+				limit = { has_country_flag = strengthen_army }
+				custom_effect_tooltip = BONUS_PP_25
+				hidden_effect = { add_political_power = 25 }
+			}
+			add_tech_bonus = {
+				name = FNG_Develop_the_Dadong_Artillery_Complex
+				bonus = 1
+				uses = 2
+				category = artillery
+			}
+			716 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_offsite_building = {
+				type = arms_factory
+				level = 1
+			}
+			set_temp_variable = { ZCPOP = 3 }
+			FNG_ZCPOP = yes
+			FNG_JAP_spend_medium = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = dadong_artillery_complex
+			}
+			else = {
+				if = {
+					limit = { mio:CHN_artillery_industry_organisation = { is_mio_available = no } }
+					custom_effect_tooltip = available_mio_tt
+					show_mio_tooltip = CHN_artillery_industry_organisation
+				}
+				mio:CHN_artillery_industry_organisation = {
+					set_mio_flag = CHN_mio_unlocked
+					add_mio_size = 1
+					add_mio_funds = 500
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = FNG_Militarize_the_Minsheng_Truck
+		icon = GFX_focus_generic_truck
+		cost = 7
+
+		relative_position_id = FNG_Diversify_Armament_Production
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = FNG_Diversify_Armament_Production
+		}
+		ai_will_do = { factor = 60 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed FNG_Militarize_the_Minsheng_Truck"
+			if = {
+				limit = { has_country_flag = strengthen_army }
+				custom_effect_tooltip = BONUS_PP_25
+				hidden_effect = { add_political_power = 25 }
+			}
+			if = {
+				limit = { NOT = { has_tech = motorised_infantry } }
+				hidden_effect = { set_technology = { tech_trucks = 1 popup = no } }
+				set_technology = { motorised_infantry = 1 }
+				add_tech_bonus = {
+					name = FNG_Militarize_the_Minsheng_Truck
+					bonus = 1
+					uses = 1
+					category = motorized_equipment
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = FNG_Militarize_the_Minsheng_Truck
+					bonus = 0.75
+					uses = 2
+					category = artillery
+				}
+			}
+			add_equipment_to_stockpile = {
+				type = motorized_equipment
+				amount = 100
+				producer = FNG
+			}
+			set_temp_variable = { ZCPOP = 3 }
+			FNG_ZCPOP = yes
+			FNG_JAP_spend_medium = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_aat = no }
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = minsheng_automobile_factory
+			}
+			else = {
+				if = {
+					limit = { mio:CHN_transportation_industry_organisation = { is_mio_available = no } }
+					custom_effect_tooltip = available_mio_tt
+					show_mio_tooltip = CHN_transportation_industry_organisation
+				}
+				mio:CHN_transportation_industry_organisation = {
+					set_mio_flag = CHN_mio_unlocked
+					add_mio_size = 1
+					add_mio_funds = 500
+				}
+			}
+			hidden_effect = {
+				country_event = { id = fengtian_events.32 days = 20 random_days = 30 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+}

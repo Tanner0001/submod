@@ -1,0 +1,280 @@
+TIB_puppet_setup = {
+	#IF YOU CHANGE THIS, MAKE SURE TO EDIT china_orchestrate_sinophile_coup
+
+	#Setup Ma Biao
+	if = {
+		limit = { tag = XSM }
+		TIB = {
+			set_party_name = {
+				ideology = paternal_autocrat
+				long_name = XSM_syndicalist_party_long
+				name = XSM_syndicalist_party
+			}
+			set_politics = {
+				ruling_party = paternal_autocrat
+				elections_allowed = no
+			}
+			#Pat Aut Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 7
+				social_democrat = 12
+				social_liberal = 6
+				market_liberal = 5
+				social_conservative = 13
+				authoritarian_democrat = 18
+				paternal_autocrat = 25
+				national_populist = 9
+			}
+			XSM = { XSM_ma_biao = { set_nationality = PREV.PREV } }
+			if = {
+				limit = { has_character = XSM_ma_biao }
+				XSM_ma_biao = {
+					if = {
+						limit = { has_ideology = paternal_autocrat_subtype }
+						promote_character = paternal_autocrat_subtype
+					}
+					else = {
+						add_country_leader_role = {
+							country_leader = {
+								desc = XSM_ma_biao_high_command_desc
+								ideology = paternal_autocrat_subtype
+							}
+							promote_leader = yes
+						}
+					}
+				}
+			}
+		}
+	}
+	#Setup Abdullah Bughra
+	else_if = {
+		limit = { tag = ETS }
+		TIB = {
+			set_party_name = {
+				ideology = national_populist
+				long_name = XSM_syndicalist_party_long
+				name = XSM_syndicalist_party
+			}
+			set_politics = {
+				ruling_party = national_populist
+				elections_allowed = no
+			}
+			#Nat Pop Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 8
+				social_democrat = 10
+				social_liberal = 6
+				market_liberal = 5
+				social_conservative = 12
+				authoritarian_democrat = 16
+				paternal_autocrat = 18
+				national_populist = 20
+			}
+			ETS = { ETS_abdullah_bughra = { set_nationality = PREV.PREV } }
+			if = {
+				limit = { has_character = ETS_abdullah_bughra }
+				ETS_abdullah_bughra = {
+					if = {
+						limit = { has_ideology = national_populist_subtype }
+						promote_character = national_populist_subtype
+					}
+					else = {
+						add_country_leader_role = {
+							country_leader = {
+								desc = ETS_abdullah_bughra_high_command_desc
+								ideology = national_populist_subtype
+							}
+							promote_leader = yes
+						}
+					}
+				}
+			}
+		}
+	}
+	#NOTE: Old Chinese Puppet leaders were He Guoguang for Zhili, Wen Tsungyao for the Manchus, and Huang Musong for the KMTs
+	#Setup Rad Soc TIB
+	else_if = {
+		limit = {
+			china_alignment_left_kuomintang = yes
+			has_socialist_government = yes
+		}
+		TIB = {
+			set_politics = {
+				ruling_party = radical_socialist
+				elections_allowed = no
+			}
+			#Rad Soc KMT Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 18
+				social_democrat = 12
+				social_liberal = 6
+				market_liberal = 3
+				social_conservative = 13
+				authoritarian_democrat = 15
+				paternal_autocrat = 20
+				national_populist = 8
+			}
+			#This should release Rad Soc Panchen Lama (a Sino-phile), maybe in the future we'll do Pandatsang Rapga
+		}
+	}
+	#Setup KMT TIB
+	else_if = {
+		limit = {
+			OR = {
+				china_alignment_left_kuomintang = yes
+				china_alignment_right_kuomintang = yes
+			}
+		}
+		TIB = {
+			set_politics = {
+				ruling_party = social_democrat
+				elections_allowed = no
+			}
+			#Soc Dem KMT Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 12
+				social_democrat = 18
+				social_liberal = 6
+				market_liberal = 3
+				social_conservative = 13
+				authoritarian_democrat = 15
+				paternal_autocrat = 20
+				national_populist = 8
+			}
+		}
+		#This should release Soc Dem Panchen Lama (a Sino-phile)
+	}
+	#Setup Federalists and other Chinese moderates, be careful though to differentiate non-KMT Soc Dems vs KMT Soc Dems
+	else_if = {
+		limit = {
+			is_chinese_tag = yes
+			OR = {
+				china_is_aligned_with_federalists = yes
+				has_elected_government = yes
+			}
+		}
+		TIB = {
+			set_politics = {
+				ruling_party = social_liberal
+				elections_allowed = no
+			}
+			#Soc Lib Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 6
+				social_democrat = 8
+				social_liberal = 20
+				market_liberal = 7
+				social_conservative = 12
+				authoritarian_democrat = 14
+				paternal_autocrat = 20
+				national_populist = 8
+			}
+			#This should release Soc Lib Lungshar. His son worked for the CPC, loose connection but they're pragmatic
+		}
+	}
+	#Setup Chinese Reactionaries
+	else_if = {
+		limit = {
+			is_chinese_tag = yes
+		}
+		TIB = {
+			set_politics = {
+				ruling_party = paternal_autocrat
+				elections_allowed = no
+			}
+			#Pat Aut Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 7
+				social_democrat = 12
+				social_liberal = 6
+				market_liberal = 5
+				social_conservative = 13
+				authoritarian_democrat = 18
+				paternal_autocrat = 25
+				national_populist = 9
+			}
+			#This should release Pat Aut Reting Rinpoche, pragmatic Regent who played both sides in various ways. If need be we can use Dingja (Dorje Gyaltsen) in the future.
+		}
+	}
+	else = {
+		TIB = {
+			#Baseline Puppet Popularity - Tibet's a reactionary place but conquering it will disrupt their political situation
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 8
+				social_democrat = 13
+				social_liberal = 6
+				market_liberal = 5
+				social_conservative = 13
+				authoritarian_democrat = 18
+				paternal_autocrat = 23
+				national_populist = 9
+			}
+		}
+	}
+}
+
+TIB_remove_puppet_leader = {
+	TIB = {
+		if = {
+			limit = { has_character = XSM_ma_biao }
+			XSM_ma_biao = { set_nationality = XSM }
+			promote_character = { character = TIB_the_5th_reting_rinpoche ideology = paternal_autocrat_subtype }
+		}
+		if = {
+			limit = { has_character = ETS_abdullah_bughra }
+			ETS_abdullah_bughra = { set_nationality = ETS }
+			promote_character = { character = TIB_chao_kung ideology = national_populist_subtype }
+		}
+	}
+}
+
+TIB_add_khenchen_lobsang_tashi_sic = {
+	activate_advisor = TIB_khenchen_lobsang_tashi_sic
+}
+TIB_add_ngawang_sungrab_thutob_sic = {
+	activate_advisor = TIB_ngawang_sungrab_thutob_sic
+}
+TIB_add_lhalu_tsewang_dorje_sic = {
+	activate_advisor = TIB_lhalu_tsewang_dorje_sic
+}
+TIB_add_thubten_kunphela_sic = {
+	activate_advisor = TIB_thubten_kunphela_sic
+}
+TIB_add_sangye_yeshi_sic = {
+	activate_advisor = TIB_sangye_yeshi_sic
+}
+
+TIB_remove_isolation = {
+	if = {
+		limit = { has_idea = isolation }
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = { partial_economic_mobilisation_available = yes }
+			add_ideas = partial_economic_mobilisation
+		}
+		else_if = {
+			limit = { low_economic_mobilisation_available = yes }
+			add_ideas = low_economic_mobilisation
+		}
+		else = {
+			add_ideas = civilian_economy
+		}
+	}
+	else = {
+		add_political_power = 75
+	}
+}

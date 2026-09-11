@@ -1,0 +1,553 @@
+@MIT_small_value = 1
+@MIT_medium_value = 5
+@MIT_large_value = 10
+@MIT_huge_value = 50
+scripted_gui = {
+	mitteleuropa_button = {
+		parent_window_name = raid_filter
+		context_type = player_context
+		window_name = "mitteleuropa_open_button_window"
+		dirty = global.MIT_update
+
+		visible = {
+			GER_is_in_mitteleuropa = yes
+		}
+
+		ai_enabled = { always = yes }
+		ai_check = { MIT_interface_is_open = no }
+
+		ai_test_interval = 168 #every 7-14 days
+
+		triggers = {
+			mitteleuropa_open_button_click_enabled = {
+				MIT_is_active = yes
+				NOT = { has_global_flag = MIT_event_chain_ongoing }
+			}
+		}
+
+		effects = {
+			mitteleuropa_open_button_click = {
+				if = {
+					limit = { MIT_interface_is_open = no }
+					if = {
+						limit = {
+							is_ai = no
+							NOT = { has_country_flag = MIT_opened_panel_once }
+						}
+						country_event = germany_mitteleuropa_events.1001
+					}
+					else = {
+						MIT_open_mitteleuropa_panel = yes
+					}
+				}
+				else = {
+					MIT_close_mitteleuropa_panel = yes
+				}
+			}
+		}
+		ai_weights = {
+			mitteleuropa_open_button_click = {
+				ai_will_do = { base = 100 }
+			}
+		}
+	}
+
+	mitteleuropa_window = {
+		context_type = player_context
+		window_name = "mitteleuropa_window"
+		dirty = global.MIT_update
+
+		visible = {
+			MIT_interface_is_open = yes
+		}
+
+		ai_enabled = { always = yes }
+		ai_check = { GER_is_in_mitteleuropa = yes }
+
+		ai_test_interval = 240
+		ai_test_variance = 1 #+/- 50% of ai_test_interval -> 120-360h -> every 5-15 days
+
+		dynamic_lists = {
+			countries_list_grid = {
+				array = MIT.economic_sphere:members
+				entry_container = member_entry
+				change_scope = yes
+			}
+
+			agenda_list_grid = {
+				array = MIT_agenda_list_for_ui
+				entry_container = agenda_entry
+				value = agenda
+
+				ai_weights = {
+					agenda_button_click = {
+						ai_will_do = {
+							base = 1
+							modifier = {
+								factor = 0
+								has_war_with = agenda:agenda_supporters^0
+							}
+							modifier = {
+								factor = 0
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								has_country_flag = MIT_leadership_challenge_cooldown
+							}
+							modifier = {
+								factor = 0
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								MIT = { is_major = no }
+								NOT = { original_tag = GER }
+							}
+							modifier = {
+								factor = 0
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								NOT = { has_country_flag = MIT_angry_with_leadership }
+								ic_ratio = { tag = MIT ratio < 0.3 }
+							}
+							modifier = {
+								factor = 25
+								original_tag = GER
+								is_in_array = { agenda:available_for = THIS }
+							}
+							modifier = {
+								factor = 3
+								NOT = { original_tag = GER }
+								is_in_array = { agenda:available_for = THIS }
+							}
+							modifier = {
+								set_temp_variable = { consolidation_factor = agenda:agenda_supporters^num }
+								divide_temp_variable = { consolidation_factor = 20 }
+								add_to_temp_variable = { consolidation_factor = 1 }
+								factor = consolidation_factor
+							}
+							modifier = {
+								factor = 2 #if a leadership challenge has been issued, jump on the bandwagon
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_supporters^num > 0 }
+							}
+							modifier = {
+								factor = 1.5
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								ic_ratio = { tag = MIT ratio > 0.5 }
+							}
+							modifier = {
+								factor = 2
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								ic_ratio = { tag = MIT ratio > 0.8 }
+							}
+							modifier = {
+								factor = 2
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								is_major = yes
+							}
+							modifier = {
+								factor = 2
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								has_country_flag = MIT_angry_with_leadership
+							}
+							modifier = {
+								factor = 2
+								GER = { MIT_challenge_leadership = { check_variable = { agenda = THIS } } }
+								OR = {
+									original_tag = BEL
+									original_tag = POL
+									original_tag = UKR
+								}
+								MIT = { tag = GER }
+							}
+							modifier = {
+								factor = 10 #everyone wants the enlargement directorate
+								GER = { MIT_enlargement_directorate = { check_variable = { agenda = THIS } } }
+							}
+							modifier = {
+								factor = 1.25
+								GER = { MIT_generic_industrial_projects = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_civilian_factories < num_of_military_factories
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_industrial_projects = { check_variable = { agenda = THIS } } }
+								num_of_civilian_factories < num_of_military_factories
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_industrial_projects = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_civilian_factories_available_for_projects < 15
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_industrial_projects = { check_variable = { agenda = THIS } } }
+								num_of_civilian_factories_available_for_projects < 15
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_arms_industry = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								has_war = yes
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_arms_industry = { check_variable = { agenda = THIS } } }
+								has_war = yes
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_arms_industry = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_military_factories < num_of_civilian_factories
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_arms_industry = { check_variable = { agenda = THIS } } }
+								num_of_military_factories < num_of_civilian_factories
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_infrastructure = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_civilian_factories > 30
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_infrastructure = { check_variable = { agenda = THIS } } }
+								num_of_civilian_factories > 30
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_infrastructure = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								is_major = yes
+							}
+							modifier = {
+								factor = 1.1
+								GER = { MIT_generic_infrastructure = { check_variable = { agenda = THIS } } }
+								is_major = yes
+							}
+							modifier = {
+								factor = 3.5
+								GER = { MIT_generic_financial_bailout = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_civilian_factories > 10
+							}
+							modifier = {
+								factor = 2
+								GER = { MIT_generic_infrastructure = { check_variable = { agenda = THIS } } }
+								num_of_civilian_factories > 20
+							}
+							modifier = {
+								factor = 3
+								GER = { MIT_generic_industrial_advisors = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_civilian_factories_available_for_projects > 15
+							}
+							modifier = {
+								factor = 2.5
+								GER = { MIT_generic_industrial_advisors = { check_variable = { agenda = THIS } } }
+								num_of_civilian_factories_available_for_projects > 15
+							}
+							modifier = {
+								factor = 2.5
+								GER = { MIT_generic_industrial_advisors = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_civilian_factories_available_for_projects > 8
+							}
+							modifier = {
+								factor = 2
+								GER = { MIT_generic_industrial_advisors = { check_variable = { agenda = THIS } } }
+								num_of_civilian_factories_available_for_projects > 8
+							}
+							modifier = {
+								factor = 2.5
+								GER = { MIT_generic_arms_experts = { check_variable = { agenda = THIS } } }
+								num_of_military_factories > 30
+							}
+							modifier = {
+								factor = 2.5
+								GER = { MIT_generic_arms_experts = { check_variable = { agenda = THIS } } }
+								num_of_military_factories > 20
+							}
+							modifier = {
+								factor = 2.5
+								GER = { MIT_generic_arms_experts = { check_variable = { agenda = THIS } } }
+								num_of_military_factories > 10
+							}
+							modifier = {
+								factor = 2.5
+								GER = { MIT_generic_arms_experts = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_military_factories > 30
+							}
+							modifier = {
+								factor = 2.5
+								GER = { MIT_generic_arms_experts = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_military_factories > 20
+							}
+							modifier = {
+								factor = 2.5
+								GER = { MIT_generic_arms_experts = { check_variable = { agenda = THIS } } }
+								check_variable = { agenda:agenda_improved > 0 }
+								num_of_military_factories > 10
+							}
+							modifier = {
+								factor = 3
+								GER = { MIT_generic_cohesion_fund = { check_variable = { agenda = THIS } } }
+							}
+							modifier = {
+								factor = 3.5
+								has_political_power < 100
+								GER = { MIT_generic_legal_reform = { check_variable = { agenda = THIS } } }
+							}
+							modifier = {
+								factor = 3.5
+								has_political_power < 0
+								GER = { MIT_generic_legal_reform = { check_variable = { agenda = THIS } } }
+							}
+						}
+					}
+				}
+			}
+
+			top_agendas_grid = {
+				array = global.MIT_sorted_voted_agendas
+				entry_container = top_agenda_entry
+				value = top_agenda
+			}
+			supporters_list_grid = {
+				array = top_agenda:agenda_supporters
+				entry_container = top_agenda_supporter_entry
+				change_scope = yes
+			}
+		}
+
+		triggers = {
+			agenda_score_increase_button_click_enabled = {
+				set_temp_variable = { MIT_value = @MIT_small_value }
+				MIT_has_political_power_for_investment = yes
+			}
+			agenda_score_increase_button_control_click_enabled = {
+				set_temp_variable = { MIT_value = @MIT_medium_value }
+				MIT_has_political_power_for_investment = yes
+			}
+			agenda_score_increase_button_shift_click_enabled = {
+				set_temp_variable = { MIT_value = @MIT_large_value }
+				MIT_has_political_power_for_investment = yes
+			}
+			agenda_score_increase_button_control_shift_click_enabled = {
+				set_temp_variable = { MIT_value = @MIT_huge_value }
+				MIT_has_political_power_for_investment = yes
+			}
+
+			agenda_score_decrease_button_click_enabled = {
+				set_temp_variable = { MIT_value = @MIT_small_value }
+				MIT_can_recover_political_power_investment = yes
+			}
+			agenda_score_decrease_button_control_click_enabled = {
+				set_temp_variable = { MIT_value = @MIT_medium_value }
+				MIT_can_recover_political_power_investment = yes
+			}
+			agenda_score_decrease_button_shift_click_enabled = {
+				set_temp_variable = { MIT_value = @MIT_large_value }
+				MIT_can_recover_political_power_investment = yes
+			}
+			agenda_score_decrease_button_control_shift_click_enabled = {
+				set_temp_variable = { MIT_value = @MIT_huge_value }
+				MIT_can_recover_political_power_investment = yes
+			}
+
+			agenda_button_click_enabled = {
+				if = {
+					limit = { has_country_flag = MIT_recent_agenda_change }
+					custom_override_tooltip = {
+						tooltip = MIT_recent_agenda_change
+						always = no
+					}
+				}
+			}
+		}
+
+		effects = {
+			button_close_click = {
+				MIT_close_mitteleuropa_panel = yes
+			}
+
+			agenda_score_increase_button_click = {
+				set_temp_variable = { MIT_value = @MIT_small_value }
+				MIT_add_agenda_score = yes
+				MIT_recalculate_agenda_score_if_appropriate = yes
+			}
+			agenda_score_increase_button_control_click = {
+				set_temp_variable = { MIT_value = @MIT_medium_value }
+				MIT_add_agenda_score = yes
+				MIT_recalculate_agenda_score_if_appropriate = yes
+			}
+			agenda_score_increase_button_shift_click = {
+				set_temp_variable = { MIT_value = @MIT_large_value }
+				MIT_add_agenda_score = yes
+				MIT_recalculate_agenda_score_if_appropriate = yes
+			}
+			agenda_score_increase_button_control_shift_click = {
+				set_temp_variable = { MIT_value = @MIT_huge_value }
+				MIT_add_agenda_score = yes
+				MIT_recalculate_agenda_score_if_appropriate = yes
+			}
+
+			agenda_score_decrease_button_click = {
+				set_temp_variable = { MIT_value = @MIT_small_value }
+				MIT_subtract_agenda_score = yes
+				MIT_recalculate_agenda_score_if_appropriate = yes
+			}
+			agenda_score_decrease_button_control_click = {
+				set_temp_variable = { MIT_value = @MIT_medium_value }
+				MIT_subtract_agenda_score = yes
+				MIT_recalculate_agenda_score_if_appropriate = yes
+			}
+			agenda_score_decrease_button_shift_click = {
+				set_temp_variable = { MIT_value = @MIT_large_value }
+				MIT_subtract_agenda_score = yes
+				MIT_recalculate_agenda_score_if_appropriate = yes
+			}
+			agenda_score_decrease_button_control_shift_click = {
+				set_temp_variable = { MIT_value = @MIT_huge_value }
+				MIT_subtract_agenda_score = yes
+				MIT_recalculate_agenda_score_if_appropriate = yes
+			}
+
+			agenda_button_click = {
+				if = {
+					limit = { NOT = { has_variable = MIT_supported_agenda } }
+					var:agenda = { MIT_support_agenda = yes }
+					MIT_apply_voting_cooldown = yes
+				}
+				else_if = {
+					limit = { check_variable = { MIT_supported_agenda = agenda } }
+					if = {
+						limit = { is_ai = no } #temp workaround
+						if = { #if the leader of a leadership challenge gives up, clear it
+							limit = {
+								var:MIT_supported_agenda = {
+									has_character_flag = MIT_challenge_leadership
+									var:agenda_supporters^0 = { tag = ROOT }
+								}
+							}
+							every_country = {
+								limit = {
+									has_variable = MIT_supported_agenda
+									var:MIT_supported_agenda = { has_character_flag = MIT_challenge_leadership }
+								}
+								var:MIT_supported_agenda = { MIT_stop_supporting_agenda = yes }
+							}
+							MIT_apply_voting_cooldown = yes
+						}
+						else_if = { #if the leader of a country-restricted agenda cancels it, and it is not available to anyone else, clear it
+							limit = {
+								var:MIT_supported_agenda = {
+									is_in_array = { available_for = ROOT }
+									var:agenda_supporters^0 = { tag = ROOT }
+								}
+							}
+							if = {
+								limit = {
+									var:MIT_supported_agenda = {
+										any_of_scopes = {
+											array = available_for
+											NOT = { tag = ROOT }
+											is_in_array = { PREV.agenda_supporters = THIS }
+										}
+									}
+								}
+								var:MIT_supported_agenda = {
+									MIT_stop_supporting_agenda = yes
+									random_scope_in_array = {
+										array = available_for
+										limit = { is_in_array = { PREV.agenda_supporters = THIS } }
+										PREV = { MIT_set_as_agenda_leader = yes }
+									}
+								}
+							}
+							else = {
+								every_country = {
+									limit = {
+										has_variable = MIT_supported_agenda
+										var:MIT_supported_agenda = { has_character_flag = MIT_challenge_leadership }
+									}
+									var:MIT_supported_agenda = { MIT_stop_supporting_agenda = yes }
+								}
+							}
+						}
+						else = {
+							var:MIT_supported_agenda = { MIT_stop_supporting_agenda = yes }
+						}
+					}
+				}
+				else = {
+					var:MIT_supported_agenda = { MIT_stop_supporting_agenda = yes }
+					var:agenda = { MIT_support_agenda = yes }
+					MIT_apply_voting_cooldown = yes
+				}
+				MIT_recalculate_all_agenda_scores = yes
+				MIT_resort_agendas_based_on_score = yes
+				MIT_update_gui = yes
+			}
+
+			agenda_reward_loc_button_click = {
+				MIT_add_agenda_reward = yes
+				custom_effect_tooltip = SEPARATION_LINE
+				MIT_get_agenda_desc = yes
+			}
+
+			top_agenda_reward_loc_button_click = {
+				set_temp_variable = { agenda = top_agenda }
+				MIT_add_agenda_reward = yes
+			}
+
+			agenda_score_breakdown_button_click = { MIT_get_agenda_score_breakdown = yes }
+		}
+
+		ai_weights = {
+			button_close_click = {
+				ai_will_do = { base = 0 }
+			}
+
+			agenda_score_increase_button_click = {
+				ai_will_do = { base = 0 }
+			}
+			agenda_score_decrease_button_click = {
+				ai_will_do = { base = 0 }
+			}
+
+			agenda_reward_loc_button_click = {
+				ai_will_do = { base = 0 }
+			}
+			agenda_score_breakdown_button_click = {
+				ai_will_do = { base = 0 }
+			}
+		}
+
+		properties = {
+			chairman_flag = {
+				image = "[MIT.GetFlag]"
+			}
+			member_flag = {
+				image = "[THIS.GetFlag]"
+			}
+
+			agenda_checkbox = {
+				frame = agenda:frame@ROOT
+			}
+
+			top_agenda_icon = {
+				image = "[GetMitteleuropaAgendaIcon]"
+			}
+
+			main_agenda_supporter_flag = {
+				image = "[GetMitteleuropaMainSupporterFlag]"
+			}
+			supporter_flag = {
+				image = "[THIS.GetFlag]"
+			}
+		}
+	}
+}

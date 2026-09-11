@@ -1,0 +1,121 @@
+######################################
+####      OGADEN WAR MISSIONS     ####
+######################################
+####     by miwaco & marimari     ####
+######################################
+
+crisis = {
+   ### Attack Phase ###
+	ETH_ogaden_war_attack_phase = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = { always = no }
+
+		available = { controls_state = 906 } #Victory Condition
+
+		cancel_trigger = {
+			hidden_trigger = {
+				OR = {
+					#Invalid if the targets are gone
+					NOT = { has_event_target = ogaden_war_aggressor }
+					NOT = { has_event_target = ogaden_war_defender }
+
+					NOT = { #Invalid if not at war with other target
+						has_war_with = event_target:ogaden_war_aggressor
+						has_war_with = event_target:ogaden_war_defender
+					}
+					906 = { #Invalid if held by Third Party
+						NOT = { is_controlled_by = event_target:ogaden_war_aggressor }
+						NOT = { is_controlled_by = event_target:ogaden_war_defender }
+					}
+				}
+			}
+		}
+
+		selectable_mission = no
+		is_good = no
+		days_mission_timeout = 200
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel ETH_ogaden_war_attack_phase" #Mutual cancellation
+			hidden_effect = {
+				event_target:ogaden_war_defender = { remove_mission = ETH_ogaden_war_defence_phase }
+				clear_global_event_target = ogaden_war_aggressor
+				clear_global_event_target = ogaden_war_defender
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout ETH_ogaden_war_attack_phase" #Send Peace Event to Victor
+			effect_tooltip = { country_event = ogaden_war_events.6 }
+			hidden_effect = { event_target:ogaden_war_defender = { country_event = ogaden_war_events.3 } }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETH_ogaden_war_attack_phase" #Flip ownership, fire Defence Phase for this target
+			906 = { set_state_owner_to = ROOT }
+			country_event = ogaden_war_events.2
+
+			hidden_effect = { #Fire Attack Phase for other target
+				event_target:ogaden_war_defender = {
+					country_event = ogaden_war_events.5
+					activate_mission = ETH_ogaden_war_attack_phase
+					save_global_event_target_as = ogaden_war_aggressor
+				}
+			}
+
+			activate_mission = ETH_ogaden_war_defence_phase
+			save_global_event_target_as = ogaden_war_defender
+		}
+		fixed_random_seed = no
+	}
+
+   ### Defence Phase ###
+	ETH_ogaden_war_defence_phase = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = { always = no }
+
+		available = { event_target:ogaden_war_aggressor = { controls_state = 906 } } #Loss Condition
+
+		cancel_trigger = {
+			hidden_trigger = {
+				OR = {
+					#Invalid if the targets are gone
+					NOT = { has_event_target = ogaden_war_aggressor }
+					NOT = { has_event_target = ogaden_war_defender }
+
+					NOT = { #Invalid if not at war with other target
+						has_war_with = event_target:ogaden_war_aggressor
+						has_war_with = event_target:ogaden_war_defender
+					}
+					906 = { #Invalid if held by Third Party
+						NOT = { is_controlled_by = event_target:ogaden_war_aggressor }
+						NOT = { is_controlled_by = event_target:ogaden_war_defender }
+					}
+				}
+			}
+		}
+
+		selectable_mission = no
+		is_good = yes
+		days_mission_timeout = 200
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel ETH_ogaden_war_defence_phase" #Cancellation handled in Attack Phase
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout ETH_ogaden_war_defence_phase" #Peace Event handled in Attack Phase
+			effect_tooltip = { country_event = ogaden_war_events.3 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETH_ogaden_war_defence_phase" #Firing of Attack Phase handled in Attack Phase
+			effect_tooltip = {
+				906 = { set_state_owner_to = event_target:ogaden_war_aggressor }
+				country_event = ogaden_war_events.5
+				activate_mission = ETH_ogaden_war_attack_phase
+			}
+		}
+		fixed_random_seed = no
+	}
+}

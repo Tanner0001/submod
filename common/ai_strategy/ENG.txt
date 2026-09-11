@@ -1,0 +1,911 @@
+#################
+### Diplomacy ###
+#################
+ENG_hates_reichspakt = {
+	reversed = yes
+
+	enable = {
+		is_in_faction_with = GER
+		GER = {
+			is_faction_leader = yes
+			has_socialist_government = no
+		}
+		ENG = { has_socialist_government = yes }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = antagonize
+		id = ENG
+		value = 1000
+	}
+	ai_strategy = {
+		type = diplo_action_acceptance
+		target = market_access_rights
+		id = ENG
+		value = -1000
+	}
+}
+ENG_hates_entente = {
+	reversed = yes
+
+	enable = {
+		is_in_faction_with = ENT
+		ENT = { is_faction_leader = yes }
+		ENG = { has_socialist_government = yes }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = antagonize
+		id = ENG
+		value = 1000
+	}
+	ai_strategy = {
+		type = diplo_action_acceptance
+		target = market_access_rights
+		id = ENG
+		value = -1000
+	}
+}
+
+################
+### Industry ###
+################
+ENG_build_up_civs_1 = {
+	allowed = {
+		original_tag = ENG
+	}
+
+	enable = {
+		date < 1938.1.1
+		has_war = no
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = building_target
+		id = industrial_complex
+		value = 49
+	}
+	ai_strategy = {
+		type = air_factory_balance
+		value = 15
+	}
+}
+
+ENG_build_up_civs_2 = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		date > 1938.1.1
+		threat < 0.75
+		has_war = no
+	}
+	abort = {
+		OR = {
+			threat > 0.75
+			has_war = yes
+		}
+	}
+
+	ai_strategy = {
+		type = building_target
+		id = arms_factory
+		value = 50
+	}
+	ai_strategy = {
+		type = building_target
+		id = dockyard
+		value = 50
+	}
+	ai_strategy = {
+		type = air_factory_balance
+		value = 30
+	}
+}
+
+ENG_build_up_mils_1 = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		OR = {
+			threat > 0.75
+			has_war = yes
+		}
+		num_of_military_factories < 150
+	}
+	abort = {
+		num_of_military_factories > 150
+	}
+
+	ai_strategy = {
+		type = added_military_to_civilian_factory_ratio
+		value = 50
+	}
+	ai_strategy = {
+		type = building_target
+		id = arms_factory
+		value = 150
+	}
+}
+
+ENG_build_up_mils_2 = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		num_of_military_factories > 150
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = added_military_to_civilian_factory_ratio
+		value = 20
+	}
+}
+
+ENG_per_ardua_ad_astra_1 = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		always = yes
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = unit_ratio
+		id = fighter
+		value = 85 #+35 from light_aircraft_production = 120
+	}
+	ai_strategy = {
+		type = unit_ratio
+		id = cas
+		value = 15 #+65 from light_aircraft_production = 80
+	}
+
+	ai_strategy = {
+		type = equipment_production_factor
+		id = fighter
+		value = 40
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = cas
+		value = 10
+	}
+}
+
+ENG_per_ardua_ad_astra_2 = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		date > 1939.1.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = equipment_production_factor
+		id = fighter
+		value = 5
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = cas
+		value = 5
+	}
+
+	ai_strategy = {
+		type = air_factory_balance
+		value = 50
+	}
+}
+
+ENG_per_ardua_ad_astra_3 = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war = yes
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = air_factory_balance
+		value = 30
+	}
+}
+
+ENG_build_naval_bombers = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		always = yes
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = unit_ratio
+		id = naval_bomber
+		value = 8
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = naval_bomber
+		value = 15
+	}
+}
+
+ENG_build_patrol_bombers = {
+	allowed = {
+		original_tag = ENG
+		has_dlc_bba = yes
+	}
+	enable = {
+		is_eligible_for_heavy_aircraft_production = yes
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = unit_ratio
+		id = maritime_patrol_plane
+		value = 5
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = maritime_patrol_plane
+		value = 10
+	}
+}
+
+ENG_the_wooden_wall = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = { always = yes }
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = dockyard_to_military_factory_ratio
+		value = 40
+	}
+
+	ai_strategy = {
+		type = naval_invasion_focus
+		value = 80
+	}
+
+	ai_strategy = {
+		type = role_ratio
+		id = marine
+		value = 10
+	}
+	ai_strategy = {
+		type = template_prio
+		id = marine
+		value = 100
+	}
+}
+
+ENG_produce_synthetic_oil = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		date > 1939.1.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = building_target
+		id = synthetic_refinery
+		value = 8
+	}
+}
+
+ENG_build_radars_sussex = {
+	allowed = {
+		original_tag = ENG
+		threat > 0.6
+		is_special_project_completed = sp:sp_air_radar
+	}
+	enable = {
+		127 = { #Sussex
+			controller = { is_ally_with = FROM }
+			free_building_slots = { building = radar_station size > 0 }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = build_building
+		id = radar_station
+		target = 127 #Sussex
+		value = 2000
+	}
+}
+
+ENG_build_radars_wessex = {
+	allowed = {
+		original_tag = ENG
+		threat > 0.6
+		is_special_project_completed = sp:sp_air_radar
+	}
+	enable = {
+		1122 = { #Wessex
+			controller = { is_ally_with = FROM }
+			free_building_slots = { building = radar_station size > 0 }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = build_building
+		id = radar_station
+		target = 1122 #Wessex
+		value = 2000
+	}
+}
+
+ENG_build_radars_london = {
+	allowed = {
+		original_tag = ENG
+		threat > 0.6
+		is_special_project_completed = sp:sp_air_radar
+	}
+	enable = {
+		126 = { #Greater London
+			controller = { is_ally_with = FROM }
+			free_building_slots = { building = radar_station size > 0 }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = build_building
+		id = radar_station
+		target = 126 #Greater London
+		value = 2000
+	}
+}
+
+ENG_build_radars_east_anglia = {
+	allowed = {
+		original_tag = ENG
+		threat > 0.6
+		is_special_project_completed = sp:sp_air_radar
+	}
+	enable = {
+		125 = { #East Anglia
+			controller = { is_ally_with = FROM }
+			free_building_slots = { building = radar_station size > 0 }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = build_building
+		id = radar_station
+		target = 125 #East Anglia
+		value = 2000
+	}
+}
+
+ENG_build_radars_west_country = {
+	allowed = {
+		original_tag = ENG
+		threat > 0.6
+		is_special_project_completed = sp:sp_air_radar
+	}
+	enable = {
+		1123 = { #West Country
+			controller = { is_ally_with = FROM }
+			free_building_slots = { building = radar_station size > 0 }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = build_building
+		id = radar_station
+		target = 1123 #West Country
+		value = 2000
+	}
+}
+
+ENG_build_radars_yorkshire = {
+	allowed = {
+		original_tag = ENG
+		threat > 0.6
+		is_special_project_completed = sp:sp_air_radar
+	}
+	enable = {
+		130 = { #Yorkshire
+			controller = { is_ally_with = FROM }
+			free_building_slots = { building = radar_station size > 0 }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = build_building
+		id = radar_station
+		target = 130 #Yorkshire
+		value = 2000
+	}
+}
+
+ENG_build_radars_lothian = {
+	allowed = {
+		original_tag = ENG
+		threat > 0.7
+		is_special_project_completed = sp:sp_air_radar
+	}
+	enable = {
+		121 = { #Lothian
+			controller = { is_ally_with = FROM }
+			free_building_slots = { building = radar_station size > 0 }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = build_building
+		id = radar_station
+		target = 121 #Lothian
+		value = 2000
+	}
+}
+
+################
+### Military ###
+################
+ENG_protect_ascension = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		controls_state = 703 #Ascension
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = theatre_distribution_demand_increase
+		id = 703 #Ascension
+		value = 1
+	}
+}
+
+ENG_protect_saint_helena = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		controls_state = 704 #Saint Helena
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = theatre_distribution_demand_increase
+		id = 704 #Saint Helena
+		value = 1
+	}
+}
+
+ENG_scapa_flow_naval_base = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war = yes
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = strike_force_home_base
+		id = 16 #North Sea
+		value = 70
+	}
+}
+
+ENG_keep_out_of_the_baltic = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war_with = GER
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_avoid_region
+		id = 9 #Gulf of Bothnia
+		value = 200
+	}
+	ai_strategy = {
+		type = naval_avoid_region
+		id = 138 #Baltic Sea
+		value = 200
+	}
+	ai_strategy = {
+		type = naval_avoid_region
+		id = 147 #Danish Belts
+		value = 200
+	}
+	ai_strategy = {
+		type = naval_avoid_region
+		id = 272 #Gulf of Finland
+		value = 200
+	}
+}
+
+ENG_careful_around_the_channel = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war = yes
+		any_enemy_country = {
+			NOT = {
+				ships_in_area = {
+					type = screen_ship
+					area = 18
+					size > 14
+				}
+				ships_in_area = {
+					type = capital_ship
+					area = 18
+					size > 1
+				}
+				ships_in_area = {
+					type = submarine
+					area = 18
+					size > 23
+				}
+				ships_in_area = {
+					type = carrier
+					area = 18
+					size > 1
+				}
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_avoid_region
+		id = 18 #English Channel
+		value = 75
+	}
+}
+
+ENG_protect_the_channel_from_invasions = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war = yes
+		123 = { is_fully_controlled_by = ROOT } #Cornwall
+		125 = { is_fully_controlled_by = ROOT } #East Anglia
+		126 = { is_fully_controlled_by = ROOT } #Greater London
+		127 = { is_fully_controlled_by = ROOT } #Sussex
+		1122 = { is_fully_controlled_by = ROOT } #Wessex
+		1123 = { is_fully_controlled_by = ROOT } #West Country
+		any_enemy_country = {
+			OR = {
+				ships_in_area = {
+					type = screen_ship
+					area = 18
+					size > 14
+				}
+				ships_in_area = {
+					type = capital_ship
+					area = 18
+					size > 1
+				}
+				ships_in_area = {
+					type = submarine
+					area = 18
+					size > 23
+				}
+				ships_in_area = {
+					type = carrier
+					area = 18
+					size > 1
+				}
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_mission_threshold
+		id = MISSION_PATROL
+		value = -100
+	}
+	ai_strategy = {
+		type = strike_force_home_base
+		id = 18 #English Channel
+		value = 250
+	}
+}
+
+ENG_raid_channel_if_invaded = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war = yes
+		any_state_of = {
+			target = { 123 125 126 127 1122 1123 } #Cornwall, East Anglia, Greater London, Sussex, Wessex, West Country
+			NOT = { is_fully_controlled_by = ROOT }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_convoy_raid_region
+		id = 18 #English Channel
+		value = 250
+	}
+	ai_strategy = {
+		type = strike_force_home_base
+		id = 18 #English Channel
+		value = 120
+	}
+}
+
+ENG_raid_north_sea_if_invaded = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war = yes
+		any_state_of = {
+			target = { 120 121 129 130 131 136 } #Scottish Highlands, Lothian, East Midlands, Yorkshire, Northumberland, Grampian
+			NOT = { is_fully_controlled_by = ROOT }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_convoy_raid_region
+		id = 16 #North Sea
+		value = 250
+	}
+	ai_strategy = {
+		type = strike_force_home_base
+		id = 16 #North Sea
+		value = 120
+	}
+}
+
+ENG_raid_western_approaches_if_invaded = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war = yes
+		OR = {
+			120 = { NOT = { is_fully_controlled_by = ROOT } } #Scottish Highlands
+			122 = { NOT = { is_fully_controlled_by = ROOT } } #South Wales
+			132 = { NOT = { is_fully_controlled_by = ROOT } } #Salfordshire
+			133 = { NOT = { is_fully_controlled_by = ROOT } } #Strathclyde
+			338 = { NOT = { is_fully_controlled_by = ROOT } } #Avon
+			957 = { NOT = { is_fully_controlled_by = ROOT } } #North Wales
+			1108 = { NOT = { is_fully_controlled_by = ROOT } } #Cumberland
+			1124 = { NOT = { is_fully_controlled_by = ROOT } } #Isle of Man
+			IRE = {
+				has_war_with = ROOT
+				has_capitulated = no
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_convoy_raid_region
+		id = 43 #Western Approaches
+		value = 250
+	}
+	ai_strategy = {
+		type = strike_force_home_base
+		id = 16 #Western Approaches
+		value = 120
+	}
+}
+
+ENG_protect_against_invasions = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war_with_major = yes
+		enemies_naval_strength_ratio > 1
+		OR = {
+			NOT = { is_in_faction_with = FRA }
+			FRA = { surrender_progress > 0.8 } #France is lost, retreat
+			num_divisions < 24 #num of starting divisions in OOB
+		}
+		OR = {
+			HOL = {
+				has_war_with = ROOT
+				has_capitulated = no
+			}
+			var:6.owner = { #Flanders
+				has_war_with = ROOT
+				has_capitulated = no
+			}
+			var:925.owner = { #Brabant
+				has_war_with = ROOT
+				has_capitulated = no
+			}
+			IRE = {
+				has_war_with = ROOT
+				has_capitulated = no
+			}
+			ICE = {
+				has_war_with = ROOT
+				has_capitulated = no
+			}
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = role_ratio
+		id = garrison
+		value = 200
+	}
+
+	ai_strategy = {
+		type = put_unit_buffers
+		ratio = 0.35
+		states = { 120 121 122 123 125 126 127 129 130 131 132 133 136 338 957 1108 1121 1122 1123 1124 }
+		subtract_fronts_from_need = no
+		subtract_invasions_from_need = no
+	}
+}
+
+ENG_push_back_invasions = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war_with_major = yes
+		any_home_area_neighbor_country = { has_war_with = ROOT } #ENG has no home_area neighbours unless invaded
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_invasion_focus
+		value = -80 #counteracts ENG_the_wooden_wall
+	}
+
+	ai_strategy = {
+		type = front_control
+		strategic_region = 1 #Southern England
+		strategic_region = 2 #Northern England
+		strategic_region = 3 #Scotland
+		priority = 100
+		ordertype = front
+		execution_type = rush
+		execute_order = yes
+		manual_attack = yes
+	}
+
+	ai_strategy = {
+		type = front_unit_request
+		strategic_region = 1 #Southern England
+		strategic_region = 2 #Northern England
+		strategic_region = 3 #Scotland
+		value = 250
+	}
+
+	ai_strategy = {
+		type = theatre_distribution_demand_increase
+		id = 126 #Greater London
+		value = 10
+	}
+}
+
+ENG_invade_ireland = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war_with = IRE
+		IRE = { has_capitulated = no }
+		NOT = { surrender_progress > 0.01 }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = invade
+		id = IRE
+		value = 200
+	}
+	ai_strategy = {
+		type = invasion_unit_request
+		tag = IRE
+		value = 40
+	}
+	ai_strategy = {
+		type = front_unit_request
+		tag = IRE
+		value = 100
+	}
+}
+
+ENG_invade_iceland = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war_with = ICE
+		ICE = { has_capitulated = no }
+		NOT = { surrender_progress > 0.01 }
+		OR = {
+			NOT = { has_war_with = IRE }
+			IRE = { has_capitulated = yes }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = invade
+		id = ICE
+		value = 200
+	}
+	ai_strategy = {
+		type = invasion_unit_request
+		tag = ICE
+		value = 25
+	}
+	ai_strategy = {
+		type = front_unit_request
+		tag = ICE
+		value = 100
+	}
+}
+
+ENG_invade_canada = {
+	allowed = {
+		original_tag = ENG
+	}
+	enable = {
+		has_war_with = CAN
+		CAN = { has_capitulated = no }
+		NOT = { surrender_progress > 0.01 }
+		OR = {
+			NOT = { has_war_with = IRE }
+			IRE = { has_capitulated = yes }
+		}
+		OR = {
+			NOT = { has_war_with = ICE }
+			ICE = { has_capitulated = yes }
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = invade
+		id = "IMP"
+		value = 200
+	}
+	ai_strategy = {
+		type = invasion_unit_request
+		tag = IMP
+		value = 100
+	}
+	ai_strategy = {
+		type = front_unit_request
+		tag = IMP
+		value = 100
+	}
+}

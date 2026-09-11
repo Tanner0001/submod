@@ -1,0 +1,83 @@
+@annexation_days_mission_timeout = 120
+
+annexation_decisions = {
+	annexation_decision = {
+		icon = {
+			key = continent_europe
+			trigger = { FROM = { is_on_continent = europe } }
+		}
+		icon = {
+			key = continent_north_america
+			trigger = {
+				FROM = {
+					OR = {
+						is_on_continent = north_america
+						is_on_continent = central_america
+					}
+				}
+			}
+		}
+		icon = {
+			key = continent_south_america
+			trigger = { FROM = { is_on_continent = south_america } }
+		}
+		icon = {
+			key = continent_asia
+			trigger = {
+				FROM = {
+					OR = {
+						is_on_continent = asia
+						is_on_continent = india
+					}
+				}
+			}
+		}
+		icon = {
+			key = continent_oceania
+			trigger = { FROM = { is_on_continent = australia } }
+		}
+		icon = {
+			key = continent_middle_east
+			trigger = { FROM = { is_on_continent = middle_east } }
+		}
+		state_target = yes
+		on_map_mode = decision_view_only
+		visible = {
+			FROM = { is_valid_annexation_state = yes }
+		}
+		target_trigger = {
+			FROM = { is_valid_annexation_state = yes }
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel annexation_decision"
+			add_to_variable = { ROOT.active_annexation_decisions = -1 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete annexation_decision"
+			if = {
+				limit = {
+					tag = CAN
+					check_variable = { FROM.annexation_target = 361.id } #Maryland
+				}
+				country_event = american_civil_war_events.156
+			}
+			else_if = {
+				limit = {
+					tag = LBA
+					check_variable = { FROM.annexation_target = 448.id } #Tripoli
+				}
+				country_event = libya_events.25
+			}
+			else = {
+				annexation_decision_effect = yes
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = annexation_decision target = FROM }
+			}
+		}
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+}

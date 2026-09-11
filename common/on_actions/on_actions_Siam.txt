@@ -1,0 +1,166 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			SIA = { event_target:system = { set_occupation_law_where_available = territorial_integration } }
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed
+	on_annex = {
+		effect = {
+			FROM = {
+				if = {
+					limit = { has_idea = SIA_war_reparation_paid_idea }
+					remove_ideas = SIA_war_reparation_paid_idea
+				}
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed
+	on_civil_war_end = {
+		effect = {
+			if = {
+				limit = { original_tag = SIA }
+				country_event = siam_events.20 # Civil War ends
+				if = {
+					limit = { NOT = { country_exists = event_target:original_siam } }
+					event_target:original_siam = { transfer_technology_without_doctrines = yes }
+				}
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - This fires just before FROM gets annexed, meaning the country and everything it owns still exists. It will also fire on_annex and on_civil_war_end
+	on_civil_war_end_before_annexation = {
+		effect = {
+			### Rebuilding the Siamese Navy, if any was left untransferred/built during the civil war
+			if = {
+				limit = {
+					original_tag = SIA
+					FROM = { original_tag = SIA }
+				}
+				set_country_flag = SIA_Civil_War_Ended
+				if = {
+					limit = { has_idea = SIA_faltering_political_movement_idea }
+					remove_ideas = SIA_faltering_political_movement_idea
+				}
+				FROM = {
+					every_character = {
+						limit = {
+							OR = {
+								can_be_country_leader = yes
+								is_advisor = yes
+							}
+							NOT = { has_character_flag = SIA_parliamentarian }
+							NOT = { has_character_flag = SIA_royalist }
+						}
+						set_nationality = ROOT
+					}
+					transfer_navy = { target = ROOT }
+				}
+				if = {
+					limit = { is_dynamic_country = yes }
+					set_cosmetic_tag = SIA_default
+
+					## add these characters to the revolter so other scripts don't break due to invalid references
+					FROM = {
+						SIA_prajadhipok = { set_nationality = PREV }
+						SIA_ananda_mahidol = { set_nationality = PREV }
+						SIA_bhumibol_adulyadej = { set_nationality = PREV }
+						SIA_chula_chakrabongse = { set_nationality = PREV }
+						SIA_paribatra_sukhumbhand = { set_nationality = PREV }
+						SIA_chumbhotbongs_paribatra = { set_nationality = PREV }
+						SIA_sukhumabhinanda = { set_nationality = PREV }
+						SIA_supha_sirimanon = { set_nationality = PREV }
+						SIA_pridi_phanomyong = { set_nationality = PREV }
+						SIA_pote_sarasin = { set_nationality = PREV }
+						SIA_seni_pramoj = { set_nationality = PREV }
+						SIA_phao_sriyanond = { set_nationality = PREV }
+						SIA_sarit_thanarat = { set_nationality = PREV }
+					}
+				}
+				else = {
+					drop_cosmetic_tag = yes
+				}
+				SIA_demobilize_forces = yes
+				SIA_add_neutral_generals = yes
+				country_event = siam_events.20
+				FROM = {
+					if = {
+						limit = { has_idea = SIA_faltering_political_movement_idea }
+						remove_ideas = SIA_faltering_political_movement_idea
+					}
+				}
+			}
+		}
+	}
+
+	on_ruling_party_change = {
+		# temp var old_ideology_token is available for effects
+		effect = {
+			if = {
+				limit = {
+					original_tag = SIA
+					has_socialist_government = yes
+				}
+				if = {
+					limit = { has_cosmetic_tag = THI }
+					set_cosmetic_tag = THI_REP
+
+					set_party_name = { # CPT
+						ideology = totalist
+						long_name = SIA_totalist_party_TH_long
+						name = SIA_totalist_party_TH
+					}
+					set_party_name = { # KST
+						ideology = syndicalist
+						long_name = SIA_syndicalist_party_TH_long
+						name = SIA_syndicalist_party_TH
+					}
+				}
+				else_if = {
+					limit = { NOT = { has_cosmetic_tag = SIA_Parliament } }
+					set_cosmetic_tag = SIA_REP
+
+					set_party_name = { # CPS
+						ideology = totalist
+						long_name = SIA_totalist_party_long
+						name = SIA_totalist_party
+					}
+					set_party_name = { # KSS
+						ideology = syndicalist
+						long_name = SIA_syndicalist_party_long
+						name = SIA_syndicalist_party
+					}
+				}
+			}
+		}
+	}
+
+	on_state_control_changed = {
+		effect = {
+			if = {
+				### Fall of Bangkok
+				limit = {
+					original_tag = SIA
+					FROM.FROM = { state = 289 } #Siam
+				}
+				country_event = { id = siam_events.18 days = 1 }
+			}
+			## Remove SIA state reform if non-SIA get those states
+			if = {
+				limit = {
+					FROM = { original_tag = SIA }
+					FROM.FROM = { NOT = { is_core_of = FROM } }
+				}
+				FROM.FROM = {
+					clr_state_flag = SIA_municipal_reform_implemented
+					clr_state_flag = SIA_local_police_reinforced
+					clr_state_flag = SIA_civil_service_expanded
+				}
+			}
+		}
+	}
+}
+

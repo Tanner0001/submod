@@ -1,0 +1,795 @@
+##################################
+# Great Britain Annexation Stuff #
+##################################
+
+britain_create_puppet_templates = {
+	division_template = {
+		name = "Cavalry Division"
+		division_names_group = ENGL_CAV_01
+		regiments = {
+			cavalry = { x = 0 y = 0 }
+			cavalry = { x = 0 y = 1 }
+			cavalry = { x = 0 y = 2 }
+			cavalry = { x = 1 y = 0 }
+			cavalry = { x = 1 y = 1 }
+			cavalry = { x = 1 y = 2 }
+		}
+		support = {
+			military_police = { x = 0 y = 0 }
+		}
+	}
+	division_template = {
+		name = "Infantry Division"
+		division_names_group = ENGL_INF_01
+		regiments = {
+			infantry = { x = 0 y = 0 }
+			infantry = { x = 0 y = 1 }
+			infantry = { x = 0 y = 2 }
+			infantry = { x = 1 y = 0 }
+			infantry = { x = 1 y = 1 }
+			infantry = { x = 1 y = 2 }
+			infantry = { x = 2 y = 0 }
+			infantry = { x = 2 y = 1 }
+			infantry = { x = 2 y = 2 }
+		}
+		template_counter = 91
+	}
+	division_template = {
+		name = "Armour Division"
+		division_names_group = BRENGL_ARM_01
+		regiments = {
+			light_armor = { x = 0 y = 0 }
+			light_armor = { x = 0 y = 1 }
+			light_armor = { x = 0 y = 2 }
+			motorized = { x = 1 y = 0 }
+			motorized = { x = 1 y = 1 }
+			motorized = { x = 1 y = 2 }
+		}
+	}
+}
+
+### Union of Britain ###
+
+ENG_create_puppet_totalist_government = {
+	ENG_rajani_palme_dutt = { promote_character = yes }
+	set_politics = {
+		ruling_party = totalist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_party_name = {
+		ideology = totalist
+		long_name = ENG_VAN_totalist_party_long
+		name = ENG_VAN_totalist_party
+	}
+	set_popularities = {
+		totalist = 40
+		syndicalist = 28
+		radical_socialist = 22
+		social_democrat = 10
+		social_liberal = 0
+		market_liberal = 0
+		social_conservative = 0
+		authoritarian_democrat = 0
+		paternal_autocrat = 0
+		national_populist = 0
+	}
+	hidden_effect = {
+		activate_advisor = ENG_jt_murphy_sic
+	}
+}
+ENG_create_puppet_syndicalist_government = {
+	ENG_ebby_edwards = { promote_character = yes }
+	set_politics = {
+		ruling_party = syndicalist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 11
+		radical_socialist = 19
+		syndicalist = 62
+		social_democrat = 8
+		social_liberal = 0
+		market_liberal = 0
+		social_conservative = 0
+		authoritarian_democrat = 0
+		paternal_autocrat = 0
+		national_populist = 0
+	}
+	hidden_effect = {
+		activate_advisor = ENG_george_hardy_sic
+	}
+}
+
+### Great Britain / England ###
+
+GBP_create_cores = {
+	ENG = {
+		every_core_state = {
+			limit = {
+				if = {
+					limit = {
+						OR = {
+							is_core_of = SCO
+							region = 3 #Scotland
+						}
+					}
+					NOT = { has_variable = GBP_no_scotland }
+				}
+				if = {
+					limit = {
+						OR = {
+							is_core_of = WLS
+							state = 122 #South Wales
+							state = 957 #North Wales
+						}
+					}
+					NOT = { has_variable = GBP_no_wales }
+				}
+			}
+			remove_claim_and_add_core_of_target = yes
+		}
+	}
+}
+
+GBP_change_to_england = {
+	if = {
+		limit = { has_cosmetic_tag = GBP_military_governorate }
+		set_cosmetic_tag = GBP_england_military_governorate
+		hidden_effect = {
+			set_party_name = {
+				ideology = paternal_autocrat
+				long_name = GBP_paternal_autocrat_party_long_england
+				name = GBP_paternal_autocrat_party_england
+			}
+		}
+	}
+	else_if = {
+		limit = { NOT = { has_cosmetic_tag = GBP_england } }
+		set_cosmetic_tag = GBP_england
+		hidden_effect = {
+			set_party_name = {
+				ideology = paternal_autocrat
+				long_name = GBP_paternal_autocrat_party_long_england
+				name = GBP_paternal_autocrat_party_england
+			}
+		}
+	}
+}
+
+GBP_change_to_britain = {
+	if = {
+		limit = { has_cosmetic_tag = GBP_england_military_governorate }
+		set_cosmetic_tag = GBP_military_governorate
+		hidden_effect = {
+			set_party_name = {
+				ideology = paternal_autocrat
+				long_name = GBP_paternal_autocrat_party_long
+				name = GBP_paternal_autocrat_party
+			}
+		}
+	}
+	else_if = {
+		limit = { has_cosmetic_tag = GBP_england }
+		effect_tooltip = { set_cosmetic_tag = GBP }
+		hidden_effect = {
+			drop_cosmetic_tag = yes
+			set_party_name = {
+				ideology = paternal_autocrat
+				long_name = GBP_paternal_autocrat_party_long
+				name = GBP_paternal_autocrat_party
+			}
+		}
+	}
+}
+
+GBP_set_up_government = {
+	if = {
+		limit = {
+			PREV = {
+				original_tag = GER
+				has_socialist_government = no
+				NOT = { has_completed_focus = GER_restore_civilian_administration }
+			}
+		}
+		GER_setup_puppet_england = yes
+	}
+	else = {
+		if = {
+			limit = { PREV = { has_government = national_populist } }
+			GBP_create_nationalist_government = yes
+		}
+		else_if = {
+			limit = { PREV = { has_government = paternal_autocrat } }
+			GBP_create_autocratic_government = yes
+		}
+		else = {
+			random_list = {
+				40 = { GBP_create_leftist_democratic_government = yes }
+				30 = { GBP_create_centrist_democratic_government = yes }
+				30 = { GBP_create_right_democratic_government = yes }
+			}
+		}
+		if = {
+			limit = {
+				has_variable = GBP_no_scotland
+				NOT = { has_cosmetic_tag = GBP_england }
+			}
+			set_cosmetic_tag = GBP_england
+			hidden_effect = {
+				set_party_name = {
+					ideology = paternal_autocrat
+					long_name = GBP_paternal_autocrat_party_long_england
+					name = GBP_paternal_autocrat_party_england
+				}
+			}
+		}
+		country_event = britain_puppet_events.4
+	}
+}
+
+GBP_create_leftist_democratic_government = {
+	set_politics = {
+		ruling_party = social_democrat
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	hidden_effect = {
+		set_popularities = {
+			totalist = 1
+			syndicalist = 27
+			radical_socialist = 4
+			social_democrat = 42
+			social_liberal = 21
+			market_liberal = 2
+			social_conservative = 1
+			authoritarian_democrat = 1
+			paternal_autocrat = 1
+			national_populist = 0
+		}
+	}
+}
+GBP_create_centrist_democratic_government = {
+	set_politics = {
+		ruling_party = social_liberal
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	hidden_effect = {
+		set_popularities = {
+			totalist = 1
+			syndicalist = 25
+			radical_socialist = 4
+			social_democrat = 12
+			social_liberal = 46
+			market_liberal = 2
+			social_conservative = 6
+			authoritarian_democrat = 2
+			paternal_autocrat = 2
+			national_populist = 0
+		}
+	}
+}
+GBP_create_right_democratic_government = {
+	set_politics = {
+		ruling_party = social_conservative
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	hidden_effect = {
+		set_popularities = {
+			totalist = 6
+			syndicalist = 20
+			radical_socialist = 15
+			social_democrat = 12
+			social_liberal = 15
+			market_liberal = 0
+			social_conservative = 24
+			authoritarian_democrat = 0
+			paternal_autocrat = 6
+			national_populist = 2
+		}
+	}
+}
+GBP_create_autocratic_government = {
+	set_politics = {
+		ruling_party = paternal_autocrat
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 8
+		syndicalist = 25
+		radical_socialist = 5
+		social_democrat = 8
+		social_liberal = 9
+		market_liberal = 0
+		social_conservative = 6
+		authoritarian_democrat = 0
+		paternal_autocrat = 35
+		national_populist = 4
+	}
+}
+GBP_create_nationalist_government = {
+	set_politics = {
+		ruling_party = national_populist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 11
+		syndicalist = 26
+		radical_socialist = 15
+		social_democrat = 8
+		social_liberal = 4
+		market_liberal = 1
+		social_conservative = 5
+		authoritarian_democrat = 0
+		paternal_autocrat = 8
+		national_populist = 22
+	}
+}
+GBP_create_monarchy = {
+	GBP_charles_iii = { promote_character = yes }
+	set_politics = {
+		ruling_party = paternal_autocrat
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 11
+		syndicalist = 26
+		radical_socialist = 18
+		social_democrat = 10
+		social_liberal = 6
+		market_liberal = 0
+		social_conservative = 4
+		authoritarian_democrat = 0
+		paternal_autocrat = 18
+		national_populist = 7
+	}
+	if = {
+		limit = { NOT = { has_cosmetic_tag = GBP_england } }
+		set_cosmetic_tag = GBP_monarchy
+	}
+}
+
+GBP_set_up_northumbria = {
+	hidden_effect = {
+		set_cosmetic_tag = GBP_northumbria
+		load_focus_tree = GBP_northumbria_focus
+
+		every_core_state = {
+			limit = {
+				NOT = { state = 131 } #Northumberland
+				NOT = { state = 1108 } #Cumberland
+			}
+			remove_core_of = PREV
+		}
+
+		if = {
+			limit = { owns_state = 131 }
+			set_capital = { state = 131 remember_old_capital = no } #Northumberland
+		}
+		else = {
+			set_capital = { state = 1108 remember_old_capital = no } #Cumberland
+		}
+
+		set_party_name = {
+			ideology = totalist
+			name = GBP_northumbria_totalist_party
+			long_name = GBP_northumbria_totalist_party_long
+		}
+		set_party_name = {
+			ideology = syndicalist
+			name = GBP_northumbria_syndicalist_party
+			long_name = GBP_northumbria_syndicalist_party_long
+		}
+		set_party_name = {
+			ideology = radical_socialist
+			name = GBP_northumbria_radical_socialist_party
+			long_name = GBP_northumbria_radical_socialist_party_long
+		}
+		set_party_name = {
+			ideology = social_democrat
+			name = GBP_northumbria_social_democrat_party
+			long_name = GBP_northumbria_social_democrat_party_long
+		}
+		set_party_name = {
+			ideology = social_liberal
+			name = GBP_northumbria_social_liberal_party
+			long_name = GBP_northumbria_social_liberal_party_long
+		}
+		set_party_name = {
+			ideology = market_liberal
+			name = GBP_northumbria_market_liberal_party
+			long_name = GBP_northumbria_market_liberal_party_long
+		}
+		set_party_name = {
+			ideology = social_conservative
+			name = GBP_northumbria_social_conservative_party
+			long_name = GBP_northumbria_social_conservative_party_long
+		}
+		set_party_name = {
+			ideology = authoritarian_democrat
+			name = GBP_northumbria_authoritarian_democrat_party
+			long_name = GBP_northumbria_authoritarian_democrat_party_long
+		}
+		set_party_name = {
+			ideology = paternal_autocrat
+			name = GBP_northumbria_paternal_autocrat_party
+			long_name = GBP_northumbria_paternal_autocrat_party_long
+		}
+		set_party_name = {
+			ideology = national_populist
+			name = GBP_northumbria_national_populist_party
+			long_name = GBP_northumbria_national_populist_party_long
+		}
+		event_target:original_britain_puppet = {
+			GBP_james_bowman = {
+				set_nationality = PREV.PREV
+				promote_character = totalist_subtype
+				promote_character = syndicalist_subtype
+				promote_character = radical_socialist_subtype
+				promote_character = social_democrat_subtype
+			}
+			GBP_arthur_munro_sutherland = {
+				set_nationality = PREV.PREV
+				promote_character = social_liberal_subtype
+				promote_character = market_liberal_subtype
+				promote_character = social_conservative_subtype
+				promote_character = authoritarian_democrat_subtype
+				promote_character = paternal_autocrat_subtype
+				promote_character = national_populist_subtype
+			}
+			GBP_joseph_frederick_laycock = {
+				set_nationality = PREV.PREV
+				promote_to_field_marshal = yes
+			}
+			GBP_ernest_bulmer = {
+				set_nationality = PREV.PREV
+				demote_to_general = yes
+			}
+		}
+	}
+}
+
+GBP_set_northumbria_politics = {
+	add_ideas = GBP_pariah_state
+	add_ideas = GBP_broken_army
+	add_ideas = GBP_dead_economy
+	add_ideas = GBP_bitter_resistance
+	set_politics = {
+		ruling_party = paternal_autocrat
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 5
+		syndicalist = 17
+		radical_socialist = 25
+		social_democrat = 12
+		social_liberal = 3
+		market_liberal = 2
+		social_conservative = 10
+		authoritarian_democrat = 4
+		paternal_autocrat = 20
+		national_populist = 2
+	}
+	#activate_advisor = SCO_tom_bell_sic
+	generate_generic_sics_and_activate = yes
+	generate_all_generic_advisors = yes
+}
+
+### Scotland ###
+SCO_create_cores = {
+	every_state = {
+		limit = { region = 3 } #Scotland
+		remove_claim_and_add_core_of_target = yes
+	}
+}
+
+SCO_set_up_government = {
+	if = {
+		limit = { PREV = { has_government = totalist } }
+		SCO_create_totalist_government = yes
+	}
+	else_if = {
+		limit = { PREV = { has_socialist_government = yes } }
+		random_list = {
+			40 = { SCO_create_syndicalist_government = yes }
+			60 = { SCO_create_radical_socialist_government = yes }
+		}
+	}
+	else_if = {
+		limit = { PREV = { has_authoritarian_government = yes } }
+		set_country_flag = scotland_paternal_autocrat
+		SCO_create_interim_government = yes
+	}
+	else = {
+		set_country_flag = scotland_democratic
+		SCO_create_interim_government = yes
+	}
+}
+
+SCO_create_totalist_government = {
+	set_politics = {
+		ruling_party = totalist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 30
+		syndicalist = 18
+		radical_socialist = 21
+		social_democrat = 12
+		social_liberal = 13
+		market_liberal = 0
+		social_conservative = 0
+		authoritarian_democrat = 3
+		paternal_autocrat = 3
+		national_populist = 0
+	}
+	activate_advisor = SCO_tom_bell_sic
+	remove_ideas = SCO_fledgling_state
+}
+SCO_create_syndicalist_government = {
+	set_politics = {
+		ruling_party = syndicalist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 10
+		syndicalist = 42
+		radical_socialist = 25
+		social_democrat = 8
+		social_liberal = 6
+		market_liberal = 0
+		social_conservative = 4
+		authoritarian_democrat = 5
+		paternal_autocrat = 0
+		national_populist = 0
+	}
+	activate_advisor = SCO_david_kirkwood_sic
+	remove_ideas = SCO_fledgling_state
+}
+SCO_create_radical_socialist_government = {
+	set_politics = {
+		ruling_party = radical_socialist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 10
+		syndicalist = 25
+		radical_socialist = 28
+		social_democrat = 14
+		social_liberal = 11
+		market_liberal = 0
+		social_conservative = 0
+		authoritarian_democrat = 3
+		paternal_autocrat = 9
+		national_populist = 0
+	}
+	activate_advisor = SCO_george_buchanan_sic
+	remove_ideas = SCO_fledgling_state
+}
+SCO_create_interim_government = {
+	set_politics = {
+		ruling_party = authoritarian_democrat
+		last_election = "1936.1.1"
+		election_frequency = 60
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 5
+		syndicalist = 25
+		radical_socialist = 16
+		social_democrat = 14
+		social_liberal = 15
+		market_liberal = 1
+		social_conservative = 6
+		authoritarian_democrat = 10
+		paternal_autocrat = 8
+		national_populist = 0
+	}
+}
+SCO_create_snp_right = {
+	add_country_leader_role = {
+		character = SCO_arthur_donaldson
+		country_leader = {
+			desc = SCO_arthur_donaldson_leader_desc
+			ideology = authoritarian_democrat_subtype
+		}
+		promote_leader = yes
+	}
+	SCO_john_mcgrew = { promote_character = yes }
+	set_party_name = {
+		ideology = authoritarian_democrat
+		name = SCO_authoritarian_democrat_party_snp
+		long_name = SCO_authoritarian_democrat_party_long_snp
+	}
+	add_popularity = {
+		ideology = paternal_autocrat
+		popularity = -0.08
+	}
+	add_popularity = {
+		ideology = authoritarian_democrat
+		popularity = 0.05
+	}
+}
+
+### Wales ###
+WLS_create_cores = {
+	122 = { remove_claim_and_add_core_of_target = yes } #South Wales
+	957 = { remove_claim_and_add_core_of_target = yes } #North Wales
+}
+
+WLS_set_up_government = {
+	if = {
+		limit = { PREV = { has_government = totalist } }
+		WLS_create_totalist_government = yes
+	}
+	else_if = {
+		limit = { PREV = { has_socialist_government = yes } }
+		random_list = {
+			40 = { WLS_create_syndicalist_government = yes }
+			60 = { WLS_create_radical_socialist_government = yes }
+		}
+	}
+	else_if = {
+		limit = { PREV = { has_authoritarian_government = yes } }
+		set_country_flag = wales_paternal_autocrat
+		WLS_create_interim_government = yes
+	}
+	else = {
+		random_list = {
+			40 = { set_country_flag = wales_social_liberal }
+			60 = { set_country_flag = wales_social_conservative }
+		}
+		WLS_create_interim_government = yes
+	}
+}
+
+WLS_create_totalist_government = {
+	set_politics = {
+		ruling_party = totalist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 28
+		syndicalist = 17
+		radical_socialist = 10
+		social_democrat = 14
+		social_liberal = 10
+		market_liberal = 0
+		social_conservative = 15
+		authoritarian_democrat = 5
+		paternal_autocrat = 1
+		national_populist = 0
+	}
+	activate_advisor = WLS_huw_t_edwards_sic
+}
+WLS_create_syndicalist_government = {
+	set_politics = {
+		ruling_party = syndicalist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 6
+		syndicalist = 40
+		radical_socialist = 14
+		social_democrat = 15
+		social_liberal = 4
+		market_liberal = 0
+		social_conservative = 9
+		authoritarian_democrat = 5
+		paternal_autocrat = 7
+		national_populist = 0
+	}
+	activate_advisor = WLS_huw_t_edwards_sic
+}
+WLS_create_radical_socialist_government = {
+	set_politics = {
+		ruling_party = radical_socialist
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 2
+		radical_socialist = 58
+		syndicalist = 18
+		social_democrat = 22
+		social_liberal = 0
+		market_liberal = 0
+		social_conservative = 0
+		authoritarian_democrat = 0
+		paternal_autocrat = 0
+		national_populist = 0
+	}
+	activate_advisor = WLS_huw_t_edwards_sic
+}
+WLS_create_interim_government = {
+	set_politics = {
+		ruling_party = paternal_autocrat
+		last_election = "1936.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	set_popularities = {
+		totalist = 15
+		syndicalist = 12
+		radical_socialist = 14
+		social_democrat = 5
+		social_liberal = 10
+		market_liberal = 0
+		social_conservative = 15
+		authoritarian_democrat = 13
+		paternal_autocrat = 16
+		national_populist = 0
+	}
+	activate_advisor = WLS_huw_t_edwards_sic
+}
+
+### Misc ###
+GBP_transfer_english_commanders = {
+	ENG = {
+		#FMs/Generals
+		ENG_basil_liddel_hart = { set_nationality = PREV.PREV }
+		ENG_bernard_paget = { set_nationality = PREV.PREV }
+		ENG_percy_hobart = { set_nationality = PREV.PREV }
+		ENG_frederick_browning = { set_nationality = PREV.PREV }
+		ENG_eric_charles_hayes = { set_nationality = PREV.PREV }
+		ENG_brian_horrocks = { set_nationality = PREV.PREV }
+		ENG_raymond_briggs = { set_nationality = PREV.PREV }
+		ENG_william_gott = { set_nationality = PREV.PREV }
+		ENG_thomas_jacomb_hutton = { set_nationality = PREV.PREV }
+		ENG_eric_dorman_smith = { set_nationality = PREV.PREV }
+		ENG_clement_armitage = { set_nationality = PREV.PREV }
+		ENG_herbert_lumsdon = { set_nationality = PREV.PREV }
+
+		#Admirals
+		ENG_max_horton = { set_nationality = PREV.PREV }
+		ENG_edward_evans = { set_nationality = PREV.PREV }
+		ENG_geoffrey_layton = { set_nationality = PREV.PREV }
+		ENG_arthur_power = { set_nationality = PREV.PREV }
+		ENG_frederic_john_walker = { set_nationality = PREV.PREV }
+		ENG_algernon_willis = { set_nationality = PREV.PREV }
+		ENG_percy_addison = { set_nationality = PREV.PREV }
+		ENG_geoffrey_barnard = { set_nationality = PREV.PREV }
+		ENG_frank_pegram = { set_nationality = PREV.PREV }
+		ENG_anthony_pugsley = { set_nationality = PREV.PREV }
+	}
+}
+
+SCO_transfer_commanders = {
+	ENG = {
+		ENG_robert_don_oliver = { set_nationality = PREV.PREV }
+		ENG_edmund_anstice = { set_nationality = PREV.PREV }
+	}
+}
+
+WLS_transfer_commanders = {
+	ENG = {
+		ENG_bernard_warburton_lee = { set_nationality = PREV.PREV }
+	}
+}

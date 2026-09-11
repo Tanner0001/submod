@@ -1,0 +1,5372 @@
+###########################
+# French Republic Decisions
+###########################
+
+NFA_seize_morocco_decisions = {
+	NFA_seize_real_morocco = {
+		icon = generic_ignite_civil_war
+		allowed = {
+			original_tag = NFA
+		}
+		available = {
+			surrender_progress < 0.05
+			OR = {
+				controls_state = 290
+				controls_state = 805
+				controls_state = 513
+			}
+			FROM = { has_capitulated = no }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+			has_capitulated = no
+			FROM = {
+				OR = {
+					is_subject = no
+					is_subject_of = GEX
+				}
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				is_subject = yes
+				has_capitulated = yes
+				FROM = { has_capitulated = yes }
+				FROM = {
+					is_subject = yes
+					NOT = { is_subject_of = GEX }
+				}
+			}
+		}
+
+		cost = 25
+		days_remove = 10
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		targets = { MOR }
+		target_root_trigger = {
+			NOT = { country_exists = GER }
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				OR = {
+					is_subject = no
+					is_subject_of = GEX
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger = yes }
+			}
+			modifier = {
+				factor = 0
+				FROM = { dont_start_major_faction_wars = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel NFA_seize_real_morocco"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_seize_real_morocco"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove NFA_seize_real_morocco"
+			clear_decision_attack_AI = yes
+			if = {
+				limit = {
+					FROM = { is_subject_of = GEX }
+				}
+				GEX = {
+					country_event = { id = french_republic_events.111 days = 2 }
+				}
+				add_opinion_modifier = {
+					target = GEX
+					modifier = NFA_seized_morocco
+				}
+			}
+			else = {
+				FROM = {
+					country_event = { id = french_republic_events.116 days = 2 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+propaganda_efforts = {
+	NFA_mobilise_population_for_war = {
+		icon = GFX_decision_hol_radio_oranje
+		allowed = { original_tag = NFA }
+		ai_will_do = {
+			factor = 150
+			modifier = {
+				factor = 0
+				has_war_support > 0.75
+			}
+		}
+		cost = 50
+		visible = {
+			has_completed_focus = NATFRA_Indestructible_Bonds
+			NOT = { 28 = { is_owned_and_controlled_by = NFA } }
+		}
+		available = { has_completed_focus = NATFRA_Re_Conscription }
+
+		days_remove = 90
+		days_re_enable = 90
+
+		modifier = {
+			war_support_weekly = 0.02
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilise_population_for_war"
+			if = {
+				limit = { NOT = { has_completed_focus = NATFRA_Prepare_For_War } }
+				custom_effect_tooltip = until_we_complete_PFW_tt
+				add_stability = -0.03
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+NFA_fight_for_influence_cat = {
+	Mordacq_takes_to_the_waves = {
+		icon = GFX_decision_hol_radio_oranje
+		fixed_random_seed = no
+		allowed = {
+			original_tag = NFA
+		}
+		available = {
+			always = no
+		}
+		activation = {
+			has_country_flag = Mordacq_Airwaves
+			has_country_flag = Fight_for_influence_on
+		}
+		is_good = no
+		days_mission_timeout = 25
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = Fight_for_influence_on
+			}
+		}
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout Mordacq_takes_to_the_waves"
+			if = {
+				limit = { has_country_flag = cf_rival_broadcast }
+				hidden_effect = {
+					random_list = {
+						4 = {
+							modifier = {
+								add = Mor_influence
+							}
+							country_event = { id = french_republic_events.21 days = 2 } # Mordacq rules the waves
+							clr_country_flag = Mordacq_Airwaves
+							clr_country_flag = Mordacq_Airwaves_decision_made
+							clr_country_flag = cf_rival_broadcast
+							set_country_flag = Mordacq_Parade
+						}
+						6 = {
+							modifier = {
+								add = Pet_influence
+							}
+							modifier = {
+								factor = 2
+								has_country_flag = Petain_headstart_cf
+							}
+							country_event = { id = french_republic_events.22 days = 2 } # The Marshall rules the waves
+							clr_country_flag = Mordacq_Airwaves
+							clr_country_flag = Mordacq_Airwaves_decision_made
+							clr_country_flag = cf_rival_broadcast
+							set_country_flag = Mordacq_Parade
+						}
+					}
+				}
+			}
+			else = {
+				custom_effect_tooltip = Mordacq_gains_influence_tt
+				hidden_effect = {
+					add_to_variable = {
+						var = Mor_influence
+						value = 2
+					}
+					clr_country_flag = Mordacq_Airwaves
+					clr_country_flag = Mordacq_Airwaves_decision_made
+					set_country_flag = Mordacq_Parade
+				}
+				add_political_power = -10
+			}
+		}
+	}
+
+	Deal_With_Political_Opposition_Airwaves = {
+		icon = GFX_decision_hol_radio_oranje
+		allowed = {
+			original_tag = NFA
+		}
+		ai_will_do = { factor = 1000 }
+		cost = 0
+		visible = {
+			has_active_mission = Mordacq_takes_to_the_waves
+			NOT = {
+				has_country_flag = Mordacq_Airwaves_decision_made
+			}
+		}
+		available = {
+			has_active_mission = Mordacq_takes_to_the_waves
+		}
+		days_remove = 7
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = Fight_for_influence_on
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Deal_With_Political_Opposition_Airwaves"
+			country_event = french_republic_events.20 #Decide how to respond to Mordacq on Air
+		}
+		fixed_random_seed = no
+	}
+
+	Mordacq_parade = {
+		icon = GFX_decision_eng_blackshirt_march
+		fixed_random_seed = no
+		allowed = {
+			original_tag = NFA
+		}
+		available = {
+			always = no
+		}
+		activation = {
+			has_country_flag = Mordacq_Parade
+			has_country_flag = Fight_for_influence_on
+		}
+		is_good = no
+		days_mission_timeout = 40
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = Fight_for_influence_on
+			}
+		}
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout Mordacq_parade"
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.02
+			}
+			custom_effect_tooltip = Mordacq_gains_influence_tt
+			hidden_effect = {
+				add_to_variable = {
+					var = Mor_influence
+					value = 2
+				}
+				clr_country_flag = Mordacq_Parade
+				clr_country_flag = Mordacq_Parades_decision_made
+				set_country_flag = Mordacq_Speech
+			}
+		}
+	}
+
+	Deal_With_Political_Opposition_Parades = {
+		icon = GFX_decision_eng_blackshirt_march
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 0
+		ai_will_do = { factor = 1000 }
+
+		visible = {
+			has_active_mission = Mordacq_parade
+			NOT = {
+				has_country_flag = Mordacq_Parades_decision_made
+			}
+		}
+		available = {
+			has_active_mission = Mordacq_parade
+		}
+		days_remove = 10
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = Fight_for_influence_on
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Deal_With_Political_Opposition_Parades"
+			country_event = french_republic_events.23 #Decide how to respond to Mordacq on Parades
+		}
+		fixed_random_seed = no
+	}
+
+	Mordacqs_Speech = {
+		icon = GFX_decision_generic_speech
+		fixed_random_seed = no
+		allowed = {
+			original_tag = NFA
+		}
+		available = {
+			always = no
+		}
+		activation = {
+			has_country_flag = Mordacq_Speech
+			has_country_flag = Fight_for_influence_on
+		}
+		is_good = no
+		days_mission_timeout = 35
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = Fight_for_influence_on
+			}
+		}
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout Mordacqs_Speech"
+			if = {
+				limit = { has_country_flag = cf_rival_speech }
+				hidden_effect = {
+					random_list = {
+						4 = {
+							modifier = {
+								add = Mor_influence
+							}
+							country_event = { id = french_republic_events.24 days = 2 } # Mordacq draws more influence
+							clr_country_flag = Mordacq_Speech
+							clr_country_flag = cf_rival_speech
+							clr_country_flag = Mordacq_Speech_decision_made
+							set_country_flag = Mordacq_Barrack
+						}
+						6 = {
+							modifier = {
+								add = Pet_influence
+							}
+							modifier = {
+								factor = 2
+								has_country_flag = Petain_headstart_cf
+							}
+							country_event = { id = french_republic_events.25 days = 2 } # The Marshall draws more influence
+							clr_country_flag = Mordacq_Speech
+							clr_country_flag = cf_rival_speech
+							clr_country_flag = Mordacq_Speech_decision_made
+							set_country_flag = Mordacq_Barrack
+						}
+					}
+				}
+			}
+			else = {
+				add_political_power = -10
+				custom_effect_tooltip = Mordacq_gains_influence_tt
+				hidden_effect = {
+					clr_country_flag = Mordacq_Speech
+					clr_country_flag = Mordacq_Speech_decision_made
+					set_country_flag = Mordacq_Barrack
+					add_to_variable = {
+						var = Mor_influence
+						value = 2
+					}
+				}
+			}
+		}
+	}
+
+	Deal_With_Political_Opposition_Speech = {
+		icon = GFX_decision_generic_speech
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 0
+		ai_will_do = { factor = 1000 }
+
+		visible = {
+			has_active_mission = Mordacqs_Speech
+			NOT = {
+				has_country_flag = Mordacq_Speech_decision_made
+			}
+		}
+		available = {
+			has_active_mission = Mordacqs_Speech
+		}
+		days_remove = 15
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = Fight_for_influence_on
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Deal_With_Political_Opposition_Speech"
+			country_event = french_republic_events.26 #Decide how to respond to Mordacqs Speech
+		}
+		fixed_random_seed = no
+	}
+
+	Mordacq_In_The_Barracks = {
+		icon = GFX_decision_soldierly_discipline
+		fixed_random_seed = no
+		allowed = {
+			original_tag = NFA
+		}
+		available = {
+			always = no
+		}
+		activation = {
+			has_country_flag = Mordacq_Barrack
+			has_country_flag = Fight_for_influence_on
+		}
+		is_good = no
+		days_mission_timeout = 40
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = Fight_for_influence_on
+			}
+		}
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout Mordacq_In_The_Barracks"
+			if = {
+				limit = {
+					has_country_flag = Mail_crack_down
+				}
+				add_stability = -0.015
+				add_political_power = -10
+				add_manpower = -200
+				hidden_effect = {
+					add_to_variable = {
+						var = Pet_corruption
+						value = 1
+					}
+					add_to_variable = {
+						var = Competition_Loop_Counter
+						value = 1
+					}
+					clr_country_flag = Mordacq_Barrack
+					clr_country_flag = Mail_crack_down
+					clr_country_flag = Mordacq_Barrack_decision_made
+					country_event = { id = french_republic_events.28 days = 1 } # Count the competition loops
+				}
+			}
+			else = {
+				add_manpower = -500
+				custom_effect_tooltip = Mordacq_gains_influence_tt
+				hidden_effect = {
+					add_to_variable = {
+						var = Mor_influence
+						value = 1
+					}
+					add_to_variable = {
+						var = Competition_Loop_Counter
+						value = 1
+					}
+					clr_country_flag = Mordacq_Barrack
+					clr_country_flag = Mordacq_Barrack_decision_made
+					country_event = { id = french_republic_events.28 days = 1 } # Count the competition loops
+				}
+			}
+		}
+	}
+
+	Deal_With_Political_Opposition_Barrack = {
+		icon = GFX_decision_soldierly_discipline
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 0
+		ai_will_do = { factor = 1000 }
+
+		visible = {
+			has_active_mission = Mordacq_In_The_Barracks
+			NOT = {
+				has_country_flag = Mordacq_Barrack_decision_made
+			}
+		}
+		available = {
+			has_active_mission = Mordacq_In_The_Barracks
+		}
+		days_remove = 10
+		cancel_trigger = {
+			NOT = {
+				has_country_flag = Fight_for_influence_on
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Deal_With_Political_Opposition_Barrack"
+			country_event = french_republic_events.27 #Decide how to respond to Mordacq in the Barracks
+		}
+		fixed_random_seed = no
+	}
+
+	Invest_Construction = {
+		icon = generic_construction
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 20
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 2
+				check_variable = { Pet_corruption < 3 }
+			}
+			modifier = {
+				factor = 0.25
+				check_variable = { Pet_corruption > 4 }
+			}
+		}
+		visible = {
+			has_country_flag = NFA_Investment_Allowed
+		}
+		available = {
+			custom_override_tooltip = {
+				tooltip = NFA_Investing_tt
+				NOT = { has_country_flag = NFA_Investing }
+			}
+		}
+		modifier = {
+			production_speed_buildings_factor = 0.05
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete Invest_Construction"
+			custom_effect_tooltip = Petain_gains_influence_tt
+			hidden_effect = {
+				add_to_variable = {
+					var = Pet_corruption
+					value = 1
+				}
+				add_to_variable = {
+					var = Pet_influence
+					value = 1
+				}
+			}
+			set_country_flag = NFA_Investing
+		}
+		days_remove = 30
+		days_re_enable = 75
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Invest_Construction"
+			add_political_power = 5
+			clr_country_flag = NFA_Investing
+		}
+		fixed_random_seed = no
+	}
+
+	Invest_Arms_Factory = {
+		icon = ger_military_buildup
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 75
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 2
+				check_variable = { Pet_corruption < 3 }
+			}
+			modifier = {
+				factor = 0.25
+				check_variable = { Pet_corruption > 4 }
+			}
+		}
+		visible = {
+			has_country_flag = NFA_Investment_Allowed
+		}
+		available = {
+			custom_override_tooltip = {
+				tooltip = NFA_Investing_tt
+				NOT = { has_country_flag = NFA_Investing }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete Invest_Arms_Factory"
+			custom_effect_tooltip = Petain_gains_influence_tt
+			hidden_effect = {
+				add_to_variable = {
+					var = Pet_corruption
+					value = 1
+				}
+				add_to_variable = {
+					var = Pet_influence
+					value = 1
+				}
+				set_country_flag = NFA_Investing
+			}
+		}
+		days_remove = 40
+		days_re_enable = 110
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Invest_Arms_Factory"
+			459 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			clr_country_flag = NFA_Investing
+		}
+		fixed_random_seed = no
+	}
+
+	Support_Loyal_Business = {
+		icon = generic_industry
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 50
+		ai_will_do = {
+			factor = 85
+			modifier = {
+				factor = 2
+				check_variable = { Pet_corruption < 3 }
+			}
+			modifier = {
+				factor = 0.25
+				check_variable = { Pet_corruption > 4 }
+			}
+		}
+		visible = {
+			has_country_flag = NFA_Investment_Allowed
+		}
+		available = {
+			custom_override_tooltip = {
+				tooltip = NFA_Investing_tt
+				NOT = { has_country_flag = NFA_Investing }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete Support_Loyal_Business"
+			custom_effect_tooltip = Petain_gains_influence_tt
+			hidden_effect = {
+				add_to_variable = {
+					var = Pet_corruption
+					value = 1
+				}
+				add_to_variable = {
+					var = Pet_influence
+					value = 1
+				}
+				set_country_flag = NFA_Investing
+			}
+		}
+		days_remove = 40
+		days_re_enable = 80
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Support_Loyal_Business"
+			459 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			clr_country_flag = NFA_Investing
+		}
+		fixed_random_seed = no
+	}
+
+	Back_Newspaper = {
+		icon = GFX_decision_generic_civil_support
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 20
+		ai_will_do = {
+			factor = 60
+			modifier = {
+				factor = 2
+				check_variable = { Pet_corruption < 3 }
+			}
+			modifier = {
+				factor = 0.25
+				check_variable = { Pet_corruption > 4 }
+			}
+		}
+		visible = {
+			has_country_flag = NFA_Investment_Allowed
+		}
+		available = {
+			custom_override_tooltip = {
+				tooltip = NFA_Investing_tt
+				NOT = { has_country_flag = NFA_Investing }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete Back_Newspaper"
+			custom_effect_tooltip = Petain_gains_influence_tt
+			hidden_effect = {
+				add_to_variable = {
+					var = Pet_corruption
+					value = 1
+				}
+				add_to_variable = {
+					var = Pet_influence
+					value = 1
+				}
+				set_country_flag = NFA_Investing
+			}
+		}
+		days_remove = 15
+		days_re_enable = 65
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Back_Newspaper"
+			add_political_power = 5
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.02
+			}
+			clr_country_flag = NFA_Investing
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Call_For_Moral_Order = {
+		icon = GFX_decision_soldierly_discipline
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 20
+		ai_will_do = {
+			factor = 150
+			modifier = {
+				factor = 2
+				check_variable = { Pet_corruption > 4 }
+			}
+			modifier = {
+				factor = 0.25
+				check_variable = { Pet_corruption < 1 }
+			}
+		}
+		visible = {
+			has_country_flag = NFA_reduce_corruption_on
+		}
+		available = {
+			custom_override_tooltip = {
+				tooltip = NFA_reduce_corruption_tt
+				NOT = { has_country_flag = NFA_reduce_corruption }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Call_For_Moral_Order"
+			custom_effect_tooltip = NFA_reduced_corruption_tt
+			hidden_effect = {
+				set_country_flag = NFA_reduce_corruption
+			}
+		}
+		days_remove = 15
+		days_re_enable = 65
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Call_For_Moral_Order"
+			add_stability = 0.01
+			hidden_effect = {
+				subtract_from_variable = {
+					var = Pet_corruption
+					value = 1
+				}
+			}
+			clr_country_flag = NFA_reduce_corruption
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Make_Corruption_Crime = {
+		icon = generic_political_discourse
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 40
+		ai_will_do = {
+			factor = 150
+			modifier = {
+				factor = 2
+				check_variable = { Pet_corruption > 4 }
+			}
+			modifier = {
+				factor = 0.25
+				check_variable = { Pet_corruption < 1 }
+			}
+		}
+		visible = {
+			has_country_flag = NFA_reduce_corruption_on
+		}
+		available = {
+			custom_override_tooltip = {
+				tooltip = NFA_reduce_corruption_tt
+				NOT = { has_country_flag = NFA_reduce_corruption }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Make_Corruption_Crime"
+			custom_effect_tooltip = NFA_reduced_corruption_tt
+			hidden_effect = {
+				set_country_flag = NFA_reduce_corruption
+			}
+		}
+		days_remove = 40
+		days_re_enable = 100
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Make_Corruption_Crime"
+			add_political_power = 5
+			hidden_effect = {
+				subtract_from_variable = {
+					var = Pet_corruption
+					value = 1
+				}
+			}
+			clr_country_flag = NFA_reduce_corruption
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Scapegoats = {
+		icon = generic_political_discourse
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 30
+		ai_will_do = {
+			factor = 150
+			modifier = {
+				factor = 2
+				check_variable = { Pet_corruption > 4 }
+			}
+			modifier = {
+				factor = 0.25
+				check_variable = { Pet_corruption < 1 }
+			}
+		}
+		visible = {
+			has_country_flag = NFA_reduce_corruption_on
+		}
+		available = {
+			custom_override_tooltip = {
+				tooltip = NFA_reduce_corruption_tt
+				NOT = { has_country_flag = NFA_reduce_corruption }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Scapegoats"
+			custom_effect_tooltip = NFA_reduced_corruption_tt
+			hidden_effect = {
+				set_country_flag = NFA_reduce_corruption
+			}
+		}
+		days_remove = 40
+		days_re_enable = 100
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Scapegoats"
+			add_political_power = 5
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = -0.02
+			}
+			hidden_effect = {
+				subtract_from_variable = {
+					var = Pet_corruption
+					value = 1
+				}
+			}
+			clr_country_flag = NFA_reduce_corruption
+		}
+		fixed_random_seed = no
+	}
+}
+
+#Purge decisions for the AF #
+
+NFA_decision_AF_trials_cat = {
+	NFA_Public_Humiliation = {
+		icon = GFX_decision_generic_political_rally
+		allowed = {
+			tag = NFA
+		}
+		cost = 25
+		fire_only_once = yes
+		days_remove = 50
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Public_Humiliation"
+			country_event = french_republic_events.312
+		}
+
+		ai_will_do = { factor = 50 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Public_Humiliation"
+			set_country_flag = NFA_AF_purged_streets
+			if = {
+				limit = {
+					has_country_flag = NFA_AF_purged_streets
+					has_country_flag = NFA_AF_purged_politicians
+					has_country_flag = NFA_AF_purged_police
+					has_country_flag = NFA_AF_purged_military
+					has_country_flag = NFA_AF_purged_spies
+				}
+				country_event = french_republic_events.317
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Arrest_Republican_Leaders = {
+		icon = GFX_decision_generic_arrest
+		allowed = {
+			tag = NFA
+		}
+		cost = 25
+		fire_only_once = yes
+		days_remove = 50
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Arrest_Republican_Leaders"
+			country_event = french_republic_events.313
+		}
+
+		ai_will_do = { factor = 50 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Arrest_Republican_Leaders"
+			set_country_flag = NFA_AF_purged_politicians
+			if = {
+				limit = {
+					has_country_flag = NFA_AF_purged_streets
+					has_country_flag = NFA_AF_purged_politicians
+					has_country_flag = NFA_AF_purged_police
+					has_country_flag = NFA_AF_purged_military
+					has_country_flag = NFA_AF_purged_spies
+				}
+				country_event = french_republic_events.317
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Cleanse_the_Police = {
+		icon = GFX_decision_generic_police_action
+		allowed = {
+			tag = NFA
+		}
+		cost = 25
+		fire_only_once = yes
+		days_remove = 50
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Cleanse_the_Police"
+			country_event = french_republic_events.314
+		}
+
+		ai_will_do = { factor = 50 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Cleanse_the_Police"
+			set_country_flag = NFA_AF_purged_police
+			if = {
+				limit = {
+					has_country_flag = NFA_AF_purged_streets
+					has_country_flag = NFA_AF_purged_politicians
+					has_country_flag = NFA_AF_purged_police
+					has_country_flag = NFA_AF_purged_military
+					has_country_flag = NFA_AF_purged_spies
+				}
+				country_event = french_republic_events.317
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Purge_the_Military = {
+		icon = GFX_decision_generic_military
+		allowed = {
+			tag = NFA
+		}
+		cost = 25
+		fire_only_once = yes
+		days_remove = 50
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Purge_the_Military"
+			country_event = french_republic_events.315
+		}
+
+		ai_will_do = { factor = 50 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Purge_the_Military"
+			set_country_flag = NFA_AF_purged_military
+			if = {
+				limit = {
+					has_country_flag = NFA_AF_purged_streets
+					has_country_flag = NFA_AF_purged_politicians
+					has_country_flag = NFA_AF_purged_police
+					has_country_flag = NFA_AF_purged_military
+					has_country_flag = NFA_AF_purged_spies
+				}
+				country_event = french_republic_events.317
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Those_Who_Slither = {
+		icon = GFX_decision_onmap_recruit_operative
+		allowed = {
+			tag = NFA
+		}
+		cost = 25
+		fire_only_once = yes
+		days_remove = 50
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Those_Who_Slither"
+			country_event = french_republic_events.316
+		}
+
+		ai_will_do = { factor = 50 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Those_Who_Slither"
+			set_country_flag = NFA_AF_purged_spies
+			if = {
+				limit = {
+					has_country_flag = NFA_AF_purged_streets
+					has_country_flag = NFA_AF_purged_politicians
+					has_country_flag = NFA_AF_purged_police
+					has_country_flag = NFA_AF_purged_military
+					has_country_flag = NFA_AF_purged_spies
+				}
+				country_event = french_republic_events.317
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+NFA_reclaim_metropole_cat = {
+	NFA_La_Lutte_Finale = {
+		icon = generic_ignite_civil_war
+
+		available = {
+			OR = {
+				threat > 0.75
+				FROM = { has_war_with = GER }
+				NOT = { country_exists = GER }
+			}
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_truce_with = FROM }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			NOT = { has_wargoal_against = FROM }
+			is_subject = no
+		}
+
+		targets = { FRA }
+		target_trigger = {
+			can_declare_war_on = FROM
+			NOT = { has_wargoal_against = FROM }
+		}
+
+		priority = 100
+		days_remove = 30
+		days_re_enable = 30
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger = yes }
+				date < 1941.1.1
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress < 0.5 }
+				OR = {
+					#help NEE unite America first
+					AND = {
+						FROM = { surrender_progress < 0.5 }
+						is_ally_with = NEE
+						OR = {
+							has_global_flag = CAN_supports_NEE
+							NEE = { has_country_flag = NEE_claimed_america }
+						}
+						NOT = { CAN = { has_country_flag = CAN_white_peaced_ACW } }
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+					#help USA unite America first
+					AND = {
+						has_global_flag = CAN_supports_USA
+						country_exists = USA
+						NOT = { CAN = { has_country_flag = CAN_white_peaced_ACW } }
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+					#help ACC unite America first
+					AND = {
+						has_global_flag = CAN_supports_ACC
+						country_exists = ACC
+						NOT = { CAN = { has_country_flag = CAN_white_peaced_ACW } }
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+					#help APG unite America first
+					AND = {
+						has_global_flag = CAN_supports_APG
+						country_exists = APG
+						NOT = { CAN = { has_country_flag = CAN_white_peaced_ACW } }
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = tilsit_peace_success
+				RUS = { NOT = { has_war_with = INT } }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel NFA_La_Lutte_Finale"
+			clear_decision_attack_AI = yes
+			clr_country_flag = NFA_delay_la_lutte_finale
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_La_Lutte_Finale"
+			setup_decision_attack_AI = yes
+			hidden_effect = {
+				if = {
+					limit = {
+						is_ai = yes
+						is_in_faction = yes
+						faction_leader = { is_ai = no }
+					}
+					faction_leader = { country_event = french_republic_events.140 } #A player CAN can decide if NFA attacks or not
+				}
+				else = {
+					FROM = { country_event = french_republic_events.110 } #warning event
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove NFA_La_Lutte_Finale"
+			clear_decision_attack_AI = yes
+			if = {
+				limit = { has_country_flag = NFA_delay_la_lutte_finale }
+				clr_country_flag = NFA_delay_la_lutte_finale
+			}
+			else = {
+				log = "KR_Event_Logging;ENTENTE ENTERS 2WK"
+				set_global_flag = entente_reclamation_wars_threat
+				declare_war_on = { target = FROM type = annex_everything }
+				add_named_threat = {
+					threat = 15
+					name = NFA_la_lutte_finale_war_threat
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_reunion_fever = {
+		icon = generic_form_nation
+		ai_will_do = { factor = 75 }
+		visible = {
+			FRA = { surrender_progress > 0.20 }
+		}
+		available = {
+			country_exists = FRA
+			controls_state = 16 #NFA controls Paris
+			controls_state = 21 #NFA controls Provence
+			OR = {
+				controls_state = 19 #Aquitaine
+				controls_state = 20 #Lyonnais
+				controls_state = 980 #Lille
+			}
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 16 }
+		}
+
+		custom_cost_text = CP_5
+		custom_cost_trigger = {
+			NOT = { command_power < 5 }
+		}
+
+		days_remove = 365
+		fire_only_once = yes
+
+		targeted_modifier = {
+			tag = FRA
+			attack_bonus_against = 0.15
+			defense_bonus_against = 0.15
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_reunion_fever"
+			hidden_effect = { add_command_power = -5 }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Paris = {
+		icon = generic_army_support
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 15
+				controls_state = 24
+				controls_state = 18
+				controls_state = 33
+				controls_state = 16
+			}
+		}
+		cost = 40
+		available = {
+			controls_state = 16 #NFA controls Paris
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 16 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Paris"
+			16 = { #Paris
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_mobilize_Paris = {
+		icon = generic_prepare_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 15
+				controls_state = 24
+				controls_state = 18
+				controls_state = 33
+				controls_state = 16
+			}
+		}
+		available = {
+			controls_state = 16 #NFA controls Paris
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 16 }
+		}
+
+		ai_hint_pp_cost = 15
+		custom_cost_trigger = {
+			NOT = { command_power < 30 }
+			NOT = { has_political_power < 15 }
+		}
+		custom_cost_text = CP_30_PP_15
+
+		fire_only_once = yes
+		days_remove = 15
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilize_Paris"
+			hidden_effect = {
+				add_command_power = -30
+				add_political_power = -15
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mobilize_Paris"
+			NFA_create_loyalist_template = yes
+			16 = { #Ile de France
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 3
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division de Paris\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 11506
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2e Division de Paris\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 11506
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"3ème Division de Paris\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 9523
+						owner = ROOT
+					}
+				}
+			}
+			add_to_variable = { NFA_loyalist_unit_limit_bonus = 3 tooltip = NFA_loyalist_unit_limit_bonus }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Marseille = {
+		icon = generic_army_support
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 20
+		available = {
+			controls_state = 21 #NFA controls Provence
+		}
+		visible = {
+			has_war_with = FRA
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 21 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Marseille"
+			21 = { #Provence
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			if = {
+				limit = {
+					NOT = { has_country_flag = nfa_landed_on_continent_cf }
+				}
+				set_country_flag = nfa_landed_on_continent_cf
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_mobilize_Provence = {
+		icon = generic_prepare_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			controls_state = 459
+		}
+		available = {
+			controls_state = 21 #NFA controls Provence
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 21 }
+		}
+
+		fire_only_once = yes
+		days_remove = 15
+
+		ai_hint_pp_cost = 10
+		custom_cost_trigger = {
+			NOT = { command_power < 20 }
+			NOT = { has_political_power < 10 }
+		}
+		custom_cost_text = CP_20_PP_10
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilize_Provence"
+			hidden_effect = {
+				add_command_power = -20
+				add_political_power = -10
+			}
+			add_war_support = 0.05
+			if = {
+				limit = {
+					NOT = { has_country_flag = nfa_landed_on_continent_cf }
+				}
+				set_country_flag = nfa_landed_on_continent_cf
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mobilize_Provence"
+			NFA_create_loyalist_template = yes
+			21 = { #Provence
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division de Provence\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 11834
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2e Division de Provence\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 11834
+						owner = ROOT
+					}
+				}
+			}
+			add_to_variable = { NFA_loyalist_unit_limit_bonus = 2 tooltip = NFA_loyalist_unit_limit_bonus }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Occitanie = {
+		icon = generic_nationalism
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 31
+				controls_state = 22
+				controls_state = 817
+			}
+		}
+
+		cost = 30
+		available = {
+			controls_state = 31 #NFA controls Garonne
+			controls_state = 22 #NFA controls Languedoc
+			controls_state = 817 #NFA controls Roussilon
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 31 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Occitanie"
+			31 = { #Garonne
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			22 = { #Languedoc
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			817 = { #Roussilon
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			if = {
+				limit = {
+					NOT = { has_country_flag = nfa_landed_on_continent_cf }
+				}
+				set_country_flag = nfa_landed_on_continent_cf
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_Poitou_Limo_railway = {
+		icon = generic_ignite_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 21
+				controls_state = 22
+			}
+		}
+		available = {
+			controls_state = 31
+			FRA = {
+				controls_state = 23
+				controls_state = 25
+			}
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 25 }
+		}
+
+		fire_only_once = yes
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 200 } }
+		}
+		custom_cost_text = 200_guns
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Poitou_Limo_railway"
+			custom_effect_tooltip = NFA_Poitou_Limo_Sabotage_tt
+			hidden_effect = {
+				add_equipment_to_stockpile = { type = infantry_equipment amount = -200 }
+				25 = { #Limousin
+					add_dynamic_modifier = { modifier = NFA_sabotage_modifier days = 35 }
+					damage_building = { type = infrastructure damage = 1.6 }
+				}
+				23 = { #Poitou
+					add_dynamic_modifier = { modifier = NFA_sabotage_modifier days = 35 }
+					damage_building = { type = infrastructure damage = 2.3 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Aquitaine = {
+		icon = generic_army_support
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 19
+				controls_state = 779
+				controls_state = 984
+			}
+		}
+		cost = 30
+		available = {
+			controls_state = 19 #NFA controls Aquitaine
+			controls_state = 779 #NFA controls Labourd
+			controls_state = 984 #NFA controls Pyrenees
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 19 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Aquitaine"
+			19 = { #Aquitaine
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			779 = { #Labourd
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			984 = { #Pyrenees
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			if = {
+				limit = {
+					NOT = { has_country_flag = nfa_landed_on_continent_cf }
+				}
+				set_country_flag = nfa_landed_on_continent_cf
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_mobilize_Aquitaine = {
+		icon = generic_prepare_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 22
+				controls_state = 779
+				controls_state = 984
+				var:1070.owner = { is_in_faction_with = NFA }
+			}
+		}
+		available = {
+			controls_state = 19 #NFA controls Aquitaine
+			controls_state = 779 #NFA controls Labourd
+			controls_state = 984 #NFA controls Pyrenees
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 19 }
+		}
+
+		ai_hint_pp_cost = 10
+		custom_cost_trigger = {
+			NOT = { command_power < 20 }
+			NOT = { has_political_power < 10 }
+		}
+		custom_cost_text = CP_20_PP_10
+
+		fire_only_once = yes
+		days_remove = 15
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilize_Aquitaine"
+			add_war_support = 0.03
+			hidden_effect = {
+				add_command_power = -20
+				add_political_power = -10
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mobilize_Aquitaine"
+			NFA_create_loyalist_template = yes
+			19 = { #Aquitaine
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division d'Aquitaine\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 9737
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2e Division d'Aquitaine\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 9737
+						owner = ROOT
+					}
+				}
+			}
+			add_to_variable = { NFA_loyalist_unit_limit_bonus = 2 tooltip = NFA_loyalist_unit_limit_bonus }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Poitou_Limousin = {
+		icon = generic_nationalism
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 23
+				controls_state = 25
+			}
+		}
+
+		cost = 15
+		available = {
+			controls_state = 23 #NFA controls Poitou
+			controls_state = 25 #NFA controls Limousin
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 23 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Poitou_Limousin"
+			23 = { #Poitou
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			25 = { #Limousin
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Auvergne_Lyon = {
+		icon = generic_army_support
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 20
+				controls_state = 26
+			}
+		}
+		cost = 30
+		available = {
+			controls_state = 20 #NFA controls Lyonnais
+			controls_state = 26 #NFA controls Auvergne
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 20 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Auvergne_Lyon"
+			20 = { #Lyonnais
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			26 = { #Auvergne
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Rhone_Alp = {
+		icon = generic_nationalism
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 15
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 32
+				controls_state = 763
+			}
+		}
+		available = {
+			controls_state = 32 #NFA controls Rhone
+			controls_state = 763 #NFA controls Alpes
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 763 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Rhone_Alp"
+			32 = { #Rhone
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			763 = { #Alpes
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_mobilize_Lyon = {
+		icon = generic_prepare_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 21
+				controls_state = 27
+				controls_state = 33
+				controls_state = 20
+				controls_state = 36
+			}
+		}
+		available = {
+			controls_state = 20 #NFA controls Lyonnais
+			controls_state = 26 #NFA controls Auvergne
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 20 }
+		}
+
+		ai_hint_pp_cost = 15
+		custom_cost_trigger = {
+			NOT = { command_power < 30 }
+			NOT = { has_political_power < 15 }
+		}
+		custom_cost_text = CP_30_PP_15
+
+		fire_only_once = yes
+		days_remove = 15
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilize_Lyon"
+			add_war_support = 0.03
+			hidden_effect = {
+				add_command_power = -30
+				add_political_power = -15
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mobilize_Lyon"
+			NFA_create_loyalist_template = yes
+			20 = { #Lyonnais
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division du Lyonnais\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 6613
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2e Division du Lyonnais\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 6613
+						owner = ROOT
+					}
+				}
+			}
+			26 = { #Auvergne
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_unit
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division d'Auvergne\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 9748
+						owner = ROOT
+					}
+				}
+			}
+			add_to_variable = { NFA_loyalist_unit_limit_bonus = 3 tooltip = NFA_loyalist_unit_limit_bonus }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Dijon_Lyon_railway = {
+		icon = generic_ignite_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			controls_state = 21
+		}
+		available = {
+			controls_state = 32
+			FRA = {
+				controls_state = 27
+			}
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 27 }
+		}
+
+		fire_only_once = yes
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 200 } }
+		}
+		custom_cost_text = 200_guns
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Dijon_Lyon_railway"
+			custom_effect_tooltip = NFA_Dijon_Lyon_Sabotage_tt
+			hidden_effect = {
+				add_equipment_to_stockpile = { type = infantry_equipment amount = -200 }
+				27 = { #Burgundy
+					add_dynamic_modifier = { modifier = NFA_sabotage_modifier days = 35 }
+					damage_building = { type = infrastructure damage = 2.3 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Loire = {
+		icon = generic_nationalism
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 25
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 30
+				controls_state = 33
+			}
+		}
+		available = {
+			controls_state = 30 #NFA controls Maine
+			controls_state = 33 #NFA controls Orléanais
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 30 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Loire"
+			30 = { #Maine
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			33 = { #Orléanais
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_mobilize_Loire = {
+		icon = generic_prepare_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			controls_state = 459
+		}
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 30
+				controls_state = 33
+				controls_state = 25
+				controls_state = 26
+			}
+		}
+		available = {
+			controls_state = 30 #NFA controls Maine
+			controls_state = 33 #NFA controls Orléanais
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 33 }
+		}
+
+		ai_hint_pp_cost = 15
+		custom_cost_trigger = {
+			NOT = { command_power < 30 }
+			NOT = { has_political_power < 15 }
+		}
+		custom_cost_text = CP_30_PP_15
+
+		fire_only_once = yes
+		days_remove = 15
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilize_Loire"
+			hidden_effect = {
+				add_command_power = -30
+				add_political_power = -15
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mobilize_Loire"
+			NFA_create_loyalist_template = yes
+			33 = { #Orleanais
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division d'Orléans\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 512
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"1ère Division de la Loire\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 512
+						owner = ROOT
+					}
+				}
+			}
+			30 = { #Maine
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_unit
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"2ème Division de la Loire\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 9478
+						owner = ROOT
+					}
+				}
+			}
+			add_to_variable = { NFA_loyalist_unit_limit_bonus = 3 tooltip = NFA_loyalist_unit_limit_bonus }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Brittany = {
+		icon = generic_army_support
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 20
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 14
+				controls_state = 983
+			}
+		}
+		available = {
+			controls_state = 14 #NFA controls Upper Brittany
+			controls_state = 983 #NFA controls Brittany
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 983 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Brittany"
+			14 = { #Upper Brittany
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			983 = { #Brittany
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_mobilize_Brittany = {
+		icon = generic_prepare_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 14
+				controls_state = 983
+				controls_state = 23
+				controls_state = 30
+				controls_state = 15
+			}
+		}
+		available = {
+			controls_state = 14 #NFA controls Upper Brittany
+			controls_state = 983 #NFA controls Brittany
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 14 }
+		}
+
+		ai_hint_pp_cost = 10
+		custom_cost_trigger = {
+			NOT = { command_power < 20 }
+			NOT = { has_political_power < 10 }
+		}
+		custom_cost_text = CP_20_PP_10
+
+		fire_only_once = yes
+		days_remove = 15
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilize_Brittany"
+			hidden_effect = {
+				add_command_power = -20
+				add_political_power = -10
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mobilize_Brittany"
+			NFA_create_loyalist_template = yes
+			14 = { # Upper Brittany
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division de Bretagne\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 9495
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2ème Division de Bretagne\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 11465
+						owner = ROOT
+					}
+				}
+			}
+			add_to_variable = { NFA_loyalist_unit_limit_bonus = 2 tooltip = NFA_loyalist_unit_limit_bonus }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Normandy = {
+		icon = generic_army_support
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 15
+				controls_state = 14
+				controls_state = 33
+				controls_state = 30
+				controls_state = 16
+				controls_state = 24
+			}
+		}
+		cost = 30
+		available = {
+			controls_state = 15 #NFA controls Normandy
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 15 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Normandy"
+			15 = { #Normandy
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_mobilize_Normandy = {
+		icon = generic_prepare_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 15
+				controls_state = 14
+				controls_state = 33
+				controls_state = 30
+				controls_state = 16
+				controls_state = 24
+			}
+		}
+		available = {
+			controls_state = 15 #NFA controls Lorraine
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 15 }
+		}
+
+		ai_hint_pp_cost = 10
+		custom_cost_trigger = {
+			NOT = { command_power < 20 }
+			NOT = { has_political_power < 10 }
+		}
+		custom_cost_text = CP_20_PP_10
+
+		fire_only_once = yes
+		days_remove = 15
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilize_Normandy"
+			hidden_effect = {
+				add_command_power = -20
+				add_political_power = -10
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mobilize_Normandy"
+			NFA_create_loyalist_template = yes
+			15 = { #Normandy
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division de Normandie\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 11535
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2ème Division de Normandie\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 11563
+						owner = ROOT
+					}
+				}
+			}
+			add_to_variable = { NFA_loyalist_unit_limit_bonus = 2 tooltip = NFA_loyalist_unit_limit_bonus }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Lorraine = {
+		icon = generic_nationalism
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 20
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 785
+				controls_state = 18
+			}
+		}
+		available = {
+			controls_state = 785 #NFA controls Lorraine
+			controls_state = 18 #NFA controls Champagne
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 785 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Lorraine"
+			785 = { #Lorraine
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			18 = { #Champagne
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_Bolster_Picardy = {
+		icon = generic_army_support
+		ai_will_do = { factor = 75 }
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 25
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 24
+				controls_state = 17
+				controls_state = 980
+			}
+		}
+		available = {
+			controls_state = 24 #NFA controls Picardy
+			controls_state = 17 #NFA controls Pas-de-Calais
+			controls_state = 980 #NFA controls French Hainaut
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 980 }
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bolster_Picardy"
+			24 = { #Picardy
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			17 = { #Pas-de-Calais
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+			980 = { #Lille
+				add_compliance = 5
+				add_resistance_target = {
+					amount = -10
+					occupier = NFA
+					tooltip = NFA_Military_Police_tt
+					days = 90
+				}
+				hidden_effect = { set_garrison_strength = 1.0 }
+			}
+		}
+		days_re_enable = 100
+		fixed_random_seed = no
+	}
+
+	NFA_mobilize_Picardy = {
+		icon = generic_prepare_civil_war
+		ai_will_do = { factor = 75 }
+		visible = {
+			has_war_with = FRA
+			OR = {
+				controls_state = 24
+				controls_state = 17
+				controls_state = 980
+				controls_state = 15
+				controls_state = 16
+				controls_state = 18
+				controls_state = 785
+			}
+		}
+		available = {
+			controls_state = 24 #NFA controls Picardy
+			controls_state = 17 #NFA controls Pas-de-Calais
+			controls_state = 980 #NFA controls French Hainaut
+		}
+		highlight_states = {
+			highlight_state_targets = { state = 24 }
+		}
+
+		ai_hint_pp_cost = 10
+		custom_cost_trigger = {
+			NOT = { command_power < 20 }
+			NOT = { has_political_power < 10 }
+		}
+		custom_cost_text = CP_20_PP_10
+
+		fire_only_once = yes
+		days_remove = 15
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_mobilize_Picardy"
+			hidden_effect = {
+				add_command_power = -20
+				add_political_power = -10
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mobilize_Picardy"
+			NFA_create_loyalist_template = yes
+			24 = { #Picardy
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_unit
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division de Picardie\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 454
+						owner = ROOT
+					}
+				}
+			}
+			980 = { #Lille
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_unit
+						TYPE = "National French Loyalists"
+					}
+					create_unit = {
+						division = "name = \"1ère Division de Lille\" division_template = \"National French Loyalists\" start_experience_factor = 0.3"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 11483
+						owner = ROOT
+					}
+				}
+			}
+			add_to_variable = { NFA_loyalist_unit_limit_bonus = 2 tooltip = NFA_loyalist_unit_limit_bonus }
+		}
+		fixed_random_seed = no
+	}
+}
+
+NFA_rebuild_legitimacy_cat = {
+	NFA_Small_Propaganda = {
+		icon = generic_form_nation
+
+		available = {
+			political_power_daily > 0.2
+			NOT = { has_decision = NFA_Large_Scale_Effort }
+		}
+
+		visible = {
+			has_country_flag = NFA_reconstruction_active
+		}
+
+		modifier = {
+			political_power_gain = -0.2
+			war_support_weekly = -0.003
+		}
+
+		cost = 15
+		days_remove = 60
+		days_re_enable = 65
+
+		ai_will_do = { factor = 400 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Small_Propaganda"
+			every_owned_state = { #Check all states of NFA
+				limit = {
+					is_france = yes
+					has_resistance = yes
+				}
+				add_dynamic_modifier = { modifier = NFA_small_propaganda_effort days = 60 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Small_Propaganda"
+			effect_tooltip = {
+				every_owned_state = { #Check all states of NFA
+					limit = {
+						is_france = yes
+						has_resistance = yes
+					}
+					remove_dynamic_modifier = { modifier = NFA_small_propaganda_effort }
+				}
+			}
+			hidden_effect = {
+				every_owned_state = {
+					limit = { has_dynamic_modifier = { modifier = NFA_small_propaganda_effort } }
+					remove_dynamic_modifier = { modifier = NFA_small_propaganda_effort }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Large_Scale_Effort = {
+		icon = generic_form_nation
+
+		available = {
+			political_power_daily > 0.5
+			NOT = { has_decision = NFA_Small_Propaganda }
+		}
+
+		visible = {
+			has_country_flag = NFA_reconstruction_active
+		}
+
+		modifier = {
+			political_power_gain = -0.5
+			war_support_weekly = -0.005
+			stability_weekly = -0.001
+			syndicalist_drift = -0.01
+			radical_socialist_drift = -0.01
+			totalist_drift = -0.01
+		}
+
+		cost = 50
+		days_remove = 60
+		days_re_enable = 65
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Large_Scale_Effort"
+			every_owned_state = { #Check all states of NFA
+				limit = {
+					is_france = yes
+					has_resistance = yes
+				}
+				add_dynamic_modifier = { modifier = NFA_large_propaganda_effort days = 60 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Large_Scale_Effort"
+			effect_tooltip = {
+				every_owned_state = { #Check all states of NFA
+					limit = {
+						is_france = yes
+						has_resistance = yes
+					}
+					remove_dynamic_modifier = { modifier = NFA_large_propaganda_effort }
+				}
+			}
+			hidden_effect = {
+				every_owned_state = {
+					limit = { has_dynamic_modifier = { modifier = NFA_large_propaganda_effort } }
+					remove_dynamic_modifier = { modifier = NFA_large_propaganda_effort }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Focus_Paris = {
+		icon = generic_nationalism
+
+		available = {
+			controls_state = FROM #NFA controls Paris
+		}
+
+		state_target = yes
+		targets = { 16 }
+		target_root_trigger = {
+			has_country_flag = NFA_reconstruction_active
+		}
+		target_trigger = {
+			FROM = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		cost = 10
+		days_re_enable = 40
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Focus_Paris"
+			country_event = french_republic_events.161 #Work on reducing resistance or increasing compliance in Paris
+			NFA_compliance_or_resistance_choice_tooltip = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Provence Focus #
+
+	NFA_Focus_Provence = {
+		icon = generic_nationalism
+
+		available = {
+			controls_state = FROM #NFA controls Provence
+		}
+
+		state_target = yes
+		targets = { 21 }
+		target_root_trigger = {
+			has_country_flag = NFA_reconstruction_active
+		}
+		target_trigger = {
+			FROM = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		cost = 10
+		days_re_enable = 40
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Focus_Provence"
+			country_event = french_republic_events.162 #Work on reducing resistance or increasing compliance in Provence
+			NFA_compliance_or_resistance_choice_tooltip = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Lyon Focus #
+
+	NFA_Focus_Lyonnais = {
+		icon = generic_nationalism
+
+		available = {
+			controls_state = FROM #NFA controls Lyonnais
+		}
+
+		state_target = yes
+		targets = { 20 }
+		target_root_trigger = {
+			has_country_flag = NFA_reconstruction_active
+		}
+		target_trigger = {
+			FROM = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		cost = 10
+		days_re_enable = 40
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Focus_Lyonnais"
+			country_event = french_republic_events.163 #Work on reducing resistance or increasing compliance in Lyonnais
+			NFA_compliance_or_resistance_choice_tooltip = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Bordeaux Focus #
+
+	NFA_Focus_Bordeaux = {
+		icon = generic_nationalism
+
+		available = {
+			controls_state = FROM #NFA controls Bordeaux
+		}
+
+		state_target = yes
+		targets = { 19 }
+		target_root_trigger = {
+			has_country_flag = NFA_reconstruction_active
+		}
+		target_trigger = {
+			FROM = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		cost = 10
+		days_re_enable = 40
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Focus_Bordeaux"
+			country_event = french_republic_events.164 #Work on reducing resistance or increasing compliance in Bordeaux
+			NFA_compliance_or_resistance_choice_tooltip = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Lille Focus #
+
+	NFA_Focus_Lille = {
+		icon = generic_nationalism
+
+		available = {
+			controls_state = FROM #NFA controls Lille
+		}
+
+		state_target = yes
+		targets = { 980 }
+		target_root_trigger = {
+			has_country_flag = NFA_reconstruction_active
+		}
+		target_trigger = {
+			FROM = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		cost = 10
+		days_re_enable = 40
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Focus_Lille"
+			country_event = french_republic_events.165 #Work on reducing resistance or increasing compliance in Lille
+			NFA_compliance_or_resistance_choice_tooltip = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Coring Metropolitan States #
+
+	NFA_Bring_Brittany_Home = {
+		icon = generic_nationalism
+
+		available = {
+			is_neighbor_of = BRI
+			NOT = { country_exists = GER }
+		}
+
+		visible = {
+			country_exists = BRI
+			NOT = { has_war_with = BRI }
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 14 }
+		}
+
+		cost = 0
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bring_Brittany_Home"
+			BRI = { country_event = french_republic_events.629 }
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Bring_Belgian_Land_Home = {
+		icon = generic_nationalism
+
+		available = {
+			NOT = { country_exists = GER }
+		}
+
+		visible = {
+			OR = {
+				var:17.owner = { #Pas-de-Calais
+					is_belgian_tag = yes
+					is_neighbor_of = ROOT
+					NOT = { has_war_with = ROOT }
+				}
+				var:980.owner = { #Lille
+					is_belgian_tag = yes
+					is_neighbor_of = ROOT
+					NOT = { has_war_with = ROOT }
+				}
+			}
+		}
+
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = 17
+					state = 980
+				}
+				owner = {
+					is_belgian_tag = yes
+					is_neighbor_of = ROOT
+					NOT = { has_war_with = ROOT }
+				}
+			}
+		}
+
+		cost = 25
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Bring_Belgian_Land_Home"
+			every_other_country = {
+				limit = {
+					is_belgian_tag = yes
+					NOT = { has_war_with = ROOT }
+					owns_any_state_of = {
+						17 #Pas-de-Calais
+						980 #Lille
+					}
+				}
+				country_event = french_republic_events.630
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+NFA_rebuild_metropole_cat = {
+	NFA_civ_in_amiens = {
+		icon = generic_construction
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 24 }
+		}
+		available = {
+			24 = {
+				OR = {
+					compliance > 60
+					is_core_of = NFA
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 2
+			controls_state = 24
+		}
+		visible = {
+			24 = {
+				OR = {
+					compliance > 30
+					is_core_of = NFA
+				}
+			}
+			owns_state = 24
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		fire_only_once = yes
+		cost = 25
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_civ_in_amiens"
+			24 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_mil_in_calais = {
+		icon = ger_military_buildup
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 17 }
+		}
+		available = {
+			17 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		visible = {
+			owns_state = 17
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		fire_only_once = yes
+		cost = 25
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mil_in_calais"
+			17 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Rebuild_Loire_Valley = {
+		icon = electrify
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 33 }
+		}
+		available = {
+			30 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			33 = {
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		visible = {
+			owns_state = 30
+			owns_state = 33
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		fire_only_once = yes
+		cost = 35
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Rebuild_Loire_Valley"
+			33 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			30 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Restore_Caen = {
+		icon = generic_scorched_earth
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 15 }
+		}
+		available = {
+			15 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		visible = {
+			owns_state = 15
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		fire_only_once = yes
+		cost = 20
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Restore_Caen"
+			15 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						province = 11535
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 1
+						VP = 11535
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Rebuild_Burgundy = {
+		icon = generic_scorched_earth
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 27 }
+		}
+		available = {
+			27 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			785 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		visible = {
+			owns_state = 27
+			owns_state = 785
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		fire_only_once = yes
+		cost = 35
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Rebuild_Burgundy"
+			27 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			785 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Renovate_Champagne = {
+		icon = generic_operation
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 18 }
+		}
+		available = {
+			18 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		visible = {
+			owns_state = 18
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		fire_only_once = yes
+		cost = 30
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Renovate_Champagne"
+			18 = {
+				increase_state_category_by_one_level = yes
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Renovate_Marseille = {
+		icon = generic_operation
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 21 }
+		}
+		available = {
+			21 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		visible = {
+			owns_state = 21
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		fire_only_once = yes
+		cost = 30
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Renovate_Marseille"
+			21 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						province = 11834
+						level = 3
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 3
+						VP = 11834
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_mil_in_provence = {
+		icon = ger_military_buildup
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 21 }
+		}
+		available = {
+			21 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		visible = {
+			owns_state = 21
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		fire_only_once = yes
+		cost = 25
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mil_in_provence"
+			21 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Revive_La_Rochelle = {
+		icon = generic_construction
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 23 }
+		}
+		available = {
+			23 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		visible = {
+			owns_state = 23
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		fire_only_once = yes
+		cost = 30
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Revive_La_Rochelle"
+			23 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						province = 6657
+						level = 2
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 6657
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_civ_in_bordeaux = {
+		icon = generic_construction
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 19 }
+		}
+		available = {
+			19 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		visible = {
+			owns_state = 19
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		fire_only_once = yes
+		cost = 25
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_civ_in_bordeaux"
+			19 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_mil_in_bordeaux = {
+		icon = ger_military_buildup
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 19 }
+		}
+		available = {
+			19 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		visible = {
+			owns_state = 19
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		fire_only_once = yes
+		cost = 25
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mil_in_bordeaux"
+			19 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Light_Up_Lyon = {
+		icon = electrify
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 20 }
+		}
+		available = {
+			20 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		visible = {
+			owns_state = 20
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		fire_only_once = yes
+		cost = 30
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_Light_Up_Lyon"
+			20 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_mil_in_lyonnais = {
+		icon = ger_military_buildup
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = 20 }
+		}
+		available = {
+			20 = {
+				is_controlled_by = ROOT
+				OR = {
+					compliance > 60
+					is_core_of = ROOT
+				}
+			}
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		visible = {
+			owns_state = 20
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		fire_only_once = yes
+		cost = 25
+		days_remove = 90
+		ai_will_do = { factor = 50 }
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove NFA_mil_in_lyonnais"
+			20 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+@NFA_focus_on_region_cost = 30
+@NFA_focus_on_region_days_remove = 60
+@NFA_focus_on_region_days_re_enable = 150
+NFA_fate_of_french_africa_cat = {
+	## Civilizing Mission ##
+
+	# Focus on Region Decisions
+	NFA_focus_on_region = {
+		icon = generic_form_nation
+		allowed = { always = no }
+
+		available = {
+			controls_state = FROM
+			political_power_daily > 0.25
+			NOT = { has_country_flag = nfa_africa_civ_mission_in_progress }
+		}
+
+		visible = {
+			FROM = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { controls_state = FROM }
+				FROM = { is_core_of = ROOT }
+			}
+		}
+
+		modifier = {
+			political_power_gain = -0.25
+		}
+
+		state_target = yes
+
+		cost = @NFA_focus_on_region_cost
+		days_remove = @NFA_focus_on_region_days_remove
+		days_re_enable = @NFA_focus_on_region_days_re_enable
+
+		ai_will_do = { factor = 200 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel NFA_focus_on_region"
+			clr_country_flag = nfa_africa_civ_mission_in_progress
+			FROM = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_focus_on_region"
+			set_country_flag = nfa_africa_civ_mission_in_progress
+			FROM = {
+				NFA_add_african_integration_focus_modifier = yes
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove NFA_focus_on_region"
+			clr_country_flag = nfa_africa_civ_mission_in_progress
+			FROM = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Focus_On_Tunisia = {
+		name = NFA_focus_on_region
+		icon = generic_form_nation
+		allowed = { always = no }
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 458
+				state = 665
+			}
+		}
+
+		available = {
+			controls_state = 458
+			controls_state = 665
+			political_power_daily > 0.25
+			NOT = { has_country_flag = nfa_africa_civ_mission_in_progress }
+		}
+
+		visible = {
+			458 = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+			665 = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				AND = {
+					NOT = { controls_state = 458 }
+					NOT = { controls_state = 665 }
+				}
+				AND = {
+					458 = { is_core_of = ROOT }
+					665 = { is_core_of = ROOT }
+				}
+			}
+		}
+
+		state_target = yes
+
+		modifier = {
+			political_power_gain = -0.25
+		}
+
+		cost = @NFA_focus_on_region_cost
+		days_remove = @NFA_focus_on_region_days_remove
+		days_re_enable = @NFA_focus_on_region_days_re_enable
+
+		ai_will_do = { factor = 200 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel NFA_Focus_On_Tunisia"
+			clr_country_flag = nfa_africa_civ_mission_in_progress
+			458 = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+			665 = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Focus_On_Tunisia"
+			set_country_flag = nfa_africa_civ_mission_in_progress
+			458 = {
+				NFA_add_african_integration_focus_modifier = yes
+			}
+			665 = {
+				NFA_add_african_integration_focus_modifier = yes
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove NFA_Focus_On_Tunisia"
+			clr_country_flag = nfa_africa_civ_mission_in_progress
+			458 = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+			665 = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Focus_On_French_Sudan = {
+		icon = generic_form_nation
+		allowed = { always = no }
+
+		highlight_states = {
+			highlight_state_targets = {
+				state = 556
+				state = 1095
+			}
+		}
+
+		available = {
+			controls_state = 556
+			controls_state = 1095
+			political_power_daily > 0.25
+			NOT = { has_country_flag = nfa_africa_civ_mission_in_progress }
+		}
+
+		visible = {
+			556 = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+			1095 = {
+				is_owned_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				AND = {
+					NOT = { controls_state = 556 }
+					NOT = { controls_state = 1095 }
+				}
+				AND = {
+					556 = { is_core_of = ROOT }
+					1095 = { is_core_of = ROOT }
+				}
+			}
+		}
+
+		state_target = yes
+
+		modifier = {
+			political_power_gain = -0.25
+		}
+
+		cost = @NFA_focus_on_region_cost
+		days_remove = @NFA_focus_on_region_days_remove
+		days_re_enable = @NFA_focus_on_region_days_re_enable
+
+		ai_will_do = { factor = 200 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel NFA_Focus_On_French_Sudan"
+			clr_country_flag = nfa_africa_civ_mission_in_progress
+			556 = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+			1095 = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Focus_On_French_Sudan"
+			set_country_flag = nfa_africa_civ_mission_in_progress
+			556 = {
+				NFA_add_african_integration_focus_modifier = yes
+			}
+			1095 = {
+				NFA_add_african_integration_focus_modifier = yes
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove NFA_Focus_On_French_Sudan"
+			clr_country_flag = nfa_africa_civ_mission_in_progress
+			556 = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+			1095 = {
+				NFA_remove_african_integration_focus_modifier = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# Algeria
+
+	NFA_Integrate_Algeria = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 10
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		available = { #Sufficiently compliant/non-resisting local population
+			FROM = {
+				is_controlled_by = ROOT
+				compliance > 50
+				resistance < 10
+			}
+		}
+		state_target = yes
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Algeria"
+			FROM = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p25_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_focus_on_region }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# Tunisia
+
+	NFA_Integrate_Tunisia = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 30
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		available = { #Sufficiently compliant/non-resisting local population
+			458 = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+			665 = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+		}
+		state_target = yes
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Tunisia"
+			458 = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p5_recruitment_down
+				}
+			}
+			665 = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p5_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_Focus_On_Tunisia }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# Guinea
+
+	NFA_Integrate_Guinea = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 25
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		visible = {
+			owns_state = FROM
+		}
+		available = { #Sufficiently compliant/non-resisting local population
+			FROM = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+		}
+		state_target = yes
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Guinea"
+			FROM = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p65_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_focus_on_region }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# Mauritania
+
+	NFA_Integrate_Mauritania = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 10
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		visible = {
+			owns_state = FROM
+		}
+
+		available = { #Sufficiently compliant/non-resisting local population
+			FROM = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+		}
+		state_target = yes
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Mauritania"
+			FROM = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p65_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_focus_on_region }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# French Sudan
+
+	NFA_Integrate_French_Sudan = {
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 30
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		visible = {
+			owns_state = 556
+			owns_state = 1095
+		}
+		available = { #Sufficiently compliant/non-resisting local population
+			556 = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+			1095 = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 556
+				state = 1095
+			}
+		}
+		state_target = yes
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_French_Sudan"
+			556 = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p65_recruitment_down
+				}
+			}
+			1095 = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p65_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_Focus_On_French_Sudan }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# Ivory Coast
+
+	NFA_Integrate_Ivory_Coast = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 30
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		visible = {
+			owns_state = FROM
+		}
+		available = { #Sufficiently compliant/non-resisting local population
+			FROM = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+		}
+		state_target = yes
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Ivory_Coast"
+			FROM = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p65_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_focus_on_region }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# Upper Volta
+
+	NFA_Integrate_Upper_Volta = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 30
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		visible = {
+			owns_state = FROM
+		}
+		available = { #Sufficiently compliant/non-resisting local population
+			FROM = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+		}
+		state_target = yes
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Upper_Volta"
+			FROM = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p65_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_focus_on_region }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# Niger
+
+	NFA_Integrate_Niger = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 25
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		visible = {
+			owns_state = FROM
+		}
+		available = { #Sufficiently compliant/non-resisting local population
+			FROM = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+		}
+		state_target = yes
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Niger"
+			FROM = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p65_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_focus_on_region }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+# Chad
+
+	NFA_Integrate_Chad = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		cost = 20
+		fire_only_once = yes
+		ai_will_do = { factor = 400 }
+		visible = {
+			owns_state = FROM
+		}
+		available = { #Sufficiently compliant/non-resisting local population
+			FROM = {
+				is_controlled_by = ROOT
+				compliance > 70
+				resistance < 10
+			}
+		}
+
+		state_target = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Chad"
+			FROM = {
+				add_core_of = NFA
+				NFA_remove_resistance_modifiers = yes
+				add_dynamic_modifier = {
+					modifier = NFA_p65_recruitment_down
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_focus_on_region }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	# Dahomey
+
+	NFA_Integrate_Dahomey = {
+		name = NFA_integrate_region
+		icon = generic_nationalism
+		allowed = { always = no }
+		available = { #Sufficiently compliant/non-resisting local population
+			if = {
+				limit = { has_subject = DAH }
+				DAH = { controls_all_owned_states = yes }
+			}
+			else = {
+				FROM = {
+					is_controlled_by = ROOT
+					compliance > 70
+					resistance < 10
+				}
+			}
+		}
+
+		visible = {
+			OR = {
+				owns_state = FROM
+				has_subject = DAH
+			}
+		}
+
+		state_target = yes
+
+		cost = 20
+		fire_only_once = yes
+		days_remove = NFA_Integrate_Dahomey_days_remove?200
+
+		modifier = {
+			political_power_gain = -0.15
+		}
+
+		ai_will_do = { factor = 400 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_Integrate_Dahomey"
+			if = {
+				limit = { has_subject = DAH }
+				set_variable = { NFA_Integrate_Dahomey_days_remove = 200 }
+			}
+			else = {
+				FROM = {
+					add_core_of = NFA
+					NFA_remove_resistance_modifiers = yes
+					add_dynamic_modifier = {
+						modifier = NFA_p65_recruitment_down
+					}
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove NFA_Integrate_Dahomey"
+			clear_variable = NFA_Integrate_Dahomey_days_remove
+			if = {
+				limit = { has_subject = DAH }
+				annex_country = {
+					target = DAH
+					transfer_troops = no
+				}
+				FROM = {
+					add_core_of = NFA
+					NFA_remove_resistance_modifiers = yes
+					add_dynamic_modifier = {
+						modifier = NFA_p65_recruitment_down
+					}
+				}
+			}
+			hidden_effect = {
+				remove_targeted_decision = { target = FROM decision = NFA_focus_on_region }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+NFA_transahara_cat = {
+	Transahara_Phase_One = {
+		icon = GFX_decision_train
+		fixed_random_seed = no
+		highlight_states = {
+			highlight_state_targets = { state = 513 }
+		}
+		allowed = {
+			original_tag = NFA
+		}
+		visible = {
+			owns_state = 513
+		}
+		available = {
+			controls_state = 513
+		}
+		cost = 10
+		fire_only_once = yes
+
+		modifier = {
+			consumer_goods_factor = 0.06
+			political_power_gain = 0.15
+			production_speed_infrastructure_factor = 0.1
+		}
+
+		days_remove = 125
+
+		ai_will_do = { factor = 100000 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Transahara_Phase_One"
+			set_country_flag = NFA_Transahara_Phase_One_Done_cf
+			513 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			country_event = french_republic_events.257
+			unlock_decision_tooltip = Transahara_Phase_Two
+		}
+	}
+
+	Transahara_Phase_Two = {
+		icon = GFX_decision_train
+		fixed_random_seed = no
+		highlight_states = {
+			highlight_state_targets = { state = 513 }
+		}
+		allowed = {
+			original_tag = NFA
+		}
+		visible = {
+			owns_state = 513
+		}
+		available = {
+			has_country_flag = NFA_Transahara_Phase_One_Done_cf
+			controls_state = 513
+		}
+		cost = 15
+		fire_only_once = yes
+
+		modifier = {
+			consumer_goods_factor = 0.08
+			political_power_gain = 0.15
+			production_speed_infrastructure_factor = 0.1
+		}
+
+		days_remove = 125
+
+		ai_will_do = { factor = 100000 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Transahara_Phase_Two"
+			clr_country_flag = NFA_Transahara_Phase_One_Done_cf
+			set_country_flag = NFA_Transahara_Phase_Two_Done_cf
+			513 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			country_event = french_republic_events.258
+			unlock_decision_tooltip = Transahara_Phase_Three
+		}
+	}
+
+	Transahara_Phase_Three = {
+		icon = GFX_decision_train
+		fixed_random_seed = no
+		highlight_states = {
+			highlight_state_targets = { state = 1095 }
+		}
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 20
+		visible = {
+			owns_state = 1095
+		}
+		available = {
+			has_country_flag = NFA_Transahara_Phase_Two_Done_cf
+			controls_state = 1095
+		}
+		fire_only_once = yes
+
+		modifier = {
+			consumer_goods_factor = 0.08
+			political_power_gain = 0.15
+			production_speed_infrastructure_factor = 0.1
+		}
+
+		days_remove = 125
+
+		ai_will_do = { factor = 100000 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Transahara_Phase_Three"
+			hidden_effect = {
+				country_event = { id = french_republic_events.253 days = 100 } # The Project Nears Completion
+			}
+			clr_country_flag = NFA_Transahara_Phase_Two_Done_cf
+			set_country_flag = NFA_Transahara_Phase_Three_Done_cf
+			1095 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			country_event = french_republic_events.259
+			unlock_decision_tooltip = Transahara_Phase_Four
+		}
+	}
+
+	Transahara_Phase_Four = {
+		icon = GFX_decision_train
+		fixed_random_seed = no
+		highlight_states = {
+			highlight_state_targets = {
+				state = 556
+				state = 1095
+			}
+		}
+		allowed = {
+			original_tag = NFA
+		}
+		cost = 25
+		visible = {
+			owns_state = 556
+			owns_state = 1095
+		}
+		available = {
+			has_country_flag = NFA_Transahara_Phase_Three_Done_cf
+			controls_state = 556
+			controls_state = 1095
+		}
+		fire_only_once = yes
+
+		modifier = {
+			consumer_goods_factor = 0.1
+			political_power_gain = 0.15
+			production_speed_infrastructure_factor = 0.1
+		}
+
+		days_remove = 125
+
+		ai_will_do = { factor = 100000 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove Transahara_Phase_Four"
+			clr_country_flag = NFA_Transahara_Phase_Three_Done_cf
+			clr_country_flag = nfa_transahara_railway_on_cf
+			clr_country_flag = nfa_transahara_almost_cf
+			set_global_flag = nfa_transahara_railway_finished_cf
+			add_political_power = 100
+			country_event = french_republic_events.260
+			custom_effect_tooltip = nfa_transsaharan_rails_tt
+			clr_global_flag = TRANSSAHARIAN_ROUTE_DISABLED
+			556 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			# Add building slots
+			513 = {
+				increase_state_category_by_one_level = yes
+			}
+			556 = {
+				increase_state_category_by_one_level = yes
+			}
+			1095 = {
+				increase_state_category_by_one_level = yes
+			}
+			808 = {
+				increase_state_category_by_one_level = yes
+			}
+			# Remove the Transsahara Idea
+			if = {
+				limit = {
+					has_idea = NFA_transsaharian_5
+				}
+				remove_ideas = NFA_transsaharian_5
+			}
+			else_if = {
+				limit = {
+					has_idea = NFA_transsaharian_4
+				}
+				remove_ideas = NFA_transsaharian_4
+			}
+			else_if = {
+				limit = {
+					has_idea = NFA_transsaharian_3
+				}
+				remove_ideas = NFA_transsaharian_3
+			}
+			else_if = {
+				limit = {
+					has_idea = NFA_transsaharian_2
+				}
+				remove_ideas = NFA_transsaharian_2
+			}
+			else_if = {
+				limit = {
+					has_idea = NFA_transsaharian_1
+				}
+				remove_ideas = NFA_transsaharian_1
+			}
+			else_if = {
+				limit = {
+					has_idea = NFA_transsaharian_0
+				}
+				remove_ideas = NFA_transsaharian_0
+			}
+		}
+	}
+
+	NFA_Invite_Investors = {
+		icon = generic_political_discourse
+		allowed = {
+			original_tag = NFA
+		}
+		cost = NFA_Invite_Investors_cost?15
+		fire_only_once = yes
+		ai_will_do = { base = 0 }
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Invite_Investors"
+			clear_variable = NFA_Invite_Investors_cost
+			if = {
+				limit = {
+					has_government = paternal_autocrat
+					has_country_flag = NFA_Petain_wins_ffi
+				}
+				NFA_Reduce_Transahara_2 = yes
+			}
+			else = {
+				NFA_Reduce_Transahara_1 = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	NFA_Cheap_Work_1 = {
+		icon = generic_inflation
+		allowed = {
+			original_tag = NFA
+		}
+		available = {
+			NOT = {
+				has_country_flag = nfa_transahara_almost_cf
+			}
+		}
+		cost = 20
+		fire_only_once = yes
+		ai_will_do = { base = 0 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_Cheap_Work_1"
+			NFA_Reduce_Transahara_1 = yes
+			hidden_effect = {
+				country_event = { id = french_republic_events.252 days = 45 random_days = 100 } # Workers Run Away
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+NFA_colonial_rebellions = {
+	NFA_crush_resistance = {
+		icon = GFX_decision_oppression
+
+		allowed = { always = no } #activated by effect
+
+		visible = {
+			NOT = { country_exists = FROM }
+			owns_state = FROM.capital
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		target_non_existing = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete NFA_crush_resistance"
+			clr_country_flag = NFA_rebelled_@FROM
+			NFA_disable_revolt_decision_category = yes
+			every_owned_state = {
+				limit = { is_core_of = FROM }
+				add_resistance_target = {
+					amount = -60
+					occupier = ROOT
+					tooltip = NFA_rebellion_crushed_tt
+					days = 1825
+				}
+				add_resistance = -80
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = NFA_crush_resistance target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	# Wadai #
+	NFA_white_peace_revolt_CHA = { #White peace if there is a stalemate
+		icon = GFX_decision_oppression
+
+		available = {
+			CHA = { surrender_progress > 0.1 }
+		}
+
+		activation = {
+			has_war_with = CHA
+			has_country_flag = NFA_rebelled_CHA
+			CHA = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = CHA }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+		selectable_mission = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_white_peace_revolt_CHA"
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = 3
+				add_resistance = -5
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_white_peace_revolt_CHA"
+			add_stability = -0.05
+			add_political_power = -50
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = -5
+				add_resistance = 10
+			}
+			CHA = {
+				country_event = french_republic_events.614
+				every_owned_state = { remove_claim_by = ROOT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	NFA_CHA_released_by_revolter = { #Another revolter liberates CHA
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 515
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 515
+				country_exists = CHA
+			}
+			var:515.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 515.controller }
+				country_exists = CHA
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 515 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_CHA_released_by_revolter"
+			set_temp_variable = { original_occupier = 515.controller }
+			set_temp_variable = { revolter = CHA }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Niger #
+	NFA_white_peace_revolt_NGR = { #White peace if there is a stalemate
+		icon = GFX_decision_oppression
+
+		available = {
+			NGR = { surrender_progress > 0.1 }
+		}
+
+		activation = {
+			has_war_with = NGR
+			has_country_flag = NFA_rebelled_NGR
+			NGR = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = NGR }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+		selectable_mission = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_white_peace_revolt_NGR"
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = 3
+				add_resistance = -5
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_white_peace_revolt_NGR"
+			add_stability = -0.05
+			add_political_power = -50
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = -5
+				add_resistance = 10
+			}
+			NGR = {
+				country_event = french_republic_events.614
+				every_owned_state = { remove_claim_by = ROOT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	NFA_NGR_released_by_revolter = { #Another revolter liberates NGR
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 809
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 809
+				country_exists = NGR
+			}
+			var:809.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 809.controller }
+				country_exists = NGR
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 809 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_NGR_released_by_revolter"
+			set_temp_variable = { original_occupier = 809.controller }
+			set_temp_variable = { revolter = NGR }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Burkina Faso #
+	NFA_white_peace_revolt_VOL = { #White peace if there is a stalemate
+		icon = GFX_decision_oppression
+
+		available = {
+			VOL = { surrender_progress > 0.1 }
+		}
+
+		activation = {
+			has_war_with = VOL
+			has_country_flag = NFA_rebelled_VOL
+			VOL = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = VOL }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+		selectable_mission = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_white_peace_revolt_VOL"
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = 3
+				add_resistance = -5
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_white_peace_revolt_VOL"
+			add_stability = -0.05
+			add_political_power = -50
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = -5
+				add_resistance = 10
+			}
+			VOL = {
+				country_event = french_republic_events.614
+				every_owned_state = { remove_claim_by = ROOT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	NFA_VOL_released_by_revolter = { #Another revolter liberates VOL
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 808
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 808
+				country_exists = VOL
+			}
+			var:808.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 808.controller }
+				country_exists = VOL
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 808 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_VOL_released_by_revolter"
+			set_temp_variable = { original_occupier = 808.controller }
+			set_temp_variable = { revolter = VOL }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Mali #
+	NFA_white_peace_revolt_MLI = { #White peace if there is a stalemate
+		icon = GFX_decision_oppression
+
+		available = {
+			MLI = { surrender_progress > 0.1 }
+		}
+
+		activation = {
+			has_war_with = MLI
+			has_country_flag = NFA_rebelled_MLI
+			MLI = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = MLI }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+		selectable_mission = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_white_peace_revolt_MLI"
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = 3
+				add_resistance = -5
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_white_peace_revolt_MLI"
+			add_stability = -0.05
+			add_political_power = -50
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = -5
+				add_resistance = 10
+			}
+			MLI = {
+				country_event = french_republic_events.614
+				every_owned_state = { remove_claim_by = ROOT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	NFA_MLI_released_by_revolter = { #Another revolter liberates MLI
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 556
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 556
+				country_exists = MLI
+			}
+			var:556.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 556.controller }
+				country_exists = MLI
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 556 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_MLI_released_by_revolter"
+			set_temp_variable = { original_occupier = 556.controller }
+			set_temp_variable = { revolter = MLI }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Guinea #
+	NFA_white_peace_revolt_GNA = { #White peace if there is a stalemate
+		icon = GFX_decision_oppression
+
+		available = {
+			GNA = { surrender_progress > 0.1 }
+		}
+
+		activation = {
+			has_war_with = GNA
+			has_country_flag = NFA_rebelled_GNA
+			GNA = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = GNA }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+		selectable_mission = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_white_peace_revolt_GNA"
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = 3
+				add_resistance = -5
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_white_peace_revolt_GNA"
+			add_stability = -0.05
+			add_political_power = -50
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = -5
+				add_resistance = 10
+			}
+			GNA = {
+				country_event = french_republic_events.614
+				every_owned_state = { remove_claim_by = ROOT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	NFA_GNA_released_by_revolter = { #Another revolter liberates GNA
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 806
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 806
+				country_exists = GNA
+			}
+			var:806.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 806.controller }
+				country_exists = GNA
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 806 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_GNA_released_by_revolter"
+			set_temp_variable = { original_occupier = 806.controller }
+			set_temp_variable = { revolter = GNA }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Mauritania #
+	NFA_white_peace_revolt_MRT = { #White peace if there is a stalemate
+		icon = GFX_decision_oppression
+
+		available = {
+			MRT = { surrender_progress > 0.1 }
+		}
+
+		activation = {
+			has_war_with = MRT
+			has_country_flag = NFA_rebelled_MRT
+			MRT = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = MRT }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+		selectable_mission = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_white_peace_revolt_MRT"
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = 3
+				add_resistance = -5
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_white_peace_revolt_MRT"
+			add_stability = -0.05
+			add_political_power = -50
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = -5
+				add_resistance = 10
+			}
+			MRT = {
+				country_event = french_republic_events.614
+				every_owned_state = { remove_claim_by = ROOT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	NFA_MRT_released_by_revolter = { #Another revolter liberates MRT
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 557
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 557
+				country_exists = MRT
+			}
+			var:557.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 557.controller }
+				country_exists = MRT
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 557 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_MRT_released_by_revolter"
+			set_temp_variable = { original_occupier = 557.controller }
+			set_temp_variable = { revolter = MRT }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Ivory Coast #
+	NFA_white_peace_revolt_IVO = { #White peace if there is a stalemate
+		icon = GFX_decision_oppression
+
+		available = {
+			IVO = { surrender_progress > 0.1 }
+		}
+
+		activation = {
+			has_war_with = IVO
+			has_country_flag = NFA_rebelled_IVO
+			IVO = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = IVO }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+		selectable_mission = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_white_peace_revolt_IVO"
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = 3
+				add_resistance = -5
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_white_peace_revolt_IVO"
+			add_stability = -0.05
+			add_political_power = -50
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = -5
+				add_resistance = 10
+			}
+			IVO = {
+				country_event = french_republic_events.614
+				every_owned_state = { remove_claim_by = ROOT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	NFA_IVO_released_by_revolter = { #Another revolter liberates IVO
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 807
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 807
+				country_exists = IVO
+			}
+			var:807.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 807.controller }
+				country_exists = IVO
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 807 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_IVO_released_by_revolter"
+			set_temp_variable = { original_occupier = 807.controller }
+			set_temp_variable = { revolter = IVO }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Tunisia #
+	NFA_white_peace_revolt_TUN = { #White peace if there is a stalemate
+		icon = GFX_decision_oppression
+
+		available = {
+			TUN = { surrender_progress > 0.1 }
+		}
+
+		activation = {
+			has_war_with = TUN
+			has_country_flag = NFA_rebelled_TUN
+			TUN = { surrender_progress < 0.1 }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = TUN }
+		}
+
+		days_mission_timeout = 200
+		is_good = no
+		selectable_mission = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete NFA_white_peace_revolt_TUN"
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = 3
+				add_resistance = -5
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_white_peace_revolt_TUN"
+			add_stability = -0.05
+			add_political_power = -50
+			every_owned_state = {
+				limit = {
+					OR = {
+						has_dynamic_modifier = { modifier = NFA_colonial_resistance }
+						has_dynamic_modifier = { modifier = NFA_Colonial_Exploitation }
+					}
+				}
+				add_compliance = -5
+				add_resistance = 10
+			}
+			TUN = {
+				country_event = french_republic_events.614
+				every_owned_state = { remove_claim_by = ROOT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	NFA_TUN_released_by_revolter = { #Another revolter liberates TUN... somehow
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 458
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 458
+				country_exists = TUN
+			}
+			var:458.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 458.controller }
+				country_exists = TUN
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 458 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_TUN_released_by_revolter"
+			set_temp_variable = { original_occupier = 458.controller }
+			set_temp_variable = { revolter = TUN }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Senegal #
+	NFA_SEN_released_by_revolter = { #Another revolter liberates SEN
+		icon = GFX_decision_oppression
+
+		activation = {
+			NOT = {
+				NFA = { controls_state = 272 }
+				country_exists = SEN
+			}
+			var:272.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 272.controller }
+				country_exists = SEN
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 272 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_SEN_released_by_revolter"
+			set_temp_variable = { original_occupier = 272.controller }
+			set_temp_variable = { revolter = SEN }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Sierra Leone #
+	NFA_SIE_released_by_revolter = { #Another revolter liberates SIE
+		icon = GFX_decision_oppression
+
+		available = {
+			controls_state = 700
+		}
+
+		activation = {
+			NOT = {
+				controls_state = 700
+				country_exists = SIE
+			}
+			var:700.controller = {
+				ROOT = { has_country_flag = NFA_rebelled_@PREV }
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = 700.controller }
+				country_exists = SIE
+			}
+		}
+
+		days_mission_timeout = 40
+		is_good = no
+		selectable_mission = no
+
+		highlight_states = {
+			highlight_state_targets = { state = 700 }
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout NFA_SIE_released_by_revolter"
+			set_temp_variable = { original_occupier = 700.controller }
+			set_temp_variable = { revolter = SIE }
+			NFA_colony_released_by_revolter = yes
+		}
+		fixed_random_seed = no
+	}
+}
+

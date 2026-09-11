@@ -1,0 +1,873 @@
+# leader_traits contain a list of UnitLeaderTrait with the following structure:
+# trait_key = {
+# 	type = all # or either of field_marshal, corps_commander, navy
+#	trait_type = basic_trait # or either of status_trait, personality_trait, assignable_trait, basic_terrain_trait, assignable_terrain_trait, exile
+#	attack_skill = 0 # integer
+#	defense_skill = 0 # integer
+#	logistics_skill = 0 # integer
+#	planning_skill = 0 # integer
+#	maneuvering_skill = 0 # integer
+#	coordination_skill = 0 # integer
+#	attack_skill_factor = 0.0 # decimal
+#	defense_skill_factor = 0.0 # decimal
+#	logistics_skill_factor = 0.0 # decimal
+#	planning_skill_factor = 0.0 # decimal
+#	maneuvering_skill_factor = 0.0 # decimal
+#	coordination_skill_factor = 0.0 # decimal
+#	show_in_combat = yes # boolean
+#	override_effect_tooltip = "" # loc key
+#	custom_effect_tooltip = "" # loc key
+#	custom_prerequisite_tooltip = "" # loc key
+#	custom_gain_xp_trigger_tooltip = "" # loc key
+#	mutually_exclusive = other_trait # trait key
+#	parent = { # Can be added multiple times
+#		traits = { XXX YYY ZZZ }  # A list of other traits that
+#       num_parents_needed = 1 # The number of the above traits that must be true
+#   }
+#   any_parent = { XXX YYY ZZZ } # shorthand for parent when num_parents_needed are defaulted to 1
+#   all_parents = { XXX YYY ZZZ } # shorthand for parent when num_parents_needed are the same as the number of parents
+#	gui_row = 0 # integer, starts at 0, unset or -1 means the trait does not appear in unlockable trait tree.
+#	gui_column = 0 # integer, starts at 0, unset or -1 means auto
+#	allowed = trigger # scope is a unit leader
+#	prerequisites = trigger # scope is an unit leader
+#	gain_xp = trigger # scope is a combatant
+#	gain_xp_leader = trigger # scope is a unit leader. ROOT is country you are from and FROM is any target nationality for agents
+#	gain_xp_on_spotting = 0 # integer
+#	modifier = { } # list of modifiers
+#	non_shared_modifier = {} #
+#	corps_commander_modifier = {} #
+#	field_marshal_modifier = {} #
+#	sub_unit_modifiers = { # list of sub unit def
+#		# e.g.
+#		submarine {
+#			units = {} # list of adjusters
+#			# list of modifiers e.g.
+#			naval_visibility = -0.1
+#		}
+#	}
+#	trait_xp_factor = {} # list of trait_key/decimal
+#	on_add = effect # scope is an unit leader
+#	on_remove = effect # scope is an unit leader
+#	daily_effect = effect # scope is an unit leader
+#	cost = 1000 # integer
+#	ai_will_do = {} # weight
+#	new_commander_weight = {} # weight
+#	enable_ability = ability_key
+#}
+
+leader_traits = {
+	##
+	##	GENERIC
+	##
+
+	artillery_officer = {
+		type = corps_commander
+		trait_type = personality_trait
+
+		trait_xp_factor = {
+			artillery_specialist = 1	#+100%
+		}
+	}
+
+	artillery_specialist = {
+		type = corps_commander
+		gain_xp = {
+			check_expr = {
+				value = num_battalions_with_type@artillery_brigade
+				add = num_battalions_with_type@mot_artillery_brigade
+				add = num_battalions_with_type@rocket_artillery_brigade
+				add = num_battalions_with_type@mot_rocket_artillery_brigade
+				add = num_battalions_with_type@motorized_rocket_brigade
+				greater_than = { value = num_battalions multiply = 0.2 }
+			}
+		}
+		custom_gain_xp_trigger_tooltip = artillery_ratio_over_20
+
+		cost = 1000
+		modifier = {
+			army_artillery_attack_factor = 0.1
+		}
+
+		slot = high_command
+		specialist_advisor_trait = KR_MHC_artillery_1
+		expert_advisor_trait = KR_MHC_artillery_2
+		genius_advisor_trait = KR_MHC_artillery_3
+
+		ai_will_do = { factor = 1 }
+
+		gui_row = 4
+	}
+
+	artillery_expert = {
+		type = corps_commander
+		gain_xp = {
+			always = no # not gainable
+		}
+		cost = 500
+		modifier = {
+			army_artillery_attack_factor = 0.1
+		}
+
+		ai_will_do = { factor = 1 }
+
+		trait_type = assignable_trait
+		any_parent = { artillery_specialist }
+		gui_row = 4
+		mutually_exclusive = fortress_buster
+		mutually_exclusive = scavenger
+	}
+
+	rising_star = {
+		type = { land navy }
+		trait_type = personality_trait
+
+		modifier = {
+			experience_gain_factor = 0.25
+			custom_modifier_tooltip = rising_star_tt
+		}
+
+		new_commander_weight = {
+			factor = 1
+
+			modifier = {
+				FROM = { has_idea = best_of_the_best_spirit }
+				factor = 0
+			}
+			modifier = {
+				FROM = { has_idea = academy_scholarships_spirit }
+				factor = 0
+			}
+			modifier = {
+				skill > 2
+				factor = 0
+			}
+		}
+	}
+
+	master_of_ordnance = {
+		type = corps_commander
+
+		trait_type = personality_trait
+
+		modifier = {
+			army_artillery_attack_factor = 0.15
+		}
+
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	compassionate_leader = {
+		type = land
+		trait_type = personality_trait
+
+		attack_skill = -1
+
+		modifier = {
+			army_morale_factor = 0.10
+			max_dig_in_factor = 0.10
+			supply_consumption_factor = -0.05
+		}
+
+		new_commander_weight = {
+			factor = 1
+
+			modifier = {
+				FROM = { has_idea = best_of_the_best_spirit }
+				factor = 0
+			}
+			modifier = {
+				FROM = { has_idea = academy_scholarships_spirit }
+				factor = 0
+			}
+		}
+	}
+
+	##
+	##	OPERATIVE
+	##
+
+	operative_bold = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 1.0
+			modifier = {
+				has_trait = operative_cautious
+				factor = 0
+			}
+			modifier = {
+				has_trait = operative_reckless
+				factor = 0.5
+			}
+		}
+
+		modifier = {
+			operation_outcome = 0.10
+		}
+	}
+
+	operative_cautious = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 1.0
+			modifier = {
+				has_trait = operative_bold
+				factor = 0
+			}
+			modifier = {
+				has_trait = operative_reckless
+				factor = 0
+			}
+		}
+
+		modifier = {
+			own_operative_detection_chance_factor = -0.10
+			operation_risk = -0.10
+		}
+	}
+
+	operative_reckless = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 1.0
+			modifier = {
+				has_trait = operative_cautious
+				factor = 0
+			}
+			modifier = {
+				has_trait = operative_bold
+				factor = 0.5
+			}
+		}
+
+		modifier = {
+			operation_risk = 0.10
+			operation_outcome = 0.10
+		}
+	}
+
+	operative_military_background = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 1.0
+			modifier = {
+				has_trait = operative_streetwise
+				factor = 0
+			}
+		}
+
+		modifier = {
+			operation_infiltrate_armed_forces_army_outcome = 0.20
+			operation_infiltrate_armed_forces_navy_outcome = 0.20
+			operation_infiltrate_armed_forces_airforce_outcome = 0.20
+			operation_infiltrate_armed_forces_army_risk = -0.20
+			operation_infiltrate_armed_forces_navy_risk = -0.20
+			operation_infiltrate_armed_forces_airforce_risk = -0.20
+		}
+	}
+
+	operative_political_connections = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0.5
+			modifier = {
+				has_trait = operative_streetwise
+				factor = 0
+			}
+		}
+
+		modifier = {
+			intel_network_gain = 0.20
+			diplomatic_pressure_mission_factor = 0.20
+			operation_infiltrate_civilian_outcome = 0.20
+			operation_infiltrate_civilian_risk = -0.20
+		}
+	}
+
+	operative_highly_educated = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0.7
+			modifier = {
+				has_trait = operative_streetwise
+				factor = 0
+			}
+		}
+
+		modifier = {
+			operation_steal_tech_risk = -0.25
+			operation_steal_tech_outcome = 0.25
+			operation_capture_cipher_risk = -0.25
+			operation_capture_cipher_outcome = 0.25
+		}
+	}
+
+	operative_efficient = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0.7
+		}
+
+		modifier = {
+			operation_cost = -0.20
+		}
+	}
+
+	operative_streetwise = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 1.0
+			modifier = {
+				has_trait = operative_political_connections
+				factor = 0
+			}
+			modifier = {
+				has_trait = operative_military_background
+				factor = 0
+			}
+			modifier = {
+				has_trait = operative_highly_educated
+				factor = 0
+			}
+		}
+
+		modifier = {
+			boost_resistance_factor = 0.20
+			operation_infiltrate_risk = -0.20
+			operation_make_resistance_contacts_outcome = 0.20
+			own_operative_forced_into_hiding_time_factor = -0.20
+		}
+	}
+
+	operative_master_infiltrator = {
+		type = operative
+		trait_type = basic_trait
+
+		new_commander_weight = {
+			factor = 0
+		}
+
+		modifier = {
+			operation_infiltrate_outcome = 0.50
+			operation_infiltrate_risk = -0.50
+		}
+	}
+
+	operative_survivor = {
+		type = operative
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0
+		}
+
+		modifier = {
+			operation_risk = -0.50
+		}
+	}
+
+	operative_master_commando = {
+		type = operative
+		trait_type = basic_trait
+
+		new_commander_weight = {
+			base = 0
+		}
+
+		modifier = {
+			own_operative_detection_chance_factor = -0.20
+			target_sabotage_factor = 0.50
+			target_sabotage_risk = -0.50
+			operation_capture_cipher_outcome = 0.50
+			operation_capture_cipher_risk = -0.50
+		}
+	}
+
+	operative_master_saboteur = {
+		type = operative
+		trait_type = basic_trait
+
+		new_commander_weight = {
+			base = 0
+		}
+
+		modifier = {
+			target_sabotage_factor = 0.50
+			target_sabotage_risk = -0.25
+			target_sabotage_cost = -0.50
+		}
+	}
+
+	##
+	##	COUNTRY-SPECIFIC TRAITS
+	##
+
+	SIA_four_musketeers = { # actually 5 of them, but is called 4 historically
+		type = { land navy }
+		trait_type = personality_trait
+		modifier = {
+			planning_speed = 0.025
+			army_morale_factor = 0.05
+		}
+		non_shared_modifier = {
+			reassignment_duration_factor = 1
+		}
+		new_commander_weight = {
+			factor = 0 # Only added for 5 commander
+		}
+	}
+	CHN_yue_clique_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_gui_clique_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_RKT_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	GBR_british_exile_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	INT_polish_exile_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	INC_siamese_exile_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	WCA_red_guard_commander = {
+		type = land
+		trait_type = personality_trait
+		allowed = {
+			FROM = { tag = WCA }
+		}
+		unit_type = {
+			type = militia
+		}
+		unit_trigger = {
+			division_has_majority_template = militia
+			owner = {
+				NOT = {
+					has_idea = best_of_the_best_spirit
+					has_idea = academy_scholarships_spirit
+				}
+			}
+		}
+		modifier = {
+			modifier_army_sub_unit_militia_defence_factor = 0.05
+			modifier_army_sub_unit_militia_speed_factor = 0.05
+			modifier_army_sub_unit_militia_max_org_factor = 0.05
+			out_of_supply_factor = -0.1
+		}
+		new_commander_weight = {
+			factor = 0.3
+			modifier = {
+				factor = 0
+				has_global_flag = USA_civil_war_over_flag
+			}
+		}
+	}
+	LEC_british_commander = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	LEC_german_commander = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	LEC_japanese_commander = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	LEC_international_commander = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	KOR_korean_exile = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	AST_new_zealander = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	TUR_OHF_members = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	TUR_Loyal_to_the_Sultan = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_LKT_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	RAJ_british_commander = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	NOR_samfundsvernet_moderate = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	NOR_samfundsvernet_radical = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_gmj_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_jin_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_zhang_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_new_guard_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_shikan_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_japanese_aligned_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_monarchist_officer_trait = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_CDL_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_GRA_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	SAF_british_commander = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	SAF_boer_commander = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	IRE_apolitical_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	SRI_fascist_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	SRI_socialist_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	GAL_polish_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	GAL_ukrainian_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	SPA_carlist_loyalties = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	SPR_republican_loyalties = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	RUS_sidelined = {
+		type = land
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+
+		non_shared_modifier = {
+			experience_gain_factor = -0.33
+			reassignment_duration_factor = 1
+		}
+		corps_commander_modifier = {
+			max_commander_army_size = -10
+		}
+		field_marshal_modifier = {
+			max_army_group_size = -3
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	RUS_ice_march_trait = {
+		type = land
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		non_shared_modifier = {
+			skill_bonus_factor = 0.1
+			experience_gain_factor = -0.1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+		attack_skill_factor = 1
+	}
+	RUS_ice_march_adm_trait = {
+		type = navy
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		non_shared_modifier = {
+			skill_bonus_factor = 0.1
+			experience_gain_factor = -0.1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	RUS_monarchist_officer = {
+		type = land
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	RUS_republican_officer = {
+		type = land
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	RUS_savinkovist_officer = {
+		type = land
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		non_shared_modifier = {
+			promote_cost_factor = -0.5
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	RUS_red_army_trait = {
+		type = land
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		non_shared_modifier = {
+			skill_bonus_factor = 0.05
+			promote_cost_factor = -0.25
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_YUN_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_GZH_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_XSM_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_HNN_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_SZC_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_SIK_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_NZH_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	CHN_SZH_officer = {
+		type = { land navy }
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+}

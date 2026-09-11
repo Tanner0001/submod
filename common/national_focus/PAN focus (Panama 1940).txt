@@ -1,0 +1,456 @@
+###########################
+# Panama Focus Tree for Grand Coalition vs CPN focuses
+# By JakeR2000
+###########################
+
+focus_tree = {
+	id = panama_1940
+	country = {
+		factor = 0
+	}
+
+	default = no
+	continuous_focus_position = { x = 225 y = 900 }
+
+	shared_focus = PAN_canal_in_crisis
+	shared_focus = PAN_protect_interests
+	shared_focus = PAN_defend_our_homeland
+	shared_focus = PAN_invest_in_industry
+	shared_focus = PAN_improve_agriculture
+
+	focus = {
+		id = PAN_40_elections
+		icon = GFX_goal_generic_elections
+		cost = 0
+
+		x = 2
+		y = 0
+
+		available = {
+			always = no
+		}
+		bypass = {
+			has_country_flag = PAN_40_elections
+		}
+		on_uncomplete = {
+			remove_ideas = {
+				PAN_construction_effort
+				PAN_land_clearing
+				PAN_state_owned_land
+				PAN_private_owned_land
+				PAN_modernized_panama_idea
+				PAN_new_national_police_idea
+				PAN_government_owned_unions
+				PAN_regulated_unions
+				PAN_curtailed_unions
+				PAN_a_common_goal
+				PAN_liberal_panama
+				PAN_new_conservative_government
+				PAN_economic_prosperity
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_40_elections"
+		}
+	}
+
+	focus = {
+		id = PAN_CPN_victory #CPN wins elections
+		icon = GFX_goal_ideology_authoritarian_democrat
+		cost = 0
+
+		x = 0
+		y = 1
+
+		available = {
+			always = no
+		}
+		prerequisite = {
+			focus = PAN_40_elections
+		}
+		bypass = {
+			has_country_flag = PAN_CPN_Victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_CPN_victory"
+		}
+	}
+
+	focus = {
+		id = PAN_modernizing_panama
+		icon = GFX_goal_generic_build_housing
+		cost = 7
+
+		relative_position_id = PAN_CPN_victory
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAN_CPN_victory
+		}
+		available = {
+			has_country_flag = PAN_CPN_Victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_modernizing_panama"
+			add_ideas = PAN_construction_effort
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = PAN_clear_new_land
+		icon = GFX_goal_OTT_Land_Reform
+		cost = 10
+
+		relative_position_id = PAN_CPN_victory
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = PAN_modernizing_panama
+		}
+		available = {
+			has_country_flag = PAN_CPN_Victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_clear_new_land"
+			add_ideas = PAN_land_clearing
+			304 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = PAN_industrial_projects
+		icon = GFX_goal_generic_construct_public_housing
+		cost = 10
+
+		relative_position_id = PAN_CPN_victory
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = PAN_modernizing_panama
+		}
+		available = {
+			has_country_flag = PAN_CPN_Victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_industrial_projects"
+			304 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			country_event = panama_events.27
+			custom_effect_tooltip = tooltip_event_allows_choice
+			custom_effect_tooltip = tooltip_event_choice_option_1
+			event_option_tooltip = panama_events.27.a
+			custom_effect_tooltip = tooltip_event_choice_option_2
+			event_option_tooltip = panama_events.27.b
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = PAN_land_status #decide what to do with the land - state owned or private owned?
+		icon = GFX_focus_AUS_agriculture
+		cost = 5
+
+		relative_position_id = PAN_CPN_victory
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = PAN_clear_new_land
+		}
+		available = {
+			has_country_flag = PAN_CPN_Victory
+		}
+		prerequisite = {
+			focus = PAN_industrial_projects
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_land_status"
+			country_event = panama_events.26
+			custom_effect_tooltip = tooltip_event_allows_choice
+			custom_effect_tooltip = tooltip_event_choice_option_1
+			event_option_tooltip = panama_events.26.a
+			custom_effect_tooltip = tooltip_event_choice_option_2
+			event_option_tooltip = panama_events.26.b
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = PAN_modernized_panama
+		icon = GFX_goal_panama
+		cost = 5
+
+		relative_position_id = PAN_CPN_victory
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = PAN_land_status
+		}
+		available = {
+			has_country_flag = PAN_CPN_Victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_modernized_panama"
+			add_ideas = PAN_modernized_panama_idea
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = PAN_coalition_victory
+		icon = GFX_goal_ideology_social_liberal
+		cost = 0
+
+		x = 4
+		y = 1
+
+		available = {
+			always = no
+		}
+		prerequisite = {
+			focus = PAN_40_elections
+		}
+		bypass = {
+			has_country_flag = PAN_coalition_victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_coalition_victory"
+		}
+	}
+
+	focus = {
+		id = PAN_new_national_police
+		icon = GFX_goal_enlist_the_police
+		cost = 5
+
+		relative_position_id = PAN_coalition_victory
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = PAN_coalition_victory
+		}
+		available = {
+			has_country_flag = PAN_coalition_victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_new_national_police"
+			add_ideas = PAN_new_national_police_idea
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = PAN_the_union_compromise
+		icon = GFX_goal_generic_union_agreement
+		cost = 7
+
+		relative_position_id = PAN_coalition_victory
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = PAN_new_national_police
+		}
+		available = {
+			has_country_flag = PAN_coalition_victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_the_union_compromise"
+			country_event = panama_events.28
+			custom_effect_tooltip = tooltip_event_allows_choice
+			custom_effect_tooltip = tooltip_event_choice_option_1
+			event_option_tooltip = panama_events.28.a
+			custom_effect_tooltip = tooltip_event_choice_option_2
+			event_option_tooltip = panama_events.28.b
+			custom_effect_tooltip = tooltip_event_choice_option_3
+			event_option_tooltip = panama_events.28.c
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = PAN_export_economy
+		icon = GFX_goal_AST_new_markets
+		cost = 10
+
+		relative_position_id = PAN_coalition_victory
+		x = -1
+		y = 3
+
+		available = {
+			has_country_flag = PAN_coalition_victory
+		}
+		prerequisite = {
+			focus = PAN_the_union_compromise
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_export_economy"
+			304 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = PAN_work_together #The coalition can fall apart here maybe, who leads after depends on who you picked to lead the CC
+		icon = GFX_goal_generic_government_deals
+		cost = 10
+
+		relative_position_id = PAN_coalition_victory
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = PAN_the_union_compromise
+		}
+		available = {
+			has_country_flag = PAN_coalition_victory
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_work_together"
+			country_event = panama_events.29
+			custom_effect_tooltip = tooltip_event_allows_choice
+			custom_effect_tooltip = tooltip_event_choice_option_1
+			event_option_tooltip = panama_events.29.a
+			custom_effect_tooltip = tooltip_event_choice_option_2
+			effect_tooltip = {
+				set_party_name = {
+					ideology = social_conservative
+					long_name = PAN_new_conservatives_long
+					name = PAN_new_conservatives
+				}
+				set_party_name = {
+					ideology = social_liberal
+					long_name = PAN_social_liberal_party_long
+					name = PAN_social_liberal_party
+				}
+				set_party_name = {
+					ideology = market_liberal
+					long_name = PAN_market_liberal_party_long
+					name = PAN_market_liberal_party
+				}
+				set_party_name = {
+					ideology = authoritarian_democrat
+					long_name = PAN_authoritarian_democrat_party_long
+					name = PAN_authoritarian_democrat_party
+				}
+				set_party_name = {
+					ideology = national_populist
+					long_name = PAN_national_populist_party_long
+					name = PAN_national_populist_party
+				}
+				if = {
+					limit = { has_government = authoritarian_democrat }
+					set_temp_variable = { coalition_partner_var = token:social_liberal }
+					remove_from_coalition = yes
+					set_temp_variable = { coalition_partner_var = token:market_liberal }
+					remove_from_coalition = yes
+					set_temp_variable = { coalition_partner_var = token:social_conservative }
+					remove_from_coalition = yes
+				}
+				else_if = {
+					limit = { has_government = social_conservative }
+					set_temp_variable = { coalition_partner_var = token:social_liberal }
+					remove_from_coalition = yes
+					set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+					remove_from_coalition = yes
+					set_temp_variable = { coalition_partner_var = token:national_populist }
+					remove_from_coalition = yes
+				}
+				else_if = {
+					limit = { has_government = social_liberal }
+					set_temp_variable = { coalition_partner_var = token:social_conservative }
+					remove_from_coalition = yes
+					set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+					remove_from_coalition = yes
+					set_temp_variable = { coalition_partner_var = token:national_populist }
+					remove_from_coalition = yes
+				}
+				else = {
+					custom_effect_tooltip = end_coalition_tt
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = PAN_a_common_ideology
+		icon = GFX_goal_HOL_CNA_restored_stability
+		cost = 5
+
+		relative_position_id = PAN_coalition_victory
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = PAN_work_together
+		}
+		available = {
+			has_country_flag = PAN_coalition_victory
+		}
+		prerequisite = {
+			focus = PAN_export_economy
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed PAN_a_common_ideology"
+			custom_effect_tooltip = PAN_liberals_in_charge
+			effect_tooltip = { add_ideas = PAN_liberal_panama }
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = PAN_conservative_in_charge
+			effect_tooltip = { add_ideas = PAN_new_conservative_government }
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = PAN_authoritarian_in_charge
+			effect_tooltip = { add_ideas = PAN_economic_prosperity }
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = PAN_coalition_in_charge
+			effect_tooltip = { add_ideas = PAN_a_common_goal }
+			hidden_effect = {
+				if = {
+					limit = { has_country_flag = PAN_coalition_standing }
+					clr_country_flag = PAN_coalition_standing
+					add_ideas = PAN_a_common_goal
+				}
+				else_if = {
+					limit = { has_government = social_conservative }
+					add_ideas = PAN_liberal_panama
+				}
+				else_if = {
+					limit = { has_government = social_conservative }
+					add_ideas = PAN_new_conservative_government
+				}
+				else_if = {
+					limit = { has_government = authoritarian_democrat }
+					add_ideas = PAN_economic_prosperity
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_INDUSTRY }
+	}
+}

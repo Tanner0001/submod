@@ -1,0 +1,197 @@
+#################
+### Diplomacy ###
+#################
+CAN_GBR_hates_socialists = {
+	reversed = yes
+
+	enable = {
+		has_socialist_government = yes
+		IMP = { is_in_faction_with = ENT }
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = antagonize
+		id = IMP #CAN/GBR
+		value = 1000
+	}
+	ai_strategy = {
+		type = diplo_action_acceptance
+		target = market_access_rights
+		id = IMP #CAN/GBR
+		value = -1000
+	}
+}
+CAN_dislikes_germany = {
+	reversed = yes
+
+	enable = {
+		is_in_faction_with = GER
+		GER = { is_faction_leader = yes }
+		NOT = { has_global_flag = GER_stay_out_france_uk }
+		IMP = { is_in_faction_with = ENT }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = ignore
+		id = IMP #CAN/GBR
+		value = 300
+	}
+	ai_strategy = {
+		type = alliance
+		id = IMP #CAN/GBR
+		value = -300
+	}
+	ai_strategy = {
+		type = befriend
+		id = IMP #CAN/GBR
+		value = -300
+	}
+	ai_strategy = {
+		type = support
+		id = IMP #CAN/GBR
+		value = -1000
+	}
+}
+entente_dislikes_germany = {
+	enable = {
+		is_in_faction_with = ENT
+		GER = { is_faction_leader = yes }
+		NOT = { has_global_flag = GER_stay_out_france_uk }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = ignore
+		id = GER
+		value = 300
+	}
+	ai_strategy = {
+		type = alliance
+		id = GER
+		value = -300
+	}
+	ai_strategy = {
+		type = befriend
+		id = GER
+		value = -300
+	}
+	ai_strategy = {
+		type = support
+		id = GER
+		value = -1000
+	}
+}
+entente_dont_fight_russia = {
+	enable = {
+		is_in_faction_with = ENT
+		RUS = {
+			is_faction_leader = yes
+			has_socialist_government = no
+		}
+		NOT = { country_exists = GER }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = diplo_action_desire
+		id = RUS
+		value = 100
+		target = non_aggression_pact
+	}
+	ai_strategy = {
+		type = befriend
+		id = RUS
+		value = 300
+	}
+}
+
+################
+### Domestic ###
+################
+CAN_build_up_troops = {
+	allowed = {
+		tag = CAN
+	}
+	enable = {
+		has_cosmetic_tag = CAN_entente
+		NOT = { country_exists = GBR }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = force_build_armies
+		value = 100
+	}
+}
+
+CAN_fight_the_quebecois = {
+	allowed = {
+		tag = CAN
+	}
+	enable = {
+		OR = {
+			has_completed_focus = CAN_send_in_the_rcmp
+			has_completed_focus = CAN_a_second_unionist_government
+		}
+		QUE = {
+			any_core_state = {
+				has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+				is_owned_by = ROOT
+			}
+		}
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = save_equipment
+		id = infantry_equipment
+		value = 601
+	}
+}
+
+################
+### Military ###
+################
+CAN_naval_invasion_focus = {
+	allowed = {
+		tag = CAN
+	}
+	enable = {
+		surrender_progress < 0.05
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = naval_invasion_focus
+		value = 80
+	}
+}
+
+CAN_watch_the_border = {
+	allowed = {
+		tag = CAN
+	}
+	enable = {
+		has_global_flag = USA_civil_war_begun_flag
+		is_in_faction_with = ENT
+	}
+	abort = {
+		OR = {
+			NOT = { is_in_faction_with = ENT }
+			has_global_flag = USA_civil_war_over_flag
+			has_war_with = ENG
+			any_home_area_neighbor_country = { has_war_with = ROOT }
+		}
+	}
+
+	ai_strategy = {
+		type = front_unit_request
+		area = north_america
+		value = 100
+	}
+}

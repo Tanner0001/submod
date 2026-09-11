@@ -1,0 +1,1595 @@
+QIE_recalculate_peking_commission = {
+	set_variable = { var_PEKCOM_influence = { value = QIE.party_popularity@market_liberal multiply = -0.5 } }
+	set_variable = { var_PEKCOM_influence_positive = { value = var_PEKCOM_influence multiply = -1 } }
+	set_variable = { var_PEKCOM_influence_stability = { value = QIE.party_popularity@market_liberal multiply = -0.25 } }
+}
+
+QIE_recalculate_yiguandao_influence = {
+	set_variable = {
+		var_YIG_influence = {
+			value = QIE.party_popularity@national_populist
+			multiply = -1
+			clamp = { min = -0.5 max = 0 }
+		}
+	}
+}
+
+QIE_add_yiguandao_modifier = {
+	add_dynamic_modifier = {
+		modifier = QIE_yiguandao_influence_dynamic_modifier
+		scope = QIE
+	}
+}
+
+QIE_remove_peking_commission = {
+	clear_variable = var_PEKCOM_influence
+	remove_dynamic_modifier = { modifier = QIE_german_influence_dynamic_modifier }
+	remove_targeted_decision = { target = FROM decision = QIE_bribe_lobbyists }
+	remove_targeted_decision = { target = FROM decision = QIE_encourage_domestic_production }
+	remove_targeted_decision = { target = FROM decision = QIE_encourage_anti_german_boycott }
+	remove_targeted_decision = { target = FROM decision = QIE_entice_financial_support }
+}
+
+QIE_enable_manchu_qing_alignment = {
+	if = {
+		limit = {
+			QIE = {
+				QIE_aisin_gioro_puyi = {
+					is_dead = no
+					china_character_is_manchu_qing = no
+				}
+			}
+		}
+
+		#set Puyi as Manchu
+		QIE = {
+			QIE_aisin_gioro_puyi = {
+				china_set_character_alignment_manchu_qing = yes
+
+				temp_unretire_character = yes
+				set_portraits = {
+					civilian = { large = GFX_portrait_QIE_aisin_gioro_puyi_civilian_large_uniform }
+				}
+				remove_all_country_leader_roles = yes
+				for_loop_effect = {
+					start = 3 #social_democrat
+					end = 9 #national_populist
+					compare = less_than_or_equals
+
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									desc = QIE_aisin_gioro_puyi_manchu_leader_desc
+									ideology = [IDEOLOGY]
+									traits = { CHN_restorationist_aligned QIE_restored_emperor }
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[?global.ideology_groups^v.GetTokenKey]_subtype"
+					}
+				}
+				revert_temp_unretire_character = yes
+			}
+		}
+
+		#set other allies as Manchu if appropriate
+		SHD = {
+			SHD_qu_yingguang = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_northern_zhili = yes
+						NOT = {
+							QIE = { has_country_flag = QIE_qu_says_no }
+							QIE = { has_country_flag = QIE_yan_says_no }
+						}
+						OR = {
+							QIE = { has_country_flag = QIE_qu_backs_coup }
+							AND = {
+								QIE = { has_country_flag = QIE_yan_backs_coup }
+								NOT = {
+									QIE = {
+										OR = {
+											has_country_flag = QIE_coup_failed_early
+											has_country_flag = QIE_coup_failed
+										}
+									}
+								}
+							}
+						}
+					}
+					china_set_character_alignment_manchu_qing = yes
+
+					temp_unretire_character = yes
+					swap_country_leader_traits = {
+						remove = CHN_northern_zhili_aligned
+						add = CHN_restorationist_aligned
+						ideology = authoritarian_democrat_subtype
+					}
+					revert_temp_unretire_character = yes
+				}
+			}
+			SHD_zhang_tianran = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_northern_zhili = yes
+					}
+					china_set_character_alignment_manchu_qing = yes
+
+					temp_unretire_character = yes
+					swap_country_leader_traits = {
+						remove = CHN_northern_zhili_aligned
+						add = CHN_restorationist_aligned
+						ideology = national_populist_subtype
+					}
+					revert_temp_unretire_character = yes
+				}
+			}
+		}
+		KUM = {
+			KUM_nasir_shah = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_northern_zhili = yes
+					}
+					china_set_character_alignment_manchu_qing = yes
+
+					temp_unretire_character = yes
+
+					#store first reformer role
+					if = {
+						limit = { has_trait = KUM_first_reformer }
+						set_temp_variable = { trait_token = token:KUM_first_reformer }
+					}
+					else_if = {
+						limit = { has_trait = KUM_first_reformer2 }
+						set_temp_variable = { trait_token = token:KUM_first_reformer2 }
+					}
+					else_if = {
+						limit = { has_trait = KUM_first_reformer3 }
+						set_temp_variable = { trait_token = token:KUM_first_reformer3 }
+					}
+					else_if = {
+						limit = { has_trait = KUM_first_reformer4 }
+						set_temp_variable = { trait_token = token:KUM_first_reformer4 }
+					}
+					if = {
+						limit = { has_variable = trait_token }
+						remove_trait_from_all_country_leader_roles = yes
+					}
+
+					set_temp_variable = { remove_trait_token = token:CHN_northern_zhili_aligned }
+					set_temp_variable = { add_trait_token = token:CHN_restorationist_aligned }
+					swap_traits_in_all_country_leader_roles = yes
+
+					#re-add first reformer role
+					if = {
+						limit = { has_variable = trait_token }
+						add_trait_to_all_country_leader_roles = yes
+					}
+
+					revert_temp_unretire_character = yes
+				}
+			}
+			KUM_bashir_shah = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_northern_zhili = yes
+					}
+					china_set_character_alignment_manchu_qing = yes
+
+					temp_unretire_character = yes
+					set_temp_variable = { remove_trait_token = token:CHN_northern_zhili_aligned }
+					set_temp_variable = { add_trait_token = token:CHN_restorationist_aligned }
+					swap_traits_in_all_country_leader_roles = yes
+					revert_temp_unretire_character = yes
+				}
+			}
+			KUM_yulbars_khan = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_northern_zhili = yes
+					}
+					china_set_character_alignment_manchu_qing = yes
+
+					temp_unretire_character = yes
+					set_temp_variable = { remove_trait_token = token:CHN_northern_zhili_aligned }
+					set_temp_variable = { add_trait_token = token:CHN_restorationist_aligned }
+					swap_traits_in_all_country_leader_roles = yes
+					revert_temp_unretire_character = yes
+				}
+			}
+		}
+		#Set Zhili flags to be republican if appropriate
+		if = {
+			limit = {
+				ANQ = { has_cosmetic_tag = LSEP_QIE }
+			}
+			ANQ = { set_cosmetic_tag = LSEP_REP }
+		}
+		if = {
+			limit = {
+				HNN = { has_cosmetic_tag = HNN_zhili_monarchy }
+			}
+			HNN = { set_cosmetic_tag = HNN_zhili_republic }
+		}
+		if = {
+			limit = {
+				LEP = { has_cosmetic_tag = LSEP_QIE }
+			}
+			LEP = { set_cosmetic_tag = LSEP_REP }
+		}
+		else_if = {
+			limit = {
+				LEP = { has_cosmetic_tag = LEP_LEP }
+			}
+			LEP = { set_cosmetic_tag = LEP_LEP_REP }
+		}
+		if = {
+			limit = {
+				SHD = {
+					has_country_leader = { character = SHD_qu_yingguang }
+					china_is_aligned_with_zhili = yes
+				}
+			}
+			SHD = { set_cosmetic_tag = SHD_REP }
+		}
+	}
+}
+
+QIE_disable_manchu_qing_alignment = {
+	if = {
+		limit = {
+			QIE = {
+				QIE_aisin_gioro_puyi = {
+					is_dead = no
+					china_character_is_manchu_qing = yes
+				}
+			}
+		}
+
+		#set Puyi as Zhili
+		QIE = {
+			QIE_aisin_gioro_puyi = {
+				china_set_character_alignment_northern_zhili = yes
+
+				temp_unretire_character = yes
+				set_portraits = {
+					civilian = { large = GFX_portrait_QIE_aisin_gioro_puyi_civilian_large }
+				}
+				remove_all_country_leader_roles = yes
+				for_loop_effect = {
+					start = 3 #social_democrat
+					end = 9 #national_populist
+					compare = less_than_or_equals
+
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									desc = QIE_aisin_gioro_puyi_leader_desc
+									ideology = [IDEOLOGY]
+									traits = { CHN_northern_zhili_aligned QIE_puppet_emperor }
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[?global.ideology_groups^v.GetTokenKey]_subtype"
+					}
+				}
+				revert_temp_unretire_character = yes
+			}
+		}
+
+		#set other allies as Zhili if appropriate
+		SHD = {
+			SHD_qu_yingguang = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_manchu_qing = yes
+					}
+					china_set_character_alignment_northern_zhili = yes
+
+					temp_unretire_character = yes
+					swap_country_leader_traits = {
+						remove = CHN_restorationist_aligned
+						add = CHN_northern_zhili_aligned
+						ideology = authoritarian_democrat_subtype
+					}
+					revert_temp_unretire_character = yes
+				}
+			}
+			SHD_zhang_tianran = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_manchu_qing = yes
+					}
+					china_set_character_alignment_northern_zhili = yes
+
+					temp_unretire_character = yes
+					swap_country_leader_traits = {
+						remove = CHN_restorationist_aligned
+						add = CHN_northern_zhili_aligned
+						ideology = national_populist_subtype
+					}
+					revert_temp_unretire_character = yes
+				}
+			}
+		}
+		KUM = {
+			KUM_nasir_shah = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_manchu_qing = yes
+					}
+					china_set_character_alignment_northern_zhili = yes
+
+					temp_unretire_character = yes
+					set_temp_variable = { remove_trait_token = token:CHN_restorationist_aligned }
+					set_temp_variable = { add_trait_token = token:CHN_northern_zhili_aligned }
+					swap_traits_in_all_country_leader_roles = yes
+					revert_temp_unretire_character = yes
+				}
+			}
+			KUM_bashir_shah = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_manchu_qing = yes
+					}
+					china_set_character_alignment_northern_zhili = yes
+
+					temp_unretire_character = yes
+
+					#store first reformer role
+					if = {
+						limit = { has_trait = KUM_first_reformer }
+						set_temp_variable = { trait_token = token:KUM_first_reformer }
+					}
+					else_if = {
+						limit = { has_trait = KUM_first_reformer2 }
+						set_temp_variable = { trait_token = token:KUM_first_reformer2 }
+					}
+					else_if = {
+						limit = { has_trait = KUM_first_reformer3 }
+						set_temp_variable = { trait_token = token:KUM_first_reformer3 }
+					}
+					else_if = {
+						limit = { has_trait = KUM_first_reformer4 }
+						set_temp_variable = { trait_token = token:KUM_first_reformer4 }
+					}
+					if = {
+						limit = { has_variable = trait_token }
+						remove_trait_from_all_country_leader_roles = yes
+					}
+
+					set_temp_variable = { remove_trait_token = token:CHN_restorationist_aligned }
+					set_temp_variable = { add_trait_token = token:CHN_northern_zhili_aligned }
+					swap_traits_in_all_country_leader_roles = yes
+
+					#re-add first reformer role
+					if = {
+						limit = { has_variable = trait_token }
+						add_trait_to_all_country_leader_roles = yes
+					}
+
+					revert_temp_unretire_character = yes
+				}
+			}
+			KUM_yulbars_khan = {
+				if = {
+					limit = {
+						is_dead = no
+						china_character_is_manchu_qing = yes
+					}
+					china_set_character_alignment_northern_zhili = yes
+
+					temp_unretire_character = yes
+					set_temp_variable = { remove_trait_token = token:CHN_restorationist_aligned }
+					set_temp_variable = { add_trait_token = token:CHN_northern_zhili_aligned }
+					swap_traits_in_all_country_leader_roles = yes
+					revert_temp_unretire_character = yes
+				}
+			}
+		}
+	}
+}
+
+QIE_zhili_clique_flees = {
+	custom_effect_tooltip = QIE_zhili_clique_flees_tt
+	hidden_effect = {
+		### if SZC is Authdem, move all Zhili generals into hiding
+		### they'll be transferred to SZC by their events
+		if = {
+			limit = {
+				SZC = {
+					SZC_has_armament_government = yes
+					NOT = { has_idea = SZC_civil_war_idea }
+				}
+			}
+			every_unit_leader = {
+				limit = { has_character_flag = QIE_zhili_leader }
+				set_nationality = event_target:system
+			}
+			### then trigger the Zhili Remnant switch
+			SZC = {
+				country_event = { id = sichuan_events.264 days = 20 random_hours = 480 }
+			}
+		}
+		### if HNN is ruled by Tang Xiangming, move Zhili generals to hiding
+		### Transfer generals
+		else_if = {
+			limit = {
+				HNN = { has_country_leader = { character = HNN_tang_xiangming } }
+			}
+			every_unit_leader = {
+				limit = { has_character_flag = QIE_zhili_leader }
+				remove_trait = { trait = politically_connected }
+				set_nationality = event_target:system
+			}
+			HNN = { country_event = hunan_military_events.6 }
+		}
+		### if SZC is not AuthDem and HNN is not Zhili, scatter the generals
+		else = {
+			### Jiang Baili flees to Zhao HNN, then Guangdong
+			if = {
+				limit = { HNN = { china_is_aligned_with_federalists = yes } }
+				random_unit_leader = {
+					limit = { is_character = QIE_jiang_baili }
+					set_nationality = HNN
+					unit_leader_event = qing_flavour_events.14
+				}
+			}
+			else_if = {
+				limit = {
+					GXC = { china_is_aligned_with_kmt = no }
+				}
+				random_unit_leader = {
+					limit = { is_character = QIE_jiang_baili }
+					set_nationality = GXC
+					unit_leader_event = qing_flavour_events.14
+				}
+			}
+			else = {
+				random_unit_leader = {
+					limit = { is_character = QIE_jiang_baili }
+					retire = yes
+				}
+			}
+			### Zhang Qihuang to Hunan, then Liangguang
+			if = {
+				limit = { HNN = { china_is_aligned_with_federalists = yes } }
+				random_unit_leader = {
+					limit = { is_character = QIE_zhang_qihuang }
+					set_nationality = HNN
+					unit_leader_event = qing_flavour_events.14
+				}
+			}
+			else_if = {
+				limit = { GXC = { china_is_aligned_with_kmt = no } }
+				random_unit_leader = {
+					limit = { is_character = QIE_zhang_qihuang }
+					set_nationality = GXC
+					unit_leader_event = qing_flavour_events.14
+				}
+			}
+			else = {
+				random_unit_leader = {
+					limit = { is_character = QIE_zhang_qihuang }
+					retire = yes
+				}
+			}
+			### Xiao Yaonan flees to LEP, Zhao Hunan, or goes into hiding
+			if = {
+				limit = { has_character = QIE_xiao_yaonan }
+				if = {
+					limit = { LEP = { exists = yes } }
+					QIE_xiao_yaonan = {
+						set_nationality = LEP
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+				else_if = {
+					limit = { HNN = { china_is_aligned_with_federalists = yes } }
+					QIE_xiao_yaonan = {
+						set_nationality = HNN
+					}
+				}
+				else = {
+					QIE_xiao_yaonan = { retire = yes }
+				}
+			}
+			### SZC's generals flee to LEP or go into hiding
+			if = {
+				limit = { country_exists = LEP }
+				every_unit_leader = {
+					limit = { has_character_flag = SZC_armament_leader }
+					set_nationality = LEP
+					if = {
+						limit = { is_character = SZC_yang_sen }
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+			}
+			else = {
+				every_unit_leader = {
+					limit = { has_character_flag = SZC_armament_leader }
+					retire = yes
+				}
+			}
+			### Tang Xiangming flees to SHX, LEP, otherwise retire
+			if = {
+				limit = { has_character = HNN_tang_xiangming }
+				if = {
+					limit = { NOT = { has_country_flag = QIE_yan_backs_coup } }
+					HNN_tang_xiangming = {
+						set_nationality = SHX
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+				else_if = {
+					limit = { country_exists = LEP }
+					HNN_tang_xiangming = {
+						set_nationality = LEP
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+				else = {
+					HNN_tang_xiangming = { retire = yes }
+				}
+			}
+			### Tang Zaili flees to LEP, otherwise retire
+			if = {
+				limit = { has_character = QIE_tang_zaili }
+				if = {
+					limit = { country_exists = LEP }
+					QIE_tang_zaili = {
+						set_nationality = LEP
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+				else = {
+					QIE_tang_zaili = { retire = yes }
+				}
+			}
+			### Wang Chengbin flees to FNG, otherwise retire
+			if = {
+				limit = { has_character = QIE_wang_chengbin }
+				if = {
+					limit = { country_exists = FNG }
+					QIE_wang_chengbin = {
+						set_nationality = FNG
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+				else = {
+					QIE_wang_chengbin = { retire = yes }
+				}
+			}
+			### Wang Huaiqing, Liu Zhenhua and Wei Yisan flee to non-backer SHX or go into hiding
+			if = {
+				limit = {
+					NOT = { has_country_flag = QIE_yan_backs_coup }
+				}
+				every_character = {
+					limit = {
+						OR = {
+							is_character = QIE_wang_huaiqing
+							is_character = QIE_liu_zhenhua
+							is_character = QIE_wei_yisan
+						}
+					}
+					set_nationality = SHX
+					unit_leader_event = qing_flavour_events.14
+				}
+			}
+			else = {
+				every_unit_leader = {
+					limit = {
+						OR = {
+							is_character = QIE_wang_huaiqing
+							is_character = QIE_liu_zhenhua
+							is_character = QIE_wei_yisan
+						}
+					}
+					retire = yes
+				}
+			}
+			### Cai Chengxun, Wang Tan and Liu Menggeng flee to FNG
+			every_character = {
+				limit = {
+					OR = {
+						is_character = QIE_cai_chengxun
+						is_character = QIE_liu_menggeng
+						is_character = QIE_wang_tan
+					}
+				}
+				set_nationality = FNG
+				unit_leader_event = qing_flavour_events.14
+			}
+
+			### Li Bingzhi is moved to Zongchang Shandong or goes into hiding
+			if = {
+				limit = { has_character = QIE_li_bingzhi }
+				if = {
+					limit = { SHD = { SHD_is_led_by_zongchang = yes } }
+					QIE_li_bingzhi = {
+						set_nationality = SHD
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+				else = {
+					QIE_li_bingzhi = { retire = yes }
+				}
+			}
+		}
+		#unlike the rest Yu Xuezhong will always flee to the northeast, even if other zhili exists
+		if = {
+			limit = { has_character = QIE_yu_xuezhong }
+			QIE_yu_xuezhong = {
+				set_nationality = FNG
+				unit_leader_event = qing_flavour_events.14
+			}
+		}
+		QIE_bai_jianwu = { retire = yes }
+		QIE_wang_kemin = { retire = yes }
+		QIE_gao_lingwei = { retire = yes }
+		QIE_peng_shouxin = { retire = yes }
+		QIE_wang_yujia = { retire = yes }
+		QIE_xiong_bingqi = { retire = yes }
+		QIE_bian_shoujing = { retire = yes }
+		QIE_wu_jinglian = { retire = yes }
+		QIE_peng_yunyi = { retire = yes }
+		QIE_wu_yulin = { retire = yes }
+		QIE_du_xigui = { retire = yes }
+		QIE_li_jichen = { retire = yes }
+	}
+}
+
+QIE_incoming_attack_notification = {
+	hidden_effect = {
+		if = {
+			limit = {
+				FROM = {
+					decryption_progress = {
+						target = ROOT
+						value > 0.5
+					}
+				}
+			}
+			FROM = {
+				country_event = { id = qing_foreign_policy_events.132 days = 7 }
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					AND = {
+						NOT = {
+							has_tech = basic_encryption
+						}
+						FROM = {
+							has_tech = basic_decryption
+						}
+					}
+					AND = {
+						NOT = {
+							has_tech = improved_encryption
+						}
+						FROM = {
+							has_tech = improved_decryption
+						}
+					}
+					AND = {
+						NOT = {
+							has_tech = advanced_encryption
+						}
+						FROM = {
+							has_tech = advanced_decryption
+						}
+					}
+				}
+			}
+			FROM = {
+				country_event = { id = qing_foreign_policy_events.132 days = 7 }
+			}
+		}
+		else = {
+			FROM = {
+				country_event = { id = qing_foreign_policy_events.132 days = 13 }
+			}
+		}
+	}
+}
+
+QIE_recruit_new_zhili_generals = {
+	QIE = {
+		set_temp_variable = { qin_dechun = QIE_qin_dechun }
+		set_temp_variable = { du_xijun = QIE_du_xijun }
+		set_temp_variable = { guo_jijiao = QIE_guo_jijiao }
+		set_temp_variable = { li_shuchun = QIE_li_shuchun }
+	}
+	effect_tooltip = {
+		add_corps_commander_role = { character = var:qin_dechun }
+		add_corps_commander_role = { character = var:du_xijun }
+		add_corps_commander_role = { character = var:guo_jijiao }
+		add_corps_commander_role = { character = var:li_shuchun }
+	}
+	hidden_effect = {
+		QIE = {
+			QIE_qin_dechun = { set_nationality = PREV.PREV }
+			QIE_du_xijun = { set_nationality = PREV.PREV }
+			QIE_guo_jijiao = { set_nationality = PREV.PREV }
+			QIE_li_shuchun = { set_nationality = PREV.PREV }
+		}
+	}
+}
+
+QIE_reduce_fractured_empire = {
+	if = {
+		limit = { has_idea = QIE_fractured_empire0 }
+		swap_ideas = {
+			remove_idea = QIE_fractured_empire0
+			add_idea = QIE_fractured_empire2
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_fractured_empire2 }
+		swap_ideas = {
+			remove_idea = QIE_fractured_empire2
+			add_idea = QIE_fractured_empire3
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_fractured_empire3 }
+		remove_ideas = QIE_fractured_empire3
+	}
+	else = {
+		add_stability = 0.025
+	}
+}
+
+QIE_import_german_air_expertise = {
+	if = {
+		limit = {
+			NOT = {
+				has_idea = QIE_german_air_support_idea
+				has_idea = QIE_german_air_support_idea2
+				has_idea = QIE_german_air_support_idea3
+			}
+		}
+		add_ideas = QIE_german_air_support_idea
+	}
+	else_if = {
+		limit = { has_idea = QIE_german_air_support_idea }
+		swap_ideas = {
+			remove_idea = QIE_german_air_support_idea
+			add_idea = QIE_german_air_support_idea2
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_german_air_support_idea2 }
+		swap_ideas = {
+			remove_idea = QIE_german_air_support_idea2
+			add_idea = QIE_german_air_support_idea3
+		}
+	}
+}
+
+QIE_lower_debt = {
+	if = {
+		limit = { has_idea = QIE_big_debt10 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt10
+			add_idea = QIE_big_debt9
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt9 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt9
+			add_idea = QIE_big_debt8
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt8 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt8
+			add_idea = QIE_big_debt7
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt7 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt7
+			add_idea = QIE_big_debt6
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt6 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt6
+			add_idea = QIE_big_debt5
+		}
+		country_event = qing_focus_events.34
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt5 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt5
+			add_idea = QIE_big_debt4
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt4 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt4
+			add_idea = QIE_big_debt3
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt3 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt3
+			add_idea = QIE_big_debt2
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt2 }
+		swap_ideas = {
+			remove_idea = QIE_big_debt2
+			add_idea = QIE_big_debt1
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_big_debt1 }
+		remove_ideas = QIE_big_debt1
+		country_event = qing_focus_events.35
+		hidden_effect = {
+			remove_targeted_decision = { decision = QIE_ger_debt_repayment target = GER }
+		}
+	}
+}
+
+QIE_create_variant_destroyer = {
+	if = {
+		limit = { NOT = { has_tech = early_ship_hull_light } }
+		set_technology = { early_ship_hull_light = 1 }
+	}
+	create_equipment_variant = {
+		name = "Chu Tong Class" #V170-class DD
+		type = ship_hull_light_1
+		name_group = CHYN_DD_HISTORICAL
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_2
+			fixed_ship_anti_air_slot = empty
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = light_ship_engine_2
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+	}
+}
+
+QIE_spawn_destroyers = {
+	create_ship = { name = "Xiangyang" type = ship_hull_light_1 equipment_variant = "Chu Tong Class" }
+	create_ship = { name = "Yuncheng" type = ship_hull_light_1 equipment_variant = "Chu Tong Class" }
+	create_ship = { name = "Zhaotong" type = ship_hull_light_1 equipment_variant = "Chu Tong Class" }
+	create_ship = { name = "Wenzhou" type = ship_hull_light_1 equipment_variant = "Chu Tong Class" }
+	create_ship = { name = "Linfen" type = ship_hull_light_1 equipment_variant = "Chu Tong Class" }
+}
+
+QIE_create_variant_submarine = {
+	if = {
+		limit = { NOT = { has_tech = early_ship_hull_submarine } }
+		set_technology = { early_ship_hull_submarine = 1 }
+	}
+	create_equipment_variant = {
+		name = "Type II" #OTL German class
+		type = ship_hull_submarine_1
+		name_group = CHYN_SS_HISTORICAL
+		parent_version = 0
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_1
+			rear_1_custom_slot = empty
+		}
+	}
+}
+
+QIE_spawn_submarines = {
+	create_ship = { type = ship_hull_submarine_1 equipment_variant = "Type II" }
+	create_ship = { type = ship_hull_submarine_1 equipment_variant = "Type II" }
+	create_ship = { type = ship_hull_submarine_1 equipment_variant = "Type II" }
+	create_ship = { type = ship_hull_submarine_1 equipment_variant = "Type II" }
+	create_ship = { type = ship_hull_submarine_1 equipment_variant = "Type II" }
+	create_ship = { type = ship_hull_submarine_1 equipment_variant = "Type II" }
+	create_ship = { type = ship_hull_submarine_1 equipment_variant = "Type II" }
+}
+
+QIE_create_variant_cruiser = {
+	if = {
+		limit = { NOT = { has_tech = early_ship_hull_cruiser } }
+		set_technology = { early_ship_hull_cruiser = 1 }
+	}
+	if = {
+		limit = { NOT = { has_tech = basic_battery } }
+		set_technology = { basic_battery = 1 }
+	}
+	if = {
+		limit = { NOT = { has_tech = basic_torpedo } }
+		set_technology = { basic_torpedo = 1 }
+	}
+	create_equipment_variant = {
+		name = "Jiangjun Class" #Hamburg-class CL
+		type = ship_hull_cruiser_1
+		name_group = CHYN_CL_HISTORICAL
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_1
+			fixed_ship_anti_air_slot = empty
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_1
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			mid_1_custom_slot = ship_light_medium_battery_1
+			mid_2_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = empty
+		}
+	}
+}
+
+QIE_spawn_cruisers = {
+	create_ship = { name = "Feng Jiangjun" type = ship_hull_cruiser_1 equipment_variant = "Jiangjun Class" }
+	create_ship = { name = "Cao Jiangjun" type = ship_hull_cruiser_1 equipment_variant = "Jiangjun Class" }
+}
+
+QIE_create_battleship_variant = {
+	if = {
+		limit = { NOT = { has_tech = early_ship_hull_heavy } }
+		set_technology = { early_ship_hull_heavy = 1 }
+	}
+	if = {
+		limit = { NOT = { has_tech = basic_battery } }
+		set_technology = { basic_battery = 1 }
+	}
+	create_equipment_variant = {
+		name = "Wuwei Class" #Kaiser-class BB
+		type = ship_hull_heavy_1
+		name_group = CHYN_BB_HISTORICAL
+		parent_version = 0
+		modules = {
+			fixed_ship_battery_slot = ship_heavy_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_1
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_armor_slot = ship_armor_bb_1
+			front_1_custom_slot = empty
+			mid_1_custom_slot = empty
+			mid_2_custom_slot = ship_secondaries_1
+			rear_1_custom_slot = ship_heavy_battery_1
+		}
+	}
+}
+
+QIE_spawn_battleship = {
+	create_ship = { name = "Wu Yuanshuai" type = ship_hull_heavy_1 equipment_variant = "Wuwei Class" }
+}
+
+QIE_jinghan_railroad_focus_effect = { #also used by an SZC focus
+	if = {
+		limit = { owns_state = 1048 }
+		1048 = { increase_state_category_by_one_level = yes }
+	}
+	if = {
+		limit = { owns_state = 1058 }
+		1058 = { increase_state_category_by_one_level = yes }
+	}
+	if = {
+		limit = { owns_state = 1059 }
+		1059 = { increase_state_category_by_one_level = yes }
+	}
+	if = {
+		limit = { owns_state = 607 }
+		607 = { increase_state_category_by_one_level = yes }
+	}
+	if = {
+		limit = { owns_state = 799 }
+		799 = { increase_state_category_by_one_level = yes }
+	}
+	build_railway = {
+		level = 3
+		path = { 4619 7167 10462 10446 7568 12012 10364 9958 1139 4144 1169 1188 4190 7109 12026 4140 9843 }
+	}
+	custom_effect_tooltip = tooltip_white_line
+	add_timed_idea = {
+		idea = QIE_unclogging_the_arteries
+		days = 300
+	}
+}
+
+QIE_daye_hanyang_effect = { #also used by an SZC focus
+	1048 = {
+		add_extra_state_shared_building_slots = 4
+		add_building_construction = {
+			type = industrial_complex
+			level = 2
+			instant_build = yes
+		}
+	}
+	add_timed_idea = {
+		idea = QIE_daye_hanyang_rapid_development_scheme
+		days = 365
+	}
+}
+
+QIE_upgrade_military_spirit_jiang_effect = {
+	if = {
+		limit = { has_idea = QIE_stalled_80_division_reform_plan }
+		swap_ideas = {
+			remove_idea = QIE_stalled_80_division_reform_plan
+			add_idea = QIE_formation_of_a_militaristic_state_people_level1
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_formation_of_a_militaristic_state_people_level1 }
+		swap_ideas = {
+			remove_idea = QIE_formation_of_a_militaristic_state_people_level1
+			add_idea = QIE_formation_of_a_militaristic_state_people_level2
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_formation_of_a_militaristic_state_people_level2 }
+		swap_ideas = {
+			remove_idea = QIE_formation_of_a_militaristic_state_people_level2
+			add_idea = 	QIE_formation_of_a_militaristic_state_people_level3
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_formation_of_a_militaristic_state_people_level3 }
+		swap_ideas = {
+			remove_idea = QIE_formation_of_a_militaristic_state_people_level3
+			add_idea = 	QIE_formation_of_a_militaristic_state_people_level4
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_formation_of_a_militaristic_state_people_level4 } #Fallback
+		every_unit_leader = {
+			gain_xp = 200
+		}
+	}
+	else = {
+		custom_effect_tooltip = QIE_upgrade_military_spirit_jiang_tt
+	}
+}
+
+QIE_upgrade_military_spirit_germany_effect = {
+	if = {
+		limit = { has_idea = QIE_stalled_80_division_reform_plan }
+		swap_ideas = {
+			remove_idea = QIE_stalled_80_division_reform_plan
+			add_idea = QIE_in_the_footsteps_of_giants_level1
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_in_the_footsteps_of_giants_level1 }
+		swap_ideas = {
+			remove_idea = QIE_in_the_footsteps_of_giants_level1
+			add_idea = QIE_in_the_footsteps_of_giants_level2
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_in_the_footsteps_of_giants_level2 }
+		swap_ideas = {
+			remove_idea = QIE_in_the_footsteps_of_giants_level2
+			add_idea = QIE_in_the_footsteps_of_giants_level3
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_in_the_footsteps_of_giants_level3 }
+		swap_ideas = {
+			remove_idea = QIE_in_the_footsteps_of_giants_level3
+			add_idea = QIE_in_the_footsteps_of_giants_level4
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_in_the_footsteps_of_giants_level4 } #Fallback
+		every_unit_leader = {
+			gain_xp = 200
+		}
+	}
+	else = {
+		custom_effect_tooltip = QIE_upgrade_military_spirit_germany_tt
+	}
+}
+
+QIE_upgrade_military_spirit_manchu_effect = {
+	if = {
+		limit = { has_idea = QIE_stalled_80_division_reform_plan }
+		swap_ideas = {
+			remove_idea = QIE_stalled_80_division_reform_plan
+			add_idea = QIE_revival_of_the_new_army_level1
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_revival_of_the_new_army_level1 }
+		swap_ideas = {
+			remove_idea = QIE_revival_of_the_new_army_level1
+			add_idea = QIE_revival_of_the_new_army_level2
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_revival_of_the_new_army_level2 }
+		swap_ideas = {
+			remove_idea = QIE_revival_of_the_new_army_level2
+			add_idea = QIE_revival_of_the_new_army_level3
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_revival_of_the_new_army_level3 }
+		swap_ideas = {
+			remove_idea = QIE_revival_of_the_new_army_level3
+			add_idea = QIE_revival_of_the_new_army_level4
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_revival_of_the_new_army_level4 } #Fallback
+		every_unit_leader = {
+			gain_xp = 200
+		}
+	}
+	else = {
+		custom_effect_tooltip = QIE_upgrade_military_spirit_manchu_tt
+	}
+}
+
+QIE_upgrade_high_command_effect = {
+	if = {
+		limit = { has_idea = QIE_court_of_the_jade_marshal }
+		swap_ideas = {
+			remove_idea = QIE_court_of_the_jade_marshal
+			add_idea = QIE_reorganised_high_command
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_reorganised_high_command }
+		swap_ideas = {
+			remove_idea = QIE_reorganised_high_command
+			add_idea = QIE_chinese_high_command
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_chinese_high_command } #Fallback
+		every_unit_leader = {
+			gain_xp = 200
+		}
+	}
+	else = {
+		custom_effect_tooltip = QIE_upgrade_high_command_tt
+	}
+}
+
+QIE_upgrade_wang_kemin_advisor_effect = {
+	QIE_wang_kemin = {
+		if = {
+			limit = { has_trait = KR_bank_president }
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_replace_character_trait
+					ROLE = political_advisor
+					OLD_TRAIT = KR_bank_president
+					NEW_TRAIT = KR_conductor_of_the_banking_clans
+				}
+				remove_trait = {
+					character = QIE_wang_kemin
+					slot = political_advisor
+					trait = KR_bank_president
+				}
+				add_trait = {
+					character = QIE_wang_kemin
+					slot = political_advisor
+					trait = KR_conductor_of_the_banking_clans
+				}
+			}
+			effect_tooltip = {
+				set_temp_variable = { modifier_change_tt = 0.05 tooltip = political_power_factor_tooltip }
+				set_temp_variable = { modifier_change_tt = -0.05 tooltip = consumer_goods_factor_tooltip }
+				set_temp_variable = { modifier_change_tt = 0.10 tooltip = production_speed_buildings_factor_tooltip }
+			}
+		}
+	}
+}
+
+QIE_improve_zhili_monarchy_legitimacy = {
+	if = {
+		limit = { has_idea = QIE_legitimacy_of_the_monarchy }
+		swap_ideas = {
+			remove_idea = QIE_legitimacy_of_the_monarchy
+			add_idea = QIE_legitimacy_of_the_monarchy_1
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_legitimacy_of_the_monarchy_1 }
+		swap_ideas = {
+			remove_idea = QIE_legitimacy_of_the_monarchy_1
+			add_idea = QIE_legitimacy_of_the_monarchy_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = QIE_legitimacy_of_the_monarchy_2 }
+		swap_ideas = {
+			remove_idea = QIE_legitimacy_of_the_monarchy_2
+			add_idea = QIE_legitimacy_of_the_monarchy_3
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = QIE_legitimacy_of_the_monarchy_3
+			has_completed_focus = QIE_overtures_to_the_assembly
+		}
+		swap_ideas = {
+			remove_idea = QIE_legitimacy_of_the_monarchy_3
+			add_idea = QIE_legitimacy_of_the_monarchy_cao
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = QIE_legitimacy_of_the_monarchy_3
+			has_completed_focus = QIE_elections_of_year
+		}
+		swap_ideas = {
+			remove_idea = QIE_legitimacy_of_the_monarchy_3
+			add_idea = QIE_legitimacy_of_the_monarchy_wu
+		}
+	}
+	else = {
+		custom_effect_tooltip = QIE_improve_legitimacy_tt
+	}
+}
+
+QIE_import_krupp_steel_effect = {
+	custom_effect_tooltip = QIE_import_krupp_steel_effect_tt
+	set_temp_variable = {
+		QIE_import_krupp_steel_var = {
+			value = party_popularity@market_liberal
+			multiply = 10 #Party Pop ranges from 0-1. Multiply it by ten so range is 0-10
+			clamp = { min = 0 max = 10 }
+			round = yes
+		}
+	}
+	if = {
+		limit = { check_variable = { QIE_import_krupp_steel_var < 1 } }
+		1048 = { #Wuhan
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { QIE_import_krupp_steel_var < 2 } }
+		1048 = { #Wuhan
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		607 = { #Luoyang
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { QIE_import_krupp_steel_var < 4 } }
+		1048 = { #Wuhan
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		607 = { #Luoyang
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		1062 = { #Baoding
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { QIE_import_krupp_steel_var < 6 } }
+		1048 = { #Wuhan
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		607 = { #Luoyang
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		1062 = { #Baoding
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		608 = { #Beijing
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { QIE_import_krupp_steel_var < 8 } }
+		1048 = { #Wuhan
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		607 = { #Luoyang
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		1062 = { #Baoding
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		608 = { #Beijing
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { QIE_import_krupp_steel_var < 11 } }
+		1048 = { #Wuhan
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		607 = { #Luoyang
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		1062 = { #Baoding
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+		608 = { #Beijing
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+}
+
+QIE_sun_liren_flees_effect = {
+	if = {
+		limit = { has_character = ANQ_sun_liren }
+		if = {
+			limit = {
+				GXC = { china_is_aligned_with_kmt = yes }
+			}
+			QIE = {
+				random_unit_leader = {
+					limit = { is_character = ANQ_sun_liren }
+					set_portraits = {
+						army = {
+							large = GFX_portrait_ANQ_sun_liren_army_large_kuomintang
+							small = GFX_portrait_ANQ_sun_liren_army_small_kuomintang
+						}
+					}
+					add_unit_leader_trait = CHN_RKT_officer_trait
+					set_nationality = GXC
+					unit_leader_event = qing_flavour_events.14
+				}
+			}
+		}
+		else = {
+			random_country = {
+				limit = {
+					is_chinese_tag = yes
+					china_is_aligned_with_manchu = no
+					NOT = {
+						tag = XSM
+						tag = SIK
+						tag = KUM
+						tag = LEP
+						tag = FNG
+						AND = {
+							tag = SHD
+							china_is_aligned_with_fengtian = yes
+						}
+					}
+				}
+				ROOT = {
+					random_unit_leader = {
+						limit = { is_character = ANQ_sun_liren }
+						set_nationality = PREV.PREV
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+			}
+			random_unit_leader = {
+				limit = { is_character = ANQ_sun_liren }
+				retire = yes
+			}
+		}
+	}
+}
+
+QIE_ma_dengying_flees_effect = {
+	if = {
+		limit = { has_character = ANQ_ma_dengying }
+		if = {
+			limit = {
+				GXC = { china_is_aligned_with_kmt = no }
+			}
+			QIE = {
+				random_unit_leader = {
+					limit = { is_character = ANQ_ma_dengying }
+					set_nationality = GXC
+					unit_leader_event = qing_flavour_events.14
+				}
+			}
+		}
+		else = {
+			random_country = {
+				limit = {
+					is_chinese_tag = yes
+					china_is_aligned_with_manchu = no
+					NOT = {
+						tag = XSM
+						tag = SIK
+						tag = KUM
+						tag = LEP
+						tag = FNG
+						AND = {
+							tag = SHD
+							china_is_aligned_with_fengtian = yes
+						}
+					}
+				}
+				ROOT = {
+					random_unit_leader = {
+						limit = { is_character = ANQ_ma_dengying }
+						set_nationality = PREV.PREV
+						unit_leader_event = qing_flavour_events.14
+					}
+				}
+			}
+			random_unit_leader = {
+				limit = { is_character = ANQ_ma_dengying }
+				retire = yes
+			}
+		}
+	}
+}
+
+QIE_unlock_german_companies_effect = {
+	custom_effect_tooltip = tooltip_white_line
+	add_one_random_civilian_factory = yes
+	add_one_random_civilian_factory = yes
+	custom_effect_tooltip = tooltip_white_line
+	if = {
+		limit = { has_dlc_aat = no }
+		custom_effect_tooltip = available_designer
+		show_ideas_tooltip = QIE_krupp
+		show_ideas_tooltip = QIE_opel
+		show_ideas_tooltip = QIE_henschel
+		show_ideas_tooltip = QIE_focke_wulf
+		show_ideas_tooltip = QIE_junkers
+		show_ideas_tooltip = QIE_blohm_voss
+	}
+	else = {
+		custom_effect_tooltip = available_mio_tt
+		show_mio_tooltip = QIE_krupp_organisation
+		show_mio_tooltip = QIE_opel_organisation
+		show_mio_tooltip = QIE_henschel_organisation
+		show_mio_tooltip = QIE_focke_wulf_organisation
+		show_mio_tooltip = QIE_junkers_organisation
+		show_mio_tooltip = QIE_blohm_voss_organisation
+		mio:QIE_krupp_organisation = { add_mio_size = 2 }
+		mio:QIE_opel_organisation = { add_mio_size = 2 }
+		mio:QIE_henschel_organisation = { add_mio_size = 2 }
+		mio:QIE_focke_wulf_organisation = { add_mio_size = 2 }
+		mio:QIE_junkers_organisation = { add_mio_size = 2 }
+		mio:QIE_blohm_voss_organisation = { add_mio_size = 2 }
+	}
+}
+
+QIE_create_yiguandao_template = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_create_division_template
+			NAME = "Yiguandao Minbing"
+			LINE_1 = { localization_key = line_battalion_tt NAME = irregular_infantry ICON = GFX_unit_irregular_infantry_icon_small COUNT = 4 }
+		}
+		if = {
+			limit = { has_template = "Yiguandao Minbing" }
+			delete_unit_template_and_units = { division_template = "Yiguandao Minbing" disband = yes } #no cheating
+		}
+		division_template = {
+			name = "Yiguandao Minbing"
+			division_names_group = QIE_MIL_01
+			regiments = {
+				irregular_infantry = { x = 0 y = 0 }
+				irregular_infantry = { x = 0 y = 1 }
+				irregular_infantry = { x = 1 y = 0 }
+				irregular_infantry = { x = 1 y = 1 }
+			}
+		}
+	}
+}

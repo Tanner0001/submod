@@ -1,0 +1,568 @@
+Ottoman_Cairo_Pact_decisions = {
+	OTT_Varlik_Vergisi = {
+		icon = generic_prepare_civil_war
+
+		visible = {
+			has_authoritarian_government = yes
+			NOT = { has_idea = ott_varlik_vargisi }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_Varlik_Vergisi"
+			454 = {
+				ott_increase_revolt_risk = yes
+			}
+			183 = {
+				ott_increase_revolt_risk = yes
+			}
+			553 = {
+				ott_increase_revolt_risk = yes
+			}
+			339 = {
+				ott_increase_revolt_risk = yes
+			}
+			355 = {
+				ott_increase_revolt_risk = yes
+			}
+			773 = {
+				ott_increase_revolt_risk = yes
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = ott_varlik_vargisi
+			add_political_power = 100
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = ott_gre_dealing_hurdle
+			set_country_flag = ott_gre_dealing_hurdle
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_Emergency_Mobilisation = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			NOT = { has_idea = OTT_Mobilisation }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 100
+		days_remove = 60
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_Emergency_Mobilisation"
+			add_ideas = OTT_Mobilisation
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_Emergency_Mobilisation"
+			hidden_effect = {
+				remove_ideas = OTT_Mobilisation
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_Fortify_Aleppo = {
+		icon = generic_operation
+
+		available = {
+			controls_state = 677
+			has_manpower > 3000
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 677 }
+		}
+
+		visible = {
+			owns_state = 677
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_Fortify_Aleppo"
+			add_manpower = -3000
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_Fortify_Aleppo"
+			add_manpower = 3000
+			677 = {
+				add_building_construction = {
+					type = bunker
+					province = 7671
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					province = 7140
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					province = 9823
+					level = 2
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 12473
+						level = 3
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 3
+						VP = 12473
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_Fortify_Bagdhad = {
+		icon = generic_operation
+
+		available = {
+			controls_state = 291
+			has_manpower > 5000
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 291 }
+		}
+
+		visible = {
+			owns_state = 291
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 20
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_Fortify_Bagdhad"
+			add_manpower = -5000
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove OTT_Fortify_Bagdhad"
+			add_manpower = 5000
+			291 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 2097
+						level = 3
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 3
+						VP = 2097
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	OTT_Flood_the_Euphrates_Plain = {
+		icon = generic_scorched_earth
+
+		allowed = {
+			original_tag = TUR
+		}
+
+		available = {
+			controls_state = 676
+			NOT = {
+				controls_state = 291
+				controls_state = 812
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 291 }
+		}
+
+		visible = {
+			owns_state = 676
+			owns_state = 291
+			owns_state = 812
+		}
+
+		ai_will_do = { factor = 10 }
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete OTT_Flood_the_Euphrates_Plain"
+			291 = { #Baghdad
+				damage_building = { type = industrial_complex damage = 0.6 }
+				if = {
+					limit = { arms_factory > 0 } #Starts with none
+					damage_building = { type = arms_factory damage = 0.6 }
+				}
+				damage_building = { type = infrastructure damage = 0.6 }
+			}
+			812 = { #Basra
+				if = {
+					limit = { industrial_complex > 0 } #Starts with none
+					damage_building = { type = industrial_complex damage = 0.6 }
+				}
+				if = {
+					limit = { arms_factory > 0 } #Starts with none
+					damage_building = { type = arms_factory damage = 0.6 }
+				}
+				damage_building = { type = infrastructure damage = 0.6 }
+			}
+			add_war_support = -0.05
+			add_stability = -0.05
+		}
+		fixed_random_seed = no
+	}
+}
+
+foreign_politics = {
+	HEJ_resist_arab_invasion = {
+		icon = oppression
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			NOT = { controls_state = 679 }
+		}
+
+		days_mission_timeout = 70
+		is_good = yes
+
+		cancel_trigger = {
+			OR = {
+				has_war_with = EGY
+				NOT = { has_war_with = 915.owner }
+				var:915.owner = { is_valid_peace_target = no }
+				hidden_trigger = {
+					var:915.owner = { is_arabian_tag = no }
+				}
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 679 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete HEJ_resist_arab_invasion"
+			EGY = { country_event = hejaz_events.8 }
+			var:915.owner = {
+				white_peace_with_ROOT = yes
+				annex_country = { target = HEJ }
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout HEJ_resist_arab_invasion"
+			EGY = { country_event = hejaz_events.11 }
+		}
+		fixed_random_seed = no
+	}
+	HEJ_invasion_of_hejaz = {
+		name = HEJ_resist_arab_invasion
+		desc = HEJ_resist_arab_invasion_desc
+		icon = oppression
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			controls_state = 679
+		}
+
+		days_mission_timeout = 70
+		is_good = no
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = HEJ }
+				has_war_with = EGY
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 679 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete HEJ_invasion_of_hejaz"
+			effect_tooltip = {
+				EGY = { country_event = hejaz_events.8 }
+				HEJ = { white_peace_with_ROOT = yes }
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout HEJ_invasion_of_hejaz"
+			effect_tooltip = {
+				EGY = { country_event = hejaz_events.11 }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+Suez_Reparation_decisions = {
+	Axis_Suez_Reparations_mission = {
+		icon = GFX_decision_generic_naval
+
+		allowed = {
+			always = no
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		cancel_trigger = {
+			hidden_trigger = {
+				753 = {
+					NOT = {
+						is_owned_by = OTT
+						is_owned_by = PAL
+					}
+				}
+			}
+		}
+
+		selectable_mission = no
+		days_mission_timeout = 730
+		is_good = yes
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete Axis_Suez_Reparations_mission"
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout Axis_Suez_Reparations_mission"
+			custom_effect_tooltip = SUEZ_REOPENED
+			clr_global_flag = SUEZ_CANAL_BLOCKED
+			if = {
+				limit = {
+					country_exists = PAL
+					PAL = {
+						has_focus_tree = Suez_Focus
+						NOT = { has_completed_focus = SUE_Re_Open_The_Canal }
+					}
+				}
+				PAL = { complete_national_focus = SUE_Re_Open_The_Canal }
+			}
+			else_if = {
+				limit = { owns_state = 753 }
+				var:753.owner = {
+					add_ideas = pal_dividends
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	Axis_Suez_Commence_Reparations_OTT = {
+		icon = generic_operation
+
+		allowed = {
+			tag = OTT
+		}
+
+		available = {
+			has_global_flag = SUEZ_SUCCESS
+			OR = {
+				controls_state = 753
+				PAL = { controls_state = 753 }
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 753 }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete Axis_Suez_Commence_Reparations_OTT"
+			every_country = {
+				limit = {
+					has_socialist_government = no
+					NOT = { has_war_with = ROOT }
+					OR = {
+						tag = ROOT
+						tag = PAL
+						tag = GER
+						tag = AUS
+						tag = NFA
+						tag = CAN
+						tag = GBR
+						tag = ENT
+						tag = SIC
+						tag = HOL
+						tag = BEL
+						tag = GRE
+					}
+				}
+				activate_mission = Axis_Suez_Reparations_mission
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	Axis_Suez_Reparations_small_effort = {
+		icon = GFX_decision_generic_construction
+
+		allowed = {
+			OR = {
+				tag = GER
+				tag = AUS
+				tag = NFA
+				tag = CAN
+				tag = SIC
+				tag = TUR
+			}
+		}
+
+		available = {
+			var:753.owner = {
+				controls_state = 753
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 753 }
+		}
+
+		visible = {
+			has_active_mission = Axis_Suez_Reparations_mission
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10
+				has_political_power > 50
+			}
+			modifier = {
+				add = 50
+				has_political_power > 100
+			}
+		}
+
+		fire_only_once = no
+		days_re_enable = 50
+
+		cost = 25
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete Axis_Suez_Reparations_small_effort"
+			every_country = {
+				limit = {
+					has_active_mission = Axis_Suez_Reparations_mission
+				}
+				add_days_mission_timeout = {
+					mission = Axis_Suez_Reparations_mission
+					days = -20
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	Axis_Suez_Reparations_large_effort = {
+		icon = GFX_decision_generic_construction
+
+		allowed = {
+			OR = {
+				tag = GER
+				tag = AUS
+				tag = NFA
+				tag = CAN
+				tag = SIC
+				tag = TUR
+			}
+		}
+
+		available = {
+			var:753.owner = {
+				controls_state = 753
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 753 }
+		}
+
+		visible = {
+			has_active_mission = Axis_Suez_Reparations_mission
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10
+				has_political_power > 50
+			}
+			modifier = {
+				add = 50
+				has_political_power > 100
+			}
+		}
+
+		fire_only_once = no
+
+		days_re_enable = 50
+
+		cost = 50
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete Axis_Suez_Reparations_large_effort"
+			every_country = {
+				limit = {
+					has_active_mission = Axis_Suez_Reparations_mission
+				}
+				add_days_mission_timeout = {
+					mission = Axis_Suez_Reparations_mission
+					days = -50
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+

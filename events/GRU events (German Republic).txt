@@ -1,0 +1,340 @@
+###########################
+# Puppet Germany Events
+# By Liegnitz and Auralius
+###########################
+
+add_namespace = germany_puppet_events
+
+#rename city
+country_event = {
+	id = germany_puppet_events.1
+	title = germany_puppet_events.1.t
+	desc = germany_puppet_events.1.d
+	picture = GFX_report_event_generic_big_city
+
+	is_triggered_only = yes
+
+	trigger = {
+		check_variable = { 67.zabrze_german_name = 0 }
+		has_socialist_government = yes
+		owns_state = 67
+		controls_province = 11467
+	}
+
+	option = { #Marx
+		log = "[GetLogInfo]: event germany_puppet_events.1 option germany_puppet_events.1.a"
+		name = germany_puppet_events.1.a
+		ai_chance = { base = 60 }
+		set_variable = { 67.zabrze_german_name = 1 }
+		effect_tooltip = {
+			set_province_name = { id = 11467 name = VICTORY_POINTS_11467_KARL_MARX_STADT }
+		}
+	}
+
+	option = { #nothing political
+		log = "[GetLogInfo]: event germany_puppet_events.1 option germany_puppet_events.1.b"
+		name = germany_puppet_events.1.b
+		ai_chance = { base = 40 }
+		set_variable = { 67.zabrze_german_name = 2 }
+		effect_tooltip = {
+			set_province_name = { id = 11467 name = VICTORY_POINTS_11467_EISENHUTTENSTADT }
+		}
+	}
+
+	after = {
+		67 = { rename_state_effect = yes }
+	}
+}
+
+#reset city name if retaken
+country_event = {
+	id = germany_puppet_events.2
+	title = germany_puppet_events.2.t
+	desc = germany_puppet_events.2.d
+	picture = GFX_report_event_generic_big_city
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { check_variable = { 67.zabrze_german_name = 0 } }
+		has_socialist_government = no
+		owns_state = 67
+		controls_province = 11467
+	}
+
+	option = { #restore it
+		log = "[GetLogInfo]: event germany_puppet_events.2 option germany_puppet_events.2.a"
+		name = germany_puppet_events.2.a
+		clear_variable = 67.zabrze_german_name
+		effect_tooltip = {
+			set_province_name = { id = 11467 name = VICTORY_POINTS_11467 }
+		}
+		67 = { rename_state_effect = yes }
+	}
+}
+
+country_event = {
+	id = germany_puppet_events.3
+	title = germany_puppet_events.3.t
+	desc = germany_puppet_events.3.d
+	picture = GFX_report_event_generic_big_city
+
+	is_triggered_only = yes
+
+	option = { #Grant independence
+		log = "[GetLogInfo]: event germany_puppet_events.3 option germany_puppet_events.3.a"
+		name = germany_puppet_events.3.a
+		ai_chance = { base = 100 }
+		set_autonomy = {
+			target = FROM
+			autonomy_state = autonomy_free
+		}
+		if = {
+			limit = { has_subject = RHI }
+			FROM = {
+				annex_country = {
+					target = RHI
+					transfer_troops = yes
+				}
+			}
+		}
+		custom_effect_tooltip = GRU_independence_tt
+	}
+
+	option = { #Maintian Control
+		log = "[GetLogInfo]: event germany_puppet_events.3 option germany_puppet_events.3.b"
+		name = germany_puppet_events.3.b
+		ai_chance = { base = 0 }
+		add_political_power = -50
+		FROM = {
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.15
+			}
+		}
+	}
+}
+
+country_event = { #Invasion of Austria
+	id = germany_puppet_events.4
+	title = germany_puppet_events.4.t
+	desc = germany_puppet_events.4.d
+	picture = GFX_report_event_generic_big_city
+
+	is_triggered_only = yes
+
+	option = { # Prepare our armies
+		log = "[GetLogInfo]: event germany_puppet_events.4 option germany_puppet_events.4.a"
+		name = germany_puppet_events.4.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					AUS = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		create_wargoal = {
+			target = AUS
+			type = topple_government
+		}
+	}
+
+	option = { # Tell them to stand down
+		log = "[GetLogInfo]: event germany_puppet_events.4 option germany_puppet_events.4.b"
+		name = germany_puppet_events.4.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				OR = {
+					country_is_in_dangerous_war = yes
+					AUS = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		add_political_power = -50
+		FROM = {
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = totalist
+				popularity = 0.05
+			}
+		}
+	}
+}
+
+country_event = { #Invasion of Poland
+	id = germany_puppet_events.5
+	title = germany_puppet_events.5.t
+	desc = germany_puppet_events.5.d
+	picture = GFX_report_event_generic_big_city
+
+	is_triggered_only = yes
+
+	option = { #Grant independence
+		log = "[GetLogInfo]: event germany_puppet_events.5 option germany_puppet_events.5.a"
+		name = germany_puppet_events.5.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					POL = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		create_wargoal = {
+			target = POL
+			type = topple_government
+		}
+	}
+
+	option = { #Maintian Control
+		log = "[GetLogInfo]: event germany_puppet_events.5 option germany_puppet_events.5.b"
+		name = germany_puppet_events.5.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				OR = {
+					country_is_in_dangerous_war = yes
+					POL = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		FROM = {
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = totalist
+				popularity = 0.05
+			}
+		}
+	}
+}
+
+country_event = {
+	id = germany_puppet_events.6
+	title = germany_puppet_events.6.t
+	desc = germany_puppet_events.6.d
+	picture = GFX_report_event_generic_big_city
+
+	is_triggered_only = yes
+
+	option = { #Grant independence
+		log = "[GetLogInfo]: event germany_puppet_events.6 option germany_puppet_events.6.a"
+		name = germany_puppet_events.6.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					PRE = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		every_other_country = {
+			display_individual_scopes = yes
+			limit = {
+				OR = {
+					original_tag = PRE
+					original_tag = GRU
+				}
+				can_declare_war_on = ROOT
+				has_socialist_government = no
+				has_capitulated = no
+			}
+			ROOT = {
+				create_wargoal = {
+					target = PREV
+					type = topple_government
+				}
+			}
+		}
+	}
+
+	option = { #Maintian Control
+		log = "[GetLogInfo]: event germany_puppet_events.6 option germany_puppet_events.6.b"
+		name = germany_puppet_events.6.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				OR = {
+					country_is_in_dangerous_war = yes
+					PRE = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		FROM = {
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = totalist
+				popularity = 0.05
+			}
+		}
+	}
+}
+
+# RHI offers BeNeRhein
+country_event = {
+	id = germany_puppet_events.7
+	title = germany_puppet_events.7.t
+	desc = germany_puppet_events.7.d
+	picture = GFX_report_event_generic_big_city
+
+	is_triggered_only = yes
+
+	option = { # Yeah
+		log = "[GetLogInfo]: event germany_puppet_events.7 option germany_puppet_events.7.a"
+		name = germany_puppet_events.7.a
+		add_ideas = RHI_benerhi_idea
+	}
+
+	option = { # No
+		log = "[GetLogInfo]: event germany_puppet_events.7 option germany_puppet_events.7.b"
+		name = germany_puppet_events.7.b
+		ai_chance = { base = 0 }
+		add_political_power = 10
+	}
+}
+
+# RHI requests renegotiation
+country_event = {
+	id = germany_puppet_events.8
+	title = germany_puppet_events.8.t
+	desc = germany_puppet_events.8.d
+	picture = GFX_report_event_generic_big_city
+
+	is_triggered_only = yes
+
+	option = { # Yeah
+		log = "[GetLogInfo]: event germany_puppet_events.8 option germany_puppet_events.8.a"
+		name = germany_puppet_events.8.a
+		RHI = {
+			swap_ideas = {
+				remove_idea = RHI_rhenish_reparations
+				add_idea = RHI_rhenish_reparations_new
+			}
+		}
+	}
+
+	option = { # No
+		log = "[GetLogInfo]: event germany_puppet_events.8 option germany_puppet_events.8.b"
+		name = germany_puppet_events.8.b
+		add_stability = -0.02
+	}
+}

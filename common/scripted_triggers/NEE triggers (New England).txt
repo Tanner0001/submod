@@ -1,0 +1,42 @@
+NEE_is_supporting_USA = {
+	has_idea = ACW_support_USA
+}
+
+NEE_is_supporting_ACC = {
+	has_idea = ACW_support_ACC
+}
+
+NEE_is_supporting_AUS = {
+	has_idea = ACW_support_APG
+}
+
+NEE_war_is_truly_over = {
+	has_global_flag = USA_civil_war_over_flag
+	OR = {
+		AND = { #NEE sole winner
+			country_exists = NEE
+			NOT = { country_exists = USA }
+			NOT = { country_exists = WCA }
+			NOT = { country_exists = APG }
+			NOT = { country_exists = ACC }
+		}
+		AND = { #NEE won alongside another faction after CAN joined the ACW on their side
+			NEE = { is_in_faction_with = CAN }
+			CAN = { has_country_flag = CAN_joined_the_ACW }
+			any_country_of = {
+				count = 3
+				target = { USA WCA APG ACC }
+				exists = no
+			}
+		}
+		AND = { #NEE won alongside another ACC together
+			NEE = {
+				is_in_faction_with = ACC
+				NOT = { is_in_faction_with = ENT }
+			}
+			NOT = { country_exists = USA }
+			NOT = { country_exists = WCA }
+			NOT = { country_exists = APG }
+		}
+	}
+}

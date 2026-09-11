@@ -1,0 +1,2504 @@
+###########################
+# Armenia Events
+###########################
+# By KFateweaver
+###########################
+
+add_namespace = armenia_events
+
+country_event = { # Intro Event (Used in intro screen as well. DO NOT DELETE!)
+	id = armenia_events.1
+	title = armenia_events.1.t
+	desc = armenia_events.1.d
+	picture = GFX_report_event_ARM_landscape_mountain2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.1 option armenia_events.1.a"
+		name = armenia_events.1.a
+		activate_mission = ARM_capture_Kars
+		if = {
+			limit = {
+				country_exists = RUS
+				RUS = {
+					is_subject = no
+					has_socialist_government = no
+				}
+			}
+			activate_targeted_decision = { decision = ARM_request_russian_guns target = RUS }
+			hidden_effect = {
+				RUS = {
+					if = {
+						limit = { has_completed_focus = RUS_caucasus } #Decision disables if focus completed before ARM spawns
+						activate_targeted_decision = { target = ARM decision = RUS_Invite_Caucasus }
+						activate_targeted_decision = { target = ARM decision = RUS_attack }
+					}
+				}
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		add_ideas = ARM_independence_fervour_1
+		custom_effect_tooltip = tooltip_white_line
+		random_owned_controlled_state = {
+			limit = { is_core_of = ROOT }
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		hidden_effect = {
+			country_event = { id = armenia_events.830 days = 7 }
+			country_event = { id = armenia_events.86 days = 30 }
+			country_event = { id = armenia_events.61 days = 420 }
+			country_event = { id = armenia_events.58 days = 555 }
+		}
+	}
+}
+country_event = { #Relations between Lebanon and Armenia
+	id = armenia_events.4
+	title = armenia_events.4.t
+	desc = armenia_events.4.d
+	picture = GFX_report_event_generic_refugee_camp
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.4 option armenia_events.4.a"
+		name = armenia_events.4.a
+		add_opinion_modifier = {
+			target = LEB
+			modifier = KR_approves_of_govt
+		}
+		reverse_add_opinion_modifier = {
+			target = LEB
+			modifier = KR_approves_of_govt
+		}
+		add_political_power = 5
+	}
+}
+country_event = { ####constituent assembly####
+	id = armenia_events.12
+	title = armenia_events.12.t
+	desc = armenia_events.12.d
+	picture = GFX_report_event_NFA_event_NFA_Assembly
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.12 option armenia_events.12.a"
+		name = armenia_events.12.a
+		hidden_effect = {
+			set_variable = {
+				var = arm_rad_soc
+				value = 0
+			}
+			set_variable = {
+				var = arm_communists
+				value = 0
+			}
+			country_event = { id = armenia_events.13 days = 3 }
+		}
+	}
+}
+country_event = { ###political goal
+	id = armenia_events.13
+	title = armenia_events.13.t
+	desc = armenia_events.13.d
+	picture = GFX_report_event_ARM_propaganda_socialist
+	is_triggered_only = yes
+
+	option = { ###focus on the workers rights
+		log = "[GetLogInfo]: event armenia_events.13 option armenia_events.13.a"
+		name = armenia_events.13.a
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_path option = ARM_PATH_TOTALIST }
+			}
+		}
+		add_stability = 0.05
+		add_to_variable = { arm_rad_soc = 1 }
+	}
+	option = { ###focus on totally transform the country
+		log = "[GetLogInfo]: event armenia_events.13 option armenia_events.13.b"
+		name = armenia_events.13.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_path option = ARM_PATH_RADSOC }
+			}
+		}
+		add_political_power = 50
+		add_to_variable = { arm_communists = 1 }
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = armenia_events.14 days = 3 }
+		}
+	}
+}
+country_event = { ###economical goal
+	id = armenia_events.14
+	title = armenia_events.14.t
+	desc = armenia_events.14.d
+	picture = GFX_report_event_ARM_propaganda_socialist
+	is_triggered_only = yes
+
+	option = { ###focus on progressively reforming the economy
+		log = "[GetLogInfo]: event armenia_events.14 option armenia_events.14.a"
+		name = armenia_events.14.a
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_path option = ARM_PATH_TOTALIST }
+			}
+		}
+		add_to_variable = { arm_rad_soc = 1 }
+	}
+	option = { ###focus on collectivize and nationalize
+		log = "[GetLogInfo]: event armenia_events.14 option armenia_events.14.b"
+		name = armenia_events.14.b
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_path option = ARM_PATH_RADSOC }
+			}
+		}
+		add_to_variable = { arm_communists = 1 }
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = armenia_events.15 days = 3 }
+		}
+	}
+}
+country_event = { ###foreign goal
+	id = armenia_events.15
+	title = armenia_events.15.t
+	desc = armenia_events.15.d
+	picture = GFX_report_event_ARM_propaganda_socialist
+	is_triggered_only = yes
+
+	option = { ###focus on creating a revolutionary army
+		log = "[GetLogInfo]: event armenia_events.15 option armenia_events.15.a"
+		name = armenia_events.15.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_path option = ARM_PATH_TOTALIST }
+			}
+		}
+		add_manpower = 10000
+		add_to_variable = { arm_rad_soc = 1 }
+	}
+	option = { ###focus on the country
+		log = "[GetLogInfo]: event armenia_events.15 option armenia_events.15.b"
+		name = armenia_events.15.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_path option = ARM_PATH_RADSOC }
+			}
+		}
+		add_political_power = 50
+		add_to_variable = { arm_communists = 1 }
+	}
+	after = {
+		hidden_effect = {
+			if = {
+				limit = { check_variable = { arm_rad_soc < arm_communists } }
+				country_event = { id = armenia_events.16 days = 7 }
+			}
+			else = {
+				country_event = { id = armenia_events.17 days = 7 }
+			}
+		}
+	}
+}
+country_event = { # communists takes power
+	id = armenia_events.16
+	title = armenia_events.16.t
+	desc = armenia_events.16.d
+	picture = GFX_report_event_ARM_demonstration_socialist
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.16 option armenia_events.16.a"
+		name = armenia_events.16.a
+		clear_variable = arm_communists
+		clear_variable = arm_rad_soc
+		set_politics = {
+			ruling_party = totalist
+			elections_allowed = no
+		}
+		effect_tooltip = { activate_advisor = ARM_aghasi_khanjian_sic }
+		add_popularity = { ideology = totalist popularity = 0.10 }
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		complete_national_focus = ARM_communist_victory
+	}
+}
+country_event = { # Hunchaks stay in the course
+	id = armenia_events.17
+	title = armenia_events.17.t
+	desc = armenia_events.17.d
+	picture = GFX_report_event_ARM_demonstration
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.17 option armenia_events.17.a"
+		name = armenia_events.17.a
+		clear_variable = arm_communists
+		clear_variable = arm_rad_soc
+		add_popularity = { ideology = radical_socialist popularity = 0.10 }
+		complete_national_focus = ARM_hunchak_victory
+	}
+}
+country_event = { ### Armenia asks for resources
+	id = armenia_events.18
+	title = armenia_events.18.t
+	desc = armenia_events.18.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = { ###accept
+		log = "[GetLogInfo]: event armenia_events.18 option armenia_events.18.a"
+		name = armenia_events.18.a
+		ai_chance = { base = 10 }
+		add_political_power = -15
+		FROM = { country_event = { id = armenia_events.19 days = 7 } }
+	}
+	option = { ###refuse
+		log = "[GetLogInfo]: event armenia_events.18 option armenia_events.18.b"
+		name = armenia_events.18.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = { id = armenia_events.20 days = 7 } }
+	}
+}
+country_event = { # they accepted
+	id = armenia_events.19
+	title = armenia_events.19.t
+	desc = armenia_events.19.d
+	picture = GFX_report_event_FNG_industry3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.19 option armenia_events.19.a"
+		name = armenia_events.19.a
+		add_political_power = 50
+		add_offsite_building = { type = industrial_complex level = 1 }
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_pleased
+		}
+	}
+}
+country_event = { # they refused
+	id = armenia_events.20
+	title = armenia_events.20.t
+	desc = armenia_events.20.d
+	picture = GFX_report_event_ARM_propaganda_socialist
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.20 option armenia_events.20.a"
+		name = armenia_events.20.a
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_displeased
+		}
+	}
+}
+#######war event chain########
+country_event = { # Nzhdeh ask for the imprisonment of collaborators administration/officers
+	id = armenia_events.21
+	title = armenia_events.21.t
+	desc = armenia_events.21.d
+	picture = GFX_report_event_ARM_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.21 option armenia_events.21.a"
+		name = armenia_events.21.a
+		add_manpower = -1000
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+		hidden_effect = {
+			country_event = { id = armenia_events.22 days = 7 }
+		}
+	}
+}
+country_event = { # Ottoman resistance
+	id = armenia_events.22
+	title = armenia_events.22.t
+	desc = armenia_events.22.d
+	picture = GFX_report_event_ARM_demonstration
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.22 option armenia_events.22.a"
+		name = armenia_events.22.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.03
+		}
+	}
+}
+country_event = { # Nzhdeh and the military centralize the power until "end of the war"
+	id = armenia_events.23
+	title = armenia_events.23.t
+	desc = armenia_events.23.d
+	picture = GFX_report_event_ARM_demonstration_city
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.23 option armenia_events.23.a"
+		name = armenia_events.23.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+	}
+}
+country_event = { # Nzhdeh proclaimed leader of the nation
+	id = armenia_events.24
+	title = armenia_events.24.t
+	desc = armenia_events.24.d
+	picture = GFX_report_event_ARM_demonstration_city
+
+	is_triggered_only = yes
+
+	option = { ###search for collaborator in the resistance in case of...
+		log = "[GetLogInfo]: event armenia_events.24 option armenia_events.24.a"
+		name = armenia_events.24.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARM_path option = ARM_PATH_NATPOP }
+					has_game_rule = { rule = ARM_path option = ARM_PATH_PATAUT }
+					has_game_rule = { rule = ARM_path option = ARM_PATH_AUTDEM }
+				}
+			}
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.03
+		}
+	}
+	option = { ###ofc he is
+		log = "[GetLogInfo]: event armenia_events.24 option armenia_events.24.b"
+		name = armenia_events.24.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_NATPOP } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_PATAUT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_AUTDEM } }
+			}
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+	}
+}
+country_event = { # democrats call for a place in the gov
+	id = armenia_events.25
+	title = armenia_events.25.t
+	desc = armenia_events.25.d
+	picture = GFX_report_event_ARM_demonstration_city
+
+	is_triggered_only = yes
+
+	option = { ###give them some concessions, unity first
+		log = "[GetLogInfo]: event armenia_events.25 option armenia_events.25.a"
+		name = armenia_events.25.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARM_path option = ARM_PATH_NATPOP }
+					has_game_rule = { rule = ARM_path option = ARM_PATH_PATAUT }
+					has_game_rule = { rule = ARM_path option = ARM_PATH_AUTDEM }
+				}
+			}
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.02
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.02
+		}
+	}
+	option = { ###nope
+		log = "[GetLogInfo]: event armenia_events.25 option armenia_events.25.b"
+		name = armenia_events.25.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_NATPOP } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_PATAUT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_AUTDEM } }
+			}
+		}
+		add_political_power = -10
+	}
+}
+#########War is over - Victory#########
+country_event = { # THE CALM BEFORE THE STORM
+	id = armenia_events.26
+	title = armenia_events.26.t
+	desc = armenia_events.26.d
+	picture = GFX_report_event_ARM_landscape_mountain2
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.26 option armenia_events.26.a"
+		name = armenia_events.26.a
+		add_ideas = ARM_destroyed_recovery
+		custom_effect_tooltip = tooltip_white_line
+		add_ideas = ARM_social_chaos
+		custom_effect_tooltip = tooltip_white_line
+		add_timed_idea = {
+			idea = ARM_turkish_emigrants
+			days = 365
+		}
+		hidden_effect = {
+			remove_ideas = {
+				ARM_temporary_unity
+				ARM_independence_fervour_1
+				ARM_independence_fervour_2
+				ARM_independence_fervour_3
+				ARM_independence_fervour_4
+				ARM_iranian_attache
+				ARM_iranian_attache_monarchist
+			}
+			if = {
+				limit = {
+					RUS = {
+						exists = yes
+						has_government = national_populist
+					}
+					OR = {
+						AND = {
+							paternal_autocrat > 0.5
+							OR = {
+								is_ai = no
+								has_game_rule = { rule = ARM_path option = DEFAULT }
+							}
+						}
+						AND = {
+							is_ai = yes
+							OR = {
+								has_game_rule = { rule = ARM_path option = ARM_PATH_NATPOP }
+								has_game_rule = { rule = ARM_path option = ARM_PATH_AUTDEM }
+								# Prevents PatAut Nzhdeh when Russia is NatPop:
+								has_game_rule = { rule = ARM_path option = ARM_PATH_PATAUT }
+							}
+						}
+					}
+				}
+				country_event = { id = armenia_events.28 days = 5 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						AND = {
+							paternal_autocrat > 0.5
+							OR = {
+								is_ai = no
+								has_game_rule = { rule = ARM_path option = DEFAULT }
+							}
+						}
+						AND = {
+							is_ai = yes
+							has_game_rule = { rule = ARM_path option = ARM_PATH_PATAUT }
+						}
+					}
+				}
+				country_event = { id = armenia_events.27 days = 10 }
+			}
+			else = {
+				country_event = { id = armenia_events.29 days = 10 }
+			}
+		}
+	}
+}
+country_event = { # Nzhdeh Dashnaks and military create a coalition
+	id = armenia_events.27
+	title = armenia_events.27.t
+	desc = armenia_events.27.d
+	picture = GFX_report_event_ARM_demonstration_city
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.27 option armenia_events.27.a"
+		name = armenia_events.27.a
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.03
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		effect_tooltip = { activate_advisor = ARM_hovhannes_kajaznuni_sic }
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+	}
+}
+country_event = { # Nzhdeh creates his organisation
+	id = armenia_events.28
+	title = armenia_events.28.t
+	desc = armenia_events.28.d
+	picture = GFX_report_event_ARM_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.28 option armenia_events.28.a"
+		name = armenia_events.28.a
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.1
+		}
+		set_party_name = {
+			ideology = national_populist
+			name = ARM_national_populist_party_tseghakronism
+			long_name = ARM_national_populist_party_tseghakronism_long
+		}
+		hidden_effect = {
+			country_event = { id = armenia_events.30 days = 5 }
+		}
+	}
+}
+country_event = { # democracy prevails, Nzhdeh is only a temporal figurehead
+	id = armenia_events.29
+	title = armenia_events.29.t
+	desc = armenia_events.29.d
+	picture = GFX_report_event_AST_election
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.29 option armenia_events.29.a"
+		name = armenia_events.29.a
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = yes
+		}
+		activate_advisor = ARM_khorhurd_sic
+		hidden_effect = {
+			country_event = { id = armenia_events.31 days = 10 random_days = 5 }
+		}
+	}
+}
+country_event = { # Nzhdeh become absolute leader of totalitarian state
+	id = armenia_events.30
+	title = armenia_events.30.t
+	desc = armenia_events.30.d
+	picture = GFX_report_event_ARM_army_training
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.30 option armenia_events.30.a"
+		name = armenia_events.30.a
+		set_politics = {
+			ruling_party = national_populist
+			elections_allowed = no
+		}
+		effect_tooltip = { activate_advisor = ARM_hayk_asatryan_sic }
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+		hidden_effect = {
+			country_event = { id = armenia_events.38 days = 35 random_days = 15 }
+		}
+	}
+}
+country_event = { # election campaign begin - explains coalition system
+	id = armenia_events.31
+	title = armenia_events.31.t
+	desc = armenia_events.31.d
+	picture = GFX_report_event_ARM_demonstration_city
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.31 option armenia_events.31.a"
+		name = armenia_events.31.a
+		add_stability = 0.05
+	}
+}
+country_event = { # First Armenian Elections
+	id = armenia_events.32
+	title = armenia_events.32.t
+	desc = armenia_events.32.d
+	picture = GFX_report_event_AST_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.32 option armenia_events.32.a"
+		name = armenia_events.32.a
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARM_path option = ARM_PATH_RADSOC }
+					has_game_rule = { rule = ARM_path option = ARM_PATH_TOTALIST }
+				}
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					AND = {
+						is_in_faction_with = GER
+						GER = { is_faction_leader = yes }
+					}
+					AND = {
+						is_in_faction_with = RUS
+						RUS = { is_faction_leader = yes }
+					}
+				}
+			}
+			custom_effect_tooltip = ARM_no_electable_socialists_tt
+			custom_effect_tooltip = tooltip_white_line
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.15
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.15
+		}
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = { localization_key = tooltip_in_days DAYS = 14 }
+		country_event = { id = armenia_events.33 days = 14 }
+	}
+	option = {
+		log = "[GetLogInfo]: event armenia_events.32 option armenia_events.32.b"
+		name = armenia_events.32.b
+		trigger = {
+			NOT = {
+				AND = {
+					is_in_faction_with = GER
+					GER = { is_faction_leader = yes }
+				}
+				AND = {
+					is_in_faction_with = RUS
+					RUS = { is_faction_leader = yes }
+				}
+			}
+		}
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_RADSOC } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_TOTALIST } }
+			}
+		}
+		if = {
+			limit = { NOT = { has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_PER } } }
+			hidden_effect = { clear_all_relations = yes }
+		}
+		set_politics = {
+			ruling_party = radical_socialist
+			elections_allowed = no
+		}
+		effect_tooltip = { activate_advisor = ARM_sarkis_dkhrouni_sic }
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.15
+		}
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.1
+		}
+		set_temp_variable = { coalition_partner_var = token:totalist }
+		add_to_coalition = yes
+	}
+}
+country_event = { # First Parliamentary Elections
+	id = armenia_events.33
+	title = armenia_events.33.t
+	desc = armenia_events.33.d
+	picture = GFX_report_event_AST_election
+
+	is_triggered_only = yes
+
+	option = { # Dashnaks
+		log = "[GetLogInfo]: event armenia_events.33 option armenia_events.33.a"
+		name = armenia_events.33.a
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARM_path option = ARM_PATH_MARLIB }
+					has_game_rule = { rule = ARM_path option = ARM_PATH_SOCCON }
+				}
+			}
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_democrat
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.1
+		}
+		custom_effect_tooltip = tooltip_white_line
+		effect_tooltip = { activate_advisor = ARM_alexander_khatisian_sic }
+		custom_effect_tooltip = tooltip_white_line
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+	}
+	option = { # Ramgavar
+		log = "[GetLogInfo]: event armenia_events.33 option armenia_events.33.b"
+		name = armenia_events.33.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = ARM_path option = ARM_PATH_SOCDEM }
+					has_game_rule = { rule = ARM_path option = ARM_PATH_SOCLIB }
+				}
+			}
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = market_liberal
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 48
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		custom_effect_tooltip = tooltip_white_line
+		effect_tooltip = { activate_advisor = ARM_arshag_chobanian_sic }
+		custom_effect_tooltip = tooltip_white_line
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = armenia_events.114 days = 730 }
+		}
+	}
+}
+country_event = { # Conquest of Batumi
+	id = armenia_events.35
+	title = armenia_events.35.t
+	desc = armenia_events.35.d
+	picture = GFX_report_event_RUS_ship
+
+	is_triggered_only = yes
+
+	option = { # Claim Batumi
+		log = "[GetLogInfo]: event armenia_events.35 option armenia_events.35.a"
+		name = armenia_events.35.a
+		ai_chance = { base = 30 }
+		585 = { add_claim_by = ARM }
+		if = {
+			limit = { country_exists = GEO }
+			reverse_add_opinion_modifier = {
+				target = GEO
+				modifier = KR_displeased
+			}
+		}
+	}
+	option = { # Better safe than sorry
+		log = "[GetLogInfo]: event armenia_events.35 option armenia_events.35.b"
+		name = armenia_events.35.b
+		ai_chance = { base = 70 }
+	}
+	after = {
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 12
+		}
+		add_manpower = 250
+	}
+}
+country_event = { #Movie Nazar the Brave
+	id = armenia_events.36
+	title = armenia_events.36.t
+	desc = armenia_events.36.d
+	picture = GFX_report_event_ARM_landscape_mountain2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.36 option armenia_events.36.a"
+		name = armenia_events.36.a
+		add_stability = 0.01
+	}
+}
+country_event = { #Mikoyan's Meat and Ice Cream Production
+	id = armenia_events.37
+	title = armenia_events.37.t
+	desc = armenia_events.37.d
+	picture = GFX_report_event_ARM_propaganda_socialist
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.37 option armenia_events.37.a"
+		name = armenia_events.37.a
+		add_stability = 0.02
+		add_political_power = 5
+	}
+}
+###Nzhdeh event chain
+country_event = { #Nzhdeh begin political oppression
+	id = armenia_events.38
+	title = armenia_events.38.t
+	desc = armenia_events.38.d
+	picture = GFX_report_event_ARM_army_training
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.38 option armenia_events.38.a"
+		name = armenia_events.38.a
+		add_political_power = -5
+		hidden_effect = {
+			country_event = { id = armenia_events.39 days = 20 }
+		}
+	}
+}
+country_event = { #the resettlement of turkish pop, expel turkish and azeris
+	id = armenia_events.39
+	title = armenia_events.39.t
+	desc = armenia_events.39.d
+	picture = GFX_report_event_ARM_refugees
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.39 option armenia_events.39.a"
+		name = armenia_events.39.a
+		add_political_power = -5
+		add_manpower = -500
+		hidden_effect = {
+			country_event = { id = armenia_events.40 days = 25 }
+		}
+	}
+}
+country_event = { # Massacre of Yerevan
+	id = armenia_events.40
+	title = armenia_events.40.t
+	desc = armenia_events.40.d
+	picture = GFX_report_event_ARM_refugees
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.40 option armenia_events.40.a"
+		name = armenia_events.40.a
+		add_political_power = -20
+		add_manpower = -3000
+		hidden_effect = {
+			country_event = { id = armenia_events.41 days = 3 }
+		}
+	}
+}
+country_event = { #democrats protest Nzhdeh Policy
+	id = armenia_events.41
+	title = armenia_events.41.t
+	desc = armenia_events.41.d
+	picture = GFX_report_event_ARM_demonstration_city
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.41 option armenia_events.41.a"
+		name = armenia_events.41.a
+		add_popularity = {
+			ideology = market_liberal
+			popularity = -0.1
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.1
+		}
+		hidden_effect = {
+			country_event = { id = armenia_events.42 days = 50 }
+		}
+	}
+}
+
+country_event = { # Boghos Dadian's Coup
+	id = armenia_events.42
+	title = armenia_events.42.t
+	desc = armenia_events.42.d
+	picture = GFX_report_event_ARM_army
+
+	is_triggered_only = yes
+
+	option = { ###Boghos Dadian Succeeds
+		log = "[GetLogInfo]: event armenia_events.42 option armenia_events.42.a"
+		name = armenia_events.42.a
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_path option = ARM_PATH_NATPOP }
+			}
+		}
+		country_event = { id = armenia_events.43 days = 1 }
+	}
+
+	option = { ###Boghos Dadian Fails
+		log = "[GetLogInfo]: event armenia_events.42 option armenia_events.42.b"
+		name = armenia_events.42.b
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_path option = ARM_PATH_AUTDEM }
+			}
+		}
+		country_event = { id = armenia_events.44 days = 1 }
+	}
+}
+country_event = { #Boghos Dadian Succeeds
+	id = armenia_events.43
+	title = armenia_events.43.t
+	desc = armenia_events.43.d
+	picture = GFX_report_event_ARM_demonstration
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.43 option armenia_events.43.a"
+		name = armenia_events.43.a
+		retire_character = ARM_garegin_nzhdeh
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		if = {
+			limit = { has_character = ARM_boghos_bey_dadian }
+			ARM_boghos_bey_dadian = { promote_leader = yes }
+		}
+		effect_tooltip = { activate_advisor = ARM_galust_syurmenian_sic }
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		hidden_effect = {
+			add_country_leader_role = {
+				character = ARM_boghos_bey_dadian
+				country_leader = {
+					desc = ARM_boghos_bey_dadian_leader_desc
+					ideology = paternal_autocrat_subtype
+					traits = { ARM_prestigious_veteran }
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				character = ARM_hayk_asatryan
+				country_leader = {
+					desc = ARM_hayk_asatryan_sic_desc
+					ideology = national_populist_subtype
+					traits = { ARM_returned_ideologue }
+				}
+				promote_leader = yes
+			}
+			country_event = { id = armenia_events.89 days = 35 }
+		}
+	}
+}
+country_event = { #Boghos Dadian Fails
+	id = armenia_events.44
+	title = armenia_events.44.t
+	desc = armenia_events.44.d
+	picture = GFX_report_event_ARM_demonstration
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.44 option armenia_events.44.a"
+		name = armenia_events.44.a
+		ARM_boghos_bey_dadian = { kill_character = yes }
+		add_political_power = 15
+		custom_effect_tooltip = {
+			localization_key = tooltip_enable_focus
+			FOCUS = ARM_armenia_above_all
+		}
+		set_country_flag = ARM_Nzhdeh_entrenched
+	}
+}
+country_event = { #Establish the seven tseghakron cults
+	id = armenia_events.45
+	title = armenia_events.45.t
+	desc = armenia_events.45.d
+	picture = GFX_report_event_ARM_landscape_mountain2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.45 option armenia_events.45.a"
+		name = armenia_events.45.a
+	}
+}
+country_event = { #Armenia Asks for enter the Internationale
+	id = armenia_events.46
+	title = armenia_events.46.t
+	desc = armenia_events.46.d
+	picture = GFX_report_event_ARM_propaganda_socialist
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.46 option armenia_events.46.a"
+		name = armenia_events.46.a
+		effect_tooltip = { add_to_faction = FROM }
+		FROM = { country_event = { id = armenia_events.47 days = 3 } }
+	}
+	option = {
+		log = "[GetLogInfo]: event armenia_events.46 option armenia_events.46.b"
+		name = armenia_events.46.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = { id = armenia_events.48 days = 3 } }
+	}
+}
+
+country_event = { #They said yes
+	id = armenia_events.47
+	title = armenia_events.47.t
+	desc = armenia_events.47.d
+	picture = GFX_report_event_ARM_propaganda_socialist
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.47 option armenia_events.47.a"
+		name = armenia_events.47.a
+		FROM = { add_to_faction = ROOT }
+		add_ideas = ARM_internationale_military_advisors
+		activate_targeted_decision = { decision = ARM_request_industrial_support target = FROM }
+	}
+}
+country_event = { #They said no
+	id = armenia_events.48
+	title = armenia_events.48.t
+	desc = armenia_events.48.d
+	picture = GFX_report_event_ARM_propaganda_socialist
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.48 option armenia_events.48.a"
+		name = armenia_events.48.a
+	}
+}
+country_event = { #Armenia Asks to enter the Moscow Accords
+	id = armenia_events.49
+	title = armenia_events.49.t
+	desc = armenia_events.49.d
+	picture = GFX_report_event_ARM_landscape_mountain
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.49 option armenia_events.49.a"
+		name = armenia_events.49.a
+		effect_tooltip = {
+			if = {
+				limit = { has_government = national_populist }
+				set_autonomy = {
+					target = FROM
+					autonomy_state = autonomous_puppet
+					end_wars = no
+				}
+			}
+			else = {
+				add_to_faction = FROM
+			}
+		}
+		FROM = { country_event = armenia_events.50 }
+	}
+	option = {
+		log = "[GetLogInfo]: event armenia_events.49 option armenia_events.49.b"
+		name = armenia_events.49.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = armenia_events.51 }
+	}
+}
+
+country_event = { #They said yes
+	id = armenia_events.50
+	title = armenia_events.50.t
+	desc = armenia_events.50.d
+	picture = GFX_report_event_ARM_demonstration_socialist
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.50 option armenia_events.50.a"
+		name = armenia_events.50.a
+		if = {
+			limit = { FROM = { has_government = national_populist } }
+			get_current_government_type = yes
+			FROM = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomous_puppet
+					end_wars = no
+				}
+			}
+			restore_previous_government_type = yes
+		}
+		else = {
+			FROM = { add_to_faction = ROOT }
+		}
+	}
+}
+country_event = { #They said no
+	id = armenia_events.51
+	title = armenia_events.51.t
+	desc = armenia_events.51.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.51 option armenia_events.51.a"
+		name = armenia_events.51.a
+	}
+}
+country_event = { #Armenia Asks for enter the Reichspakt
+	id = armenia_events.55
+	title = armenia_events.55.t
+	desc = armenia_events.55.d
+	picture = GFX_report_event_ARM_landscape_mountain2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.55 option armenia_events.55.a"
+		name = armenia_events.55.a
+		ai_chance = { base = 100 }
+		effect_tooltip = { add_to_faction = FROM }
+		FROM = { country_event = armenia_events.56 }
+	}
+	option = {
+		log = "[GetLogInfo]: event armenia_events.55 option armenia_events.55.b"
+		name = armenia_events.55.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = armenia_events.57 }
+	}
+}
+
+country_event = { #They said yes
+	id = armenia_events.56
+	title = armenia_events.56.t
+	desc = armenia_events.56.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.56 option armenia_events.56.a"
+		name = armenia_events.56.a
+		FROM = { add_to_faction = ROOT }
+		if = {
+			limit = { country_exists = AZR }
+			AZR = { clear_embargo_PREV = yes }
+		}
+	}
+}
+country_event = { #They said no
+	id = armenia_events.57
+	title = armenia_events.57.t
+	desc = armenia_events.57.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.57 option armenia_events.57.a"
+		name = armenia_events.57.a
+	}
+}
+country_event = { #Armenian Massacres Memorial
+	id = armenia_events.58
+	title = armenia_events.58.t
+	desc = armenia_events.58.d
+	picture = GFX_report_event_ARM_construction_Tsitsernakaberd
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.58 option armenia_events.58.a"
+		name = armenia_events.58.a
+		add_stability = 0.01
+	}
+}
+country_event = { #Reconstruction of Etchmiadzin Cathedral
+	id = armenia_events.59
+	title = armenia_events.59.t
+	desc = armenia_events.59.d
+	picture = GFX_report_event_ARM_etchmiadzin
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.59 option armenia_events.59.a"
+		name = armenia_events.59.a
+		add_stability = 0.01
+	}
+}
+country_event = { #Deserter found during military exercise
+	id = armenia_events.60
+	title = armenia_events.60.t
+	desc = armenia_events.60.d
+	picture = GFX_report_event_GXC_federalist_troops_mountains
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.60 option armenia_events.60.a"
+		name = armenia_events.60.a
+		add_political_power = 3
+	}
+	option = {
+		log = "[GetLogInfo]: event armenia_events.60 option armenia_events.60.b"
+		name = armenia_events.60.b
+		add_manpower = 1
+		add_political_power = -1
+	}
+}
+country_event = { #Excavation of Teishebaini
+	id = armenia_events.61
+	title = armenia_events.61.t
+	desc = armenia_events.61.d
+	picture = GFX_report_event_ARM_landscape_mountain2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.61 option armenia_events.61.a"
+		name = armenia_events.61.a
+		add_political_power = 5
+	}
+}
+country_event = { #Armenia's National Anthem
+	id = armenia_events.62
+	title = armenia_events.62.t
+	desc = armenia_events.62.d
+	picture = GFX_report_event_ARM_army
+
+	is_triggered_only = yes
+
+	option = { #Mer Hayrenik
+		log = "[GetLogInfo]: event armenia_events.62 option armenia_events.62.a"
+		name = armenia_events.62.a
+		add_political_power = 10
+		add_war_support = 0.01
+	}
+	option = {#New composition
+		log = "[GetLogInfo]: event armenia_events.62 option armenia_events.62.b"
+		name = armenia_events.62.b
+		add_stability = 0.02
+	}
+	option = { #Compose one in honour of Nzhdeh
+		log = "[GetLogInfo]: event armenia_events.62 option armenia_events.62.c"
+		name = armenia_events.62.c
+		trigger = { has_dictatorship_government = yes }
+		add_war_support = 0.01
+		set_temp_variable = { ideology_change_var = 0.01 }
+		change_ruling_party_popularity = yes
+	}
+}
+country_event = { #Return of the diaspora
+	id = armenia_events.79
+	title = armenia_events.79.t
+	desc = armenia_events.79.d
+	picture = GFX_report_event_ARM_refugees
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.79 option armenia_events.79.a"
+		name = armenia_events.79.a
+		swap_ideas = {
+			remove_idea = ARM_diaspora
+			add_idea = ARM_diaspora_1
+		}
+	}
+}
+country_event = { #Armenian Academy of Sciences
+	id = armenia_events.80
+	title = armenia_events.80.t
+	desc = armenia_events.80.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = { #Establish the Academy
+		log = "[GetLogInfo]: event armenia_events.80 option armenia_events.80.a"
+		name = armenia_events.80.a
+		add_political_power = -15
+		add_stability = 0.02
+		hidden_effect = {
+			country_event = { id = armenia_events.81 days = 90 }
+		}
+	}
+	option = { #Waste of Resources
+		log = "[GetLogInfo]: event armenia_events.80 option armenia_events.80.b"
+		name = armenia_events.80.b
+		ai_chance = { base = 0 }
+	}
+}
+country_event = { #Inauguration of the Academy
+	id = armenia_events.81
+	title = armenia_events.81.t
+	desc = armenia_events.81.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.81 option armenia_events.81.a"
+		name = armenia_events.81.a
+		add_stability = 0.01
+		add_political_power = 5
+		hidden_effect = {
+			country_event = { id = armenia_events.82 days = 90 }
+		}
+	}
+}
+country_event = { #Armenian Orthography Reform
+	id = armenia_events.82
+	title = armenia_events.82.t
+	desc = armenia_events.82.d
+	picture = GFX_report_event_generic_books
+
+	is_triggered_only = yes
+
+	option = { #Reform
+		log = "[GetLogInfo]: event armenia_events.82 option armenia_events.82.a"
+		name = armenia_events.82.a
+		add_stability = -0.01
+		add_political_power = 5
+	}
+	option = { #No Reforms
+		log = "[GetLogInfo]: event armenia_events.82 option armenia_events.82.b"
+		name = armenia_events.82.b
+		add_stability = 0.01
+		add_political_power = -5
+	}
+}
+country_event = { #Form an alliance with PER?
+	id = armenia_events.830
+	title = armenia_events.830.t
+	desc = armenia_events.830.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_war_with = OTT
+		PER = {
+			is_subject = no
+			has_war_with = OTT
+		}
+	}
+
+	option = { #Yes
+		log = "[GetLogInfo]: event armenia_events.830 option armenia_events.830.a"
+		name = armenia_events.830.a
+		ai_chance = { base = 100 }
+		PER = { country_event = { id = armenia_events.83 days = 3 } }
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			PER = {
+				if = {
+					limit = { is_in_faction = no }
+					create_faction_from_template = { template = faction_template_generic name = tabriz_accords }
+					add_to_faction = PREV
+				}
+				else_if = {
+					limit = { is_faction_leader = yes }
+					add_to_faction = PREV
+				}
+				else = {
+					faction_leader = { add_to_faction = PREV }
+				}
+			}
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_enable_focus
+			FOCUS = ARM_coordinate_with_teheran
+		}
+	}
+	option = { #No
+		log = "[GetLogInfo]: event armenia_events.830 option armenia_events.830.b"
+		name = armenia_events.830.b
+		ai_chance = { base = 0 }
+	}
+}
+country_event = { #Armenia proposes a temporary faction
+	id = armenia_events.83
+	title = armenia_events.83.t
+	desc = armenia_events.83.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = { #Yes
+		log = "[GetLogInfo]: event armenia_events.83 option armenia_events.83.a"
+		name = armenia_events.83.a
+		if = {
+			limit = { ROOT = { is_in_faction = no } }
+			create_faction_from_template = { template = faction_template_generic name = tabriz_accords }
+			add_to_faction = FROM
+		}
+		else_if = {
+			limit = { ROOT = { is_faction_leader = yes } }
+			add_to_faction = FROM
+		}
+		else = {
+			faction_leader = { add_to_faction = FROM }
+		}
+		FROM = {
+			country_event = armenia_events.84
+			set_country_flag = non_ideological_faction_member
+		}
+		custom_effect_tooltip = tooltip_white_line
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_close_allies
+		}
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = KR_close_allies
+		}
+	}
+	option = { #No
+		log = "[GetLogInfo]: event armenia_events.83 option armenia_events.83.b"
+		name = armenia_events.83.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = armenia_events.85 }
+	}
+}
+country_event = { #Iran accepts
+	id = armenia_events.84
+	title = armenia_events.84.t
+	desc = armenia_events.84.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.84 option armenia_events.84.a"
+		name = armenia_events.84.a
+		effect_tooltip = {
+			FROM = { add_to_faction = ROOT }
+			add_opinion_modifier = {
+				target = FROM
+				modifier = KR_close_allies
+			}
+			reverse_add_opinion_modifier = {
+				target = FROM
+				modifier = KR_close_allies
+			}
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_enable_focus
+			FOCUS = ARM_coordinate_with_teheran
+		}
+	}
+}
+country_event = { #Iran refuses
+	id = armenia_events.85
+	title = armenia_events.85.t
+	desc = armenia_events.85.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.85 option armenia_events.85.a"
+		name = armenia_events.85.a
+	}
+}
+country_event = { #Boghos Dadian and other Ottoman soldiers desert
+	id = armenia_events.86
+	title = armenia_events.86.t
+	desc = armenia_events.86.d
+	picture = GFX_report_event_USA_soldiers_watching
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.86 option armenia_events.86.a"
+		name = armenia_events.86.a
+		add_manpower = 500
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 150
+			producer = TUR
+		}
+		show_unit_leaders_tooltip = ARM_boghos_bey_dadian
+		ARM_boghos_bey_dadian = { set_character_flag = show_unit_leader_role } #TODO: revert when bug with country_leader variable is fixed
+	}
+}
+country_event = { #Liberation of Kars
+	id = armenia_events.87
+	title = armenia_events.87.t
+	desc = armenia_events.87.d
+	picture = GFX_report_event_ARM_landscape_mountain
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.87 option armenia_events.87.a"
+		name = armenia_events.87.a
+		add_manpower = 2000
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 250
+			producer = TUR
+		}
+	}
+}
+
+country_event = { #Leave Tabriz Accords?
+	id = armenia_events.88
+	title = armenia_events.88.t
+	desc = armenia_events.88.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.88 option armenia_events.88.a"
+		name = armenia_events.88.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_PER }
+			}
+		}
+		leave_faction = yes
+		PER = {
+			if = {
+				limit = {
+					is_faction_leader = yes
+					NOT = {
+						any_allied_country = {
+							is_subject = no
+							NOT = { tag = ROOT }
+						}
+					}
+				}
+				dismantle_faction = yes
+			}
+		}
+		clr_country_flag = non_ideological_faction_member
+	}
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.88 option armenia_events.88.b"
+		name = armenia_events.88.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_PER }
+			}
+		}
+	}
+}
+country_event = { #Collapse of the Tseghakronutyun
+	id = armenia_events.89
+	title = armenia_events.89.t
+	desc = armenia_events.89.d
+	picture = GFX_report_event_ARM_army
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.89 option armenia_events.89.a"
+		name = armenia_events.89.a
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+		add_popularity = {
+			ideology = national_populist
+			popularity = -0.08
+		}
+		add_stability = 0.03
+	}
+}
+country_event = { #Armenia Requests Guns
+	id = armenia_events.90
+	title = armenia_events.90.t
+	desc = armenia_events.90.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = { #Accept
+		log = "[GetLogInfo]: event armenia_events.90 option armenia_events.90.a"
+		name = armenia_events.90.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_war = yes
+				any_enemy_country = {
+					is_major = yes
+				}
+			}
+		}
+		add_political_power = 20
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -1500
+			producer = RUS
+		}
+		reverse_add_opinion_modifier = {
+			target = ARM
+			modifier = KR_pleased
+		}
+		hidden_effect = {
+			ARM = { country_event = { id = armenia_events.91 days = 2 } }
+		}
+	}
+	option = { #Refuse
+		log = "[GetLogInfo]: event armenia_events.90 option armenia_events.90.b"
+		name = armenia_events.90.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 10
+				has_war = yes
+				any_enemy_country = {
+					is_major = yes
+				}
+			}
+		}
+		reverse_add_opinion_modifier = {
+			target = ARM
+			modifier = KR_displeased
+		}
+		hidden_effect = {
+			ARM = { country_event = { id = armenia_events.92 days = 2 } }
+		}
+	}
+}
+country_event = { #Russia Sends Guns
+	id = armenia_events.91
+	title = armenia_events.91.t
+	desc = armenia_events.91.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.91 option armenia_events.91.a"
+		name = armenia_events.91.a
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1500
+			producer = RUS
+		}
+	}
+}
+country_event = { #Russia Refuses to Send Guns
+	id = armenia_events.92
+	title = armenia_events.92.t
+	desc = armenia_events.92.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.92 option armenia_events.92.a"
+		name = armenia_events.92.a
+	}
+}
+country_event = { #Bar Fight Escalates
+	id = armenia_events.93
+	title = armenia_events.93.t
+	desc = armenia_events.93.d
+	picture = GFX_report_event_HOL_alcoholism_on_the_rise3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.93 option armenia_events.93.a"
+		name = armenia_events.93.a
+		add_manpower = -7
+		add_political_power = -20
+	}
+	option = {
+		log = "[GetLogInfo]: event armenia_events.93 option armenia_events.93.b"
+		name = armenia_events.93.b
+		add_stability = -0.03
+	}
+}
+
+# Reconciliation with TUR/Join the RP
+country_event = { #ARM requests German mediation
+	id = armenia_events.100
+	title = armenia_events.100.t
+	desc = armenia_events.100.d
+	picture = GFX_OTT_Language_Committee
+
+	is_triggered_only = yes
+
+	option = { #Mediate Talks
+		log = "[GetLogInfo]: event armenia_events.100 option armenia_events.100.a"
+		name = armenia_events.100.a
+		ai_chance = { base = 1 }
+		ARM = {
+			set_country_flag = GER_mediating_peace_talks
+			country_event = { id = armenia_events.102 days = 1 } #How much to demand from TUR with GER backing
+		}
+	}
+	option = { #Refuse
+		log = "[GetLogInfo]: event armenia_events.100 option armenia_events.100.b"
+		name = armenia_events.100.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				ARM = { is_ai = no } #Player Armenia always gets meditated to join the RP
+			}
+		}
+		ARM = { country_event = { id = armenia_events.101 days = 1 } } #How much to demand from TUR when alone
+	}
+}
+
+country_event = { #ARM ponders demands to TUR - solo
+	id = armenia_events.101
+	title = armenia_events.101.t
+	desc = armenia_events.101.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = { #Bold Demands
+		log = "[GetLogInfo]: event armenia_events.101 option armenia_events.101.a"
+		name = armenia_events.101.a
+		ai_chance = { base = 30 }
+		TUR = { country_event = { id = armenia_events.103 days = 1 } }
+	}
+	option = { #Restrained Demands
+		log = "[GetLogInfo]: event armenia_events.101 option armenia_events.101.b"
+		name = armenia_events.101.b
+		ai_chance = { base = 70 }
+		TUR = { country_event = { id = armenia_events.104 days = 1 } }
+	}
+}
+
+country_event = { #ARM ponders demands to TUR - with GER
+	id = armenia_events.102
+	title = armenia_events.102.t
+	desc = armenia_events.102.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = { #Bold Demands
+		log = "[GetLogInfo]: event armenia_events.102 option armenia_events.102.a"
+		name = armenia_events.102.a
+		ai_chance = { base = 70 }
+		TUR = { country_event = { id = armenia_events.103 days = 1 } }
+	}
+	option = { #Restrained Demands
+		log = "[GetLogInfo]: event armenia_events.102 option armenia_events.102.b"
+		name = armenia_events.102.b
+		ai_chance = { base = 30 }
+		TUR = { country_event = { id = armenia_events.104 days = 1 } }
+	}
+}
+
+country_event = { #TUR receives bold demands
+	id = armenia_events.103
+	title = armenia_events.103.t
+	desc = {
+		text = armenia_events.103.d
+		trigger = {
+			NOT = { ARM = { has_country_flag = GER_mediating_peace_talks } }
+		}
+	}
+	desc = {
+		text = armenia_events.103.d.withger
+		trigger = {
+			ARM = { has_country_flag = GER_mediating_peace_talks }
+		}
+	}
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = { #Compensate ARM
+		log = "[GetLogInfo]: event armenia_events.103 option armenia_events.103.a"
+		name = armenia_events.103.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 6
+				ARM = { has_country_flag = GER_mediating_peace_talks }
+			}
+		}
+		add_political_power = -75
+		ARM = {
+			set_variable = { arm_compensation = 75 }
+			country_event = { id = armenia_events.105 days = 1 }
+		}
+		custom_effect_tooltip = which_has_the_following_effect
+		effect_tooltip = {
+			ARM = { add_political_power = 75 }
+		}
+	}
+	option = { #Refuse to compensate ARM
+		log = "[GetLogInfo]: event armenia_events.103 option armenia_events.103.b"
+		name = armenia_events.103.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_GER }
+			}
+		}
+		ARM = { country_event = { id = armenia_events.107 days = 1 } }
+		reverse_add_opinion_modifier = {
+			target = ARM
+			modifier = KR_displeased
+		}
+		hidden_effect = {
+			GER = { country_event = { id = armenia_events.108 days = 1 } }
+		}
+	}
+}
+
+country_event = { #TUR receives relaxed demands
+	id = armenia_events.104
+	title = armenia_events.104.t
+	desc = {
+		text = armenia_events.104.d
+		trigger = {
+			NOT = { ARM = { has_country_flag = GER_mediating_peace_talks } }
+		}
+	}
+	desc = {
+		text = armenia_events.104.d.withger
+		trigger = {
+			ARM = { has_country_flag = GER_mediating_peace_talks }
+		}
+	}
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = { #Compensate ARM
+		log = "[GetLogInfo]: event armenia_events.104 option armenia_events.103.a"
+		name = armenia_events.103.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 6
+				ARM = { has_country_flag = GER_mediating_peace_talks }
+			}
+			modifier = { #Republican Turkey is more likely
+				factor = 2
+				is_monarchy = no
+			}
+		}
+		add_political_power = -50
+		ARM = {
+			set_variable = { arm_compensation = 50 }
+			country_event = { id = armenia_events.105 days = 1 }
+		}
+		custom_effect_tooltip = which_has_the_following_effect
+		effect_tooltip = {
+			ARM = { add_political_power = 50 }
+		}
+	}
+	option = { #Refuse to compensate ARM
+		log = "[GetLogInfo]: event armenia_events.104 option armenia_events.103.b"
+		name = armenia_events.103.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_GER }
+			}
+		}
+		ARM = { country_event = { id = armenia_events.107 days = 1 } }
+		reverse_add_opinion_modifier = {
+			target = ARM
+			modifier = KR_displeased
+		}
+		hidden_effect = {
+			GER = { country_event = { id = armenia_events.108 days = 1 } }
+		}
+	}
+}
+
+country_event = { #ARM compensated
+	id = armenia_events.105
+	title = armenia_events.105.t
+	desc = armenia_events.105.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.105 option armenia_events.105.a"
+		name = armenia_events.105.a
+		add_political_power = var:arm_compensation
+		if = {
+			limit = { has_country_flag = GER_mediating_peace_talks }
+			GER = { country_event = { id = armenia_events.106 days = 1 } }
+		}
+		TUR = { country_event = { id = armenia_events.109 days = 3 } }
+	}
+}
+
+country_event = { #ARM compensated
+	id = armenia_events.106
+	title = armenia_events.105.t
+	desc = armenia_events.106.d
+	picture = GFX_report_event_generic_diplomacy2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.106 option armenia_events.106.a"
+		name = armenia_events.106.a
+		effect_tooltip = {
+			ARM = { add_political_power = var:arm_compensation }
+		}
+	}
+}
+
+country_event = { #ARM not compensated
+	id = armenia_events.107
+	title = armenia_events.107.t
+	desc = armenia_events.107.d
+	picture = GFX_report_event_ARM_refugees
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.107 option armenia_events.107.a"
+		name = armenia_events.107.a
+		add_political_power = var:arm_compensation
+		if = {
+			limit = { has_country_flag = GER_mediating_peace_talks }
+			GER = {
+				country_event = { id = armenia_events.108 days = 1 }
+				effect_tooltip = {
+					add_opinion_modifier = {
+						target = TUR
+						modifier = KR_displeased
+					}
+				}
+			}
+		}
+		TUR = { country_event = { id = armenia_events.109 days = 3 } }
+	}
+}
+
+country_event = { #ARM not compensated
+	id = armenia_events.108
+	title = armenia_events.107.t
+	desc = armenia_events.108.d
+	picture = GFX_report_event_ARM_refugees
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.108 option armenia_events.107.a"
+		name = armenia_events.107.a
+		effect_tooltip = {
+			ARM = { add_political_power = var:arm_compensation }
+		}
+		add_opinion_modifier = {
+			target = TUR
+			modifier = KR_displeased
+		}
+	}
+}
+
+country_event = { #Recognise ARM?
+	id = armenia_events.109
+	title = armenia_events.109.t
+	desc = armenia_events.109.d
+	picture = GFX_report_event_ARM_country_map
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.109 option armenia_events.109.a"
+		name = armenia_events.109.a
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 6
+				ARM = { has_country_flag = GER_mediating_peace_talks }
+			}
+			modifier = { #Republican Turkey is more likely
+				factor = 2
+				is_monarchy = no
+			}
+		}
+		ARM = { country_event = { id = armenia_events.110 days = 1 } }
+		GER = { country_event = { id = armenia_events.111 days = 1 } }
+	}
+	option = {
+		log = "[GetLogInfo]: event armenia_events.109 option armenia_events.109.b"
+		name = armenia_events.109.b
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 3
+				NOT = { is_in_faction_with = GER }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					GER = { is_ai = no } #If GER is a player, let ARM get the chance to join the RP
+					ARM = { is_ai = no } #Don't block player ARM from joining the RP
+					has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_GER }
+				}
+			}
+		}
+		ARM = { country_event = { id = armenia_events.112 days = 1 } }
+		GER = { country_event = { id = armenia_events.113 days = 1 } }
+	}
+}
+
+country_event = { #ARM recognised
+	id = armenia_events.110
+	title = armenia_events.110.t
+	desc = armenia_events.110.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.110 option armenia_events.110.a"
+		name = armenia_events.110.a
+		add_stability = 0.05
+		if = {
+			limit = { GER = { is_faction_leader = yes } }
+			activate_targeted_decision = { target = GER decision = ARM_join_reichspakt }
+		}
+	}
+}
+
+country_event = { #ARM recognised
+	id = armenia_events.111
+	title = armenia_events.110.t
+	desc = armenia_events.111.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.111 option armenia_events.111.a"
+		name = armenia_events.111.a
+	}
+}
+
+country_event = { #ARM not recognised
+	id = armenia_events.112
+	title = armenia_events.112.t
+	desc = armenia_events.112.d
+	picture = GFX_report_event_ARM_refugees
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.112 option armenia_events.112.a"
+		name = armenia_events.112.a
+		add_stability = -0.05
+	}
+}
+
+country_event = { #ARM not recognised
+	id = armenia_events.113
+	title = armenia_events.112.t
+	desc = armenia_events.113.d
+	picture = GFX_report_event_ARM_refugees
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.113 option armenia_events.113.a"
+		name = armenia_events.113.a
+	}
+}
+
+country_event = { #Coalition splits
+	id = armenia_events.114
+	title = armenia_events.114.t
+	desc = armenia_events.114.d
+	picture = GFX_report_event_generic_conference1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.114 option armenia_events.114.a"
+		name = armenia_events.114.a
+		end_coalition = yes
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.05
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = -0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { # Second+ Armenian election
+	id = armenia_events.115
+	title = armenia_events.115.t
+	desc = armenia_events.115.d
+	picture = GFX_report_event_AST_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+	}
+
+	option = { ###Dashnak
+		log = "[GetLogInfo]: event armenia_events.115 option armenia_events.115.a"
+		name = armenia_events.115.a
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_SOCDEM } }
+			}
+		}
+		if = {
+			limit = {
+				NOT = { has_government = social_democrat }
+			}
+			set_politics = {
+				ruling_party = social_democrat
+				elections_allowed = yes
+			}
+			effect_tooltip = { activate_advisor = ARM_alexander_khatisian_sic }
+		}
+		else = {
+			add_stability = 0.05
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.1
+		}
+	}
+	option = { ###Socialist-Revolutionaries
+		log = "[GetLogInfo]: event armenia_events.115 option armenia_events.115.b"
+		name = armenia_events.115.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_SOCLIB } }
+			}
+		}
+		if = {
+			limit = {
+				NOT = { has_government = social_liberal }
+			}
+			set_politics = {
+				ruling_party = social_liberal
+				elections_allowed = yes
+			}
+			effect_tooltip = { activate_advisor = ARM_khorhurd_sic }
+		}
+		else = {
+			add_stability = 0.05
+		}
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.1
+		}
+	}
+	option = { ###Ramgavar
+		log = "[GetLogInfo]: event armenia_events.115 option armenia_events.115.c"
+		name = armenia_events.115.c
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_MARLIB } }
+			}
+		}
+		if = {
+			limit = {
+				NOT = { has_government = market_liberal }
+			}
+			set_politics = {
+				ruling_party = market_liberal
+				elections_allowed = yes
+			}
+			effect_tooltip = { activate_advisor = ARM_arshag_chobanian_sic }
+		}
+		else = {
+			add_stability = 0.05
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.1
+		}
+	}
+	option = { ###ZAK
+		log = "[GetLogInfo]: event armenia_events.115 option armenia_events.115.e"
+		name = armenia_events.115.e
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = ARM_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ARM_path option = ARM_PATH_SOCCON } }
+			}
+		}
+		if = {
+			limit = {
+				NOT = { has_government = social_conservative }
+			}
+			set_politics = {
+				ruling_party = social_conservative
+				elections_allowed = yes
+			}
+			effect_tooltip = { activate_advisor = ARM_khorhurd_sic }
+		}
+		else = {
+			add_stability = 0.05
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+	}
+}
+country_event = { #ARM proposes trade agreement
+	id = armenia_events.116
+	title = armenia_events.116.t
+	desc = armenia_events.116.d
+	picture = GFX_report_event_merchant_ship_01
+
+	is_triggered_only = yes
+
+	option = { #Hell yeah
+		log = "[GetLogInfo]: event armenia_events.116 option armenia_events.116.a"
+		name = armenia_events.116.a
+		ai_chance = { base = 100 }
+		add_political_power = 10
+		FROM = { country_event = { id = armenia_events.117 days = 3 } }
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = KR_pleased
+		}
+	}
+	option = { #Nah
+		log = "[GetLogInfo]: event armenia_events.116 option armenia_events.116.b"
+		name = armenia_events.116.b
+		ai_chance = { base = 0 }
+		FROM = { country_event = { id = armenia_events.118 days = 3 } }
+		reverse_add_opinion_modifier = {
+			target = FROM
+			modifier = KR_displeased
+		}
+	}
+}
+country_event = { #FROM accepts
+	id = armenia_events.117
+	title = armenia_events.117.t
+	desc = armenia_events.117.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.117 option armenia_events.117.a"
+		name = armenia_events.117.a
+		if = {
+			limit = { has_idea = ARM_trade_agreements_7 }
+			swap_ideas = {
+				remove_idea = ARM_trade_agreements_7
+				add_idea = ARM_trade_agreements_8
+			}
+		}
+		else_if = {
+			limit = { has_idea = ARM_trade_agreements_6 }
+			swap_ideas = {
+				remove_idea = ARM_trade_agreements_6
+				add_idea = ARM_trade_agreements_7
+			}
+		}
+		else_if = {
+			limit = { has_idea = ARM_trade_agreements_5 }
+			swap_ideas = {
+				remove_idea = ARM_trade_agreements_5
+				add_idea = ARM_trade_agreements_6
+			}
+		}
+		else_if = {
+			limit = { has_idea = ARM_trade_agreements_4 }
+			swap_ideas = {
+				remove_idea = ARM_trade_agreements_4
+				add_idea = ARM_trade_agreements_5
+			}
+		}
+		else_if = {
+			limit = { has_idea = ARM_trade_agreements_3 }
+			swap_ideas = {
+				remove_idea = ARM_trade_agreements_3
+				add_idea = ARM_trade_agreements_4
+			}
+		}
+		else_if = {
+			limit = { has_idea = ARM_trade_agreements_2 }
+			swap_ideas = {
+				remove_idea = ARM_trade_agreements_2
+				add_idea = ARM_trade_agreements_3
+			}
+		}
+		else_if = {
+			limit = { has_idea = ARM_trade_agreements_1 }
+			swap_ideas = {
+				remove_idea = ARM_trade_agreements_1
+				add_idea = ARM_trade_agreements_2
+			}
+		}
+		else = {
+			add_ideas = ARM_trade_agreements_1
+		}
+	}
+}
+country_event = { #FROM declines
+	id = armenia_events.118
+	title = armenia_events.118.t
+	desc = armenia_events.118.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.118 option armenia_events.118.a"
+		name = armenia_events.118.a
+	}
+}
+country_event = { #Constantinople is taken
+	id = armenia_events.119
+	title = armenia_events.119.t
+	desc = armenia_events.119.d
+	picture = GFX_OTT_Troops_Istanbul
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.119 option armenia_events.119.a"
+		name = armenia_events.119.a
+		add_political_power = 20
+		add_war_support = 0.03
+	}
+}
+
+country_event = { # Liberation of Karabakh
+	id = armenia_events.120
+	title = armenia_events.120.t
+	desc = armenia_events.120.d
+	picture = GFX_report_event_ARM_landscape_mountain
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event armenia_events.120 option armenia_events.120.a"
+		name = armenia_events.120.a
+		set_temp_variable = { ideology_change_var = 0.03 }
+		change_ruling_party_popularity = yes
+		add_political_power = 25
+		add_war_support = 0.05
+	}
+}

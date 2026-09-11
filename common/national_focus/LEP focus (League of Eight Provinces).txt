@@ -1,0 +1,4228 @@
+###########################
+# League of Eight Provinces Focuses
+###########################
+# By Erag and WordZero
+###########################
+# Lore and help by Flamefang
+###########################
+
+focus_tree = {
+	id = League_of_Eight
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = LEP
+		}
+	}
+	default = no
+	continuous_focus_position = {
+		x = 3250
+		y = 1800
+	}
+
+	shared_focus = CHS_provisional_government
+	shared_focus = CHS_reintegrate_academies
+	shared_focus = CHS_standardised_arsenals
+	shared_focus = CHS_southern_fleets_legacy
+
+	focus = {
+		id = LEP_suns_year_of_glory
+		icon = GFX_goal_QIE_rat
+		cost = 7
+
+		x = 13
+		y = 0
+
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_suns_year_of_glory"
+			custom_effect_tooltip = LEP_sun_chuanfang_year_tt
+			hidden_effect = {
+				add_political_power = 80
+			}
+		}
+	}
+
+	focus = {
+		id = LEP_qi_rules_nanjing
+		icon = GFX_goal_LEP_qi_rules_nanjing
+		cost = 0
+
+		relative_position_id = LEP_suns_year_of_glory
+		x = 0
+		y = 1
+
+		prerequisite = { focus = LEP_suns_year_of_glory }
+		ai_will_do = { factor = 1000 }
+		available = { hidden_trigger = { always = no } }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_qi_rules_nanjing"
+			set_political_power = 0
+			add_war_support = 0.10 #Brings war support to 10%
+			add_stability = 0.15 #Brings stability back up to -50%
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = LEP_north_south_west
+		icon = GFX_goal_generic_occupy_states_ongoing_war
+		cost = 3
+
+		relative_position_id = LEP_qi_rules_nanjing
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 2000 }
+		prerequisite = { focus = LEP_qi_rules_nanjing }
+		available = {
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_north_south_west"
+			add_command_power = 25
+			country_event = league_events.19
+		}
+	}
+
+	focus = {
+		id = LEP_qis_central_command
+		icon = GFX_goal_officers
+		cost = 3
+
+		relative_position_id = LEP_north_south_west
+		x = -2
+		y = 1
+
+		ai_will_do = { factor = 1600 }
+		prerequisite = { focus = LEP_north_south_west }
+		available = {
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_qis_central_command"
+			add_command_power = 25
+			swap_ideas = {
+				remove_idea = LEP_Questionable_Authority
+				add_idea = LEP_Questionable_Authority1
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_enforce_officer_loyalty
+		icon = GFX_goal_generic_officer
+		cost = 3
+
+		relative_position_id = LEP_qis_central_command
+		x = 0
+		y = 2
+
+		ai_will_do = { factor = 1600 }
+		prerequisite = { focus = LEP_qis_central_command }
+		available = {
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_enforce_officer_loyalty"
+			add_command_power = 25
+			swap_ideas = {
+				remove_idea = LEP_Questionable_Authority1
+				add_idea = LEP_Questionable_Authority2
+			}
+			swap_ideas = {
+				remove_idea = LEP_the_disunited_armies_1
+				add_idea = LEP_the_disunited_armies_2
+			}
+			hidden_effect = {
+				country_event = { id = league_events.20 days = 3 }
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_jiangnan_loans
+		icon = GFX_goal_generic_loans
+		cost = 3
+
+		relative_position_id = LEP_north_south_west
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 800 }
+		prerequisite = { focus = LEP_north_south_west }
+		available = {
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_jiangnan_loans"
+			add_political_power = 50
+			swap_ideas = {
+				remove_idea = LEP_Crippled_Industry
+				add_idea = LEP_Crippled_Industrym1
+			}
+			add_popularity = {
+				ideology = social_conservative
+				popularity = 0.02
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_emergency_industry_reallocation
+		icon = GFX_goal_generic_industry_reallocation
+		cost = 3
+
+		relative_position_id = LEP_jiangnan_loans
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 800 }
+		prerequisite = { focus = LEP_jiangnan_loans }
+		available = {
+			controls_state = 613
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_emergency_industry_reallocation"
+			if = {
+				limit = { controls_state = 613 }
+				613 = {
+					remove_building = {
+						type = industrial_complex
+						level = 1
+					}
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+
+			if = {
+				limit = { has_idea = LEP_Crippled_Industrym2b }
+				swap_ideas = {
+					remove_idea = LEP_Crippled_Industrym2b
+					add_idea = LEP_Crippled_Industrym3
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_Crippled_Industrym1
+					add_idea = LEP_Crippled_Industrym2a
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_price_controls
+		icon = GFX_goal_generic_price_controls
+		cost = 3
+
+		relative_position_id = LEP_jiangnan_loans
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 800 }
+		prerequisite = { focus = LEP_jiangnan_loans }
+		available = {
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_price_controls"
+			add_political_power = 50
+			if = {
+				limit = { has_idea = LEP_Crippled_Industrym2a }
+				swap_ideas = {
+					remove_idea = LEP_Crippled_Industrym2a
+					add_idea = LEP_Crippled_Industrym3
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_Crippled_Industrym1
+					add_idea = LEP_Crippled_Industrym2b
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_aog_gun_shipments
+		icon = GFX_goal_generic_small_arms
+		cost = 3
+
+		relative_position_id = LEP_jiangnan_loans
+		x = 0
+		y = 2
+
+		ai_will_do = { factor = 800 }
+		prerequisite = { focus = LEP_jiangnan_loans }
+		available = {
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_aog_gun_shipments"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 750
+				producer = GEA
+			}
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.005 }
+			LEP_modify_tsingtau_spirit = yes
+		}
+	}
+
+	focus = {
+		id = LEP_suppress_student_unions
+		icon = GFX_goal_generic_imprison_people
+		cost = 3
+
+		relative_position_id = LEP_north_south_west
+		x = 2
+		y = 1
+
+		ai_will_do = { factor = 1600 }
+		prerequisite = { focus = LEP_north_south_west }
+		available = {
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_suppress_student_unions"
+			add_war_support = 0.10
+			swap_ideas = {
+				remove_idea = LEP_Rampant_Disorder
+				add_idea = LEP_Rampant_Disorder1
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_enforce_media_controls
+		icon = GFX_goal_generic_media_controls
+		cost = 3
+
+		relative_position_id = LEP_suppress_student_unions
+		x = 0
+		y = 2
+
+		ai_will_do = { factor = 1600 }
+		prerequisite = { focus = LEP_suppress_student_unions }
+		available = {
+			OR = {
+				has_war_with = CHI
+				has_war_with = ANQ
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_enforce_media_controls"
+			add_war_support = 0.10
+			swap_ideas = {
+				remove_idea = LEP_Rampant_Disorder1
+				add_idea = LEP_Rampant_Disorder2
+			}
+			hidden_effect = {
+				country_event = { id = league_events.21 days = 3 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = LEP_the_marshal_stands_triumphant
+		icon = GFX_goal_ANQ_five_stars_five_provinces
+		cost = 0
+
+		relative_position_id = LEP_aog_gun_shipments
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 100 }
+		prerequisite = {
+			focus = LEP_enforce_officer_loyalty
+			focus = LEP_aog_gun_shipments
+			focus = LEP_enforce_media_controls
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_the_marshal_stands_triumphant"
+			custom_effect_tooltip = LEP_marshal_stands_triumphant_tt
+		}
+	}
+
+	focus = {
+		id = LEP_two_marshals_under_the_sky
+		icon = {
+			GFX_goal_ANQ_stand_with_qing = {
+				QIE = { is_monarchy = yes }
+				NOT = { has_global_flag = QIE_manchu_restoration }
+			}
+			GFX_goal_beijing_begonia = yes
+		}
+		dynamic = yes
+		cost = 4
+
+		relative_position_id = LEP_the_marshal_stands_triumphant
+		x = -1
+		y = 1
+
+		ai_will_do = {
+			base = 50
+			modifier = {
+				add = -50
+				QIE = { has_country_flag = QIE_anti_concessionist_policy }
+				NOT = { has_game_rule = { rule = LEP_forpol option = LEP_FORPOL_QIE } }
+			}
+			modifier = {
+				add = -50
+				QIE = {
+					exists = yes
+					is_subject = no
+					has_country_flag = wu_intervenes_proANQ
+				}
+			}
+			modifier = {
+				add = 100
+				QIE = {
+					exists = yes
+					is_subject = no
+					has_country_flag = wu_intervenes_proLEP
+				}
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = china_refused_alliance_QIE
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = LEP_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = LEP_forpol option = LEP_FORPOL_QIE } }
+				NOT = {
+					QIE = {
+						exists = yes
+						is_subject = no
+						has_country_flag = wu_intervenes_proLEP
+					}
+				}
+			}
+		}
+		prerequisite = { focus = LEP_the_marshal_stands_triumphant }
+		bypass = {
+			is_subject_of = QIE
+		}
+		available = {
+			NOT = { has_country_flag = LEP_league_war_flag }
+			country_exists = QIE
+			NOT = { has_war_with = QIE }
+			QIE = { china_is_aligned_with_zhili = yes }
+			set_temp_variable = { target = QIE }
+			at_peace_or_same_enemies_as_TARGET = yes
+			OR = {
+				has_global_flag = CHN_south_china_war_started
+				CHN_south_china_war_over_trigger = yes
+				date > 1938.1.1
+			}
+		}
+		mutually_exclusive = { focus = LEP_deepen_the_zhili_schism }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_two_marshals_under_the_sky"
+			QIE = {
+				country_event = china_events.4
+				custom_effect_tooltip = if_they_accept_tt
+				effect_tooltip = { china_puppet_ROOT_effect = yes }
+			}
+			if = {
+				limit = { has_character = LEP_fang_benren }
+				custom_effect_tooltip = LEP_fang_benren_will_be_upset
+				hidden_effect = { country_event = { id = league_events.217 days = 6 } }
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = LEP_deepen_the_zhili_schism
+		icon = GFX_goal_QIE_purge_zhili
+		cost = 4
+
+		relative_position_id = LEP_the_marshal_stands_triumphant
+		x = 1
+		y = 1
+
+		ai_will_do = {
+			base = 75
+			modifier = {
+				add = 100
+				QIE = {
+					exists = yes
+					is_subject = no
+					has_country_flag = wu_intervenes_proANQ
+				}
+			}
+			modifier = {
+				add = 100
+				QIE = { has_country_flag = QIE_anti_concessionist_policy }
+				NOT = { has_game_rule = { rule = LEP_forpol option = LEP_FORPOL_QIE } }
+			}
+			modifier = {
+				factor = 0
+				QIE = {
+					exists = yes
+					is_subject = no
+					has_country_flag = wu_intervenes_proLEP
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = LEP_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = LEP_forpol option = LEP_FORPOL_LEP } }
+			}
+		}
+		prerequisite = { focus = LEP_the_marshal_stands_triumphant }
+		bypass = {
+			china_is_potential_government = yes
+		}
+		available = {
+			NOT = { has_country_flag = LEP_league_war_flag }
+			CHN_no_aligned_unifier_exists_trigger = yes
+			is_subject = no
+			OR = {
+				has_global_flag = CHN_south_china_war_started
+				CHN_south_china_war_over_trigger = yes
+				date > 1938.1.1
+			}
+		}
+		mutually_exclusive = { focus = LEP_two_marshals_under_the_sky }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_deepen_the_zhili_schism"
+			if = {
+				limit = {
+					has_country_flag = wu_intervenes_proLEP
+				}
+				add_war_support = -0.10
+				add_stability = -0.10
+				custom_effect_tooltip = LEP_deepen_the_zhili_schism_penalty_tt
+			}
+			set_potential_national_government = yes
+			custom_effect_tooltip = china_can_core_through_compliance
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = LEP_joint_training_with_beijing
+		icon = {
+			GFX_goal_QIE_hail_to_the_qing = {
+				QIE = { is_monarchy = yes }
+				NOT = { has_global_flag = QIE_manchu_restoration }
+			}
+			GFX_goal_QIE_reorganise_warlord_divisions = yes
+		}
+		dynamic = yes
+		cost = 5
+
+		relative_position_id = LEP_two_marshals_under_the_sky
+		x = -1
+		y = 1
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.1
+				NOT = { has_completed_focus = LEP_peace_in_countryside }
+			}
+			modifier = {
+				factor = 1.25
+				QIE = { has_completed_focus = QIE_restore_order_in_the_middle_kingdom }
+			}
+		}
+		prerequisite = { focus = LEP_two_marshals_under_the_sky }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_joint_training_with_beijing"
+			add_timed_idea = {
+				idea = LEP_joint_training_with_beijing_idea
+				days = 200
+			}
+			custom_effect_tooltip = tooltip_white_line
+			QIE = {
+				add_timed_idea = {
+					idea = LEP_joint_training_with_beijing_idea
+					days = 200
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = LEP_negotiate_with_the_nationalistic_elite
+		icon = GFX_goal_ANQ_convince_intellectuals
+		cost = 5
+
+		relative_position_id = LEP_two_marshals_under_the_sky
+		x = 1
+		y = 1
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.1
+				NOT = { has_completed_focus = LEP_peace_in_countryside }
+			}
+			modifier = {
+				factor = 1.25
+				QIE = { has_completed_focus = QIE_restore_order_in_the_middle_kingdom }
+			}
+		}
+		prerequisite = {
+			focus = LEP_two_marshals_under_the_sky
+			focus = LEP_deepen_the_zhili_schism
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_negotiate_with_the_nationalistic_elite"
+			add_stability = 0.05
+			add_political_power = 50
+			add_popularity = {
+				ideology = social_democrat
+				popularity = 0.03
+			}
+			add_popularity = {
+				ideology = social_conservative
+				popularity = 0.03
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = 0.03
+			}
+			set_temp_variable = { coalition_partner_var = token:social_liberal }
+			add_to_coalition = yes
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = LEP_utilize_the_jingxing_society
+		icon = GFX_goal_ANQ_court_vermilion_society
+		cost = 5
+
+		relative_position_id = LEP_deepen_the_zhili_schism
+		x = 1
+		y = 1
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.1
+				NOT = { has_completed_focus = LEP_peace_in_countryside }
+			}
+			modifier = {
+				factor = 1.25
+				QIE = { has_completed_focus = QIE_restore_order_in_the_middle_kingdom }
+			}
+		}
+		prerequisite = { focus = LEP_deepen_the_zhili_schism }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_utilize_the_jingxing_society"
+			add_timed_idea = {
+				idea = LEP_formenting_pro_german_intellectuals
+				days = 250
+			}
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+			add_to_coalition = yes
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.05
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = LEP_foster_economic_cooperation
+		icon = GFX_goal_ANQ_Caifa_Contracts
+		cost = 5
+
+		relative_position_id = LEP_joint_training_with_beijing
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.1
+				NOT = { has_completed_focus = LEP_peace_in_countryside }
+			}
+			modifier = {
+				factor = 1.25
+				QIE = { has_completed_focus = QIE_restore_order_in_the_middle_kingdom }
+			}
+		}
+		prerequisite = { focus = LEP_joint_training_with_beijing }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_foster_economic_cooperation"
+			add_ideas = LEP_open_door_policy_with_beijing
+			custom_effect_tooltip = tooltip_white_line
+			add_opinion_modifier = {
+				target = QIE
+				modifier = KR_close_allies
+			}
+			QIE = {
+				if = {
+					limit = { QIE_has_debt = yes }
+					QIE_lower_debt = yes
+				}
+				else = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = LEP_end_southern_intransigence
+		icon = YUN_GFX_Goal_Secure_Southern_China
+		cost = 5
+
+		relative_position_id = LEP_negotiate_with_the_nationalistic_elite
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.1
+				NOT = { has_completed_focus = LEP_peace_in_countryside }
+			}
+			modifier = {
+				factor = 1.5
+				has_completed_focus = LEP_thorough_logistics
+			}
+			modifier = {
+				factor = 1.5
+				has_completed_focus = LEP_overtures_to_berlin
+			}
+			modifier = {
+				factor = 1.5
+				has_completed_focus = LEP_primacy_of_the_engineering_corps
+			}
+			modifier = {
+				factor = 1.25
+				QIE = { has_completed_focus = QIE_restore_order_in_the_middle_kingdom }
+			}
+			modifier = {
+				factor = 5
+				CHN_ai_factor_pressure_to_act_trigger = yes
+			}
+		}
+		will_lead_to_war_with = HNN
+		will_lead_to_war_with = GXC
+		prerequisite = { focus = LEP_negotiate_with_the_nationalistic_elite }
+		bypass = {
+			is_subject_of = QIE
+			OR = {
+				has_war_with = HNN
+				NOT = { country_exists = HNN }
+				HNN = { is_subject_of = QIE }
+			}
+			OR = {
+				has_war_with = GXC
+				NOT = { country_exists = GXC }
+				GXC = { is_subject_of = QIE }
+			}
+		}
+		available = {
+			date > 1938.1.1
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_end_southern_intransigence"
+			if = {
+				limit = { is_subject = yes }
+				country_event = league_events.211
+			}
+			else = {
+				custom_effect_tooltip = LEP_southern_china_submission_tt
+				if = {
+					limit = {
+						country_exists = HNN
+						NOT = { is_ally_with = HNN }
+					}
+					add_to_array = { ROOT.china_possible_targets_array = HNN }
+					add_to_array = { china_possible_allies_array = HNN }
+					effect_tooltip = { activate_targeted_decision = { target = HNN decision = china_demand_submission } }
+				}
+				if = {
+					limit = {
+						country_exists = GXC
+						NOT = { is_ally_with = GXC }
+					}
+					add_to_array = { ROOT.china_possible_targets_array = GXC }
+					add_to_array = { china_possible_allies_array = GXC }
+					effect_tooltip = { activate_targeted_decision = { target = GXC decision = china_demand_submission } }
+				}
+				if = {
+					limit = {
+						country_exists = SZC
+						NOT = { is_ally_with = SZC }
+					}
+					add_to_array = { ROOT.china_possible_targets_array = SZC }
+					add_to_array = { china_possible_allies_array = SZC }
+					effect_tooltip = { activate_targeted_decision = { target = SZC decision = china_demand_submission } }
+				}
+				if = {
+					limit = {
+						country_exists = YUN
+						NOT = { is_ally_with = YUN }
+					}
+					add_to_array = { ROOT.china_possible_targets_array = YUN }
+					add_to_array = { china_possible_allies_array = YUN }
+					effect_tooltip = { activate_targeted_decision = { target = YUN decision = china_demand_submission } }
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = LEP_secure_german_support
+		icon = GFX_goal_align_germany
+		cost = 5
+
+		relative_position_id = LEP_utilize_the_jingxing_society
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.1
+				NOT = { has_completed_focus = LEP_peace_in_countryside }
+			}
+			modifier = {
+				factor = 1.25
+				QIE = { has_completed_focus = QIE_restore_order_in_the_middle_kingdom }
+			}
+		}
+		prerequisite = { focus = LEP_utilize_the_jingxing_society }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_secure_german_support"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 1000
+				producer = GER
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 200
+				producer = GER
+			}
+			add_command_power = 50
+			add_popularity = {
+				ideology = market_liberal
+				popularity = 0.07
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_ARMY_BONUS
+		}
+	}
+
+	focus = {
+		id = LEP_heir_to_the_jade_marshal
+		icon = GFX_goal_QIE_zhili
+		cost = 5
+
+		relative_position_id = LEP_foster_economic_cooperation
+		x = 1
+		y = 1
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.1
+				NOT = { has_completed_focus = LEP_peace_in_countryside }
+			}
+			modifier = {
+				factor = 1.25
+				QIE = { has_completed_focus = QIE_restore_order_in_the_middle_kingdom }
+			}
+			modifier = {
+				factor = 3
+				QIE = { has_war = yes }
+			}
+		}
+		prerequisite = { focus = LEP_foster_economic_cooperation }
+		prerequisite = { focus = LEP_end_southern_intransigence }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_heir_to_the_jade_marshal"
+			custom_effect_tooltip = LEP_heir_to_the_jade_marshal_tt
+			if = {
+				limit = {
+					QIE = { is_monarchy = no }
+				}
+				set_cosmetic_tag = LEP_LEP_REP
+			}
+			else = {
+				set_cosmetic_tag = LEP_LEP
+			}
+			hidden_effect = {
+				overlord = { country_event = china_events.12 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = LEP_last_son_of_the_family
+		icon = {
+			GFX_goal_generic_attack_qing = {
+				has_global_flag = QIE_manchu_restoration
+			}
+			GFX_goal_generic_attack_zhili = yes
+		}
+		dynamic = yes
+		cost = 5
+
+		relative_position_id = LEP_secure_german_support
+		x = -1
+		y = 1
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.1
+				NOT = { has_completed_focus = LEP_peace_in_countryside }
+			}
+			modifier = {
+				factor = 1.25
+				QIE = { has_completed_focus = QIE_restore_order_in_the_middle_kingdom }
+			}
+			modifier = {
+				factor = 1.5
+				has_completed_focus = LEP_thorough_logistics
+			}
+			modifier = {
+				factor = 1.5
+				has_completed_focus = LEP_symphony_of_factory_and_firepower
+			}
+			modifier = {
+				factor = 1.5
+				has_completed_focus = LEP_fortifying_our_positions
+			}
+			modifier = {
+				factor = 3
+				QIE = { has_war = yes }
+			}
+			modifier = {
+				factor = 5
+				CHN_ai_factor_pressure_to_act_trigger = yes
+			}
+		}
+
+		will_lead_to_war_with = QIE
+		will_lead_to_war_with = SHD
+		will_lead_to_war_with = FNG
+		will_lead_to_war_with = SHX
+
+		prerequisite = { focus = LEP_secure_german_support }
+		prerequisite = { focus = LEP_end_southern_intransigence }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_last_son_of_the_family"
+			custom_effect_tooltip = LEP_northern_china_submission_tt
+			if = {
+				limit = { can_declare_war_on = QIE }
+				activate_targeted_decision = { target = QIE decision = china_attack_decision }
+			}
+			if = {
+				limit = { can_declare_war_on = FNG }
+				activate_targeted_decision = { target = FNG decision = china_attack_decision }
+			}
+			if = {
+				limit = {
+					can_declare_war_on = SHD
+					SHD = {
+						is_subject = no
+						has_civil_war = no
+						china_is_potential_government = no
+					}
+				}
+				add_to_array = { ROOT.china_possible_targets_array = SHD }
+				add_to_array = { china_possible_allies_array = SHD }
+				effect_tooltip = { activate_targeted_decision = { target = SHD decision = china_demand_submission } }
+			}
+			else_if = {
+				limit = { can_declare_war_on = SHD }
+				activate_targeted_decision = { target = SHD decision = china_attack_decision }
+			}
+			if = {
+				limit = {
+					can_declare_war_on = SHX
+					SHX = {
+						is_subject = no
+						has_civil_war = no
+						china_is_potential_government = no
+					}
+				}
+				add_to_array = { ROOT.china_possible_targets_array = SHX }
+				add_to_array = { china_possible_allies_array = SHX }
+				effect_tooltip = { activate_targeted_decision = { target = SHX decision = china_demand_submission } }
+			}
+			else_if = {
+				limit = { can_declare_war_on = SHX }
+				activate_targeted_decision = { target = SHX decision = china_attack_decision }
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = LEP_government_by_coercion
+		icon = GFX_goal_LEP_coercion
+		cost = 2
+
+		relative_position_id = LEP_suns_year_of_glory
+		x = 9
+		y = 1
+
+		ai_will_do = { base = 125 }
+		available = {
+			has_country_leader = { character = LEP_qi_xieyuan }
+			NOT = { has_country_flag = LEP_league_war_flag }
+		}
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus LEP_government_by_coercion"
+			country_event = { id = league_events.100 days = 2 }
+		}
+
+		prerequisite = { focus = LEP_suns_year_of_glory }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_government_by_coercion"
+			swap_ideas = {
+				remove_idea = LEP_Conspicuous_Kleptocracy_2
+				add_idea = LEP_Coercive_Rule
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = LEP_the_new_beiyang
+		icon = GFX_focus_CHI_cradle_of_civilization
+		cost = 5
+
+		relative_position_id = LEP_heir_to_the_jade_marshal
+		x = 1
+		y = 1
+
+		available = { china_is_the_unifier_of_china_trigger = yes }
+
+		ai_will_do = { factor = 5000 }
+		prerequisite = {
+			focus = LEP_heir_to_the_jade_marshal
+			focus = LEP_last_son_of_the_family
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_the_new_beiyang"
+			activate_targeted_decision = { decision = CHN_found_our_faction_decision target = ROOT }
+			custom_effect_tooltip = tooltip_white_line
+			china_add_research_slots = yes
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = LEP_jinbao_tt
+			custom_effect_tooltip = tooltip_white_line
+			QIE = {
+				QIE_wellington_koo = { CHN_recruit_character_effect = yes }
+				QIE_yuan_naikuan = { CHN_recruit_character_effect = yes }
+				QIE_peng_yunyi = { CHN_recruit_character_effect = yes }
+				QIE_wang_kemin = { CHN_recruit_character_effect = yes }
+				QIE_xiong_bingqi = { CHN_recruit_character_effect = yes }
+				QIE_bian_shoujing = { CHN_recruit_character_effect = yes }
+				QIE_wang_tan = { CHN_recruit_character_effect = yes }
+				QIE_liu_menggeng = { CHN_recruit_character_effect = yes }
+				QIE_tang_zaili = { CHN_recruit_character_effect = yes }
+				QIE_wang_chengbin = { CHN_recruit_character_effect = yes }
+				QIE_cai_chengxun = { CHN_recruit_character_effect = yes }
+				QIE_wu_yulin = { CHN_recruit_character_effect = yes }
+				QIE_wang_huaiqing = { CHN_recruit_character_effect = yes }
+				QIE_sa_zhenbing = { CHN_recruit_character_effect = yes }
+				QIE_zeng_qi = { CHN_recruit_character_effect = yes }
+				QIE_li_huang = {
+					CHN_recruit_character_effect = yes
+					add_advisor_role = {
+						advisor = {
+							slot = political_advisor
+							idea_token = QIE_li_huang_advisor
+							desc = QIE_li_huang_sic_desc
+							traits = { KR_pragmatic_statesman }
+						}
+					}
+				}
+			}
+			HNN = {
+				HNN_tang_xiangming = { CHN_recruit_character_effect = yes }
+				HNN_zuo_shunsheng = { CHN_recruit_character_effect = yes }
+			}
+			GXC = {
+				GXC_zhang_junmai = { CHN_recruit_character_effect = yes }
+				GXC_zhang_jiaao = { CHN_recruit_character_effect = yes }
+				GXC_zhu_jiahua = { CHN_recruit_character_effect = yes }
+			}
+			custom_effect_tooltip = tooltip_white_line
+			china_enable_outskirts_decisions = yes
+			KUM = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			ETS = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			SIK = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			TIB = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			MON = {
+				every_core_state = { add_claim_by = ROOT }
+			}
+			add_state_claim = 1111
+			add_state_claim = 1042
+			add_state_claim = 329
+		}
+	}
+
+	focus = {
+		id = LEP_finish_sun_investigation
+		icon = GFX_goal_generic_investigation
+		cost = 2
+
+		relative_position_id = LEP_government_by_coercion
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 95 }
+		prerequisite = { focus = LEP_government_by_coercion }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_finish_sun_investigation"
+			country_event = league_events.15
+		}
+	}
+
+	focus = {
+		id = LEP_undermine_sun_loyalists
+		icon = GFX_goal_generic_political_purge
+		cost = 2
+
+		relative_position_id = LEP_finish_sun_investigation
+		x = -2
+		y = 1
+
+		ai_will_do = { factor = 95 }
+		prerequisite = { focus = LEP_finish_sun_investigation }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_undermine_sun_loyalists"
+			if = {
+				limit = { has_idea = LEP_Chaotic_Order1b }
+				swap_ideas = {
+					remove_idea = LEP_Chaotic_Order1b
+					add_idea = LEP_Chaotic_Order2ab
+				}
+			}
+			else_if = {
+				limit = { has_idea = LEP_Chaotic_Order1c }
+				swap_ideas = {
+					remove_idea = LEP_Chaotic_Order1c
+					add_idea = LEP_Chaotic_Order2ac
+				}
+			}
+			else_if = {
+				limit = { has_idea = LEP_Chaotic_Order2bc }
+				swap_ideas = {
+					remove_idea = LEP_Chaotic_Order2bc
+					add_idea = LEP_Chaotic_Order3
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_Chaotic_Order
+					add_idea = LEP_Chaotic_Order1a
+				}
+			}
+			country_event = league_events.22
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_university_oversight_board
+		icon = GFX_goal_generic_controlled_board
+		cost = 2
+
+		relative_position_id = LEP_finish_sun_investigation
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 95 }
+		prerequisite = { focus = LEP_finish_sun_investigation }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_university_oversight_board"
+			add_political_power = 50
+			if = {
+				limit = { has_idea = LEP_Chaotic_Order1a }
+				swap_ideas = {
+					remove_idea = LEP_Chaotic_Order1a
+					add_idea = LEP_Chaotic_Order2ab
+				}
+			}
+			else_if = {
+				limit = { has_idea = LEP_Chaotic_Order1c }
+				swap_ideas = {
+					remove_idea = LEP_Chaotic_Order1c
+					add_idea = LEP_Chaotic_Order2bc
+				}
+			}
+			else_if = {
+				limit = { has_idea = LEP_Chaotic_Order2ac }
+				swap_ideas = {
+					remove_idea = LEP_Chaotic_Order2ac
+					add_idea = LEP_Chaotic_Order3
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_Chaotic_Order
+					add_idea = LEP_Chaotic_Order1b
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = LEP_governor_question
+		icon = GFX_goal_LEP_governor_question
+		cost = 2
+		dynamic = yes
+
+		relative_position_id = LEP_finish_sun_investigation
+		x = 2
+		y = 1
+
+		ai_will_do = { factor = 95 }
+		prerequisite = { focus = LEP_finish_sun_investigation }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_governor_question"
+			country_event = league_events.102
+			hidden_effect = {
+				activate_targeted_decision = { target = THIS decision = LEP_send_shangguan_back_to_zhejiang_decision }
+				activate_targeted_decision = { target = THIS decision = LEP_send_chen_yi_back_to_zhejiang_decision }
+				activate_targeted_decision = { target = THIS decision = LEP_new_governor_zhejiang_decision }
+				activate_targeted_decision = { target = THIS decision = LEP_new_governor_fujian_decision }
+				activate_targeted_decision = { target = THIS decision = LEP_new_governor_jiangxi_decision }
+			}
+		}
+	}
+
+	focus = {
+		id = LEP_track_down_kmt
+		icon = GFX_goal_LEP_kmt_encirclement
+		cost = 2
+
+		relative_position_id = LEP_undermine_sun_loyalists
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 95 }
+		prerequisite = { focus = LEP_undermine_sun_loyalists }
+		prerequisite = { focus = LEP_university_oversight_board }
+		prerequisite = { focus = LEP_governor_question }
+
+		#available = { has_idea = LEP_kuomintang } - removed for now since it blocks puppets from going down this tree. Seems redundant anyhow
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_track_down_kmt"
+			if = {
+				limit = { has_active_mission = LEP_temp_suppress_kmt }
+				remove_mission = LEP_temp_suppress_kmt
+			}
+			activate_targeted_decision = { target = THIS decision = LEP_decision_lower_kmt_unrest }
+		}
+	}
+
+	focus = {
+		id = LEP_crack_down_rural_bandits
+		icon = GFX_goal_LEP_against_yiguandao
+		cost = 2
+
+		relative_position_id = LEP_track_down_kmt
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 95 }
+		prerequisite = { focus = LEP_track_down_kmt }
+		#available = { has_idea = LEP_rural_banditry } - removed for now since it blocsk puppet from going down this tree. Seems redundant anyhow
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_crack_down_rural_bandits"
+			if = {
+				limit = { has_active_mission = LEP_temp_suppress_rural_banditry }
+				remove_mission = LEP_temp_suppress_rural_banditry
+			}
+			activate_targeted_decision = { target = THIS decision = LEP_decision_lower_bandit_unrest }
+		}
+	}
+
+	focus = {
+		id = LEP_reconstitute_baojia_system
+		icon = GFX_goal_army_guy_2
+		cost = 2
+
+		relative_position_id = LEP_governor_question
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 75 }
+		prerequisite = { focus = LEP_undermine_sun_loyalists }
+		prerequisite = { focus = LEP_university_oversight_board }
+		prerequisite = { focus = LEP_governor_question }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_reconstitute_baojia_system"
+			swap_ideas = {
+				remove_idea = LEP_Chaotic_Order3
+				add_idea = LEP_Chaotic_Order4
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_xiangyong_inspections
+		icon = GFX_focus_generic_little_entente
+		cost = 2
+
+		relative_position_id = LEP_reconstitute_baojia_system
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 75 }
+		prerequisite = { focus = LEP_reconstitute_baojia_system }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_xiangyong_inspections"
+			swap_ideas = {
+				remove_idea = LEP_Chaotic_Order4
+				add_idea = LEP_Chaotic_Order5
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_water_infrastructure_commission
+		icon = GFX_focus_generic_land_reclamation
+		cost = 2
+
+		relative_position_id = LEP_crack_down_rural_bandits
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_crack_down_rural_bandits }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_water_infrastructure_commission"
+			600 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			1044 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			606 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = { controls_state = 597 }
+				597 = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_peace_in_countryside
+		icon = GFX_goal_generic_rice_field
+		cost = 2
+
+		relative_position_id = LEP_crack_down_rural_bandits
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 75 }
+		prerequisite = { focus = LEP_crack_down_rural_bandits }
+		prerequisite = { focus = LEP_xiangyong_inspections }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_peace_in_countryside"
+			remove_ideas = LEP_Chaotic_Order5
+		}
+	}
+
+	focus = {
+		id = LEP_selective_enforcement
+		icon = GFX_goal_LEP_selective_enforcement
+		cost = 2
+
+		relative_position_id = LEP_xiangyong_inspections
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_xiangyong_inspections }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_selective_enforcement"
+			add_ideas = LEP_Dishonest_Government
+			add_political_power = 100
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_reform_public_security
+		icon = GFX_goal_secret_agents
+		cost = 2
+
+		relative_position_id = LEP_water_infrastructure_commission
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_water_infrastructure_commission }
+		prerequisite = { focus = LEP_selective_enforcement }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_reform_public_security"
+			swap_ideas = {
+				remove_idea = LEP_Coercive_Rule
+				add_idea = LEP_Coercive_Rule1
+			}
+			add_political_power = 50
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_redoubts_for_revenue
+		icon = GFX_goal_skull_fortification
+		cost = 2
+
+		relative_position_id = LEP_selective_enforcement
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_water_infrastructure_commission }
+		prerequisite = { focus = LEP_selective_enforcement }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_redoubts_for_revenue"
+			activate_targeted_decision = { target = THIS decision = LEP_fortify_xuzhou }
+			activate_targeted_decision = { target = THIS decision = LEP_fujian_inland_defences }
+			activate_targeted_decision = { target = THIS decision = LEP_fortify_hangzhou_bay }
+			activate_targeted_decision = { target = THIS decision = LEP_jiangxi_mountain_strongholds }
+			activate_targeted_decision = { target = THIS decision = LEP_anhui_border_forts }
+		}
+	}
+
+	focus = {
+		id = LEP_tackle_local_corruption
+		icon = GFX_goal_generic_tackle_corruption
+		cost = 2
+
+		relative_position_id = LEP_reform_public_security
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_reform_public_security }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_tackle_local_corruption"
+			swap_ideas = {
+				remove_idea = LEP_Coercive_Rule1
+				add_idea = LEP_Coercive_Rule2
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_green_gang_dealings
+		icon = GFX_goal_generic_spy_connections
+		cost = 2
+
+		relative_position_id = LEP_reform_public_security
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_reform_public_security }
+		prerequisite = { focus = LEP_redoubts_for_revenue }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_green_gang_dealings"
+			country_event = league_events.27
+		}
+	}
+
+	focus = {
+		id = LEP_public_media_campaigns
+		icon = GFX_goal_generic_propaganda
+		cost = 2
+
+		relative_position_id = LEP_redoubts_for_revenue
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_redoubts_for_revenue }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_public_media_campaigns"
+			swap_ideas = {
+				remove_idea = LEP_Dishonest_Government
+				add_idea = LEP_Dishonest_Government1
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_appoint_civilian_magistrates
+		icon = GFX_goal_generic_civilian_oversight
+		cost = 2
+
+		relative_position_id = LEP_tackle_local_corruption
+		x = -3
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_tackle_local_corruption }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_appoint_civilian_magistrates"
+			swap_ideas = {
+				remove_idea = LEP_Coercive_Rule2
+				add_idea = LEP_Coercive_Rule3
+			}
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+			add_political_power = 50
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_public_repression
+		icon = GFX_focus_generic_oppression
+		cost = 2
+
+		relative_position_id = LEP_appoint_civilian_magistrates
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_appoint_civilian_magistrates }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_public_repression"
+			if = {
+				limit = { has_idea = LEP_Coercive_Rule4b }
+				swap_ideas = {
+					remove_idea = LEP_Coercive_Rule4b
+					add_idea = LEP_Coercive_Rule5
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_Coercive_Rule3
+					add_idea = LEP_Coercive_Rule4a
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = LEP_shut_down_intellectual_circles
+		icon = GFX_focus_prc_infiltration
+		cost = 2
+
+		relative_position_id = LEP_appoint_civilian_magistrates
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_appoint_civilian_magistrates }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_shut_down_intellectual_circles"
+			if = {
+				limit = { has_idea = LEP_Coercive_Rule4a }
+				swap_ideas = {
+					remove_idea = LEP_Coercive_Rule4a
+					add_idea = LEP_Coercive_Rule5
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_Coercive_Rule3
+					add_idea = LEP_Coercive_Rule4b
+				}
+			}
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.01
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = -0.02
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = LEP_crush_urban_unions
+		icon = GFX_goal_generic_crush_unions
+		cost = 2
+
+		relative_position_id = LEP_public_repression
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_public_repression }
+		prerequisite = { focus = LEP_shut_down_intellectual_circles }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_crush_urban_unions"
+			swap_ideas = {
+				remove_idea = LEP_Coercive_Rule5
+				add_idea = LEP_Coercive_Rule6
+			}
+			add_political_power = 50
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_pacification_commissioner_qi
+		icon = GFX_goal_LEP_commissioner_qi
+		cost = 2
+
+		relative_position_id = LEP_crush_urban_unions
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_crush_urban_unions }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_pacification_commissioner_qi"
+			swap_ideas = {
+				remove_idea = LEP_Coercive_Rule6
+				add_idea = LEP_Coercive_Rule7
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_pressure_jiangzhe_caifa
+		icon = GFX_goal_LEP_jiangzhe_bank
+		cost = 2
+
+		relative_position_id = LEP_tackle_local_corruption
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_green_gang_dealings }
+		prerequisite = { focus = LEP_tackle_local_corruption }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_pressure_jiangzhe_caifa"
+			country_event = league_events.59
+			if = {
+				limit = { has_idea = LEP_Economic_Modernizationb }
+				swap_ideas = {
+					remove_idea = LEP_Economic_Modernizationb
+					add_idea = LEP_Economic_Modernization1
+				}
+			}
+			else = { add_ideas = LEP_Economic_Modernizationa }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_solicit_legations_investments
+		icon = GFX_goal_LEP_lec_investments
+		cost = 2
+
+		relative_position_id = LEP_green_gang_dealings
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_green_gang_dealings }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_solicit_legations_investments"
+			if = {
+				limit = { has_idea = LEP_Economic_Modernizationa }
+				swap_ideas = {
+					remove_idea = LEP_Economic_Modernizationa
+					add_idea = LEP_Economic_Modernization1
+				}
+			}
+			else = { add_ideas = LEP_Economic_Modernizationb }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_expand_jiangnan_arsenal
+		icon = GFX_goal_generic_construct_mil_factory
+		cost = 2
+
+		relative_position_id = LEP_pressure_jiangzhe_caifa
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_pressure_jiangzhe_caifa }
+		prerequisite = { focus = LEP_solicit_legations_investments }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_expand_jiangnan_arsenal"
+			random_owned_controlled_state = {
+				prioritize = { 606 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 613 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 596 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_lower_yangtze_development
+		icon = GFX_goal_generic_construct_civ_factory
+		cost = 2
+
+		relative_position_id = LEP_solicit_legations_investments
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_solicit_legations_investments }
+		prerequisite = { focus = LEP_pressure_jiangzhe_caifa }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_lower_yangtze_development"
+			random_owned_controlled_state = {
+				prioritize = { 606 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 613 }
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 596 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_eastern_railway_construction
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 2
+
+		relative_position_id = LEP_expand_jiangnan_arsenal
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_expand_jiangnan_arsenal }
+		prerequisite = { focus = LEP_lower_yangtze_development }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_eastern_railway_construction"
+			build_railway = {
+				level = 1
+				start_state = 596
+				target_state = 613
+			}
+			build_railway = {
+				level = 1
+				start_province = 3992
+				target_province = 7071
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_heavy_industrial_investments
+		icon = GFX_goal_factory_complex
+		cost = 2
+
+		relative_position_id = LEP_eastern_railway_construction
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_eastern_railway_construction }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_heavy_industrial_investments"
+			if = {
+				limit = { has_idea = LEP_Economic_Modernization2b }
+				swap_ideas = {
+					remove_idea = LEP_Economic_Modernization2b
+					add_idea = LEP_Economic_Modernization3
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_Economic_Modernization1
+					add_idea = LEP_Economic_Modernization2a
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 1047 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 1014 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_new_economic_development
+		icon = GFX_goal_generic_construction
+		cost = 2
+
+		relative_position_id = LEP_eastern_railway_construction
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_eastern_railway_construction }
+		prerequisite = { focus = LEP_patronize_xiangshen }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_new_economic_development"
+			if = {
+				limit = { has_idea = LEP_Economic_Modernization2a }
+				swap_ideas = {
+					remove_idea = LEP_Economic_Modernization2a
+					add_idea = LEP_Economic_Modernization3
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_Economic_Modernization1
+					add_idea = LEP_Economic_Modernization2b
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 1050 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_subsidize_local_communities
+		icon = GFX_goal_LEP_subsidize_villages
+		cost = 2
+
+		relative_position_id = LEP_public_media_campaigns
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_public_media_campaigns }
+		prerequisite = { focus = LEP_tackle_local_corruption }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_subsidize_local_communities"
+			add_ideas = LEP_Local_Development
+			add_political_power = 50
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_revitalize_the_tea_trade
+		icon = GFX_goal_LEP_tea_trade
+		cost = 2
+
+		relative_position_id = LEP_subsidize_local_communities
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_subsidize_local_communities }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_revitalize_the_tea_trade"
+			swap_ideas = {
+				remove_idea = LEP_Local_Development
+				add_idea = LEP_Local_Development1
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_patronize_xiangshen
+		icon = GFX_goal_LEP_patronize_xiangshen
+		cost = 2
+
+		relative_position_id = LEP_revitalize_the_tea_trade
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_revitalize_the_tea_trade }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_patronize_xiangshen"
+			swap_ideas = {
+				remove_idea = LEP_Local_Development1
+				add_idea = LEP_Local_Development2
+			}
+			add_political_power = 50
+		}
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_modern_agriculture
+		icon = GFX_goal_generic_agriculture2
+		cost = 2
+
+		relative_position_id = LEP_patronize_xiangshen
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_patronize_xiangshen }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_modern_agriculture"
+			swap_ideas = {
+				remove_idea = LEP_Local_Development2
+				add_idea = LEP_Local_Development3
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_dubious_practices
+		icon = GFX_goal_shadow_government
+		cost = 2
+
+		relative_position_id = LEP_public_media_campaigns
+		x = 3
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_public_media_campaigns }
+		prerequisite = { focus = LEP_green_gang_dealings }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_dubious_practices"
+			swap_ideas = {
+				remove_idea = LEP_Dishonest_Government1
+				add_idea = LEP_Dishonest_Government2
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_tsingtau_collaboration
+		icon = GFX_goal_align_germany
+		cost = 2
+
+		relative_position_id = LEP_government_by_coercion
+		x = 6
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 100 }
+		prerequisite = { focus = LEP_government_by_coercion }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_tsingtau_collaboration"
+			country_event = { id = league_german_influence_events.1 days = 3 }
+			random_owned_controlled_state = {
+				prioritize = { 613 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = { controls_state = 597 }
+				597 = {
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			swap_ideas = {
+				remove_idea = LEP_Nanking_Kommission
+				add_idea = LEP_Kommission_Sponsorship
+			}
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.01 }
+			LEP_modify_tsingtau_spirit = yes
+			hidden_effect = { # Open LEP_AOG_decisions
+				activate_targeted_decision = { target = GEA decision = LEP_AOG_factories_civ }
+				activate_targeted_decision = { target = GEA decision = LEP_AOG_factories_mil }
+				activate_targeted_decision = { target = GEA decision = LEP_AOG_training }
+				activate_targeted_decision = { target = GEA decision = LEP_AOG_decrease_influence }
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = LEP_german_reconstruction_crews
+		icon = GFX_goal_generic_german_construction
+		cost = 2
+
+		relative_position_id = LEP_tsingtau_collaboration
+		x = -1
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_tsingtau_collaboration }
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus LEP_german_reconstruction_crews"
+			hidden_effect = { country_event = { id = league_german_influence_events.4 days = 7 } }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_german_reconstruction_crews"
+			613 = {
+				increase_state_category_by_one_level = yes
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			596 = {
+				increase_state_category_by_one_level = yes
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			1014 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = { controls_state = 597 }
+				597 = {
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.015 }
+			LEP_modify_tsingtau_spirit = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_krupp_industrial_methods
+		icon = GFX_goal_LEP_krupp_industial
+		cost = 2
+
+		relative_position_id = LEP_tsingtau_collaboration
+		x = 1
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_tsingtau_collaboration }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_krupp_industrial_methods"
+			swap_ideas = {
+				remove_idea = LEP_Kommission_Sponsorship
+				add_idea = LEP_Kommission_Sponsorship1
+			}
+			add_tech_bonus = {
+				name = LEP_krupp_industrial_methods
+				bonus = 0.5
+				uses = 1
+				category = industry
+			}
+			if = {
+				limit = { controls_state = 1065 }
+				1065 = {
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.005 }
+			LEP_modify_tsingtau_spirit = yes
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = LEP_german_research_aid
+		icon = GFX_goal_double_research
+		cost = 2
+
+		relative_position_id = LEP_german_reconstruction_crews
+		x = 1
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_german_reconstruction_crews }
+		prerequisite = { focus = LEP_krupp_industrial_methods }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_german_research_aid"
+			swap_ideas = {
+				remove_idea = LEP_Kommission_Sponsorship1
+				add_idea = LEP_Kommission_Sponsorship2
+			}
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.005 }
+			LEP_modify_tsingtau_spirit = yes
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_nanjing_university_expansion
+		icon = GFX_focus_research2
+		cost = 2
+
+		relative_position_id = LEP_german_research_aid
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_german_research_aid }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_nanjing_university_expansion"
+			china_add_research_slots = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = LEP_westernized_school_curriculum
+		icon = GFX_focus_generic_treaty
+		cost = 2
+
+		relative_position_id = LEP_german_research_aid
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_german_research_aid }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_westernized_school_curriculum"
+			add_tech_bonus = {
+				name = LEP_westernized_school_curriculum
+				bonus = 0.5
+				uses = 1
+				category = electronics
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = LEP_deutsch_asiatische_loans
+		icon = GFX_goal_LEP_deutschasiatische
+		cost = 2
+
+		relative_position_id = LEP_nanjing_university_expansion
+		x = 1
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_nanjing_university_expansion }
+		prerequisite = { focus = LEP_westernized_school_curriculum }
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus LEP_deutsch_asiatische_loans"
+			country_event = { id = league_german_influence_events.10 days = 3 }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_deutsch_asiatische_loans"
+			swap_ideas = {
+				remove_idea = LEP_Kommission_Sponsorship2
+				add_idea = LEP_Kommission_Sponsorship3
+			}
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.005 }
+			LEP_modify_tsingtau_spirit = yes
+			country_event = { id = league_german_influence_events.14 days = 3 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_opening_the_interior
+		icon = GFX_focus_DEN_no_regulations
+		cost = 2
+
+		relative_position_id = LEP_deutsch_asiatische_loans
+		x = 0
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_selective_enforcement }
+		prerequisite = { focus = LEP_deutsch_asiatische_loans }
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus LEP_opening_the_interior"
+			country_event = { id = league_german_influence_events.16 days = 3 }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_opening_the_interior"
+			swap_ideas = {
+				remove_idea = LEP_Kommission_Sponsorship3
+				add_idea = LEP_Kommission_Sponsorship4
+			}
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.025 }
+			LEP_modify_tsingtau_spirit = yes
+			if = {
+				limit = { controls_state = 1064 }
+				1064 = {
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_improved_tungsten_extraction
+		icon = GFX_focus_generic_tungsten
+		cost = 2
+
+		relative_position_id = LEP_opening_the_interior
+		x = -1
+		y = 1
+
+		available = { 1012 = { is_owned_and_controlled_by = LEP } }
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_opening_the_interior }
+		bypass = { hidden_trigger = { 1012 = { has_state_flag = LEP_tungsten_mines_developed } } }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_improved_tungsten_extraction"
+			activate_targeted_decision = { target = 1012 decision = LEP_improved_tungsten_extraction }
+			if = {
+				limit = {
+					country_exists = GEA
+					NOT = { has_war_with = GEA }
+					GEA = { has_capitulated = no }
+				}
+				set_temp_variable = { LEP_market_liberal_pp_change = 0.005 }
+				LEP_modify_tsingtau_spirit = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = LEP_schantung_eisenbahn_expansion
+		icon = GFX_goal_LEP_schantung_eisenbahn
+		cost = 2
+
+		relative_position_id = LEP_opening_the_interior
+		x = 1
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_opening_the_interior }
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus LEP_schantung_eisenbahn_expansion"
+			country_event = { id = league_german_influence_events.22 days = 3 }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_schantung_eisenbahn_expansion"
+			swap_ideas = {
+				remove_idea = LEP_Kommission_Sponsorship4
+				add_idea = LEP_Kommission_Sponsorship5
+			}
+			build_railway = {
+				start_province = 13707
+				target_province = 12067
+			}
+			build_railway = {
+				start_province = 12067
+				target_province = 1029
+			}
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.01 }
+			LEP_modify_tsingtau_spirit = yes
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_eastern_resources_commission
+		icon = GFX_all_resource
+		cost = 2
+
+		relative_position_id = LEP_schantung_eisenbahn_expansion
+		x = 0
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_schantung_eisenbahn_expansion }
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus LEP_eastern_resources_commission"
+			country_event = { id = league_german_influence_events.27 days = 3 }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_eastern_resources_commission"
+			hidden_effect = { country_event = { id = league_german_influence_events.29 days = 14 } }
+			swap_ideas = {
+				remove_idea = LEP_Kommission_Sponsorship5
+				add_idea = LEP_Kommission_Sponsorship6
+			}
+			add_tech_bonus = {
+				name = LEP_eastern_resources_commission
+				bonus = 0.5
+				uses = 1
+				category = excavation_tech
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_tolerate_vice
+		icon = GFX_goal_opium
+		cost = 2
+
+		relative_position_id = LEP_eastern_resources_commission
+		x = -3
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_dubious_practices }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_tolerate_vice"
+			swap_ideas = {
+				remove_idea = LEP_Dishonest_Government2
+				add_idea = LEP_Dishonest_Government3
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_facilitate_german_prospecting
+		icon = GFX_focus_generic_steel
+		cost = 2
+
+		relative_position_id = LEP_eastern_resources_commission
+		x = -1
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_eastern_resources_commission }
+		prerequisite = { focus = LEP_dubious_practices }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_facilitate_german_prospecting"
+			swap_ideas = {
+				remove_idea = LEP_Kommission_Sponsorship6
+				add_idea = LEP_Kommission_Sponsorship7
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_inland_development_zones
+		icon = GFX_goal_new_treaty
+		cost = 2
+
+		relative_position_id = LEP_tolerate_vice
+		x = 1
+		y = 1
+
+		available = {
+			country_exists = GEA
+			NOT = { has_war_with = GEA }
+			GEA = { has_capitulated = no }
+		}
+		bypass_if_unavailable = yes
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_tolerate_vice }
+		prerequisite = { focus = LEP_facilitate_german_prospecting }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_inland_development_zones"
+			swap_ideas = {
+				remove_idea = LEP_Kommission_Sponsorship7
+				add_idea = LEP_Kommission_Sponsorship8
+			}
+
+			set_temp_variable = { LEP_market_liberal_pp_change = 0.015 }
+			LEP_modify_tsingtau_spirit = yes
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_friendly_monopolies
+		icon = GFX_focus_DEN_limited_regulations
+		cost = 2
+
+		relative_position_id = LEP_inland_development_zones
+		x = 0
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_inland_development_zones }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_friendly_monopolies"
+			swap_ideas = {
+				remove_idea = LEP_Dishonest_Government3
+				add_idea = LEP_Dishonest_Government4
+			}
+			add_political_power = 50
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_cult_of_personality
+		icon = GFX_goal_LEP_personality_cult
+		cost = 2
+
+		relative_position_id = LEP_heavy_industrial_investments
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_pacification_commissioner_qi }
+		prerequisite = { focus = LEP_heavy_industrial_investments }
+		prerequisite = { focus = LEP_new_economic_development }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_cult_of_personality"
+			swap_ideas = {
+				remove_idea = LEP_Coercive_Rule7
+				add_idea = LEP_Coercive_Rule8
+			}
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_network_of_allegiances
+		icon = GFX_goal_generic_debt_negotiations
+		cost = 2
+
+		relative_position_id = LEP_modern_agriculture
+		x = -1
+		y = 1
+
+		ai_will_do = { factor = 40 }
+		prerequisite = { focus = LEP_new_economic_development }
+		prerequisite = { focus = LEP_modern_agriculture }
+		prerequisite = { focus = LEP_friendly_monopolies }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_network_of_allegiances"
+			swap_ideas = {
+				remove_idea = LEP_Dishonest_Government4
+				add_idea = LEP_Dishonest_Government5
+			}
+			add_political_power = 50
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = LEP_five_provinces_one_marshal
+		icon = GFX_goal_LEP_marshal_qi
+		cost = 2
+
+		relative_position_id = LEP_cult_of_personality
+		x = 1
+		y = 1
+
+		ai_will_do = { factor = 100 }
+		prerequisite = { focus = LEP_cult_of_personality }
+		prerequisite = { focus = LEP_network_of_allegiances }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_five_provinces_one_marshal"
+			remove_ideas = LEP_Dishonest_Government5
+			remove_ideas = LEP_Coercive_Rule8
+			add_ideas = LEP_Coercive_Government
+		}
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_INDUSTRY
+			FOCUS_FILTER_STABILITY
+		}
+	}
+	focus = {
+		id = LEP_fallout_of_the_league_war
+		icon = GFX_goal_LEP_collapse
+		cost = 5
+
+		relative_position_id = LEP_suns_year_of_glory
+		x = -9
+		y = 1
+
+		ai_will_do = {
+			base = 95
+			modifier = {
+				has_war = yes
+				add = 40
+			}
+		}
+
+		available = {
+			has_country_leader = { character = LEP_qi_xieyuan }
+			NOT = { has_country_flag = LEP_league_war_flag }
+		}
+
+		prerequisite = { focus = LEP_suns_year_of_glory }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_fallout_of_the_league_war"
+			if = {
+				limit = { has_idea = LEP_the_disunited_armies_1 }
+				swap_ideas = {
+					remove_idea = LEP_the_disunited_armies_1
+					add_idea = LEP_the_disunited_armies_2
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_the_disunited_armies_2
+					add_idea = LEP_the_disunited_armies_3
+				}
+			}
+			if = {
+				limit = {
+					LEP_li_erkang = { is_hired_as_advisor = no }
+					has_free_political_advisor_slot = yes
+				}
+				hidden_effect = {
+					activate_advisor = LEP_li_erkang_advisor
+				}
+				custom_effect_tooltip = if_not_yet_hired_will_hire
+				show_ideas_tooltip = LEP_li_erkang_advisor
+			}
+			else = {
+				add_political_power = 70
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = LEP_reinstill_discipline
+		icon = GFX_goal_mass_concentration_of_army
+		cost = 5
+
+		relative_position_id = LEP_fallout_of_the_league_war
+		x = -1
+		y = 1
+
+		ai_will_do = {
+			base = 70
+			modifier = {
+				has_war = yes
+				add = 40
+			}
+		}
+		prerequisite = { focus = LEP_fallout_of_the_league_war }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_reinstill_discipline"
+			add_timed_idea = {
+				idea = LEP_purging_anarchy
+				days = 250
+			}
+			custom_effect_tooltip = tooltip_white_line
+			every_unit_leader = {
+				limit = {
+					OR = {
+						is_character = LEP_liu_zongji
+						is_character = LEP_xie_hongxun
+						is_character = LEP_ma_yuren
+						is_character = LEP_meng_zhaoyue
+						is_character = LEP_zheng_junyan
+						is_character = LEP_zhou_yinren
+						is_character = LEP_shangguan_yunxiang
+					}
+				}
+				add_timed_unit_leader_trait = {
+					trait = reassigned
+					days = 200
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_idea = LEP_the_disunited_armies_2 }
+				swap_ideas = {
+					remove_idea = LEP_the_disunited_armies_2
+					add_idea = LEP_the_disunited_armies_3
+				}
+			}
+			else = { remove_ideas = LEP_the_disunited_armies_3 }
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+		}
+	}
+
+	focus = {
+		id = LEP_recoup_the_lost_divisions
+		icon = GFX_goal_LEP_fallen_flags
+		cost = 6
+
+		relative_position_id = LEP_fallout_of_the_league_war
+		x = 1
+		y = 1
+
+		ai_will_do = {
+			base = 70
+			modifier = {
+				has_war = yes
+				add = 40
+			}
+		}
+		prerequisite = { focus = LEP_fallout_of_the_league_war }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_recoup_the_lost_divisions"
+			show_unit_leaders_tooltip = LEP_guo_chan
+			show_unit_leaders_tooltip = LEP_zhou_yan
+			hidden_effect = {
+				LEP_guo_chan = { CHN_recruit_character_effect = yes }
+				LEP_zhou_yan = { CHN_recruit_character_effect = yes }
+			}
+			if = {
+				limit = { has_character = LEP_chen_yi }
+				custom_effect_tooltip = LEP_chen_yi_will_recommend_lin_wei
+				custom_effect_tooltip = tooltip_white_line
+				hidden_effect = { LEP_lin_wei = { CHN_recruit_character_effect = yes } }
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "League Infantry Division"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 5 }
+					SUPPORT_1 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+					SUPPORT_2 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+				}
+				if = {
+					limit = { has_template = "League Infantry Division" }
+					delete_unit_template_and_units = { division_template = "League Infantry Division" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "League Infantry Division"
+					division_names_group = LEP_INF_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+						artillery = { x = 0 y = 1 }
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_override_tooltip = {
+				tooltip = LEP_recoup_the_lost_divisions_tt
+				delete_unit_template_and_units = { division_template = "Polizeitruppe" }
+				delete_units = { division_template = "Bubing Xie" disband = yes }
+				random_owned_controlled_state = {
+					prioritize = { 613 }
+					create_unit = {
+						division = "name = \"Wusheng Lianjun Di 1 Shi\" division_template = \"League Infantry Division\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Wusheng Lianjun Di 2 Shi\" division_template = \"League Infantry Division\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Wusheng Lianjun Di 3 Shi\" division_template = \"League Infantry Division\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Wusheng Lianjun Di 4 Shi\" division_template = \"League Infantry Division\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Wusheng Lianjun Di 5 Shi\" division_template = \"League Infantry Division\" start_equipment_factor = 0.5 start_experience_factor = 0.1"
+						owner = ROOT
+					}
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+		}
+	}
+
+	focus = {
+		id = LEP_eliteheer_model
+		icon = GFX_focus_chi_army_reform
+		cost = 6
+
+		relative_position_id = LEP_fallout_of_the_league_war
+		x = 0
+		y = 2
+
+		ai_will_do = {
+			base = 45
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_reinstill_discipline }
+		prerequisite = { focus = LEP_recoup_the_lost_divisions }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_eliteheer_model"
+			add_war_support = 0.05
+			add_doctrine_cost_reduction = {
+				name = LEP_eliteheer_model
+				cost_reduction = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+			if = {
+				limit = { has_idea = LEP_the_disunited_armies_3 }
+				swap_ideas = {
+					remove_idea = LEP_the_disunited_armies_3
+					add_idea = LEP_eliteheer_1
+				}
+			}
+			else = {
+				add_ideas = LEP_eliteheer_1
+			}
+			custom_effect_tooltip = tooltip_white_line
+			enable_tech_assault_battalion = yes
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+	}
+
+	focus = {
+		id = LEP_new_model_officer
+		icon = GFX_focus_generic_full_social_mobilization
+		cost = 6
+
+		relative_position_id = LEP_eliteheer_model
+		x = -3
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_eliteheer_model }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_new_model_officer"
+			swap_ideas = {
+				remove_idea = LEP_eliteheer_1
+				add_idea = LEP_eliteheer_2
+			}
+			every_army_leader = {
+				limit = { skill < 2 }
+				gain_xp = 250
+				add_max_trait = 1
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+		}
+	}
+
+	focus = {
+		id = LEP_innovation_breeds_victory
+		icon = GFX_goal_generic_army_cooperation
+		cost = 6
+
+		relative_position_id = LEP_new_model_officer
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_new_model_officer }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_innovation_breeds_victory"
+			army_experience = 25
+			add_mastery_bonus = {
+				name = LEP_innovation_breeds_victory
+				bonus = 0.1
+				days = 365
+				folder = land
+			}
+			if = {
+				limit = { has_idea = LEP_eliteheer_3 }
+				swap_ideas = {
+					remove_idea = LEP_eliteheer_3
+					add_idea = LEP_eliteheer_5
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_eliteheer_2
+					add_idea = LEP_eliteheer_4
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+			FOCUS_FILTER_ARMY_XP
+		}
+	}
+
+	focus = {
+		id = LEP_staff_officer_school
+		icon = {
+			GFX_goal_LEP_officer_initiative = {
+				QIE = { is_monarchy = yes }
+				NOT = { has_global_flag = QIE_manchu_restoration }
+			}
+			GFX_focus_generic_military_mission = yes
+		}
+		dynamic = yes
+		cost = 7
+
+		relative_position_id = LEP_new_model_officer
+		x = -2
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_new_model_officer }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_staff_officer_school"
+			if = {
+				limit = { has_idea = LEP_eliteheer_4 }
+				swap_ideas = {
+					remove_idea = LEP_eliteheer_4
+					add_idea = LEP_eliteheer_5
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_eliteheer_2
+					add_idea = LEP_eliteheer_3
+				}
+			}
+			random_army_leader = {
+				limit = {
+					has_trait = organizer
+					NOT = { has_trait = skilled_staffer }
+				}
+				add_trait = { trait = skilled_staffer }
+			}
+			every_army_leader = {
+				add_planning = 1
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+		}
+	}
+
+	focus = {
+		id = LEP_thorough_logistics
+		icon = GFX_focus_generic_truck
+		cost = 7
+
+		relative_position_id = LEP_innovation_breeds_victory
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_innovation_breeds_victory }
+		prerequisite = { focus = LEP_staff_officer_school }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_thorough_logistics"
+			add_tech_bonus = {
+				name = LEP_thorough_logistics
+				bonus = 0.75
+				uses = 2
+				category = logistics_tech
+				category = motorized_equipment
+			}
+			add_equipment_to_stockpile = {
+				type = train_equipment
+				amount = 10
+			}
+			custom_effect_tooltip = tooltip_white_line
+			every_army_leader = {
+				add_logistics = 1
+			}
+			swap_ideas = {
+				remove_idea = LEP_eliteheer_5
+				add_idea = LEP_eliteheer_6
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_disrupting_supply
+		icon = GFX_focus_FIN_motti_tactics
+		cost = 7
+
+		relative_position_id = LEP_thorough_logistics
+		x = -1
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_thorough_logistics }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_disrupting_supply"
+			if = {
+				limit = { has_idea = LEP_eliteheer_8 }
+				swap_ideas = {
+					remove_idea = LEP_eliteheer_8
+					add_idea = LEP_eliteheer_9
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_eliteheer_6
+					add_idea = LEP_eliteheer_7
+				}
+			}
+			random_army_leader = {
+				limit = { attack_skill_level > 3 }
+				add_trait = { trait = expert_improviser }
+			}
+			add_ideas = LEP_disrupting_their_supply
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+		}
+	}
+
+	focus = {
+		id = LEP_overtures_to_berlin
+		icon = GFX_goal_GER_CHN_military_mission
+		cost = 5
+
+		relative_position_id = LEP_eliteheer_model
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_eliteheer_model }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_overtures_to_berlin"
+			if = {
+				limit = { GER = { GER_is_schleicher_path = yes } }
+				LEP_german_trained_officers_theorist = {
+					custom_override_tooltip = {
+						tooltip = {
+							localization_key = tooltip_replace_character_trait
+							ROLE = theorist
+							OLD_TRAIT = LEP_german_military_mission
+							NEW_TRAIT = LEP_harmony_of_military_industry
+						}
+						remove_trait = {
+							character = LEP_german_trained_officers_theorist
+							slot = theorist
+							trait = LEP_german_military_mission
+						}
+						add_trait = {
+							character = LEP_german_trained_officers_theorist
+							slot = theorist
+							trait = LEP_harmony_of_military_industry
+						}
+					}
+					effect_tooltip = {
+						set_temp_variable = { modifier_change_tt = 0.10 tooltip = production_factory_start_efficiency_factor_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.10 tooltip = production_factory_efficiency_gain_factor_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.10 tooltip = conscription_factor_tooltip }
+					}
+				}
+			}
+			else_if = {
+				limit = { GER = { GER_is_du_path = yes } }
+				LEP_german_trained_officers_theorist = {
+					custom_override_tooltip = {
+						tooltip = {
+							localization_key = tooltip_replace_character_trait
+							ROLE = theorist
+							OLD_TRAIT = LEP_german_military_mission
+							NEW_TRAIT = LEP_theory_of_moltke_of_the_east
+						}
+						remove_trait = {
+							character = LEP_german_trained_officers_theorist
+							slot = theorist
+							trait = LEP_german_military_mission
+						}
+						add_trait = {
+							character = LEP_german_trained_officers_theorist
+							slot = theorist
+							trait = LEP_theory_of_moltke_of_the_east
+						}
+					}
+					effect_tooltip = {
+						set_temp_variable = { modifier_change_tt = 0.05 tooltip = army_org_factor_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.15 tooltip = army_attack_against_major_factor_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.15 tooltip = experience_gain_army_unit_factor_tooltip }
+						set_temp_variable = { modifier_change_tt = -15 tooltip = unit_limit_bonus_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.25 tooltip = max_training_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.20 tooltip = training_time_army_factor_tooltip }
+					}
+				}
+			}
+			else = {
+				LEP_german_trained_officers_theorist = {
+					custom_override_tooltip = {
+						tooltip = {
+							localization_key = tooltip_replace_character_trait
+							ROLE = theorist
+							OLD_TRAIT = LEP_german_military_mission
+							NEW_TRAIT = LEP_legacy_of_the_weltkrieg_theorist
+						}
+						remove_trait = {
+							character = LEP_german_trained_officers_theorist
+							slot = theorist
+							trait = LEP_german_military_mission
+						}
+						add_trait = {
+							character = LEP_german_trained_officers_theorist
+							slot = theorist
+							trait = LEP_legacy_of_the_weltkrieg_theorist
+						}
+					}
+					effect_tooltip = {
+						set_temp_variable = { modifier_change_tt = -0.10 tooltip = special_forces_training_time_factor_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.10 tooltip = dig_in_speed_factor_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.10 tooltip = army_artillery_attack_factor_tooltip }
+						set_temp_variable = { modifier_change_tt = 0.05 tooltip = land_reinforce_rate_tooltip }
+						set_temp_variable = { modifier_change_tt = -1 tooltip = military_factory_donations_tooltip }
+					}
+				}
+			}
+			show_unit_leaders_tooltip = LEP_li_rentao
+			show_unit_leaders_tooltip = LEP_xu_peigen
+			add_popularity = {
+				ideology = market_liberal
+				popularity = 0.005
+			}
+			add_opinion_modifier = {
+				target = GER
+				modifier = KR_pleased
+			}
+			hidden_effect = {
+				LEP_li_rentao = { CHN_recruit_character_effect = yes }
+				LEP_xu_peigen = { CHN_recruit_character_effect = yes }
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = LEP_raining_thunder
+		icon = GFX_goal_Krupp_Artillery
+		cost = 7
+
+		relative_position_id = LEP_overtures_to_berlin
+		x = -1
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_overtures_to_berlin }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_raining_thunder"
+			add_tech_bonus = {
+				name = LEP_raining_thunder
+				bonus = 0.5
+				uses = 3
+				category = infantry_tech
+				category = mio_cat_all_artillery_equipment
+			}
+			if = {
+				limit = { has_idea = LEP_german_equipment_support_1 }
+				swap_ideas = {
+					remove_idea = LEP_german_equipment_support_1
+					add_idea = LEP_german_equipment_support_3
+				}
+			}
+			else = {
+				add_ideas = LEP_german_equipment_support_2
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 600
+				producer = GER
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 300
+				producer = GER
+			}
+			add_popularity = {
+				ideology = market_liberal
+				popularity = 0.05
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_emphasising_mobility
+		icon = GFX_goal_generic_army_grand_battleplan
+		cost = 7
+
+		relative_position_id = LEP_overtures_to_berlin
+		x = 1
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_overtures_to_berlin }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_emphasising_mobility"
+			add_tech_bonus = {
+				name = LEP_emphasising_mobility
+				bonus = 0.75
+				uses = 3
+				category = mio_cat_tech_all_armor_and_modules
+				category = cat_mechanized_equipment
+				category = motorized_equipment
+			}
+			if = {
+				limit = { has_idea = LEP_german_equipment_support_2 }
+				swap_ideas = {
+					remove_idea = LEP_german_equipment_support_2
+					add_idea = LEP_german_equipment_support_3
+				}
+			}
+			else = {
+				add_ideas = LEP_german_equipment_support_1
+			}
+			if = {
+				limit = { has_dlc_nsb = yes }
+				if = {
+					limit = { NOT = { has_tech = basic_light_tank_chassis } }
+					set_technology = { basic_light_tank_chassis = 1 }
+				}
+				create_equipment_variant = {
+					name = "Panzer I Ausf. A"
+					type = light_tank_chassis_1
+					show_position = no
+					parent_version = 0
+					modules = {
+						main_armament_slot = tank_heavy_machine_gun				# MG13/MG17 twin
+						turret_type_slot = tank_light_one_man_tank_turret
+						suspension_type_slot = tank_bogie_suspension
+						armor_type_slot = tank_riveted_armor
+						engine_type_slot = tank_gasoline_engine
+						special_type_slot_1 = secondary_turret_hmg				# Represent 2nd MG in twinned pair
+						special_type_slot_2 = tank_radio_1
+					}
+					upgrades = {
+						tank_nsb_engine_upgrade = 6
+						tank_nsb_armor_upgrade = 1
+					}
+					icon = GFX_GER_basic_light_tank_medium
+				}
+				add_equipment_to_stockpile = {
+					type = light_tank_chassis_1
+					amount = 100
+					variant_name = "Panzer I Ausf. A"
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = basic_light_tank } }
+					set_technology = { basic_light_tank = 1 }
+				}
+				create_equipment_variant = {
+					name = "Panzer I Ausf. A"
+					type = light_tank_equipment_1
+					upgrades = {
+						tank_gun_upgrade = 2
+						tank_armor_upgrade = 2
+						tank_reliability_upgrade = 2
+						tank_engine_upgrade = 2
+					}
+				}
+				add_equipment_to_stockpile = {
+					type = light_tank_equipment_1
+					amount = 100
+					variant_name = "Panzer I Ausf. A"
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_symphony_of_factory_and_firepower
+		icon = GFX_goal_Focus_Military_Mobilisation
+		cost = 6
+
+		relative_position_id = LEP_raining_thunder
+		x = 1
+		y = 1
+
+		ai_will_do = {
+			base = 35
+			modifier = {
+				has_war = yes
+				add = 40
+			}
+		}
+		prerequisite = { focus = LEP_raining_thunder }
+		prerequisite = { focus = LEP_emphasising_mobility }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_symphony_of_factory_and_firepower"
+			add_tech_bonus = {
+				name = LEP_symphony_of_factory_and_firepower
+				bonus = 0.75
+				uses = 1
+				category = industry
+			}
+			swap_ideas = {
+				remove_idea = LEP_german_equipment_support_3
+				add_idea = LEP_german_equipment_support_4
+			}
+			if = {
+				limit = { has_dlc_aat = yes }
+				every_military_industrial_organization = {
+					limit = {
+						OR = {
+							is_military_industrial_organization = LEP_focke_wulf_organisation
+							is_military_industrial_organization = LEP_krupp_artillery_organisation
+							is_military_industrial_organization = LEP_krupp_tank_organisation
+							is_military_industrial_organization = CHN_small_arms_industry_organisation
+						}
+					}
+					add_mio_funds_gain_factor = 0.2
+					add_mio_size = 1
+				}
+				mio:CHN_support_equipment_industry_organisation = {
+					add_mio_funds_gain_factor = 0.10
+					complete_mio_trait = China_mio_trait_integrated_jinling
+					set_mio_flag = integrated_jinling
+				}
+			}
+			else = {
+				add_one_random_military_factory = yes
+				add_one_random_military_factory = yes
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_primacy_of_the_engineering_corps
+		icon = GFX_goal_generic_construction2
+		cost = 6
+
+		relative_position_id = LEP_eliteheer_model
+		x = 2
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_eliteheer_model }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_primacy_of_the_engineering_corps"
+			add_ideas = LEP_engineering_corps_1
+			custom_effect_tooltip = tooltip_white_line
+			enable_tech_expanded_engineer_corps = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_tech_bonus = {
+				name = LEP_primacy_of_the_engineering_corps
+				uses = 1
+				bonus = 0.75
+				category = engineers_tech
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_shattering_their_walls
+		icon = GFX_goal_generic_army_superior_firepower
+		cost = 7
+
+		relative_position_id = LEP_primacy_of_the_engineering_corps
+		x = 2
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_primacy_of_the_engineering_corps }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_shattering_their_walls"
+			if = {
+				limit = { has_idea = LEP_engineering_corps_3 }
+				swap_ideas = {
+					remove_idea = LEP_engineering_corps_3
+					add_idea = LEP_engineering_corps_4
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_engineering_corps_1
+					add_idea = LEP_engineering_corps_2
+				}
+			}
+			enable_tech_anti_fortification_artillery = yes
+			custom_effect_tooltip = tooltip_white_line
+			every_unit_leader = {
+				random_select_amount = 2
+				add_trait = {
+					trait = artillery_specialist
+				}
+			}
+			every_army_leader = {
+				limit = { has_trait = artillery_specialist }
+				add_attack = 1
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_artillery_of_the_sky
+		icon = GFX_goal_generic_air_CAS_german
+		cost = 7
+
+		relative_position_id = LEP_shattering_their_walls
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			base = 20
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+		prerequisite = { focus = LEP_shattering_their_walls }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_artillery_of_the_sky"
+			add_tech_bonus = {
+				name = LEP_artillery_of_the_sky
+				bonus = 0.5
+				uses = 2
+				category = mio_cat_all_cas_and_modules
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = LEP_nanjing_airforce_1
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_bba = yes }
+				if = {
+					limit = { NOT = { has_tech = iw_small_airframe } }
+					set_technology = { iw_small_airframe = 1 }
+				}
+				hidden_effect = {
+					if = {
+						limit = { NOT = { has_tech = early_bombs } }
+						set_technology = { early_bombs = 1 }
+					}
+					if = {
+						limit = { NOT = { has_tech = aa_lmg } }
+						set_technology = { aa_lmg = 1 }
+					}
+					if = {
+						limit = { NOT = { has_tech = engines_1 } }
+						set_technology = { engines_1 = 1 }
+					}
+				}
+				create_equipment_variant = {
+					name = "K-47" #German Fighter Used by China
+					type = small_plane_airframe_0
+					modules = {
+						fixed_main_weapon_slot = light_mg_2x
+						engine_type_slot = engine_1_1x
+						special_type_slot_1 = empty
+					}
+				}
+				create_equipment_variant = {
+					name = "Nieuport-Delage NiD .29" #French Fighter Used by China
+					type = small_plane_airframe_1
+					parent_version = 0
+					modules = {
+						fixed_main_weapon_slot = light_mg_4x
+						fixed_auxiliary_weapon_slot_1 = light_mg_4x
+						engine_type_slot = engine_2_1x
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = fighter1 } }
+					set_technology = { fighter1 = 1 }
+				}
+				create_equipment_variant = {
+					name = "K-47" #German Fighter Used by China
+					type = fighter_equipment_1
+					parent_version = 0
+					upgrades = {
+						plane_gun_upgrade = 2
+						plane_engine_upgrade = 1
+					}
+				}
+			}
+			if = {
+				limit = { has_dlc_bba = yes }
+				if = {
+					limit = { NOT = { has_tech = basic_small_airframe } }
+					set_technology = { basic_small_airframe = 1 }
+				}
+				create_equipment_variant = {
+					name = "Henschel Hs 123" #German CAS used by China
+					type = small_plane_cas_airframe_0
+					parent_version = 0
+					modules = {
+						fixed_main_weapon_slot = bomb_locks
+						engine_type_slot = engine_1_1x
+					}
+					obsolete = yes
+				}
+				create_equipment_variant = {
+					name = "Curtiss A-12" #American CAS used by China
+					type = small_plane_cas_airframe_1
+					parent_version = 0
+					modules = {
+						fixed_main_weapon_slot = bomb_locks
+						fixed_auxiliary_weapon_slot_1 = bomb_locks
+						engine_type_slot = engine_2_1x
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = CAS1 } }
+					set_technology = { CAS1 = 1 }
+				}
+				create_equipment_variant = {
+					name = "Henschel Hs 123" #German CAS used in China
+					type = CAS_equipment_1
+					parent_version = 0
+					upgrades = {
+						plane_cas_upgrade = 2
+						plane_engine_upgrade = 2
+					}
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_artillery_of_the_sea
+		icon = GFX_focus_ARG_study_the_battle_of_the_river_plate
+		cost = 6
+
+		relative_position_id = LEP_artillery_of_the_sky
+		x = 0
+		y = 2
+
+		ai_will_do = {
+			base = 15
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+		prerequisite = { focus = LEP_artillery_of_the_sky }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_artillery_of_the_sea"
+			add_tech_bonus = {
+				name = LEP_artillery_of_the_sea
+				bonus = 0.5
+				uses = 2
+				category = mio_cat_tech_all_destroyer_and_modules
+				category = mio_cat_tech_all_cruiser_and_modules
+			}
+			add_doctrine_cost_reduction = {
+				name = LEP_artillery_of_the_sea
+				cost_reduction = 0.5
+				uses = 1
+				category = naval_doctrine
+			}
+			random_owned_controlled_state = {
+				prioritize = { 613 }
+				limit = {
+					is_core_of = ROOT
+					is_in_home_area = yes
+					is_valid_state_for_development = yes
+					free_building_slots = { building = dockyard size > 0 include_locked = yes }
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+			navy_experience = 50
+			add_ideas = LEP_nanjing_navy
+		}
+		search_filters = {
+			FOCUS_FILTER_NAVY_BONUS
+			FOCUS_FILTER_RESEARCH
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_fortifying_our_positions
+		icon = GFX_focus_FIN_weapon_caches
+		cost = 5
+
+		relative_position_id = LEP_primacy_of_the_engineering_corps
+		x = 0
+		y = 2
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_primacy_of_the_engineering_corps }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_fortifying_our_positions"
+			if = {
+				limit = { has_idea = LEP_engineering_corps_2 }
+				swap_ideas = {
+					remove_idea = LEP_engineering_corps_2
+					add_idea = LEP_engineering_corps_4
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_engineering_corps_1
+					add_idea = LEP_engineering_corps_3
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 613 }
+				limit = {
+					is_core_of = ROOT
+					is_in_home_area = yes
+					is_valid_state_for_development = yes
+					free_building_slots = { building = anti_air_building size > 0 }
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 2
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			LEP_fortifying_our_positions_effect = yes
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_nanjing_air_academy
+		icon = GFX_goal_China_Beiyang_Air_Force
+		cost = 6
+
+		relative_position_id = LEP_fortifying_our_positions
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			base = 25
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+		prerequisite = { focus = LEP_fortifying_our_positions }
+		prerequisite = { focus = LEP_artillery_of_the_sky }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_nanjing_air_academy"
+			air_experience = 50
+			swap_ideas = {
+				remove_idea = LEP_nanjing_airforce_1
+				add_idea = LEP_nanjing_airforce_2
+			}
+			add_doctrine_cost_reduction = {
+				name = LEP_nanjing_air_academy
+				cost_reduction = 0.5
+				uses = 2
+				category = air_doctrine
+			}
+			random_owned_controlled_state = {
+				prioritize = { 613 }
+				limit = {
+					is_core_of = ROOT
+					is_in_home_area = yes
+					is_valid_state_for_development = yes
+					free_building_slots = { building = air_base size > 0 }
+				}
+				add_building_construction = {
+					type = air_base
+					level = 4
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_AIRFORCE_BONUS
+			FOCUS_FILTER_AIR_XP
+			FOCUS_FILTER_RESEARCH
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_cult_of_aviation
+		icon = GFX_focus_SOV_flying_clubs
+		cost = 5
+
+		relative_position_id = LEP_nanjing_air_academy
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			base = 30
+			modifier = {
+				has_war = yes
+				add = 15
+			}
+		}
+		prerequisite = { focus = LEP_nanjing_air_academy }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_cult_of_aviation"
+			if = {
+				limit = { has_idea = LEP_nanjing_airforce_4 }
+				swap_ideas = {
+					remove_idea = LEP_nanjing_airforce_4
+					add_idea = LEP_nanjing_airforce_5
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_nanjing_airforce_2
+					add_idea = LEP_nanjing_airforce_3
+				}
+			}
+			air_experience = 40
+			add_ace = {
+				name = "Fengzhu"
+				surname = "Xue"
+				callsign = "Patriot"
+				type = fighter_unique
+			}
+			add_ace = {
+				name = "Jinsheng"
+				surname = "Cao"
+				callsign = "Fortune"
+				type = fighter_genius
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_AIRFORCE_BONUS
+			FOCUS_FILTER_AIR_XP
+		}
+	}
+
+	focus = {
+		id = LEP_china_air_fleet
+		icon = GFX_focus_generic_air_bases
+		cost = 6
+
+		relative_position_id = LEP_nanjing_air_academy
+		x = 1
+		y = 2
+
+		ai_will_do = {
+			base = 20
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+		prerequisite = { focus = LEP_nanjing_air_academy }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_china_air_fleet"
+			if = {
+				limit = { has_idea = LEP_nanjing_airforce_3 }
+				swap_ideas = {
+					remove_idea = LEP_nanjing_airforce_3
+					add_idea = LEP_nanjing_airforce_5
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_nanjing_airforce_2
+					add_idea = LEP_nanjing_airforce_4
+				}
+			}
+			add_tech_bonus = {
+				name = LEP_china_air_fleet
+				uses = 2
+				category = mio_cat_all_light_aircraft_and_modules
+				bonus = 0.75
+			}
+			if = {
+				limit = { has_dlc_aat = yes }
+				if = {
+					limit = { mio:CHN_aviation_industry_organisation = { is_mio_available = no } }
+					custom_effect_tooltip = available_mio_tt
+					show_mio_tooltip = CHN_aviation_industry_organisation
+				}
+				mio:CHN_aviation_industry_organisation = {
+					set_mio_flag = CHN_mio_unlocked
+					add_mio_size = 1
+					add_mio_funds = 500
+				}
+			}
+			else = {
+				add_one_random_military_factory = yes
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_AIRFORCE_BONUS
+			FOCUS_FILTER_RESEARCH
+			FOCUS_FILTER_INDUSTRY
+		}
+	}
+
+	focus = {
+		id = LEP_through_fire_and_war
+		icon = GFX_goal_generic_intense_warfare
+		cost = 6
+
+		relative_position_id = LEP_symphony_of_factory_and_firepower
+		x = -1
+		y = 1
+
+		ai_will_do = {
+			base = 25
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+		prerequisite = { focus = LEP_fortifying_our_positions }
+		prerequisite = { focus = LEP_thorough_logistics }
+		prerequisite = { focus = LEP_symphony_of_factory_and_firepower }
+		prerequisite = { focus = LEP_artillery_of_the_sky }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_through_fire_and_war"
+			if = {
+				limit = { has_idea = LEP_eliteheer_7 }
+				swap_ideas = {
+					remove_idea = LEP_eliteheer_7
+					add_idea = LEP_eliteheer_9
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = LEP_eliteheer_6
+					add_idea = LEP_eliteheer_8
+				}
+			}
+			every_army_leader = {
+				add_attack = 1
+				add_timed_unit_leader_trait = {
+					trait = offensive_mindset_temp_trait
+					days = 300
+				}
+			}
+			add_tech_bonus = {
+				name = LEP_through_fire_and_war
+				uses = 1
+				bonus = 0.5
+				category = cat_special_forces_generic
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+
+	focus = {
+		id = LEP_the_pinnacle_of_chinese_soldiery
+		icon = GFX_goal_LEP_southern_school
+		cost = 6
+
+		relative_position_id = LEP_through_fire_and_war
+		x = 0
+		y = 1
+
+		ai_will_do = {
+			base = 25
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+		prerequisite = { focus = LEP_through_fire_and_war }
+		prerequisite = { focus = LEP_disrupting_supply }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed LEP_the_pinnacle_of_chinese_soldiery"
+			custom_effect_tooltip = LEP_combine_army_ideas_tt
+			custom_effect_tooltip = tooltip_white_line
+			china_add_research_slots = yes
+			hidden_effect = {
+				remove_ideas = {
+					LEP_eliteheer_9
+					LEP_engineering_corps_4
+					LEP_german_equipment_support_4
+				}
+				add_ideas = LEP_pinnacle_army
+			}
+		}
+		search_filters = {
+			FOCUS_FILTER_ARMY_BONUS
+			FOCUS_FILTER_RESEARCH
+		}
+	}
+}

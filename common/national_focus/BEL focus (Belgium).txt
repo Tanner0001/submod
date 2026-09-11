@@ -1,0 +1,5705 @@
+###########################
+# Belgium Shared Focus Tree
+# By Jeankedezeehond
+###########################
+
+### German tree
+focus_tree = {
+	id = BEL_focus
+
+	country = {
+		factor = 0
+
+		modifier = {
+			add = 10
+			tag = BEL
+		}
+	}
+
+	shared_focus = BEL_War_Bonds
+	shared_focus = BEL_Galopin_Doctrine
+	shared_focus = BEL_Industrial_Committee
+	shared_focus = BEL_Solvay_Institute
+	shared_focus = BEL_Secondary_Military
+	shared_focus = BEL_Independent_Forces
+	shared_focus = BEL_Rely_on_the_Kriegsmarine
+	shared_focus = BEL_Fleet_of_our_own
+	shared_focus = BEL_Masters_of_the_Skies
+	shared_focus = BEL_Supporting_Role
+	shared_focus = BEL_A_Neutral_Bloc
+	shared_focus = BEL_The_Lion_Roars
+
+	default = no
+	continuous_focus_position = { x = 100 y = 1500 }
+
+	#####German Occupation
+
+	focus = {
+		id = BEL_Evaluate_State_Budget
+		icon = GFX_goal_generic_demand_territory
+		cost = 3
+
+		x = 7
+		y = 0
+
+		available = {
+			date > 1936.11.01
+			is_subject_of = GER
+		}
+
+		ai_will_do = { factor = 100 }
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus BEL_Evaluate_State_Budget"
+			hidden_effect = {
+				country_event = { id = belgium_military_events.1 days = 3 }
+				country_event = { id = belgium_military_events.5 days = 7 }
+				country_event = { id = belgium_military_events.9 days = 10 }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Evaluate_State_Budget"
+			add_political_power = 50
+			country_event = belgium_events.831
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = BEL_German_Investigation
+		icon = GFX_BAT_germanisation
+		cost = 10
+
+		relative_position_id = BEL_Evaluate_State_Budget
+		x = -4
+		y = 1
+
+		prerequisite = { focus = BEL_Evaluate_State_Budget }
+		available = { has_country_flag = German_Investigation is_subject_of = GER }
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 50
+				date > 1937.1.1
+				OR = {
+					has_game_rule = { rule = BEL_flawal_path option = BEL_FLAWAL_PATH_REFERENDUM }
+					has_game_rule = { rule = BEL_flawal_path option = BEL_FLAWAL_PATH_CRACKDOWN }
+				}
+			}
+		}
+
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus BEL_German_Investigation"
+			hidden_effect = {
+				country_event = { id = flanders_wallonia_events.21 days = 32 }
+			}
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_German_Investigation"
+			custom_effect_tooltip = BEL_German_Investigation_tt
+		}
+	}
+
+	focus = {
+		id = BEL_Investigate_Political_Schandal
+		icon = GFX_goal_BEL_abolish_flanders_council
+		cost = 10
+
+		relative_position_id = BEL_German_Investigation
+		x = -1
+		y = 1
+
+		prerequisite = { focus = BEL_German_Investigation }
+		available = { is_subject_of = GER }
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 50
+				date > 1937.1.1
+				OR = {
+					has_game_rule = { rule = BEL_flawal_path option = BEL_FLAWAL_PATH_REFERENDUM }
+					has_game_rule = { rule = BEL_flawal_path option = BEL_FLAWAL_PATH_CRACKDOWN }
+				}
+			}
+		}
+
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus BEL_Investigate_Political_Schandal"
+			hidden_effect = {
+				country_event = { id = flanders_wallonia_events.23 days = 35 }
+				country_event = { id = flanders_wallonia_events.24 days = 42 }
+				country_event = { id = flanders_wallonia_events.25 days = 56 }
+			}
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Investigate_Political_Schandal"
+			custom_effect_tooltip = BEL_Investigate_Political_Schandal_tt
+			add_political_power = -50
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = BEL_Abolish_Flemish_Council
+		icon = GFX_goal_DEI_focus_disband_volksraad
+		cost = 10
+
+		relative_position_id = BEL_Investigate_Political_Schandal
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Investigate_Political_Schandal }
+		available = {
+			is_subject_of = GER
+			6 = { is_owned_and_controlled_by = ROOT }
+			925 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 50
+				date > 1937.1.1
+				OR = {
+					has_game_rule = { rule = BEL_flawal_path option = BEL_FLAWAL_PATH_REFERENDUM }
+					has_game_rule = { rule = BEL_flawal_path option = BEL_FLAWAL_PATH_CRACKDOWN }
+				}
+			}
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Abolish_Flemish_Council"
+			add_political_power = -50
+			add_stability = -0.05
+			add_ideas = BEL_Abolish_Flemish_Council_idea
+			add_popularity = { ideology = paternal_autocrat popularity = -0.15 }
+			hidden_effect = {
+				country_event = { id = flanders_wallonia_events.43 days = 5 random_days = 5 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Strong_Royal_Power
+		icon = GFX_focus_flanders_wallonia_monarchy
+		cost = 10
+
+		relative_position_id = BEL_German_Investigation
+		x = 1
+		y = 1
+
+		prerequisite = { focus = BEL_German_Investigation }
+		available = { is_subject_of = GER }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Strong_Royal_Power"
+			add_political_power = 150
+			add_stability = 0.10
+			add_popularity = { ideology = authoritarian_democrat popularity = 0.30 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Reintroduce_Census_Voting
+		icon = GFX_focus_usa_voter_registration_act
+		cost = 10
+
+		relative_position_id = BEL_Strong_Royal_Power
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Strong_Royal_Power }
+		available = { is_subject_of = GER }
+		mutually_exclusive = {
+			focus = BEL_1938_Elections
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Reintroduce_Census_Voting"
+			add_political_power = 200
+			add_stability = -0.10
+			add_war_support = -0.10
+			country_event = belgium_events.849
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Expand_Feldgendarmerie
+		icon = GFX_goal_secret_agents
+		cost = 10
+
+		relative_position_id = BEL_Reintroduce_Census_Voting
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Reintroduce_Census_Voting }
+		available = { is_subject_of = GER }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Expand_Feldgendarmerie"
+			add_stability = 0.075
+			country_event = belgium_events.805
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Increase_Suppression
+		icon = GFX_goal_continuous_suppression
+		cost = 10
+
+		relative_position_id = BEL_Expand_Feldgendarmerie
+		x = -1
+		y = 1
+
+		prerequisite = { focus = BEL_Expand_Feldgendarmerie }
+		prerequisite = { focus = BEL_Enforce_German_Education }
+		available = { is_subject_of = GER }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Increase_Suppression"
+			add_ideas = BEL_Create_VRT
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Ban_Cooperatives_f
+		icon = GFX_goal_anti_comintern_pact
+		cost = 10
+
+		relative_position_id = BEL_Increase_Suppression
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Increase_Suppression }
+		available = { is_subject_of = GER }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Ban_Cooperatives_f"
+			add_popularity = { ideology = syndicalist popularity = -0.20 }
+			add_political_power = -50
+			add_stability = -0.05
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Enforce_German_Education
+		icon = GFX_focus_ger_return_of_the_kaiser
+		cost = 10
+
+		relative_position_id = BEL_Abolish_Flemish_Council
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Abolish_Flemish_Council }
+		prerequisite = { focus = BEL_Reintroduce_Census_Voting }
+		available = { is_subject_of = GER }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Enforce_German_Education"
+			add_ideas = BEL_German_Immigration
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = BEL_Soldiers_To_Protect_The_Empire
+		icon = GFX_focus_ger_oppose_hitler
+		cost = 10
+
+		relative_position_id = BEL_Abolish_Flemish_Council
+		x = -2
+		y = 1
+
+		prerequisite = { focus = BEL_Abolish_Flemish_Council }
+		prerequisite = { focus = BEL_Reintroduce_Census_Voting }
+		available = { is_subject_of = GER }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Soldiers_To_Protect_The_Empire"
+			add_ideas = BEL_More_Soldiers
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = BEL_Expand_The_Westwall
+		icon = GFX_goal_generic_defence
+		cost = 10
+
+		relative_position_id = BEL_Soldiers_To_Protect_The_Empire
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Soldiers_To_Protect_The_Empire }
+		available = { is_subject_of = GER }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Expand_The_Westwall"
+			6 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 1
+						province = 6446
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 1
+						VP = 6446
+					}
+				}
+				add_building_construction = {
+					type = bunker
+					level = 1
+					province = 3576
+					instant_build = yes
+				}
+			}
+			34 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 1
+						province = 3516
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 1
+						VP = 3516
+					}
+				}
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 13081
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 1
+						province = 9536
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 1
+						VP = 9536
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+#Reworked Adelbert Reform program
+
+	focus = {
+		id = BEL_Guidance_By_The_Flemish_Council
+		icon = GFX_goal_government_icon
+		cost = 10
+
+		relative_position_id = BEL_Evaluate_State_Budget
+		x = 3
+		y = 1
+
+		prerequisite = {
+			focus = BEL_Evaluate_State_Budget
+		}
+		available = {
+			has_country_flag = Flemish_Council_Chosen
+		}
+		ai_will_do = { factor = 100 }
+
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus BEL_Guidance_By_The_Flemish_Council"
+			hidden_effect = {
+				country_event = { id = belgium_events.832 days = 32 }
+			}
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Guidance_By_The_Flemish_Council"
+			custom_effect_tooltip = BEL_Guidance_By_The_Flemish_Council_tt
+
+			hidden_effect = {
+				country_event = { id = flanders_wallonia_events.50 days = 30 }
+			}
+		}
+	}
+
+	focus = {
+		id = BEL_Give_Power_To_Parliament
+		icon = GFX_goal_Fight_for_Freedom
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = BEL_Guidance_By_The_Flemish_Council
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Give_Power_To_Parliament"
+			add_political_power = 50
+			add_stability = 0.15
+			add_war_support = 0.10
+			add_popularity = { ideology = social_conservative popularity = 0.15 }
+			add_popularity = { ideology = social_liberal popularity = 0.10 }
+			add_popularity = { ideology = social_democrat popularity = 0.10 }
+			hidden_effect = {
+				# fires no later than May 1938
+				set_temp_variable = { days_to_event = 863 }
+				calculate_days_since_game_start = yes
+				add_to_temp_variable = { days_to_event = 1 }
+				country_event = { id = flanders_wallonia_events.62 days = days_to_event }
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_1938_Elections
+		icon = GFX_goal_KTG_Elections
+		cost = 0
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = -3
+		y = 2
+
+		prerequisite = {
+			focus = BEL_Give_Power_To_Parliament
+		}
+		mutually_exclusive = {
+			focus = BEL_Reintroduce_Census_Voting
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_1938_Elections"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = BEL_KP_Victory
+		icon = GFX_goal_ideology_social_conservative
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = -2
+		y = 3
+
+		prerequisite = {
+			focus = BEL_1938_Elections
+		}
+		available = {
+			has_government = social_conservative
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_KP_Victory"
+			add_popularity = { ideology = social_conservative popularity = 0.10 }
+			add_political_power = 50
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = BEL_Catholic_Education_Reforms
+		icon = GFX_focus_research
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = -2
+		y = 4
+
+		prerequisite = {
+			focus = BEL_KP_Victory
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Catholic_Education_Reforms"
+			add_ideas = BEL_Cat_Science
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = BEL_Caritas
+		icon = GFX_goal_Winterhilfe
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = -2
+		y = 5
+
+		prerequisite = {
+			focus = BEL_Catholic_Education_Reforms
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Caritas"
+			add_ideas = BEL_Caritas_idea
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_BWP_Victory
+		icon = GFX_goal_HOL_list_left
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = -4
+		y = 3
+
+		prerequisite = {
+			focus = BEL_1938_Elections
+		}
+		available = {
+			has_government = social_democrat
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_BWP_Victory"
+			add_popularity = { ideology = social_democrat popularity = 0.10 }
+			add_political_power = 50
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = BEL_Create_Free_Education
+		icon = GFX_focus_generic_socialist_science
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = -4
+		y = 4
+
+		prerequisite = {
+			focus = BEL_BWP_Victory
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Create_Free_Education"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = BEL_State_Funded_Cooperatives
+		icon = GFX_goal_generic_union_agreement
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = -4
+		y = 5
+
+		prerequisite = {
+			focus = BEL_Create_Free_Education
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_State_Funded_Cooperatives"
+			add_ideas = BEL_welfare_state
+		}
+	}
+
+	focus = {
+		id = BEL_Rijkswacht
+		icon = GFX_goal_KTG_Belgian_Officers2
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = BEL_Guidance_By_The_Flemish_Council
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Rijkswacht"
+			country_event = flanders_wallonia_events.57
+		}
+	}
+
+	focus = {
+		id = BEL_Trans_Regional_Associations
+		icon = GFX_goal_generic_improve_relations
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = BEL_Rijkswacht
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Trans_Regional_Associations"
+			add_war_support = 0.20
+			add_stability = 0.08
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Rally_Behind_the_Lion
+		icon = GFX_focus_eng_imperial_federation
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = 3
+		y = 2
+
+		prerequisite = {
+			focus = BEL_Rijkswacht
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Rally_Behind_the_Lion"
+			add_ideas = BEL_Flemish_Lion
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = BEL_Stop_the_Flamenpolitik
+		icon = GFX_focus_BEL_expression_of_belgian_unity
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = 3
+		y = 3
+
+		prerequisite = {
+			focus = BEL_Rally_Behind_the_Lion
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Stop_the_Flamenpolitik"
+			if = {
+				limit = { has_idea = BEL_anti_german_sentiment5 }
+				remove_ideas = BEL_anti_german_sentiment5
+			}
+			else_if = {
+				limit = { has_idea = BEL_anti_german_sentiment4 }
+				remove_ideas = BEL_anti_german_sentiment4
+			}
+			else_if = {
+				limit = { has_idea = BEL_anti_german_sentiment3 }
+				remove_ideas = BEL_anti_german_sentiment3
+			}
+			else_if = {
+				limit = { has_idea = BEL_anti_german_sentiment2 }
+				remove_ideas = BEL_anti_german_sentiment2
+			}
+			else_if = {
+				limit = { has_idea = BEL_anti_german_sentiment1 }
+				remove_ideas = BEL_anti_german_sentiment1
+			}
+		}
+	}
+
+	focus = {
+		id = BEL_Combat_German_Favoritism
+		icon = GFX_goal_authoritarian
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = 2
+		y = 4
+
+		prerequisite = {
+			focus = BEL_Stop_the_Flamenpolitik
+		}
+		ai_will_do = { factor = 100 }
+
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus BEL_Combat_German_Favoritism"
+			country_event = { id = belgium_events.842 days = 35 }
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Combat_German_Favoritism"
+			add_stability = 0.10
+			add_political_power = -75
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Restore_the_law_Lejeune
+		icon = GFX_goal_new_treaty
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = 4
+		y = 4
+
+		prerequisite = {
+			focus = BEL_Stop_the_Flamenpolitik
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Restore_the_law_Lejeune"
+			swap_ideas = {
+				remove_idea = BEL_King_Exile
+				add_idea = BEL_King_Exile2
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = BEL_Reform_The_Provincial_System
+		icon = GFX_goal_economic_control
+		cost = 10
+
+		relative_position_id = BEL_Guidance_By_The_Flemish_Council
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = BEL_Trans_Regional_Associations
+		}
+		prerequisite = {
+			focus = BEL_Give_Power_To_Parliament
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Reform_The_Provincial_System"
+			add_ideas = BEL_Economic_Regions
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+}
+
+### Independent tree
+focus_tree = {
+	id = BEL_Independent_focus
+
+	country = {
+		factor = 0
+	}
+
+	shared_focus = BEL_War_Bonds
+	shared_focus = BEL_Galopin_Doctrine
+	shared_focus = BEL_Industrial_Committee
+	shared_focus = BEL_Solvay_Institute
+	shared_focus = BEL_Secondary_Military
+	shared_focus = BEL_Independent_Forces
+	shared_focus = BEL_Rely_on_the_Kriegsmarine
+	shared_focus = BEL_Fleet_of_our_own
+	shared_focus = BEL_Masters_of_the_Skies
+	shared_focus = BEL_Supporting_Role
+	shared_focus = BEL_A_Neutral_Bloc
+	shared_focus = BEL_The_Lion_Roars
+
+	default = no
+	continuous_focus_position = { x = 100 y = 1500 }
+
+	focus = {
+		id = BEL_Elections
+		icon = GFX_BEL_support_democracy
+		cost = 3
+
+		x = 1
+		y = 0
+
+		offset = {
+			x = 2
+			y = 0
+			trigger = { has_completed_focus = BEL_BWP }
+		}
+		offset = {
+			x = -1
+			y = 0
+			trigger = { has_completed_focus = BEL_LP }
+		}
+		offset = {
+			x = 8
+			y = 0
+			trigger = {
+				NOT = { has_completed_focus = BEL_BWP }
+				NOT = { has_completed_focus = BEL_LP }
+				NOT = { has_completed_focus = BEL_KP }
+				NOT = { has_completed_focus = BEL_NP }
+			}
+		}
+
+		bypass = {
+			OR = {
+				has_country_leader = { character = BEL_albert_van_belgie }
+				AND = {
+					is_subject = yes
+					has_democratic_government = no
+				}
+			}
+		}
+		ai_will_do = { factor = 1000 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Elections"
+			add_stability = 0.08
+			add_political_power = 50
+			country_event = belgium_events.360
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Monarchy
+		icon = GFX_focus_BEL_legacy_of_the_soldier_king
+		cost = 0
+
+		relative_position_id = BEL_Elections
+		x = 6
+		y = 1
+
+		offset = {
+			x = -6
+			y = 0
+			trigger = { has_completed_focus = BEL_Monarchy }
+		}
+		allow_branch = {
+			NOT = { has_completed_focus = BEL_Republic }
+		}
+
+		prerequisite = { focus = BEL_Elections }
+		available = {
+			hidden_trigger = { always = no }
+		}
+		bypass = {
+			has_country_leader = { character = BEL_albert_van_belgie }
+		}
+		mutually_exclusive = { focus = BEL_Republic }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Monarchy"
+			custom_effect_tooltip = unlock_focuses
+			country_event = belgium_events.41
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+
+	focus = {
+		id = BEL_Republic
+		icon = GFX_focus_BEL_belgian_renaissance
+		cost = 0
+
+		relative_position_id = BEL_Elections
+		x = -6
+		y = 1
+
+		offset = {
+			x = 6
+			y = 0
+			trigger = { has_completed_focus = BEL_Republic }
+		}
+		allow_branch = {
+			NOT = { has_completed_focus = BEL_Monarchy }
+		}
+
+		prerequisite = { focus = BEL_Elections }
+		available = {
+			hidden_trigger = { always = no }
+		}
+		bypass = {
+			is_subject = yes
+			has_democratic_government = no
+			NOT = { has_country_leader = { character = BEL_albert_van_belgie } }
+		}
+		mutually_exclusive = { focus = BEL_Monarchy }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Republic"
+			custom_effect_tooltip = unlock_focuses
+			country_event = belgium_events.44
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+
+	focus = {
+		id = BEL_BWP
+		icon = GFX_goal_BEL_BWP
+		cost = 0
+
+		relative_position_id = BEL_Elections
+		x = -3
+		y = 2
+
+		offset = {
+			x = 3
+			y = 0
+			trigger = {
+				has_completed_focus = BEL_BWP
+			}
+		}
+		allow_branch = {
+			NOT = { has_completed_focus = BEL_LP }
+			NOT = { has_completed_focus = BEL_KP }
+			NOT = { has_completed_focus = BEL_NP }
+		}
+
+		prerequisite = {
+			focus = BEL_Republic
+			focus = BEL_Monarchy
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		bypass = {
+			is_subject = yes
+			OR = {
+				has_soclib_or_socdem_government = yes
+				has_socialist_government = yes
+			}
+		}
+		mutually_exclusive = { focus = BEL_LP }
+		mutually_exclusive = { focus = BEL_KP }
+		mutually_exclusive = { focus = BEL_NP }
+		ai_will_do = { factor = 1000 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_BWP"
+			custom_effect_tooltip = unlock_focuses
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+
+	focus = {
+		id = BEL_LP
+		icon = GFX_goal_BEL_LP
+		cost = 0
+
+		relative_position_id = BEL_Elections
+		x = -9
+		y = 2
+
+		offset = {
+			x = 9
+			y = 0
+			trigger = {
+				has_completed_focus = BEL_LP
+			}
+		}
+		allow_branch = {
+			NOT = { has_completed_focus = BEL_BWP }
+			NOT = { has_completed_focus = BEL_KP }
+			NOT = { has_completed_focus = BEL_NP }
+		}
+
+		prerequisite = {
+			focus = BEL_Republic
+			focus = BEL_Monarchy
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		bypass = {
+			is_subject = yes
+			has_government = market_liberal
+		}
+		mutually_exclusive = { focus = BEL_KP }
+		mutually_exclusive = { focus = BEL_NP }
+		mutually_exclusive = { focus = BEL_BWP }
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_LP"
+			custom_effect_tooltip = unlock_focuses
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+
+	focus = {
+		id = BEL_KP
+		icon = GFX_goal_BEL_KP
+		cost = 0
+
+		relative_position_id = BEL_Elections
+		x = 4
+		y = 2
+
+		offset = {
+			x = -4
+			y = 0
+			trigger = {
+				has_completed_focus = BEL_KP
+			}
+		}
+		allow_branch = {
+			NOT = { has_completed_focus = BEL_BWP }
+			NOT = { has_completed_focus = BEL_LP }
+			NOT = { has_completed_focus = BEL_NP }
+		}
+
+		prerequisite = { focus = BEL_Republic focus = BEL_Monarchy }
+		available = {
+			hidden_trigger = { always = no }
+		}
+		bypass = {
+			is_subject = yes
+			has_conservative_government = yes
+		}
+		mutually_exclusive = { focus = BEL_LP }
+		mutually_exclusive = { focus = BEL_NP }
+		mutually_exclusive = { focus = BEL_BWP }
+		ai_will_do = { factor = 1000 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_KP"
+			custom_effect_tooltip = unlock_focuses
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+
+	focus = {
+		id = BEL_NP
+		icon = GFX_goal_BEL_Verdinaso
+		cost = 0
+
+		relative_position_id = BEL_Elections
+		x = 9
+		y = 2
+
+		offset = {
+			x = -9
+			y = 0
+			trigger = {
+				has_completed_focus = BEL_NP
+			}
+		}
+		allow_branch = {
+			NOT = { has_completed_focus = BEL_BWP }
+			NOT = { has_completed_focus = BEL_LP }
+			NOT = { has_completed_focus = BEL_KP }
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		prerequisite = {
+			focus = BEL_Republic
+			focus = BEL_Monarchy
+		}
+		mutually_exclusive = { focus = BEL_LP }
+		mutually_exclusive = { focus = BEL_KP }
+		mutually_exclusive = { focus = BEL_BWP }
+		bypass = {
+			is_subject = yes
+			has_dictatorship_government = yes
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_NP"
+			custom_effect_tooltip = unlock_focuses
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+
+	#############NATIONAL POPULIST
+
+	focus = {
+		id = BEL_Groote_Kuisch
+		icon = GFX_focus_BEL_government_resigns
+		cost = 10
+
+		relative_position_id = BEL_NP
+		x = 0
+		y = 1
+
+		available = {
+			has_dictatorship_government = yes
+		}
+		prerequisite = { focus = BEL_NP }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Groote_Kuisch"
+			add_timed_idea = { idea = BEL_Groote_Kuisch days = 365 }
+		}
+	}
+
+	focus = {
+		id = BEL_Reinforce_Idea
+		icon = GFX_BEL_Reinforce_Belgicism
+		cost = 10
+
+		relative_position_id = BEL_Groote_Kuisch
+		x = 0
+		y = 1
+
+		available = {
+			has_dictatorship_government = yes
+		}
+		prerequisite = { focus = BEL_Groote_Kuisch }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Reinforce_Idea"
+			country_event = belgium_events.45
+			custom_effect_tooltip = which_has_the_following_effect
+			event_option_tooltip = belgium_events.45.a
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Secularise_State
+		icon = GFX_focus_generic_strike_at_democracy1
+		cost = 10
+
+		relative_position_id = BEL_Reinforce_Idea
+		x = -1
+		y = 1
+
+		available = {
+			has_dictatorship_government = yes
+		}
+		prerequisite = { focus = BEL_Reinforce_Idea }
+		ai_will_do = { factor = 100 }
+		mutually_exclusive = { focus = BEL_Unite_with_Catholic_Parties }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Secularise_State"
+			add_ideas = BEL_State_Funded_Research
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = BEL_Subsidize_Industry
+		icon = GFX_goal_generic_production2
+		cost = 10
+
+		relative_position_id = BEL_Secularise_State
+		x = 0
+		y = 1
+
+		available = {
+			has_dictatorship_government = yes
+			34 = { is_owned_and_controlled_by = ROOT }
+		}
+		prerequisite = { focus = BEL_Secularise_State }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Subsidize_Industry"
+			add_resource = {
+				type = steel
+				amount = 8
+				state = 34
+			}
+		}
+	}
+
+	focus = {
+		id = BEL_Unite_with_Catholic_Parties
+		icon = GFX_BEL_Improve_Catholic_Relations
+		cost = 10
+
+		relative_position_id = BEL_Reinforce_Idea
+		x = 1
+		y = 1
+
+		available = {
+			has_dictatorship_government = yes
+		}
+		prerequisite = { focus = BEL_Reinforce_Idea }
+		ai_will_do = { factor = 100 }
+		mutually_exclusive = { focus = BEL_Secularise_State }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Unite_with_Catholic_Parties"
+			add_ideas = BEL_Flemish_Lion
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = BEL_Subsidize_Agriculture
+		icon = GFX_goal_agricultural_policies
+		cost = 10
+
+		relative_position_id = BEL_Unite_with_Catholic_Parties
+		x = 0
+		y = 1
+
+		available = {
+			has_dictatorship_government = yes
+		}
+		prerequisite = { focus = BEL_Unite_with_Catholic_Parties }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Subsidize_Agriculture"
+			add_ideas = BEL_Farmers_aid
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = BEL_Look_Towards_Expansion
+		icon = GFX_goal_BEL_Reclaim_Place
+		cost = 10
+
+		relative_position_id = BEL_Subsidize_Industry
+		x = 1
+		y = 1
+
+		available = {
+			has_dictatorship_government = yes
+			is_subject = no
+		}
+		prerequisite = { focus = BEL_Subsidize_Agriculture focus = BEL_Subsidize_Industry }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Look_Towards_Expansion"
+			add_manpower = 20000
+			custom_effect_tooltip = BEL_nfa_claim_tt
+			every_state = {
+				limit = {
+					OR = {
+						state = 978 #Limburg
+						state = 979 #Westerscheldt
+						AND = {
+							state = 980 #Lille
+							ROOT = {
+								NOT = { is_in_faction_with = NFA }
+							}
+						}
+					}
+				}
+				enable_state_integration_80_compliance = yes
+				add_claim_by = ROOT
+			}
+			if = {
+				limit = {
+					NOT = { is_in_faction_with = NFA }
+				}
+				add_state_claim = 17 #Pas-de-Calais
+			}
+			custom_effect_tooltip = tooltip_white_line
+			unlock_decision_tooltip = BEL_Reclaim_Zeeuws-Vlaanderen_and_Limburg
+			if = {
+				limit = {
+					NOT = { is_in_faction_with = NFA }
+				}
+				unlock_decision_tooltip = BEL_Reclaim_French_Flanders
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	#CATHOLIC
+
+	focus = {
+		id = BEL_Expand_the_Boerenbond
+		icon = GFX_goal_agricultural_policies
+		cost = 10
+
+		relative_position_id = BEL_KP
+		x = 0
+		y = 1
+
+		available = {
+			has_conservative_government = yes
+		}
+		prerequisite = { focus = BEL_KP }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Expand_the_Boerenbond"
+			add_ideas = BEL_Farmers_aid
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = BEL_Improve_working_conditions
+		icon = GFX_goal_economic_control
+		cost = 10
+
+		relative_position_id = BEL_Expand_the_Boerenbond
+		x = 0
+		y = 1
+
+		available = {
+			has_conservative_government = yes
+		}
+		prerequisite = { focus = BEL_Expand_the_Boerenbond }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Improve_working_conditions"
+			add_ideas = BEL_Empower_Workers
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Expand_State_Companies
+		icon = GFX_focus_generic_the_giant_wakes
+		cost = 10
+
+		relative_position_id = BEL_Improve_working_conditions
+		x = 0
+		y = 1
+
+		available = {
+			has_conservative_government = yes
+		}
+		prerequisite = { focus = BEL_Improve_working_conditions }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Expand_State_Companies"
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Strive_Towards_Federation
+		icon = GFX_BEL_Federalism
+		cost = 10
+
+		relative_position_id = BEL_Expand_State_Companies
+		x = -1
+		y = 1
+
+		available = {
+			has_conservative_government = yes
+		}
+		prerequisite = { focus = BEL_Expand_State_Companies }
+		ai_will_do = { factor = 100 }
+		mutually_exclusive = { focus = BEL_Strive_Towards_Confederation }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Strive_Towards_Federation"
+			add_stability = 0.10
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Reinforce_Belgicism
+		icon = GFX_BEL_Reinforce_Belgicism
+		cost = 10
+
+		relative_position_id = BEL_Strive_Towards_Federation
+		x = 0
+		y = 1
+
+		available = {
+			has_conservative_government = yes
+		}
+		prerequisite = { focus = BEL_Strive_Towards_Federation }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Reinforce_Belgicism"
+			swap_ideas = {
+				remove_idea = BEL_Language_Trouble
+				add_idea = BEL_belgicism
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = BEL_Strive_Towards_Confederation
+		icon = GFX_BEL_Confederalism
+		cost = 10
+
+		relative_position_id = BEL_Expand_State_Companies
+		x = 1
+		y = 1
+
+		available = {
+			has_conservative_government = yes
+		}
+		prerequisite = { focus = BEL_Expand_State_Companies }
+		ai_will_do = { factor = 100 }
+		mutually_exclusive = { focus = BEL_Strive_Towards_Federation }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Strive_Towards_Confederation"
+			add_political_power = 50
+			add_stability = 0.05
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Create_The_Economic_Regions
+		icon = GFX_focus_generic_treaty
+		cost = 10
+
+		relative_position_id = BEL_Strive_Towards_Confederation
+		x = 0
+		y = 1
+
+		available = {
+			has_conservative_government = yes
+		}
+		prerequisite = { focus = BEL_Strive_Towards_Confederation }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Create_The_Economic_Regions"
+			add_ideas = BEL_Economic_Regions
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Fund_Catholic_Education
+		icon = GFX_goal_BRA_catholic_education
+		cost = 10
+
+		relative_position_id = BEL_Reinforce_Belgicism
+		x = 1
+		y = 1
+
+		available = {
+			has_conservative_government = yes
+		}
+		prerequisite = { focus = BEL_Reinforce_Belgicism focus = BEL_Create_The_Economic_Regions }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Fund_Catholic_Education"
+			add_ideas = BEL_Cat_Science
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = BEL_Large_State_Investements
+		icon = GFX_BEL_Catholic_Construction
+		cost = 10
+
+		relative_position_id = BEL_Fund_Catholic_Education
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Fund_Catholic_Education }
+		available = {
+			has_conservative_government = yes
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Large_State_Investements"
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	##############LIBERALS
+
+	focus = {
+		id = BEL_Decrease_Governement_Control
+		icon = GFX_goal_generic_positive_trade_relations
+		cost = 10
+
+		relative_position_id = BEL_LP
+		x = 0
+		y = 1
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = BEL_LP }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Decrease_Governement_Control"
+			add_ideas = BEL_Decreased_Control
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Encourage_Corporations
+		icon = GFX_goal_generic_consumer_goods
+		cost = 10
+
+		relative_position_id = BEL_Decrease_Governement_Control
+		x = 0
+		y = 1
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = BEL_Decrease_Governement_Control }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Encourage_Corporations"
+			swap_ideas = {
+				remove_idea = BEL_Decreased_Control
+				add_idea = BEL_Corporations
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Excavation_Permits
+		icon = GFX_goal_generic_construction2
+		cost = 10
+
+		relative_position_id = BEL_Encourage_Corporations
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Encourage_Corporations }
+		available = {
+			has_government = market_liberal
+			34 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Excavation_Permits"
+			add_resource = {
+				type = steel
+				amount = 22
+				state = 34
+			}
+			add_tech_bonus = {
+				name = BEL_Excavation_Permits
+				bonus = 0.5
+				uses = 2
+				category = construction_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = BEL_Focus_On_Export
+		icon = GFX_goal_generic_positive_trade_relations
+		cost = 10
+
+		relative_position_id = BEL_Excavation_Permits
+		x = 0
+		y = 1
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = BEL_Excavation_Permits }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Focus_On_Export"
+			swap_ideas = {
+				remove_idea = BEL_Corporations
+				add_idea = BEL_Focus_On_Export
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Free_Scientific_Research
+		icon = GFX_goal_generic_scientific_exchange
+		cost = 10
+
+		relative_position_id = BEL_Focus_On_Export
+		x = 0
+		y = 1
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = BEL_Focus_On_Export }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Free_Scientific_Research"
+			swap_ideas = {
+				remove_idea = BEL_Focus_On_Export
+				add_idea = BEL_Lib_Science
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	################SOCIALISTS
+
+	focus = {
+		id = BEL_Reform_The_Party
+		icon = GFX_goal_ideology_syndicalist
+		cost = 10
+
+		relative_position_id = BEL_BWP
+		x = -3
+		y = 1
+
+		available = {
+			has_socialist_government = yes
+		}
+		prerequisite = { focus = BEL_BWP }
+		ai_will_do = { factor = 100 }
+		mutually_exclusive = { focus = BEL_Introduce_Plan_Van_Acker focus = BEL_Introduce_Plan_Spaak }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Reform_The_Party"
+			add_stability = 0.07
+			country_event = belgium_events.421
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Introduce_The_8-Hour_Workday
+		icon = GFX_goal_economic_control
+		cost = 10
+
+		relative_position_id = BEL_Reform_The_Party
+		x = 0
+		y = 1
+
+		available = {
+			has_socialist_government = yes
+		}
+		prerequisite = { focus = BEL_Reform_The_Party }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Introduce_The_8-Hour_Workday"
+			add_ideas = BEL_Empower_Workers
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Expand_The_Cooperatives
+		icon = GFX_goal_generic_production
+		cost = 10
+
+		relative_position_id = BEL_Introduce_The_8-Hour_Workday
+		x = 0
+		y = 1
+
+		available = {
+			has_socialist_government = yes
+		}
+		prerequisite = { focus = BEL_Introduce_The_8-Hour_Workday }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Expand_The_Cooperatives"
+			add_stability = 0.15
+			add_war_support = 0.10
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Industrialize_Countryside
+		icon = GFX_goal_generic_construction
+		cost = 10
+
+		relative_position_id = BEL_Expand_The_Cooperatives
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Expand_The_Cooperatives }
+		available = {
+			has_socialist_government = yes
+			925 = { is_owned_and_controlled_by = ROOT }
+			948 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Industrialize_Countryside"
+			925 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_resource = {
+					type = steel
+					amount = 10
+				}
+			}
+			948 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_resource = {
+					type = steel
+					amount = 14
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Introduce_Plan_Spaak
+		icon = GFX_goal_ideology_social_liberal
+		cost = 10
+
+		relative_position_id = BEL_BWP
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_BWP }
+		available = {
+			has_government = social_liberal
+		}
+		ai_will_do = { factor = 100 }
+		mutually_exclusive = { focus = BEL_Introduce_Plan_Van_Acker focus = BEL_Reform_The_Party }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Introduce_Plan_Spaak"
+			add_stability = 0.075
+			country_event = belgium_events.43
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Introduce_Plan_Van_Acker
+		icon = GFX_goal_ideology_social_democrat
+		cost = 10
+
+		relative_position_id = BEL_BWP
+		x = 3
+		y = 1
+
+		prerequisite = { focus = BEL_BWP }
+		available = {
+			has_government = social_democrat
+		}
+		ai_will_do = { factor = 100 }
+		mutually_exclusive = { focus = BEL_Introduce_Plan_Spaak focus = BEL_Reform_The_Party }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Introduce_Plan_Van_Acker"
+			add_stability = 0.075
+			country_event = belgium_events.42
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Instate_Economic_Secretaries
+		icon = GFX_goal_generic_production
+		cost = 10
+
+		relative_position_id = BEL_Introduce_Plan_Van_Acker
+		x = 0
+		y = 1
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = BEL_Introduce_Plan_Van_Acker }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Instate_Economic_Secretaries"
+			add_ideas = BEL_Secretaries
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Nationalise_Basic_Industry
+		icon = GFX_goal_generic_production2
+		cost = 10
+
+		relative_position_id = BEL_Instate_Economic_Secretaries
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Instate_Economic_Secretaries }
+		available = {
+			has_government = social_democrat
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Nationalise_Basic_Industry"
+			add_ideas = BEL_Nationalise_Basic
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Expand_Processing_Industry
+		icon = GFX_goal_generic_construction2
+		cost = 10
+
+		relative_position_id = BEL_Nationalise_Basic_Industry
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Nationalise_Basic_Industry }
+		available = {
+			has_government = social_democrat
+			34 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Expand_Processing_Industry"
+			34 = {
+				add_resource = {
+					type = steel
+					amount = 12
+				}
+			}
+			add_tech_bonus = {
+				name = BEL_Expand_Processing_Industry
+				bonus = 0.5
+				uses = 2
+				category = industry
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = BEL_Finish_Plan_Van_Acker
+		icon = GFX_goal_generic_construction
+		cost = 10
+
+		relative_position_id = BEL_Expand_Processing_Industry
+		x = 0
+		y = 1
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = BEL_Expand_Processing_Industry }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Finish_Plan_Van_Acker"
+			add_stability = 0.10
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Reform_Ministries
+		icon = GFX_focus_generic_treaty
+		cost = 10
+
+		relative_position_id = BEL_Introduce_Plan_Spaak
+		x = 0
+		y = 1
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = BEL_Introduce_Plan_Spaak }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Reform_Ministries"
+			add_ideas = BEL_Ministries
+			add_stability = -0.02
+			add_political_power = 75
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Expand_Infrastructure
+		icon = GFX_goal_socialist_infrastructure
+		cost = 10
+
+		relative_position_id = BEL_Reform_Ministries
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Reform_Ministries }
+		available = {
+			has_government = social_liberal
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Expand_Infrastructure"
+			add_one_random_infrastructure = yes
+			add_one_random_infrastructure = yes
+			add_one_random_infrastructure = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Focus_On_Civilian
+		icon = GFX_goal_generic_consumer_goods
+		cost = 10
+
+		relative_position_id = BEL_Expand_Infrastructure
+		x = 0
+		y = 1
+
+		prerequisite = { focus = BEL_Expand_Infrastructure }
+		available = {
+			has_government = social_liberal
+		}
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Focus_On_Civilian"
+			add_ideas = BEL_Civilian
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = BEL_Finish_Plan_Spaak
+		icon = GFX_goal_generic_construction
+		cost = 10
+
+		relative_position_id = BEL_Focus_On_Civilian
+		x = 0
+		y = 1
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = BEL_Focus_On_Civilian }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Finish_Plan_Spaak"
+			add_stability = 0.10
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = BEL_Create_The_Belgian_Cooperative_Union
+		icon = GFX_Cooperative
+		cost = 10
+
+		relative_position_id = BEL_Industrialize_Countryside
+		x = 0
+		y = 1
+
+		available = {
+			has_socialist_government = yes
+		}
+		prerequisite = { focus = BEL_Industrialize_Countryside }
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed BEL_Create_The_Belgian_Cooperative_Union"
+			add_war_support = 0.25
+			set_cosmetic_tag = BEL_cooperative
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+}
+
+#### Revised Industry Tree
+shared_focus = {
+	id = BEL_War_Bonds
+	icon = GFX_goal_generic_intelligence_exchange
+	cost = 10
+
+	x = 5
+	y = 0
+
+	offset = {
+		x = 17
+		y = 0
+		trigger = {
+			has_focus_tree = BEL_Independent_focus
+			NOT = { has_completed_focus = BEL_BWP }
+			NOT = { has_completed_focus = BEL_LP }
+			NOT = { has_completed_focus = BEL_KP }
+			NOT = { has_completed_focus = BEL_NP }
+		}
+	}
+	offset = {
+		x = 5
+		y = 0
+		trigger = { has_completed_focus = BEL_BWP }
+	}
+	offset = {
+		x = -1
+		y = 0
+		trigger = { has_completed_focus = BEL_LP }
+	}
+	offset = {
+		x = 12
+		y = 0
+		trigger = {
+			has_focus_tree = BEL_focus
+		}
+	}
+
+	ai_will_do = { factor = 90 }
+
+	available = {
+		threat > 0.15
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_War_Bonds"
+		add_timed_idea = {
+			idea = BEL_War_Bonds
+			days = 365
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Last_Stand_Act
+	icon = GFX_goal_generic_fortify_city
+	cost = 5
+
+	relative_position_id = BEL_War_Bonds
+	x = -1
+	y = 1
+
+	prerequisite = { focus = BEL_War_Bonds }
+
+	ai_will_do = { factor = 90 }
+
+	available = {
+		OR = {
+			threat > 0.2
+			is_in_faction = no
+			has_defensive_war = yes
+			surrender_progress > 0.2
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Last_Stand_Act"
+		add_manpower = 30000
+	}
+	search_filters = { FOCUS_FILTER_MANPOWER }
+}
+
+shared_focus = {
+	id = BEL_Refugee_Management
+	icon = GFX_goal_refugee_management
+	cost = 10
+
+	relative_position_id = BEL_War_Bonds
+	x = -1
+	y = 2
+
+	prerequisite = { focus = BEL_Last_Stand_Act }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Refugee_Management"
+		add_ideas = BEL_Refugee_Program
+	}
+	search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY }
+}
+
+shared_focus = {
+	id = BEL_Repair_Leuven_Library
+	icon = GFX_goal_KTG_Bookstack
+	cost = 10
+
+	relative_position_id = BEL_War_Bonds
+	x = -1
+	y = 3
+
+	prerequisite = { focus = BEL_Refugee_Management }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Repair_Leuven_Library"
+		add_research_slot_until_five = yes
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_FN_Herstal
+	icon = GFX_focus_BEL_fn_herstal
+	cost = 10
+
+	relative_position_id = BEL_War_Bonds
+	x = 2
+	y = 1
+
+	prerequisite = { focus = BEL_War_Bonds }
+	prerequisite = { focus = BEL_Galopin_Doctrine }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_FN_Herstal"
+		random_owned_controlled_state = {
+			prioritize = { 948 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = arms_factory size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			prioritize = { 948 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = arms_factory size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_fabrique_nationale_organisation = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.2
+				add_mio_research_bonus = 0.05
+				unlock_mio_trait_tooltip = BEL_mio_trait_outsourced_production
+			}
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_renard_organisation = {
+				unlock_mio_trait_tooltip = BEL_mio_trait_fn_herstal_collaboration
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Brossel
+	icon = GFX_goal_generic_army_motorized
+	cost = 10
+
+	relative_position_id = BEL_War_Bonds
+	x = 1
+	y = 2
+
+	prerequisite = { focus = BEL_FN_Herstal }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Brossel"
+		random_owned_controlled_state = {
+			prioritize = { 925 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = arms_factory size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			prioritize = { 925 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = arms_factory size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_dlc_lar = yes }
+				mio:BEL_brossel_organisation = {
+					add_mio_size = 1
+					add_mio_funds_gain_factor = 0.2
+					add_mio_research_bonus = 0.05
+					unlock_mio_trait_tooltip = BEL_mio_trait_knight_engines
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = BEL_Brossel
+					bonus = 1
+					uses = 1
+					category = motorized_equipment
+				}
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Minerva
+	icon = GFX_goal_BEL_minerva
+	cost = 10
+
+	relative_position_id = BEL_War_Bonds
+	x = 3
+	y = 2
+
+	prerequisite = { focus = BEL_FN_Herstal }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Minerva"
+		random_owned_controlled_state = {
+			prioritize = { 925 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = arms_factory size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			prioritize = { 925 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = arms_factory size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_minerva_organisation = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.2
+				add_mio_research_bonus = 0.05
+				unlock_mio_trait_tooltip = BEL_mio_trait_flourishing_automobile_industry
+				unlock_mio_trait_tooltip = BEL_mio_trait_knight_engines
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_FRC_Investements
+	icon = GFX_goal_generic_production2
+	cost = 10
+
+	relative_position_id = BEL_War_Bonds
+	x = 2
+	y = 3
+
+	prerequisite = { focus = BEL_Minerva focus = BEL_Brossel }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_FRC_Investements"
+		random_owned_controlled_state = {
+			prioritize = { 948 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = arms_factory size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = arms_factory
+				level = 2
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_fonderie_de_canons_de_liege_organization = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.2
+				add_mio_research_bonus = 0.05
+				unlock_mio_trait_tooltip = BEL_mio_trait_excellent_machining_tools
+			}
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_familleureux_organisation = {
+				unlock_mio_trait_tooltip = BEL_mio_trait_fonderie_de_canons_de_liege
+			}
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_la_brugeoise_organisation = {
+				unlock_mio_trait_tooltip = BEL_mio_trait_fonderie_de_canons_de_liege
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Galopin_Doctrine
+	icon = GFX_goal_generic_forceful_treaty
+	cost = 10
+
+	relative_position_id = BEL_War_Bonds
+	x = 4
+	y = 0
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Galopin_Doctrine"
+		add_ideas = BEL_Galopin_Doctrine
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = BEL_alexandre_galopin_advisor
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Brussels_Oostende
+	icon = GFX_focus_BEL_engine_of_the_economy
+	cost = 10
+
+	relative_position_id = BEL_Galopin_Doctrine
+	x = 1
+	y = 1
+
+	prerequisite = { focus = BEL_Galopin_Doctrine }
+
+	ai_will_do = { factor = 90 }
+
+	available = {
+		controls_state = 925
+		controls_state = 948
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Brussels_Oostende"
+		925 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		948 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Schelle
+	icon = GFX_goal_Schelle
+	cost = 5
+
+	relative_position_id = BEL_Galopin_Doctrine
+	x = 1
+	y = 2
+
+	prerequisite = { focus = BEL_Brussels_Oostende }
+	available = { controls_state = 925 }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Schelle"
+		add_ideas = BEL_Schelle_Power
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Antwerp
+	icon = GFX_goal_generic_shipyard
+	cost = 10
+
+	relative_position_id = BEL_Galopin_Doctrine
+	x = 0
+	y = 3
+
+	prerequisite = { focus = BEL_Schelle }
+
+	ai_will_do = { factor = 90 }
+
+	available = {
+		OR = {
+			has_completed_focus = BEL_Invest_Liege_Economic_Zone
+			has_completed_focus = BEL_Sixth_Solvay_Congress
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Antwerp"
+		random_owned_controlled_state = {
+			prioritize = { 925 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = dockyard size > 1 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = dockyard
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Shipping
+	icon = GFX_focus_BEL_cockerill_shipyards
+	cost = 5
+
+	relative_position_id = BEL_Antwerp
+	x = 1
+	y = 1
+
+	prerequisite = { focus = BEL_Antwerp }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Shipping"
+		if = {
+			limit = { has_completed_focus = BEL_Invest_Liege_Economic_Zone }
+			add_ideas = BEL_Shipping_Dependence
+		}
+		else_if = {
+			limit = { has_completed_focus = BEL_Sixth_Solvay_Congress }
+			if = {
+				limit = { has_idea = BEL_black_monday_II }
+				remove_ideas = BEL_black_monday_II
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = BEL_black_monday
+					add_idea = BEL_black_monday_II
+				}
+			}
+		}
+		else = {
+			custom_effect_tooltip = {
+				localization_key = tooltip_if_focus_completed
+				FOCUS = BEL_Invest_Liege_Economic_Zone
+			}
+			effect_tooltip = { add_ideas = BEL_Shipping_Dependence }
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = {
+				localization_key = tooltip_if_focus_completed
+				FOCUS = BEL_Sixth_Solvay_Congress
+			}
+			effect_tooltip = {
+				if = {
+					limit = { has_idea = BEL_black_monday_II }
+					remove_ideas = BEL_black_monday_II
+					custom_effect_tooltip = tooltip_white_line
+				}
+				else = {
+					swap_ideas = {
+						remove_idea = BEL_black_monday
+						add_idea = BEL_black_monday_II
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			mio:BEL_cockerill_scheepwerfen_organisation = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.2
+				add_mio_research_bonus = 0.05
+				unlock_mio_trait_tooltip = BEL_mio_trait_global_trade_hub
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Diamant
+	icon = GFX_focus_CONGO_bakwanga_mine
+	cost = 5
+
+	relative_position_id = BEL_Antwerp
+	x = -1
+	y = 1
+
+	prerequisite = { focus = BEL_Antwerp }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Diamant"
+		if = {
+			limit = { has_completed_focus = BEL_Invest_Liege_Economic_Zone }
+			add_ideas = BEL_Diamant_Sector
+		}
+		else_if = {
+			limit = { has_completed_focus = BEL_Sixth_Solvay_Congress }
+			if = {
+				limit = { has_idea = BEL_black_monday_II }
+				remove_ideas = BEL_black_monday_II
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = BEL_black_monday
+					add_idea = BEL_black_monday_II
+				}
+			}
+		}
+		else = {
+			custom_effect_tooltip = {
+				localization_key = tooltip_if_focus_completed
+				FOCUS = BEL_Invest_Liege_Economic_Zone
+			}
+			effect_tooltip = { add_ideas = BEL_Diamant_Sector }
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = {
+				localization_key = tooltip_if_focus_completed
+				FOCUS = BEL_Sixth_Solvay_Congress
+			}
+			effect_tooltip = {
+				if = {
+					limit = { has_idea = BEL_black_monday_II }
+					remove_ideas = BEL_black_monday_II
+				}
+				else = {
+					swap_ideas = {
+						remove_idea = BEL_black_monday
+						add_idea = BEL_black_monday_II
+					}
+				}
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		random_owned_controlled_state = {
+			prioritize = { 925 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Zeebrugge
+	icon = GFX_goal_generic_construct_naval_dockyard
+	cost = 10
+
+	relative_position_id = BEL_Antwerp
+	x = -3
+	y = 1
+
+	prerequisite = { focus = BEL_Antwerp }
+	prerequisite = { focus = BEL_FRC_Investements }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Zeebrugge"
+		random_owned_controlled_state = {
+			prioritize = { 6 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = dockyard size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Industrial_Committee
+	icon = GFX_goal_generic_improve_industry
+	cost = 10
+
+	relative_position_id = BEL_Galopin_Doctrine
+	x = 3
+	y = 0
+
+	ai_will_do = { factor = 90 }
+
+	available = {
+		has_idea = BEL_black_monday
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Industrial_Committee"
+		add_tech_bonus = {
+			name = BEL_Industrial_Committee
+			bonus = 1
+			uses = 2
+			category = industry
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Invest_Liege_Economic_Zone
+	icon = GFX_goal_economic_control
+	cost = 10
+
+	relative_position_id = BEL_Industrial_Committee
+	x = 0
+	y = 1
+
+	prerequisite = { focus = BEL_Industrial_Committee }
+	mutually_exclusive = { focus = BEL_Sixth_Solvay_Congress }
+
+	ai_will_do = { factor = 90 }
+
+	available = {
+		controls_state = 948
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Invest_Liege_Economic_Zone"
+		add_tech_bonus = {
+			name = BEL_Invest_Liege_Economic_Zone
+			bonus = 0.5
+			uses = 2
+			category = industry
+		}
+		random_owned_controlled_state = {
+			prioritize = { 948 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = tooltip_increases_focus_effects
+		custom_effect_tooltip = {
+			localization_key = tooltip_yellow_text
+			TEXT = BEL_Diamant
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_yellow_text
+			TEXT = BEL_Shipping
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Seraing
+	icon = GFX_focus_generic_steel
+	cost = 10
+
+	relative_position_id = BEL_Industrial_Committee
+	x = 0
+	y = 2
+
+	prerequisite = { focus = BEL_Invest_Liege_Economic_Zone }
+
+	ai_will_do = { factor = 90 }
+
+	available = {
+		948 = { is_owned_and_controlled_by = ROOT }
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Seraing"
+		random_owned_controlled_state = {
+			prioritize = { 948 }
+			limit = {
+				is_core_of = ROOT
+				is_valid_state_for_development = yes
+				free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		add_resource = {
+			type = steel
+			amount = 26
+			state = 948
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Fund_Cimentieres
+	icon = GFX_goal_generic_construction
+	cost = 10
+
+	relative_position_id = BEL_Industrial_Committee
+	x = -1
+	y = 3
+
+	prerequisite = { focus = BEL_Invest_Liege_Economic_Zone }
+	prerequisite = { focus = BEL_Schelle }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Fund_Cimentieres"
+		swap_ideas = {
+			remove_idea = BEL_black_monday
+			add_idea = BEL_Cement_Export
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+###Research Revised
+shared_focus = {
+	id = BEL_Solvay_Institute
+	icon = GFX_focus_research
+	cost = 5
+
+	relative_position_id = BEL_Industrial_Committee
+	x = 3
+	y = 0
+
+	ai_will_do = { factor = 50 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Solvay_Institute"
+		add_ideas = BEL_Solvay_Institute_idea
+	}
+}
+
+shared_focus = {
+	id = BEL_Sixth_Solvay_Congress
+	icon = GFX_goal_generic_scientific_exchange
+	cost = 5
+
+	relative_position_id = BEL_Solvay_Institute
+	x = 0
+	y = 1
+
+	prerequisite = { focus = BEL_Solvay_Institute }
+	mutually_exclusive = { focus = BEL_Invest_Liege_Economic_Zone }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Sixth_Solvay_Congress"
+		swap_ideas = {
+			remove_idea = BEL_Solvay_Institute_idea
+			add_idea = BEL_Solvay_Institute2
+		}
+		custom_effect_tooltip = tooltip_reduces_focus_effects
+		custom_effect_tooltip = {
+			localization_key = tooltip_yellow_text
+			TEXT = BEL_Diamant
+		}
+		custom_effect_tooltip = {
+			localization_key = tooltip_yellow_text
+			TEXT = BEL_Shipping
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Baekelandt_Program
+	icon = GFX_focus_rocketry
+	cost = 5
+
+	relative_position_id = BEL_Solvay_Institute
+	x = -1
+	y = 2
+
+	prerequisite = { focus = BEL_Sixth_Solvay_Congress }
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Baekelandt_Program"
+		add_breakthrough_progress = {
+			specialization = specialization_air
+			value = 0.5
+		}
+		custom_effect_tooltip = tooltip_white_line
+		add_tech_bonus = {
+			name = BEL_Baekelandt_Program
+			bonus = 0.75
+			uses = 2
+			category = jet_technology
+			category = rocketry
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Antwerpse_Raffinage
+	icon = GFX_goal_generic_oil_refinery
+	cost = 5
+
+	relative_position_id = BEL_Solvay_Institute
+	x = 1
+	y = 2
+
+	prerequisite = { focus = BEL_Sixth_Solvay_Congress }
+	available = {
+		has_tech = synth_oil_experiments
+		925 = { is_owned_and_controlled_by = ROOT }
+	}
+
+	ai_will_do = { factor = 90 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Antwerpse_Raffinage"
+		add_tech_bonus = {
+			name = BEL_Antwerpse_Raffinage
+			bonus = 2
+			uses = 1
+			category = synth_resources
+		}
+		random_owned_controlled_state = {
+			prioritize = { 925 }
+			limit = {
+				is_core_of = ROOT
+				free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+			}
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = synthetic_refinery
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Uranium_Mining
+	icon = GFX_focus_wonderweapons
+	cost = 10
+
+	relative_position_id = BEL_Solvay_Institute
+	x = -1
+	y = 3
+
+	prerequisite = { focus = BEL_Baekelandt_Program }
+
+	ai_will_do = {
+		factor = 90
+		modifier = {
+			factor = 0
+			date < 1939.1.1
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Uranium_Mining"
+		if = {
+			limit = {
+				NOT = { has_tech = atomic_research }
+				NOT = { is_researching_technology = atomic_research }
+			}
+			add_tech_bonus = {
+				name = BEL_Uranium_Mining
+				bonus = 0.5
+				uses = 1
+				technology = atomic_research
+			}
+			add_breakthrough_progress = {
+				specialization = specialization_nuclear
+				value = 0.25
+			}
+		}
+		else = {
+			add_breakthrough_progress = {
+				specialization = specialization_nuclear
+				value = 0.75
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+#Revised Land Army
+
+shared_focus = {
+	id = BEL_Secondary_Military
+	icon = GFX_goal_Deutsches_Heer
+	cost = 5
+
+	relative_position_id = BEL_War_Bonds
+	x = 17
+	y = 0
+
+	mutually_exclusive = {
+		focus = BEL_Independent_Forces
+	}
+	available = {
+		has_completed_focus = BEL_Evaluate_State_Budget
+		is_ally_with = GER
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Secondary_Military"
+		army_experience = 15
+		add_doctrine_cost_reduction = {
+			name = BEL_Secondary_Military
+			cost_reduction = 0.75
+			uses = 1
+			category = land_doctrine
+		}
+		hidden_effect = {
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+	search_filters = { FOCUS_FILTER_ARMY_XP }
+}
+
+shared_focus = {
+	id = BEL_Air_Defence_of_the_Territory
+	icon = GFX_goal_generic_fortify_city
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = -3
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Secondary_Military
+	}
+	available = {
+		925 = { is_owned_and_controlled_by = ROOT }
+		34 = { is_owned_and_controlled_by = ROOT }
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Air_Defence_of_the_Territory"
+		925 = {
+			add_building_construction = {
+				type = anti_air_building
+				level = 1
+				instant_build = yes
+			}
+		}
+		34 = {
+			add_building_construction = {
+				type = anti_air_building
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_ideas = BEL_Air_Defence_Of_Territory
+	}
+	search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+}
+
+shared_focus = {
+	id = BEL_Air_Support_for_Germany
+	icon = GFX_focus_generic_air_defense
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = -3
+	y = 2
+
+	prerequisite = {
+		focus = BEL_Air_Defence_of_the_Territory
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Air_Support_for_Germany"
+		add_tech_bonus = {
+			name = BEL_Air_Support_for_Germany
+			bonus = 1
+			uses = 1
+			category = light_fighter
+			category = cat_heavy_fighter
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Cover_The_Fortress_Line
+	icon = GFX_focus_BEL_better_than_maginot
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = -3
+	y = 3
+
+	prerequisite = {
+		focus = BEL_Air_Support_for_Germany
+	}
+	available = {
+		6 = { is_owned_and_controlled_by = ROOT }
+		34 = { is_owned_and_controlled_by = ROOT }
+		925 = { is_owned_and_controlled_by = ROOT }
+		948 = { is_owned_and_controlled_by = ROOT }
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Cover_The_Fortress_Line"
+		6 = {
+			add_building_construction = {
+				type = anti_air_building
+				level = 1
+				instant_build = yes
+			}
+		}
+		34 = {
+			add_building_construction = {
+				type = anti_air_building
+				level = 1
+				instant_build = yes
+			}
+		}
+		925 = {
+			add_building_construction = {
+				type = anti_air_building
+				level = 1
+				instant_build = yes
+			}
+		}
+		948 = {
+			add_building_construction = {
+				type = anti_air_building
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Feldgendarmerie
+	icon = GFX_goal_secret_police
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Secondary_Military
+	}
+	mutually_exclusive = {
+		focus = BEL_The_Vlaamse_Wacht
+	}
+	available = {
+		OR = {
+			has_country_flag = Small_Vlaamse_Wacht
+			has_country_flag = Feldgendarmerie
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Feldgendarmerie"
+		swap_ideas = {
+			remove_idea = BEL_Language_Trouble
+			add_idea = BEL_Feldgendarmerie
+		}
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+}
+
+shared_focus = {
+	id = BEL_Exempt_Walloons_From_the_Army
+	icon = GFX_goal_generic_forceful_treaty
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = -1
+	y = 2
+
+	prerequisite = {
+		focus = BEL_Feldgendarmerie
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Exempt_Walloons_From_the_Army"
+		swap_ideas = {
+			remove_idea = BEL_Feldgendarmerie
+			add_idea = BEL_Exempt_Walloons
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESISTANCE FOCUS_FILTER_STABILITY FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = BEL_The_Vlaamse_Wacht
+	icon = GFX_focus_BEL_flanders_ascendant
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Secondary_Military
+	}
+	available = {
+		NOT = {
+			has_country_flag = Small_Vlaamse_Wacht
+			has_country_flag = Feldgendarmerie
+		}
+	}
+	mutually_exclusive = {
+		focus = BEL_Feldgendarmerie
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_The_Vlaamse_Wacht"
+		swap_ideas = {
+			remove_idea = BEL_Language_Trouble
+			add_idea = BEL_Vlaamse_Wacht
+		}
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_RESISTANCE FOCUS_FILTER_STABILITY }
+}
+
+shared_focus = {
+	id = BEL_Memories_of_the_Yzer
+	icon = GFX_goal_BEL_Belgian_Rearmement2
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = 1
+	y = 2
+
+	prerequisite = {
+		focus = BEL_The_Vlaamse_Wacht
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Memories_of_the_Yzer"
+		swap_ideas = {
+			remove_idea = BEL_Vlaamse_Wacht
+			add_idea = BEL_Flemish_Pride
+		}
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_RESISTANCE }
+}
+
+shared_focus = {
+	id = BEL_Increase_Flemish_Conscription
+	icon = GFX_goal_national_mobilization
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = 0
+	y = 3
+
+	prerequisite = {
+		focus = BEL_Memories_of_the_Yzer
+		focus = BEL_Exempt_Walloons_From_the_Army
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Increase_Flemish_Conscription"
+		add_ideas = BEL_Increased_Recruitement
+	}
+	search_filters = { FOCUS_FILTER_MANPOWER }
+}
+
+shared_focus = {
+	id = BEL_Joint_Doctrine_Developement
+	icon = GFX_goal_tfv_generic_tech_sharing
+	cost = 8
+
+	relative_position_id = BEL_Secondary_Military
+	x = -2
+	y = 4
+
+	prerequisite = {
+		focus = BEL_Increase_Flemish_Conscription
+	}
+	available = {
+		is_in_faction_with = GER
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Joint_Doctrine_Developement"
+		army_experience = 25
+		air_experience = 25
+		add_mastery_bonus = {
+			name = BEL_Joint_Doctrine_Developement
+			bonus = 0.1
+			days = 365
+			folder = land
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Trench_War
+	icon = GFX_goal_FLA_Poppys
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = -3
+	y = 5
+
+	prerequisite = {
+		focus = BEL_Joint_Doctrine_Developement
+	}
+	prerequisite = {
+		focus = BEL_Cover_The_Fortress_Line
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Trench_War"
+		every_owned_state = {
+			display_individual_scopes = yes
+			limit = {
+				is_core_of = ROOT
+				is_in_home_area = yes
+				any_neighbor_state = {
+					owner = {
+						is_in_faction = yes
+						NOT = { is_ally_with = ROOT }
+					}
+				}
+			}
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					province = {
+						all_provinces = yes
+						limit_to_border = yes
+					}
+					level = 1
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_border_provinces
+					BUILDING = bunker
+					NUMBER = 1
+				}
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Increase_FN_Funding
+	icon = GFX_goal_generic_small_arms
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = 2
+	y = 4
+
+	prerequisite = {
+		focus = BEL_Increase_Flemish_Conscription
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Increase_FN_Funding"
+		add_tech_bonus = {
+			name = BEL_Increase_FN_Funding
+			bonus = 1
+			uses = 1
+			category = infantry_weapons
+		}
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_1
+			amount = 2000
+			producer = BEL
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Mobilise_the_Reserves
+	icon = GFX_goal_BEL_Valiant_Defence3
+	cost = 6
+
+	relative_position_id = BEL_Secondary_Military
+	x = 0
+	y = 4
+
+	prerequisite = {
+		focus = BEL_Increase_Flemish_Conscription
+	}
+	ai_will_do = { factor = 50 }
+	available = {
+		OR = {
+			has_war = yes
+			threat > 0.5
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Mobilise_the_Reserves"
+		add_war_support = 0.1
+		add_manpower = 100000
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Last_Stand
+	icon = GFX_goal_generic_defence
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = 1
+	y = 5
+
+	prerequisite = {
+		focus = BEL_Mobilise_the_Reserves
+	}
+	available = {
+		has_war = yes
+	}
+	mutually_exclusive = {
+		focus = BEL_Push_Forwards
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Last_Stand"
+		add_timed_idea = {
+			idea = BEL_Last_Stand
+			days = 100
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Push_Forwards
+	icon = GFX_goal_generic_military_sphere
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = -1
+	y = 5
+
+	prerequisite = {
+		focus = BEL_Mobilise_the_Reserves
+	}
+	available = {
+		has_war = yes
+	}
+	mutually_exclusive = {
+		focus = BEL_Last_Stand
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Push_Forwards"
+		add_timed_idea = {
+			idea = BEL_Push_Forwards
+			days = 100
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Meuse_Line
+	icon = GFX_focus_BEL_national_redoubt_at_antwerp
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = 4
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Independent_Forces
+		focus = BEL_Secondary_Military
+	}
+	available = {
+		948 = { is_owned_and_controlled_by = ROOT }
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Meuse_Line"
+		948 = {
+			add_building_construction = {
+				type = bunker
+				level = 2
+				province = 9444
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = bunker
+				level = 2
+				province = 6537
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_KW_Line
+	icon = GFX_focus_BEL_koningshooikt_wavre_line
+	cost = 5
+
+	relative_position_id = BEL_Meuse_Line
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Meuse_Line
+	}
+	available = {
+		NOT = {
+			is_in_faction_with = GER
+		}
+		34 = { is_owned_and_controlled_by = ROOT }
+		925 = { is_owned_and_controlled_by = ROOT }
+	}
+	mutually_exclusive = {
+		focus = BEL_Expansion_Lundendorf_Line
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_KW_Line"
+		34 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 3516
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = bunker
+					NUMBER = 2
+					VP = 3516
+				}
+			}
+			add_building_construction = {
+				type = bunker
+				level = 2
+				province = 13081
+				instant_build = yes
+			}
+		}
+		925 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 516
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = bunker
+					NUMBER = 2
+					VP = 516
+				}
+			}
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 6598
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = bunker
+					NUMBER = 2
+					VP = 6598
+				}
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Expansion_Lundendorf_Line
+	icon = GFX_goal_generic_construct_military
+	cost = 5
+
+	relative_position_id = BEL_Meuse_Line
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Meuse_Line
+	}
+	available = {
+		NOT = { is_in_faction_with = FRA }
+		6 = { is_owned_and_controlled_by = ROOT } #Flanders
+		if = {
+			limit = { owns_state = 29 }
+			29 = { is_owned_and_controlled_by = ROOT } #Dunkirk
+		}
+		34 = { is_owned_and_controlled_by = ROOT } #Hainaut
+		948 = { is_owned_and_controlled_by = ROOT } #Liège
+	}
+	mutually_exclusive = {
+		focus = BEL_KW_Line
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Expansion_Lundendorf_Line"
+		if = {
+			limit = { owns_state = 29 }
+			29 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 1
+						province = 575
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 1
+						VP = 575
+					}
+				}
+			}
+		}
+		6 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					level = 1
+					province = 6446
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = bunker
+					NUMBER = 1
+					VP = 6446
+				}
+			}
+			add_building_construction = {
+				type = bunker
+				level = 1
+				province = 3576
+				instant_build = yes
+			}
+		}
+		34 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					level = 1
+					province = 3516
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = bunker
+					NUMBER = 1
+					VP = 3516
+				}
+			}
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					level = 1
+					province = 9536
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = bunker
+					NUMBER = 1
+					VP = 9536
+				}
+			}
+		}
+		948 = {
+			add_building_construction = {
+				type = bunker
+				level = 1
+				province = 9444
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Chasseurs_Ardennais
+	icon = GFX_focus_BEL_resist_and_bite
+	cost = 5
+
+	relative_position_id = BEL_KW_Line
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Expansion_Lundendorf_Line
+		focus = BEL_KW_Line
+	}
+	available = {
+		948 = { is_owned_and_controlled_by = ROOT }
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Chasseurs_Ardennais"
+		enable_tech_improved_recon_units = yes
+		custom_effect_tooltip = tooltip_white_line
+		add_tech_bonus = {
+			name = BEL_Chasseurs_Ardennais
+			bonus = 2
+			uses = 1
+			category = recon_tech
+		}
+		custom_effect_tooltip = tooltip_white_line
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_create_division_template
+				NAME = "Chasseurs Ardennais"
+				LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 6 }
+				LINE_2 = { localization_key = line_battalion_tt NAME = light_tank_destroyer_brigade ICON = GFX_unit_light_tank_destroyer_brigade_icon_small COUNT = 1 }
+				LINE_3 = { localization_key = line_battalion_tt NAME = motorized ICON = GFX_unit_motorized_icon_small COUNT = 1 }
+				SUPPORT_1 = { localization_key = support_battalion_tt NAME = recon ICON = GFX_unit_recon_icon_small }
+				SUPPORT_2 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+				SUPPORT_3 = { localization_key = support_battalion_tt NAME = anti_tank ICON = GFX_unit_anti_tank_icon_small }
+				SUPPORT_4 = { localization_key = support_battalion_tt NAME = field_hospital ICON = GFX_unit_field_hospital_icon_small }
+			}
+			if = {
+				limit = { has_template = "Chasseurs Ardennais" }
+				delete_unit_template_and_units = { division_template = "Chasseurs Ardennais" disband = yes } #no cheating
+			}
+			division_template = {
+				name = "Chasseurs Ardennais"
+				division_names_group = BEL_MTN_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+					infantry = { x = 1 y = 2 }
+					light_tank_destroyer_brigade = { x = 2 y = 0 }
+					motorized = { x = 3 y = 0 }
+				}
+				support = {
+					recon = { x = 0 y = 0 }
+					engineer = { x = 0 y = 1 }
+					anti_tank = { x = 0 y = 2 }
+					field_hospital = { x = 0 y = 3 }
+				}
+			}
+		}
+		random_owned_controlled_state = {
+			prioritize = { 948 }
+			limit = { valid_state_for_spawning_friendly_unit = yes }
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_unit
+					TYPE = "Chasseurs Ardennais"
+				}
+				create_unit = {
+					division = "division_template = \"Chasseurs Ardennais\" start_experience_factor = 0.6"
+					owner = ROOT
+				}
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Independent_Forces
+	icon = GFX_goal_BEL_army
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = 8
+	y = 0
+
+	mutually_exclusive = {
+		focus = BEL_Secondary_Military
+	}
+	available = {
+		if = {
+			limit = { NOT = { has_focus_tree = BEL_Independent_focus } }
+			has_completed_focus = BEL_Evaluate_State_Budget
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Independent_Forces"
+		army_experience = 25
+		add_doctrine_cost_reduction = {
+			name = BEL_Independent_Forces
+			cost_reduction = 0.5
+			uses = 2
+			category = land_doctrine
+		}
+		hidden_effect = {
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+	search_filters = { FOCUS_FILTER_ARMY_XP }
+}
+
+shared_focus = {
+	id = BEL_Flemish_Walloon_Officers
+	icon = GFX_goal_Bilingual_Staff
+	cost = 5
+
+	relative_position_id = BEL_Independent_Forces
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Independent_Forces
+	}
+	mutually_exclusive = {
+		focus = BEL_German_Favoritism
+	}
+	ai_will_do = { factor = 1 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Flemish_Walloon_Officers"
+		remove_ideas = BEL_Language_Trouble
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS }
+}
+
+shared_focus = {
+	id = BEL_War_of_Defence
+	icon = GFX_goal_nested_fortifications
+	cost = 5
+
+	relative_position_id = BEL_Flemish_Walloon_Officers
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Flemish_Walloon_Officers
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_War_of_Defence"
+		add_tech_bonus = {
+			name = BEL_War_of_Defence
+			bonus = 1
+			uses = 1
+			category = infantry_weapons
+			category = artillery
+		}
+		add_mastery_bonus = {
+			name = BEL_War_of_Defence
+			bonus = 0.1
+			days = 365
+			track = infantry
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_German_Favoritism
+	icon = GFX_goal_German_Staff
+	cost = 5
+
+	relative_position_id = BEL_Independent_Forces
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Independent_Forces
+	}
+	available = {
+		is_subject_of = GER
+	}
+	mutually_exclusive = {
+		focus = BEL_Flemish_Walloon_Officers
+	}
+	ai_will_do = { factor = 1 }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_German_Favoritism"
+		add_ideas = BEL_German_Officers
+	}
+	search_filters = { FOCUS_FILTER_ARMY_BONUS }
+}
+
+shared_focus = {
+	id = BEL_Strike_First_Doctrine
+	icon = GFX_goal_planning_bonus
+	cost = 5
+
+	relative_position_id = BEL_German_Favoritism
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = BEL_German_Favoritism
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Strike_First_Doctrine"
+		add_tech_bonus = {
+			name = BEL_Strike_First_Doctrine
+			bonus = 1
+			uses = 1
+			category = armor
+		}
+		add_mastery_bonus = {
+			name = BEL_Strike_First_Doctrine
+			bonus = 0.1
+			days = 365
+			track = armor
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Expansion_of_the_Academy
+	icon = GFX_goal_generic_scientific_exchange
+	cost = 5
+
+	relative_position_id = BEL_Independent_Forces
+	x = 0
+	y = 3
+
+	prerequisite = {
+		focus = BEL_Strike_First_Doctrine
+		focus = BEL_War_of_Defence
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Expansion_of_the_Academy"
+		add_ideas = KTG_Military_Academy
+	}
+}
+
+shared_focus = {
+	id = BEL_Small_arms_developement
+	icon = GFX_focus_secret_rearmament
+	cost = 5
+
+	relative_position_id = BEL_Expansion_of_the_Academy
+	x = -2
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Expansion_of_the_Academy
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Small_arms_developement"
+		add_tech_bonus = {
+			name = BEL_Small_arms_developement
+			bonus = 1
+			uses = 1
+			category = infantry_weapons
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_fabrique_nationale_organisation = { add_mio_funds = 2000 }
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Cooperation_with_the_Universities
+	icon = GFX_focus_research
+	cost = 5
+
+	relative_position_id = BEL_Chasseurs_Ardennais
+	x = 1
+	y = 2
+
+	prerequisite = {
+		focus = BEL_Increase_FN_Funding
+		focus = BEL_Small_arms_developement
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Cooperation_with_the_Universities"
+		add_research_slot_until_five = yes
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Enlarge_the_Military_Complex
+	icon = GFX_goal_generic_construct_mil_factory
+	cost = 5
+
+	relative_position_id = BEL_Chasseurs_Ardennais
+	x = -1
+	y = 2
+
+	prerequisite = {
+		focus = BEL_Increase_FN_Funding
+		focus = BEL_Small_arms_developement
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Enlarge_the_Military_Complex"
+		add_one_random_military_factory = yes
+		add_one_random_military_factory = yes
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_War_on_the_Horizon
+	icon = GFX_goal_BEL_Our_Place_In_The_World
+	cost = 5
+
+	relative_position_id = BEL_Expansion_of_the_Academy
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Expansion_of_the_Academy
+	}
+	available = {
+		OR = {
+			threat > 0.5
+			has_war = yes
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_War_on_the_Horizon"
+		increase_conscription = yes
+		custom_effect_tooltip = tooltip_white_line
+		increase_economic_mobilisation = yes
+	}
+}
+
+shared_focus = {
+	id = BEL_Distribute_Bycicles
+	icon = GFX_goal_bicycle_infantry
+	cost = 5
+
+	relative_position_id = BEL_War_on_the_Horizon
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_War_on_the_Horizon
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Distribute_Bycicles"
+		add_ideas = BEL_idea_bicycle_army
+	}
+}
+
+shared_focus = {
+	id = BEL_Minerva_Truck_Contract
+	icon = GFX_goal_generic_army_motorized
+	cost = 5
+
+	relative_position_id = BEL_War_on_the_Horizon
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_War_on_the_Horizon
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Minerva_Truck_Contract"
+		add_tech_bonus = {
+			name = BEL_Minerva_Truck_Contract
+			uses = 1
+			bonus = 1
+			ahead_reduction = 1.5
+			category = motorized_equipment
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_minerva_organisation = { add_mio_funds = 2000 }
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Artillery_Advances
+	icon = GFX_goal_generic_army_artillery
+	cost = 5
+
+	relative_position_id = BEL_Expansion_of_the_Academy
+	x = 2
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Expansion_of_the_Academy
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Artillery_Advances"
+		add_tech_bonus = {
+			name = BEL_Artillery_Advances
+			bonus = 0.5
+			uses = 2
+			category = artillery
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Mechanised_Forces
+	icon = GFX_goal_generic_build_tank
+	cost = 5
+
+	relative_position_id = BEL_Artillery_Advances
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Artillery_Advances
+	}
+	prerequisite = {
+		focus = BEL_Mobile_Defence_Stations
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Mechanised_Forces"
+		add_tech_bonus = {
+			name = BEL_Mechanised_Forces
+			bonus = 1
+			uses = 1
+			category = motorized_equipment
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Anti_Tank_Focus
+	icon = GFX_goal_generic_army_artillery2
+	cost = 5
+
+	relative_position_id = BEL_Independent_Forces
+	x = 3
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Independent_Forces
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Anti_Tank_Focus"
+		add_ideas = BEL_Anti_Tank_Production
+	}
+}
+
+shared_focus = {
+	id = BEL_T13_Success
+	icon = GFX_goal_light_tanks
+	cost = 5
+
+	relative_position_id = BEL_Anti_Tank_Focus
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Anti_Tank_Focus
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_T13_Success"
+		swap_ideas = {
+			remove_idea = BEL_Anti_Tank_Production
+			add_idea = BEL_T13_Production
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Mobile_Defence_Stations
+	icon = GFX_goal_generic_army_tanks
+	cost = 5
+
+	relative_position_id = BEL_T13_Success
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = BEL_T13_Success
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Mobile_Defence_Stations"
+		add_tech_bonus = {
+			name = BEL_Mobile_Defence_Stations
+			bonus = 1
+			uses = 1
+			category = armor
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+### Naval Tree ###
+
+shared_focus = {
+	id = BEL_Rely_on_the_Kriegsmarine
+	icon = GFX_goal_Kaiserliche_Marine
+	cost = 5
+
+	relative_position_id = BEL_Secondary_Military
+	x = -4
+	y = 7
+
+	mutually_exclusive = { focus = BEL_Fleet_of_our_own }
+
+	available_if_capitulated = yes
+	available = {
+		has_completed_focus = BEL_Evaluate_State_Budget
+		is_ally_with = GER
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Rely_on_the_Kriegsmarine"
+		navy_experience = 15
+		add_doctrine_cost_reduction = {
+			name = BEL_Support_the_Fleet
+			cost_reduction = 0.75
+			uses = 1
+			category = naval_doctrine
+		}
+		hidden_effect = {
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+	search_filters = { FOCUS_FILTER_NAVY_XP }
+}
+
+shared_focus = {
+	id = BEL_Land_Based_Support
+	icon = GFX_goal_generic_construct_military
+	cost = 5
+
+	relative_position_id = BEL_Rely_on_the_Kriegsmarine
+	x = -2
+	y = 1
+
+	prerequisite = { focus = BEL_Rely_on_the_Kriegsmarine }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Land_Based_Support"
+		every_owned_state = {
+			display_individual_scopes = yes
+			limit = {
+				is_core_of = ROOT
+				is_controlled_by = ROOT
+				is_coastal = yes
+			}
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = coastal_bunker
+					province = {
+						all_provinces = yes
+						limit_to_coastal = yes
+					}
+					level = 3
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_coastal_provinces
+					BUILDING = coastal_bunker
+					NUMBER = 3
+				}
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Expansion_of_the_Zeebrugge_Harbour
+	icon = GFX_goal_generic_construct_naval_dockyard
+	cost = 5
+
+	relative_position_id = BEL_Rely_on_the_Kriegsmarine
+	x = -2
+	y = 3
+
+	prerequisite = { focus = BEL_Land_Based_Support }
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Expansion_of_the_Zeebrugge_Harbour"
+		every_owned_state = {
+			display_individual_scopes = yes
+			limit = {
+				is_core_of = ROOT
+				is_controlled_by = ROOT
+				is_coastal = yes
+			}
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = naval_base
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+					level = 2
+					instant_build = yes
+				}
+				tooltip = {
+					localization_key = tooltip_add_naval_base_levels
+					BUILDING = naval_base
+					NUMBER = 2
+				}
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Destroyer_Effort
+	icon = GFX_goal_generic_build_navy
+	cost = 5
+
+	relative_position_id = BEL_Rely_on_the_Kriegsmarine
+	x = 0
+	y = 1
+
+	prerequisite = { focus = BEL_Rely_on_the_Kriegsmarine }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+		has_tech = early_ship_hull_light
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Destroyer_Effort"
+		add_tech_bonus = {
+			name = BEL_Destroyer_Effort
+			bonus = 0.75
+			uses = 2
+			category = dd_tech
+		}
+		custom_effect_tooltip = tooltip_white_line
+		BEL_create_destroyer_variant = yes
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Submarine_Program
+	icon = GFX_goal_generic_navy_submarine
+	cost = 5
+
+	relative_position_id = BEL_Rely_on_the_Kriegsmarine
+	x = -1
+	y = 2
+
+	prerequisite = { focus = BEL_Destroyer_Effort }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+		has_tech = early_ship_hull_submarine
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Submarine_Program"
+		add_tech_bonus = {
+			name = BEL_Submarine_Program
+			bonus = 0.75
+			uses = 2
+			category = ss_tech
+		}
+		custom_effect_tooltip = tooltip_white_line
+		BEL_create_submarine_variant = yes
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Patrol_the_Coast
+	icon = GFX_goal_generic_coastal_navy
+	cost = 5
+
+	relative_position_id = BEL_Rely_on_the_Kriegsmarine
+	x = 1
+	y = 2
+
+	prerequisite = { focus = BEL_Destroyer_Effort }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Patrol_the_Coast"
+		add_one_random_dockyard = yes
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Train_with_the_Kaiserliche_Marine
+	icon = GFX_goal_generic_navy_battleship
+	cost = 5
+
+	relative_position_id = BEL_Rely_on_the_Kriegsmarine
+	x = 1
+	y = 3
+
+	prerequisite = { focus = BEL_Patrol_the_Coast }
+
+	available_if_capitulated = yes
+
+	available = {
+		has_navy_size = { size > 0 }
+		has_naval_grand_doctrine = yes
+		GER = { has_naval_grand_doctrine = yes }
+	}
+	bypass = {
+		NOT = { is_in_faction_with = GER }
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Train_with_the_Kaiserliche_Marine"
+		add_mastery = {
+			amount = 100
+			folder = naval
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+####Fleet in Being
+
+shared_focus = {
+	id = BEL_Fleet_of_our_own
+	icon = GFX_goal_BEL_navy
+	cost = 5
+
+	relative_position_id = BEL_Rely_on_the_Kriegsmarine
+	x = 4
+	y = 0
+
+	mutually_exclusive = { focus = BEL_Rely_on_the_Kriegsmarine }
+
+	available = {
+		if = {
+			limit = { NOT = { has_focus_tree = BEL_Independent_focus } }
+			has_completed_focus = BEL_Evaluate_State_Budget
+		}
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Fleet_of_our_own"
+		navy_experience = 25
+		add_doctrine_cost_reduction = {
+			name = BEL_Support_the_Fleet
+			cost_reduction = 0.5
+			uses = 2
+			category = naval_doctrine
+		}
+		hidden_effect = {
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+	search_filters = { FOCUS_FILTER_NAVY_XP }
+}
+
+shared_focus = {
+	id = BEL_Cruiser_Effort
+	icon = GFX_goal_generic_navy_cruiser
+	cost = 5
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = -1
+	y = 1
+
+	prerequisite = { focus = BEL_Fleet_of_our_own }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+		has_tech = early_ship_hull_cruiser
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Cruiser_Effort"
+		add_tech_bonus = {
+			name = BEL_Cruiser_Effort
+			bonus = 0.75
+			uses = 2
+			category = ca_tech
+		}
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = { has_tech = advanced_ship_hull_cruiser }
+			create_equipment_variant = {
+				name = "Antverpia Class"
+				type = ship_hull_cruiser_4
+				name_group = BEL_CITIES_THEME
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_battery_2
+					fixed_ship_anti_air_slot = ship_anti_air_2
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_1
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_3
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					fixed_ship_secondaries_slot = ship_secondaries_2
+					front_1_custom_slot = ship_anti_air_2
+					mid_1_custom_slot = ship_torpedo_2
+					mid_2_custom_slot = ship_airplane_launcher_1
+					rear_1_custom_slot = ship_light_battery_2
+				}
+				design_team = mio:BEL_cockerill_scheepwerfen_organisation
+			}
+			set_temp_variable = { level = 4 }
+		}
+		else_if = {
+			limit = { has_tech = improved_ship_hull_cruiser }
+			create_equipment_variant = {
+				name = "Antverpia Class"
+				type = ship_hull_cruiser_3
+				name_group = BEL_CITIES_THEME
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_3
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					front_1_custom_slot = ship_anti_air_1
+					mid_1_custom_slot = ship_torpedo_1
+					mid_2_custom_slot = ship_airplane_launcher_1
+					rear_1_custom_slot = ship_light_battery_1
+				}
+				design_team = mio:BEL_cockerill_scheepwerfen_organisation
+			}
+			set_temp_variable = { level = 3 }
+		}
+		else_if = {
+			limit = { has_tech = basic_ship_hull_cruiser }
+			create_equipment_variant = {
+				name = "Antverpia Class"
+				type = ship_hull_cruiser_2
+				name_group = BEL_CITIES_THEME
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_2
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					front_1_custom_slot = ship_anti_air_1
+					mid_1_custom_slot = ship_torpedo_1
+					mid_2_custom_slot = ship_airplane_launcher_1
+					rear_1_custom_slot = ship_light_battery_1
+				}
+				design_team = mio:BEL_cockerill_scheepwerfen_organisation
+			}
+			set_temp_variable = { level = 2 }
+		}
+		else = {
+			create_equipment_variant = {
+				name = "Antverpia Class"
+				type = ship_hull_cruiser_1
+				name_group = BEL_CITIES_THEME
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_1
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					fixed_ship_secondaries_slot = ship_secondaries_1
+				}
+				design_team = mio:BEL_cockerill_scheepwerfen_organisation
+			}
+			set_temp_variable = { level = 1 }
+		}
+		meta_effect = {
+			text = {
+				add_equipment_production = {
+					equipment = {
+						type = [HULL]
+						version_name = "Antverpia Class"
+					}
+					progress = 0.75
+					industrial_manufacturer = mio:BEL_cockerill_scheepwerfen_organisation
+				}
+			}
+			HULL = "ship_hull_cruiser_[?level]"
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Support_the_Fleet
+	icon = GFX_goal_generic_navy_doctrines_tactics
+	cost = 5
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = -1
+	y = 2
+
+	prerequisite = { focus = BEL_Cruiser_Effort }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Support_the_Fleet"
+		add_one_random_dockyard = yes
+		add_one_random_dockyard = yes
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Adalberts_Dream
+	icon = GFX_focus_BEL_re_establish_belgian_navy
+	cost = 5
+	dynamic = yes
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = 2
+	y = 1
+
+	prerequisite = { focus = BEL_Fleet_of_our_own }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Adalberts_Dream"
+		add_ideas = BEL_Naval_Program_idea
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_boel_zonen_organisation = {
+				add_mio_research_bonus = 0.1
+				add_mio_funds_gain_factor = 0.1
+			}
+			mio:BEL_cockerill_scheepwerfen_organisation = {
+				add_mio_research_bonus = 0.1
+				add_mio_funds_gain_factor = 0.1
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Modernise_Destroyers
+	icon = GFX_goal_AST_upgrade_reserves
+	cost = 5
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = 1
+	y = 2
+
+	prerequisite = { focus = BEL_Adalberts_Dream }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+		has_tech = early_ship_hull_light
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Modernise_Destroyers"
+		add_tech_bonus = {
+			name = BEL_Modernise_Destroyers
+			bonus = 0.75
+			uses = 2
+			category = dd_tech
+		}
+		custom_effect_tooltip = tooltip_white_line
+		BEL_create_destroyer_variant = yes
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Purchase_New_Cruisers
+	icon = GFX_goal_USA_liberty_ships
+	cost = 5
+
+	relative_position_id = BEL_Modernise_Destroyers
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Modernise_Destroyers
+	}
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+		has_tech = early_ship_hull_cruiser
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Purchase_New_Cruisers"
+		add_tech_bonus = {
+			name = BEL_Purchase_New_Cruisers
+			bonus = 0.75
+			uses = 2
+			category = ca_tech
+		}
+		custom_effect_tooltip = tooltip_white_line
+		if = {
+			limit = { has_tech = advanced_ship_hull_cruiser }
+			create_equipment_variant = {
+				name = "Bruxellae Class"
+				type = ship_hull_cruiser_4
+				name_group = BEL_CITIES_THEME
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_medium_battery_4
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_1
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_4
+					fixed_ship_secondaries_slot = empty
+					fixed_ship_armor_slot = ship_armor_cruiser_3
+					front_1_custom_slot = ship_anti_air_1
+					mid_1_custom_slot = ship_torpedo_3
+					mid_2_custom_slot = ship_airplane_launcher_2
+					rear_1_custom_slot = ship_medium_battery_4
+				}
+				design_team = mio:BEL_cockerill_scheepwerfen_organisation
+			}
+			set_temp_variable = { level = 4 }
+		}
+		else_if = {
+			limit = { has_tech = improved_ship_hull_cruiser }
+			create_equipment_variant = {
+				name = "Bruxellae Class"
+				type = ship_hull_cruiser_3
+				name_group = BEL_CITIES_THEME
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_medium_battery_3
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_1
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_3
+					fixed_ship_secondaries_slot = empty
+					fixed_ship_armor_slot = ship_armor_cruiser_2
+					front_1_custom_slot = ship_anti_air_1
+					mid_1_custom_slot = ship_torpedo_2
+					mid_2_custom_slot = ship_airplane_launcher_2
+					rear_1_custom_slot = ship_medium_battery_3
+				}
+				design_team = mio:BEL_cockerill_scheepwerfen_organisation
+			}
+			set_temp_variable = { level = 3 }
+		}
+		else_if = {
+			limit = { has_tech = basic_ship_hull_cruiser }
+			create_equipment_variant = {
+				name = "Bruxellae Class"
+				type = ship_hull_cruiser_2
+				name_group = BEL_CITIES_THEME
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_medium_battery_2
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_2
+					fixed_ship_secondaries_slot = empty
+					fixed_ship_armor_slot = ship_armor_cruiser_2
+					front_1_custom_slot = ship_anti_air_1
+					mid_1_custom_slot = ship_torpedo_1
+					mid_2_custom_slot = ship_airplane_launcher_1
+					rear_1_custom_slot = ship_medium_battery_2
+				}
+				design_team = mio:BEL_cockerill_scheepwerfen_organisation
+			}
+			set_temp_variable = { level = 2 }
+		}
+		else = {
+			create_equipment_variant = {
+				name = "Bruxellae Class"
+				type = ship_hull_cruiser_1
+				name_group = BEL_CITIES_THEME
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_medium_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_1
+					fixed_ship_secondaries_slot = empty
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					mid_1_custom_slot = ship_torpedo_1
+					mid_2_custom_slot = ship_airplane_launcher_1
+					rear_1_custom_slot = ship_medium_battery_1
+				}
+				design_team = mio:BEL_cockerill_scheepwerfen_organisation
+			}
+			set_temp_variable = { level = 1 }
+		}
+		meta_effect = {
+			text = {
+				add_equipment_production = {
+					equipment = {
+						type = [HULL]
+						version_name = "Bruxellae Class"
+					}
+					progress = 0.5
+					industrial_manufacturer = mio:BEL_cockerill_scheepwerfen_organisation
+				}
+			}
+			HULL = "ship_hull_cruiser_[?level]"
+		}
+	}
+	search_filters = { FOCUS_FILTER_MANPOWER }
+}
+
+shared_focus = {
+	id = BEL_Submarine_Support
+	icon = GFX_goal_generic_wolf_pack
+	cost = 5
+
+	relative_position_id = BEL_Adalberts_Dream
+	x = 1
+	y = 1
+
+	prerequisite = { focus = BEL_Adalberts_Dream }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+		has_tech = early_ship_hull_submarine
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Submarine_Support"
+		add_tech_bonus = {
+			name = BEL_Submarine_Support
+			bonus = 0.75
+			uses = 2
+			category = ss_tech
+		}
+		custom_effect_tooltip = tooltip_white_line
+		BEL_create_submarine_variant = yes
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Naval_Officer_Academy
+	icon = GFX_focus_BEL_antwerp_maritime_academy
+	cost = 5
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = 2
+	y = 3
+
+	prerequisite = { focus = BEL_Modernise_Destroyers }
+	prerequisite = { focus = BEL_Submarine_Support }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Naval_Officer_Academy"
+		navy_experience = 25
+		add_ideas = BEL_Royal_Naval_Academy
+		custom_effect_tooltip = tooltip_white_line
+		add_mastery_bonus = {
+			name = BEL_Naval_Officer_Academy
+			bonus = 0.1
+			days = 365
+			folder = naval
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Increase_Investements_Battleship_Program
+	icon = GFX_goal_generic_buy_ships
+	cost = 5
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = 3
+	y = 4
+
+	mutually_exclusive = { focus = BEL_Scrap_The_Program }
+
+	prerequisite = { focus = BEL_Naval_Officer_Academy }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Increase_Investements_Battleship_Program"
+		swap_ideas = {
+			remove_idea = BEL_Naval_Program_idea
+			add_idea = BEL_Naval_Program2_idea
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			mio:BEL_boel_zonen_organisation = {
+				add_mio_funds_gain_factor = 0.1
+				add_mio_design_team_assign_cost = -0.5
+			}
+			mio:BEL_cockerill_scheepwerfen_organisation = {
+				add_mio_funds_gain_factor = 0.1
+				add_mio_design_team_assign_cost = -0.5
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_Scrap_The_Program
+	icon = GFX_goal_AST_scrap_reserves
+	cost = 5
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = 1
+	y = 4
+
+	mutually_exclusive = { focus = BEL_Increase_Investements_Battleship_Program }
+
+	prerequisite = { focus = BEL_Naval_Officer_Academy }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Scrap_The_Program"
+		remove_ideas = BEL_Naval_Program_idea
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_boel_zonen_organisation = {
+				add_mio_research_bonus = -0.1
+				add_mio_funds_gain_factor = -0.1
+			}
+			mio:BEL_cockerill_scheepwerfen_organisation = {
+				add_mio_research_bonus = -0.1
+				add_mio_funds_gain_factor = -0.1
+			}
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Naval_Cooperation_Program
+	icon = GFX_goal_tfv_generic_tech_sharing
+	cost = 5
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = 4
+	y = 3
+
+	prerequisite = { focus = BEL_Modernise_Destroyers }
+	prerequisite = { focus = BEL_Submarine_Support }
+
+	available_if_capitulated = yes
+
+	available = {
+		num_of_naval_factories > 0
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Naval_Cooperation_Program"
+		navy_experience = 25
+		add_tech_bonus = {
+			name = BEL_Naval_Cooperation_Program
+			bonus = 0.75
+			uses = 2
+			category = ship_modules_tech
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+	#Reformed Air Tree
+
+shared_focus = {
+	id = BEL_Masters_of_the_Skies
+	icon = GFX_goal_BEL_air_force
+	cost = 5
+
+	relative_position_id = BEL_Fleet_of_our_own
+	x = 7
+	y = 0
+
+	mutually_exclusive = {
+		focus = BEL_Supporting_Role
+	}
+	available = {
+		if = {
+			limit = { NOT = { has_focus_tree = BEL_Independent_focus } }
+			has_completed_focus = BEL_Evaluate_State_Budget
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Masters_of_the_Skies"
+		air_experience = 25
+		add_doctrine_cost_reduction = {
+			name = BEL_Masters_of_the_Skies
+			cost_reduction = 0.5
+			uses = 2
+			category = air_doctrine
+		}
+		hidden_effect = {
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+	search_filters = { FOCUS_FILTER_AIR_XP }
+}
+
+shared_focus = {
+	id = BEL_Renard_Fighter_Program
+	icon = GFX_focus_BEL_renard_constructions_aeronautiques
+	cost = 5
+
+	relative_position_id = BEL_Masters_of_the_Skies
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Masters_of_the_Skies
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Renard_Fighter_Program"
+		if = {
+			limit = { has_dlc_bba = no }
+			add_tech_bonus = {
+				name = BEL_Renard_Fighter_Program
+				bonus = 0.75
+				uses = 2
+				category = light_fighter
+			}
+		}
+		else = {
+			add_tech_bonus = {
+				name = BEL_Renard_Fighter_Program
+				bonus = 1
+				uses = 1
+				category = light_air
+			}
+			add_tech_bonus = {
+				name = BEL_Renard_Fighter_Program
+				bonus = 1
+				uses = 1
+				category = plane_modules_tech
+			}
+		}
+		if = {
+			limit = { has_dlc_aat = yes }
+			custom_effect_tooltip = tooltip_white_line
+			mio:BEL_renard_organisation = { add_mio_funds = 2000 }
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Royal_Air_Academy
+	icon = GFX_goal_generic_air_fighter2_new
+	cost = 5
+
+	relative_position_id = BEL_Masters_of_the_Skies
+	x = -1
+	y = 2
+
+	prerequisite = {
+		focus = BEL_Renard_Fighter_Program
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Royal_Air_Academy"
+		air_experience = 20
+		add_mastery_bonus = {
+			name = BEL_Royal_Air_Academy
+			bonus = 0.2
+			days = 240
+			track = fighter_aircraft
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_SABCA_Bombers
+	icon = GFX_goal_generic_air_tactical_bomber_new
+	cost = 5
+
+	relative_position_id = BEL_Masters_of_the_Skies
+	x = 0
+	y = 3
+
+	prerequisite = {
+		focus = BEL_Royal_Air_Academy
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_SABCA_Bombers"
+		if = {
+			limit = { has_dlc_bba = no }
+			add_tech_bonus = {
+				name = BEL_SABCA_Bombers
+				bonus = 0.75
+				uses = 2
+				category = tactical_bomber
+			}
+		}
+		else = {
+			add_tech_bonus = {
+				name = BEL_SABCA_Bombers
+				bonus = 1
+				uses = 1
+				category = medium_air
+			}
+			add_tech_bonus = {
+				name = BEL_SABCA_Bombers
+				bonus = 1
+				uses = 1
+				category = plane_modules_tech
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_RADAR_Stations
+	icon = GFX_goal_generic_radar
+	cost = 5
+
+	relative_position_id = BEL_Masters_of_the_Skies
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Masters_of_the_Skies
+		focus = BEL_Supporting_Role
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_RADAR_Stations"
+		if = {
+			limit = { NOT = { is_special_project_completed = sp:sp_air_radar } }
+			complete_special_project = {
+				project = sp:sp_air_radar
+				show_modifiers = no
+			}
+		}
+		else = {
+			add_tech_bonus = {
+				name = BEL_RADAR_Stations
+				bonus = 0.75
+				uses = 2
+				category = radar_tech
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		random_owned_controlled_state = {
+			prioritize = { 925 }
+			limit = {
+				is_core_of = ROOT
+				has_maximum_radar_station_level = no
+				impassable = no
+			}
+			add_building_construction = {
+				type = radar_station
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_AA_Fortifications
+	icon = GFX_focus_generic_air_defense2
+	cost = 5
+
+	relative_position_id = BEL_RADAR_Stations
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = BEL_RADAR_Stations
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_AA_Fortifications"
+		every_core_state = {
+			display_individual_scopes = yes
+			limit = {
+				is_owned_and_controlled_by = ROOT
+				is_in_home_area = yes
+				anti_air_building < 5
+			}
+			add_building_construction = {
+				type = anti_air_building
+				level = 1
+				instant_build = yes
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		add_tech_bonus = {
+			name = BEL_AA_Fortifications
+			bonus = 1
+			uses = 1
+			category = cat_anti_air
+		}
+	}
+}
+
+shared_focus = {
+	id = BEL_Supporting_Role
+	icon = GFX_goal_Deutsche_Luftstreitkrafte
+	cost = 5
+
+	relative_position_id = BEL_Masters_of_the_Skies
+	x = 2
+	y = 0
+
+	mutually_exclusive = {
+		focus = BEL_Masters_of_the_Skies
+	}
+	available = {
+		has_completed_focus = BEL_Evaluate_State_Budget
+		is_ally_with = GER
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Supporting_Role"
+		air_experience = 15
+		add_doctrine_cost_reduction = {
+			name = BEL_Ground_Support
+			cost_reduction = 0.75
+			uses = 1
+			category = air_doctrine
+		}
+		hidden_effect = {
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+	search_filters = { FOCUS_FILTER_AIR_XP }
+}
+
+shared_focus = {
+	id = BEL_CAS_Support
+	icon = GFX_goal_generic_air_CAS_new
+	cost = 5
+
+	relative_position_id = BEL_Supporting_Role
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Supporting_Role
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_CAS_Support"
+		if = {
+			limit = { has_dlc_bba = no }
+			add_tech_bonus = {
+				name = BEL_CAS_Support
+				bonus = 0.75
+				uses = 2
+				category = cas_bomber
+			}
+		}
+		else = {
+			add_tech_bonus = {
+				name = BEL_CAS_Support
+				bonus = 1
+				uses = 1
+				category = cas_bomber
+			}
+			add_tech_bonus = {
+				name = BEL_CAS_Support
+				bonus = 1
+				uses = 1
+				category = plane_modules_tech
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Ground_Support
+	icon = GFX_goal_generic_occupy_start_war
+	cost = 5
+
+	relative_position_id = BEL_CAS_Support
+	x = 0
+	y = 1
+
+	prerequisite = {
+		focus = BEL_CAS_Support
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Ground_Support"
+		air_experience = 20
+		add_mastery_bonus = {
+			name = BEL_CAS_Support
+			bonus = 0.2
+			days = 240
+			track = strike_aircraft
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Coast_Patrol
+	icon = GFX_goal_generic_air_naval_bomber_new
+	cost = 5
+
+	relative_position_id = BEL_Ground_Support
+	x = -1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_Ground_Support
+	}
+
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Coast_Patrol"
+		if = {
+			limit = { has_dlc_bba = no }
+			add_tech_bonus = {
+				name = BEL_Coast_Patrol
+				bonus = 0.75
+				uses = 2
+				category = naval_bomber
+			}
+		}
+		else = {
+			add_tech_bonus = {
+				name = BEL_Coast_Patrol
+				bonus = 1
+				uses = 1
+				category = naval_bomber
+			}
+			add_tech_bonus = {
+				name = BEL_Coast_Patrol
+				bonus = 1
+				uses = 1
+				category = plane_modules_tech
+			}
+		}
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+# Foreign Tree
+shared_focus = {
+	id = BEL_A_Neutral_Bloc
+	icon = GFX_focus_hol_continue_the_war_in_batavia
+	cost = 5
+
+	relative_position_id = BEL_Galopin_Doctrine
+	x = 2
+	y = 6
+
+	available = {
+		has_completed_focus = BEL_Elections
+		is_subject = no
+		is_in_faction = no
+		has_socialist_government = no
+		country_exists = HOL
+		HOL = {
+			is_subject = no
+			is_in_faction = no
+			has_capitulated = no
+			has_socialist_government = no
+		}
+		set_temp_variable = { target = HOL }
+		at_peace_or_same_enemies_as_TARGET = yes
+		NOT = { has_country_flag = BEL_HOL_refused_alliance }
+	}
+	mutually_exclusive = {
+		focus = BEL_The_Lion_Roars
+	}
+	ai_will_do = {
+		factor = 1000
+		modifier = {
+			factor = 0
+			has_game_rule = { rule = BEL_forpol option = BEL_FORPOL_ENT }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_A_Neutral_Bloc"
+		HOL = { country_event = belgium_events.101 }
+		custom_effect_tooltip = if_they_accept_tt
+		effect_tooltip = {
+			create_faction_from_template = { template = faction_template_generic name = benesam }
+			HOL = { add_to_faction = HOL } #for the tooltip
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = generic_neutral_foreign_policy
+			HOL = { add_ideas = generic_neutral_foreign_policy }
+		}
+		custom_effect_tooltip = tooltip_white_line
+		unlock_decision_tooltip = BEL_Expanding_the_Westerschelde
+		unlock_decision_tooltip = BEL_Expanding_Gent_Terneuzen
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = BEL_Free_Trade
+	icon = GFX_goal_generic_cash_stimulus_plan
+	cost = 10
+
+	relative_position_id = BEL_A_Neutral_Bloc
+	x = -1
+	y = 2
+
+	available = {
+		is_in_faction_with = HOL
+		OR = {
+			is_faction_leader = yes
+			HOL = { is_faction_leader = yes }
+		}
+	}
+	prerequisite = { focus = BEL_A_Neutral_Bloc }
+	ai_will_do = { factor = 200 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Free_Trade"
+		add_ideas = free_trade
+		add_one_random_civilian_factory = yes
+		add_one_random_civilian_factory = yes
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Koninklijke_Academie
+	icon = GFX_focus_research2
+	cost = 10
+
+	relative_position_id = BEL_A_Neutral_Bloc
+	x = 0
+	y = 1
+
+	available = {
+		is_in_faction_with = HOL
+		OR = {
+			is_faction_leader = yes
+			HOL = { is_faction_leader = yes }
+		}
+	}
+	bypass = {
+		is_in_tech_sharing_group = belgian_research
+	}
+	prerequisite = { focus = BEL_A_Neutral_Bloc }
+
+	ai_will_do = { factor = 1000 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Koninklijke_Academie"
+		add_to_tech_sharing_group = belgian_research
+		HOL = { country_event = belgium_events.111 }
+	}
+	search_filters = { FOCUS_FILTER_RESEARCH }
+}
+
+shared_focus = {
+	id = BEL_Expand_Arms_Sales
+	icon = GFX_focus_generic_combined_arms
+	cost = 10
+
+	relative_position_id = BEL_A_Neutral_Bloc
+	x = 1
+	y = 2
+
+	available = {
+		is_in_faction_with = HOL
+		OR = {
+			is_faction_leader = yes
+			HOL = { is_faction_leader = yes }
+		}
+	}
+	prerequisite = { focus = BEL_A_Neutral_Bloc }
+	ai_will_do = { factor = 200 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Expand_Arms_Sales"
+		add_ideas = BEL_export_focus3
+	}
+	search_filters = { FOCUS_FILTER_INDUSTRY }
+}
+
+shared_focus = {
+	id = BEL_The_Lion_Roars
+	icon = GFX_focus_hol_united_netherlands
+	cost = 10
+
+	relative_position_id = BEL_A_Neutral_Bloc
+	x = -3
+	y = 0
+
+	available = {
+		has_completed_focus = BEL_Elections
+		is_subject = no
+		NOT = { is_in_faction_with = GER }
+	}
+	mutually_exclusive = {
+		focus = BEL_A_Neutral_Bloc
+	}
+	ai_will_do = {
+		factor = 1000
+		modifier = {
+			factor = 0
+			NOT = { has_game_rule = { rule = BEL_forpol option = BEL_FORPOL_ENT } }
+			has_socialist_government = no
+			is_in_faction = no
+		}
+		modifier = {
+			factor = 0
+			has_game_rule = { rule = BEL_forpol option = BEL_FORPOL_BEL }
+		}
+	}
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_The_Lion_Roars"
+		add_ideas = BEL_The_Lion
+	}
+	search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_MANPOWER }
+}
+
+shared_focus = {
+	id = BEL_Our_Old_Allies
+	icon = GFX_GBR_lead_entente
+	cost = 5
+
+	relative_position_id = BEL_The_Lion_Roars
+	x = -1
+	y = 1
+
+	available = {
+		is_subject = no
+		is_in_faction = no
+		has_socialist_government = no
+		ENT = { is_faction_leader = yes }
+		NOT = { has_war_with = ENT }
+		at_peace_or_same_enemies_as_ENT = yes
+	}
+	bypass = {
+		is_in_faction_with = ENT
+	}
+	prerequisite = {
+		focus = BEL_The_Lion_Roars
+	}
+	mutually_exclusive = {
+		focus = BEL_Help_The_Syndicalist_Cause
+	}
+	ai_will_do = { factor = 1000 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Our_Old_Allies"
+		ENT = { country_event = belgium_events.102 }
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+
+shared_focus = {
+	id = BEL_Help_The_Syndicalist_Cause
+	icon = GFX_goal_FRA_phalanstere
+	cost = 5
+
+	relative_position_id = BEL_The_Lion_Roars
+	x = 1
+	y = 1
+
+	prerequisite = {
+		focus = BEL_The_Lion_Roars
+	}
+	mutually_exclusive = {
+		focus = BEL_Our_Old_Allies
+	}
+	available = {
+		is_subject = no
+		is_in_faction = no
+		has_socialist_government = yes
+		INT = { is_faction_leader = yes }
+		NOT = { has_war_with = INT }
+		at_peace_or_same_enemies_as_ENT = yes
+	}
+	bypass = {
+		is_in_faction_with = INT
+	}
+	ai_will_do = { factor = 1000 }
+	completion_reward = {
+		log = "[GetLogRoot]: Focus Completed BEL_Help_The_Syndicalist_Cause"
+		INT = { country_event = belgium_events.102 }
+	}
+	search_filters = { FOCUS_FILTER_POLITICAL }
+}
+

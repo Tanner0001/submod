@@ -1,0 +1,5277 @@
+################################
+# Japan Decisions
+################################
+# By Zankoas and The Alpha Dog
+################################
+
+@JAP_fading_sun_timeout = 180
+
+JAP_fading_sun = {
+	JAP_fading_sun_timer = {
+		icon = revolt
+
+		allowed = { always = no } #activated by japan_foreign_events.229
+
+		available = {
+			if = {
+				limit = {
+					var:global.russia = {
+						has_war_with = PREV
+						is_valid_peace_target = yes
+					}
+					OR = {
+						has_war_with = CUF
+						any_of_scopes = {
+							array = global.china_tags_array
+							has_war_with = PREV
+							china_is_potential_government = yes
+						}
+					}
+				}
+				OR = {
+					JAP_fading_sun_korea_fully_controlled = yes
+					JAP_fading_sun_manchuria_not_capitulated = yes
+					JAP_fading_sun_far_eastern_republic_not_capitulated = yes
+					JAP_fading_sun_controls_major_chinese_city = yes
+					JAP_fading_sun_any_chinese_ally_not_capitulated = yes
+				}
+			}
+			else_if = {
+				limit = {
+					var:global.russia = {
+						has_war_with = PREV
+						is_valid_peace_target = yes
+					}
+				}
+				OR = {
+					JAP_fading_sun_korea_fully_controlled = yes
+					JAP_fading_sun_manchuria_not_capitulated = yes
+					JAP_fading_sun_far_eastern_republic_not_capitulated = yes
+				}
+			}
+			else = {
+				OR = {
+					JAP_fading_sun_korea_fully_controlled = yes
+					JAP_fading_sun_manchuria_not_capitulated = yes
+					JAP_fading_sun_controls_major_chinese_city = yes
+					JAP_fading_sun_any_chinese_ally_not_capitulated = yes
+				}
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				has_war = no
+				is_subject = yes
+				has_capitulated = yes
+				custom_override_tooltip = {
+					tooltip = is_in_faction_but_not_leader
+					is_in_faction_but_not_leader = yes
+				}
+			}
+		}
+
+		is_good = no
+		days_mission_timeout = @JAP_fading_sun_timeout
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel JAP_fading_sun_timer"
+			hidden_effect = {
+				every_country = {
+					limit = { has_active_mission = JAP_fading_sun_timer_enemy }
+					remove_mission = JAP_fading_sun_timer_enemy
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_fading_sun_timer"
+			hidden_effect = {
+				every_country = {
+					limit = { has_active_mission = JAP_fading_sun_timer_enemy }
+					remove_mission = JAP_fading_sun_timer_enemy
+				}
+			}
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout JAP_fading_sun_timer"
+			set_global_flag = JAP_will_surrender
+			if = {
+				limit = { is_ai = no }
+				add_stability = -0.1
+				add_war_support = -0.1
+				effect_tooltip = {
+					if = {
+						limit = { NOT = { has_global_flag = JAP_will_surrender } }
+						if = {
+							limit = {
+								var:global.russia = {
+									has_war_with = PREV
+									is_valid_peace_target = yes
+								}
+							}
+							activate_targeted_decision = { decision = JAP_offer_peace_to_russia target = RUS }
+						}
+						if = {
+							limit = {
+								OR = {
+									has_war_with = CUF
+									any_of_scopes = {
+										array = global.china_tags_array
+										has_war_with = PREV
+										china_is_potential_government = yes
+									}
+								}
+							}
+							activate_targeted_decision = { decision = JAP_offer_peace_to_china target = CHN }
+						}
+					}
+				}
+				hidden_effect = {
+					activate_mission = JAP_fading_sun_timer
+					every_enemy_country = {
+						limit = {
+							is_ai = no
+							OR = {
+								is_tag_in_china_area = yes
+								is_russian_tag = yes
+							}
+						}
+						activate_mission = JAP_fading_sun_timer_enemy
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_fading_sun_timer_enemy = {
+		icon = revolt
+
+		allowed = { always = no } #activated by japan_foreign_events.229
+
+		available = {
+			hidden_trigger = { always = no } #handled by JAP_fading_sun_timer, the below is only for player information
+			if = {
+				limit = {
+					var:global.russia = {
+						has_war_with = PREV
+						is_valid_peace_target = yes
+					}
+					OR = {
+						has_war_with = CUF
+						any_of_scopes = {
+							array = global.china_tags_array
+							has_war_with = PREV
+							china_is_potential_government = yes
+						}
+					}
+				}
+				OR = {
+					JAP_fading_sun_korea_fully_controlled = yes
+					JAP_fading_sun_manchuria_not_capitulated = yes
+					JAP_fading_sun_far_eastern_republic_not_capitulated = yes
+					JAP_fading_sun_controls_major_chinese_city = yes
+					JAP_fading_sun_any_chinese_ally_not_capitulated = yes
+				}
+			}
+			else_if = {
+				limit = {
+					var:global.russia = {
+						has_war_with = PREV
+						is_valid_peace_target = yes
+					}
+				}
+				OR = {
+					JAP_fading_sun_korea_fully_controlled = yes
+					JAP_fading_sun_manchuria_not_capitulated = yes
+					JAP_fading_sun_far_eastern_republic_not_capitulated = yes
+				}
+			}
+			else = {
+				OR = {
+					JAP_fading_sun_korea_fully_controlled = yes
+					JAP_fading_sun_manchuria_not_capitulated = yes
+					JAP_fading_sun_controls_major_chinese_city = yes
+					JAP_fading_sun_any_chinese_ally_not_capitulated = yes
+				}
+			}
+		}
+
+		cancel_trigger = {
+			hidden_trigger = { always = no } #handled by JAP_fading_sun_timer, the below is only for player information
+			OR = {
+				JAP = { has_war = no }
+				JAP = { is_subject = yes }
+				JAP = { has_capitulated = yes }
+				JAP = {
+					custom_override_tooltip = {
+						tooltip = is_in_faction_but_not_leader
+						is_in_faction_but_not_leader = yes
+					}
+				}
+				if = {
+					limit = { JAP = { is_ai = yes } }
+					JAP = { surrender_progress > 0.15 }
+				}
+				else = {
+					hidden_trigger = { always = no }
+				}
+			}
+		}
+
+		is_good = yes
+		days_mission_timeout = @JAP_fading_sun_timeout
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout JAP_fading_sun_timer_enemy"
+			#no logging here - this mission is only meant to give a player information
+			effect_tooltip = {
+				if = {
+					limit = { JAP = { is_ai = no } }
+					JAP = {
+						add_stability = -0.1
+						add_war_support = -0.1
+					}
+				}
+				else = {
+					country_event = japan_foreign_events.230
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_offer_peace_to_china = {
+		icon = peace_dove
+
+		available = {
+			OR = {
+				surrender_progress > 0.3
+				has_global_flag = JAP_will_surrender
+			}
+		}
+
+		visible = {
+			any_enemy_country = {
+				is_chinese_tag = yes
+				OR = {
+					china_is_potential_government = yes
+					is_faction_leader = yes #United Front
+				}
+				is_valid_peace_target = yes
+			}
+			is_valid_peace_target = yes
+			has_capitulated = no
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_offer_peace_to_china"
+			save_event_target_as = japan
+			effect_tooltip = {
+				every_enemy_country = {
+					limit = {
+						is_tag_in_china_area = yes
+						is_valid_peace_target = yes
+					}
+					country_event = japan_foreign_events.230
+				}
+			}
+			hidden_effect = { JAP_china_peace_next_country = yes }
+			if = {
+				limit = {
+					any_of_scopes = {
+						array = global.china_tags_array
+						is_ai = no
+						has_war_with = JAP
+						OR = {
+							is_subject = no
+							overlord = { is_chinese_tag = yes }
+						}
+						OR = {
+							is_in_faction = no
+							faction_leader = { is_chinese_tag = yes }
+						}
+					}
+				}
+				set_global_flag = walking_on_the_sun_achievement_condition
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_offer_peace_to_russia = {
+		icon = peace_dove
+
+		available = {
+			OR = {
+				has_global_flag = JAP_will_surrender
+				surrender_progress > 0.3
+			}
+		}
+
+		visible = {
+			has_war_with = FROM
+			is_valid_peace_target = yes
+			has_capitulated = no
+			FROM = { is_valid_peace_target = yes }
+		}
+
+		targets = { RUS }
+		target_root_trigger = {
+			OR = {
+				NOT = { country_exists = FNG }
+				KOR = {
+					any_core_state = {
+						is_owned_by = ROOT
+						NOT = { is_fully_controlled_by = ROOT }
+					}
+				}
+			}
+		}
+		target_trigger = {
+			has_war_with = FROM
+			FROM = { is_valid_peace_target = yes }
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_offer_peace_to_russia"
+			FROM = { country_event = japan_foreign_events.238 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+JAP_land_reform = {
+	JAP_land_reform_1 = {
+		icon = GFX_decision_generic_agriculture
+
+		allowed = { always = no }
+
+		available = {
+			NOT = { has_country_flag = JAP_land_reform_in_progress }
+		}
+
+		cost = JAP_land_reform_pp_1
+		days_remove = JAP_land_reform_cost_1
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 2000
+			modifier = {
+				factor = 0.01
+				has_war = yes
+			}
+		}
+
+		priority = 100
+
+		modifier = {
+			war_support_factor = -0.10
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_land_reform_1"
+			set_country_flag = JAP_land_reform_in_progress
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_land_reform_1"
+			set_country_flag = JAP_part_one_land_reform
+			clr_country_flag = JAP_land_reform_in_progress
+			add_to_variable = {
+				var = JAP_land_reform_variable
+				value = 1
+			}
+			custom_effect_tooltip = JAP_land_reform_progress
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_land_reform_2 = {
+		icon = GFX_decision_generic_agriculture
+
+		allowed = { always = no }
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = JAP_land_reform_1 }
+				has_country_flag = JAP_part_one_land_reform
+			}
+			NOT = { has_country_flag = JAP_land_reform_in_progress }
+		}
+
+		cost = JAP_land_reform_pp_2
+		days_remove = JAP_land_reform_cost_2
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 2000
+			modifier = {
+				factor = 0.01
+				has_war = yes
+			}
+		}
+
+		priority = 100
+
+		modifier = {
+			war_support_factor = -0.1
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_land_reform_2"
+			set_country_flag = JAP_land_reform_in_progress
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_land_reform_2"
+			set_country_flag = JAP_part_two_land_reform
+			clr_country_flag = JAP_land_reform_in_progress
+			add_to_variable = {
+				var = JAP_land_reform_variable
+				value = 1
+			}
+			custom_effect_tooltip = JAP_land_reform_progress
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_land_reform_3 = {
+		icon = GFX_decision_generic_agriculture
+
+		allowed = { always = no }
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = JAP_land_reform_2 }
+				has_country_flag = JAP_part_two_land_reform
+			}
+			NOT = { has_country_flag = JAP_land_reform_in_progress }
+		}
+
+		cost = JAP_land_reform_pp_3
+		days_remove = JAP_land_reform_cost_3
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 2000
+			modifier = {
+				factor = 0.01
+				has_war = yes
+			}
+		}
+
+		priority = 100
+
+		modifier = {
+			war_support_factor = -0.1
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_land_reform_3"
+			set_country_flag = JAP_land_reform_in_progress
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_land_reform_3"
+			clr_country_flag = JAP_land_reform_in_progress
+			add_to_variable = {
+				var = JAP_land_reform_variable
+				value = 2
+			}
+			custom_effect_tooltip = JAP_land_reform_progress_large
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_land_adjustment = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { always = no }
+
+		available = {
+			NOT = { has_country_flag = JAP_land_reform_in_progress }
+		}
+
+		days_remove = JAP_land_reform_cost_4
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1 }
+
+		priority = 100
+
+		modifier = {
+			war_support_factor = -0.05
+			stability_factor = -0.05
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_land_adjustment"
+			set_country_flag = JAP_land_reform_in_progress
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_land_adjustment"
+			clr_country_flag = JAP_land_reform_in_progress
+			add_to_variable = {
+				var = JAP_land_reform_variable
+				value = 1
+			}
+			custom_effect_tooltip = JAP_land_reform_progress
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_rent_control = {
+		icon = GFX_decision_generic_civil_support
+
+		allowed = { always = no }
+
+		available = {
+			NOT = { has_country_flag = JAP_land_reform_in_progress }
+		}
+
+		cost = JAP_land_reform_pp_3
+		fire_only_once = yes
+
+		ai_will_do = { base = 2000 }
+
+		priority = 100
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_rent_control"
+			add_to_variable = {
+				var = JAP_land_reform_variable
+				value = 2
+			}
+			custom_effect_tooltip = JAP_land_reform_progress_large
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_agriculture_land_control = {
+		icon = GFX_decision_generic_decision
+
+		allowed = { always = no }
+
+		available = {
+			NOT = { has_country_flag = JAP_land_reform_in_progress }
+			has_stability > 0.05
+		}
+
+		cost = JAP_land_reform_pp_2
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 2000
+			modifier = {
+				factor = 0.01
+				has_war = no
+			}
+		}
+
+		priority = 100
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_agriculture_land_control"
+			add_stability = -0.05
+			add_to_variable = {
+				var = JAP_land_reform_variable
+				value = 1
+			}
+			custom_effect_tooltip = JAP_land_reform_progress
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_finish_land_reform = {
+		icon = GFX_decision_generic_operation
+
+		allowed = { always = no }
+
+		available = {
+			check_variable = {
+				tooltip = JAP_land_reform_over_2
+				JAP_land_reform_variable > 2
+			}
+			NOT = { has_country_flag = JAP_land_reform_in_progress }
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 2000
+				OR = {
+					has_war = yes
+					has_stability > 0.75
+					check_variable = { JAP_land_reform_variable > 5 }
+				}
+			}
+		}
+
+		priority = 100
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_finish_land_reform"
+			country_event = japan_domestic_events.75
+			custom_effect_tooltip = JAP_land_reform_idea
+			if = {
+				limit = {
+					check_variable = { JAP_land_reform_variable < 3 }
+				}
+				custom_effect_tooltip = JAP_land_reform_fail
+			}
+			else_if = {
+				limit = {
+					check_variable = { JAP_land_reform_variable > 2 }
+					check_variable = { JAP_land_reform_variable < 6 }
+				}
+				effect_tooltip = {
+					if = {
+						limit = { has_country_flag = JAP_seiyukai_land_reform }
+						add_stability = 0.05
+						add_war_support = 0.05
+					}
+					JAP_land_reform_reward_decent = yes
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { JAP_land_reform_variable > 5 }
+					check_variable = { JAP_land_reform_variable < 8 }
+				}
+				effect_tooltip = {
+					if = {
+						limit = { has_country_flag = JAP_seiyukai_land_reform }
+						add_stability = 0.1
+						add_war_support = 0.1
+					}
+					JAP_land_reform_reward_good = yes
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { JAP_land_reform_variable > 7 }
+				}
+				effect_tooltip = {
+					if = {
+						limit = { has_country_flag = JAP_seiyukai_land_reform }
+						add_stability = 0.15
+						add_war_support = 0.15
+					}
+					JAP_land_reform_best = yes
+				}
+			}
+			hidden_effect = { JAP_close_JAP_land_reform = yes }
+		}
+		fixed_random_seed = no
+	}
+}
+
+JAP_influence_china = {
+	#FNG JAP Decisions
+	JAP_faith_in_zhang_runs_out_mission = {
+		allowed = { always = no }
+		available = {
+			FNG_JAP_mission_complete_trigger = yes
+		}
+		cancel_trigger = {
+			NOT = { country_exists = FNG }
+		}
+		icon = GFX_decision_jap_conquer_china
+		is_good = no
+		days_mission_timeout = 365
+		priority = 300 #Should always be at top
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_faith_in_zhang_runs_out_mission"
+			#Rig it if you have game rules
+			if = {
+				limit = {
+					FNG = { is_ai = yes }
+					OR = {
+						has_game_rule = { rule = FNG_path option = FNG_PATH_GAMBIT_PATAUT }
+						has_game_rule = { rule = FNG_path option = FNG_PATH_CONCORD_PATAUT }
+					}
+				}
+				effect_tooltip = { country_event = fengtian_japan_mechanic_events.004 } #The Huanggutun Incident
+			}
+			#Actual code
+			else = {
+				effect_tooltip = { country_event = fengtian_japan_mechanic_events.003 } #The Fengtian-Japanese Alliance Victorious?
+			}
+		}
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout JAP_faith_in_zhang_runs_out_mission"
+			#Rig it if you have game rules
+			if = {
+				limit = {
+					FNG = { is_ai = yes }
+					OR = {
+						has_game_rule = { rule = FNG_path option = FNG_PATH_RECOVERY_AUTDEM }
+						has_game_rule = { rule = FNG_path option = FNG_PATH_COMMUNICATIONS_AUTDEM }
+						has_game_rule = { rule = FNG_path option = FNG_PATH_TWIN_DRAGONS_AUTDEM }
+					}
+				}
+				effect_tooltip = { country_event = fengtian_japan_mechanic_events.003 } #The Fengtian-Japanese Alliance Victorious?
+			}
+			#Actual code
+			else = {
+				effect_tooltip = { country_event = fengtian_japan_mechanic_events.004 } #The Huanggutun Incident
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel JAP_faith_in_zhang_runs_out_mission"
+		}
+		fixed_random_seed = no
+	}
+
+	FNG_JAP_search_for_helpful_collaborators = {
+		allowed = { tag = JAP }
+		visible = {
+			has_active_mission = JAP_faith_in_zhang_runs_out_mission
+		}
+		icon = GFX_decision_generic_political_discourse
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100 #Higher Priority than Others
+				has_political_power > 150 #AI shouldn't use this unless they have room to spare
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = JAP_is_playing_FNG_JAP_minigame_flag
+			}
+		}
+		cost = 30
+		days_re_enable = 0
+		days_remove = 90
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete FNG_JAP_search_for_helpful_collaborators"
+			effect_tooltip = {
+				FNG_JAP_mech_sub_time_small_effect = yes
+				FNG_JAP_investment_small = yes
+			}
+			set_country_flag = {
+				flag = JAP_is_playing_FNG_JAP_minigame_flag
+				days = 60 #Ai will only do Philippines stuff every 60 days.
+				value = 1
+			}
+			FNG = { country_event = { id = fengtian_japan_mechanic_events.200 days = 1 } } #Japan Searches for Collaborators
+		}
+		fixed_random_seed = no
+	}
+
+	FNG_JAP_rein_in_the_extremists = {
+		allowed = { tag = JAP }
+		visible = {
+			has_active_mission = JAP_faith_in_zhang_runs_out_mission
+		}
+		icon = GFX_decision_soldierly_discipline
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100 #Higher Priority than Others
+				has_war_support > 0.50
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = JAP_is_playing_FNG_JAP_minigame_flag
+			}
+		}
+		custom_cost_trigger = {
+			has_war_support > 0.05
+		}
+		custom_cost_text = war_support5
+		days_re_enable = 0
+		days_remove = 90
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete FNG_JAP_rein_in_the_extremists"
+			hidden_effect = {
+				add_war_support = -0.05
+			}
+			effect_tooltip = {
+				FNG_JAP_mech_add_time_small_effect = yes
+				FNG_JAP_investment_small = yes
+			}
+			set_country_flag = {
+				flag = JAP_is_playing_FNG_JAP_minigame_flag
+				days = 60 #Ai will only do Philippines stuff every 60 days.
+				value = 1
+			}
+			FNG = { country_event = { id = fengtian_japan_mechanic_events.201 days = 1 } } #Japan Reins in Extremists
+		}
+		fixed_random_seed = no
+	}
+
+	FNG_JAP_deploy_emergency_economic_aid = {
+		allowed = { tag = JAP }
+		visible = {
+			has_active_mission = JAP_faith_in_zhang_runs_out_mission
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		icon = GFX_decision_cash_flow
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100 #Higher Priority than Others
+				num_of_civilian_factories_available_for_projects > 14
+				has_war = no
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = JAP_is_playing_FNG_JAP_minigame_flag
+			}
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		cost = 10
+		days_re_enable = 0
+		days_remove = 90
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete FNG_JAP_deploy_emergency_economic_aid"
+			effect_tooltip = {
+				FNG_JAP_mech_sub_time_medium_effect = yes
+				FNG_JAP_investment_medium = yes
+				FNG = {
+					add_timed_idea = {
+						idea = FNG_JAP_deploy_emergency_economic_aid_idea
+						days = 90
+					}
+				}
+			}
+			set_country_flag = {
+				flag = JAP_is_playing_FNG_JAP_minigame_flag
+				days = 60 #Ai will only do Philippines stuff every 60 days.
+				value = 1
+			}
+			FNG = { country_event = { id = fengtian_japan_mechanic_events.202 days = 1 } } #Japan Deploys an Economic Aid Plan
+		}
+		fixed_random_seed = no
+	}
+
+	FNG_JAP_send_emergency_arms_shipment = {
+		allowed = { tag = JAP }
+		visible = {
+			has_active_mission = JAP_faith_in_zhang_runs_out_mission
+		}
+		available = {
+			has_equipment = { artillery_equipment > 49 }
+			has_equipment = { support_equipment > 49 }
+		}
+		icon = GFX_decision_artillery
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100 #Higher Priority than Others
+				has_war_support > 0.50
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = JAP_is_playing_FNG_JAP_minigame_flag
+			}
+		}
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 2000 } }
+		}
+		custom_cost_text = 2000_guns
+		days_re_enable = 0
+		days_remove = 90
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete FNG_JAP_send_emergency_arms_shipment"
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -2000
+				}
+				add_equipment_to_stockpile = {
+					type = artillery_equipment
+					amount = -50
+				}
+				add_equipment_to_stockpile = {
+					type = support_equipment
+					amount = -50
+				}
+			}
+			effect_tooltip = {
+				FNG_JAP_mech_sub_time_medium_effect = yes
+				FNG_JAP_investment_medium = yes
+				FNG = {
+					add_equipment_to_stockpile = {
+						type = infantry_equipment
+						amount = 2000
+					}
+					add_equipment_to_stockpile = {
+						type = artillery_equipment
+						amount = 50
+					}
+					add_equipment_to_stockpile = {
+						type = support_equipment
+						amount = 50
+					}
+				}
+			}
+			set_country_flag = {
+				flag = JAP_is_playing_FNG_JAP_minigame_flag
+				days = 60 #Ai will only do Philippines stuff every 60 days.
+				value = 1
+			}
+			FNG = { country_event = { id = fengtian_japan_mechanic_events.203 days = 1 } } #Japanese Sends Emergency Arms
+		}
+		fixed_random_seed = no
+	}
+	FNG_JAP_reinforce_our_armies_in_china = {
+		allowed = { tag = JAP }
+		visible = {
+			has_active_mission = JAP_faith_in_zhang_runs_out_mission
+			NOT = {
+				has_relation_modifier = {
+					target = FNG
+					modifier = volunteer_limit_plus_nine #AKA capped out
+				}
+			}
+		}
+		available = {
+			if = {
+				limit = {
+					has_relation_modifier = {
+						target = FNG
+						modifier = volunteer_limit_plus_two
+					}
+				}
+				custom_override_tooltip = {
+					tooltip = FNG_JAP_influence_above_25_tooltip
+					OR = {
+						FNG_mantetsu_level_medium = yes
+						FNG_mantetsu_level_high = yes
+						FNG_mantetsu_level_very_high = yes
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					has_relation_modifier = {
+						target = FNG
+						modifier = volunteer_limit_plus_four
+					}
+				}
+				custom_override_tooltip = {
+					tooltip = FNG_JAP_influence_above_50_tooltip
+					OR = {
+						FNG_mantetsu_level_high = yes
+						FNG_mantetsu_level_very_high = yes
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					has_relation_modifier = {
+						target = FNG
+						modifier = volunteer_limit_plus_six
+					}
+				}
+				FNG_mantetsu_level_very_high = yes
+			}
+			#If you don't have any ideas yet, you can do it any time.
+		}
+		icon = GFX_decision_generic_military
+		priority = 100
+		ai_will_do = {
+			base = 100 #Japan should basically always take this focus when its available.
+			modifier = {
+				factor = 0
+				has_country_flag = JAP_is_playing_FNG_JAP_minigame_flag
+			}
+		}
+		custom_cost_trigger = {
+			NOT = { command_power < 50 }
+		}
+		custom_cost_text = CP_50
+		days_re_enable = 0
+		days_remove = 90
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete FNG_JAP_reinforce_our_armies_in_china"
+			hidden_effect = {
+				add_command_power = -50
+			}
+			effect_tooltip = {
+				FNG_JAP_mech_sub_time_medium_effect = yes
+				FNG_JAP_investment_medium = yes
+				JAP_FNG_increase_reinforcements_to_FNG_effect = yes
+			}
+			set_country_flag = {
+				flag = JAP_is_playing_FNG_JAP_minigame_flag
+				days = 60 #Ai will only do Philippines stuff every 60 days.
+				value = 1
+			}
+			FNG = { country_event = { id = fengtian_japan_mechanic_events.204 days = 1 } } #Japanese Reinforcements Arrive
+		}
+		fixed_random_seed = no
+	}
+	FNG_JAP_attaches_to_the_continent = {
+		allowed = { tag = JAP }
+		visible = {
+			has_active_mission = JAP_faith_in_zhang_runs_out_mission
+			FNG = { has_war = yes }
+			NOT = {
+				FNG = { has_attache_from = JAP }
+			}
+		}
+		available = {
+			#Can do any time basically
+		}
+		icon = GFX_decision_decision_generic_chinese_officers
+		priority = 100
+		ai_will_do = {
+			base = 500 #Japan should basically always take this focus when its available.
+			#modifier = {
+			#	factor = 0
+			#	has_country_flag = JAP_is_playing_FNG_JAP_minigame_flag
+			#}
+			modifier = {
+				factor = 0
+				check_variable = { FNG.FNG_JAP_influence_variable > 0.30 } #avoid causing massive penalty on Fengtian
+			}
+		}
+		custom_cost_trigger = {
+			NOT = { command_power < 15 }
+		}
+		custom_cost_text = CP_15
+		days_re_enable = 20 #Ensure the events play out correctly
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete FNG_JAP_attaches_to_the_continent"
+			hidden_effect = {
+				add_command_power = -15
+			}
+			if = {
+				limit = {
+					NOT = { has_country_flag = JAP_has_sent_military_attache_to_the_continent }
+				}
+				FNG = { country_event = { id = fengtian_japan_mechanic_events.205 days = 1 } } #Attaches from Tokyo
+				effect_tooltip = {
+					diplomatic_relation = {
+						country = FNG
+						relation = send_attache
+						active = yes
+					}
+				}
+				custom_effect_tooltip = if_they_accept_tt
+				effect_tooltip = {
+					FNG_JAP_investment_mega = yes
+				}
+				custom_effect_tooltip = if_they_refuse_tt
+				effect_tooltip = {
+					FNG_JAP_mech_sub_time_mega_effect = yes
+				}
+				set_country_flag = JAP_has_sent_military_attache_to_the_continent
+			}
+			else_if = {
+				limit = {
+					has_country_flag = JAP_has_sent_military_attache_to_the_continent
+				}
+				diplomatic_relation = {
+					country = FNG
+					relation = send_attache
+					active = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	#Other Misc JAP-CHN Decisions
+	JAP_china_army_training = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			FROM = {
+				strength_ratio = {
+					tag = JAP
+					ratio < 0.35
+				}
+			}
+		}
+
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+			FROM = {
+				exists = yes
+				is_working_with_JAP = yes
+				NOT = {
+					CHN = { is_ally_with = ROOT }
+					has_war_with = JAP
+					has_country_flag = JAP_no_training_help
+				}
+			}
+		}
+
+		cancel_trigger = {
+			FROM = { has_country_flag = JAP_no_training_help }
+		}
+
+		custom_cost_text = army_xp_10
+		custom_cost_trigger = {
+			NOT = { has_army_experience < 10 }
+		}
+		days_remove = 100
+		fire_only_once = yes
+
+		modifier = {
+			army_org_factor = -0.05
+		}
+
+		ai_will_do = { factor = 1 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_china_army_training"
+			army_experience = 10
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_china_army_training"
+			hidden_effect = { army_experience = -10 }
+			FROM = { country_event = japan_foreign_events.3 }
+			custom_effect_tooltip = chinese_tag_must_agree
+			effect_tooltip = {
+				FROM = {
+					add_timed_idea = {
+						idea = JAP_china_training
+						days = 100
+					}
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = FNG }
+				}
+				effect_tooltip = {
+					add_war_support = 0.03
+					FNG_JAP_investment_large = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_provide_arms_facilities = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			num_of_military_factories > 25
+		}
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+			FROM = {
+				exists = yes
+				is_working_with_JAP = yes
+				NOT = {
+					has_country_flag = has_offsite_mils_from_JAP
+					CHN = { is_ally_with = ROOT }
+					has_country_flag = JAP_refused_offsite_mils
+					has_war_with = JAP
+				}
+			}
+		}
+
+		cost = 25
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10
+				FROM = {
+					stockpile_ratio = {
+						archetype = infantry_equipment
+						ratio < 0.5
+					}
+				}
+			}
+			modifier = {
+				has_war = yes
+				factor = 0
+			}
+		}
+		days_remove = 365
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_provide_arms_facilities"
+			custom_effect_tooltip = chinese_tag_must_agree
+			FROM = {
+				country_event = japan_foreign_events.4
+			}
+			effect_tooltip = {
+				FROM = {
+					add_offsite_building = { type = arms_factory level = 3 }
+				}
+				random_owned_controlled_state = {
+					limit = {
+						is_core_of = ROOT
+						arms_factory > 0
+					}
+					add_to_variable = { JAP_mils_to_china_state = 1 }
+					remove_building = {
+						type = arms_factory
+						level = 1
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						is_core_of = ROOT
+						arms_factory > 0
+					}
+					add_to_variable = { JAP_mils_to_china_state = 1 }
+					remove_building = {
+						type = arms_factory
+						level = 1
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						is_core_of = ROOT
+						arms_factory > 0
+					}
+					add_to_variable = { JAP_mils_to_china_state = 1 }
+					remove_building = {
+						type = arms_factory
+						level = 1
+					}
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = FNG }
+				}
+				effect_tooltip = {
+					add_war_support = 0.03
+					FNG_JAP_investment_medium = yes
+				}
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_provide_arms_facilities"
+			if = {
+				limit = {
+					FROM = {
+						has_country_flag = has_offsite_mils_from_JAP
+					}
+				}
+				FROM = {
+					add_offsite_building = { type = arms_factory level = -3 }
+					clr_country_flag = has_offsite_mils_from_JAP
+				}
+				every_owned_state = {
+					limit = {
+						has_variable = JAP_mils_to_china_state
+					}
+					add_building_construction = {
+						type = arms_factory
+						level = var:JAP_mils_to_china_state
+						instant_build = yes
+					}
+					clear_variable = JAP_mils_to_china_state
+				}
+			}
+			custom_effect_tooltip = JAP_you_get_the_mils_back
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_support_offensive = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			FROM = {
+				has_war = yes
+			}
+		}
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+			FROM = {
+				exists = yes
+				is_working_with_JAP = yes
+				NOT = {
+					CHN = { is_ally_with = ROOT }
+					has_war_with = JAP
+					has_country_flag = JAP_refused_offensive_help
+				}
+			}
+		}
+
+		cost = 30
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 3
+				FROM = {
+					any_enemy_country = {
+						has_war_with = JAP
+					}
+				}
+			}
+			modifier = {
+				any_enemy_country = {
+					strength_ratio = {
+						tag = JAP
+						ratio > 0.8
+					}
+				}
+				factor = 0
+			}
+		}
+		days_remove = 100
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_support_offensive"
+			FROM = {
+				country_event = japan_foreign_events.5
+			}
+			custom_effect_tooltip = chinese_tag_must_agree
+			effect_tooltip = {
+				FROM = {
+					add_timed_idea = {
+						idea = JAP_china_attack_support
+						days = 100
+					}
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = FNG }
+				}
+				effect_tooltip = {
+					add_war_support = 0.03
+					FNG_JAP_investment_medium = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_provide_planes = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			if = {
+				limit = { has_dlc_bba = yes }
+				FROM = {
+					NOT = {
+						has_tech = basic_small_airframe
+					}
+				}
+			}
+			else = {
+				FROM = {
+					NOT = {
+						has_tech = fighter2
+					}
+				}
+			}
+		}
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+			FROM = {
+				exists = yes
+				is_working_with_JAP = yes
+				NOT = {
+					CHN = { is_ally_with = ROOT }
+					has_war_with = JAP
+				}
+			}
+		}
+		fire_only_once = yes
+
+		cost = 100
+		ai_will_do = { factor = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_provide_planes"
+			FROM = {
+				country_event = japan_foreign_events.6
+			}
+			if = {
+				limit = { has_tech = jet_fighter2 }
+				create_production_license = {
+					target = FROM
+					equipment = {
+						type = jet_fighter_equipment_2
+					}
+					cost_factor = 0.5
+				}
+			}
+			else_if = {
+				limit = { has_tech = jet_fighter1 }
+				create_production_license = {
+					target = FROM
+					equipment = {
+						type = jet_fighter_equipment_1
+					}
+					cost_factor = 0.5
+				}
+			}
+			else_if = {
+				limit = { has_tech = fighter3 }
+				create_production_license = {
+					target = FROM
+					equipment = {
+						type = fighter_equipment_3
+					}
+					cost_factor = 0.5
+				}
+			}
+			else_if = {
+				limit = { has_tech = fighter2 }
+				create_production_license = {
+					target = FROM
+					equipment = {
+						type = fighter_equipment_2
+					}
+					cost_factor = 0.5
+				}
+			}
+			else_if = {
+				limit = { has_tech = fighter1 }
+				create_production_license = {
+					target = FROM
+					equipment = {
+						type = fighter_equipment_1
+					}
+					cost_factor = 0.5
+				}
+			}
+			else_if = {
+				limit = { has_dlc_bba = yes }
+				create_production_license = {
+					target = FROM
+					equipment = {
+						type = small_plane_airframe_0
+					}
+					cost_factor = 0
+				}
+			}
+			else = {
+				create_production_license = {
+					target = FROM
+					equipment = {
+						type = fighter_equipment_0
+					}
+					cost_factor = 0.5
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = FNG }
+				}
+				effect_tooltip = {
+					add_war_support = 0.03
+					FNG_JAP_investment_large = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	support_chinese_separatists = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			FROM = {
+				NOT = { has_war_with = FNG }
+			}
+		}
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+			can_declare_war_on = FROM
+			FROM = {
+				has_war = yes
+				is_subject = no
+				has_socialist_government = no
+				NOT = {
+					has_country_flag = japanese_independence_support
+					has_country_flag = JAP_refused_independence_help
+				}
+				any_enemy_country = {
+					is_chinese_tag = yes
+					is_working_with_JAP = no
+				}
+			}
+		}
+
+		cost = 50
+		ai_will_do = { factor = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete support_chinese_separatists"
+			FROM = {
+				country_event = japan_foreign_events.7
+			}
+			custom_effect_tooltip = chinese_tag_must_agree
+			effect_tooltip = {
+				FROM = {
+					add_ideas = JAP_chinese_separatist_support
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	send_ETS_tartar_guy = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			NOT = { has_war_with = FROM }
+		}
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+			FROM = {
+				exists = yes
+				is_subject = no
+				NOT = { has_war_with = JAP }
+			}
+		}
+		fire_only_once = yes
+		cost = 10
+		ai_will_do = { factor = 4 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete send_ETS_tartar_guy"
+			ETS = {
+				country_event = japan_foreign_events.8
+			}
+			custom_effect_tooltip = ETS_will_discuss_this
+		}
+		fixed_random_seed = no
+	}
+	JAP_pan_asianism = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			has_war_with = CHN
+			608 = { is_controlled_by_ROOT_or_ally = yes }
+			613 = { is_controlled_by_ROOT_or_ally = yes }
+		}
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+		}
+
+		cost = 40
+
+		ai_will_do = { base = 100 }
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_pan_asianism"
+			custom_effect_tooltip = JAP_peace_effects
+			effect_tooltip = { add_ideas = JAP_sabotage_1 }
+			hidden_effect = {
+				every_enemy_country = {
+					limit = {
+						is_in_array = { global.china_tags_array = THIS }
+					}
+					country_event = japan_foreign_events.604
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_harmony_and_reconciliation = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			has_war_with = CHN
+			608 = { is_controlled_by_ROOT_or_ally = yes }
+			613 = { is_controlled_by_ROOT_or_ally = yes }
+		}
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+		}
+
+		cost = 40
+
+		ai_will_do = { base = 100 }
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_harmony_and_reconciliation"
+			custom_effect_tooltip = JAP_peace_effects
+			effect_tooltip = { add_ideas = JAP_sabotage_2 }
+			hidden_effect = {
+				every_enemy_country = {
+					limit = {
+						is_in_array = { global.china_tags_array = THIS }
+					}
+					country_event = japan_foreign_events.605
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_unity_through_peace = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			has_war_with = CHN
+			608 = { is_controlled_by_ROOT_or_ally = yes }
+			613 = { is_controlled_by_ROOT_or_ally = yes }
+		}
+		visible = {
+			is_faction_leader = yes
+			JAP_chinese_enemy_exists = yes
+		}
+
+		cost = 40
+
+		ai_will_do = { base = 100 }
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_unity_through_peace"
+			custom_effect_tooltip = JAP_peace_effects
+			effect_tooltip = { add_ideas = JAP_sabotage_3 }
+			hidden_effect = {
+				every_enemy_country = {
+					limit = {
+						is_in_array = { global.china_tags_array = THIS }
+					}
+					country_event = japan_foreign_events.606
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_finish_off_stragglers = {
+		icon = GFX_decision_jap_conquer_china
+
+		allowed = { always = no } #activated by focus JAP_continental_warfare
+
+		available = {
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+			NOT = { is_guaranteed_by = FROM }
+			FROM = { is_working_with_JAP = no }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			NOT = { has_wargoal_against = FROM }
+			NOT = { has_global_flag = JAP_defeated_by_china }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				has_wargoal_against = FROM
+				has_global_flag = JAP_defeated_by_china
+				has_non_aggression_pact_with = FROM
+				has_guaranteed = FROM
+				is_guaranteed_by = FROM
+				FROM = { is_working_with_JAP = yes }
+			}
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			NOT = { has_wargoal_against = FROM }
+			NOT = { has_global_flag = JAP_defeated_by_china }
+		}
+
+		cost = 35
+		days_remove = 30
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger_consider_naval_strength = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_finish_off_stragglers"
+			clear_decision_attack_AI = yes
+			hidden_effect = { add_political_power = 35 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_finish_off_stragglers"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_finish_off_stragglers"
+			clear_decision_attack_AI = yes
+			create_wargoal = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_campaign_into_frontier = {
+		icon = GFX_decision_jap_conquer_china
+
+		allowed = { always = no } #activated by focus JAP_continental_warfare
+
+		available = {
+			second_weltkrieg_has_begun = yes
+			NOT = {
+				has_non_aggression_pact_with = FROM
+				has_guaranteed = FROM
+				is_guaranteed_by = FROM
+				is_ally_with = FROM
+			}
+			if = {
+				limit = {
+					FNG = {
+						exists = yes
+						is_working_with_JAP = yes
+					}
+				}
+				OR = {
+					#This decision exists basically because faction rules prevent non-leaders from declaring war.
+					FNG = { has_wargoal_against = FROM } #if FNG is independent, try to funnel decisions through them and their demand outskirts decisions.
+					FNG = {
+						has_global_flag = china_united
+						is_subject_of = JAP
+					}
+				}
+			}
+			else = {
+				has_global_flag = china_united
+				var:608.owner = { #Beijing
+					is_subject_of = ROOT
+				}
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			NOT = { has_wargoal_against = FROM }
+			NOT = { has_global_flag = JAP_defeated_by_china }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				has_wargoal_against = FROM
+				has_global_flag = JAP_defeated_by_china
+				has_non_aggression_pact_with = FROM
+				has_guaranteed = FROM
+				is_guaranteed_by = FROM
+				is_ally_with = FROM
+			}
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			NOT = { has_wargoal_against = FROM }
+			NOT = { has_global_flag = JAP_defeated_by_china }
+		}
+
+		cost = 35
+		days_remove = 30
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				FROM = { default_attack_AI_trigger_consider_naval_strength = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_campaign_into_frontier"
+			clear_decision_attack_AI = yes
+			hidden_effect = { add_political_power = 35 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_campaign_into_frontier"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_campaign_into_frontier"
+			clear_decision_attack_AI = yes
+			create_wargoal = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	develop_fengtian = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 10
+		}
+		visible = {
+			FNG_JAP_hostile = no
+			FROM = {
+				num_of_military_factories < 12
+				NOT = { has_war_with = JAP }
+				controls_state = 885
+				controls_state = 886
+				controls_state = 714
+			}
+		}
+
+		cost = 100
+
+		ai_will_do = { factor = 10 }
+
+		modifier = {
+			civilian_factory_use = 10
+		}
+
+		days_remove = 150
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete develop_fengtian"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove develop_fengtian"
+			885 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			886 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			714 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			FNG_JAP_investment_mega = yes
+		}
+		fixed_random_seed = no
+	}
+
+	develop_generic_tag = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		visible = {
+			is_faction_leader = yes
+			FROM = {
+				num_of_military_factories < 10
+				is_working_with_JAP = yes
+				exists = yes
+				NOT = {
+					has_war_with = JAP
+					CHN = { is_ally_with = ROOT }
+				}
+			}
+		}
+
+		cost = 50
+		ai_will_do = {
+			base = 0
+			modifier = {
+				FROM = {
+					AND = {
+						OR = {
+							is_in_faction_with = JAP
+							is_in_faction_with = FNG
+						}
+						NOT = {
+							has_war_with = JAP
+						}
+					}
+				}
+				add = 10
+			}
+			modifier = {
+				factor = 0
+				has_political_power < 100
+			}
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		days_remove = 75
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete develop_generic_tag"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove develop_generic_tag"
+			FROM = {
+				add_one_random_military_factory = yes
+				add_one_random_military_factory = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	major_railroad_investment = {
+		icon = GFX_decision_train
+
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+		visible = {
+			is_faction_leader = yes
+			FROM = {
+				is_working_with_JAP = yes
+				exists = yes
+				NOT = {
+					has_war_with = JAP
+					CHN = { is_ally_with = ROOT }
+				}
+				any_owned_state = {
+					is_core_of = PREV
+					is_controlled_by = PREV
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+			}
+		}
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 30
+		ai_will_do = {
+			base = 0
+			modifier = {
+				FROM = {
+					AND = {
+						OR = {
+							is_in_faction_with = JAP
+							is_in_faction_with = FNG
+						}
+						NOT = {
+							has_war_with = JAP
+						}
+					}
+				}
+				add = 5
+			}
+			modifier = {
+				factor = 0
+				has_political_power < 50
+			}
+		}
+		days_remove = 60
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove major_railroad_investment"
+			FROM = {
+				add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+				random_owned_controlled_state = {
+					limit = {
+						is_core_of = PREV
+						free_building_slots = { building = infrastructure size > 0 }
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						is_core_of = PREV
+						free_building_slots = { building = infrastructure size > 0 }
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	minor_railroad_investment = {
+		icon = GFX_decision_train
+
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 0
+		}
+		visible = {
+			is_faction_leader = yes
+			FROM = {
+				is_working_with_JAP = yes
+				exists = yes
+				NOT = {
+					has_war_with = JAP
+					CHN = { is_ally_with = ROOT }
+				}
+				any_owned_state = {
+					is_core_of = PREV
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+			}
+		}
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+		cost = 20
+		ai_will_do = {
+			base = 0
+			modifier = {
+				FROM = {
+					AND = {
+						OR = {
+							is_in_faction_with = JAP
+							is_in_faction_with = FNG
+						}
+						NOT = {
+							has_war_with = JAP
+						}
+					}
+				}
+				add = 5
+			}
+			modifier = {
+				factor = 0
+				has_political_power < 50
+			}
+		}
+		days_remove = 40
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove minor_railroad_investment"
+			FROM = {
+				ROOT = { activate_targeted_decision = { target = PREV decision = major_railroad_investment } }
+				add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+				random_owned_controlled_state = {
+					limit = {
+						is_core_of = PREV
+						free_building_slots = { building = infrastructure size > 0 }
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	harbin_chemical_research = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { always = no }
+
+		available = {
+			885 = {
+				is_owned_and_controlled_by = FNG
+			}
+			has_tech = synth_oil_experiments
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		visible = {
+			FNG_JAP_hostile = no
+			FNG = {
+				owns_state = 885
+				NOT = {
+					has_war_with = JAP
+				}
+			}
+		}
+		cost = 50
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 5
+				FNG = { is_in_faction_with = JAP }
+			}
+		}
+		modifier = {
+			civilian_factory_use = 3
+		}
+		days_remove = 100
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove harbin_chemical_research"
+			FNG = {
+				if = {
+					limit = {
+						NOT = {
+							has_tech = synth_oil_experiments
+						}
+					}
+					set_technology = { synth_oil_experiments = 1 }
+				}
+				885 = {
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = synthetic_refinery
+						level = 2
+						instant_build = yes
+					}
+				}
+				add_war_support = 0.03
+				FNG_JAP_investment_medium = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	changchun_industry_investment = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { always = no }
+
+		available = {
+			886 = {
+				is_owned_and_controlled_by = FNG
+			}
+			num_of_civilian_factories_available_for_projects > 8
+		}
+		visible = {
+			FNG_JAP_hostile = no
+			FNG = {
+				owns_state = 886
+				NOT = { has_war_with = JAP }
+			}
+		}
+		cost = 100
+		ai_will_do = { factor = 10 }
+		modifier = {
+			civilian_factory_use = 8
+		}
+		days_remove = 150
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove changchun_industry_investment"
+			FNG = {
+				886 = {
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = industrial_complex
+						level = 4
+						instant_build = yes
+					}
+				}
+				add_war_support = 0.03
+			}
+			FNG_JAP_investment_large = yes
+		}
+		fixed_random_seed = no
+	}
+}
+
+political_actions = {
+	JAP_the_great_struggle = {
+		icon = generic_ignite_civil_war
+		allowed = { always = no }
+
+		visible = {
+			is_subject = no
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				has_war_with_major = yes
+			}
+		}
+
+		fire_only_once = yes
+
+		days_remove = 365
+
+		modifier = {
+			army_attack_against_major_factor = 0.1
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_the_great_struggle"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_the_great_struggle"
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_divert_workers_towards_production = {
+		icon = GFX_decision_generic_merge_plant_materiel
+		allowed = { always = no }
+
+		visible = {
+			is_subject = no
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+
+		ai_will_do = {
+			base = 15
+			modifier = {
+				add = 30
+				has_war = yes
+			}
+		}
+
+		days_remove = 180
+		days_re_enable = 200
+		fire_only_once = no
+
+		ai_hint_pp_cost = 40
+		custom_cost_text = JAP_divert_workers_towards_production_cost_tt
+		custom_cost_trigger = {
+			NOT = { has_political_power < 40 }
+			NOT = { has_manpower < 200000 }
+		}
+
+		modifier = {
+			production_factory_efficiency_gain_factor = 0.1
+			industrial_capacity_factory = 0.05
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_divert_workers_towards_production"
+			add_political_power = -40
+			add_manpower = -200000
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_divert_workers_towards_production"
+			add_manpower = 180000
+		}
+		fixed_random_seed = no
+	}
+}
+
+JAP_economy_cat = {
+	# Activated by JAP_create_five_year_plan
+	JAP_support_yokohama_auto_industries = {
+		icon = GFX_decision_factories
+
+		allowed = { always = no }
+
+		highlight_states = {
+			highlight_state_targets = { state = 282 }
+		}
+
+		available = { num_of_civilian_factories_available_for_projects > 1 }
+
+		cost = 25
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_support_yokohama_auto_industries"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_support_yokohama_auto_industries"
+			282 = { prioritize_state = yes } # Tokyo
+			add_one_random_civilian_factory = yes
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_support_ota_jidosha = {
+		icon = GFX_decision_factories
+
+		allowed = { always = no }
+
+		highlight_states = {
+			highlight_state_targets = { state = 533 }
+		}
+
+		available = { num_of_civilian_factories_available_for_projects > 1 }
+
+		cost = 25
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_support_ota_jidosha"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_support_ota_jidosha"
+			533 = { prioritize_state = yes } # South Tohoku
+			add_one_random_civilian_factory = yes
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_support_kurasiki_kensyoku = {
+		icon = GFX_decision_factories
+
+		allowed = { always = no }
+
+		highlight_states = {
+			highlight_state_targets = { state = 531 }
+		}
+
+		available = { num_of_civilian_factories_available_for_projects > 1 }
+
+		cost = 25
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_support_kurasiki_kensyoku"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_support_kurasiki_kensyoku"
+			531 = { prioritize_state = yes } # Kansai
+			add_one_random_civilian_factory = yes
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_support_mitsubishi = {
+		icon = GFX_decision_generic_merge_plant_aircraft
+
+		allowed = { always = no }
+
+		highlight_states = {
+			highlight_state_targets = { state = 1104 }
+		}
+
+		available = { num_of_civilian_factories_available_for_projects > 2 }
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 90
+
+		ai_will_do = { factor = 1000 }
+
+		modifier = { civilian_factory_use = 3 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_support_mitsubishi"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_support_mitsubishi"
+			1104 = { prioritize_state = yes } # Hyogo
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_subisidies_for_nakajima = {
+		icon = GFX_decision_ger_military_buildup
+
+		allowed = { always = no }
+
+		highlight_states = {
+			highlight_state_targets = { state = 528 }
+		}
+
+		available = { num_of_civilian_factories_available_for_projects > 2 }
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 90
+
+		ai_will_do = { factor = 1000 }
+
+		modifier = { civilian_factory_use = 3 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_subisidies_for_nakajima"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_subisidies_for_nakajima"
+			528 = { prioritize_state = yes } # North Kyushu
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Activated by JAP_ties_to_the_zaibatsu
+	JAP_support_nissan = {
+		icon = GFX_decision_ger_military_buildup
+		allowed = { always = no }
+
+		available = { num_of_civilian_factories_available_for_projects > 2 }
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 90
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 3 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_support_nissan"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_support_nissan"
+			282 = { prioritize_state = yes } # Tokyo
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_industrial_partnership_with_sumitomo = {
+		icon = GFX_decision_ger_military_buildup
+		allowed = { always = no }
+
+		available = { num_of_civilian_factories_available_for_projects > 2 }
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 90
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 3 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_industrial_partnership_with_sumitomo"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_industrial_partnership_with_sumitomo"
+			282 = { prioritize_state = yes } # Tokyo
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_support_nichitsu_expansion = {
+		icon = GFX_decision_generic_construction
+		allowed = { always = no }
+
+		available = {
+			has_tech = synth_oil_experiments
+			num_of_civilian_factories_available_for_projects > 2
+			527 = { is_owned_and_controlled_by = ROOT }
+			1100 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 90
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 3 }
+
+		cancel_trigger = {
+			any_state_of = {
+				target = { 527 1100 }
+				NOT = { is_owned_and_controlled_by = ROOT }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_support_nichitsu_expansion"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_support_nichitsu_expansion"
+			527 = { # Yangseo
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 1
+					instant_build = yes
+				}
+			}
+			1100 = { # Gwanbuk
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	# Activated by JAP_foster_technological_innovation
+	JAP_back_isuzu = {
+		icon = GFX_decision_generic_motorized
+		allowed = { always = no }
+
+		available = { num_of_civilian_factories_available_for_projects > 1 }
+
+		cost = 30
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 10 }
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_back_isuzu"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_back_isuzu"
+			528 = { prioritize_state = yes } # North Kyushu
+			add_one_random_military_factory = yes
+			add_tech_bonus = {
+				name = JAP_back_isuzu
+				bonus = 0.75
+				uses = 1
+				category = cat_mechanized_equipment
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_aid_toyo_rayon = {
+		icon = GFX_decision_generic_construction
+		allowed = { always = no }
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = synth_oil_experiments
+		}
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 90
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_aid_toyo_rayon"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_aid_toyo_rayon"
+			531 = { prioritize_state = yes } # Kansai
+			add_one_random_synthetic_refinery = yes
+			add_one_random_synthetic_refinery = yes
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_fund_nec_plant = {
+		icon = GFX_decision_electrify
+		allowed = { always = no }
+
+		available = { num_of_civilian_factories_available_for_projects > 1 }
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_fund_nec_plant"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_fund_nec_plant"
+			1101 = { prioritize_state = yes } # North Kanto
+			add_one_random_civilian_factory = yes
+			add_tech_bonus = {
+				name = JAP_fund_nec_plant
+				bonus = 0.5
+				uses = 2
+				category = electronics
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_invest_in_mitsui = {
+		icon = GFX_decision_factories
+		allowed = { always = no }
+
+		available = { num_of_civilian_factories_available_for_projects > 1 }
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_invest_in_mitsui"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_invest_in_mitsui"
+			1104 = { prioritize_state = yes } # Hyogo
+			add_one_random_civilian_factory = yes
+			add_tech_bonus = {
+				name = JAP_invest_in_mitsui
+				bonus = 0.5
+				uses = 1
+				category = cat_production
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_kawasaki_aircraft_plant = {
+		icon = GFX_decision_generic_merge_plant_aircraft
+		allowed = { always = no }
+
+		available = { num_of_civilian_factories_available_for_projects > 2 }
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 90
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 3 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_kawasaki_aircraft_plant"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_kawasaki_aircraft_plant"
+			532 = { prioritize_state = yes } # Tokai
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+			air_experience = 25
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_aid_for_chugoku_arms_industries = {
+		icon = GFX_decision_ger_military_buildup
+
+		allowed = { always = no }
+
+		available = { num_of_civilian_factories_available_for_projects > 2 }
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 90
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 3 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_aid_for_chugoku_arms_industries"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_aid_for_chugoku_arms_industries"
+			529 = { prioritize_state = yes } # San'yo
+			1103 = { prioritize_state = yes } # San'in
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Activated by JAP_prioritise_military_oil
+	JAP_support_nippon_soda = {
+		icon = GFX_decision_generic_construction
+
+		allowed = { always = no }
+
+		state_target = yes
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = synth_oil_experiments
+		}
+
+		cost = 40
+		fire_only_once = yes
+
+		days_remove = 100
+
+		ai_will_do = { factor = 100 }
+
+		modifier = { civilian_factory_use = 3 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_support_nippon_soda"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_support_nippon_soda"
+			1106 = { prioritize_state = yes } # North Tohoku
+			add_one_random_synthetic_refinery = yes
+			add_one_random_synthetic_refinery = yes
+		}
+		fixed_random_seed = no
+	}
+
+	# Activated by JAP_scrap_and_build_program
+	JAP_expand_tamano_shipyards = {
+		icon = GFX_decision_generic_naval
+
+		allowed = { always = no }
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		visible = {
+			controls_state = 529
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 529 } # Chugoku
+		}
+
+		cost = 30
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		priority = 50
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_expand_tamano_shipyards"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_expand_tamano_shipyards"
+			529 = { prioritize_state = yes }
+			add_one_random_dockyard = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_expand_kure_naval_arsenal = {
+		icon = GFX_decision_generic_naval
+
+		allowed = { always = no }
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		visible = {
+			controls_state = 529
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 529 } # Chugoku
+		}
+
+		cost = 30
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		priority = 50
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_expand_kure_naval_arsenal"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_expand_kure_naval_arsenal"
+			529 = { prioritize_state = yes }
+			add_one_random_dockyard = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_expand_yokosuka_naval_arsenal = {
+		icon = GFX_decision_generic_naval
+
+		allowed = { always = no }
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		visible = {
+			controls_state = 282
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 282 } # Kanto
+		}
+
+		cost = 30
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		priority = 50
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_expand_yokosuka_naval_arsenal"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_expand_yokosuka_naval_arsenal"
+			282 = { prioritize_state = yes }
+			add_one_random_dockyard = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_expand_sasebo_naval_arsenal = {
+		icon = GFX_decision_generic_naval
+
+		allowed = { always = no }
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		visible = {
+			controls_state = 528
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 528 } # Kyushu
+		}
+
+		cost = 30
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		priority = 50
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_expand_sasebo_naval_arsenal"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_expand_sasebo_naval_arsenal"
+			528 = { prioritize_state = yes }
+			add_one_random_dockyard = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_expand_maizuru_naval_arsenal = {
+		icon = GFX_decision_generic_naval
+
+		allowed = { always = no }
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		visible = {
+			controls_state = 1104
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 1104 } # Hyogo
+		}
+
+		cost = 30
+		fire_only_once = yes
+
+		days_remove = 60
+
+		ai_will_do = { factor = 100 }
+
+		priority = 50
+
+		modifier = { civilian_factory_use = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_expand_maizuru_naval_arsenal"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove JAP_expand_maizuru_naval_arsenal"
+			1104 = { prioritize_state = yes }
+			add_one_random_dockyard = yes
+		}
+		fixed_random_seed = no
+	}
+
+	## Navy; Activated by JAP_start_the_fourth_circle_plan
+	JAP_complete_the_fourth_circle_plan = {
+		icon = GFX_decision_generic_merge_plant_ship
+
+		allowed = { always = no }
+
+		available = {
+			has_navy_size = {
+				unit = battleship
+				size > 7
+			}
+			has_navy_size = {
+				unit = carrier
+				size > 7
+			}
+			has_navy_size = {
+				unit = battle_cruiser
+				size > 5
+			}
+			has_navy_size = {
+				unit = heavy_cruiser
+				size > 19
+			}
+			has_navy_size = {
+				unit = light_cruiser
+				size > 19
+			}
+			has_navy_size = {
+				unit = destroyer
+				size > 149
+			}
+		}
+
+		priority = 51
+		days_mission_timeout = 1450
+		is_good = no
+
+		cancel_trigger = {
+			is_subject = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_complete_the_fourth_circle_plan"
+			swap_ideas = {
+				remove_idea = JAP_mass_shipbuilding_2
+				add_idea = JAP_mass_shipbuilding_3
+			}
+		}
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout JAP_complete_the_fourth_circle_plan"
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel JAP_complete_the_fourth_circle_plan"
+		}
+		fixed_random_seed = no
+	}
+}
+
+JAP_co_prosperity_decisions = {
+	JAP_invite_into_faction = {
+		icon = generic_flags
+		priority = 10
+
+		allowed = { tag = JAP }
+
+		available = {
+			FROM = { #separate FROMs to make the tooltip more readable
+				OR = {
+					has_idea = JAP_member_integration_2
+					has_idea = JAP_member_integration_3
+				}
+			}
+			FROM = {
+				surrender_progress < 0.30
+				at_peace_or_same_enemies_as_ROOT = yes
+			}
+			NOT = { GER = { has_guaranteed = FROM } }
+			NOT = { GEA = { has_guaranteed = FROM } }
+			surrender_progress < 0.30
+		}
+
+		visible = {
+			NOT = { has_war_with = FROM }
+			FROM = {
+				exists = yes
+				is_in_faction = no
+				is_subject = no
+				has_socialist_government = no
+				OR = {
+					is_in_economic_sphere = no
+					is_in_economic_sphere_led_by_ROOT = yes
+				}
+				NOT = { has_country_flag = JAP_invited_to_sphere }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		target_array = economic_sphere:members
+		target_array = global.JAP_possible_allies_array
+		target_trigger = {
+			FROM = {
+				exists = yes
+				is_in_faction = no
+				is_subject = no
+				has_socialist_government = no
+				NOT = { has_country_flag = JAP_invited_to_sphere }
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				INC = { exists = no }
+				FROM = {
+					tag = SIA
+					num_divisions < 31
+					has_war = no
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_invite_into_faction"
+			FROM = {
+				set_country_flag = JAP_invited_to_sphere
+				country_event = japan_foreign_events.342
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_invite_into_economic_sphere = {
+		icon = generic_agreement
+		priority = 5
+
+		allowed = { tag = JAP }
+
+		available = {
+			surrender_progress < 0.30
+			FROM = {
+				surrender_progress < 0.30
+				NOT = { is_guaranteed_by = GER }
+				NOT = { is_guaranteed_by = GEA }
+			}
+		}
+
+		visible = {
+			is_economic_sphere_leader = yes
+			FROM = { japan_tag_can_be_invited_to_economic_sphere = yes }
+		}
+
+		cost = 25
+		fire_only_once = no
+
+		targets = { ANQ AST BRM CAM CEY ETS MAN GXC HAW INC INS KAC KOR LAO LEC MAL MON NZL PHI PNG SAR SHA SHX SIA SHD SZC TIB FER XSM VIN NEP AFG KAZ TRK BUK KHI }
+		target_array = subjects
+		target_array = faction_members
+		target_array = global.indian_tags_array
+		target_root_trigger = { has_completed_focus = JAP_osaka_conference }
+		target_trigger = {
+			is_economic_sphere_leader = yes
+			FROM = { japan_tag_can_be_invited_to_economic_sphere = yes }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_invite_into_economic_sphere"
+			FROM = {
+				set_country_flag = JAP_was_invited_into_sphere
+				country_event = { id = japan_foreign_events.401 days = 2 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 0
+				FROM = {
+					NOT = { is_in_faction_with = ROOT }
+					any_owned_state = { is_claim_or_core_of_ROOT = yes }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { NOT = { has_country_flag = tokyo_conference_trade_ally } }
+				is_in_array = { global.JAP_possible_allies_array = FROM }
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 5
+				FROM = {
+					NOT = { is_subject_of = ROOT }
+					is_in_faction_with = ROOT
+				}
+			}
+			modifier = {
+				factor = 100
+				FROM = {
+					OR = {
+						is_subject_of = ROOT
+						has_country_flag = tokyo_conference_trade_ally
+					}
+				}
+			}
+			modifier = {
+				factor = 0.5
+				FROM = { num_of_civilian_factories < 4 }
+			}
+			modifier = {
+				factor = 3
+				FROM = { num_of_civilian_factories > 6 }
+			}
+			modifier = {
+				factor = 5
+				FROM = { num_of_military_factories > 9 }
+			}
+			modifier = {
+				add = 2000
+				FROM = { original_tag = SIA } #Make Siam join ASAP
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_invest_in_sphere_member = {
+		icon = hol_attract_foreign_investors
+		priority = 3
+
+		allowed = { tag = JAP }
+
+		available = {
+			set_temp_variable = { JAP_factory_comparison = FROM.num_of_owned_factories }
+			if = {
+				limit = { FROM = { has_idea = JAP_member_integration_2 } }
+				multiply_temp_variable = { JAP_factory_comparison = 3 }
+			}
+			else_if = {
+				limit = { FROM = { has_idea = JAP_member_integration_1 } }
+				multiply_temp_variable = { JAP_factory_comparison = 2 }
+			}
+			num_of_controlled_factories > JAP_factory_comparison
+			surrender_progress < 0.30
+			FROM = { surrender_progress < 0.30 }
+		}
+
+		visible = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = {
+				NOT = { tag = FNG }
+				NOT = { has_idea = JAP_member_integration_3 }
+				is_subject = no
+			}
+		}
+
+		cost = JAP_eco_cost_1
+		fire_only_once = no
+		days_remove = 365
+
+		target_array = economic_sphere:members
+		target_root_trigger = { has_completed_focus = JAP_integrate_asian_economies }
+		target_trigger = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = {
+				NOT = { tag = FNG }
+				NOT = { has_idea = JAP_member_integration_3 }
+				is_subject = no
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_invest_in_sphere_member"
+			FROM = {
+				country_event = japan_foreign_events.405
+				event_option_tooltip = japan_foreign_events.405.a
+			}
+		}
+
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 2
+				FROM = { tag = SIA }
+			}
+			modifier = {
+				factor = 2
+				is_in_faction_with = FROM
+			}
+			modifier = {
+				factor = 0.5
+				ic_ratio = { tag = FROM ratio > 3 }
+			}
+			modifier = {
+				factor = 3
+				ic_ratio = { tag = FROM ratio < 2 }
+			}
+			modifier = {
+				add = 2000
+				FROM = {
+					original_tag = SIA #Make Siam join ASAP
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_economic_sphere_takeover = {
+		icon = oppression
+		priority = 4
+
+		allowed = { tag = JAP }
+
+		available = {
+			set_temp_variable = { JAP_factory_comparison = { value = FROM.num_of_owned_factories multiply = 3 } }
+			num_of_controlled_factories > JAP_factory_comparison
+			surrender_progress < 0.30
+			FROM = { surrender_progress < 0.30 }
+			NOT = { FROM = { has_country_flag = JAP_invest_timer } }
+		}
+
+		visible = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = {
+				has_idea = JAP_member_integration_3
+				is_subject = no
+			}
+		}
+
+		cost = JAP_eco_cost_2
+		fire_only_once = no
+
+		target_array = economic_sphere:members
+		target_root_trigger = { has_completed_focus = JAP_integrate_asian_economies }
+		target_trigger = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = {
+				has_idea = JAP_member_integration_3
+				is_subject = no
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_economic_sphere_takeover"
+			FROM = {
+				country_event = japan_foreign_events.407
+				event_option_tooltip = japan_foreign_events.407.a
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				add = 10000
+				FROM = { original_tag = SIA }
+			}
+			modifier = {
+				factor = 2
+				is_in_faction_with = FROM
+			}
+			modifier = {
+				factor = 0.5
+				ic_ratio = { tag = FROM ratio > 3 }
+			}
+			modifier = {
+				factor = 3
+				ic_ratio = { tag = FROM ratio < 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_invest_in_sphere_member_docks = {
+		icon = hol_attract_foreign_investors
+
+		allowed = { tag = JAP }
+
+		available = {
+			num_of_naval_factories > FROM.num_of_naval_factories
+			surrender_progress < 0.30
+			FROM = { surrender_progress < 0.30 }
+			NOT = { FROM = { has_country_flag = JAP_invest_timer } }
+		}
+
+		visible = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = { num_of_naval_factories > 0 }
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		priority = 1
+		target_array = economic_sphere:members
+		target_root_trigger = { has_completed_focus = JAP_copro_development_plan }
+		target_trigger = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = { num_of_naval_factories > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_invest_in_sphere_member_docks"
+			FROM = {
+				set_country_flag = { flag = JAP_invest_timer days = 365 value = 1 }
+				set_country_flag = JAP_invest_docks
+				country_event = japan_foreign_events.420
+				event_option_tooltip = japan_foreign_events.420.a
+			}
+		}
+
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 2
+				FROM = { tag = SIA }
+			}
+			modifier = {
+				factor = 2
+				is_in_faction_with = FROM
+			}
+			modifier = {
+				factor = 0.5
+				ic_ratio = { tag = FROM ratio > 3 }
+			}
+			modifier = {
+				factor = 3
+				ic_ratio = { tag = FROM ratio < 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_invest_in_sphere_naval_advisors = {
+		icon = hol_attract_foreign_investors
+
+		allowed = { tag = JAP }
+
+		available = {
+			surrender_progress < 0.30
+			FROM = { surrender_progress < 0.30 }
+		}
+
+		visible = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = { num_of_naval_factories > 0 }
+		}
+
+		cost = 20
+		fire_only_once = yes
+
+		priority = 1
+		target_array = economic_sphere:members
+		target_root_trigger = { has_completed_focus = JAP_naval_engineering_assistance }
+		target_trigger = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = { num_of_naval_factories > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_invest_in_sphere_naval_advisors"
+			FROM = {
+				country_event = japan_foreign_events.421
+				custom_effect_tooltip = tooltip_event_allows_choice
+				custom_effect_tooltip = tooltip_event_choice_option_1
+				event_option_tooltip = japan_foreign_events.421.a
+				custom_effect_tooltip = tooltip_event_choice_option_2
+				event_option_tooltip = japan_foreign_events.421.b
+				custom_effect_tooltip = tooltip_event_choice_option_3
+				event_option_tooltip = japan_foreign_events.421.c
+			}
+		}
+
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 2
+				FROM = { tag = SIA }
+			}
+			modifier = {
+				factor = 2
+				is_in_faction_with = FROM
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_invest_in_sphere_prosperity_ships = {
+		icon = hol_attract_foreign_investors
+
+		allowed = { tag = JAP }
+
+		available = {
+			surrender_progress < 0.30
+			FROM = { surrender_progress < 0.30 }
+		}
+
+		visible = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = { num_of_naval_factories > 0 }
+		}
+
+		cost = 20
+		fire_only_once = yes
+
+		priority = 1
+		target_array = economic_sphere:members
+		target_root_trigger = { has_completed_focus = JAP_prosperity_ships }
+		target_trigger = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = { num_of_naval_factories > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_invest_in_sphere_prosperity_ships"
+			FROM = {
+				country_event = japan_foreign_events.422
+				event_option_tooltip = japan_foreign_events.422.a
+			}
+		}
+
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 2
+				FROM = { tag = SIA }
+			}
+			modifier = {
+				factor = 2
+				is_in_faction_with = FROM
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_invest_in_sphere_take_dockyards = { #took over dockyards
+		icon = hol_attract_foreign_investors
+
+		allowed = { tag = JAP }
+
+		available = {
+			surrender_progress < 0.30
+			FROM = { num_of_naval_factories > 2 }
+			OR = {
+				has_subject = FROM
+				FROM = { surrender_progress < 0.30 }
+			}
+		}
+
+		visible = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = {
+				has_country_flag = JAP_invest_docks
+				NOT = { has_country_flag = JAP_refused_dockyards }
+			}
+		}
+
+		days_remove = 365
+		cost = 50
+
+		priority = 1
+		target_array = economic_sphere:members
+		target_root_trigger = { has_completed_focus = JAP_unified_production }
+		target_trigger = {
+			is_leader_of_economic_sphere_of_FROM = yes
+			FROM = {
+				has_country_flag = JAP_invest_docks
+				NOT = { has_country_flag = JAP_refused_dockyards }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_invest_in_sphere_take_dockyards"
+			add_offsite_building = { type = dockyard level = 3 }
+			if = {
+				limit = { has_subject = FROM }
+				FROM = {
+					country_event = japan_foreign_events.423
+					event_option_tooltip = japan_foreign_events.423.a
+				}
+			}
+			else = {
+				FROM = { country_event = japan_foreign_events.423 }
+				custom_effect_tooltip = if_they_accept_tt
+				FROM = { event_option_tooltip = japan_foreign_events.423.a }
+			}
+		}
+
+		remove_trigger = {
+			is_in_same_economic_sphere_as_FROM = no
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_invest_in_sphere_take_dockyards"
+			add_offsite_building = { type = dockyard level = -3 }
+			FROM = {
+				country_event = japan_foreign_events.424
+				event_option_tooltip = japan_foreign_events.424.a
+			}
+		}
+
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 10
+				any_enemy_country = { num_of_naval_factories > ROOT.num_of_naval_factories }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+JAP_long_war_cat = { #Long War decisions
+	JAP_modernization_complete = {
+		icon = GFX_decision_eng_trade_unions_demand
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+		}
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = JAP_war_ready_industries_3 }
+				has_country_flag = JAP_war_ready_industries_3_complete
+			}
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = JAP_war_ready_soldiers_3 }
+				has_country_flag = JAP_war_ready_soldiers_3_complete
+			}
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = JAP_war_ready_equipment_3 }
+				has_country_flag = JAP_war_ready_equipment_3_complete
+			}
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_modernization_complete"
+			hidden_effect = {
+				remove_ideas = {
+					JAP_equipment_lw_3
+					JAP_research_modernisation_lw_3
+					JAP_staff_modernisation_lw_3
+				}
+				add_ideas = JAP_long_war_army_lw
+			}
+			custom_effect_tooltip = JAP_merge_into_modern_army
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_industries_1 = {
+		icon = GFX_decision_generic_research
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+		}
+
+		available = {
+			num_of_military_factories > 21
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_industries_1"
+			set_country_flag = JAP_war_ready_industries_1_complete
+			add_ideas = JAP_research_modernisation_lw_1
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_industries_2 = {
+		icon = GFX_decision_generic_research
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+			has_country_flag = JAP_war_ready_industries_1_complete
+		}
+
+		available = {
+			num_of_military_factories > 26
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_industries_2"
+			set_country_flag = JAP_war_ready_industries_2_complete
+			swap_ideas = {
+				remove_idea = JAP_research_modernisation_lw_1
+				add_idea = JAP_research_modernisation_lw_2
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_industries_3 = {
+		icon = GFX_decision_generic_research
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+			has_country_flag = JAP_war_ready_industries_2_complete
+		}
+
+		available = {
+			num_of_military_factories > 38
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_industries_3"
+			set_country_flag = JAP_war_ready_industries_3_complete
+			swap_ideas = {
+				remove_idea = JAP_research_modernisation_lw_2
+				add_idea = JAP_research_modernisation_lw_3
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_soldiers_1 = {
+		icon = GFX_decision_hol_draw_up_staff_plans
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+		}
+
+		available = {
+			NOT = {
+				check_variable = {
+					JAP_compled_mil_focuses < 4
+					tooltip = JAP_has_completed_x_mil
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_soldiers_1"
+			set_country_flag = JAP_war_ready_soldiers_1_complete
+			add_ideas = JAP_staff_modernisation_lw_1
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_soldiers_2 = {
+		icon = GFX_decision_hol_draw_up_staff_plans
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+			has_country_flag = JAP_war_ready_soldiers_1_complete
+		}
+
+		available = {
+			NOT = {
+				check_variable = {
+					JAP_compled_mil_focuses < 8
+					tooltip = JAP_has_completed_x_mil
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_soldiers_2"
+			set_country_flag = JAP_war_ready_soldiers_2_complete
+			swap_ideas = {
+				remove_idea = JAP_staff_modernisation_lw_1
+				add_idea = JAP_staff_modernisation_lw_2
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_soldiers_3 = {
+		icon = GFX_decision_hol_draw_up_staff_plans
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+			has_country_flag = JAP_war_ready_soldiers_2_complete
+		}
+
+		available = {
+			NOT = {
+				check_variable = {
+					JAP_compled_mil_focuses < 12
+					tooltip = JAP_has_completed_x_mil
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_soldiers_3"
+			set_country_flag = JAP_war_ready_soldiers_3_complete
+			swap_ideas = {
+				remove_idea = JAP_staff_modernisation_lw_2
+				add_idea = JAP_staff_modernisation_lw_3
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_equipment_1 = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+		}
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_has_tech_detailed
+					NAME = country_culture|support_weapons
+					TECH = support_weapons
+				}
+				has_tech = support_weapons
+			}
+			has_tech = interwar_artillery
+			has_tech = tech_logistics_company
+			has_tech = radio
+			has_land_grand_doctrine = yes
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_equipment_1"
+			set_country_flag = JAP_war_ready_equipment_1_complete
+			add_ideas = JAP_equipment_lw_1
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_equipment_2 = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+			has_country_flag = JAP_war_ready_equipment_1_complete
+		}
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_has_tech_detailed
+					NAME = country_culture|infantry_weapons2
+					TECH = infantry_weapons2
+				}
+				has_tech = infantry_weapons2
+			}
+			has_template_containing_unit = artillery_brigade
+			if = {
+				limit = { has_dlc_nsb = yes }
+				has_tech = basic_medium_tank_chassis
+			}
+			else = {
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_has_tech_detailed
+						NAME = country_culture|medium_tank_equipment_1
+						TECH = medium_tank_equipment_1
+					}
+					has_tech = basic_medium_tank
+				}
+			}
+			count_triggers = {
+				amount = 3
+				has_subdoctrine_in_track = infantry
+				has_subdoctrine_in_track = combat_support
+				has_subdoctrine_in_track = armor
+				has_subdoctrine_in_track = operations
+			}
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_equipment_2"
+			set_country_flag = JAP_war_ready_equipment_2_complete
+			swap_ideas = {
+				remove_idea = JAP_equipment_lw_1
+				add_idea = JAP_equipment_lw_2
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_ready_equipment_3 = {
+		icon = GFX_decision_generic_industry
+
+		allowed = { tag = JAP }
+
+		visible = {
+			has_completed_focus = JAP_long_war_doctrine
+			has_country_flag = JAP_war_ready_equipment_2_complete
+		}
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_has_tech_detailed
+					NAME = country_culture|infantry_equipment_2
+					TECH = infantry_equipment_2
+				}
+				has_tech = improved_infantry_weapons
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_has_tech_detailed
+					NAME = country_culture|artillery2
+					TECH = artillery2
+				}
+				has_tech = artillery2
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_has_tech_detailed
+					NAME = country_culture|mechanized_equipment_1
+					TECH = mechanized_equipment_1
+				}
+				has_tech = mechanised_infantry
+			}
+			count_triggers = {
+				amount = 2
+				has_mastery = { amount = 200 track = infantry }
+				has_mastery = { amount = 200 track = combat_support }
+				has_mastery = { amount = 200 track = armor }
+				has_mastery = { amount = 200 track = operations }
+			}
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		priority = 101
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_war_ready_equipment_3"
+			set_country_flag = JAP_war_ready_equipment_3_complete
+			swap_ideas = {
+				remove_idea = JAP_equipment_lw_2
+				add_idea = JAP_equipment_lw_3
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+JAP_short_war_cat = { # Short war decisions
+	JAP_war_planning_against_from_default = {
+		name = JAP_war_planning_against_from
+		icon = GFX_decision_hol_draw_up_staff_plans
+		priority = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = FROM.capital }
+		}
+
+		visible = {
+			JAP_war_planning_decision_target_trigger = yes
+		}
+
+		cancel_trigger = {
+			JAP_war_planning_decision_cancel_trigger = yes
+		}
+
+		targets = { PHI SIA AST GEA }
+		target_array = global.china_tags_array
+		target_root_trigger = {
+			has_completed_focus = JAP_short_war_doctrine
+		}
+		target_trigger = {
+			JAP_war_planning_decision_target_trigger = yes
+		}
+
+		custom_cost_text = JAP_CP_cost_tt
+		custom_cost_trigger = {
+			JAP_war_planning_decision_cost = yes
+		}
+
+		days_remove = JAP_sw_warplan_research_time?365
+		fire_only_once = yes
+
+		ai_will_do = { factor = 10 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_war_planning_against_from_default"
+			JAP_war_planning_decision_cancel_effect = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_war_planning_against_from_default"
+			JAP_war_planning_decision_complete = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_war_planning_against_from_default"
+			JAP_war_planning_decision_remove = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_planning_against_from_india = {
+		name = JAP_war_planning_against_from
+		icon = GFX_decision_hol_draw_up_staff_plans
+		priority = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = FROM.capital }
+		}
+
+		visible = {
+			JAP_war_planning_decision_target_trigger = yes
+		}
+
+		cancel_trigger = {
+			JAP_war_planning_decision_cancel_trigger = yes
+		}
+
+		targets = { 439.OWNER } #Delhi
+		target_root_trigger = {
+			has_completed_focus = JAP_short_war_doctrine
+		}
+		target_trigger = {
+			JAP_war_planning_decision_target_trigger = yes
+			439 = { is_claim_or_core_of_FROM = yes } #Delhi
+			FROM = {
+				owns_state = 427 #Hyderabad
+				owns_state = 431 #West Bengal
+				owns_state = 433 #Rajputana
+			}
+		}
+
+		custom_cost_text = JAP_CP_cost_tt
+		custom_cost_trigger = {
+			JAP_war_planning_decision_cost = yes
+		}
+
+		days_remove = JAP_sw_warplan_research_time?365
+		fire_only_once = yes
+
+		ai_will_do = { factor = 10 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_war_planning_against_from_india"
+			JAP_war_planning_decision_cancel_effect = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_war_planning_against_from_india"
+			JAP_war_planning_decision_complete = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_war_planning_against_from_india"
+			JAP_war_planning_decision_remove = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_planning_against_from_russia = {
+		name = JAP_war_planning_against_from
+		icon = GFX_decision_hol_draw_up_staff_plans
+		priority = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = FROM.capital }
+		}
+
+		visible = {
+			JAP_war_planning_decision_target_trigger = yes
+		}
+
+		cancel_trigger = {
+			JAP_war_planning_decision_cancel_trigger = yes
+		}
+
+		targets = { 219.OWNER } #Moscow
+		target_root_trigger = {
+			has_completed_focus = JAP_short_war_doctrine
+		}
+		target_trigger = {
+			JAP_war_planning_decision_target_trigger = yes
+			219 = { is_claim_or_core_of_FROM = yes } #Moscow
+		}
+
+		custom_cost_text = JAP_CP_cost_tt
+		custom_cost_trigger = {
+			JAP_war_planning_decision_cost = yes
+		}
+
+		days_remove = JAP_sw_warplan_research_time?365
+		fire_only_once = yes
+
+		ai_will_do = { factor = 10 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_war_planning_against_from_russia"
+			JAP_war_planning_decision_cancel_effect = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_war_planning_against_from_russia"
+			JAP_war_planning_decision_complete = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_war_planning_against_from_russia"
+			JAP_war_planning_decision_remove = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_planning_against_from_america = {
+		name = JAP_war_planning_against_from
+		icon = GFX_decision_hol_draw_up_staff_plans
+		priority = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = FROM.capital }
+		}
+
+		visible = {
+			JAP_war_planning_decision_target_trigger = yes
+		}
+
+		cancel_trigger = {
+			JAP_war_planning_decision_cancel_trigger = yes
+		}
+
+		targets = { 361.OWNER } #Maryland
+		target_array = global.china_tags_array
+		target_array = global.indian_tags_array
+
+		target_root_trigger = {
+			has_completed_focus = JAP_short_war_doctrine
+			has_global_flag = USA_civil_war_over_flag
+		}
+		target_trigger = {
+			JAP_war_planning_decision_target_trigger = yes
+			361 = { is_claim_or_core_of_FROM = yes } #Maryland
+		}
+
+		custom_cost_text = JAP_CP_cost_tt
+		custom_cost_trigger = {
+			JAP_war_planning_decision_cost = yes
+		}
+
+		days_remove = JAP_sw_warplan_research_time?365
+		fire_only_once = yes
+
+		ai_will_do = { factor = 10 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_war_planning_against_from_america"
+			JAP_war_planning_decision_cancel_effect = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_war_planning_against_from_america"
+			JAP_war_planning_decision_complete = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_war_planning_against_from_america"
+			JAP_war_planning_decision_remove = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_war_planning_against_from_indonesia = {
+		name = JAP_war_planning_against_from
+		icon = GFX_decision_hol_draw_up_staff_plans
+		priority = 100
+
+		highlight_states = {
+			highlight_state_targets = { state = FROM.capital }
+		}
+
+		visible = {
+			JAP_war_planning_decision_target_trigger = yes
+		}
+
+		cancel_trigger = {
+			JAP_war_planning_decision_cancel_trigger = yes
+		}
+
+		targets = { 1020.OWNER } #Residency of Batavia
+		target_root_trigger = {
+			has_completed_focus = JAP_short_war_doctrine
+		}
+		target_trigger = {
+			JAP_war_planning_decision_target_trigger = yes
+			1020 = { is_claim_or_core_of_FROM = yes }
+		}
+
+		custom_cost_text = JAP_CP_cost_tt
+		custom_cost_trigger = {
+			JAP_war_planning_decision_cost = yes
+		}
+
+		days_remove = JAP_sw_warplan_research_time?365
+		fire_only_once = yes
+
+		ai_will_do = { factor = 10 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_war_planning_against_from_indonesia"
+			JAP_war_planning_decision_cancel_effect = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_war_planning_against_from_indonesia"
+			JAP_war_planning_decision_complete = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_war_planning_against_from_indonesia"
+			JAP_war_planning_decision_remove = yes
+		}
+		fixed_random_seed = no
+	}
+	JAP_strike_against_from_i = {
+		name = JAP_strike_against_from
+		icon = GFX_decision_generic_ignite_civil_war
+		priority = 100
+
+		allowed = { always = no }
+
+		visible = {
+			has_war_with = FROM
+		}
+
+		targeted_modifier = {
+			tag = FROM
+			attack_bonus_against = 0.1
+			breakthrough_bonus_against = 0.1
+		}
+
+		days_remove = JAP_sw_length_var?365
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_strike_against_from_i"
+		}
+		fixed_random_seed = no
+	}
+	JAP_strike_against_from_ii = {
+		name = JAP_strike_against_from
+		icon = GFX_decision_generic_ignite_civil_war
+		priority = 100
+
+		allowed = { always = no }
+
+		visible = {
+			has_war_with = FROM
+		}
+
+		targeted_modifier = {
+			tag = FROM
+			attack_bonus_against = 0.15
+			breakthrough_bonus_against = 0.15
+		}
+
+		days_remove = JAP_sw_length_var?365
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_strike_against_from_ii"
+			if = {
+				limit = { has_dlc_lar = yes }
+				add_intel = {
+					target = FROM
+					army_intel = 15
+				}
+			}
+			else = {
+				add_decryption = {
+					target = FROM
+					ratio = 0.15
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_battle_for_production = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		cost = 50
+		fire_only_once = yes
+
+		days_remove = 100
+
+		ai_will_do = { factor = 100 }
+
+		priority = 99
+
+		modifier = {
+			industrial_capacity_factory = 0.10
+			industrial_capacity_dockyard = 0.10
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_battle_for_production"
+		}
+		fixed_random_seed = no
+	}
+	JAP_battle_for_morale = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		cost = 50
+		fire_only_once = yes
+
+		days_remove = 100
+
+		ai_will_do = { factor = 100 }
+
+		priority = 99
+
+		modifier = {
+			command_power_gain = 0.5
+			breakthrough_factor = 0.1
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_battle_for_morale"
+		}
+		fixed_random_seed = no
+	}
+	JAP_battle_for_defence = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		cost = 50
+		fire_only_once = yes
+
+		days_remove = 100
+
+		ai_will_do = { factor = 100 }
+
+		priority = 99
+
+		modifier = {
+			army_defence_factor = 0.10
+			dig_in_speed_factor = 0.25
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_battle_for_defence"
+		}
+		fixed_random_seed = no
+	}
+	JAP_battle_for_the_skies = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		cost = 50
+		fire_only_once = yes
+
+		days_remove = 100
+
+		ai_will_do = { factor = 100 }
+
+		priority = 99
+
+		modifier = {
+			army_bonus_air_superiority_factor = 0.20
+			air_superiority_efficiency = 0.10
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_battle_for_the_skies"
+		}
+		fixed_random_seed = no
+	}
+	JAP_battle_for_harmony = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		cost = 50
+		fire_only_once = yes
+
+		days_remove = 100
+
+		ai_will_do = { factor = 100 }
+
+		priority = 99
+
+		modifier = {
+			stability_weekly = 0.005
+			consumer_goods_factor = -0.15
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_battle_for_harmony"
+		}
+		fixed_random_seed = no
+	}
+}
+
+JAP_co_prosperity_member_decisions = {
+
+	JAP_request_nav_advisors = {
+		icon = generic_research
+
+		allowed = {
+			NOT = {
+				tag = JAP
+				tag = GER #always hostile
+				tag = MAF
+				tag = GEA
+				tag = BAT
+				tag = RUS
+				tag = FRA
+				tag = ENG
+				tag = WCA
+				tag = SRI
+				tag = SWF
+				tag = FOP
+				tag = HND
+				tag = USA #can't join
+				tag = APG
+				tag = NEE
+				tag = RAJ
+				tag = DEI
+				tag = TAI
+			}
+			OR = {
+				tag = FNG
+				original_tag = GXC
+				tag = SHD
+				is_chinese_or_potential_chinese_tag = no #others can't join
+			}
+		}
+
+		targets = { JAP }
+		target_root_trigger = {
+			JAP = { has_completed_focus = JAP_naval_engineering_assistance }
+			num_of_naval_factories > 0
+		}
+		target_trigger = {
+			OR = {
+				is_in_faction_with = FROM
+				is_in_economic_sphere_led_by_FROM = yes
+			}
+			NOT = { has_war_with = FROM }
+		}
+
+		cost = 20
+		fire_only_once = yes
+
+		ai_will_do = { factor = 10 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_request_nav_advisors"
+			JAP = { country_event = japan_foreign_events.425 }
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_withdraw_from_alliance = {
+		icon = generic_army_support
+
+		allowed = {
+			NOT = {
+				tag = JAP
+				tag = FNG #Fengtian has its own content for joining and leaving.
+			}
+		}
+
+		available = {
+			has_war = no
+			is_subject = no
+		}
+
+		visible = {
+			is_ai = no
+			is_in_faction_with = JAP
+			JAP = { is_faction_leader = yes }
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete JAP_withdraw_from_alliance"
+			JAP = {
+				effect_tooltip = { remove_from_faction = ROOT }
+				add_opinion_modifier = { target = ROOT modifier = KR_hates_govt }
+				country_event = japan_foreign_events.408
+			}
+		}
+
+		ai_will_do = { base = 0 }
+		fixed_random_seed = no
+	}
+
+	JAP_withdraw_from_sphere = {
+		icon = generic_break_treaty
+
+		allowed = {
+			NOT = {
+				original_tag = JAP
+				tag = FNG #Fengtian has its own content for joining and leaving.
+			}
+		}
+
+		available = {
+			is_subject = no
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			is_in_economic_sphere_led_by_FROM = yes
+			NOT = {
+				has_idea = JAP_member_integration_1
+				has_idea = JAP_member_integration_2
+				has_idea = JAP_member_integration_3
+			}
+		}
+
+		targets = { JAP }
+		target_trigger = {
+			is_in_economic_sphere_led_by_FROM = yes
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_withdraw_from_sphere"
+			custom_effect_tooltip = JAP_withdraws_from_sphere
+			hidden_effect = { JAP_remove_from_economic_sphere = yes }
+			JAP = {
+				add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+				country_event = japan_foreign_events.409
+			}
+			remove_ideas = JAP_nav_tra_idea
+		}
+
+		ai_will_do = { base = 0 }
+		fixed_random_seed = no
+	}
+
+	JAP_nationalize_japanese_investments = {
+		icon = generic_break_treaty
+
+		allowed = {
+			NOT = {
+				original_tag = JAP
+				tag = FNG #Fengtian has its own content for joining and leaving.
+			}
+		}
+
+		available = {
+			is_subject = no
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			is_in_economic_sphere_led_by_FROM = yes
+			OR = {
+				has_idea = JAP_member_integration_1
+				has_idea = JAP_member_integration_2
+				has_idea = JAP_member_integration_3
+			}
+		}
+
+		targets = { JAP }
+		target_trigger = {
+			is_in_economic_sphere_led_by_FROM = yes
+		}
+
+		cost = JAP_investment_buyout?100
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_nationalize_japanese_investments"
+			custom_effect_tooltip = JAP_withdraws_from_sphere
+			hidden_effect = { JAP_remove_from_economic_sphere = yes }
+			JAP = {
+				add_opinion_modifier = { target = ROOT modifier = KR_outraged }
+				country_event = { id = japan_foreign_events.410 days = 1 }
+			}
+		}
+
+		ai_will_do = { base = 0 }
+		fixed_random_seed = no
+	}
+}
+
+JAP_foreign_policy_decisions = {
+	JAP_attack_indochina = {
+		name = attack_country
+		desc = JAP_attack_indochina_desc
+		icon = generic_tank
+		allowed = { always = no }
+
+		available = {
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			FROM = { is_in_same_economic_sphere_as_ROOT = no }
+		}
+
+		cost = 25
+		fire_only_once = yes
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+			modifier = {
+				factor = 0
+				is_in_array = { global.JAP_possible_allies_array = FROM }
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					NOT = {
+						any_home_area_neighbor_country = {
+							is_owner_neighbor_of = PREV
+							is_ally_with = ROOT
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				FROM = { has_war_with = GER }
+			}
+			modifier = {
+				factor = 5
+				FROM = { has_socialist_government = yes }
+			}
+			modifier = {
+				factor = 0
+				FROM = { tag = INC }
+				INC = { is_in_faction = no }
+				NOT = { has_game_rule = { rule = INC_forpol option = DEFAULT } }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_attack_indochina"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_attack_indochina"
+			add_war_support = 0.05
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_attack_indochina"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_attack_india = {
+		name = attack_country
+		desc = JAP_attack_india_desc
+		icon = generic_tank
+		allowed = { always = no }
+
+		available = {
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { naval_base > 0 }
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			FROM = { is_in_same_economic_sphere_as_ROOT = no }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				FROM = { is_in_same_economic_sphere_as_ROOT = yes }
+				has_non_aggression_pact_with = FROM
+				has_guaranteed = FROM
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+		days_remove = 30
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					NOT = { original_tag = CEY }
+					NOT = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { tag = BHU } # Ffs stop killing an observer tag
+			}
+			modifier = {
+				factor = 5
+				FROM = { has_socialist_government = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_attack_india"
+			clear_decision_attack_AI = yes
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_attack_india"
+			add_war_support = 0.05
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_attack_india"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_attack_australia = {
+		name = attack_country
+		desc = JAP_attack_australia_desc
+		icon = generic_tank
+
+		allowed = { always = no }
+
+		available = {
+			any_state_of = {
+				target = { 327 1020 } #Luzon, Batavia
+				is_controlled_by_ROOT_or_ally = yes
+			}
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { has_guaranteed = FROM }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			FROM = {
+				is_in_same_economic_sphere_as_ROOT = no
+				NOT = { has_country_flag = AST_has_ties_with_japan }
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					FROM = { default_attack_AI_trigger = yes }
+					second_weltkrieg_has_begun = no
+				}
+			}
+			modifier = {
+				factor = 5
+				FROM = { has_socialist_government = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_attack_australia"
+			clear_decision_attack_AI = yes
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_attack_australia"
+			add_war_support = 0.05
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_attack_australia"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_take_over_sakhalin = {
+		icon = generic_tank
+		allowed = { always = no }
+
+		available = {
+			FER = {
+				controls_state = FROM
+				num_of_controlled_states > 10
+			}
+			RUS = { surrender_progress > 0.2 }
+		}
+
+		visible = {
+			var:FROM.owner = { is_russian_tag = yes } #North Sakhalin
+			537 = { is_owned_and_controlled_by = ROOT } #South Sakhalin
+		}
+
+		cost = 25
+		fire_only_once = yes
+		state_target = yes
+
+		ai_will_do = { factor = 20 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_take_over_sakhalin"
+			FROM = { transfer_state_to = ROOT }
+			hidden_effect = {
+				add_state_claim = FROM
+				FROM = { enable_state_integration_50_compliance = yes }
+				FER = { country_event = russia_far_east_events.51 } #Japanese invade Sakhalin
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_attack_russia = {
+		name = attack_country
+		desc = JAP_attack_russia_desc
+		icon = generic_tank
+
+		allowed = { always = no }
+
+		available = {
+			can_declare_war_on = FROM
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 50
+		fire_only_once = yes
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+			modifier = {
+				factor = 5
+				FROM = { has_socialist_government = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel JAP_attack_russia"
+			clear_decision_attack_AI = yes
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_attack_russia"
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_attack_russia"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+prospect_for_resources = {
+	JAP_develop_chosen_tungsten_mines1 = {
+		name = JAP_develop_chosen_tungsten_mines
+		icon = tungsten
+
+		allowed = { always = no }
+
+		available = {
+			has_tech = excavation1
+			num_of_civilian_factories_available_for_projects > 3
+			controls_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		state_target = yes
+
+		cost = 40
+		days_remove = 180
+
+		modifier = {
+			civilian_factory_use = 4
+		}
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_develop_chosen_tungsten_mines1"
+			custom_effect_tooltip = JAP_develop_chosen_tungsten_mines_tt
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_develop_chosen_tungsten_mines1"
+			add_resource = {
+				type = tungsten
+				amount = 22
+				state = FROM
+			}
+			hidden_effect = {
+				JAP = {
+					activate_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines2 target = FROM }
+					remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines1 target = FROM }
+				}
+				KOR = {
+					activate_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines2 target = FROM }
+					remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines1 target = FROM }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	JAP_develop_chosen_tungsten_mines2 = {
+		name = JAP_develop_chosen_tungsten_mines
+		icon = tungsten
+
+		allowed = { always = no }
+
+		available = {
+			has_tech = excavation2
+			num_of_civilian_factories_available_for_projects > 3
+			controls_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		state_target = yes
+
+		cost = 40
+		days_remove = 180
+
+		modifier = {
+			civilian_factory_use = 4
+		}
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_develop_chosen_tungsten_mines2"
+			custom_effect_tooltip = JAP_develop_chosen_tungsten_mines_tt
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_develop_chosen_tungsten_mines2"
+			add_resource = {
+				type = tungsten
+				amount = 20
+				state = FROM
+			}
+			hidden_effect = {
+				JAP = {
+					activate_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines3 target = FROM }
+					remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines2 target = FROM }
+				}
+				KOR = {
+					activate_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines3 target = FROM }
+					remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines2 target = FROM }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_develop_chosen_tungsten_mines3 = {
+		name = JAP_develop_chosen_tungsten_mines
+		icon = tungsten
+
+		allowed = { always = no }
+
+		available = {
+			has_tech = excavation3
+			num_of_civilian_factories_available_for_projects > 3
+			controls_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		state_target = yes
+
+		cost = 40
+		days_remove = 180
+
+		modifier = {
+			civilian_factory_use = 4
+		}
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_develop_chosen_tungsten_mines3"
+			custom_effect_tooltip = JAP_develop_chosen_tungsten_mines_tt
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_develop_chosen_tungsten_mines3"
+			add_resource = {
+				type = tungsten
+				amount = 23
+				state = FROM
+			}
+			hidden_effect = {
+				JAP = {
+					activate_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines4 target = FROM }
+					remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines3 target = FROM }
+				}
+				KOR = {
+					activate_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines4 target = FROM }
+					remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines3 target = FROM }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_develop_chosen_tungsten_mines4 = {
+		name = JAP_develop_chosen_tungsten_mines
+		icon = tungsten
+
+		allowed = { always = no }
+
+		available = {
+			has_tech = excavation4
+			num_of_civilian_factories_available_for_projects > 5
+			controls_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+		}
+
+		state_target = yes
+
+		cost = 60
+		days_remove = 180
+
+		modifier = {
+			civilian_factory_use = 6
+		}
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_develop_chosen_tungsten_mines4"
+			custom_effect_tooltip = JAP_develop_chosen_tungsten_mines_tt
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_develop_chosen_tungsten_mines4"
+			add_resource = {
+				type = tungsten
+				amount = 25
+				state = FROM
+			}
+			hidden_effect = {
+				JAP = {
+					activate_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines5 target = FROM }
+					remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines4 target = FROM }
+				}
+				KOR = {
+					activate_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines5 target = FROM }
+					remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines4 target = FROM }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	JAP_develop_chosen_tungsten_mines5 = {
+		name = JAP_develop_chosen_tungsten_mines
+		icon = tungsten
+
+		highlight_states = {
+			highlight_state_targets = { state = 527 state = 525 }
+		}
+
+		allowed = { always = no }
+
+		available = {
+			has_tech = excavation5
+			num_of_civilian_factories_available_for_projects > 5
+			controls_state = FROM
+			controls_state = 525
+		}
+
+		visible = {
+			owns_state = FROM
+			owns_state = 525
+		}
+
+		state_target = yes
+
+		cost = 75
+		days_remove = 220
+
+		modifier = {
+			civilian_factory_use = 6
+		}
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete JAP_develop_chosen_tungsten_mines5"
+			custom_effect_tooltip = JAP_develop_chosen_tungsten_mines_tt
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove JAP_develop_chosen_tungsten_mines5"
+			add_resource = {
+				type = tungsten
+				amount = 20
+				state = FROM
+			}
+			add_resource = {
+				type = tungsten
+				amount = 16
+				state = 525
+			}
+			hidden_effect = {
+				JAP = { remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines5 target = FROM } }
+				KOR = { remove_targeted_decision = { decision = JAP_develop_chosen_tungsten_mines5 target = FROM } }
+			}
+		}
+		fixed_random_seed = no
+	}
+}

@@ -1,0 +1,18 @@
+calculate_faction_joining_tension = {
+	# Calculate Threat Value
+	set_temp_variable = {
+		threat_value = {
+			# base = 1000 / distance
+			value = 1000
+			divide = capital:distance_to@GER.capital
+			# multiply by the sum of all three ratios
+			multiply = {
+				value = { value = num_of_owned_factories divide = GER.num_of_owned_factories } # factory ratio
+				add = { value = max_divisions divide = GER.max_divisions } # max division ratio
+				add = { value = max_manpower_k divide = GER.max_manpower_k } # population ratio
+			}
+			# max (0.1, x)
+			clamp = { min = 0.1 max = 100 }
+		}
+	}
+}

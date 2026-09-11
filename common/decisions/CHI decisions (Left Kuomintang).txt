@@ -1,0 +1,2132 @@
+##################################
+#    Left Kuomintang Decisions   #
+##################################
+# By Suzuha and Chiang Kai-Shrek #
+# Based on work by               #
+# DSFDarker and Spiderfist       #
+##################################
+
+#debug_decisions = {
+	#DEBUG_spawn_LKMT = {
+	#	complete_effect = {
+	#		LEP = { country_event = league_collapse_events.58 }
+	#		annex_country = {
+	#			target = LEP
+	#			transfer_troops = yes
+	#		}
+	#		CHI = { country_event = CHI.earlygame.000 }
+	#	}
+	#}
+#}
+
+foreign_politics = {
+	Join_CHIs_faction_decision = {
+		icon = GFX_decision_trumpet
+		priority = 150
+
+		allowed = {
+			OR = {
+				tag = ARM
+				tag = BRM #Since they don't have a focus tree they unlock this decision via event burma_events.6 option c
+				tag = HAW #Since they don't decide foreign policy via focus they unlock this decision via event hawaii_events.9 option a
+				tag = INC
+				tag = INS
+				tag = PHI #Becomes visible if PHI went Independent Foreign Policy and is Socialist
+				tag = SIA
+			}
+		}
+
+		available = {
+			if = {
+				limit = { tag = ARM }
+				AND = {
+					has_completed_focus = ARM_first_popular_assembly
+					PER = { is_in_faction_with = CHI } #ARM should be able to join if PER is in the faction
+				}
+			}
+			else_if = {
+				limit = { tag = INC }
+				OR = {
+					has_completed_focus = INC_Comrade_Plus_Brother
+					AND = {
+						HND = { exists = no } #ESU is deader than disco
+						INT = { exists = no } #No help from INT either
+						has_war_with_major = yes
+					}
+				}
+			}
+			else_if = {
+				limit = { tag = INS }
+				OR = {
+					has_completed_focus = INS_cooperate_with_the_chinese
+					AND = {
+						HND = { exists = no } #ESU is deader than disco
+						INT = { exists = no } #No help from INT either
+						has_war_with_major = yes
+					}
+				}
+			}
+			else_if = {
+				limit = { tag = SIA }
+				OR = {
+					has_completed_focus = SIA_people_assembly
+					AND = {
+						HND = { exists = no } #ESU is deader than disco
+						INT = { exists = no } #No help from INT either
+						has_war_with_major = yes
+					}
+				}
+			}
+		}
+
+		visible = {
+			has_socialist_government = yes
+			if = {
+				limit = {
+					tag = INC
+				}
+				INC_has_VNQDD_government_trigger = yes
+			}
+			is_subject = no
+			is_in_faction = no
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+			if = {
+				limit = { tag = PHI }
+				OR = {
+					NOT = {
+						PHI = { has_country_flag = PHI_USA_won_fight_for_philippines_flag }
+					}
+					AND = {
+						PHI = { has_country_flag = PHI_USA_won_fight_for_philippines_flag }
+						WCA = { is_in_faction_with = FROM }
+					}
+				}
+			}
+		}
+
+		targets = { CHI }
+		target_root_trigger = {
+			has_socialist_government = yes
+			if = {
+				limit = {
+					tag = INC
+				}
+				INC_has_VNQDD_government_trigger = yes
+			}
+			is_subject = no
+			is_in_faction = no
+		}
+		target_trigger = {
+			FROM = {
+				has_socialist_government = yes
+				has_completed_focus = KMT_lead_the_liberation_of_asia
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 0
+				is_major = yes #Majors will never join another faction that own their cores.
+				FROM = {
+					OR = {
+						any_owned_state = { is_core_of = ROOT }
+						any_allied_country = { any_owned_state = { is_core_of = ROOT } }
+					}
+				}
+			}
+			modifier = {
+				factor = 0 #Give 0 reason to join if a tag has a non CHN forpol game rule set
+				OR = {
+					AND = {
+						tag = ARM
+						OR = {
+							AND = {
+								has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_INT }
+								NOT = { CHI = { is_in_faction_with = INT } }
+								RUS = {
+									has_socialist_government = no
+									is_faction_leader = no
+								}
+							}
+							AND = {
+								has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_PER }
+								NOT = { CHI = { is_in_faction_with = PER } }
+							}
+						}
+					}
+					AND = {
+						tag = BRM
+						OR = {
+							AND = {
+								has_game_rule = { rule = BRM_forpol option = BRM_FORPOL_INT }
+								NOT = { CHI = { is_in_faction_with = INT } }
+							}
+							AND = {
+								has_game_rule = { rule = BRM_forpol option = BRM_FORPOL_HND }
+								NOT = { CHI = { is_in_faction_with = HND } }
+							}
+						}
+					}
+					AND = {
+						tag = HAW
+						NOT = { has_game_rule = { rule = HAW_forpol option = DEFAULT } }
+						NOT = { has_game_rule = { rule = HAW_forpol option = HAW_FORPOL_CHN } }
+					}
+					AND = {
+						tag = INC
+						OR = {
+							AND = {
+								has_game_rule = { rule = INC_forpol option = INC_FORPOL_INT }
+								NOT = { CHI = { is_in_faction_with = INT } }
+							}
+							AND = {
+								has_game_rule = { rule = INC_forpol option = INC_FORPOL_HND }
+								NOT = { CHI = { is_in_faction_with = CHI } }
+							}
+						}
+					}
+					AND = {
+						tag = INS
+						OR = {
+							AND = {
+								has_game_rule = { rule = INS_forpol option = INS_FORPOL_INT }
+								NOT = { CHI = { is_in_faction_with = INT } }
+							}
+							AND = {
+								has_game_rule = { rule = INS_forpol option = INS_FORPOL_HND }
+								NOT = { CHI = { is_in_faction_with = HND } }
+							}
+						}
+					}
+					AND = {
+						tag = PHI
+						OR = {
+							AND = {
+								has_game_rule = { rule = PHI_forpol option = PHI_FORPOL_INT }
+								NOT = { CHI = { is_in_faction_with = INT } }
+							}
+							AND = {
+								has_game_rule = { rule = PHI_forpol option = PHI_FORPOL_HND }
+								NOT = { CHI = { is_in_faction_with = HND } }
+							}
+						}
+					}
+					AND = {
+						tag = SIA
+						OR = {
+							AND = {
+								has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_INT }
+								NOT = { HND = { is_in_faction_with = INT } }
+							}
+							AND = {
+								has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_HND }
+								NOT = { CHI = { is_in_faction_with = HND } }
+							}
+						}
+					}
+				}
+			}
+
+			#Base willingness depends on opinion.
+			modifier = {
+				add = 25
+				has_opinion = { target = CHI value > 74 }
+			}
+			modifier = {
+				add = 25
+				has_opinion = { target = CHI value > 99 }
+			}
+			modifier = {
+				add = 25
+				has_opinion = { target = CHI value > 124 }
+			}
+			modifier = {
+				add = 25
+				has_opinion = { target = CHI value > 149 }
+			}
+			modifier = {
+				add = 25
+				has_opinion = { target = CHI value > 174 }
+			}
+			modifier = {
+				add = 25
+				has_opinion = { target = CHI value > 199 }
+			}
+
+			#Competition with other alliances
+			modifier = {
+				add = -25
+				HND = {
+					is_faction_leader = yes #A competitor arises
+					NOT = { has_war_with = ROOT }
+				}
+			}
+			modifier = {
+				add = -25
+				INT = {
+					is_faction_leader = yes #A competitor arises
+					NOT = { has_war_with = ROOT }
+				}
+				GER = { is_faction_leader = no } #Germany has been defeated
+			}
+			modifier = {
+				add = 25
+				any_neighbor_country = { is_ally_with = FROM } #Proximity to alliance
+			}
+			modifier = {
+				add = 50
+				any_neighbor_country = { tag = FROM } #Proximity to alliance
+			}
+			modifier = {
+				add = -25
+				any_neighbor_country = { is_ally_with = HND } #Proximity to Competitors
+			}
+			modifier = {
+				add = -25
+				any_neighbor_country = { is_ally_with = INT } #Proximity to Competitors
+			}
+
+			#Cores and Claims
+			modifier = {
+				add = -25 #Minors will be hesitant to join alliances that they have claims on.
+				is_major = no
+				FROM = {
+					OR = {
+						any_owned_state = { is_claimed_by = ROOT }
+						any_allied_country = { any_owned_state = { is_claimed_by = ROOT } }
+					}
+				}
+			}
+			modifier = {
+				add = -50 #Majors will be hesitant to join alliances that they have claims on.
+				is_major = yes
+				FROM = {
+					OR = {
+						any_owned_state = { is_claimed_by = ROOT }
+						any_allied_country = { any_owned_state = { is_claimed_by = ROOT } }
+					}
+				}
+			}
+			modifier = {
+				add = -50
+				is_major = no #Very hard to convince a minor state to join you if you have their cores.
+				FROM = {
+					OR = {
+						any_owned_state = { is_core_of = ROOT }
+						any_allied_country = { any_owned_state = { is_core_of = ROOT } }
+					}
+				}
+			}
+
+			#Global Affairs
+			modifier = {
+				factor = 2 #Sharing a war with Japan/GEA/ENT is good
+				OR = {
+					AND = {
+						FROM = { has_war_with = JAP }
+						ROOT = { has_war_with = JAP }
+					}
+					AND = {
+						FROM = { has_war_with = GEA }
+						ROOT = { has_war_with = GEA }
+					}
+					AND = {
+						FROM = { has_war_with = ENT }
+						ROOT = { has_war_with = ENT }
+					}
+				}
+			}
+			modifier = {
+				factor = 0.5
+				JAP = { is_faction_leader = no } #If Japanese/German is no longer a threat, must work harder to convince individual tags
+				GEA = { exists = no }
+			}
+			modifier = {
+				factor = 1.75
+				282 = { is_controlled_by_ROOT_or_ally = yes } #Taking Tokyo is basically saying you're the new hegemon of Asia.
+			}
+			modifier = {
+				factor = 1.75
+				336 = { is_controlled_by_ROOT_or_ally = yes } #Ditto Singapore
+			}
+
+			#Game Rules
+			modifier = {
+				add = 1000 #Add a bunch of bonus reasons to join if a CHN forpol game rule is set
+				OR = {
+					AND = {
+						tag = ARM
+						OR = {
+							AND = {
+								has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_PER }
+								CHI = { is_in_faction_with = PER }
+							}
+							AND = {
+								has_game_rule = { rule = ARM_forpol option = ARM_FORPOL_INT }
+								CHI = { is_in_faction_with = INT }
+							}
+						}
+					}
+					AND = {
+						tag = BRM
+						OR = {
+							has_game_rule = { rule = BRM_forpol option = BRM_FORPOL_CHN }
+							AND = {
+								has_game_rule = { rule = BRM_forpol option = BRM_FORPOL_INT }
+								CHI = { is_in_faction_with = INT }
+							}
+						}
+					}
+					AND = {
+						tag = HAW
+						OR = {
+							has_game_rule = { rule = HAW_forpol option = HAW_FORPOL_CHN }
+							AND = {
+								has_game_rule = { rule = HAW_forpol option = HAW_FORPOL_INT }
+								CHI = { is_in_faction_with = INT }
+							}
+						}
+					}
+					AND = {
+						tag = INC
+						OR = {
+							has_game_rule = { rule = INC_forpol option = INC_FORPOL_CHN }
+							AND = {
+								has_game_rule = { rule = INC_forpol option = INC_FORPOL_HND }
+								CHI = { is_in_faction_with = HND }
+							}
+							AND = {
+								has_game_rule = { rule = INC_forpol option = INC_FORPOL_INT }
+								CHI = { is_in_faction_with = INT }
+							}
+						}
+					}
+					AND = {
+						tag = INS
+						OR = {
+							has_game_rule = { rule = INS_forpol option = INS_FORPOL_CHN }
+							AND = {
+								has_game_rule = { rule = INS_forpol option = INS_FORPOL_HND }
+								CHI = { is_in_faction_with = HND }
+							}
+							AND = {
+								has_game_rule = { rule = INS_forpol option = INS_FORPOL_INT }
+								CHI = { is_in_faction_with = INT }
+							}
+						}
+					}
+					AND = {
+						tag = PHI
+						OR = {
+							has_game_rule = { rule = PHI_forpol option = PHI_FORPOL_CHN }
+							AND = {
+								has_game_rule = { rule = PHI_forpol option = PHI_FORPOL_HND }
+								CHI = { is_in_faction_with = HND }
+							}
+							AND = {
+								has_game_rule = { rule = PHI_forpol option = PHI_FORPOL_INT }
+								CHI = { is_in_faction_with = INT }
+							}
+						}
+					}
+					AND = {
+						tag = SIA
+						OR = {
+							has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_CHN }
+							AND = {
+								has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_HND }
+								CHI = { is_in_faction_with = HND }
+							}
+							AND = {
+								has_game_rule = { rule = SIA_forpol option = SIA_FORPOL_INT }
+								CHI = { is_in_faction_with = INT }
+							}
+						}
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete Join_CHIs_faction_decision"
+			FROM = { country_event = china_events.422 } #[FROM.GetName] seeks to join the [ROOT.GetFaction]
+		}
+		fixed_random_seed = no
+	}
+}
+
+CHI_balance_of_power_category = {
+	CHI_stack_the_bureaucracy_decision = {
+		available = {
+			has_completed_focus = CHI_new_bureaucracy
+		}
+		icon = GFX_decision_generic_political_discourse
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				has_political_power > 150
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 180
+		cost = 35
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_stack_the_bureaucracy_decision"
+			CHI_RCA_medium_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	CHI_enforce_party_orthodoxy_decision = {
+		available = {
+			has_completed_focus = CHI_political_department
+		}
+		icon = GFX_decision_eng_propaganda_campaigns
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		days_re_enable = 180
+		custom_cost_trigger = {
+			has_war_support > 0.10
+		}
+		custom_cost_text = CHI_decision_cost_ws_10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_enforce_party_orthodoxy_decision"
+			CHI_RCA_medium_effect = yes
+			hidden_effect = {
+				add_war_support = -0.10
+			}
+		}
+		fixed_random_seed = no
+	}
+	CHI_shore_up_peasant_communes_decision = {
+		available = {
+			has_completed_focus = CHI_prepare_the_land_reform
+		}
+		icon = GFX_decision_POL_looming_peasants_strike
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				has_political_power > 150
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 180
+		cost = 35
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_shore_up_peasant_communes_decision"
+			CHI_PAC_medium_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	CHI_undermine_the_chairmans_grip_decision = {
+		available = {
+			has_completed_focus = CHI_provisional_yuan
+		}
+		icon = GFX_decision_generic_speech
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		days_re_enable = 180
+		custom_cost_trigger = {
+			has_stability > 0.10
+		}
+		custom_cost_text = CHI_decision_cost_stb_10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_undermine_the_chairmans_grip_decision"
+			CHI_PAC_large_effect = yes
+			hidden_effect = {
+				add_stability = -0.10
+			}
+		}
+		fixed_random_seed = no
+	}
+	CHI_intimidate_the_opposition_decision = {
+		available = {
+			has_completed_focus = CHI_eyes_in_the_dark
+		}
+		icon = GFX_decision_oppression
+		ai_will_do = { base = 0 }
+		fire_only_once = no
+		days_re_enable = 180
+		custom_cost_trigger = {
+			NOT = { command_power < 50 }
+		}
+		custom_cost_text = CP_50
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_intimidate_the_opposition_decision"
+			hidden_effect = {
+				add_command_power = -50
+			}
+			if = {
+				limit = {
+					CHI_RCA_winning_trigger = yes
+				}
+				add_war_support = -0.05 #Opposition of RCA's decision
+				CHI_PAC_large_effect = yes
+			}
+			if = {
+				limit = {
+					CHI_PAC_winning_trigger = yes
+				}
+				add_stability = -0.05 #Opposite of PAC's decision
+				CHI_RCA_large_effect = yes
+			}
+			CHI_add_rad_medium_effect = yes
+		}
+		fixed_random_seed = no
+	}
+}
+CHI_military_expeditions_category = {
+	###############################
+	#####      MISSIONS		 ######
+	###############################
+
+	CHI_mission_get_access_sea = {
+		icon = generic_naval
+
+		allowed = { always = no }
+
+		available = {
+			controls_state = 802
+		}
+
+		is_good = no
+		days_mission_timeout = 14
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_mission_get_access_sea"
+			CHI = { transfer_state = 802 }
+			add_stability = 0.03
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 500
+				producer = LEP
+			}
+			country_event = { id = CHI.earlygame.200 days = 10 } #Return of the central committee, firse 10 days later
+		}
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout CHI_mission_get_access_sea"
+			add_political_power = -25
+			activate_mission = CHI_mission_get_access_sea
+		}
+		fixed_random_seed = no
+	}
+	CHI_mission_secure_fujian = {
+		icon = generic_civil_support
+
+		allowed = { always = no }
+
+		available = {
+			controls_state = 595
+			controls_state = 1066
+		}
+
+		is_good = no
+		days_mission_timeout = 60
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_mission_secure_fujian"
+			transfer_state = 1066
+			add_stability = 0.06
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = LEP
+			}
+		}
+		fixed_random_seed = no
+	}
+	CHI_mission_secure_gannan = {
+		icon = generic_civil_support
+
+		allowed = { always = no }
+
+		available = {
+			controls_state = 600 #Ganzhou
+		}
+
+		is_good = no
+		days_mission_timeout = 60
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_mission_secure_gannan"
+			CHI = { transfer_state = 600 } #Ganzhou
+			add_stability = 0.03
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = LEP
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	### Negotiations with Outsiders Decisions ###
+	CHI_NAP_with_federalists_decision = { #Potential NAP with Federalists
+		allowed = { tag = CHI }
+
+		targets = { UPC }
+
+		visible = {
+			CHI_is_phase_two_trigger = yes
+		}
+		target_root_trigger = {
+
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					is_neighbor_of = ROOT
+					any_neighbor_country = { is_subject_of = ROOT }
+				}
+				CHI_government_nap_available_trigger = yes
+				has_country_leader = {
+					character = GXC_chen_jiongming
+					ruling_only = yes
+				}
+			}
+		}
+		available = {
+			ROOT = { has_war = no }
+		}
+		fire_only_once = yes
+		icon = GFX_decision_peace_dove
+
+		cost = 50
+
+		cancel_if_not_visible = yes
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.75
+				}
+			}
+			modifier = {
+				factor = 3
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.50
+				}
+			}
+			modifier = {
+				factor = 3
+				FROM = { has_war = no }
+			}
+			modifier = {
+				factor = 5
+				OR = {
+					NOT = { country_exists = QIE }
+					NOT = { country_exists = FNG }
+					any_of_scopes = {
+						array = global.china_tags_array
+						has_war_with = JAP
+					}
+				}
+			}
+			modifier = {
+				factor = 1000
+				has_game_rule = { rule = CHI_ally_betrayal option = CHI_ALLY_BETRAYAL_NEVER }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CHI_NAP_with_federalists_decision"
+			FROM = { country_event = { id = CHI.midgame.901 days = 3 } } #A Republican Pact?
+			custom_effect_tooltip = CHI_negotiation_tt
+		}
+		fixed_random_seed = no
+	}
+	CHI_subjugate_federalists_decision = { #Allow players to reform Constitutional Protection Alliance
+		allowed = { always = no }
+
+		visible = {
+			CHI_is_phase_three_trigger = yes
+		}
+		target_trigger = {
+			FROM = {
+				has_country_flag = CHI_UPC_NAP_flag
+				CHI_government_alliance_visible_trigger = yes
+			}
+		}
+		available = {
+			ROOT = {
+				CHI_government_alliance_available_trigger = yes
+			}
+		}
+		fire_only_once = yes
+		icon = GFX_decision_hand_out
+
+		cost = 100
+
+		cancel_if_not_visible = yes
+		ai_will_do = {
+			base = 30
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FROM
+					ratio < 1.25
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FNG
+					ratio < 1.5
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FNG
+					ratio < 2
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = JAP
+					ratio < 0.8
+				}
+			}
+			modifier = {
+				factor = 2
+				ic_ratio = {
+					tag = JAP
+					ratio < 0.5
+				}
+			}
+			modifier = {
+				factor = 1000
+				has_game_rule = { rule = CHI_ally_betrayal option = CHI_ALLY_BETRAYAL_NEVER }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CHI_subjugate_federalists_decision"
+			FROM = { country_event = { id = CHI.lategame.901 days = 3 } } #A Republican Alliance?
+			custom_effect_tooltip = CHI_negotiation_tt
+		}
+		fixed_random_seed = no
+	}
+	CHI_NAP_with_rkmt_decision = { #Potential NAP with Right Kuomintang
+		allowed = { tag = CHI }
+
+		targets = { YUN GXC HNN }
+
+		visible = {
+			CHI_is_phase_two_trigger = yes
+		}
+		target_root_trigger = {
+
+		}
+		target_trigger = {
+			FROM = {
+				china_is_potential_government = yes
+				china_is_aligned_with_right_kmt = yes
+				CHI_government_nap_available_trigger = yes
+			}
+		}
+		available = {
+			ROOT = { has_war = no }
+		}
+		fire_only_once = yes
+		icon = GFX_decision_peace_dove
+
+		cost = 50
+
+		cancel_if_not_visible = yes
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.75
+				}
+			}
+			modifier = {
+				factor = 3
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.50
+				}
+			}
+			modifier = {
+				factor = 3
+				FROM = { has_war = no }
+			}
+			modifier = {
+				factor = 5
+				OR = {
+					NOT = { country_exists = QIE }
+					NOT = { country_exists = FNG }
+					any_of_scopes = {
+						array = global.china_tags_array
+						has_war_with = JAP
+					}
+				}
+			}
+			modifier = {
+				factor = 1000
+				has_game_rule = { rule = CHI_ally_betrayal option = CHI_ALLY_BETRAYAL_NEVER }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CHI_NAP_with_rkmt_decision"
+			FROM = { country_event = { id = CHI.midgame.911 days = 3 } } #A Kuomintang Pact?
+			custom_effect_tooltip = CHI_negotiation_tt
+		}
+		fixed_random_seed = no
+	}
+
+	CHI_subjugate_rkmt_decision = { #Allow players to heal the Kuomintang Schism
+		allowed = { always = no }
+
+		visible = {
+			CHI_is_phase_three_trigger = yes
+		}
+		target_trigger = {
+			FROM = {
+				has_country_flag = CHI_RKT_NAP_flag
+				CHI_government_alliance_visible_trigger = yes
+			}
+		}
+		available = {
+			ROOT = {
+				CHI_government_alliance_available_trigger = yes
+			}
+		}
+		fire_only_once = yes
+		icon = GFX_decision_hand_out
+
+		cost = 100
+
+		cancel_if_not_visible = yes
+		ai_will_do = {
+			base = 30
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FROM
+					ratio < 1.25
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FNG
+					ratio < 1.5
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FNG
+					ratio < 2
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = JAP
+					ratio < 0.8
+				}
+			}
+			modifier = {
+				factor = 2
+				ic_ratio = {
+					tag = JAP
+					ratio < 0.5
+				}
+			}
+			modifier = {
+				factor = 1000
+				has_game_rule = { rule = CHI_ally_betrayal option = CHI_ALLY_BETRAYAL_NEVER }
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CHI_subjugate_rkmt_decision"
+			FROM = { country_event = { id = CHI.lategame.931 days = 3 } } #A Kuomintang Alliance?
+			custom_effect_tooltip = CHI_negotiation_tt
+		}
+		fixed_random_seed = no
+	}
+
+	CHI_betrayal_decision = { #Allow betrayal of Republican alliance as needed
+		allowed = { always = no } #Targeted Decision
+		visible = {
+		}
+		available = {
+			OR = {
+				FROM = { surrender_progress > 0.10 }
+				strength_ratio = { tag = FROM ratio > 0.60 }
+				controls_state = 608 #Beijing
+				controls_state = 1048 #Wuhan
+				controls_state = 613 #Nanjing
+				controls_state = 592 #Guangzhou
+			}
+			NOT = {
+				is_in_faction_with = FROM #United Front
+				FROM = {
+					focus_progress = {
+						focus = CHI_third_national_congress
+						progress > 0.01
+					}
+				}
+			}
+			NOT = { has_country_flag = CHI_compromise_subjugation_timer_flag }
+		}
+		cancel_trigger = {
+			OR = {
+				is_in_faction_with = FROM #if CUF forms in the 30 days
+				FROM = {
+					focus_progress = {
+						focus = CHI_third_national_congress
+						progress > 0.01
+					}
+				}
+			}
+		}
+		fire_only_once = yes
+		icon = GFX_decision_hand_grab
+		cost = 50
+
+		cancel_if_not_visible = yes
+		ai_will_do = {
+			base = 25
+			modifier = {
+				factor = 0
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.35
+				}
+				FROM = { has_war = no }
+			}
+			modifier = {
+				factor = 0
+				FROM = { has_war_with_major = yes } #Chinese patriotism lets go!!!
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = CHI_ally_betrayal option = CHI_ALLY_BETRAYAL_NEVER }
+			}
+			modifier = {
+				factor = 1.5
+				strength_ratio = {
+					tag = FROM
+					ratio > 0.75
+				}
+			}
+			modifier = {
+				factor = 2
+				strength_ratio = {
+					tag = FROM
+					ratio > 1
+				}
+			}
+			modifier = {
+				factor = 1.5
+				ic_ratio = {
+					tag = FROM
+					ratio > 0.75
+				}
+			}
+			modifier = {
+				factor = 2
+				ic_ratio = {
+					tag = FROM
+					ratio > 1
+				}
+			}
+			modifier = {
+				factor = 2
+				FROM = {
+					enemies_strength_ratio > 1.5
+				}
+			}
+		}
+		days_remove = 30
+
+		war_with_target_on_remove = yes
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel CHI_betrayal_decision"
+			clear_decision_attack_AI = yes
+			activate_targeted_decision = { target = FROM decision = CHI_betrayal_decision }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CHI_betrayal_decision"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+			if = {
+				limit = { FROM = { has_war_with_major = yes } }
+				add_war_support = -0.15
+				add_stability = -0.15
+				custom_effect_tooltip = CHI_wartime_betrayal_bad_tt
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CHI_betrayal_decision"
+			clear_decision_attack_AI = yes
+			add_timed_idea = {
+				idea = CHI_betrayed_lkmt_idea
+				days = 100
+			}
+			CHI_betrayal_uprising_effect = yes
+			declare_war_on = {
+				target = CHI
+				type = topple_government
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	CHI_expand_local_elections_decision = {
+		allowed = { always = no }
+		highlight_states = {
+			highlight_state_targets = { state = FROM }
+		}
+		visible = {
+			ROOT = {
+				owns_state = FROM
+				has_full_control_of_state = FROM
+			}
+		}
+		available = {
+			ROOT = {
+				surrender_progress < 0.01
+			}
+			FROM = {
+				is_core_of = ROOT
+			}
+		}
+		state_target = yes
+		fire_only_once = yes
+		icon = GFX_decision_eng_trade_unions_support
+		cancel_if_not_visible = no
+		ai_will_do = { factor = 50 }
+		cost = 50
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete CHI_expand_local_elections_decision"
+		}
+		days_remove = 180
+		modifier = {
+			stability_weekly = 0.0010
+			market_liberal_drift = 0.020
+			social_democrat_drift = 0.015
+			radical_socialist_drift = 0.015
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove CHI_expand_local_elections_decision"
+			if = {
+				limit = { FROM = { has_state_flag = guangxi_province_state } } #Nanning
+				ROOT = {
+					every_owned_state = {
+						limit = { has_state_flag = guangxi_province_state }
+						add_dynamic_modifier = {
+							modifier = CHI_local_democratic_elections
+							scope = THIS
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { has_state_flag = yunnan_province_state } } #Kunming
+				ROOT = {
+					every_owned_state = {
+						limit = { has_state_flag = yunnan_province_state }
+						add_dynamic_modifier = {
+							modifier = CHI_local_democratic_elections
+							scope = THIS
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { has_state_flag = guizhou_province_state } } #Guiyang
+				ROOT = {
+					every_owned_state = {
+						limit = { has_state_flag = guizhou_province_state }
+						add_dynamic_modifier = {
+							modifier = CHI_local_democratic_elections
+							scope = THIS
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { has_state_flag = hunan_province_state } } #Changsha
+				ROOT = {
+					every_owned_state = {
+						limit = { has_state_flag = hunan_province_state }
+						add_dynamic_modifier = {
+							modifier = CHI_local_democratic_elections
+							scope = THIS
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { has_state_flag = sichuan_province_state } } #Chengdu
+				ROOT = {
+					every_owned_state = {
+						limit = { has_state_flag = sichuan_province_state }
+						add_dynamic_modifier = {
+							modifier = CHI_local_democratic_elections
+							scope = THIS
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { has_state_flag = hubei_province_state } } #Wuhan
+				ROOT = {
+					every_owned_state = {
+						limit = { has_state_flag = hubei_province_state }
+						add_dynamic_modifier = {
+							modifier = CHI_local_democratic_elections
+							scope = THIS
+						}
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+CHI_outer_party_category = {
+	CHI_secure_occ_donations_decision = {
+		available = {
+			has_completed_focus = CHI_reinforce_foreign_ministry
+		}
+		icon = GFX_decision_give_cash
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				has_political_power > 150
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 180
+		cost = 10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_secure_occ_donations_decision"
+			add_offsite_building = {
+				type = industrial_complex
+				level = 1
+			}
+			CHI_RCF_medium_effect = yes
+		}
+		days_remove = 100
+		modifier = {
+			political_power_cost = 0.25
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_secure_occ_donations_decision"
+			add_offsite_building = {
+				type = industrial_complex
+				level = -1
+			}
+		}
+		fixed_random_seed = no
+	}
+	CHI_utilise_underground_networks_decision = {
+		available = {
+			has_completed_focus = CHI_shanghai_connections
+		}
+		icon = GFX_decision_SWI_expand_covert_operations
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				has_political_power > 150
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 90
+		cost = 10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_utilise_underground_networks_decision"
+			add_offsite_building = {
+				type = arms_factory
+				level = 1
+			}
+			CHI_CRS_medium_effect = yes
+		}
+		days_remove = 100
+		modifier = {
+			political_power_cost = 0.25
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_utilise_underground_networks_decision"
+			add_offsite_building = {
+				type = arms_factory
+				level = -1
+			}
+		}
+		fixed_random_seed = no
+	}
+	CHI_stoke_military_fanaticism_decision = {
+		available = {
+			has_completed_focus = CHI_commissars
+		}
+		icon = GFX_decision_soldierly_discipline
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				has_political_power > 150
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 90
+		cost = 10
+		modifier = {
+			political_power_cost = 0.25
+			army_attack_factor = 0.05
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_stoke_military_fanaticism_decision"
+			CHI_CRS_medium_effect = yes
+		}
+		days_remove = 100
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_stoke_military_fanaticism_decision"
+			army_experience = 10
+			add_war_support = 0.10
+		}
+		fixed_random_seed = no
+	}
+	CHI_rally_industrial_workers = {
+		available = {
+			has_completed_focus = CHI_united_front
+		}
+		icon = GFX_decision_generic_political_rally
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				has_political_power > 150
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 90
+		cost = 10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_rally_industrial_workers"
+			CHI_LCS_medium_effect = yes
+			CHI_CSP_RAD_effect = yes
+		}
+		days_remove = 100
+		modifier = {
+			political_power_cost = 0.25
+			industrial_capacity_factory = 0.10
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_rally_industrial_workers"
+		}
+		fixed_random_seed = no
+	}
+	CHI_secure_internationale_technical_aid_decision = {
+		available = {
+			has_completed_focus = CHI_reinforce_foreign_ministry
+			any_country_of = {
+				target = { FRA ENG WCA RUS }
+				exists = yes
+				has_capitulated = no
+				has_socialist_government = yes
+			}
+		}
+		icon = GFX_decision_generic_research
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				has_political_power > 150
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 90
+		cost = 10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_secure_internationale_technical_aid_decision"
+			CHI_LCS_medium_effect = yes
+			CHI_CSP_ORT_effect = yes
+		}
+		days_remove = 100
+		modifier = {
+			political_power_cost = 0.25
+			research_speed_factor = 0.10
+			production_factory_efficiency_gain_factor = 0.1
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_secure_internationale_technical_aid_decision"
+		}
+		fixed_random_seed = no
+	}
+	CHI_sponsor_cultural_institutions = {
+		available = {
+			has_completed_focus = CHI_promote_revolutionary_culture
+		}
+		icon = GFX_decision_hol_radio_oranje
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				has_political_power > 150
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 90
+		cost = 10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_sponsor_cultural_institutions"
+			CHI_LCS_medium_effect = yes
+			CHI_WRD_SOC_effect = yes
+		}
+		days_remove = 100
+		modifier = {
+			political_power_cost = 0.25
+			stability_weekly = 0.0025
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_sponsor_cultural_institutions"
+		}
+		fixed_random_seed = no
+	}
+}
+
+KMT_liberation_of_asia_category = {
+	CHI_support_the_revolution_in_indochina_decision = {
+		allowed = { tag = CHI }
+		visible = {
+			has_completed_focus = CHI_reinforce_foreign_ministry
+			INC = {
+				has_war_with = GEA
+				NOT = { has_war_with = CHI }
+			}
+			NOT = { has_country_flag = CHI_supported_INC_flag }
+		}
+		cancel_if_not_visible = yes
+		fire_only_once = no
+		icon = GFX_decision_SOV_the_workers_dictatorship
+		priority = 100
+		ai_will_do = { factor = 100 }
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 500 } }
+		}
+		custom_cost_text = 500_guns
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_support_the_revolution_in_indochina_decision"
+			country_event = CHI.midgame.222 #Weapons for the Indochinese Revolution
+			custom_effect_tooltip = CHI_support_revolution_options_tt
+			set_country_flag = CHI_supported_INC_flag
+		}
+		fixed_random_seed = no
+	}
+
+	CHI_disband_international_volunteer_corps_decision = {
+		allowed = { tag = CHI }
+		visible = { has_template = "International Volunteer Corps" }
+
+		icon = GFX_decision_POL_looming_peasants_strike
+		fire_only_once = no
+		cost = 25
+		priority = 100
+		ai_will_do = { factor = 0 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_disband_international_volunteer_corps_decision"
+			delete_unit_template_and_units = { division_template = "International Volunteer Corps" disband = yes }
+		}
+		fixed_random_seed = no
+	}
+
+	CHI_KOR_liberation_army_decision = { #Form the Korean Volunteer Corps
+		allowed = { tag = CHI }
+		visible = {
+			CHI = {
+				CHI_chen_youren = { is_political_advisor = yes }
+				any_enemy_country = { any_owned_state = { is_core_of = KOR } }
+				has_character = KOR_kim_wonbong
+			}
+			KOR = { exists = no }
+		}
+		available = {
+			KOR = { any_core_state = { is_controlled_by = CHI } }
+			has_equipment = { artillery_equipment > 11 }
+			has_equipment = { support_equipment > 19 }
+		}
+		cancel_trigger = { KOR = { NOT = { any_core_state = { is_controlled_by = CHI } } } }
+		fire_only_once = yes
+		icon = GFX_decision_freedom
+		priority = 90
+		ai_will_do = { factor = 50 }
+		days_remove = 30
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 1000 } }
+		}
+		custom_cost_text = 1000_guns
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_KOR_liberation_army_decision"
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -1000
+				}
+				add_equipment_to_stockpile = {
+					type = artillery_equipment
+					amount = -12
+				}
+				add_equipment_to_stockpile = {
+					type = support_equipment
+					amount = -20
+				}
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel CHI_KOR_liberation_army_decision"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1000
+				producer = CHI
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 12
+				producer = CHI
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 20
+				producer = CHI
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_KOR_liberation_army_decision"
+			KOR = {
+				every_core_state = {
+					limit = { is_controlled_by = CHI }
+					add_compliance = 30
+					add_resistance = -20
+				}
+			}
+			country_event = CHI.lategame.640 #The Korean Volunteer Corps
+		}
+		fixed_random_seed = no
+	}
+
+	CHI_MAL_liberation_army_decision = {
+		allowed = { tag = CHI }
+		visible = {
+			CHI = {
+				CHI_chen_youren = { is_political_advisor = yes }
+				any_enemy_country = { any_owned_state = { is_core_of = MAL } }
+			}
+			MAL = { exists = no }
+		}
+		available = {
+			MAL = { any_core_state = { is_controlled_by = CHI } }
+			has_equipment = { artillery_equipment > 11 }
+			has_equipment = { support_equipment > 19 }
+		}
+		cancel_trigger = { MAL = { NOT = { any_core_state = { is_controlled_by = CHI } } } }
+		fire_only_once = yes
+		icon = GFX_decision_freedom
+		priority = 90
+		ai_will_do = { factor = 50 }
+		days_remove = 30
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 1000 } }
+		}
+		custom_cost_text = 1000_guns
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_MAL_liberation_army_decision"
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -1000
+				}
+				add_equipment_to_stockpile = {
+					type = artillery_equipment
+					amount = -12
+				}
+				add_equipment_to_stockpile = {
+					type = support_equipment
+					amount = -20
+				}
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel CHI_MAL_liberation_army_decision"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1000
+				producer = CHI
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 12
+				producer = CHI
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 20
+				producer = CHI
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_MAL_liberation_army_decision"
+			MAL = {
+				every_core_state = {
+					limit = { is_controlled_by = CHI }
+					add_compliance = 30
+					add_resistance = -20
+				}
+			}
+			country_event = CHI.lategame.641 #The Three Stars Army
+		}
+		fixed_random_seed = no
+	}
+
+	CHI_INC_liberation_army_decision = {
+		allowed = { tag = CHI }
+		visible = {
+			CHI_chen_youren = { is_political_advisor = yes }
+			all_country_of = {
+				target = constant:country_groups.indochina
+				exists = no
+			}
+			any_country_of = {
+				target = constant:country_groups.indochina
+				any_core_state = { controller = { has_war_with = ROOT } }
+			}
+		}
+		available = {
+			any_country_of = {
+				target = constant:country_groups.indochina
+				any_core_state = { is_controlled_by = CHI }
+			}
+		}
+		cancel_trigger = {
+			all_country_of = {
+				target = constant:country_groups.indochina
+				all_core_state = { NOT = { is_controlled_by = CHI } }
+			}
+		}
+		fire_only_once = yes
+		icon = GFX_decision_freedom
+		priority = 90
+		ai_will_do = { factor = 50 }
+		days_remove = 30
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 1000 } }
+		}
+		custom_cost_text = 1000_guns
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_INC_liberation_army_decision"
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -1000
+				}
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel CHI_INC_liberation_army_decision"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1000
+				producer = CHI
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_INC_liberation_army_decision"
+			INC = {
+				every_core_state = {
+					limit = { is_controlled_by = CHI }
+					add_compliance = 30
+					add_resistance = -20
+				}
+			}
+			country_event = CHI.lategame.642 #The Liberation of Indochina
+		}
+		fixed_random_seed = no
+	}
+
+	CHI_fund_the_jpel = {
+		allowed = { tag = CHI }
+		visible = {
+			CHI = {
+				CHI_chen_youren = { is_political_advisor = yes }
+				has_war_with = JAP
+				has_character = JAP_nosaka_sanzo
+			}
+		}
+		available = {
+			has_war_with = JAP
+		}
+		cancel_trigger = { CHI = { NOT = { has_war_with = JAP } } }
+		fire_only_once = yes
+		icon = GFX_decision_freedom
+		priority = 90
+		ai_will_do = { factor = 50 }
+		days_remove = 60
+		custom_cost_trigger = {
+			has_war_support > 0.1
+		}
+		custom_cost_text = CHI_decision_cost_ws_10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete CHI_fund_the_jpel"
+			custom_effect_tooltip = CHI_decision_cost_ws_10_tooltip
+			JAP = { country_event = CHI.lategame.643 } #The JPEL
+			hidden_effect = {
+				add_war_support = -0.1
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove CHI_fund_the_jpel"
+		}
+		fixed_random_seed = no
+	}
+}
+
+#Satellite Content Decisions
+GXC_KMT_clash_for_canton_decision_category = {
+	GXC_CHI_order_chen_mingshu_forward = {
+		allowed = { tag = CHI }
+		visible = {
+			NOT = { GXC = { has_country_flag = GXC_KMT_leftist_coup_executed_flag } }
+		}
+		available = {
+			has_country_flag = china_is_potential_government
+			GXC = { social_democrat > 0.3 }
+			is_subject = no
+		}
+		fire_only_once = yes
+		icon = GFX_decision_lkmt_flag
+		priority = 100
+		ai_will_do = {
+			factor = 100 #Will always click if available.
+
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GXC_forpol option = GXC_FORPOL_GXC }
+			}
+		}
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 1000 } }
+		}
+		custom_cost_text = 1000_guns
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GXC_CHI_order_chen_mingshu_forward"
+			GXC = { country_event = GXC.earlygame.462 } #New Fourth Army Coup
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -1000
+				}
+				GXC = { set_country_flag = GXC_KMT_leftist_coup_executed_flag }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	GXC_CHI_rally_the_peasantry = {
+		allowed = { tag = CHI }
+		visible = {
+			has_country_flag = china_is_potential_government
+		}
+		available = {
+			#Same as default
+		}
+		days_re_enable = 60
+		icon = GFX_decision_POL_organize_strike_two
+		priority = 100
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0 #AI should be spamming the CP decisions since they are relatively "free"
+				has_country_flag = CHI_has_taken_clash_for_canton_decision_flag
+			}
+		}
+		custom_cost_trigger = {
+			NOT = { command_power < 20 }
+		}
+		custom_cost_text = CP_20
+		days_remove = 60
+		modifier = {
+			command_power_gain = -0.5
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GXC_CHI_rally_the_peasantry"
+			set_country_flag = {
+				flag = CHI_has_taken_clash_for_canton_decision_flag
+				days = 120
+				value = 1
+			}
+			hidden_effect = {
+				add_command_power = -20
+			}
+			GXC = { country_event = GXC.earlygame.465 } #The Peasants Rally in Guangdong
+			custom_effect_tooltip = if_they_accept_tt
+			event_option_tooltip = GXC.earlygame.465.a
+			custom_effect_tooltip = if_they_refuse_tt
+			event_option_tooltip = GXC.earlygame.465.b
+		}
+		fixed_random_seed = no
+	}
+
+	GXC_CHI_mobilise_the_unions = {
+		allowed = { tag = CHI }
+		visible = {
+			has_country_flag = china_is_potential_government
+		}
+		available = {
+			#Same as default
+		}
+		days_re_enable = 60
+		icon = GFX_decision_generic_wreckers
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				has_political_power > 99
+			}
+			modifier = {
+				factor = 0 #AI should be spamming the CP decisions since they are relatively "free"
+				has_country_flag = CHI_has_taken_clash_for_canton_decision_flag
+			}
+		}
+		cost = 20
+		days_remove = 60
+		modifier = {
+			political_power_gain = -0.50
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GXC_CHI_mobilise_the_unions"
+			set_country_flag = {
+				flag = CHI_has_taken_clash_for_canton_decision_flag
+				days = 120
+				value = 1
+			}
+			GXC = { country_event = GXC.earlygame.466 } #Syndicalist Agitation in Guangzhou
+			custom_effect_tooltip = if_they_accept_tt
+			event_option_tooltip = GXC.earlygame.466.a
+			custom_effect_tooltip = if_they_refuse_tt
+			event_option_tooltip = GXC.earlygame.466.b
+		}
+		fixed_random_seed = no
+	}
+
+	GXC_CHI_moderate_our_message = {
+		allowed = { tag = CHI }
+		visible = {
+			has_country_flag = china_is_potential_government
+		}
+		available = {
+			#Same as default
+		}
+		days_re_enable = 60
+		icon = GFX_decision_SWI_swiss_democratic_tradition_campaign
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				has_political_power > 99
+			}
+			modifier = {
+				factor = 0 #AI should be spamming the CP decisions since they are relatively "free"
+				has_country_flag = CHI_has_taken_clash_for_canton_decision_flag
+			}
+		}
+		cost = 10
+		days_remove = 60
+		modifier = {
+			political_power_gain = -0.25
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GXC_CHI_moderate_our_message"
+			set_country_flag = {
+				flag = CHI_has_taken_clash_for_canton_decision_flag
+				days = 120
+				value = 1
+			}
+			CHI_RCF_large_effect = yes
+			custom_effect_tooltip = tooltip_white_line
+			GXC = { country_event = GXC.earlygame.467 } #Republican Intellectuals Call for Unity!
+			custom_effect_tooltip = if_they_accept_tt
+			event_option_tooltip = GXC.earlygame.467.a
+			custom_effect_tooltip = if_they_refuse_tt
+			event_option_tooltip = GXC.earlygame.467.b
+		}
+		fixed_random_seed = no
+	}
+
+	GXC_CHI_reinforce_fourth_army = {
+		allowed = { tag = CHI }
+		visible = {
+			has_country_flag = china_is_potential_government
+		}
+		available = {
+			#Same as default
+		}
+		days_re_enable = 60
+		icon = GFX_decision_generic_military
+		priority = 100
+		ai_will_do = { base = 0 } #AI shouldn't be wasting guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 500 } }
+		}
+		custom_cost_text = 500_guns
+		days_remove = 60
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete GXC_CHI_reinforce_fourth_army"
+			set_country_flag = {
+				flag = CHI_has_taken_clash_for_canton_decision_flag
+				days = 120
+				value = 1
+			}
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -500
+				}
+			}
+			add_manpower = -5000
+			custom_effect_tooltip = tooltip_white_line
+			GXC = { country_event = GXC.earlygame.468 } #Fourth Army Reinforcements Arrive
+			custom_effect_tooltip = if_they_accept_tt
+			event_option_tooltip = GXC.earlygame.468.a
+			custom_effect_tooltip = if_they_refuse_tt
+			event_option_tooltip = GXC.earlygame.468.b
+		}
+		fixed_random_seed = no
+	}
+}
+
+YUN_CHI_Spreading_Socialism_to_the_Southwest_decision_category = {
+	YUN_CHI_fund_agrarian_development_in_guizhou_decision = {
+		allowed = { always = no } #Activates via event
+		visible = {
+			has_country_flag = china_is_potential_government
+			YUN = { YUN_is_phase_3_trigger = yes }
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		cancel_trigger = {
+			has_country_flag = YUN_CHI_rejected_agrarian_development_in_guizhou_flag
+		}
+		fire_only_once = yes
+		icon = GFX_decision_generic_agriculture
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				num_of_civilian_factories_available_for_projects > 15
+			}
+			modifier = {
+				factor = 0 #AI should be spamming the CP decisions since they are relatively "free"
+				has_country_flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+			}
+		}
+		cost = 0
+		days_remove = 180
+		modifier = {
+			civilian_factory_use = 3
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete YUN_CHI_fund_agrarian_development_in_guizhou_decision"
+			set_country_flag = {
+				flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+				days = 120
+				value = 1
+			}
+			YUN = { country_event = { id = YUN.midgame.531 days = 1 } } #Rural Reconstruction Aid from [FROM.Capital.GetCapitalVictoryPointName]
+			custom_effect_tooltip = if_they_accept_tt
+			effect_tooltip = { YUN = { event_option_tooltip = YUN.midgame.531.a } }
+			custom_effect_tooltip = if_they_refuse_tt
+			effect_tooltip = { YUN = { event_option_tooltip = YUN.midgame.531.b } }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel YUN_CHI_fund_agrarian_development_in_guizhou_decision"
+		}
+		fixed_random_seed = no
+	}
+	YUN_CHI_arm_the_civil_engineering_clique_decision = {
+		allowed = { always = no } #Activates via event
+		visible = {
+			has_country_flag = china_is_potential_government
+			YUN = { YUN_is_phase_3_trigger = yes }
+		}
+		fire_only_once = yes
+		icon = GFX_decision_generic_prepare_civil_war
+		priority = 100
+		ai_will_do = { base = 0 } #AI shouldn't be wasting guns
+		custom_cost_trigger = {
+			NOT = { has_equipment = { infantry_equipment < 1000 } }
+		}
+		custom_cost_text = 1000_guns
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete YUN_CHI_arm_the_civil_engineering_clique_decision"
+			set_country_flag = {
+				flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+				days = 120
+				value = 1
+			}
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -1000
+				}
+			}
+			YUN = { country_event = { id = YUN.midgame.532 days = 1 } } #[FROM.Capital.GetCapitalVictoryPointName] Arms the Civil Engineering Clique
+			custom_effect_tooltip = if_they_accept_tt
+			effect_tooltip = { YUN = { event_option_tooltip = YUN.midgame.532.a } }
+			custom_effect_tooltip = if_they_refuse_tt
+			effect_tooltip = { YUN = { event_option_tooltip = YUN.midgame.532.b } }
+		}
+		fixed_random_seed = no
+	}
+	YUN_CHI_cultivate_third_army_leftists_decision = {
+		allowed = { always = no } #Activates via event
+		visible = {
+			has_country_flag = china_is_potential_government
+			YUN = { YUN_is_phase_3_trigger = yes }
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		cancel_trigger = {
+			has_country_flag = YUN_CHI_rejected_military_development_in_yunnan_flag
+		}
+		fire_only_once = yes
+		icon = GFX_decision_generic_military
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				num_of_civilian_factories_available_for_projects > 15
+			}
+			modifier = {
+				factor = 0 #AI should be spamming the CP decisions since they are relatively "free"
+				has_country_flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+			}
+		}
+		cost = 0
+		days_remove = 180
+		modifier = {
+			civilian_factory_use = 3
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete YUN_CHI_cultivate_third_army_leftists_decision"
+			set_country_flag = {
+				flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+				days = 120
+				value = 1
+			}
+			YUN = { country_event = { id = YUN.midgame.533 days = 1 } } #[FROM.Capital.GetCapitalVictoryPointName] Cultivates Third Army Leftists
+			custom_effect_tooltip = if_they_accept_tt
+			effect_tooltip = { YUN = { event_option_tooltip = YUN.midgame.533.a } }
+			custom_effect_tooltip = if_they_refuse_tt
+			effect_tooltip = { YUN = { event_option_tooltip = YUN.midgame.533.b } }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel YUN_CHI_cultivate_third_army_leftists_decision"
+		}
+		fixed_random_seed = no
+	}
+	YUN_CHI_empower_zhang_bojun_decision = {
+		allowed = { always = no } #Activates via event
+		visible = {
+			has_country_flag = china_is_potential_government
+			YUN = { YUN_is_phase_3_trigger = yes }
+		}
+		fire_only_once = yes
+		icon = GFX_decision_eng_trade_unions_support
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				has_political_power > 150
+			}
+			modifier = {
+				factor = 0 #AI should be spamming the CP decisions since they are relatively "free"
+				has_country_flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+			}
+		}
+		cost = 50
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete YUN_CHI_empower_zhang_bojun_decision"
+			set_country_flag = {
+				flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+				days = 120
+				value = 1
+			}
+			YUN = { country_event = { id = YUN.midgame.534 days = 1 } } #[FROM.Capital.GetCapitalVictoryPointName] Empowers Zhang Bojun
+			custom_effect_tooltip = if_they_accept_tt
+			effect_tooltip = { YUN = { event_option_tooltip = YUN.midgame.534.a } }
+			custom_effect_tooltip = if_they_refuse_tt
+			effect_tooltip = { YUN = { event_option_tooltip = YUN.midgame.534.b } }
+		}
+		fixed_random_seed = no
+	}
+	YUN_CHI_recognise_the_new_yunnan_society_decision = {
+		allowed = { always = no } #Activates via event
+		visible = {
+			has_country_flag = china_is_potential_government
+			YUN = { YUN_is_phase_3_trigger = yes }
+		}
+		fire_only_once = yes
+		icon = GFX_decision_SWI_expand_covert_operations
+		priority = 100
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				has_political_power > 99
+			}
+			modifier = {
+				factor = 0 #AI should be spamming the CP decisions since they are relatively "free"
+				has_country_flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+			}
+		}
+		cost = 35
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete YUN_CHI_recognise_the_new_yunnan_society_decision"
+			set_country_flag = {
+				flag = CHI_has_taken_spread_socialism_in_southwest_decision_flag
+				days = 120
+				value = 1
+			}
+			YUN = { country_event = { id = YUN.midgame.535 days = 1 } } #[FROM.Capital.GetCapitalVictoryPointName] Recognises the New Yunnan Society
+			custom_effect_tooltip = YUN_CHI_recognise_the_new_yunnan_society_tt
+		}
+		fixed_random_seed = no
+	}
+}

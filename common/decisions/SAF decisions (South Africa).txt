@@ -1,0 +1,2866 @@
+# South Africa decisions
+
+political_actions = {
+	SAF_decision_township_modernisation = {
+		icon = GFX_decision_generic_construction
+		allowed = { always = no }	# Activated by focus SAF_urban_housing_program
+
+		visible = {
+			OR = {
+				has_idea = SAF_idea_slum_formation
+				has_idea = SAF_idea_slum_formation_2
+			}
+		}
+
+		cost = 100
+
+		ai_will_do = { factor = 10 }
+
+		modifier = {
+			civilian_factory_use = 3
+			political_power_gain = -0.05
+		}
+
+		days_re_enable = 30
+		days_remove = 365
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_decision_township_modernisation"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_decision_township_modernisation"
+			if = {
+				limit = {
+					has_idea = SAF_idea_slum_formation
+				}
+				remove_ideas = SAF_idea_slum_formation
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = SAF_idea_slum_formation_2
+					add_idea = SAF_idea_slum_formation
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SAF_black_monday_decisions = {
+	SAF_cut_abandonment_of_the_gold_standard = {
+		icon = eng_trade_unions_support
+		allowed = { always = no }		# Activated by scripted effect
+		fire_only_once = yes
+		days_remove = 180
+
+		modifier = {
+			political_power_gain = 0.02
+		}
+		cost = 0
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_cut_abandonment_of_the_gold_standard"
+			if = {
+				limit = {
+					check_variable = { saf_var_inflation < 0.06 }
+				}
+				add_to_variable = { var = saf_var_inflation value = 0.03 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { saf_var_inflation < 0.12 }
+				}
+				add_to_variable = { var = saf_var_inflation value = 0.06 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { saf_var_inflation < 0.24 }
+				}
+				add_to_variable = { var = saf_var_inflation value = 0.12 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { saf_var_inflation < 0.48 }
+				}
+				add_to_variable = { var = saf_var_inflation value = 0.24 }
+			}
+			else = {
+				add_to_variable = { var = saf_var_inflation value = 0.48 }
+			}
+			SAF_inflation_events = yes
+			country_event = south_africa_events.320
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_cut_abandonment_of_the_gold_standard"
+			custom_effect_tooltip = SAF_tt_saved_money_goes_to_free_budget_gs
+			add_to_variable = { var = saf_var_unemployment value = -0.05 }
+		}
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 0
+				check_variable = { saf_var_unemployment < 0.08 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_print_extra_money = {
+		icon = ger_mefo_bills
+		allowed = { always = no }
+		days_remove = 7
+		cost = 0
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_print_extra_money"
+			custom_effect_tooltip = SAF_tt_print_extra_money
+			add_to_variable = { var = saf_var_budget value = 2 }
+			if = {
+				limit = {
+					check_variable = { saf_var_inflation < 0.08 }
+				}
+				add_to_variable = { var = saf_var_inflation value = 0.03 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { saf_var_inflation < 0.12 }
+				}
+				add_to_variable = { var = saf_var_inflation value = 0.06 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { saf_var_inflation < 0.24 }
+				}
+				add_to_variable = { var = saf_var_inflation value = 0.12 }
+			}
+			else_if = {
+				limit = {
+					check_variable = { saf_var_inflation < 0.48 }
+				}
+				add_to_variable = { var = saf_var_inflation value = 0.24 }
+			}
+			else = {
+				add_to_variable = { var = saf_var_inflation value = 0.48 }
+			}
+			SAF_inflation_events = yes
+		}
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_budget < 10 } }
+			}
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_inflation < 0.07 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_counter_inflation = {
+		icon = ger_mefo_bills
+		allowed = { always = no }
+		available = {
+			custom_override_tooltip = {
+				tooltip = SWE_tt_more_than_five_percent_inflation
+				NOT = { check_variable = { saf_var_inflation < 0.05 } }
+			}
+		}
+		cost = 0
+		days_remove = 30
+		modifier = {
+			consumer_goods_factor = 0.1
+			political_power_cost = 0.5
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_counter_inflation"
+			subtract_from_variable = {
+				var = saf_var_inflation
+				value = 0.05
+				tooltip = SWE_tt_inflation_lowered
+			}
+			SAF_inflation_events = yes
+		}
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 0
+				check_variable = { saf_var_inflation < 0.05 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_take_a_loan = {
+		icon = generic_decision
+		allowed = { always = no }
+		cost = 0
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_take_a_loan"
+			custom_effect_tooltip = SAF_tt_loan_money
+			add_to_variable = { var = saf_var_debt value = 2 }
+			add_to_variable = { var = saf_var_budget value = 2 }
+		}
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_unemployment > 0.08 } }
+			}
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_budget < 10 } }
+			}
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_debt < 8 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_repay_a_loan = {
+		icon = generic_decision
+		allowed = { always = no }
+		available = {
+			custom_override_tooltip = {
+				tooltip = SAF_tt_can_pay_off_debt
+				NOT = { check_variable = { saf_var_budget < 2 } }
+			}
+		}
+		visible = {
+			NOT = { check_variable = { saf_var_debt < 2 } }
+		}
+		cost = 0
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_repay_a_loan"
+			custom_effect_tooltip = SAF_tt_pays_off_debt
+			subtract_from_variable = { var = saf_var_debt value = 2 }
+			subtract_from_variable = { var = saf_var_budget value = 2 }
+		}
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 50
+				NOT = { check_variable = { saf_var_debt < 10 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_cut_funding_on_military = {
+		icon = ger_military_buildup
+		allowed = { always = no }
+		available = {
+			NOT = {
+				has_government = social_liberal
+				has_government = social_conservative
+			}
+		}
+		cost = 0
+		days_remove = 365
+
+		modifier = {
+			industrial_capacity_factory = -0.20
+			army_org_factor = -0.25
+			political_power_cost = 0.05
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_cut_funding_on_military"
+			custom_effect_tooltip = SAF_tt_saved_money_goes_to_free_budget
+			add_to_variable = { var = saf_var_budget value = 5 }
+		}
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_budget < 10 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_raise_taxes = {
+		icon = oppression
+		allowed = { always = no }
+		days_remove = 365
+		cost = 0
+		modifier = {
+			political_power_cost = 0.10
+			consumer_goods_factor = 0.2
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_raise_taxes"
+			custom_effect_tooltip = SAF_tt_earned_money_goes_to_free_budget
+			add_to_variable = { var = saf_var_budget value = 2 }
+			if = {
+				limit = {
+					has_government = market_liberal
+				}
+				add_popularity = { ideology = market_liberal popularity = -0.05 }
+			}
+			if = {
+				limit = {
+					NOT = { check_variable = { saf_var_inflation < 0.01 } }
+				}
+				subtract_from_variable = {
+					var = saf_var_inflation
+					value = 0.01
+					tooltip = SWE_tt_inflation_lowered
+				}
+			}
+		}
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_budget < 10 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_public_work_program = {
+		icon = generic_construction
+		allowed = { always = no }
+		days_remove = 150
+		cost = 0
+		modifier = {
+			consumer_goods_factor = 0.2
+		}
+		custom_cost_trigger = {
+			NOT = { check_variable = { saf_var_budget < 3 } }
+		}
+
+		custom_cost_text = SAF_tt_three_million_kronor
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_public_work_program"
+			#custom_effect_tooltip = SWE_tt_two_million_kronor_spent
+			add_to_variable = { var = saf_var_budget value = -3 }
+			subtract_from_variable = {
+				var = saf_var_unemployment
+				value = 0.03
+				tooltip = SWE_tt_unemployment_lowered
+			}
+			clamp_variable = { var = saf_var_unemployment min = 0 max = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_public_work_program"
+			subtract_from_variable = {
+				var = saf_var_unemployment
+				value = 0.02
+				tooltip = SWE_tt_unemployment_lowered
+			}
+			clamp_variable = { var = saf_var_unemployment min = 0 max = 1 }
+		}
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_unemployment > 0.08 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_subsidize_resource_exports = {
+		icon = tungsten
+		allowed = { always = no }
+		days_remove = 150
+		modifier = {
+			local_resources_factor = 0.10
+			min_export = 0.2
+		}
+		cost = 0
+		custom_cost_trigger = {
+			NOT = { check_variable = { saf_var_budget < 2 } }
+		}
+
+		custom_cost_text = SAF_tt_two_million_kronor
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_subsidize_resource_exports"
+			add_to_variable = { var = saf_var_budget value = -2 }
+			subtract_from_variable = {
+				var = saf_var_unemployment
+				value = 0.02
+				tooltip = SWE_tt_unemployment_lowered
+			}
+			clamp_variable = { var = saf_var_unemployment min = 0 max = 1 }
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_subsidize_resource_exports"
+			subtract_from_variable = {
+				var = saf_var_unemployment
+				value = 0.02
+				tooltip = SWE_tt_unemployment_lowered
+			}
+			clamp_variable = { var = saf_var_unemployment min = 0 max = 1 }
+		}
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_unemployment > 0.08 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_nationalize_company = {
+		icon = generic_industry
+		allowed = { always = no }
+		available = {
+			OR = {
+				has_government = social_democrat
+				has_authdem_or_pataut_government = yes
+			}
+		}
+		days_remove = 60
+		cost = 0
+		custom_cost_trigger = {
+			NOT = { check_variable = { saf_var_budget < 5 } }
+		}
+
+		custom_cost_text = SAF_tt_five_million_kronor
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_nationalize_company"
+			add_to_variable = { var = saf_var_budget value = -5 }
+			subtract_from_variable = {
+				var = saf_var_unemployment
+				value = 0.02
+				tooltip = SWE_tt_unemployment_lowered
+			}
+			clamp_variable = { var = saf_var_unemployment min = 0 max = 1 }
+		}
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_unemployment > 0.08 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_implement_tariffs = {
+		icon = generic_break_treaty
+		allowed = { always = no }
+		modifier = {
+			trade_opinion_factor = -0.25
+		}
+		days_remove = 365
+		fire_only_once = yes
+		cost = 0
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_implement_tariffs"
+			custom_effect_tooltip = SAF_tt_receive_million_kronor
+			add_to_variable = { var = saf_var_budget value = 2 }
+			subtract_from_variable = {
+				var = saf_var_unemployment
+				value = 0.02
+				tooltip = SWE_tt_unemployment_lowered
+			}
+			clamp_variable = { var = saf_var_unemployment min = 0 max = 1 }
+		}
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_unemployment > 0.08 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SAF_soften_the_colour_bar = {
+		icon = GFX_decision_generic_independence
+		allowed = { always = no }	# Activated by SAF_repeal_industrial_conciliation_act
+		modifier = {
+			political_power_gain = -0.15
+		}
+
+		days_remove = 365
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_soften_the_colour_bar"
+			subtract_from_variable = {
+				var = saf_var_unemployment
+				value = 0.02
+				tooltip = SWE_tt_unemployment_lowered
+			}
+			clamp_variable = { var = saf_var_unemployment min = 0 max = 1 }
+		}
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { saf_var_unemployment > 0.08 } }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SAF_nuweveld_decisions = {
+	SAF_campaign_against_tswana_insurgents = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no }
+
+		available = {
+			542 = { has_active_resistance = yes }
+		}
+
+		ai_hint_pp_cost = 10
+		custom_cost_text = SAF_pp_10_cp_25
+		custom_cost_trigger = {
+			NOT = { has_political_power < 10 }
+			NOT = { command_power < 25 }
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				542 = { resistance < 25 }
+			}
+		}
+
+		modifier = {
+			political_power_gain = -0.15
+			conscription_factor = -0.1
+			army_morale_factor = -0.1
+		}
+
+		days_re_enable = 50
+		days_remove = 50
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_campaign_against_tswana_insurgents"
+			hidden_effect = {
+				add_political_power = -10
+				add_command_power = -25
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_campaign_against_tswana_insurgents"
+			542 = { add_resistance = -10 }
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_increase_settler_attraction = {
+		icon = generic_political_discourse
+		allowed = { always = no }
+
+		cost = 20
+
+		ai_will_do = { factor = 10 }
+
+		modifier = {
+			political_power_gain = -0.1
+			consumer_goods_factor = 0.1
+			monthly_population = -0.2
+		}
+
+		days_re_enable = 70
+		days_remove = 35
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_increase_settler_attraction"
+			add_to_variable = {
+				542.SAF_settling_attractiveness = 0.02
+				tooltip = SAF_tt_settler_attractiveness
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_increase_settler_attraction"
+			542 = {
+				if = {
+					limit = { has_resistance = yes }
+					add_resistance = 5
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_ask_for_permission_to_recruit_settlers = {
+		icon = generic_agreement
+		allowed = { always = no }
+
+		visible = {
+			FROM = {
+				exists = yes
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		fire_only_once = yes
+		cost = 20
+
+		ai_will_do = { factor = 10 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_ask_for_permission_to_recruit_settlers"
+			FROM = { country_event = south_africa_events.57 }
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_recruit_settlers_from_from = {
+		icon = generic_political_discourse
+		allowed = { always = no }
+		visible = {
+			FROM = {
+				exists = yes
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		modifier = {
+			consumer_goods_factor = 0.1
+		}
+
+		days_re_enable = 75
+		days_remove = 50
+
+		cost = 20
+
+		ai_will_do = { factor = 10 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_recruit_settlers_from_from"
+			if = {
+				limit = { FROM = { tag = HOL } }
+				add_to_variable = {
+					542.SAF_settling_attractiveness = 0.02
+					tooltip = SAF_tt_settler_attractiveness
+				}
+			}
+			else = {
+				add_to_variable = {
+					542.SAF_settling_attractiveness = 0.01
+					tooltip = SAF_tt_settler_attractiveness
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_recruit_settlers_from_from"
+			542 = {
+				if = {
+					limit = { has_resistance = yes }
+					add_resistance = 5
+				}
+			}
+			hidden_effect = {
+				FROM = {
+					if = {
+						limit = { tag = HOL }
+						add_timed_idea = {
+							idea = SAF_idea_settler_recruitment
+							days = 50
+						}
+					}
+					else = {
+						add_timed_idea = {
+							idea = SAF_idea_settler_recruitment
+							days = 25
+						}
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_control_the_tswana_insurgency = {
+		icon = oppression
+		allowed = { tag = SAF }
+
+		available = {
+			542 = { resistance < 30 }
+		}
+
+		activation = {
+			has_completed_focus = SAF_establish_nuweveld
+			542 = { resistance > 30 }
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = 542 }
+		}
+
+		is_good = no
+		fixed_random_seed = no
+		days_mission_timeout = 60
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SAF_control_the_tswana_insurgency"
+			if = {
+				limit = {
+					542 = { resistance < 60 }
+				}
+				random_list = {
+					4 = {
+						542 = { add_manpower = -30 }
+						add_to_variable = { 542.SAF_whites_in_botswana = -30 }
+						add_to_variable = {
+							542.SAF_settling_attractiveness = -0.05
+							tooltip = SAF_tt_settler_attractiveness
+						}
+					}
+					16 = {
+						542 = {
+							damage_building = {
+								type = infrastructure
+								damage = 1
+							}
+						}
+						add_to_variable = {
+							542.SAF_settling_attractiveness = -0.02
+							tooltip = SAF_tt_settler_attractiveness
+						}
+					}
+					30 = {
+						542 = { add_resistance = 10 }
+					}
+					50 = { }
+				}
+			}
+			else_if = {
+				limit = {
+					542 = {
+						resistance > 60
+						resistance < 90
+					}
+				}
+				random_list = {
+					6 = {
+						542 = { add_manpower = -30 }
+						add_to_variable = { 542.SAF_whites_in_botswana = -30 }
+						add_to_variable = {
+							542.SAF_settling_attractiveness = -0.05
+							tooltip = SAF_tt_settler_attractiveness
+						}
+					}
+					24 = {
+						542 = {
+							damage_building = {
+								type = infrastructure
+								damage = 1
+							}
+						}
+						add_to_variable = {
+							542.SAF_settling_attractiveness = -0.02
+							tooltip = SAF_tt_settler_attractiveness
+						}
+					}
+					45 = {
+						542 = { add_resistance = 10 }
+					}
+					25 = { }
+				}
+			}
+			else = {
+				country_event = south_africa_events.62
+			}
+		}
+	}
+
+	SAF_yearly_nuweveld_report = {
+		icon = GFX_decision_generic_decision
+		allowed = { always = no } #manually activated
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		cancel_trigger = {
+			has_completed_focus = SAF_stellaland_affairs_act
+		}
+
+		is_good = yes
+		days_mission_timeout = 365
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SAF_yearly_nuweveld_report"
+			country_event = south_africa_events.60
+			hidden_effect = { activate_mission = SAF_yearly_nuweveld_report }
+		}
+		fixed_random_seed = no
+	}
+}
+
+SAF_internal_resistance = {
+	SAF_suppress_ob = {
+		icon = eng_blackshirt_march
+		allowed = { always = no }	# Activated by SAF_internal_resistance_enabled flag
+
+		available = {
+			check_variable = {
+				tooltip = saf_tt_ob_stronger_than_zero
+				saf_ob_strength > 0
+			}
+		}
+
+		cost = 25
+		days_remove = 30
+
+		modifier = {
+			weekly_manpower = -20
+		}
+
+		ai_will_do = { factor = 1 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_suppress_ob"
+			if = {
+				limit = {
+					check_variable = { saf_var_ob_suppression_effectiveness > 0 }
+				}
+				subtract_from_variable = {
+					var = saf_ob_strength value = 0.2
+					tooltip = SAF_tt_ob_lowered
+				}
+				add_to_variable = {
+					var = saf_var_ob_suppression_effectiveness
+					value = -1
+				}
+			}
+			else = {
+				subtract_from_variable = {
+					var = saf_ob_strength value = 0.1
+					tooltip = SAF_tt_ob_lowered
+				}
+			}
+			clamp_variable = { var = saf_ob_strength min = 0 }
+			custom_effect_tooltip = SAF_tt_strain_on_detention_centers_increased
+			add_to_variable = { var = SAF_var_detention_cap value = 5 }
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_suppress_icu = {
+		icon = eng_blackshirt_march
+		allowed = { always = no }	# Activated by SAF_internal_resistance_enabled flag
+
+		available = {
+			check_variable = {
+				tooltip = saf_tt_icu_stronger_than_zero
+				saf_icu_strength > 0
+			}
+		}
+
+		cost = 25
+		days_remove = 30
+
+		modifier = {
+			weekly_manpower = -20
+		}
+
+		ai_will_do = { factor = 1 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_suppress_icu"
+			subtract_from_variable = {
+				var = saf_icu_strength value = 0.1
+				tooltip = SAF_tt_icu_lowered
+			}
+			clamp_variable = { var = saf_icu_strength min = 0 max = 1 }
+			custom_effect_tooltip = SAF_tt_strain_on_detention_centers_increased
+			add_to_variable = { var = SAF_var_detention_cap value = 5 }
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_control_the_ob = {
+		icon = oppression
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = SAF_tt_ob_active
+				NOT = {
+					has_country_flag = SAF_internal_resistance_enabled
+					has_global_flag = SAF_ossewabrandwag_founded
+				}
+			}
+		}
+
+		is_good = no
+		fixed_random_seed = no
+
+		days_mission_timeout = 30
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SAF_control_the_ob"
+			if = {
+				limit = {
+					saf_trigger_ob_anti_war = yes
+					check_variable = { saf_ob_strength > 0 }
+				}
+				random_list = {
+					20 = {
+						custom_effect_tooltip = SAF_tt_ossewa_nerds_harass_servicemen
+						add_timed_idea = {
+							idea = SAF_idea_harassed_army_personnel
+							days = 30
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_ossewa_nerds_blow_railway_line
+						random_core_state = {
+							limit = {
+								is_controlled_by = ROOT
+								non_damaged_building_level = { building = infrastructure level > 0 }
+							}
+							damage_building = {
+								type = infrastructure
+								damage = 0.7
+							}
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_ossewa_nerds_share_confidential_information_with_enemy
+						add_timed_idea = {
+							idea = SAF_idea_compromised_intelligence
+							days = 30
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_ossewa_nerds_convince_afrikaners_war_bad
+						add_war_support = -0.03
+					}
+					25 = {
+						modifier = {
+							factor = 2
+							check_variable = { saf_ob_strength < 0.5 }
+						}
+						modifier = {
+							factor = 2
+							check_variable = { saf_ob_strength < 0.25 }
+						}
+						modifier = {
+							factor = 2
+							check_variable = { saf_ob_strength < 0.1 }
+						}
+						#custom_effect_tooltip = no_effect
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					saf_trigger_ob_neutral = yes
+					check_variable = { saf_ob_strength > 0 }
+				}
+				custom_effect_tooltip = SAF_tt_ob_neutral_will_not_act
+			}
+			else_if = {
+				limit = {
+					saf_trigger_ob_prowar = yes
+					check_variable = { saf_ob_strength > 0 }
+				}
+				random_list = {
+					20 = {
+						custom_effect_tooltip = SAF_tt_ossewa_nerds_attack_icu
+						subtract_from_variable = { var = saf_icu_strength value = -0.1 }
+						clamp_variable = { var = saf_icu_strength min = 0 max = 1 }
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_ossewa_nerds_start_recruitment_drive
+						add_timed_idea = {
+							idea = SAF_idea_ossewa_recruitment_drive
+							days = 30
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_ossewa_nerds_lynch_foreign_citizens
+						add_stability = -0.03
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_ossewa_nerds_convince_afrikaners_war_good
+						add_war_support = 0.03
+					}
+					25 = {
+						modifier = {
+							factor = 2
+							check_variable = { saf_ob_strength < 0.5 }
+						}
+						modifier = {
+							factor = 2
+							check_variable = { saf_ob_strength < 0.25 }
+						}
+						modifier = {
+							factor = 2
+							check_variable = { saf_ob_strength < 0.1 }
+						}
+						#custom_effect_tooltip = no_effect
+					}
+				}
+			}
+			else = {
+				custom_effect_tooltip = SAF_tt_ob_weak_will_not_act
+			}
+			hidden_effect = {
+				random_list = {
+					45 = {
+						add_to_variable = { var = saf_ob_strength value = 0.05 }
+						clamp_variable = { var = saf_ob_strength min = 0 max = 1 }
+					}
+					55 = {
+						#no effect
+					}
+				}
+				activate_mission = SAF_control_the_ob
+			}
+		}
+	}
+
+	SAF_control_the_icu = {
+		icon = oppression
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = SAF_tt_icu_active
+				NOT = {
+					has_country_flag = SAF_internal_resistance_enabled
+				}
+			}
+		}
+
+		is_good = no
+		fixed_random_seed = no
+
+		days_mission_timeout = 30
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SAF_control_the_icu"
+			if = {
+				limit = {
+					saf_trigger_icu_anti_war = yes
+					check_variable = { saf_icu_strength > 0 }
+				}
+				random_list = {
+					10 = {
+						custom_effect_tooltip = SAF_tt_icu_organises_strikes
+						add_timed_idea = {
+							idea = SAF_idea_industrial_strikes
+							days = 30
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_icu_organises_mining_strikes
+						add_timed_idea = {
+							idea = SAF_idea_mining_strikes
+							days = 30
+						}
+					}
+					5 = {
+						custom_effect_tooltip = SAF_tt_icu_sabotages_factory
+						random_core_state = {
+							limit = {
+								is_controlled_by = ROOT
+								non_damaged_building_level = { building = arms_factory level > 0 }
+							}
+							damage_building = {
+								type = arms_factory
+								damage = 0.7
+							}
+						}
+					}
+					5 = {
+						custom_effect_tooltip = SAF_tt_icu_sabotages_civ_factory
+						random_core_state = {
+							limit = {
+								is_controlled_by = ROOT
+								non_damaged_building_level = { building = industrial_complex level > 0 }
+							}
+							damage_building = {
+								type = industrial_complex
+								damage = 0.7
+							}
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_icu_shares_confidential_information_with_enemy
+						add_timed_idea = {
+							idea = SAF_idea_compromised_intelligence
+							days = 30
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_icu_convince_natives_war_bad
+						add_war_support = -0.03
+					}
+					25 = {
+						modifier = {
+							factor = 2
+							check_variable = { saf_icu_strength < 0.5 }
+						}
+						modifier = {
+							factor = 2
+							check_variable = { saf_icu_strength < 0.25 }
+						}
+						modifier = {
+							factor = 2
+							check_variable = { saf_icu_strength < 0.1 }
+						}
+						#custom_effect_tooltip = no_effect
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					saf_trigger_icu_neutral = yes
+					check_variable = { saf_icu_strength > 0 }
+				}
+				custom_effect_tooltip = SAF_tt_icu_neutral_will_not_act
+			}
+			else_if = {
+				limit = {
+					saf_trigger_icu_prowar = yes
+					check_variable = { saf_icu_strength > 0 }
+				}
+				random_list = {
+					20 = {
+						custom_effect_tooltip = SAF_tt_icu_report_weapon_hideout
+						add_to_variable = {
+							var = saf_var_ob_suppression_effectiveness
+							value = 1
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_icu_suspends_peaceful_resistance
+						add_timed_idea = {
+							idea = SAF_idea_less_nonviolent_resistance
+							days = 30
+						}
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_icu_calls_for_native_recruitment
+						add_stability = -0.03
+					}
+					10 = {
+						custom_effect_tooltip = SAF_tt_icu_convince_natives_war_good
+						add_war_support = 0.03
+					}
+					25 = {
+						modifier = {
+							factor = 2
+							check_variable = { saf_icu_strength < 0.5 }
+						}
+						modifier = {
+							factor = 2
+							check_variable = { saf_icu_strength < 0.25 }
+						}
+						modifier = {
+							factor = 2
+							check_variable = { saf_icu_strength < 0.1 }
+						}
+						#custom_effect_tooltip = no_effect
+					}
+				}
+			}
+			else = {
+				custom_effect_tooltip = SAF_tt_icu_weak_will_not_act
+			}
+			hidden_effect = {
+				random_list = {
+					45 = {
+						add_to_variable = { var = saf_icu_strength value = 0.05 }
+						clamp_variable = { var = saf_icu_strength min = 0 max = 1 }
+					}
+					55 = {
+						#no effect
+					}
+				}
+				activate_mission = SAF_control_the_icu
+			}
+		}
+	}
+
+	SAF_construct_detention_camps = {
+		icon = generic_construction
+		allowed = { always = no }	# Activated by SAF_internal_resistance_enabled flag
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		ai_will_do = { factor = 1 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_construct_detention_camps"
+			custom_effect_tooltip = SAF_tt_no_trouble_with_detention_camps
+			add_stability = -0.1
+			hidden_effect = {
+				add_to_variable = { var = SAF_var_detention_cap value = -40 }
+				clamp_variable = {
+					var = SAF_var_detention_cap
+					min = 0
+					max = 100
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SAF_ryneveld_doctrine_decisions = {
+	SAF_intervene_kenya = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			if = {
+				limit = { cannot_call_allies_or_join_wars = yes }
+				OR = {
+					is_neighbor_of = FROM
+					FROM = { naval_base > 0 }
+				}
+			}
+			else = {
+				FROM = {
+					OR = {
+						naval_base > 0
+						any_home_area_neighbor_country = { is_ally_with = ROOT }
+					}
+				}
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			FROM = { NOT = { has_country_leader = { character = KEN_Thomas_Cholmondeley } } } #don't attack British Kenya
+			is_subject = no
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = { NOT = { has_country_leader = { character = KEN_Thomas_Cholmondeley } } } #don't attack British Kenya
+			is_subject = no
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					NOT = { is_neighbor_of = FROM }
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_intervene_kenya"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_intervene_kenya"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_intervene_kenya"
+			clear_decision_attack_AI = yes
+			547 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			892 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			969 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			970 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_intervene_mozambique = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					NOT = { is_neighbor_of = FROM }
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_intervene_mozambique"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_intervene_mozambique"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_intervene_mozambique"
+			clear_decision_attack_AI = yes
+			add_state_claim = 544 #Moçambique
+			add_state_claim = 950 #Lourenço Marques
+			add_state_claim = 954 #Tete
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_intervene_northern_rhodesia = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			if = {
+				limit = { cannot_call_allies_or_join_wars = yes }
+				is_neighbor_of = FROM
+			}
+			else = {
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+					FROM = { is_ai = no }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_intervene_northern_rhodesia"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_intervene_northern_rhodesia"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_intervene_northern_rhodesia"
+			clear_decision_attack_AI = yes
+			813 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			955 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			956 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			958 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_intervene_nyasaland = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			if = {
+				limit = { cannot_call_allies_or_join_wars = yes }
+				is_neighbor_of = FROM
+			}
+			else = {
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+					FROM = { is_ai = no }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_intervene_nyasaland"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_intervene_nyasaland"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_intervene_nyasaland"
+			clear_decision_attack_AI = yes
+			871 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_intervene_south_west = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			NOT = { FROM = { is_in_faction_with = GER } }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					NOT = { #AI democratic SAF should only intervene if Südwest is already out of the picture, though Dominionist SAF doesn't care
+						has_government = paternal_autocrat
+						country_exists = SWA
+					}
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+					FROM = { is_ai = no }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_intervene_south_west"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_intervene_south_west"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_intervene_south_west"
+			clear_decision_attack_AI = yes
+			NMB = { every_core_state = { add_claim_by = ROOT } }
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_intervene_taganyika = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			if = {
+				limit = { cannot_call_allies_or_join_wars = yes }
+				is_neighbor_of = FROM
+			}
+			else = {
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+					FROM = { is_ai = no }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_intervene_taganyika"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_intervene_taganyika"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_intervene_taganyika"
+			clear_decision_attack_AI = yes
+			546 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			869 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			870 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			899 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			918 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			965 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			1032 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_intervene_uganda = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			if = {
+				limit = { cannot_call_allies_or_join_wars = yes }
+				is_neighbor_of = FROM
+			}
+			else = {
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+					FROM = { is_ai = no }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_intervene_uganda"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_intervene_uganda"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_intervene_uganda"
+			clear_decision_attack_AI = yes
+			548 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_intervene_zanzibar = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+		}
+
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					NOT = {
+						controls_state = 965
+						controls_state = 970
+					}
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+					FROM = { is_ai = no }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_intervene_zanzibar"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_intervene_zanzibar"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_intervene_zanzibar"
+			clear_decision_attack_AI = yes
+			905 = {
+				add_claim_by = ROOT
+				set_state_flag = SAF_the_empire_strikes_back
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_demand_katanga_pulls_back = {
+		icon = eng_trade_unions_demand
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			if = {
+				limit = { cannot_call_allies_or_join_wars = yes }
+				is_neighbor_of = FROM
+			}
+			else = {
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+			FROM = {
+				any_owned_state = {
+					OR = {
+						is_core_of = ZAM
+						is_core_of = MLW
+					}
+					is_fully_controlled_by = PREV
+				}
+			}
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+			FROM = {
+				any_owned_state = {
+					OR = {
+						is_core_of = ZAM
+						is_core_of = MLW
+					}
+					is_fully_controlled_by = PREV
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_demand_katanga_pulls_back"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_demand_katanga_pulls_back"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_demand_katanga_pulls_back"
+			clear_decision_attack_AI = yes
+			if = {
+				limit = {
+					FROM = { is_subject = yes }
+				}
+				var:FROM.overlord = { country_event = south_africa_events.128 }
+			}
+			else = {
+				FROM = { country_event = south_africa_events.128 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_demand_kivu_pulls_back = {
+		icon = eng_trade_unions_demand
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			if = {
+				limit = { cannot_call_allies_or_join_wars = yes }
+				is_neighbor_of = FROM
+			}
+			else = {
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+			FROM = {
+				any_owned_state = {
+					OR = {
+						is_core_of = KEN
+						is_core_of = UGA
+					}
+					is_fully_controlled_by = PREV
+				}
+			}
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+			FROM = {
+				any_owned_state = {
+					OR = {
+						is_core_of = KEN
+						is_core_of = UGA
+					}
+					is_fully_controlled_by = PREV
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_demand_kivu_pulls_back"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_demand_kivu_pulls_back"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_demand_kivu_pulls_back"
+			clear_decision_attack_AI = yes
+			if = {
+				limit = {
+					FROM = { is_subject = yes }
+				}
+				var:FROM.overlord = { country_event = south_africa_events.131 }
+			}
+			else = {
+				FROM = { country_event = south_africa_events.131 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SAF_demand_somalia_pulls_back = {
+		icon = eng_trade_unions_demand
+
+		allowed = { always = no } #activated by SAF_enact_smuts_doctrine
+
+		available = {
+			if = {
+				limit = { cannot_call_allies_or_join_wars = yes }
+				is_neighbor_of = FROM
+			}
+			else = {
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_subject = no
+			FROM = {
+				any_owned_state = {
+					is_core_of = KEN
+					is_fully_controlled_by = PREV
+				}
+			}
+		}
+
+		target_trigger = {
+			can_declare_war_on = FROM
+			is_subject = no
+			FROM = {
+				any_owned_state = {
+					is_core_of = KEN
+					is_fully_controlled_by = PREV
+				}
+			}
+		}
+
+		cost = 0
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_demand_somalia_pulls_back"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_demand_somalia_pulls_back"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_demand_somalia_pulls_back"
+			clear_decision_attack_AI = yes
+			if = {
+				limit = {
+					FROM = { is_subject = yes }
+				}
+				var:FROM.overlord = { country_event = south_africa_events.133 }
+			}
+			else = {
+				FROM = { country_event = south_africa_events.133 }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+economy_decisions = {
+	SAF_establish_idc_factory_cape_town = {
+		icon = GFX_decision_generic_industry
+		allowed = { always = no }	# Activated by SAF_form_idc_of_south_africa
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = {
+				NOT = { has_state_flag = SAF_idc_factory_established }
+			}
+		}
+
+		fire_only_once = yes
+		state_target = yes
+		cost = 25
+		days_remove = 90
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_establish_idc_factory_cape_town"
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_establish_idc_factory_cape_town"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_establish_idc_factory_cape_town"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = SAF_idc_factory_established
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_establish_idc_factory_durban = {
+		icon = GFX_decision_generic_industry
+		allowed = { always = no }	# Activated by SAF_form_idc_of_south_africa
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = {
+				NOT = { has_state_flag = SAF_idc_factory_established }
+			}
+		}
+
+		fire_only_once = yes
+		state_target = yes
+		cost = 25
+		days_remove = 90
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_establish_idc_factory_durban"
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_establish_idc_factory_durban"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_establish_idc_factory_durban"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = SAF_idc_factory_established
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_establish_idc_factory_johannesburg = {
+		icon = GFX_decision_generic_industry
+		allowed = { always = no }	# Activated by SAF_form_idc_of_south_africa
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = {
+				NOT = { has_state_flag = SAF_idc_factory_established }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 90
+		state_target = yes
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_establish_idc_factory_johannesburg"
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_establish_idc_factory_johannesburg"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_establish_idc_factory_johannesburg"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = SAF_idc_factory_established
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_establish_idc_factory_salisbury = {
+		icon = GFX_decision_generic_industry
+		allowed = { always = no }	# Activated by SAF_form_idc_of_south_africa
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = {
+				NOT = { has_state_flag = SAF_idc_factory_established }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 90
+		state_target = yes
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_establish_idc_factory_salisbury"
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_establish_idc_factory_salisbury"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_establish_idc_factory_salisbury"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = SAF_idc_factory_established
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_invest_cape_town = {
+		icon = GFX_decision_hol_attract_foreign_investors
+		allowed = { always = no }	# Activated by SAF_support_iscor_expansion
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = {
+				NOT = { has_state_flag = SAF_new_factories_constructed }
+			}
+		}
+
+		fire_only_once = yes
+		state_target = yes
+		cost = 25
+		days_remove = 90
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_invest_cape_town"
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_invest_cape_town"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_invest_cape_town"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = SAF_new_factories_constructed
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_invest_durban = {
+		icon = GFX_decision_hol_attract_foreign_investors
+		allowed = { always = no }	# Activated by SAF_support_iscor_expansion
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = {
+				NOT = { has_state_flag = SAF_new_factories_constructed }
+			}
+		}
+
+		fire_only_once = yes
+		state_target = yes
+		cost = 25
+		days_remove = 90
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_invest_durban"
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_invest_durban"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_invest_durban"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = SAF_new_factories_constructed
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_expand_vanderbijlspark = {
+		icon = GFX_decision_generic_construction
+		allowed = { always = no }	# Activated by SAF_vanderbijlparks_steelworks
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = {
+				NOT = { has_state_flag = SAF_new_factories_constructed_2 }
+			}
+		}
+
+		fire_only_once = yes
+		state_target = yes
+		cost = 25
+		days_remove = 90
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_expand_vanderbijlspark"
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_expand_vanderbijlspark"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_expand_vanderbijlspark"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = SAF_new_factories_constructed_2
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_invest_witwatersrand = {
+		icon = GFX_decision_hol_attract_foreign_investors
+		allowed = { always = no }	# Activated by SAF_support_iscor_expansion
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			FROM = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = {
+				NOT = { has_state_flag = SAF_new_factories_constructed }
+			}
+		}
+
+		fire_only_once = yes
+		state_target = yes
+		cost = 25
+		days_remove = 90
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = FROM }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SAF_invest_witwatersrand"
+		}
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SAF_invest_witwatersrand"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SAF_invest_witwatersrand"
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = SAF_new_factories_constructed
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+}
+
+SAF_exploit_resources = {
+	SAF_develop_natal_steel_mines = {
+		icon = steel
+
+		highlight_states = {
+			highlight_state_targets = { state = 719 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			719 = { is_owned_and_controlled_by = ROOT }
+			has_tech = excavation2
+		}
+
+		visible = {
+			719 = {
+				is_owned_by = ROOT
+				NOT = { has_state_flag = SAF_steel_mines_developed }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = 719 }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SAF_develop_natal_steel_mines"
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_develop_natal_steel_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_develop_natal_steel_mines"
+			719 = {
+				set_state_flag = SAF_steel_mines_developed
+				add_resource = {
+					type = steel
+					amount = 18
+				}
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_develop_northern_cape_aluminium_mines = {
+		icon = aluminium
+
+		highlight_states = {
+			highlight_state_targets = { state = 945 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			945 = { is_owned_and_controlled_by = ROOT }
+			has_tech = excavation1
+		}
+
+		visible = {
+			945 = {
+				is_owned_by = ROOT
+				NOT = { has_state_flag = SAF_aluminium_mines_developed }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = 945 }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SAF_develop_northern_cape_aluminium_mines"
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_develop_northern_cape_aluminium_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_develop_northern_cape_aluminium_mines"
+			945 = {
+				set_state_flag = SAF_aluminium_mines_developed
+				add_resource = {
+					type = aluminium
+					amount = 5
+				}
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+		fixed_random_seed = no
+	}
+
+	SAF_develop_northern_cape_steel_mines = {
+		icon = steel
+		allowed = { always = no }	# Activated by SAF_support_iscor_expansion
+
+		highlight_states = {
+			highlight_state_targets = { state = 945 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			945 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		visible = {
+			945 = {
+				is_owned_by = ROOT
+				NOT = { has_state_flag = SAF_steel_mines_developed }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = 945 }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SAF_develop_northern_cape_steel_mines"
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_develop_northern_cape_steel_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_develop_northern_cape_steel_mines"
+			945 = {
+				set_state_flag = SAF_steel_mines_developed
+				add_resource = {
+					type = steel
+					amount = 12
+				}
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_develop_orange_free_state_chromium_mines = {
+		icon = chromium
+
+		highlight_states = {
+			highlight_state_targets = { state = 947 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			947 = { is_owned_and_controlled_by = ROOT }
+			has_tech = excavation1
+		}
+
+		visible = {
+			947 = {
+				is_owned_by = ROOT
+				NOT = { has_state_flag = SAF_chromium_mines_developed }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = 947 }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SAF_develop_orange_free_state_chromium_mines"
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_develop_orange_free_state_chromium_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_develop_orange_free_state_chromium_mines"
+			947 = {
+				set_state_flag = SAF_chromium_mines_developed
+				add_resource = {
+					type = chromium
+					amount = 10
+				}
+			}
+		}
+
+		ai_will_do = { factor = 10 }
+		fixed_random_seed = no
+	}
+
+	SAF_develop_orange_free_state_steel_mines = {
+		icon = steel
+		allowed = { always = no }	# Activated by SAF_diversified_territorial_economy/SAF_develop_borderlands
+
+		highlight_states = {
+			highlight_state_targets = { state = 947 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			947 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		visible = {
+			947 = {
+				is_owned_by = ROOT
+				NOT = { has_state_flag = SAF_steel_mines_developed }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = 947 }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SAF_develop_orange_free_state_steel_mines"
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_develop_orange_free_state_steel_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_develop_orange_free_state_steel_mines"
+			947 = {
+				set_state_flag = SAF_steel_mines_developed
+				add_resource = {
+					type = steel
+					amount = 10
+				}
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+
+	SAF_develop_rhodesia_steel_mines = {
+		icon = steel
+		allowed = { always = no }	# Activated by SAF_diversified_territorial_economy/SAF_develop_borderlands
+
+		highlight_states = {
+			highlight_state_targets = { state = 545 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			545 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		visible = {
+			545 = {
+				is_owned_by = ROOT
+				NOT = { has_state_flag = SAF_steel_mines_developed }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = 545 }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SAF_develop_rhodesia_steel_mines"
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_develop_rhodesia_steel_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_develop_rhodesia_steel_mines"
+			545 = {
+				set_state_flag = SAF_steel_mines_developed
+				add_resource = {
+					type = steel
+					amount = 5
+				}
+			}
+		}
+
+		ai_will_do = { factor = 50 }
+		fixed_random_seed = no
+	}
+
+	SAF_develop_transvaal_steel_mines = {
+		icon = steel
+		allowed = { always = no }	# Activated by SAF_support_iscor_expansion
+
+		highlight_states = {
+			highlight_state_targets = { state = 275 }
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			275 = { is_owned_and_controlled_by = ROOT }
+		}
+
+		visible = {
+			275 = {
+				is_owned_by = ROOT
+				NOT = { has_state_flag = SAF_steel_mines_developed }
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		cancel_trigger = {
+			NOT = { controls_state = 275 }
+		}
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SAF_develop_transvaal_steel_mines"
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SAF_develop_transvaal_steel_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SAF_develop_transvaal_steel_mines"
+			275 = {
+				set_state_flag = SAF_steel_mines_developed
+				add_resource = {
+					type = steel
+					amount = 15
+				}
+			}
+		}
+
+		ai_will_do = { factor = 250 }
+		fixed_random_seed = no
+	}
+}

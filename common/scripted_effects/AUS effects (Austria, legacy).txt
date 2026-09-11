@@ -1,0 +1,428 @@
+AUS_faction_merges_with_reichspakt = {
+	set_country_flag = AUS_intervened_in_weltkrieg
+	add_political_power = 100
+	custom_effect_tooltip = joining_reichspakt_tt
+	hidden_effect = {
+		if = {
+			limit = { has_dlc_ncns = yes }
+			save_former_faction_attributes = yes
+		}
+		every_subject_country = { set_country_flag = AUS_former_faction_member }
+		every_allied_country = {
+			limit = { is_subject = no }
+			set_global_flag = TEMPORARY_DISABLED_FACTION_POPUP
+			set_country_flag = AUS_former_faction_member
+			every_subject_country = { set_country_flag = AUS_former_faction_member }
+			FROM = { add_to_faction = PREV }
+			if = {
+				limit = {
+					OR = {
+						original_tag = POL
+						original_tag = UKR
+					}
+					is_ai = no
+				}
+				set_country_flag = illusion_of_free_choice_achievement_condition
+			}
+		}
+		dismantle_faction = yes
+	}
+	FROM = { add_to_faction = ROOT }
+	hidden_effect = {
+		activate_targeted_decision = { decision = AUS_reform_faction target = THIS }
+	}
+}
+
+AUS_flag_country_as_austrian_ally = {
+	if = {
+		limit = {
+			var:new_faction_leader = {
+				AUS_is_temporarily_in_reichspakt = yes
+				is_ally_with = AUS
+			}
+			AUS = {
+				is_in_faction = yes
+				is_faction_leader = no
+			}
+		}
+		set_country_flag = AUS_former_faction_member
+		every_subject_country = { set_country_flag = AUS_former_faction_member }
+	}
+}
+
+AUS_fire_next_budapest_treaty_event = {
+	AUS = {
+		if = {
+			limit = {
+				any_enemy_country = {
+					AUS_is_potential_fifth_balkan_war_participant = yes
+					NOT = { has_country_flag = AUS_accepts_peace }
+					NOT = { has_country_flag = AUS_will_continue_war }
+					OR = {
+						is_subject = no
+						overlord = { NOT = { has_war_with = PREV.PREV } }
+					}
+					OR = {
+						is_in_faction = no
+						is_faction_leader = yes
+						faction_leader = { NOT = { has_war_with = PREV.PREV } }
+						faction_leader = { has_country_flag = AUS_accepts_peace }
+						faction_leader = { has_country_flag = AUS_will_continue_war }
+					}
+				}
+			}
+			random_enemy_country = {
+				limit = {
+					AUS_is_potential_fifth_balkan_war_participant = yes
+					NOT = { has_country_flag = AUS_accepts_peace }
+					NOT = { has_country_flag = AUS_will_continue_war }
+					OR = {
+						is_subject = no
+						overlord = { NOT = { has_war_with = PREV.PREV } }
+					}
+					OR = {
+						is_in_faction = no
+						is_faction_leader = yes
+						faction_leader = { NOT = { has_war_with = PREV.PREV } }
+						faction_leader = { has_country_flag = AUS_accepts_peace }
+						faction_leader = { has_country_flag = AUS_will_continue_war }
+					}
+				}
+				country_event = treaty_of_budapest_events.1
+			}
+		}
+		else_if = {
+			limit = {
+				any_enemy_country = { has_country_flag = AUS_accepts_peace }
+			}
+			country_event = { id = treaty_of_budapest_events.2 days = 2 }
+		}
+		else = {
+			remove_ideas = has_scripted_peace #the refusal events handled by the event chain itself
+			every_possible_country = {
+				clr_country_flag = AUS_accepts_peace
+				clr_country_flag = AUS_will_continue_war
+			}
+			every_state = { clr_state_flag = AUS_german_intervention }
+		}
+	}
+}
+
+AUS_create_karl = {
+	if = {
+		limit = { AUS = { AUS_karl_von_habsburg = { is_dead = no } } }
+		AUS = {
+			AUS_karl_von_habsburg = {
+				character_becomes_leader_of_ruling_party_effect_tooltip = yes
+				hidden_effect = {
+					set_nationality = PREV.PREV
+					set_character_name = AUS_karl_von_habsburg_regnal
+					remove_all_country_leader_roles = yes
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_karl_von_habsburg_leader_desc
+							ideology = social_democrat_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_karl_von_habsburg_leader_desc
+							ideology = social_liberal_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_karl_von_habsburg_leader_desc
+							ideology = market_liberal_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_karl_von_habsburg_leader_desc
+							ideology = social_conservative_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_karl_von_habsburg_leader_desc
+							ideology = authoritarian_democrat_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_karl_von_habsburg_leader_desc
+							ideology = paternal_autocrat_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_karl_von_habsburg_leader_desc
+							ideology = national_populist_subtype
+						}
+						promote_leader = yes
+					}
+				}
+			}
+			hidden_effect = {
+				AUS_otto_von_habsburg = { set_nationality = PREV.PREV }
+				AUS_move_other_habsburgs = yes
+			}
+		}
+	}
+	else = { AUS_create_otto = yes }
+}
+
+AUS_create_otto = {
+	if = {
+		limit = { AUS = { AUS_otto_von_habsburg = { is_dead = no } } }
+		AUS = {
+			AUS_otto_von_habsburg = {
+				character_becomes_leader_of_ruling_party_effect_tooltip = yes
+				hidden_effect = {
+					set_nationality = PREV.PREV
+					set_character_name = AUS_otto_von_habsburg_regnal
+					remove_all_country_leader_roles = yes
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_otto_von_habsburg_leader_desc
+							ideology = social_democrat_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_otto_von_habsburg_leader_desc
+							ideology = social_liberal_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_otto_von_habsburg_leader_desc
+							ideology = market_liberal_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_otto_von_habsburg_leader_desc
+							ideology = social_conservative_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_otto_von_habsburg_leader_desc
+							ideology = authoritarian_democrat_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_otto_von_habsburg_leader_desc
+							ideology = paternal_autocrat_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = AUS_otto_von_habsburg_leader_desc
+							ideology = national_populist_subtype
+						}
+						promote_leader = yes
+					}
+				}
+			}
+			hidden_effect = {
+				AUS_move_other_habsburgs = yes
+			}
+		}
+	}
+}
+
+AUS_move_other_habsburgs = {
+	AUS_eugen_von_habsburg = { set_nationality = PREV.PREV }
+	AUS_maximilian_eugen_von_habsburg = { set_nationality = PREV.PREV }
+	AUS_joseph_august_von_habsburg = {
+		if = {
+			limit = {
+				OR = {
+					is_country_leader = no
+					is_retired = yes
+				}
+			}
+			set_nationality = PREV.PREV
+		}
+	}
+	AUS_karl_albrecht_von_habsburg = {
+		if = {
+			limit = {
+				OR = {
+					is_country_leader = no
+					is_retired = yes
+				}
+			}
+			set_nationality = PREV.PREV
+		}
+	}
+}
+
+AUS_remove_monarchy = {
+	if = {
+		limit = { has_cosmetic_tag = AUS_empire }
+		drop_cosmetic_tag = yes
+	}
+	if = {
+		limit = { has_character = AUS_karl_von_habsburg }
+		AUS_karl_von_habsburg = {
+			set_character_name = AUS_karl_von_habsburg
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			AUS_move_to_austria_if_habsburg_else_retire = yes
+		}
+	}
+	if = {
+		limit = { has_character = AUS_otto_von_habsburg }
+		AUS_otto_von_habsburg = {
+			set_character_name = AUS_otto_von_habsburg
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			AUS_move_to_austria_if_habsburg_else_retire = yes
+		}
+	}
+	if = {
+		limit = { has_character = AUS_joseph_august_von_habsburg }
+		AUS_joseph_august_von_habsburg = {
+			set_character_name = AUS_joseph_august_von_habsburg
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			AUS_move_to_austria_if_habsburg_else_retire = yes
+		}
+	}
+	if = {
+		limit = { has_character = AUS_karl_albrecht_von_habsburg }
+		AUS_karl_albrecht_von_habsburg = {
+			set_character_name = AUS_karl_albrecht_von_habsburg
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			AUS_move_to_austria_if_habsburg_else_retire = yes
+		}
+	}
+	if = {
+		limit = { has_character = AUS_eugen_von_habsburg }
+		AUS_eugen_von_habsburg = { AUS_move_to_austria_if_habsburg_else_retire = yes }
+	}
+	if = {
+		limit = { has_character = AUS_maximilian_eugen_von_habsburg }
+		AUS_maximilian_eugen_von_habsburg = { AUS_move_to_austria_if_habsburg_else_retire = yes }
+	}
+}
+
+AUS_move_to_austria_if_habsburg_else_retire = {
+	effect_tooltip = { retire = yes }
+	if = {
+		limit = { AUS = { AUS_is_led_by_habsburgs = yes } }
+		set_nationality = AUS
+	}
+	else = {
+		retire = yes
+	}
+}
+
+AUS_form_germany = {
+	set_cosmetic_tag = AUS_germany
+	effect_tooltip = {
+		every_state = {
+			limit = {
+				is_germany = yes
+				is_south_germany = no
+			}
+			add_claim_of_ROOT = yes
+			enable_state_integration_80_compliance = yes
+		}
+		every_state = {
+			limit = { is_south_germany = yes }
+			add_claim_of_ROOT = yes
+			enable_state_integration_50_compliance = yes
+		}
+	}
+	hidden_effect = {
+		every_state = {
+			limit = { is_full_germany = yes }
+			if = {
+				limit = { is_south_germany = yes }
+				add_claim_of_ROOT = yes
+				enable_state_integration_50_compliance = yes
+			}
+			else_if = {
+				limit = { is_germany = yes }
+				add_claim_of_ROOT = yes
+				enable_state_integration_80_compliance = yes
+			}
+			else = { #border regions
+				enable_state_integration_80_compliance = yes
+			}
+		}
+	}
+	every_subject_country = {
+		limit = {
+			is_germany_or_splinter_tag = yes
+			is_ai = yes
+		}
+		ROOT = {
+			annex_country = {
+				target = PREV
+				transfer_troops = yes
+			}
+		}
+	}
+}
+
+AUS_enable_danubian_integration = {
+	if = {
+		limit = { NOT = { has_variable = danubian_integration^num } }
+		every_state = {
+			limit = {
+				NOT = { has_variable = can_integrate_@PREV }
+				OR = {
+					is_core_austria = yes
+					is_bohemia = yes
+					region = 27 #Hungary
+					region = 143 #Illyria
+					AND = {
+						region = 144 #Transylvania
+						NOT = { state = 80 } #Cernauti
+						NOT = { state = 713 } #Suceava
+					}
+					state = 488 #Trieste
+					state = 683 #Gorizia
+					state = 736 #Istria
+					state = 783 #Trentino
+					state = 841 #Kotor
+				}
+			}
+			add_to_array = { PREV.danubian_integration = THIS }
+			enable_state_integration_80_compliance = yes
+			if = {
+				limit = { NOT = { has_variable = ambition_area_@PREV } }
+				add_to_array = { PREV.danubian_ambitions = THIS }
+				set_variable = { ambition_area_@PREV = 1 }
+			}
+		}
+	}
+}
+
+AUS_disable_danubian_integration = {
+	for_each_scope_loop = {
+		array = danubian_integration
+		disable_state_integration = yes
+	}
+	for_each_scope_loop = {
+		array = danubian_ambitions
+		clear_variable = ambition_area_@PREV
+	}
+	clear_array = danubian_integration
+	clear_array = danubian_ambitions
+}

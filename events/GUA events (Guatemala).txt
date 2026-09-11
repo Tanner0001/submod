@@ -1,0 +1,936 @@
+###########################
+# Guatemala Events
+###########################
+
+add_namespace = guatemala_events
+
+country_event = {
+	id = guatemala_events.2
+	title = guatemala_events.2.t
+	desc = guatemala_events.2.d
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			add_timed_idea = {
+				idea = GUA_BM
+				days = 365
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.2 option guatemala_events.2.a"
+		name = guatemala_events.2.a
+		add_stability = -0.1
+		effect_tooltip = {
+			add_timed_idea = {
+				idea = GUA_BM
+				days = 365
+			}
+		}
+		subtract_from_variable = {
+			UFC_power = 5
+			tooltip = GUA_UFC_decrease
+		}
+		update_GUA_UFC = yes
+		hidden_effect = {
+			country_event = { id = guatemala_events.3 days = 90 }
+		}
+	}
+}
+
+country_event = {
+	id = guatemala_events.3
+	title = guatemala_events.3.t
+	desc = guatemala_events.3.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.3 option guatemala_events.3.a"
+		name = guatemala_events.3.a
+		subtract_from_variable = {
+			UFC_power = 10
+			tooltip = GUA_UFC_decrease
+		}
+		update_GUA_UFC = yes
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.05
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.3 option guatemala_events.3.b"
+		name = guatemala_events.3.b
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.05
+		}
+		add_stability = 0.03
+	}
+}
+
+#american civil war
+country_event = {
+	id = guatemala_events.4
+	title = guatemala_events.4.t
+	desc = guatemala_events.4.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.4 option guatemala_events.4.a"
+		name = guatemala_events.4.a
+		add_stability = -0.1
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = -0.2
+		}
+		subtract_from_variable = {
+			UFC_power = 12
+			tooltip = GUA_UFC_decrease
+		}
+		update_GUA_UFC = yes
+		hidden_effect = {
+			country_event = { id = guatemala_events.5 days = 20 }
+		}
+	}
+}
+
+#letter of the 311
+country_event = {
+	id = guatemala_events.5
+	title = guatemala_events.5.t
+	desc = guatemala_events.5.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.5 option guatemala_events.5.a"
+		name = guatemala_events.5.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GUA_path option = GUA_PATH_AUTDEM }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_RADSOC }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCCON }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCDEM }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_COUP_PATAUT }
+				}
+			}
+		}
+		hidden_effect = { country_event = { id = guatemala_events.6 days = 3 } }
+		custom_effect_tooltip = GUA_angry_military
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.5 option guatemala_events.5.b"
+		name = guatemala_events.5.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GUA_path option = GUA_PATH_CIVIL_WAR_PATAUT }
+			}
+		}
+		add_stability = -0.3
+		hidden_effect = { country_event = { id = guatemala_events.15 days = 5 } }
+	}
+	after = {
+		set_country_flag = GUA_death_letter_flag
+	}
+}
+
+#Ubico coup
+country_event = {
+	id = guatemala_events.6
+	title = guatemala_events.6.t
+	desc = guatemala_events.6.d
+	picture = GFX_report_event_GUA_ubico_gang
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.6 option guatemala_events.6.a"
+		name = guatemala_events.6.a
+		hidden_effect = {
+			country_event = { id = guatemala_events.7 days = 1 }
+			313 = { set_demilitarized_zone = yes }
+		}
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+		set_politics = { ruling_party = paternal_autocrat }
+		activate_advisor = GUA_roderico_anzueto_valencia_sic
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		GUA_jorge_ubico_castaneda = { promote_to_field_marshal = yes }
+		GUA_jose_maria_orellana = { kill_character = yes }
+		if = {
+			limit = { has_idea = GUA_socialist_compensation }
+			remove_ideas = GUA_socialist_compensation
+		}
+		else_if = {
+			limit = { has_idea = GUA_socialist_compensation_2 }
+			remove_ideas = GUA_socialist_compensation_2
+		}
+		add_stability = -0.5
+	}
+}
+
+#Ubico speech
+country_event = {
+	id = guatemala_events.7
+	title = guatemala_events.7.t
+	desc = guatemala_events.7.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.7 option guatemala_events.7.a"
+		name = guatemala_events.7.a
+		add_stability = 0.1
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+		add_popularity = {
+			ideology = national_populist
+			popularity = 0.03
+		}
+		hidden_effect = { country_event = { id = guatemala_events.8 days = 1 } }
+	}
+}
+
+#civil war start
+country_event = {
+	id = guatemala_events.8
+	title = guatemala_events.8.t
+	desc = guatemala_events.8.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.8 option guatemala_events.8.a"
+		name = guatemala_events.8.a
+		ai_chance = {
+			base = 75
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GUA_path option = GUA_PATH_AUTDEM }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_CIVIL_WAR_PATAUT }
+				}
+			}
+		}
+		add_war_support = 0.1
+		set_temp_variable = { ideology_change_var = 0.1 }
+		change_ruling_party_popularity = yes
+		save_event_target_as = GUA_traitors_in_capital
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.8 option guatemala_events.8.b"
+		name = guatemala_events.8.b
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GUA_path option = GUA_PATH_RADSOC }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCCON }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCDEM }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_COUP_PATAUT }
+				}
+			}
+		}
+		add_stability = 0.1
+		add_popularity = {
+			ideology = social_democrat
+			popularity = -0.06
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.06
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = -0.06
+		}
+	}
+
+	after = {
+		hidden_effect = { country_event = { id = guatemala_events.9 days = 3 } }
+	}
+}
+
+#pick a siege
+country_event = {
+	id = guatemala_events.9
+	title = guatemala_events.9.t
+	desc = guatemala_events.9.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.9 option guatemala_events.9.a"
+		name = guatemala_events.9.a
+		ai_chance = { base = 60 }
+		hidden_effect = {
+			if = {
+				limit = { has_event_target = GUA_traitors_in_capital }
+				country_event = { id = guatemala_events.16 days = 3 }
+				else = { country_event = { id = guatemala_events.17 days = 3 } }
+			}
+		}
+		custom_effect_tooltip = GUA_mountain_attack_tooltip
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.9 option guatemala_events.9.b"
+		name = guatemala_events.9.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GUA_path option = GUA_PATH_AUTDEM }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_RADSOC }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCCON }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCDEM }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_CIVIL_WAR_PATAUT }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_COUP_PATAUT }
+				}
+			}
+		}
+		hidden_effect = { country_event = { id = guatemala_events.10 days = 3 } }
+		custom_effect_tooltip = GUA_port_attack_tooltip
+	}
+}
+
+country_event = {
+	id = guatemala_events.10
+	title = guatemala_events.10.t
+	desc = guatemala_events.10.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.10 option guatemala_events.10.a"
+		name = guatemala_events.10.a
+		add_war_support = 0.1
+		hidden_effect = { country_event = { id = guatemala_events.11 days = 3 } }
+	}
+}
+
+country_event = {
+	id = guatemala_events.11
+	title = guatemala_events.11.t
+	desc = guatemala_events.11.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.11 option guatemala_events.11.a"
+		name = guatemala_events.11.a
+		if = {
+			limit = { has_government = paternal_autocrat }
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.1
+			}
+			else = {
+				add_popularity = {
+					ideology = authoritarian_democrat
+					popularity = 0.1
+				}
+			}
+		}
+		country_event = { id = guatemala_events.18 days = 2 }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.11 option guatemala_events.11.b"
+		name = guatemala_events.11.b
+		add_stability = -0.1
+		if = {
+			limit = { has_government = paternal_autocrat }
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = -0.1
+			}
+			else = {
+				add_popularity = {
+					ideology = authoritarian_democrat
+					popularity = -0.1
+				}
+			}
+		}
+		country_event = { id = guatemala_events.12 days = 2 }
+	}
+}
+
+country_event = {
+	id = guatemala_events.12
+	title = guatemala_events.12.t
+	desc = guatemala_events.12.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.12 option guatemala_events.12.a"
+		name = guatemala_events.12.a
+		add_ideas = GUA_civil_war1
+		add_manpower = -2000
+		add_stability = 0.2
+		if = {
+			limit = { has_government = paternal_autocrat }
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.1
+			}
+			set_country_flag = GUA_ubico_wins_flag
+			else = {
+				add_popularity = {
+					ideology = authoritarian_democrat
+					popularity = 0.1
+				}
+				set_country_flag = GUA_orellana_wins_flag
+			}
+		}
+		hidden_effect = {
+			country_event = { id = guatemala_events.13 days = 16 }
+			country_event = { id = guatemala_events.14 days = 50 }
+			313 = { set_demilitarized_zone = no }
+		}
+	}
+}
+
+country_event = {
+	id = guatemala_events.13
+	title = guatemala_events.13.t
+	desc = guatemala_events.13.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.13 option guatemala_events.13.a"
+		name = guatemala_events.13.a
+		add_stability = 0.1
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+		hidden_effect = { set_global_flag = CEN_saviour_statue }
+	}
+}
+
+country_event = {
+	id = guatemala_events.14
+	title = guatemala_events.14.t
+	desc = guatemala_events.14.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.14 option guatemala_events.14.a"
+		name = guatemala_events.14.a
+		313 = {
+			add_extra_state_shared_building_slots = 1
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.14 option guatemala_events.14.b"
+		name = guatemala_events.14.b
+		313 = {
+			custom_override_tooltip = {
+				add_building_construction = {
+					type = bunker
+					level = 3
+					instant_build = yes
+					province = 10886
+				}
+				tooltip = {
+					localization_key = tooltip_add_building_on_victory_point
+					BUILDING = bunker
+					NUMBER = 3
+					VP = 10886
+				}
+			}
+		}
+	}
+}
+
+country_event = {
+	id = guatemala_events.15
+	title = guatemala_events.15.t
+	desc = guatemala_events.15.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.15 option guatemala_events.15.a"
+		name = guatemala_events.15.a
+		add_stability = -0.2
+		hidden_effect = {
+			country_event = { id = guatemala_events.8 days = 5 }
+			313 = { set_demilitarized_zone = yes }
+			remove_ideas = {
+				GUA_socialist_compensation
+				GUA_socialist_compensation_2
+			}
+		}
+	}
+}
+
+country_event = {
+	id = guatemala_events.16
+	title = guatemala_events.16.t
+	desc = guatemala_events.16.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.16 option guatemala_events.16.a"
+		name = guatemala_events.16.a
+		add_ideas = GUA_civil_war1
+		set_politics = {
+			ruling_party = social_democrat
+		}
+		activate_advisor = GUA_jose_manuel_fortuny_sic
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		set_country_flag = GUA_PRN_wins_flag
+		GUA_lazaro_chacon_gonzalez = { promote_to_field_marshal = yes }
+		hidden_effect = {
+			313 = { set_demilitarized_zone = no }
+		}
+	}
+}
+
+country_event = {
+	id = guatemala_events.17
+	title = guatemala_events.17.t
+	desc = guatemala_events.17.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.17 option guatemala_events.17.a"
+		name = guatemala_events.17.a
+		add_ideas = GUA_civil_war1
+		add_stability = 0.1
+		add_manpower = -4000
+		if = {
+			limit = { has_government = paternal_autocrat }
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.1
+			}
+			set_country_flag = GUA_ubico_wins_flag
+			else = {
+				add_popularity = {
+					ideology = authoritarian_democrat
+					popularity = 0.1
+				}
+				set_country_flag = GUA_orellana_wins_flag
+			}
+		}
+		hidden_effect = {
+			country_event = { id = guatemala_events.13 days = 16 }
+			country_event = { id = guatemala_events.14 days = 50 }
+			313 = { set_demilitarized_zone = no }
+		}
+	}
+}
+
+country_event = {
+	id = guatemala_events.18
+	title = guatemala_events.18.t
+	desc = guatemala_events.18.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.18 option guatemala_events.18.a"
+		name = guatemala_events.18.a
+		add_ideas = GUA_civil_war1
+		set_politics = {
+			ruling_party = social_democrat
+		}
+		activate_advisor = GUA_jose_manuel_fortuny_sic
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.05
+		}
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		GUA_lazaro_chacon_gonzalez = { promote_to_field_marshal = yes }
+		set_country_flag = GUA_PRN_wins_flag
+		add_manpower = -2000
+		hidden_effect = {
+			313 = { set_demilitarized_zone = no }
+		}
+	}
+}
+
+country_event = {
+	id = guatemala_events.20
+	title = guatemala_events.20.t
+	desc = guatemala_events.20.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.20 option guatemala_events.20.a"
+		name = guatemala_events.20.a
+		ai_chance = {
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GUA_path option = GUA_PATH_RADSOC }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCCON }
+				}
+			}
+		}
+		set_politics = { ruling_party = social_democrat }
+		add_popularity = {
+			ideology = social_democrat
+			popularity = 0.1
+		}
+		unlock_national_focus = GUA_prn_win
+		custom_effect_tooltip = GUA_ufc_coup
+		end_coalition = yes
+		hidden_effect = { country_event = { id = guatemala_events.23 days = 5 } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.20 option guatemala_events.20.b"
+		name = guatemala_events.20.b
+		ai_chance = {
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GUA_path option = GUA_PATH_COUP_PATAUT }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_RADSOC }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCDEM }
+				}
+			}
+		}
+		set_politics = { ruling_party = social_conservative }
+		activate_advisor = GUA_jose_azmitia_gonzalez_sic
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.1
+		}
+		unlock_national_focus = GUA_unionist_win
+		hidden_effect = {
+			country_event = { id = guatemala_events.100 days = 90 }
+			country_event = { id = guatemala_events.101 days = 30 }
+			country_event = { id = guatemala_events.102 days = 60 }
+			country_event = { id = guatemala_events.103 days = 5 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.20 option guatemala_events.20.c"
+		name = guatemala_events.20.c
+		ai_chance = {
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCCON }
+					has_game_rule = { rule = GUA_path option = GUA_PATH_SOCDEM }
+				}
+			}
+		}
+		set_politics = { ruling_party = radical_socialist }
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = 0.1
+		}
+		unlock_national_focus = GUA_pcg_win
+		custom_effect_tooltip = GUA_ufc_coup
+		hidden_effect = { country_event = { id = guatemala_events.23 days = 5 } }
+	}
+}
+
+country_event = {
+	id = guatemala_events.23
+	title = guatemala_events.23.t
+	desc = guatemala_events.23.d
+
+	trigger = { is_subject = no }
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.23 option guatemala_events.23.a"
+		name = guatemala_events.23.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GUA_path option = GUA_PATH_RADSOC }
+				has_game_rule = { rule = GUA_path option = GUA_PATH_SOCDEM }
+			}
+		}
+		set_politics = {
+			ruling_party = paternal_autocrat
+		}
+		activate_advisor = GUA_roderico_anzueto_valencia_sic
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		GUA_jorge_ubico_castaneda = { promote_to_field_marshal = yes }
+		add_stability = -0.4
+		custom_effect_tooltip = GUA_UFC_increase_to_70
+		set_variable = { UFC_power = 70 }
+		update_GUA_UFC = yes
+		hidden_effect = {
+			set_country_flag = GUA_UFC_wins_flag
+			if = {
+				limit = { NOT = { has_idea = GUA_united_fruit } }
+				add_ideas = GUA_united_fruit
+				add_dynamic_modifier = { modifier = GUA_united_fruit_land }
+			}
+			if = {
+				limit = { has_completed_focus = GUA_pcg_win }
+				uncomplete_national_focus = { focus = GUA_pcg_win }
+			}
+			else = { uncomplete_national_focus = { focus = GUA_prn_win } }
+			remove_ideas = GUA_depoliticisation
+			remove_ideas = GUA_restored_liberty
+		}
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.2
+		}
+		if = {
+			limit = { is_in_faction = yes }
+			leave_faction = yes
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.23 option guatemala_events.23.b"
+		name = guatemala_events.23.b
+		ai_chance = {
+			base = 90
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GUA_path option = GUA_PATH_COUP_PATAUT }
+			}
+		}
+		add_stability = -0.05
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.1
+		}
+	}
+}
+
+country_event = {
+	id = guatemala_events.69
+	title = guatemala_events.69.t
+	desc = guatemala_events.69.d
+
+	trigger = {
+		has_navy_size = {
+			size > 1
+			type = screen_ship
+		}
+	}
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event guatemala_events.69 option guatemala_events.69.a"
+		name = guatemala_events.69.a
+		destroy_ships = {
+			type = destroyer
+			count = 1
+		}
+	}
+}
+##Drozd's stuff
+country_event = { #Nobody Had The Guts To Leave The Temple!
+	id = guatemala_events.100
+	title = guatemala_events.100.t
+	desc = guatemala_events.100.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Baseball Fields
+		log = "[GetLogInfo]: event guatemala_events.100 option guatemala_events.100.a"
+		name = guatemala_events.100.a
+		add_political_power = 50
+	}
+	option = { #Houses
+		log = "[GetLogInfo]: event guatemala_events.100 option guatemala_events.100.b"
+		name = guatemala_events.100.b
+		add_stability = 0.05
+	}
+}
+
+country_event = { #Conflicts in the Unionist Party
+	id = guatemala_events.101
+	title = guatemala_events.101.t
+	desc = guatemala_events.101.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Lose some PP and Unionista popularity
+		log = "[GetLogInfo]: event guatemala_events.101 option guatemala_events.101.a"
+		name = guatemala_events.101.a
+		add_political_power = -10
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.05
+		}
+	}
+}
+
+country_event = { #Furthering of Central American thought
+	id = guatemala_events.102
+	title = guatemala_events.102.t
+	desc = guatemala_events.102.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { #Unionista is achieving it's goals
+		log = "[GetLogInfo]: event guatemala_events.102 option guatemala_events.102.a"
+		name = guatemala_events.102.a
+		add_political_power = 25
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.05
+		}
+	}
+}
+
+country_event = { #Dealing with Bermejo
+	id = guatemala_events.103
+	title = guatemala_events.103.t
+	desc = guatemala_events.103.d
+
+	is_triggered_only = yes
+
+	option = { #Exile him, he has no place here
+		log = "[GetLogInfo]: event guatemala_events.103 option guatemala_events.103.a"
+		name = guatemala_events.103.a
+		ai_chance = { base = 0 }
+		add_political_power = 20
+		remove_unit_leader_role = GUA_juan_jose_arevalo_bermejo
+	}
+	option = { #We all make mistakes, he is still an ally
+		log = "[GetLogInfo]: event guatemala_events.103 option guatemala_events.103.b"
+		name = guatemala_events.103.b
+		add_political_power = -20
+	}
+}
+
+country_event = { #Introducing Miss Chiquita
+	id = guatemala_events.105
+	title = guatemala_events.105.t
+	desc = guatemala_events.105.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #Even the jingle works.
+		log = "[GetLogInfo]: event guatemala_events.105 option guatemala_events.105.a"
+		name = guatemala_events.105.a
+		add_political_power = 10
+	}
+}
+
+country_event = { #Phantom Assassins Plot Against Ubico
+	id = guatemala_events.106
+	title = guatemala_events.106.t
+	desc = guatemala_events.106.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = { #The Socialists are behind this
+		log = "[GetLogInfo]: event guatemala_events.106 option guatemala_events.106.a"
+		name = guatemala_events.106.a
+		add_political_power = -10
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = -0.06
+		}
+	}
+	option = { #The Liberals are behind this.
+		log = "[GetLogInfo]: event guatemala_events.106 option guatemala_events.106.b"
+		name = guatemala_events.106.b
+		add_political_power = -10
+		add_popularity = {
+			ideology = social_liberal
+			popularity = -0.06
+		}
+	}
+}
+

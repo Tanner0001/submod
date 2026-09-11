@@ -1,0 +1,833 @@
+on_actions = {
+	#FROM is country getting invited.
+	on_offer_join_faction = {
+		effect = {
+			FROM = {
+				if = {
+					limit = { original_tag = IRE }
+					if = {
+						limit = { has_country_flag = IRE_govt_abstentionist_an }
+						set_variable = { IRE_war_decision_days = 5 }
+					}
+					if = {
+						limit = { has_country_flag = IRE_gateway_IRE_victory }
+						remove_ideas = {
+							IRE_new_wild_geese_idea
+							IRE_new_wild_geese_idea_monarchist
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						ROOT = {
+							is_american_tag = yes
+							OR = {
+								has_completed_focus = USA_cooperation_treaties
+								has_completed_focus = WCA_free_the_west
+							}
+						}
+						IRE = {
+							is_in_faction = no
+							has_country_flag = IRE_got_guarantee_@ROOT
+						}
+					}
+					IRE = {
+						country_event = { id = ireland_events.2032 days = 3 }
+					}
+				}
+				else_if = {
+					limit = {
+						ROOT = {
+							is_american_tag = yes
+							OR = {
+								has_completed_focus = USA_cooperation_treaties
+								has_completed_focus = WCA_free_the_west
+							}
+						}
+						FROM = {
+							NOT = { has_idea = IRE_loas_member_idea }
+						}
+						IRE = {
+							is_in_faction_with = ROOT
+							has_completed_focus = IRE_loas_focus_trade
+						}
+					}
+					hidden_effect = {
+						FROM = { add_ideas = IRE_loas_member_idea }
+					}
+				}
+			}
+		}
+	}
+
+	#ROOT = attacking side
+	#FROM = defending side
+	#fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					IRE_has_puppet_govt = no
+					second_weltkrieg_has_begun = yes
+				}
+				IRE = {
+					country_event = { id = ireland_events.2023 days = 1 } # War starting event
+					if = {
+						limit = {
+							OR = {
+								has_idea = IRE_erin_go_bragh_1
+								has_idea = IRE_erin_go_bragh_1_monarchist
+								has_idea = IRE_erin_go_bragh_2
+								has_idea = IRE_erin_go_bragh_2_monarchist
+							}
+							any_country = {
+								has_volunteers_amount_from = {
+									tag = IRE
+									count > 0
+								}
+							}
+						}
+						country_event = { id = ireland_events.2009 days = 5 } # Volunteer upgrade event
+					}
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						original_tag = IRE
+						tag = INT
+					}
+					FROM = {
+						OR = {
+							original_tag = IRE
+							tag = INT
+						}
+					}
+				}
+				IRE = {
+					if = {
+						limit = {
+							second_weltkrieg_has_begun = yes
+							is_subject = no
+							IRE_has_parliamentary_govt = yes
+							NOT = { has_country_leader = { character = IRE_michael_collins } }
+							IRE_michael_collins = { is_second_in_command = no }
+						}
+						country_event = { id = ireland_events.7000 days = 10 random_days = 20 }	# Collins as advisor trigger
+					}
+					else = {
+						country_event = { id = ireland_events.2560 days = 10 random_days = 20 }	# MegaCollins
+					}
+					set_country_flag = IRE_had_war_with_INT
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						original_tag = IRE
+						tag = ENT
+					}
+					FROM = {
+						OR = {
+							original_tag = IRE
+							tag = ENT
+						}
+					}
+				}
+				IRE = { set_country_flag = IRE_had_war_with_ENT }
+			}
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							original_tag = IRE
+							FROM = {
+								OR = {
+									tag = INT
+									original_tag = GER
+								}
+							}
+						}
+						AND = {
+							OR = {
+								tag = INT
+								original_tag = GER
+							}
+							FROM = { original_tag = IRE }
+						}
+					}
+				}
+				IRE = { country_event = { id = ireland_flavour_events.400 days = 75 random_days = 15 } }	# CS Lewis flavour event
+			}
+			if = {
+				limit = {
+					OR = {
+						original_tag = IRE
+						AND = {
+							tag = IMP
+							is_in_faction_with = ENT
+						}
+					}
+					FROM = {
+						OR = {
+							original_tag = IRE
+							AND = {
+								tag = IMP
+								is_in_faction_with = ENT
+							}
+						}
+					}
+				}
+				IRE = { country_event = { id = ireland_events.2570 days = 5 } }	# No more Steel / Brooke
+			}
+			if = {
+				limit = {
+					original_tag = SPA
+					FROM = { original_tag = SPA }
+				}
+				IRE = { country_event = { id = ireland_events.2010 days = 1 } }	# Spanish Civil War bonuses
+				# Volunteers handled by spanish_civil_war_volunteers
+			}
+			if = {
+				limit = {
+					is_in_faction_with = BPL
+					FROM = { original_tag = BUL }
+				}
+				IRE = { country_event = { id = ireland_events.2011 days = 1 } }	# Fourth Balkan War bonuses
+			}
+			if = {
+				limit = {
+					is_indian_unifier_tag = yes
+					FROM = { is_indian_unifier_tag = yes }
+				}
+				IRE = { country_event = { id = ireland_events.2050 days = 1 } }	# Indian Civil War bonuses
+			}
+			if = {
+				limit = {
+					is_american_tag = yes
+					FROM = { is_american_tag = yes }
+				}
+				IRE = { country_event = { id = ireland_events.2012 days = 1 } }	# American Civil War bonuses
+				IRE_handle_ACW_volunteers = yes
+			}
+			if = {
+				limit = {
+					is_italian_tag = yes
+					FROM = { is_italian_tag = yes }
+				}
+				IRE = { country_event = { id = ireland_events.2014 days = 1 } }	# Italian Civil War bonuses
+			}
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							original_tag = ARG
+							FROM = { original_tag = FOP }
+						}
+						AND = {
+							original_tag = FOP
+							FROM = { original_tag = ARG }
+						}
+					}
+				}
+				IRE = { country_event = { id = ireland_events.2015 days = 1 } }	# War in the Southern Cone bonuses
+			}
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							original_tag = EGY
+							FROM = { tag = OTT }
+						}
+						AND = {
+							tag = OTT
+							FROM = { original_tag = EGY }
+						}
+					}
+				}
+				IRE = { country_event = { id = ireland_events.2016 days = 1 } }	# Levant Crisis bonuses
+			}
+			if = {
+				limit = {
+					OR = {
+						original_tag = GER
+						is_ally_with = ENT
+					}
+					OR = {
+						has_global_flag = GER_stay_out_france_uk
+						has_global_flag = ENT_britain_agree_northire
+						has_global_flag = ENT_agree_colonies
+						has_global_flag = ENT_france_agree_alsace
+						has_global_flag = ENT_france_agree_mittel
+						IRE = { has_country_flag = IRE_claimed_scottish_states }
+						var:119.owner = { is_in_faction_with = ENT }
+					}
+					IRE = {
+						is_in_faction_with = GER
+						has_country_flag = IRE_govt_abstentionist_an
+						NOT = {
+							120 = { is_claimed_by = ROOT } #Scottish Highlands
+							1124 = { is_claimed_by = ROOT } #Isle of Man
+						}
+					}
+					FROM = {
+						OR = {
+							original_tag = GER
+							is_ally_with = ENT
+						}
+					}
+				}
+				IRE = { country_event = { id = ireland_events.2026 days = 1 } }	# NatPops regain their claims after Halifax is broken by war
+			}
+			if = {
+				limit = {
+					OR = {
+						original_tag = IRE
+						FROM = { original_tag = IRE }
+					}
+				}
+				IRE_replace_erin_go_bragh_idea = yes	# IRE changes its Erin Go Bragh idea if it goes to war
+			}
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							original_tag = GER
+							FROM = { original_tag = IRE }
+						}
+						AND = {
+							original_tag = IRE
+							FROM = { original_tag = GER }
+						}
+					}
+				}
+				IRE = { clr_country_flag = IRE_got_guarantee_GER }
+			}
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							is_american_tag = yes
+							FROM = {
+								original_tag = IRE
+								IRE_has_american_guarantor = yes
+							}
+						}
+						AND = {
+							original_tag = IRE
+							IRE_has_american_guarantor = yes
+							FROM = { is_american_tag = yes }
+						}
+					}
+				}
+				IRE = {
+					clr_country_flag = IRE_got_guarantee_USA
+					clr_country_flag = IRE_got_guarantee_WCA
+					clr_country_flag = IRE_got_guarantee_APG
+					clr_country_flag = IRE_got_guarantee_ACC
+					clr_country_flag = IRE_got_guarantee_NEE
+				}
+			}
+		}
+	}
+
+	on_new_term_election = {
+		effect = {
+			### Ireland ###
+			if = {
+				limit = { original_tag = IRE }
+				country_event = ireland_events.2500 #1941
+				country_event = ireland_events.2501 #1941 (Parlrep)
+				country_event = ireland_events.2502 #1941 (Wartime coalition)
+			}
+		}
+	}
+
+	# FROM = country receiving volunteers, ROOT = country sending volunteers
+	on_send_volunteers = {
+		effect = {
+			if = {
+				limit = { original_tag = IRE }
+				if = {
+					limit = {
+						OR = {
+							has_idea = IRE_erin_go_bragh_1
+							has_idea = IRE_erin_go_bragh_1_monarchist
+							has_idea = IRE_erin_go_bragh_2
+							has_idea = IRE_erin_go_bragh_2_monarchist
+						}
+						second_weltkrieg_has_begun = yes
+					}
+					country_event = ireland_events.2009
+				}
+				if = {
+					limit = {
+						has_global_flag = spanish_civil_war
+						FROM = { original_tag = SPA }
+						NOT = { has_idea = IRE_SCW_volunteers }
+					}
+					add_ideas = IRE_SCW_volunteers
+					if = {
+						limit = { is_ai = no }
+						if = {
+							limit = { FROM = { tag = SPK } }
+							set_country_flag = IRE_supported_SPK
+						}
+						else_if = {
+							limit = { FROM = { tag = SPR } }
+							set_country_flag = IRE_supported_SPR
+						}
+						else_if = {
+							limit = { FROM = { tag = SWF } }
+							set_country_flag = IRE_supported_SWF
+						}
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_SER_support_chosen
+						has_global_flag = balkan_war_started
+						FROM = { has_war_with = BUL }
+					}
+					add_ideas = IRE_SER_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_SER
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_BUL_support_chosen
+						has_global_flag = balkan_war_started
+						FROM = { has_war_with = SER }
+					}
+					add_ideas = IRE_BUL_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_BUL
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_RAJ_support_chosen
+						FROM = {
+							tag = RAJ
+							OR = {
+								has_war_with = PRF
+								has_war_with = HND
+							}
+						}
+					}
+					add_ideas = IRE_RAJ_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_RAJ
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_PRF_support_chosen
+						FROM = {
+							tag = PRF
+							OR = {
+								has_war_with = RAJ
+								has_war_with = HND
+							}
+						}
+					}
+					add_ideas = IRE_PRF_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_PRF
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_HND_support_chosen
+						FROM = {
+							tag = HND
+							OR = {
+								has_war_with = RAJ
+								has_war_with = PRF
+							}
+						}
+					}
+					add_ideas = IRE_HND_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_HND
+					}
+				}
+				if = {
+					limit = {
+						has_global_flag = USA_civil_war_begun_flag
+						OR = {
+							american_civil_war = yes
+							FROM = { tag = NEE }
+						}
+						FROM = {
+							is_american_tag = yes
+							OR = {
+								has_war_with = USA
+								has_war_with = WCA
+								has_war_with = APG
+								has_war_with = ACC
+								has_war_with = NEE
+							}
+						}
+						NOT = { has_idea = IRE_ACW_volunteers }
+					}
+					add_ideas = IRE_ACW_volunteers
+					country_event = { id = ireland_events.2013 days = 15 }
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_@FROM
+					}
+				}
+				if = {
+					limit = {
+						has_global_flag = italy_reunification_wars_threat
+						FROM = {
+							is_italian_tag = yes
+							OR = {
+								tag = SRD
+								is_in_faction = no
+							}
+						}
+						NOT = { has_idea = IRE_ICW_volunteers }
+					}
+					add_ideas = IRE_ICW_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_@FROM
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_ARG_support_chosen
+						FROM = {
+							original_tag = ARG
+							has_war_with = FOP
+						}
+					}
+					add_ideas = IRE_ARG_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_ARG
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_FOP_support_chosen
+						FROM = {
+							original_tag = FOP
+							has_war_with = ARG
+						}
+					}
+					add_ideas = IRE_FOP_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_FOP
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_OTT_support_chosen
+						FROM = {
+							tag = OTT
+							OR = {
+								has_war_with = EGY
+								has_war_with = PER
+							}
+						}
+					}
+					add_ideas = IRE_OTT_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_OTT
+					}
+				}
+				if = {
+					limit = {
+						has_country_flag = IRE_EGY_support_chosen
+						FROM = {
+							original_tag = EGY
+							has_war_with = OTT
+						}
+					}
+					add_ideas = IRE_EGY_volunteers
+					if = {
+						limit = { is_ai = no }
+						set_country_flag = IRE_supported_EGY
+					}
+				}
+			}
+		}
+	}
+
+	# ROOT is the new faction leader FROM is the old faction leader
+	# This fixes IRE's decision to join ENT/INT disappearing if CAN/FRA is no longer faction leader
+	on_assume_faction_leadership = {
+		effect = {
+			if = {
+				limit = { tag = ENT }
+				IRE = {
+					if = {
+						limit = {
+							is_valid_peace_target = yes
+							owns_state = 113 #Leinster
+							NOT = { has_war_with = ENT }
+							has_socialist_government = no
+							has_completed_focus = IRE_world_stage
+						}
+						remove_targeted_decision = { target = FROM decision = IRE_join_entente }
+						activate_targeted_decision = { target = ROOT decision = IRE_join_entente }
+					}
+					if = {
+						limit = {
+							FROM = {
+								tag = IMP
+								has_capitulated = yes
+							}
+						}
+						country_event = { id = ireland_flavour_events.7 days = 2 }	### event for IRE if IMP dies
+					}
+				}
+			}
+			if = {
+				limit = { tag = INT }
+				IRE = {
+					if = {
+						limit = {
+							is_valid_peace_target = yes
+							owns_state = 113 #Leinster
+							NOT = { has_war_with = INT }
+							has_government = radical_socialist
+							has_completed_focus = IRE_world_stage
+						}
+						remove_targeted_decision = { target = FROM decision = IRE_join_third_internationale }
+						activate_targeted_decision = { target = ROOT decision = IRE_join_third_internationale }
+					}
+				}
+			}
+		}
+	}
+
+	# FROM is the faction Leader, ROOT is the country leaving the faction
+	on_leave_faction = {
+		effect = {
+			if = {
+				limit = {
+					tag = IMP
+					has_capitulated = yes
+				}
+				IRE = {
+					country_event = { id = ireland_flavour_events.7 days = 2 }	### event for IRE if IMP dies
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			if = {
+				limit = {
+					original_tag = NIR
+					FROM = { original_tag = IRE }
+					is_in_faction = yes
+				}
+				IRE = { activate_mission = IRE_NIR_capitulation_mission }
+				ENT = { activate_mission = NIR_capitulation_mission }
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						OR = {
+							original_tag = FRA
+							original_tag = ENG
+						}
+					}
+				}
+				IRE = {
+					country_event = { id = ireland_events.3450 days = 2 }	### Reactionary capstone event
+					country_event = { id = ireland_events.2550 days = 3 }	### Relax restrictions?
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = IMP }
+				}
+				IRE = {
+					country_event = { id = ireland_flavour_events.7 days = 2 }	### event for IRE if IMP dies
+				}
+			}
+			if = {
+				limit = {
+					tag = IRE
+					IRE_has_puppet_govt = no
+					FROM = { original_tag = NIR }
+					IRE = { owns_state = 119 }
+				}
+				119 = { add_dynamic_modifier = { modifier = IRE_reluctant_countrymen_modifier } }
+			}
+			if = {
+				limit = {
+					FROM = {
+						has_government = national_populist
+						OR = {
+							original_tag = NFA
+							original_tag = PAP
+							original_tag = POR
+							original_tag = SIC
+							original_tag = SPA
+						}
+					}
+				}
+				IRE = { country_event = { id = ireland_events.3300 days = 3 } }	### Kick out the king?
+			}
+			if = {
+				limit = {
+					FROM = { original_tag = SPA }
+					count_triggers = {
+						amount = 2
+						SPK = { exists = yes }
+						SPR = { exists = yes }
+						SWF = { exists = yes }
+					}
+					has_global_flag = spanish_civil_war
+				}
+				IRE_handle_SCW_volunteers = yes
+			}
+			if = {
+				limit = {
+					FROM = { is_american_tag = yes }
+					has_global_flag = USA_civil_war_begun_flag
+					NOT = { has_global_flag = USA_civil_war_over_flag }
+				}
+				IRE_handle_ACW_volunteers = yes
+			}
+			if = {
+				limit = {
+					OR = {
+						is_american_tag = no
+						NOT = { IRE = { has_country_flag = IRE_got_guarantee_@ROOT } }
+					}
+					FROM = { is_american_tag = yes } }
+				IRE = {
+					country_event = { id = ireland_events.2008 days = 3 }		# IRE joining MA?
+					if = {
+						limit = { IRE_has_american_guarantor = yes }
+						clr_country_flag = IRE_got_guarantee_USA
+						clr_country_flag = IRE_got_guarantee_WCA
+						clr_country_flag = IRE_got_guarantee_APG
+						clr_country_flag = IRE_got_guarantee_ACC
+						clr_country_flag = IRE_got_guarantee_NEE
+					}
+				}
+			}
+			if = {
+				limit = {
+					is_in_faction_with = JAP
+					OR = {
+						AND = {
+							has_democratic_government = yes
+							JAP = { has_democratic_government = yes }
+							IRE = { has_democratic_government = yes }
+						}
+						AND = {
+							has_dictatorship_government = yes
+							JAP = { has_dictatorship_government = yes }
+							IRE = { has_dictatorship_government = yes }
+						}
+					}
+					FROM = { is_american_tag = yes }
+					IRE = { is_in_faction = no }
+				}
+				IRE = { country_event = { id = ireland_events.2033 days = 3 } }
+			}
+		}
+	}
+
+	#ROOT is winner #FROM is loser
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = {
+					tag = IRE
+					is_subject = no
+					has_government = national_populist
+					120 = { is_claimed_by = ROOT } #Scottish Highlands
+					1124 = { is_claimed_by = ROOT } #Isle of Man
+				}
+				country_event = { id = ireland_events.3310 days = 2 }	### Ireland owns the two states it has claims on
+				country_event = { id = ireland_events.3310 days = 14 }	### Repeat event in case player ally delays in transferring it
+				country_event = { id = ireland_events.3310 days = 28 } ### Repeat
+				country_event = { id = ireland_events.3310 days = 56 } ### Repeat
+				country_event = { id = ireland_events.3310 days = 108 } ### Repeat
+			}
+		}
+	}
+
+	on_ruling_party_change = {
+		# temp var old_ideology_token is available for effects
+		effect = {
+			if = {
+				limit = { original_tag = IRE }
+				if = {
+					limit = {
+						has_global_flag = USA_civil_war_begun_flag
+						NOT = { has_global_flag = USA_civil_war_over_flag }
+					}
+					IRE_handle_ACW_volunteers = yes
+				}
+				if = {
+					limit = {
+						count_triggers = {
+							amount = 2
+							SPK = { exists = yes }
+							SPR = { exists = yes }
+							SWF = { exists = yes }
+						}
+						has_global_flag = spanish_civil_war
+					}
+					IRE_handle_SCW_volunteers = yes
+				}
+				if = {
+					limit = {
+						has_cosmetic_tag = IRE_elected_radsocs
+						NOT = { has_government = radical_socialist }
+					}
+					drop_cosmetic_tag = yes
+				}
+			}
+			if = {
+				limit = {
+					is_subject = yes
+					is_in_faction = yes
+					NOT = { has_idea = IRE_loas_member_idea }
+					faction_leader = {
+						is_american_tag = yes
+						OR = {
+							has_completed_focus = USA_cooperation_treaties
+							has_completed_focus = WCA_free_the_west
+						}
+					}
+					IRE = {
+						is_in_faction_with = ROOT
+						has_completed_focus = IRE_loas_focus_trade
+					}
+				}
+				hidden_effect = {
+					add_ideas = IRE_loas_member_idea
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,1106 @@
+RUS_savinkov = {
+	has_country_leader = { character = RUS_boris_savinkov }
+}
+RUS_denikin = {
+	OR = {
+		has_country_leader = { character = RUS_anton_denikin }
+		has_country_leader = { character = RUS_sergey_markov }
+	}
+}
+RUS_wrangel = {
+	has_country_leader = { character = RUS_pyotr_wrangel }
+}
+RUS_sulimov = {
+	has_country_leader = { character = RUS_daniil_sulimov }
+}
+RUS_titov = {
+	has_country_leader = { character = RUS_aleksandr_titov }
+}
+RUS_rikhter = {
+	has_country_leader = { character = RUS_vladimir_rikhter }
+}
+RUS_fondaminsky = {
+	OR = {
+		has_country_leader = { character = RUS_ilya_fondaminsky }
+		RUS_ilya_fondaminsky = { is_second_in_command = yes }
+	}
+}
+RUS_sorokin = {
+	has_country_leader = { character = RUS_pitirim_sorokin }
+}
+RUS_boldyrev = {
+	has_country_leader = { character = RUS_vasily_boldyrev }
+}
+RUS_maklakov = {
+	OR = {
+		has_country_leader = { character = RUS_vasily_maklakov }
+		has_country_leader = { character = RUS_nikolay_nekrasov }
+	}
+}
+RUS_dolgorukov = {
+	has_country_leader = { character = RUS_pyotr_dolgorukov }
+}
+RUS_kartashyov = {
+	has_country_leader = { character = RUS_anton_kartashyov }
+}
+RUS_golitsyn = {
+	OR = {
+		has_country_leader = { character = RUS_aleksandr_golitsyn }
+		has_country_leader = { character = RUS_dmitry_romanov }
+	}
+}
+RUS_solonevich = {
+	has_country_leader = { character = RUS_ivan_solonevich }
+}
+RUS_wrangel_path = {
+	has_country_flag = RUS_wrangel_path
+}
+
+RUS_is_demrus = {
+	NOT = { has_government = national_populist }
+	has_socialist_government = no
+}
+
+RUS_is_expansionist = {
+	OR = {
+		has_authoritarian_government = yes
+		has_government = social_conservative
+		RUS_anton_kartashyov = { is_second_in_command = yes }	#Right Kadets
+		RUS_pavel_gronsky = { is_second_in_command = yes }
+		has_country_leader = { character = RUS_anton_kartashyov }
+	}
+}
+
+RUS_can_integrate = {
+	is_russian_tag = yes
+	OR = {
+		has_socialist_government = no
+		has_completed_focus = RUS_coordinate_development
+	}
+}
+
+RUS_socialists_can_integrate = {
+	if = {
+		limit = {
+			is_russian_tag = yes
+			has_socialist_government = yes
+		}
+		has_completed_focus = RUS_coordinate_development
+	}
+}
+
+RUS_has_black_monday = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_has_national_spirit
+			IDEA = RUS_black_monday
+		}
+		OR = {
+			has_idea = RUS_black_monday_1
+			has_idea = RUS_black_monday_2
+			has_idea = RUS_black_monday_3
+			has_idea = RUS_black_monday_4
+			has_idea = RUS_black_monday_5
+			has_idea = RUS_black_monday_6
+		}
+	}
+}
+
+RUS_ongoing_economic_influence_decision = {
+	custom_override_tooltip = {
+		tooltip = RUS_ongoing_influence_action
+		has_country_flag = RUS_ongoing_influence_action
+	}
+}
+
+RUS_has_german_economic_influence = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_has_national_spirit
+			IDEA = RUS_german_economic_influence
+		}
+		has_variable = RUS_german_economic_influence
+	}
+}
+
+# requires a temp variable RUS_anger_check
+RUS_check_popular_anger = {
+	custom_override_tooltip = {
+		tooltip = RUS_check_popular_anger
+		check_variable = { RUS_popular_anger > RUS_anger_check }
+	}
+}
+
+# requires a temp variable RUS_anger_check
+RUS_check_military_anger = {
+	custom_override_tooltip = {
+		tooltip = RUS_check_military_anger
+		check_variable = { RUS_military_anger > RUS_anger_check }
+	}
+}
+
+RUS_dont_attack_if_vulnerable_or_preparing = {
+	OR = {
+		enemies_strength_ratio > 0.4
+		surrender_progress > 0.02
+		has_imminent_war = yes
+	}
+}
+
+RUS_dont_attack_if_target_is_stronger = {
+	strength_ratio = { tag = ROOT ratio > 1.2 }
+	enemies_strength_ratio < 1
+	surrender_progress < 0.1
+}
+
+RUS_dont_attack_if_overlord_is_stronger = {
+	is_subject = yes
+	overlord = {
+		strength_ratio = { tag = ROOT ratio > 0.7 }
+		enemies_strength_ratio < 1
+		surrender_progress < 0.2
+	}
+}
+
+RUS_dont_attack_if_faction_is_stronger = {
+	if = {
+		limit = { ROOT = { has_war = yes } }
+		is_faction_leader = yes
+		faction_leader = {
+			OR = {
+				is_actual_major = yes
+				strength_ratio = { tag = ROOT ratio > 0.7 }
+			}
+			enemies_strength_ratio < 1.5
+			surrender_progress < 0.3
+		}
+	}
+	else = {
+		is_in_faction = yes
+		faction_leader = {
+			strength_ratio = { tag = ROOT ratio > 0.7 }
+			enemies_strength_ratio < 1
+			surrender_progress < 0.2
+		}
+	}
+}
+
+RUS_capitulated_all_central_asian_tags = {
+	custom_override_tooltip = {
+		tooltip = RUS_capitulated_all_central_asian_tags
+		all_country_of = {
+			target = { KAZ BUK KHI TRK KUM ETS }
+			OR = {
+				NOT = { has_war_with = RUS }
+				has_capitulated = yes
+			}
+		}
+	}
+}
+
+RUS_has_antisoc_resistance = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_has_national_spirit
+			IDEA = RUS_anti_socialist_resistance
+		}
+		OR = {
+			has_idea = RUS_anti_socialist_resistance_1
+			has_idea = RUS_anti_socialist_resistance_2
+			has_idea = RUS_anti_socialist_resistance_3
+			has_idea = RUS_anti_socialist_resistance_4
+			has_idea = RUS_anti_socialist_resistance_5
+			has_idea = RUS_anti_socialist_resistance_6
+		}
+	}
+}
+
+RUS_VST = {
+	custom_override_tooltip = {
+		tooltip = RUS_VST_tt
+		OR = {
+			has_government = syndicalist
+			has_country_leader = { character = RUS_grigory_zinovyev }
+		}
+	}
+}
+
+RUS_PLSR = {
+	custom_override_tooltip = {
+		tooltip = RUS_PLSR_tt
+		OR = {
+			has_government = radical_socialist
+			has_country_leader = { character = RUS_aleksey_ustinov }
+		}
+	}
+}
+
+RUS_VST_centre = {
+	custom_override_tooltip = {
+		tooltip = RUS_VST_centre_tt
+		OR = {
+			has_country_leader = { character = RUS_vladimir_levitsky }
+			has_country_leader = { character = RUS_daniil_sulimov }
+			has_country_leader = { character = RUS_aleksandr_shlyapnikov }
+			has_country_leader = { character = RUS_mikhail_tomsky }
+			has_country_leader = { character = RUS_grigory_maksimov }
+		}
+	}
+}
+
+RUS_VST_left = {
+	custom_override_tooltip = {
+		tooltip = RUS_VST_left_tt
+		OR = {
+			has_country_leader = { character = RUS_lev_kamenev }
+			has_country_leader = { character = RUS_grigory_zinovyev }
+		}
+	}
+}
+
+RUS_VST_right = {
+	custom_override_tooltip = {
+		tooltip = RUS_VST_right_tt
+		OR = {
+			has_country_leader = { character = RUS_rafail_abramovich }
+			has_country_leader = { character = RUS_boris_nikolayevsky }
+		}
+	}
+}
+
+RUS_workers_coalition_ending_status = {
+	custom_override_tooltip = {
+		tooltip = RUS_workers_coalition_subverted_tt
+		has_completed_focus = RUS_bolshevik_gamble
+	}
+}
+
+# requires a temp variable RUS_relation_check
+RUS_socdem_check = {
+	custom_override_tooltip = {
+		tooltip = RUS_socdem_check_tt
+		check_variable = { sds_var > RUS_relation_check }
+	}
+}
+# requires a temp variable RUS_relation_check
+RUS_bolshevik_check = {
+	custom_override_tooltip = {
+		tooltip = RUS_bolshevik_check_tt
+		check_variable = { rkp_var > RUS_relation_check }
+		NOT = {
+			has_completed_focus = RUS_bolshevik_gamble
+		}
+	}
+}
+# requires a temp variable RUS_relation_check
+RUS_sr_check = {
+	custom_override_tooltip = {
+		tooltip = RUS_sr_check_tt
+		check_variable = { sr_var > RUS_relation_check }
+	}
+}
+# requires a temp variable RUS_relation_check
+RUS_vst_centre_check = {
+	if = {
+		limit = { RUS_VST_centre = no }
+		custom_override_tooltip = {
+			tooltip = RUS_vst_centre_check_tt
+			check_variable = { vst_centre_var > RUS_relation_check }
+		}
+	}
+}
+# requires a temp variable RUS_relation_check
+RUS_vst_left_check = {
+	if = {
+		limit = { RUS_VST_left = no }
+		custom_override_tooltip = {
+			tooltip = RUS_vst_left_check_tt
+			check_variable = { vst_left_var > RUS_relation_check }
+		}
+	}
+}
+# requires a temp variable RUS_relation_check
+RUS_vst_right_check = {
+	if = {
+		limit = { RUS_VST_right = no }
+		custom_override_tooltip = {
+			tooltip = RUS_vst_right_check_tt
+			check_variable = { vst_right_var > RUS_relation_check }
+		}
+	}
+}
+# requires a temp variable RUS_left_radicalism_check
+RUS_vst_left_radicalism_check = {
+	if = {
+		limit = {
+			RUS_VST_left = yes
+			has_country_flag = RUS_dvoika_minigame
+		}
+		custom_override_tooltip = {
+			tooltip = RUS_vst_left_radicalism_check_tt
+			check_variable = { vst_left_radicalism > RUS_left_radicalism_check }
+		}
+	}
+}
+
+RUS_is_maximalist = {
+	has_country_flag = RUS_maximalist_side
+}
+
+RUS_is_spiridonist = {
+	custom_override_tooltip = {
+		tooltip = RUS_is_spiridonist
+		has_country_flag = RUS_spiridonist_side
+	}
+}
+
+RUS_purged_social_democrats = {
+	custom_override_tooltip = {
+		tooltip = RUS_purged_social_democrats
+		has_country_flag = RUS_purged_social_democrats
+	}
+}
+
+RUS_socdem_advisor = {
+	custom_override_tooltip = {
+		tooltip = RUS_socdem_advisor
+		is_part_of_government_social_democrat = yes
+	}
+}
+
+RUS_soclib_advisor = {
+	custom_override_tooltip = {
+		tooltip = RUS_soclib_advisor
+		is_part_of_government_social_liberal = yes
+	}
+}
+
+RUS_marlib_advisor = {
+	custom_override_tooltip = {
+		tooltip = RUS_marlib_advisor
+		is_part_of_government_market_liberal = yes
+	}
+}
+
+RUS_soccon_advisor = {
+	custom_override_tooltip = {
+		tooltip = RUS_soccon_advisor
+		is_part_of_government_social_conservative = yes
+	}
+}
+
+RUS_authdem_advisor = {
+	custom_override_tooltip = {
+		tooltip = RUS_authdem_advisor
+		is_part_of_government_authoritarian_democrat = yes
+	}
+}
+
+RUS_obukhov_upgrade_3_1_lvl4 = {
+	OR = {
+		FROM = {
+			NOT = {
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_1_lvl3 = {
+	OR = {
+		FROM = {
+			AND = {
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+						}
+					}
+				}
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+					}
+				}
+				NOT = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_1_lvl2 = {
+	OR = {
+		FROM = {
+			AND = {
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl2
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl2
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl2
+						}
+					}
+				}
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+					}
+				}
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+						}
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_1_lvl2
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_1_lvl1 = {
+	OR = {
+		FROM = {
+			AND = {
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl2
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl2
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl2
+					}
+				}
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl2
+						}
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_1_lvl1
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_2_lvl4 = {
+	OR = {
+		FROM = {
+			NOT = {
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_2_lvl3 = {
+	OR = {
+		FROM = {
+			AND = {
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+						}
+					}
+				}
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+					}
+				}
+				NOT = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_2_lvl2 = {
+	OR = {
+		FROM = {
+			AND = {
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl2
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl2
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl2
+						}
+					}
+				}
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+					}
+				}
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+						}
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_2_lvl2
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_2_lvl1 = {
+	OR = {
+		FROM = {
+			AND = {
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl2
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl2
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl2
+					}
+				}
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl2
+						}
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_2_lvl1
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_3_lvl4 = {
+	OR = {
+		FROM = {
+			NOT = {
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_3_lvl3 = {
+	OR = {
+		FROM = {
+			AND = {
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+						}
+					}
+				}
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+					}
+				}
+				NOT = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_3_lvl2 = {
+	OR = {
+		FROM = {
+			AND = {
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl2
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl2
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl2
+						}
+					}
+				}
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+					}
+				}
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+						}
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_3_lvl2
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_3_lvl1 = {
+	OR = {
+		FROM = {
+			AND = {
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl2
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl2
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl2
+					}
+				}
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl2
+						}
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_3_lvl1
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_4_lvl4 = {
+	OR = {
+		FROM = {
+			NOT = {
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_4_lvl3 = {
+	OR = {
+		FROM = {
+			AND = {
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+						}
+					}
+				}
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl4
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl4
+					}
+				}
+				NOT = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_4_lvl2 = {
+	OR = {
+		FROM = {
+			AND = {
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_2_lvl2
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_3_lvl2
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_1_lvl2
+						}
+					}
+				}
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl3
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl3
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl3
+					}
+				}
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+						}
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_4_lvl2
+			}
+		}
+	}
+}
+
+RUS_obukhov_upgrade_3_4_lvl1 = {
+	OR = {
+		FROM = {
+			AND = {
+				OR = {
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_2_lvl2
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_3_lvl2
+					}
+					mio:RUS_obukhov_organisation = {
+						is_mio_trait_completed = obukhov_upgrade_3_1_lvl2
+					}
+				}
+				NOT = {
+					OR = {
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl4
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl3
+						}
+						mio:RUS_obukhov_organisation = {
+							is_mio_trait_completed = obukhov_upgrade_3_4_lvl2
+						}
+					}
+				}
+			}
+		}
+		FROM = {
+			mio:RUS_obukhov_organisation = {
+				is_mio_trait_completed = obukhov_upgrade_3_4_lvl1
+			}
+		}
+	}
+}
+
+RUS_has_gamayun_upgrade_3 = {
+	FROM = {
+		mio:RUS_gamayun_organisation = {
+			is_mio_trait_completed = gamayun_upgrade_3
+		}
+	}
+}
+
+RUS_has_sokol_upgrade_1_or_2 = {
+	FROM = {
+		OR = {
+			mio:RUS_sokol_organisation = {
+				is_mio_trait_completed = sokol_upgrade_1
+			}
+			mio:RUS_sokol_organisation = {
+				is_mio_trait_completed = sokol_upgrade_2
+			}
+		}
+	}
+}
+
+RUS_has_TOZ_attack_medal = {
+	OR = {
+		FROM = {
+			mio:RUS_toz_organisation = {
+				is_mio_trait_completed = toz_upgrade_2
+			}
+		}
+		check_variable = { RUS_show_TOZ_medal_modifier = 1 }
+	}
+}
+
+RUS_has_TOZ_defense_medal = {
+	OR = {
+		FROM = {
+			mio:RUS_toz_organisation = {
+				is_mio_trait_completed = toz_upgrade_4
+			}
+		}
+		check_variable = { RUS_show_TOZ_medal_modifier = 2 }
+	}
+}
+
+RUS_has_TOZ_org_medal = {
+	OR = {
+		FROM = {
+			mio:RUS_toz_organisation = {
+				is_mio_trait_completed = toz_upgrade_1_2
+			}
+		}
+		check_variable = { RUS_show_TOZ_medal_modifier = 3 }
+	}
+}
+
+RUS_has_TOZ_breakthrough_medal = {
+	OR = {
+		FROM = {
+			mio:RUS_toz_organisation = {
+				is_mio_trait_completed = toz_upgrade_1_5
+			}
+		}
+		check_variable = { RUS_show_TOZ_medal_modifier = 4 }
+	}
+}
+
+RUS_has_obukhov_upgrade_5_or_6 = {
+	FROM = {
+		mio:RUS_obukhov_organisation = {
+			OR = {
+				is_mio_trait_completed = obukhov_upgrade_5
+				is_mio_trait_completed = obukhov_upgrade_6
+			}
+		}
+	}
+}
+
+RUS_is_in_moscow_economic_council = {
+	OR = {
+		has_idea = RUS_moscow_eco_treaty_RUS
+		has_idea = RUS_moscow_eco_treaty_member
+	}
+}
+
+RUS_can_join_academy_of_sciences = {
+	faction_leader = {
+		original_tag = RUS
+		is_in_tech_sharing_group = russian_research
+		has_socialist_government = no
+	}
+	NOT = { has_global_flag = RUS_ENT_merge }
+	NOT = { is_in_tech_sharing_group = russian_research }
+}

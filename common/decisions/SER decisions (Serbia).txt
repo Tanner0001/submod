@@ -1,0 +1,5864 @@
+SER_1936_election_panel = {
+	SER_black_monday_timer = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = SER_has_reduced_black_monday
+				has_idea = SER_black_monday_2
+			}
+		}
+
+		is_good = no
+		fire_only_once = yes
+		days_mission_timeout = 60
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_black_monday_timer"
+			add_political_power = 50
+			add_stability = 0.05
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_black_monday_timer"
+			custom_effect_tooltip = SER_republicans_drop_socialists_gain
+			add_to_variable = { SER_republican_strength = -10 }
+			add_to_variable = { SER_socialist_strength = 10 }
+		}
+		fixed_random_seed = no
+	}
+	SER_revanchism_timer = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			OR = {
+				has_completed_focus = SER_conscription
+				has_completed_focus = SER_raise_reserve_divisions
+				has_completed_focus = SER_leave_free_trade_area
+				has_completed_focus = SER_Form_The_Military_Council
+			}
+		}
+
+		is_good = no
+		fire_only_once = yes
+		days_mission_timeout = 45
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_revanchism_timer"
+			add_manpower = 1500
+			SER_reduce_scars = yes
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_revanchism_timer"
+			custom_effect_tooltip = SER_radicals_gain_republicans_drop
+			add_to_variable = { SER_republican_strength = -10 }
+			add_to_variable = { SER_radical_strength = 10 }
+		}
+		fixed_random_seed = no
+	}
+}
+SER_socialist_workers_decisions = {
+	SER_prove_to_the_people = {
+		icon = GFX_decision_generic_civil_support
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			SER_has_black_monday = no
+			owns_state = 767
+			has_completed_focus = SER_practical_action_programme
+			OR = {
+				has_completed_focus = SER_consolidate_taxation
+				has_completed_focus = SER_health_insurance
+				has_completed_focus = SER_democratize_courts_bureaucracy
+			}
+		}
+		cancel_trigger = {
+			NOT = { has_government = radical_socialist }
+		}
+
+		is_good = no
+		days_mission_timeout = 365
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_prove_to_the_people"
+			add_stability = 0.05
+			add_to_variable = { SER_socialist_control = 1 }
+			country_event = serbia_events.59
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_prove_to_the_people"
+			if = {
+				limit = {
+					is_ai = yes
+					has_game_rule = { rule = SER_path option = SER_PATH_RADSOC }
+				}
+				activate_mission = SER_prove_to_the_people
+			}
+			else = {
+				country_event = serbia_events.63
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_defang_the_army = {
+		icon = GFX_decision_generic_army_support
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			if = {
+				limit = { is_ai = no }
+				has_army_experience < 50
+			}
+			owns_state = 767
+			custom_override_tooltip = {
+				tooltip = SER_konspiracija_under_level_2_tt
+				national_populist < 0.1
+			}
+		}
+		cancel_trigger = {
+			NOT = { has_government = radical_socialist }
+		}
+
+		is_good = no
+		days_mission_timeout = 365
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_defang_the_army"
+			add_stability = 0.05
+			add_to_variable = { SER_socialist_control = 1 }
+			country_event = serbia_events.60
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_defang_the_army"
+			if = {
+				limit = {
+					is_ai = yes
+					has_game_rule = { rule = SER_path option = SER_PATH_RADSOC }
+				}
+				activate_mission = SER_defang_the_army
+			}
+			else = {
+				country_event = serbia_events.63
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_merge_the_coalition_parties = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			radical_socialist > 0.4
+		}
+		cancel_trigger = {
+			NOT = { has_government = radical_socialist }
+		}
+
+		is_good = no
+		days_mission_timeout = 365
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_merge_the_coalition_parties"
+			add_stability = 0.05
+			add_to_variable = { SER_socialist_control = 1 }
+			country_event = serbia_events.61
+		}
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_merge_the_coalition_parties"
+			if = {
+				limit = {
+					is_ai = yes
+					has_game_rule = { rule = SER_path option = SER_PATH_RADSOC }
+				}
+				activate_mission = SER_merge_the_coalition_parties
+			}
+			else = {
+				country_event = serbia_events.63
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_complete_the_revolution = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			has_completed_focus = SER_Third_Revolution
+		}
+		cancel_trigger = {
+			NOT = { has_government = radical_socialist }
+		}
+
+		is_good = no
+		days_mission_timeout = 150
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_complete_the_revolution"
+			if = {
+				limit = {
+					is_ai = yes
+					has_game_rule = { rule = SER_path option = SER_PATH_RADSOC }
+				}
+				activate_mission = SER_complete_the_revolution
+			}
+			else = {
+				hidden_effect = {
+					remove_mission = SER_merge_the_coalition_parties
+					remove_mission = SER_defang_the_army
+					remove_mission = SER_prove_to_the_people
+				}
+				country_event = serbia_events.63
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+SER_imro_decisions = {
+	SER_IMRO_reb_lull_phase = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			NOT = { has_war_with = MAC }
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 106 }
+		}
+
+		is_good = no
+		selectable_mission = no
+		days_mission_timeout = 90
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_IMRO_reb_lull_phase"
+			custom_effect_tooltip = SER_IMRO_action_time
+			activate_mission = SER_IMRO_reb_action_phase
+			clr_global_flag = SER_imro_dont_attack
+			hidden_effect = {
+				country_event = { id = serbia_events.27 days = 2 }
+			}
+			hidden_effect = { # short buff to give IMRO a grace period
+				if = {
+					limit = {
+						is_ai = no
+					}
+					MAC = {
+						every_army_leader = {
+							add_timed_unit_leader_trait = {
+								trait = SER_IMRO_grace_period
+								days = 30
+							}
+						}
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_reb_action_phase = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			NOT = { has_war_with = MAC }
+		}
+
+		is_good = no
+		selectable_mission = no
+		days_mission_timeout = 90
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_IMRO_reb_action_phase"
+			activate_mission = SER_IMRO_reb_lull_phase
+			activate_mission = SER_IMRO_lull_phase_rounds
+			hidden_effect = {
+				country_event = serbia_events.230
+				country_event = { id = serbia_events.24 days = 2 }
+				MAC = {
+					country_event = { id = serbia_events.24 days = 2 }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_global_flag = SER_imro_dont_attack }
+					MAC = {
+						surrender_progress < 1
+					}
+				}
+				hidden_effect = {
+					set_global_flag = SER_imro_dont_attack
+					106 = { add_resistance = 15 }
+					SER_IMRO_move_to_lull_phase = yes
+					MAC = {
+						set_state_controller = 106
+						set_country_flag = { flag = MAC_dont_attack_grace_period days = 94 value = 1 } #Gives SER a chance to move in and defend Skopje
+					}
+					SER = {
+						set_province_controller = 11832
+						set_province_controller = 3882
+						set_province_controller = 867
+						set_province_controller = 833
+						set_province_controller = 11856
+						set_province_controller = 3865
+						set_province_controller = 974
+						set_province_controller = 13560
+						set_province_controller = 11857
+						set_province_controller = 11868
+					}
+					if = {
+						limit = {
+							MAC = { num_divisions < 2 }
+						}
+						set_temp_variable = {
+							IMRO_lacking_units = {
+								value = 4
+								subtract = MAC.num_divisions
+								clamp = { min = 0 max = 4 }
+							}
+						}
+						106 = {
+							create_unit = {
+								division = "division_template = \"VMRO Diviziya\" start_experience_factor = 0.3"
+								allow_spawning_on_enemy_provs = yes
+								owner = MAC
+								count = var:IMRO_lacking_units
+								prioritize_location = 3833
+							}
+						}
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_lull_phase_rounds = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			NOT = { has_war_with = MAC }
+		}
+
+		is_good = no
+		selectable_mission = no
+		days_mission_timeout = 29
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_IMRO_lull_phase_rounds"
+			custom_effect_tooltip = SER_lull_phase_result_tt
+			hidden_effect = {
+				if = {
+					limit = {
+						OR = {
+							AND = {
+								has_global_flag = IMRO_attacks_north
+								has_global_flag = SER_attacks_north
+							}
+							AND = {
+								has_global_flag = IMRO_attacks_south
+								has_global_flag = SER_attacks_south
+							}
+						}
+					}
+					country_event = serbia_events.25 # Serbian victory
+				}
+				else_if = {
+					limit = {
+						OR = {
+							AND = {
+								has_global_flag = IMRO_attacks_north
+								has_global_flag = SER_attacks_south
+							}
+							AND = {
+								has_global_flag = IMRO_attacks_south
+								has_global_flag = SER_attacks_north
+							}
+						}
+					}
+					country_event = serbia_events.26 # IMRO victory
+				}
+				if = {
+					limit = {
+						check_variable = { IMRO_round_system < 3 }
+					}
+					activate_mission = SER_IMRO_lull_phase_rounds
+					country_event = { id = serbia_events.24 days = 2 }
+					MAC = {
+						country_event = { id = serbia_events.24 days = 2 }
+					}
+					add_to_variable = { IMRO_round_system = 1 }
+				}
+				else = {
+					set_variable = { IMRO_round_system = 1 }
+				}
+			}
+			clr_global_flag = IMRO_attacks_north
+			clr_global_flag = IMRO_attacks_south
+			clr_global_flag = SER_attacks_north
+			clr_global_flag = SER_attacks_south
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_launch_offensive = {
+		icon = GFX_decision_eng_blackshirt_march
+
+		fire_only_once = no
+		days_re_enable = 30
+
+		visible = {
+			has_active_mission = SER_IMRO_reb_action_phase
+		}
+		available = {
+			if = {
+				limit = {
+					is_ai = no
+				}
+				106 = {
+					resistance < 20
+				}
+			}
+			NOT = { has_active_mission = SER_IMRO_lull_phase_rounds }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_IMRO_launch_offensive"
+			106 = {
+				custom_effect_tooltip = SER_IMRO_launch_offensive_tt
+				SER_IMRO_move_to_action_phase = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_lure_north = {
+		icon = GFX_decision_eng_blackshirt_march
+
+		fire_only_once = no
+		days_re_enable = 30
+
+		visible = {
+			has_completed_focus = SER_lure_strategy
+		}
+		available = {
+			NOT = {
+				MAC = {
+					has_completed_focus = IMRO_study_their_tactics
+				}
+				custom_override_tooltip = {
+					tooltip = SER_IMRO_has_chosen_lure_tt
+					OR = {
+						has_global_flag = IMRO_lured_north
+						has_global_flag = IMRO_lured_south
+					}
+				}
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_IMRO_lure_north"
+			custom_effect_tooltip = SER_IMRO_lure_north_tt
+			set_global_flag = { flag = IMRO_lured_north days = 180 value = 1 }
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_lure_south = {
+		icon = GFX_decision_eng_blackshirt_march
+
+		fire_only_once = no
+		days_re_enable = 30
+
+		visible = {
+			has_completed_focus = SER_lure_strategy
+		}
+		available = {
+			NOT = {
+				MAC = {
+					has_completed_focus = IMRO_study_their_tactics
+				}
+				custom_override_tooltip = {
+					tooltip = SER_IMRO_has_chosen_lure_tt
+					OR = {
+						has_global_flag = IMRO_lured_north
+						has_global_flag = IMRO_lured_south
+					}
+				}
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_IMRO_lure_south"
+			custom_effect_tooltip = SER_IMRO_lure_south_tt
+			set_global_flag = { flag = IMRO_lured_south days = 180 value = 1 }
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_spend_double_agent = {
+		icon = GFX_decision_eng_blackshirt_march
+
+		fire_only_once = no
+		days_re_enable = 30
+
+		visible = {
+			has_completed_focus = SER_double_agents
+			has_active_mission = SER_IMRO_lull_phase_rounds
+			check_variable = {
+				tooltip = SER_IMRO_has_spent_less_than_three_double_agents_tt
+				SER_spent_double_agents < 3
+			}
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_limit_double_agents
+			}
+		}
+
+		cost = 0
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_IMRO_spend_double_agent"
+			set_country_flag = { flag = SER_ai_limit_double_agents days = 90 value = 1 }
+			add_to_variable = { SER_spent_double_agents = 1 }
+			custom_effect_tooltip = SER_IMRO_spend_double_agent_tt
+			clr_global_flag = IMRO_attacks_north
+			clr_global_flag = IMRO_attacks_south
+			clr_global_flag = SER_attacks_north
+			clr_global_flag = SER_attacks_south
+			set_global_flag = IMRO_attacks_north
+			set_global_flag = SER_attacks_north
+		}
+		fixed_random_seed = no
+	}
+}
+
+SER_konspiracija_decisions = {
+	SER_swap_form_of_payment = {
+		icon = GFX_decision_generic_break_treaty
+
+		fire_only_once = no
+
+		cost = 0
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_limit_payment_swaps
+			}
+			modifier = {
+				add = 10
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.15
+				}
+			}
+			modifier = {
+				add = 10
+				AND = {
+					has_country_flag = SER_paying_with_pp
+					OR = {
+						political_power_daily < 0.5
+						national_populist < 0.1
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_swap_form_of_payment"
+			set_country_flag = { flag = SER_ai_limit_payment_swaps days = 90 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				custom_effect_tooltip = SER_change_to_paying_with_np
+				clr_country_flag = SER_paying_with_pp
+				set_country_flag = SER_paying_with_np
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				custom_effect_tooltip = SER_change_to_paying_with_pp
+				clr_country_flag = SER_paying_with_np
+				set_country_flag = SER_paying_with_pp
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_support_resistance_in_nis = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = no
+		days_re_enable = 30
+
+		available = {
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.13
+					}
+				}
+			}
+			NOT = {
+				has_war_with = BUL
+			}
+		}
+
+		visible = {
+			SER_konspiracija_level_1_dec = yes
+			767 = {
+				is_controlled_by = BUL
+				NOT = { is_core_of = BUL }
+			}
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+		}
+
+		custom_cost_text = SER_50COMM_2NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { command_power < 50 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_support_resistance_in_nis"
+			set_country_flag = { flag = SER_ai_insanity_check days = 20 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_command_power = -50
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.02
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			BUL = {
+				country_event = serbia_events.16
+			}
+			effect_tooltip = {
+				767 = {
+					add_resistance = 10
+					add_resistance_target = {
+						amount = 20
+						occupier = BUL
+						days = 120
+						tooltip = SER_kons_rebellion_increase_rt_tt
+					}
+				}
+				BUL = { add_stability = -0.02 }
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						national_populist > 0.3
+					}
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_tap_chetnik_associations = {
+		icon = GFX_decision_eng_blackshirt_march
+
+		fire_only_once = no
+		days_re_enable = 30
+
+		available = {
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.13
+					}
+				}
+			}
+		}
+
+		visible = {
+			SER_konspiracija_level_1_dec = yes
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_pp
+					has_political_power < 100
+				}
+			}
+		}
+
+		ai_hint_pp_cost = 50
+		custom_cost_text = SER_50PP_2NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { has_political_power < 50 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_tap_chetnik_associations"
+			set_country_flag = { flag = SER_ai_insanity_check days = 30 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_political_power = -50
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.02
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			add_manpower = 2500
+			hidden_effect = {
+				if = {
+					limit = {
+						national_populist > 0.3
+					}
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_acquire_firearms = {
+		icon = generic_prepare_civil_war
+
+		fire_only_once = no
+		days_re_enable = 30
+
+		available = {
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.12
+					}
+				}
+			}
+		}
+
+		visible = {
+			SER_konspiracija_level_1_dec = yes
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_pp
+					has_political_power < 100
+				}
+			}
+		}
+
+		ai_hint_pp_cost = 60
+		custom_cost_text = SER_60PP_3NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { has_political_power < 60 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_acquire_firearms"
+			set_country_flag = { flag = SER_ai_insanity_check days = 30 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_political_power = -60
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.03
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 750
+				producer = SER
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						national_populist > 0.3
+					}
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_reduce_war_scars = {
+		icon = GFX_decision_generic_flags
+
+		fire_only_once = no
+		days_re_enable = 60
+
+		available = {
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.11
+					}
+				}
+			}
+		}
+
+		visible = {
+			SER_konspiracija_level_2_dec = yes
+			SER_has_scarred_nation = yes
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_pp
+					has_political_power < 100
+				}
+			}
+		}
+
+		ai_hint_pp_cost = 75
+		custom_cost_text = SER_75PP_4NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { has_political_power < 75 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_reduce_war_scars"
+			set_country_flag = { flag = SER_ai_insanity_check days = 30 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_political_power = -75
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.04
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			SER_reduce_scars = yes
+			hidden_effect = {
+				if = {
+					limit = {
+						national_populist > 0.3
+					}
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_acquire_artillery = {
+		icon = generic_prepare_civil_war
+
+		fire_only_once = no
+		days_re_enable = 60
+
+		available = {
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.11
+					}
+				}
+			}
+			has_tech = gw_artillery
+		}
+
+		visible = {
+			SER_konspiracija_level_3_dec = yes
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_pp
+					has_political_power < 100
+				}
+			}
+		}
+
+		ai_hint_pp_cost = 75
+		custom_cost_text = SER_75PP_4NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { has_political_power < 75 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_acquire_artillery"
+			set_country_flag = { flag = SER_ai_insanity_check days = 30 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_political_power = -75
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.04
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 200
+				producer = SER
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						national_populist > 0.3
+					}
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_acquire_support_eq = {
+		icon = GFX_decision_radio
+
+		fire_only_once = no
+		days_re_enable = 60
+
+		available = {
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.11
+					}
+				}
+			}
+		}
+
+		visible = {
+			SER_konspiracija_level_3_dec = yes
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_pp
+					has_political_power < 100
+				}
+			}
+		}
+
+		ai_hint_pp_cost = 75
+		custom_cost_text = SER_75PP_4NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { has_political_power < 75 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_acquire_support_eq"
+			set_country_flag = { flag = SER_ai_insanity_check days = 30 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_political_power = -75
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.04
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 300
+				producer = SER
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						national_populist > 0.3
+					}
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_acquire_tanks = {
+		icon = GFX_decision_generic_tank
+
+		fire_only_once = no
+		days_re_enable = 80
+
+		visible = {
+			SER_konspiracija_level_4_dec = yes
+		}
+		available = {
+			NOT = {
+				has_idea = SER_treaty_of_wartholz
+			}
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.10
+					}
+				}
+			}
+			has_design_based_on = light_tank_chassis
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+		}
+
+		ai_hint_pp_cost = 100
+		custom_cost_text = SER_100PP_5NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { has_political_power < 100 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_acquire_tanks"
+			set_country_flag = { flag = SER_ai_insanity_check days = 60 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_political_power = -100
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.05
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			add_equipment_to_stockpile = { type = light_tank_chassis amount = 300 producer = SER }
+			hidden_effect = {
+				if = {
+					limit = { national_populist > 0.3 }
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_acquire_aircraft = {
+		icon = GFX_decision_generic_air
+
+		fire_only_once = no
+		days_re_enable = 90
+
+		visible = {
+			SER_konspiracija_level_5_dec = yes
+		}
+		available = {
+			has_design_based_on = small_plane_airframe
+			NOT = { has_idea = SER_treaty_of_wartholz }
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.10
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+		}
+
+		ai_hint_pp_cost = 100
+		custom_cost_text = SER_100PP_5NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { has_political_power < 100 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_acquire_aircraft"
+			set_country_flag = { flag = SER_ai_insanity_check days = 60 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_political_power = -100
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.05
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			add_equipment_to_stockpile = {
+				type = small_plane_airframe
+				amount = 50
+				producer = SER
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						national_populist > 0.3
+					}
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_new_arsenals = {
+		icon = GFX_decision_generic_industry
+
+		fire_only_once = no
+		days_re_enable = 120
+
+		visible = {
+			SER_konspiracija_level_5_dec = yes
+			check_variable = { SER_commissioned_factories < 3 }
+		}
+		available = {
+			NOT = {
+				has_idea = SER_treaty_of_wartholz
+			}
+			national_populist < 0.95
+			custom_override_tooltip = {
+				tooltip = SER_does_not_go_over_kons_maximum_tt
+				OR = {
+					has_country_flag = SER_paying_with_pp
+					AND = {
+						has_country_flag = SER_paying_with_np
+						NOT = { has_country_flag = SER_curbed_konspiracija_control_flag }
+					}
+					AND = {
+						has_country_flag = SER_paying_with_np
+						national_populist < 0.10
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				AND = {
+					has_country_flag = SER_paying_with_np
+					national_populist > 0.1
+				}
+			}
+			#this flag does three things- it first prevents AI from spamming decisions one after another
+			##and it also prevents them from taking decisions while taking either focus SER_smoke_filled_room
+			###or having SER_prodanovic_assassination_fallout mission active, and the time in between the focus and mission
+			modifier = {
+				factor = 0
+				has_country_flag = SER_ai_insanity_check
+			}
+		}
+
+		ai_hint_pp_cost = 150
+		custom_cost_text = SER_150PP_5NP
+		custom_cost_trigger = {
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				NOT = { has_political_power < 150 }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_new_arsenals"
+			set_country_flag = { flag = SER_ai_insanity_check days = 90 value = 1 }
+			if = {
+				limit = { has_country_flag = SER_paying_with_pp }
+				add_political_power = -150
+			}
+			else_if = {
+				limit = { has_country_flag = SER_paying_with_np }
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.05
+				}
+				SER_recalculate_konspiracija = yes
+			}
+			add_one_random_military_factory = yes
+			add_to_variable = { SER_commissioned_factories = 1 }
+			hidden_effect = {
+				if = {
+					limit = {
+						national_populist > 0.3
+					}
+					country_event = serbia_flavour_events.23
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SER_Economic_Development_decisions = {
+	SER_Rural_Credit_Grants = {
+		icon = generic_agriculture
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+			controls_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = { is_core_of = ROOT }
+			has_completed_focus = SER_Rural_Credit_Banks
+		}
+
+		cost = 40
+		days_remove = 90
+		fire_only_once = yes
+
+		state_target = yes
+		target_array = core_states
+		target_root_trigger = { has_completed_focus = SER_Rural_Credit_Banks }
+		target_trigger = {
+			FROM = { is_core_of = ROOT }
+		}
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 0
+				num_of_civilian_factories_available_for_projects < 10
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_Rural_Credit_Grants"
+			FROM = {
+				increase_state_category_by_one_level = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+political_actions = {
+	SER_ready_for_war = {
+		icon = eng_trade_unions_support
+
+		allowed = {
+			OR = {
+				tag = ROM
+				tag = ITA
+				tag = POL
+				tag = GRE
+				tag = BUL #For the case if BUL joins the BPL through BUL_path_to_peace
+			}
+		}
+
+		available = {
+			has_war = no
+		}
+
+		visible = {
+			is_ai = no
+			has_country_flag = SER_will_attack_austria
+			FROM = { is_faction_leader = yes }
+		}
+
+		targets = { BPL }
+		target_trigger = {
+			FROM = { is_faction_leader = yes }
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_ready_for_war"
+			custom_effect_tooltip = SER_ready_for_war_tooltip
+			set_country_flag = SER_ready_to_attack
+		}
+		fixed_random_seed = no
+	}
+
+	### IMRO decisions ###
+	SER_IMRO_victory = {
+		icon = GFX_decision_eng_blackshirt_march
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			BUL = { focus_progress = { focus = BUL_macedonia_intervention progress < 0 } }
+			OR = {
+				controls_state = 106
+				NOT = { has_war_with = SER }
+				106 = { resistance > 99 }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_IMRO_victory"
+			if = {
+				limit = {
+					MAC = { owns_state = 107 } #Belgrade
+				}
+				log = "KR_Event_Logging;IMRO REBELLION - IMRO annexed Serbia"
+			}
+			else_if = {
+				limit = {
+					NOT = { country_exists = SER }
+				}
+				log = "KR_Event_Logging;IMRO REBELLION - Serbia annexed by 3rd party"
+			}
+			else_if = {
+				limit = {
+					NOT = { MAC = { has_war_with = SER } }
+				}
+				log = "KR_Event_Logging;IMRO REBELLION - IMRO not at war with Serbia"
+			}
+			else_if = {
+				limit = {
+					MAC = { controls_state = 106 } #Macedonia
+				}
+				log = "KR_Event_Logging;IMRO REBELLION - IMRO took Skopje"
+			}
+			else_if = {
+				limit = {
+					106 = { resistance > 99 } #Macedonia
+				}
+				log = "KR_Event_Logging;IMRO REBELLION - Macedonia reached 100% resistance"
+			}
+			else = {
+				log = "KR_Event_Logging;IMRO REBELLION - IMRO (Uncategorised victory)"
+			}
+			SER_IMRO_disable_rebellion = yes
+			drop_cosmetic_tag = yes
+			if = {
+				limit = { #BUL will annex MAC if independent and exists
+					SER = { is_subject = no }
+					BUL = {
+						exists = yes
+						is_subject = no
+					}
+				}
+				remove_civil_war_target = SER
+			}
+			SER = {
+				country_event = serbia_events.31
+			}
+			set_global_flag = SER_IMRO_victory
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_open_conflict = {
+		icon = GFX_decision_eng_blackshirt_march
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			BUL = { focus_progress = { focus = BUL_macedonia_intervention progress < 0 } }
+			check_variable = { SER.enemies^num > 1 }
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_IMRO_open_conflict"
+			SER_IMRO_disable_rebellion = yes
+			drop_cosmetic_tag = yes
+			every_country = {
+				limit = {
+					is_in_faction_with = SER
+				}
+				declare_war_on = {
+					target = PREV
+					type = annex_everything
+				}
+				country_event = serbia_events.310
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_return_to_bulgaria = {
+		icon = GFX_decision_eng_blackshirt_march
+
+		allowed = { always = no } #activated by effect
+
+		visible = {
+			has_war = no
+			country_exists = BUL
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_IMRO_return_to_bulgaria"
+			remove_civil_war_target = SER
+			BUL = { annex_country = { target = MAC transfer_troops = yes } }
+		}
+		fixed_random_seed = no
+	}
+	SER_IMRO_weapons_from_bulgaria = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { has_war_with = SER }
+				212 = {
+					NOT = {
+						has_dynamic_modifier = {
+							modifier = SER_IMRO_occupation_of_pirin
+						}
+					}
+				}
+			}
+		}
+
+		is_good = yes
+		selectable_mission = no
+		days_mission_timeout = 14
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_IMRO_weapons_from_bulgaria"
+			BUL = {
+				send_equipment = {
+					equipment = infantry_equipment
+					amount = 10
+					target = MAC
+				}
+			}
+			if = {
+				limit = {
+					has_completed_focus = IMRO_appeal_for_aid
+				}
+				add_manpower = 200
+			}
+			if = {
+				limit = {
+					has_completed_focus = IMRO_establish_legal_system
+				}
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 5
+					producer = SER
+				}
+			}
+			activate_mission = SER_IMRO_weapons_from_bulgaria
+		}
+		fixed_random_seed = no
+	}
+}
+
+foreign_politics = {
+	SER_Purchase_HMS_Lion = {
+		icon = generic_agriculture
+
+		allowed = { tag = SER }
+
+		available = {
+			has_war = no
+			any_owned_state = {
+				is_coastal = yes
+				is_controlled_by = ROOT
+			}
+		}
+
+		visible = {
+			has_completed_focus = SER_YUG_Shipbuilding_Investments
+			country_exists = IMP
+			IMP = {
+				is_subject = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 60
+		days_remove = 60
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_political_power < 120
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_Purchase_HMS_Lion"
+			IMP = { country_event = { id = serbia_events.55 days = 5 } }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_Purchase_HMS_Lion"
+			custom_effect_tooltip = if_they_accept_tt
+			if = {
+				limit = { NOT = { has_tech = early_ship_hull_heavy } }
+				set_technology = { early_ship_hull_heavy = 1 }
+			}
+			create_equipment_variant = {
+				name = "Lav Class"
+				type = ship_hull_heavy_1
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_heavy_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = heavy_ship_engine_1
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					fixed_ship_armor_slot = ship_armor_bb_1
+					front_1_custom_slot = ship_heavy_battery_1
+					mid_1_custom_slot = ship_secondaries_1
+					mid_2_custom_slot = ship_anti_air_1
+					rear_1_custom_slot = empty
+				}
+			}
+			create_ship = { name = "KB Lav" type = ship_hull_heavy_1 equipment_variant = "Lav Class" }
+		}
+		fixed_random_seed = no
+	}
+	SER_Join_Third_Internationale = {
+		name = SER_Join_Faction
+		icon = eng_trade_unions_support
+
+		allowed = {
+			tag = SER
+		}
+
+		available = {
+			at_peace_or_same_enemies_as_FROM = yes
+			NOT = { has_country_flag = SER_diplomatic_action }
+			has_socialist_government = yes
+			has_completed_focus = SER_Third_Revolution
+			NOT = {
+				has_completed_focus = SER_YUG_balkan_socialist_federation
+			}
+		}
+
+		visible = {
+			is_valid_peace_target = yes
+			owns_state = 45 #Vojvodina
+			has_completed_focus = SER_ultimatum_to_bulgaria
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		targets = { INT }
+		target_root_trigger = {
+			owns_state = 45 #Vojvodina
+			has_completed_focus = SER_ultimatum_to_bulgaria
+		}
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		days_remove = 7
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_exists = GBR
+					NOT = {
+						country_exists = FRA
+					}
+					FRA = {
+						has_socialist_government = no
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.20 }
+			}
+			modifier = {
+				factor = 0.05
+				has_completed_focus = SER_Pact_of_Organisation
+			}
+			modifier = {
+				factor = 0
+				BPL_game_rule_wait_to_disband = yes
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_Join_Third_Internationale"
+			clr_global_flag = SER_keeping_the_pact
+			set_country_flag = { flag = SER_diplomatic_action days = 10 value = 1 }
+			FROM = { country_event = { id = serbia_events.38 days = 3 } }
+		}
+		fixed_random_seed = no
+	}
+	SER_Join_Russia = {
+		name = SER_Join_Faction
+		icon = eng_trade_unions_support
+
+		allowed = {
+			tag = SER
+		}
+
+		available = {
+			at_peace_or_same_enemies_as_FROM = yes
+			NOT = { has_country_flag = SER_diplomatic_action }
+			NOT = {
+				has_idea = SER_YUG_special_relationship_idea
+			}
+			has_socialist_government = no
+			FROM = {
+				same_government_type_as_ROOT = yes
+				is_faction_leader = yes
+			}
+		}
+
+		visible = {
+			is_valid_peace_target = yes
+			OR = {
+				is_in_faction = no
+				is_in_faction_with = BPL
+			}
+			owns_state = 45 #Vojvodina
+			has_completed_focus = SER_ultimatum_to_bulgaria
+			FROM = {
+				is_faction_leader = yes
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		targets = { RUS }
+		target_root_trigger = {
+			owns_state = 45 #Vojvodina
+			has_completed_focus = SER_ultimatum_to_bulgaria
+		}
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		days_remove = 7
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				owns_state = 109
+				NOT = { has_war_with = GER }
+				country_exists = GER
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = SER_keeping_the_pact #SER is prevented joining RUS by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.20 } #SER is prevented joining RUS by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				has_elected_government = yes
+				FROM = { has_authoritarian_government = yes }
+			}
+			modifier = {
+				factor = 0.05
+				has_completed_focus = SER_Pact_of_Organisation #SER is prevented joining RUS by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					AND = {
+						has_game_rule = { rule = BUL_forpol option = BUL_FORPOL_RUS }
+						BUL = {
+							NOT = {
+								is_in_faction_with = RUS
+								has_socialist_government = yes
+								AND = {
+									has_government = authoritarian_democrat
+									NOT = { has_country_leader = { character = BUL_alexander_stamboliyski } }
+								}
+							}
+							is_valid_peace_target = yes
+							exists = yes
+						}
+						if = {
+							limit = {
+								BUL = { has_democratic_government = yes }
+							}
+							FROM = { has_democratic_government = yes }
+						}
+						else_if = {
+							limit = {
+								BUL = { has_government = national_populist }
+							}
+							FROM = { has_authoritarian_government = yes }
+						}
+					}
+					BPL_game_rule_wait_to_disband_RUS = yes
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_Join_Russia"
+			clr_global_flag = SER_keeping_the_pact
+			set_country_flag = { flag = SER_diplomatic_action days = 10 value = 1 }
+			FROM = {
+				country_event = { id = serbia_events.38 days = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_Join_The_Entente = {
+		name = SER_Join_Faction
+		icon = eng_trade_unions_support
+
+		allowed = {
+			tag = SER
+		}
+
+		available = {
+			at_peace_or_same_enemies_as_FROM = yes
+			NOT = { has_country_flag = SER_diplomatic_action }
+			NOT = {
+				has_idea = SER_YUG_special_relationship_idea
+			}
+			OR = {
+				AND = {
+					has_country_leader = { character = SER_petar_ii }
+					has_authoritarian_government = no
+				}
+				AND = {
+					has_soclib_or_socdem_government = yes
+					NOT = {
+						has_country_leader = { character = SER_dragomir_vasic }
+					}
+				}
+			}
+		}
+
+		visible = {
+			is_valid_peace_target = yes
+			owns_state = 45 #Vojvodina
+			has_completed_focus = SER_ultimatum_to_bulgaria
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		targets = { ENT }
+		target_root_trigger = {
+			owns_state = 45 #Vojvodina
+			has_completed_focus = SER_ultimatum_to_bulgaria
+		}
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		days_remove = 7
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_global_flag = SER_keeping_the_pact #SER is prevented joining ENT by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				NOT = {
+					country_exists = GBR
+					var:126.owner = { is_in_faction_with = FROM } #London
+					var:16.owner = { is_in_faction_with = FROM } #Paris
+					var:21.owner = { is_in_faction_with = FROM } #Marseille
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.20 } #SER is prevented joining ENT by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				any_neighbor_country = { is_in_faction_with = GER }
+				FROM = { has_war_with = GER } #SER is prevented joining ENT by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				FROM = { has_authoritarian_government = yes }
+			}
+			modifier = {
+				factor = 0.05
+				has_completed_focus = SER_Pact_of_Organisation #SER is prevented joining ENT by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				BPL_game_rule_wait_to_disband = yes  #SER will wait until its requirements in the game rules are met before it joins ENT
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_Join_The_Entente"
+			clr_global_flag = SER_keeping_the_pact
+			set_country_flag = { flag = SER_diplomatic_action days = 10 value = 1 }
+			FROM = {
+				country_event = { id = serbia_events.38 days = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_Join_The_Reichspakt = {
+		name = SER_Join_Faction
+		icon = eng_trade_unions_support
+
+		allowed = {
+			tag = SER
+		}
+
+		available = {
+			at_peace_or_same_enemies_as_FROM = yes
+			NOT = { has_country_flag = SER_diplomatic_action }
+			OR = {
+				AND = {
+					has_idea = SER_Petar_II_regency
+					has_authoritarian_government = yes
+				}
+				AND = {
+					has_country_leader = { character = SER_petar_ii }
+					has_dictatorship_government = yes
+				}
+				AND = {
+					has_country_leader = { character = SER_milan_stojadinovic }
+					has_dictatorship_government = yes
+				}
+			}
+			NOT = { GER = { is_in_faction_with = AUS } }
+			NOT = { has_idea = SER_YUG_special_relationship_idea }
+			OR = {
+				5 = {
+					controller = {
+						hidden_trigger = { is_in_faction = yes }
+						faction_leader = { has_socialist_government = yes }
+					}
+				}
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+					hidden_trigger = { is_in_faction = yes }
+					faction_leader = { has_socialist_government = yes }
+				}
+			}
+		}
+
+		visible = {
+			is_valid_peace_target = yes
+			owns_state = 45 #Vojvodina
+			has_completed_focus = SER_ultimatum_to_bulgaria
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		targets = { GER }
+		target_root_trigger = {
+			owns_state = 45 #Vojvodina
+			has_completed_focus = SER_ultimatum_to_bulgaria
+		}
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		days_remove = 7
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_global_flag = SER_keeping_the_pact #SER is prevented joining GER by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.20 } #SER is prevented joining GER by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				FROM = { has_war_with = RUS }
+				any_neighbor_country = { is_in_faction_with = RUS } #SER is prevented joining GER by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0.05
+				has_completed_focus = SER_Pact_of_Organisation #SER is prevented joining ENT by this, as long as SER is not set in the game rules to leave the BP at a certain point
+				BPL_game_rule_disband = no
+			}
+			modifier = {
+				factor = 0
+				BPL_game_rule_wait_to_disband = yes
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_Join_The_Reichspakt"
+			clr_global_flag = SER_keeping_the_pact
+			set_country_flag = { flag = SER_diplomatic_action days = 10 value = 1 }
+			FROM = {
+				country_event = { id = serbia_events.38 days = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_Topple_Tyrants = {
+		icon = hol_draw_up_staff_plans
+
+		allowed = { tag = SER }
+
+		available = {
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+			FROM = {
+				OR = {
+					has_socialist_government = yes
+					has_dictatorship_government = yes
+				}
+			}
+			if = {
+				limit = { FROM = { dont_start_major_faction_wars = yes } }
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+			has_soclib_or_socdem_government = yes
+		}
+
+		targets = { BUL ROM ALB GRE HUN }
+		target_root_trigger = {
+			has_completed_focus = SER_YUG_balkans_guiding_light
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 10
+		days_remove = 30
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_YUG_Topple_Tyrants"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_YUG_Topple_Tyrants"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_Topple_Tyrants"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_Topple_Tyrants_2 = {
+		icon = hol_draw_up_staff_plans
+		name = SER_YUG_Topple_Tyrants
+
+		allowed = { tag = SER }
+
+		available = {
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+			FROM = {
+				OR = {
+					has_socialist_government = yes
+					has_dictatorship_government = yes
+				}
+			}
+			if = {
+				limit = { FROM = { dont_start_major_faction_wars = yes } }
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+			has_soclib_or_socdem_government = yes
+		}
+
+		targets = { AUS TUR ITA SRI SIC PAP SRD }
+		target_root_trigger = {
+			has_completed_focus = SER_YUG_anti_imperialist_vanguard
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 10
+		days_remove = 30
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_YUG_Topple_Tyrants_2"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_YUG_Topple_Tyrants_2"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_Topple_Tyrants_2"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_Spread_Socialism = {
+		icon = hol_draw_up_staff_plans
+
+		allowed = { tag = SER }
+
+		available = {
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+			FROM = { has_socialist_government = no }
+			if = {
+				limit = { FROM = { dont_start_major_faction_wars = yes } }
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+			has_socialist_government = yes
+		}
+
+		targets = { BUL ROM ALB GRE HUN }
+		target_root_trigger = {
+			has_completed_focus = SER_YUG_liberate_balkan_socialists
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 10
+		days_remove = 30
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { original_tag = ALB }
+				OR = {
+					AND = {
+						is_in_faction_with = BUL
+						has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_BUL }
+					}
+					AND = {
+						is_in_faction_with = ROM
+						OR = {
+							has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_ROM }
+							AND = {
+								has_game_rule = { rule = ALB_forpol option = ALB_FORPOL_4BW }
+								BUL = { has_country_flag = BUL_balkan_peace_loss }
+							}
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { original_tag = BUL }
+				OR = {
+					AND = {
+						is_in_faction_with = BPL
+						has_game_rule = { rule = BUL_forpol option = BUL_FORPOL_BPL }
+					}
+					AND = {
+						is_in_faction_with = INT
+						has_game_rule = { rule = BUL_forpol option = BUL_FORPOL_INT }
+					}
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_YUG_Spread_Socialism"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_YUG_Spread_Socialism"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_Spread_Socialism"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_Southern_Expansion = {
+		icon = generic_ignite_civil_war
+
+		allowed = { tag = SER }
+
+		available = {
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+			if = {
+				limit = { FROM = { dont_start_major_faction_wars = yes } }
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			is_subject = no
+			FROM = {
+				owns_any_state_of = {
+					731 #Florina
+					769 #Serres
+				}
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				FROM = {
+					NOT = {
+						owns_any_state_of = {
+							731 #Florina
+							769 #Serres
+						}
+					}
+				}
+			}
+		}
+
+		targets = { 731.OWNER 769.OWNER }
+		target_root_trigger = {
+			has_completed_focus = SER_YUG_greater_yugoslavia_south
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_any_state_of = {
+					731 #Florina
+					769 #Serres
+				}
+			}
+		}
+
+		cost = 10
+		days_remove = 30
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_YUG_Southern_Expansion"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_YUG_Southern_Expansion"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_Southern_Expansion"
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			clear_decision_attack_AI = yes
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_Invade_Albania = {
+		icon = hol_draw_up_staff_plans
+
+		allowed = { tag = SER }
+
+		available = {
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+			if = {
+				limit = { FROM = { dont_start_major_faction_wars = yes } }
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+		}
+
+		targets = { ALB }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = SER_YUG_greater_yugoslavia_south
+				has_completed_focus = SER_YUG_subjugate_albania
+				has_completed_focus = SER_YUG_royal_subjugate_albania
+			}
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 10
+		days_remove = 25
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_YUG_Invade_Albania"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_YUG_Invade_Albania"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_Invade_Albania"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_Invade_Bulgaria = {
+		icon = hol_draw_up_staff_plans
+
+		allowed = { tag = SER }
+
+		available = {
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+			if = {
+				limit = { FROM = { dont_start_major_faction_wars = yes } }
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+		}
+
+		targets = { BUL }
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = SER_YUG_greater_yugoslavia_east
+				has_completed_focus = SER_YUG_subjugate_bulgaria
+				has_completed_focus = SER_YUG_royal_subjugate_bulgaria
+			}
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 10
+		days_remove = 30
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_YUG_Invade_Bulgaria"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_YUG_Invade_Bulgaria"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_Invade_Bulgaria"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_Western_Expansion = {
+		icon = generic_ignite_civil_war
+
+		allowed = { tag = SER }
+
+		available = {
+			OR = {
+				is_neighbor_of = FROM
+				FROM = { any_home_area_neighbor_country = { is_ally_with = ROOT } }
+			}
+			if = {
+				limit = {
+					FROM = {
+						OR = {
+							dont_start_major_faction_wars = yes
+							is_italian_tag = yes
+						}
+					}
+				}
+				second_weltkrieg_has_begun = yes
+			}
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+			FROM = {
+				owns_any_state_of = {
+					488 #Trieste
+					683 #Gorizia
+					736 #Istria
+				}
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { can_declare_war_on = FROM }
+				FROM = {
+					NOT = {
+						owns_any_state_of = {
+							488 #Trieste
+							683 #Gorizia
+							736 #Istria
+						}
+					}
+				}
+			}
+		}
+
+		targets = { 488.OWNER 683.OWNER 736.OWNER }
+		target_root_trigger = {
+			has_completed_focus = SER_YUG_greater_yugoslavia_west
+		}
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = {
+				owns_any_state_of = {
+					488 #Trieste
+					683 #Gorizia
+					736 #Istria
+				}
+			}
+		}
+
+		cost = 10
+		days_remove = 30
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_YUG_Western_Expansion"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_YUG_Western_Expansion"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_Western_Expansion"
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			clear_decision_attack_AI = yes
+		}
+		fixed_random_seed = no
+	}
+}
+
+FRA_internationale_category = {
+	FRA_invite_serbia = {
+		name = invite_country
+		icon = generic_agreement
+
+		available = {
+			FROM = { has_completed_focus = SER_Third_Revolution }
+			OR = {
+				has_global_flag = AUS_treaty_of_budapest
+				NOT = { country_exists = AUS }
+				AUS = { is_subject = yes }
+				has_war_with = AUS
+			}
+			FROM = { at_peace_or_same_enemies_as_ROOT = yes }
+		}
+
+		visible = {
+			is_faction_leader = yes
+			FROM = {
+				exists = yes
+				has_socialist_government = yes
+				has_capitulated = no
+				is_valid_peace_target = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		targets = { SER }
+		target_trigger = {
+			FROM = {
+				has_socialist_government = yes
+				is_valid_peace_target = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 25
+		days_remove = 7
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove FRA_invite_serbia"
+			FROM = { invite_country_to_faction = yes }
+		}
+		fixed_random_seed = no
+	}
+}
+
+SER_Balkan_Research_Initiative_decisions = {
+	SER_Invite_Country = {
+		name = invite_country
+		icon = generic_research
+
+		allowed = { tag = SER }
+
+		visible = {
+			is_in_tech_sharing_group = balkan_research
+			is_faction_leader = yes
+			FROM = {
+				exists = yes
+				NOT = { is_in_tech_sharing_group = balkan_research }
+				if = {
+					limit = { tag = ITA }
+					has_government = national_populist
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+				else_if = {
+					limit = { tag = POL }
+					has_dictatorship_government = yes
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+				else = {
+					is_in_faction_with = ROOT
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_in_tech_sharing_group = balkan_research }
+					}
+				}
+			}
+		}
+
+		cost = 20
+		days_remove = 10
+		fire_only_once = yes
+
+		targets = { ITA POL }
+		target_array = faction_members
+		target_root_trigger = { is_in_tech_sharing_group = balkan_research }
+		target_trigger = {
+			FROM = {
+				NOT = { is_in_tech_sharing_group = balkan_research }
+				if = {
+					limit = { tag = ITA }
+					has_government = national_populist
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+				else_if = {
+					limit = { tag = POL }
+					has_dictatorship_government = yes
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+				else = {
+					is_in_faction_with = ROOT
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_in_tech_sharing_group = balkan_research }
+					}
+				}
+			}
+		}
+
+		ai_will_do = { factor = 20 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_Invite_Country"
+			FROM = { country_event = serbia_events.35 }
+		}
+		fixed_random_seed = no
+	}
+	SER_economic_council_decision = {
+		icon = generic_agreement
+
+		allowed = { tag = SER }
+
+		available = {
+			has_war = no
+			is_in_faction_with = ROM
+			ROM = { NOT = { has_country_flag = BP_working_on_eco_union } }
+		}
+
+		visible = {
+			has_completed_focus = SER_Pact_of_Organisation
+			NOT = { has_dynamic_modifier = { modifier = BPL_pact_of_organisation } }
+		}
+
+		cancel_trigger = {
+			OR = {
+				has_war = yes
+				NOT = { is_in_faction_with = ROM }
+				is_subject = yes
+				has_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+				if = {
+					limit = { is_faction_leader = no }
+					ROM = { has_country_flag = BP_working_on_eco_union }
+				}
+				else = {
+					hidden_trigger = { always = no }
+				}
+			}
+		}
+
+		cost = 50
+		days_remove = 25
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SER_economic_council_decision"
+			clr_country_flag = BP_working_on_eco_union
+			add_political_power = 50
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_economic_council_decision"
+			set_country_flag = BP_working_on_eco_union
+			if = {
+				limit = { NOT = { is_in_array = { global.balkan_economic_union = ROOT } } }
+				add_to_array = { global.balkan_economic_union = ROOT }
+			}
+			every_other_country = {
+				limit = {
+					OR = {
+						original_tag = SER
+						original_tag = ROM
+						original_tag = GRE
+						AND = {
+							OR = {
+								original_tag = ALB
+								original_tag = BUL
+							}
+							is_ally_with = ROOT
+						}
+					}
+					has_socialist_government = no
+					OR = {
+						is_subject = no
+						is_subject_of = ROOT
+						overlord = { is_in_faction_with = ROOT }
+					}
+					OR = {
+						is_in_faction = no
+						is_in_faction_with = ROOT
+					}
+				}
+				country_event = { id = belgrade_pact_events.300 days = 7 }
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_economic_council_decision"
+			clr_country_flag = BP_working_on_eco_union
+			country_event = belgrade_pact_events.302
+		}
+		fixed_random_seed = no
+	}
+	SER_economic_council_expansion = {
+		icon = generic_agreement
+
+		allowed = { tag = SER }
+
+		available = {
+			has_war = no
+			is_in_faction_with = ROM
+			ROM = { NOT = { has_country_flag = BP_working_on_eco_union } }
+		}
+
+		visible = {
+			has_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+			check_variable = { global.BPL_pact_of_organisation_building_slots = 0 }
+		}
+
+		cancel_trigger = {
+			OR = {
+				has_war = yes
+				NOT = { is_in_faction_with = ROM }
+				is_subject = yes
+				NOT = { has_dynamic_modifier = { modifier = BPL_pact_of_organisation } }
+				NOT = { check_variable = { global.BPL_pact_of_organisation_building_slots = 0 } }
+				if = {
+					limit = { is_faction_leader = no }
+					ROM = { has_country_flag = BP_working_on_eco_union }
+				}
+				else = {
+					hidden_trigger = { always = no }
+				}
+			}
+		}
+
+		cost = 50
+		days_remove = 30
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		cancel_effect = {
+			log = "[GetLogRoot]: Decision cancel SER_economic_council_expansion"
+			clr_country_flag = BP_working_on_eco_union
+			add_political_power = 50
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_economic_council_expansion"
+			set_country_flag = BP_working_on_eco_union
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_economic_council_expansion"
+			clr_country_flag = BP_working_on_eco_union
+			country_event = belgrade_pact_events.304
+			every_other_country = {
+				limit = { has_dynamic_modifier = { modifier = BPL_pact_of_organisation } }
+				country_event = belgrade_pact_events.304
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_economic_council_application = {
+		icon = generic_agreement
+
+		allowed = {
+			OR = {
+				tag = SER
+				tag = ROM
+				tag = GRE
+				tag = ALB
+				tag = BUL
+			}
+		}
+
+		available = {
+			has_war = no
+			is_in_faction_with = global.balkan_economic_union^0
+		}
+
+		visible = {
+			has_variable = global.balkan_economic_union^num
+			var:global.balkan_economic_union^0 = { has_dynamic_modifier = { modifier = BPL_pact_of_organisation } }
+			NOT = { has_dynamic_modifier = { modifier = BPL_pact_of_organisation } }
+		}
+
+		cost = 25
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_economic_council_application"
+			set_temp_variable = { BPL_new_modifier = global.balkan_economic_union^num }
+			if = {
+				limit = { NOT = { is_in_array = { global.balkan_economic_union = ROOT } } }
+				add_to_array = { global.balkan_economic_union = ROOT }
+				add_to_temp_variable = { BPL_new_modifier = 1 }
+			}
+			add_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+
+			multiply_temp_variable = { BPL_new_modifier = 0.05 }
+			clamp_temp_variable = { var = BPL_new_modifier max = 0.15 }
+			if = {
+				limit = { NOT = { check_variable = { BPL_new_modifier = global.BPL_pact_of_organisation_construction_speed } } }
+				save_event_target_as = BPL_modifier_changed
+			}
+			set_variable = {
+				global.BPL_pact_of_organisation_construction_speed = BPL_new_modifier
+				tooltip = production_speed_buildings_factor_tooltip
+			}
+			if = {
+				limit = { NOT = { check_variable = { global.BPL_pact_of_organisation_building_slots = 0 } } }
+				set_variable = {
+					global.BPL_pact_of_organisation_building_slots = BPL_new_modifier
+					tooltip = global_building_slots_factor_tooltip
+				}
+			}
+			if = {
+				limit = { NOT = { check_variable = { global.BPL_pact_of_organisation_research_speed = 0 } } }
+				divide_temp_variable = { BPL_new_modifier = 2 }
+				set_variable = {
+					global.BPL_pact_of_organisation_research_speed = BPL_new_modifier
+					tooltip = research_speed_factor_tooltip
+				}
+			}
+			every_other_country = {
+				limit = { has_dynamic_modifier = { modifier = BPL_pact_of_organisation } }
+				country_event = belgrade_pact_events.306
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_give_BUL_research_slot = {
+		icon = generic_agreement
+
+		allowed = { tag = SER }
+
+		available = {
+			SER_has_founded_yugoslavia = yes
+		}
+
+		visible = {
+			is_in_faction_with = BUL
+			BUL = {
+				has_completed_focus = BUL_path_to_peace
+				is_in_tech_sharing_group = balkan_research
+			}
+		}
+
+		cancel_trigger = {
+			OR = {
+				NOT = { is_in_faction_with = BUL }
+				is_subject = yes
+			}
+		}
+
+		cost = 50
+		days_remove = 30
+		fire_only_once = yes
+
+		targets = { BUL }
+		target_root_trigger = { is_in_tech_sharing_group = balkan_research }
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = ROOT
+			}
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 1000
+				BUL = { is_ai = no }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_give_BUL_research_slot"
+			add_political_power = 50
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_give_BUL_research_slot"
+			effect_tooltip = {
+				BUL = {
+					add_research_slot_until_five = yes
+					country_event = belgrade_pact_events.308
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+SER_War_Plan_Drina_March_decisions = {
+	SER_set_drina_targeted_state = {
+		icon = GFX_decision_infiltrate_state
+
+		available = {
+			check_variable = {
+				tooltip = SER_has_enough_states_available_for_setting_plans_tt
+				SER_states_available_for_setting_plans > 0
+			}
+		}
+		visible = {
+			can_declare_war_on = FROM.owner
+			FROM = {
+				NOT = {
+					is_owned_by = ROOT
+					is_controlled_by = ROOT
+					has_state_flag = SER_drina_flagged_state
+				}
+			}
+		}
+
+		fire_only_once = no
+		on_map_mode = map_only
+
+		state_target = yes
+		target_array = SER_drina_targets_array
+		target_root_trigger = { has_completed_focus = SER_War_Plan_Drina_March }
+		target_trigger = {
+			FROM = {
+				NOT = {
+					is_owned_by = ROOT
+					is_controlled_by = ROOT
+				}
+			}
+		}
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_set_drina_targeted_state"
+			add_to_variable = { SER_states_available_for_setting_plans = -1 }
+			custom_effect_tooltip = SER_drina_flagged_state_will_gain_tt
+			FROM = {
+				if = {
+					limit = { ROOT = { has_socialist_government = yes } }
+					custom_effect_tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = "[?SER.SER_drina_plan_divisions]"
+						TYPE = "Srpski partizani"
+					}
+				}
+				else = {
+					custom_effect_tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = "[?SER.SER_drina_plan_divisions]"
+						TYPE = "Srpska četa"
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				effect_tooltip = {
+					add_dynamic_modifier = { modifier = SER_drina_plan_modifier }
+				}
+				set_state_flag = SER_drina_flagged_state
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+SER_The_Road_To_Unification_decisions = {
+	SER_Attack_Austria = {
+		icon = eng_puppet_usa
+		priority = 1000
+
+		available = {
+			SER_has_stabilized_macedonia = yes
+			if = {
+				limit = { is_in_faction_with = RUS }
+				RUS = { has_war_with = GER }
+				OR = {
+					is_in_faction_with = UKR
+					NOT = { country_exists = UKR }
+					UKR = { has_capitulated = yes }
+				}
+			}
+			else_if = {
+				limit = { is_in_faction_with = INT }
+				INT = { has_war_with = GER }
+			}
+		}
+
+		visible = {
+			is_subject = no
+			can_declare_war_on = FROM
+			109 = { owner = { is_ally_with = FROM } } #Central Croatia
+			FROM = { is_subject = no }
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_subject = yes
+				NOT = { can_declare_war_on = FROM }
+				NOT = { 109 = { owner = { is_ally_with = FROM } } } #Central Croatia
+				FROM = { is_subject = yes }
+			}
+		}
+
+		cost = 0
+		days_remove = 20
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		targets = { AUS }
+		target_root_trigger = { has_completed_focus = SER_Together_Against_Austria }
+		target_trigger = {
+			can_declare_war_on = FROM
+			FROM = { is_subject = no }
+			109 = { owner = { is_ally_with = FROM } } #Central Croatia
+		}
+
+		ai_will_do = {
+			factor = 1000
+			# don't do anything if already involved elsewhere
+			modifier = {
+				factor = 0
+				alliance_strength_ratio < 1
+			}
+			# wait for AI ROM to prepare the revolt if Austria and its allies aren't losing and no other countries are waiting to help
+			modifier = {
+				factor = 0
+				is_in_faction_with = ROM
+				check_variable = { ROM.revolt < 4 }
+				ROM = {
+					is_ai = yes
+					has_country_flag = ROM_funded_separatist
+				}
+				NOT = {
+					AND = {
+						POL = { has_country_flag = SER_will_attack_austria }
+						SER = { has_country_flag = SER_will_attack_austria }
+					}
+					FROM = { surrender_progress > 0.10 }
+					FROM = {
+						is_in_faction = yes
+						is_faction_leader = no
+						faction_leader = { surrender_progress > 0.10 }
+					}
+				}
+			}
+			# don't attack if a player isn't ready
+			modifier = {
+				factor = 0
+				any_of_scopes = {
+					array = ROOT.SER_will_attack_austria
+					is_ai = no
+					NOT = { has_country_flag = SER_ready_to_attack }
+				}
+			}
+			# anti-exploit measure - don't attack player Austria if they're not deploying trained troops
+			modifier = {
+				factor = 0
+				FROM = {
+					is_ai = no
+					is_major = yes
+					set_temp_variable = { manpower_threshold = { value = deployed_army_manpower_k multiply = 1000 } }
+					amount_manpower_in_deployment_queue > manpower_threshold
+					has_civil_war = no
+					has_war_with_major = no
+					enemies_strength_ratio < 1
+				}
+				second_weltkrieg_has_begun = no
+			}
+			# don't attack Austria unless it's vulnerable or other countries are waiting to help
+			modifier = {
+				factor = 0
+				FROM = {
+					NOT = {
+						any_enemy_country = { is_actual_major = yes }
+						AND = {
+							POL = { has_country_flag = SER_will_attack_austria }
+							SER = { has_country_flag = SER_will_attack_austria }
+						}
+					}
+					OR = {
+						AND = {
+							strength_ratio = { tag = ROOT ratio > 1 }
+							OR = {
+								enemies_strength_ratio < 1
+								surrender_progress < 0.1
+							}
+						}
+						AND = {
+							is_in_faction = yes
+							is_faction_leader = no
+							faction_leader = {
+								strength_ratio = { tag = ROOT ratio > 0.8 }
+								OR = {
+									enemies_strength_ratio < 1
+									surrender_progress < 0.1
+								}
+							}
+						}
+						AND = {
+							is_subject = yes
+							overlord = {
+								strength_ratio = { tag = ROOT ratio > 0.8 }
+								OR = {
+									enemies_strength_ratio < 1
+									surrender_progress < 0.1
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel SER_Attack_Austria"
+			#clear_decision_attack_AI = yes -- handled by serbia_events.32, needs manual clearing
+			hidden_effect = {
+				every_other_country = {
+					limit = { has_country_flag = added_AI_strategies_@ROOT }
+					clr_country_flag = added_AI_strategies_@ROOT
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = ROOT
+						value = -100
+					}
+					ROOT = {
+						add_ai_strategy = {
+							type = prepare_for_war
+							id = PREV
+							value = 100
+						}
+					}
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete SER_Attack_Austria"
+			#setup_decision_attack_AI = yes -- handled by serbia_events.32
+			hidden_effect = { country_event = serbia_events.32 }
+			every_other_country = {
+				limit = { has_country_flag = SER_will_attack_austria }
+				country_event = serbia_events.32
+			}
+			FROM = { country_event = serbia_events.33 } #warning event
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_Attack_Austria"
+			#clear_decision_attack_AI = yes -- handled by serbia_events.32, needs manual clearing
+			hidden_effect = {
+				every_country = {
+					limit = { has_country_flag = added_AI_strategies_@ROOT }
+					clr_country_flag = added_AI_strategies_@ROOT
+					add_ai_strategy = {
+						type = prepare_for_war
+						id = ROOT
+						value = -100
+					}
+					ROOT = {
+						add_ai_strategy = {
+							type = prepare_for_war
+							id = PREV
+							value = 100
+						}
+					}
+				}
+				country_event = { id = serbia_events.999 days = 3 }
+				country_event = { id = serbia_flavour_events.37 days = 3 }
+			}
+			every_other_country = {
+				limit = { has_country_flag = SER_will_attack_austria }
+				country_event = serbia_events.34
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			if = {
+				limit = {
+					var:109.owner = {
+						NOT = { is_ally_with = FROM }
+					}
+					can_declare_war_on = 109.owner
+				}
+				declare_war_on = {
+					target = 109.owner
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = AUS }
+					can_declare_war_on = HUN
+					HUN = { has_war_with = FROM }
+				}
+				declare_war_on = {
+					target = HUN
+					type = annex_everything
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_Form_Yugoslavia = {
+		icon = generic_flags
+		priority = 200
+
+		available = {
+			if = {
+				limit = { has_socialist_government = yes }
+				has_completed_focus = SER_Third_Revolution
+			}
+			NOT = { country_exists = CRO }
+			NOT = { has_war_with = AUS }
+			NOT = { has_war_with = HUN }
+			NOT = { has_war_with = BUL }
+			45 = { is_owned_by_ROOT_or_subject = yes } #Vojvodina
+			102 = { is_owned_by_ROOT_or_subject = yes } #Carniola
+			104 = { is_owned_by_ROOT_or_subject = yes } #Bosnia
+			105 = { is_owned_by_ROOT_or_subject = yes } #Montenegro
+			109 = { is_owned_by_ROOT_or_subject = yes } #Central Croatia
+			1109 = { is_owned_by_ROOT_or_subject = yes } #Herzegovina
+			1125 = { is_owned_by_ROOT_or_subject = yes } #Slavonia
+			if = {
+				limit = { has_country_leader = { character = SER_milan_nedic } }
+				NOT = { has_country_leader = { character = SER_milan_nedic } }
+			}
+			if = {
+				limit = {
+					OR = {
+						is_ai = no
+						is_subject = no
+					}
+				}
+				106 = { is_owned_by_ROOT_or_subject = yes } #Macedonia
+			}
+			if = {
+				limit = {
+					OR = {
+						owns_state = 106 #Macedonia
+						country_exists = MAC
+					}
+				}
+				SER_has_stabilized_macedonia = yes
+			}
+		}
+
+		visible = {
+			SER_has_founded_yugoslavia = no
+		}
+
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SER_path option = SER_PATH_MON_SOCLIB }
+					has_game_rule = { rule = SER_path option = SER_PATH_SOCCON }
+				}
+				has_government = paternal_autocrat
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_Form_Yugoslavia"
+			log = "KR_Event_Logging;YUGOSLAVIA FORMED"
+			SER_enable_yugoslavia_integration = yes
+			custom_effect_tooltip = tooltip_white_line
+			CRO = {
+				every_character = {
+					limit = {
+						is_advisor = yes
+					}
+					set_character_flag = former_CRO # added in case Croatia returns into existance, so those advisors could return to that tag if an on_action or similar is added
+					set_nationality = SER
+					demote_to_general = yes
+				}
+			}
+			if = {
+				limit = {
+					has_dictatorship_government = yes
+					OR = {
+						is_monarchy = yes
+						has_country_leader = { character = SER_milan_stojadinovic }
+					}
+				}
+				if = {
+					limit = { is_monarchy = no }
+					set_cosmetic_tag = YUG_rep
+				}
+				else = {
+					set_cosmetic_tag = YUG_mon
+					set_party_name = {
+						ideology = authoritarian_democrat
+						long_name = SER_YUG_royal_paternal_autocrat_party_long
+						name = SER_YUG_royal_paternal_autocrat_party
+					}
+					set_party_name = {
+						ideology = national_populist
+						long_name = SER_YUG_royal_paternal_autocrat_party_long
+						name = SER_YUG_royal_paternal_autocrat_party
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				set_country_flag = YUG_integral_yugoslavia_formed
+				complete_national_focus = SER_YUG_integral_yugoslavia
+			}
+			else_if = {
+				limit = {
+					is_monarchy = yes
+					has_dictatorship_government = no
+				}
+				set_cosmetic_tag = YUG_mon
+				custom_effect_tooltip = tooltip_white_line
+				set_country_flag = YUG_royal_federal_yugoslavia_formed
+				complete_national_focus = SER_YUG_royal_federation
+			}
+			else_if = {
+				limit = {
+					has_soclib_or_socdem_government = yes
+					OR = {
+						national_populist < 0.15
+						AND = {
+							is_ai = yes
+							OR = {
+								has_game_rule = { rule = SER_path option = SER_PATH_REP_SOCLIB }
+								has_game_rule = { rule = SER_path option = SER_PATH_SOCDEM }
+							}
+						}
+					}
+				}
+				set_cosmetic_tag = YUG_fed
+				custom_effect_tooltip = tooltip_white_line
+				set_country_flag = YUG_usy_formed
+				complete_national_focus = SER_YUG_united_states
+			}
+			else_if = {
+				limit = {
+					has_socialist_government = yes
+				}
+				set_cosmetic_tag = YUG_fed
+				custom_effect_tooltip = tooltip_white_line
+				set_country_flag = YUG_balkan_socialist_federation_formed
+				complete_national_focus = SER_YUG_balkan_federalism
+			}
+			else = {
+				if = { #telling republican path players that they will get this YUG if they have over 15% national_populist popularity
+					limit = {
+						has_soclib_or_socdem_government = yes
+					}
+					custom_effect_tooltip = SER_YUG_republican_gets_three_named_nation
+				}
+				set_cosmetic_tag = YUG_rep
+				custom_effect_tooltip = tooltip_white_line
+				set_country_flag = YUG_three_named_nation_formed
+				complete_national_focus = SER_YUG_three_named_nation
+			}
+			if = {
+				limit = {
+					has_democratic_government = yes
+					is_monarchy = no
+				}
+				custom_effect_tooltip = tooltip_white_line
+				meta_effect = {
+					text = {
+						add_country_leader_role = {
+							character = SER_temporary_national_representation
+							country_leader = {
+								desc = SER_temporary_national_representation_leader_desc
+								ideology = [RULING_PARTY_TAG]
+							}
+							promote_leader = yes
+						}
+						hidden_effect = {
+							set_politics = {
+								ruling_party = var:current_party_ideology_group
+								last_election = "[CURRENT_DATE]"
+								election_frequency = 4
+								elections_allowed = yes
+							}
+						}
+					}
+					RULING_PARTY_TAG = "[Root.GetRulingIdeologySubtype]"
+					CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+				}
+			}
+			if = {
+				limit = { has_idea = SER_open_rearmament }
+				custom_effect_tooltip = tooltip_white_line
+				remove_ideas = SER_open_rearmament
+			}
+			else_if = {
+				limit = { has_idea = SER_scarred_nation_1 }
+				custom_effect_tooltip = tooltip_white_line
+				remove_ideas = SER_scarred_nation_1
+			}
+			else_if = {
+				limit = { has_idea = SER_scarred_nation_01 }
+				custom_effect_tooltip = tooltip_white_line
+				remove_ideas = SER_scarred_nation_01
+			}
+			else_if = {
+				limit = { has_idea = SER_scarred_nation_2 }
+				custom_effect_tooltip = tooltip_white_line
+				remove_ideas = SER_scarred_nation_2
+			}
+			else_if = {
+				limit = { has_idea = SER_scarred_nation_3 }
+				custom_effect_tooltip = tooltip_white_line
+				remove_ideas = SER_scarred_nation_3
+			}
+			else_if = {
+				limit = { has_idea = SER_scarred_nation_4 }
+				custom_effect_tooltip = tooltip_white_line
+				remove_ideas = SER_scarred_nation_4
+			}
+			custom_effect_tooltip = tooltip_white_line
+			mark_focus_tree_layout_dirty = yes
+			if = {
+				limit = { has_completed_focus = SER_War_Plan_Drina_March }
+				if = {
+					limit = { has_template = "Srpski partizani" }
+					set_division_template_lock = { division_template = "Srpski partizani" is_locked = no }
+				}
+				if = {
+					limit = { has_template = "Srpska četa" }
+					set_division_template_lock = { division_template = "Srpska četa" is_locked = no }
+				}
+				custom_effect_tooltip = tooltip_white_line
+			}
+			if = {
+				limit = {
+					OR = {
+						is_subject = no
+						is_ai = no
+					}
+				}
+				YUG_set_up_yugoslavia_minigame = yes
+			}
+			hidden_effect = {
+				if = {
+					limit = { is_subject = no }
+					news_event = serbia_flavour_events.42
+				}
+				if = {
+					limit = {
+						has_country_leader = { character = SER_milan_stojadinovic }
+						is_subject = yes
+					}
+					set_party_name = {
+						ideology = national_populist
+						name = SER_YUG_new_royal_paternal_autocrat_party
+						long_name = SER_YUG_new_royal_paternal_autocrat_party_long
+					}
+				}
+				else_if = {
+					limit = {
+						NOT = { has_government = national_populist }
+						NOT = { has_idea = SER_konspiracija_idea }
+					}
+					set_party_name = {
+						ideology = national_populist
+						long_name = SER_YUG_national_populist_party_long
+						name = SER_YUG_national_populist_party
+					}
+					SER_collective_leadership = { promote_character = national_populist_subtype }
+				}
+				if = {
+					limit = {
+						NOT = { has_government = authoritarian_democrat }
+						NOT = { has_country_leader = { character = SER_petar_ii } }
+					}
+					set_party_name = {
+						ideology = authoritarian_democrat
+						name = SER_YUG_national_populist_party
+						long_name = SER_YUG_national_populist_party_long
+					}
+				}
+				if = {
+					limit = {
+						national_populist > 0.3
+						is_ai = no
+						has_idea = SER_konspiracija_idea
+					}
+					set_country_flag = { flag = SER_diplomatic_action days = 30 value = 1 }
+					country_event = { id = serbia_events.73 days = 7 }
+				}
+				else = {
+					country_event = { id = yugoslavia_events.2 days = 30 random_days = 10 }
+					country_event = { id = yugoslavia_events.3 days = 40 random_days = 10 }
+					country_event = { id = yugoslavia_events.6 days = 120 random_days = 30 }
+					country_event = { id = yugoslavia_events.10 days = 200 random_days = 30 }
+					country_event = { id = yugoslavia_events.11 days = 40 random_days = 10 }
+					country_event = { id = yugoslavia_mechanics_events.4 days = 60 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_Dusan_Proclamation = {
+		icon = generic_prepare_civil_war
+
+		visible = {
+			is_monarchy = yes
+			has_war_with = TUR
+			controls_state = 773 # Constantinople
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_Dusan_Proclamation"
+			country_event = serbia_flavour_events.26
+		}
+		fixed_random_seed = no
+	}
+}
+SER_contain_konspiracija_decisions = {
+	SER_prodanovic_assassination_fallout = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			always = no
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		cancel_trigger = {
+			NOT = { has_idea = SER_konspiracija_idea }
+		}
+
+		selectable_mission = no
+		is_good = no
+		days_mission_timeout = 120
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout SER_prodanovic_assassination_fallout"
+			set_country_flag = SER_enshrined_konspiracija_control_flag # cannot take anti Konspiracija foci, minimum 11% natpop
+			if = {
+				limit = { has_idea = SER_ideologically_charged_army }
+				remove_ideas = SER_ideologically_charged_army
+			}
+			if = {
+				limit = { has_idea = SER_republican_guard }
+				remove_ideas = SER_republican_guard
+			}
+			hidden_effect = {
+				country_event = { id = serbia_events.20 days = 2 } # You fucked up, Konspiracija wins
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_prodanovic_blame_konspiracija = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 0
+
+		visible = {
+			has_active_mission = SER_prodanovic_assassination_fallout
+		}
+
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				factor = 0
+				check_expr = {
+					value = party_popularity@national_populist
+					multiply = -1
+					less_than_or_equals = { value = SER_prodanovic_natpop_loss }
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_prodanovic_blame_konspiracija"
+			effect_tooltip = {
+				add_popularity = {
+					ideology = national_populist
+					popularity = SER_prodanovic_natpop_loss
+				}
+			}
+			custom_effect_tooltip = SER_prodanovic_assassination_kons_response_tt
+			# DON'T WORRY, IT'S ALL PART OF ERWIN'S FAILSAFE PLAN!
+			hidden_effect = {
+				if = {
+					limit = {
+						is_ai = yes
+						NOT = { has_game_rule = { rule = SER_path option = DEFAULT } }
+					}
+					country_event = serbia_events.19
+				}
+				else = {
+					set_temp_variable = { SER_temp_comparison_var = party_popularity@national_populist }
+					multiply_temp_variable = { SER_temp_comparison_var = -1 }
+					if = {
+						limit = { check_variable = { SER_prodanovic_natpop_loss > SER_temp_comparison_var } }
+						set_country_flag = SER_you_fucked_up_response_flag
+						country_event = serbia_events.20
+					}
+					else = {
+						country_event = serbia_events.19
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_prodanovic_other_clue_1 = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 40
+		days_remove = 14
+
+		visible = {
+			has_active_mission = SER_prodanovic_assassination_fallout
+		}
+
+		ai_will_do = { factor = 150 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_prodanovic_other_clue_1"
+			subtract_from_variable = { SER_prodanovic_natpop_loss = 0.02 }
+			custom_effect_tooltip = SER_prodanovic_assassination_gain_clue_tt
+		}
+		fixed_random_seed = no
+	}
+	SER_prodanovic_other_clue_2 = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 40
+		days_remove = 14
+
+		visible = {
+			has_active_mission = SER_prodanovic_assassination_fallout
+		}
+
+		ai_will_do = { factor = 150 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_prodanovic_other_clue_2"
+			subtract_from_variable = { SER_prodanovic_natpop_loss = 0.02 }
+			custom_effect_tooltip = SER_prodanovic_assassination_gain_clue_tt
+		}
+		fixed_random_seed = no
+	}
+	SER_prodanovic_clue_1 = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 25
+		days_remove = 14
+
+		visible = {
+			has_active_mission = SER_prodanovic_assassination_fallout
+		}
+
+		ai_will_do = { factor = 150 }
+		modifier = {
+			political_power_cost = 0.25
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_prodanovic_clue_1"
+			random_list = {
+				90 = {
+					subtract_from_variable = { SER_prodanovic_natpop_loss = 0.02 }
+					custom_effect_tooltip = SER_prodanovic_assassination_gain_clue_tt
+				}
+				10 = {
+					modifier = {
+						factor = 0
+						is_ai = yes
+						NOT = { has_game_rule = { rule = SER_path option = DEFAULT } }
+					}
+					custom_effect_tooltip = SER_prodanovic_assassination_no_effect_tt
+				}
+			}
+			set_country_flag = SER_prodanovic_clue_1_gained
+		}
+		fixed_random_seed = no
+	}
+	SER_prodanovic_clue_2 = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 25
+		days_remove = 14
+
+		visible = {
+			has_active_mission = SER_prodanovic_assassination_fallout
+			has_country_flag = SER_prodanovic_clue_1_gained
+		}
+
+		ai_will_do = { factor = 150 }
+		modifier = {
+			political_power_cost = 0.25
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_prodanovic_clue_2"
+			random_list = {
+				75 = {
+					subtract_from_variable = { SER_prodanovic_natpop_loss = 0.02 }
+					custom_effect_tooltip = SER_prodanovic_assassination_gain_clue_tt
+				}
+				25 = {
+					modifier = {
+						factor = 0
+						is_ai = yes
+						NOT = { has_game_rule = { rule = SER_path option = DEFAULT } }
+					}
+					custom_effect_tooltip = SER_prodanovic_assassination_no_effect_tt
+				}
+			}
+			set_country_flag = SER_prodanovic_clue_2_gained
+		}
+		fixed_random_seed = no
+	}
+	SER_prodanovic_clue_3 = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 25
+		days_remove = 14
+
+		visible = {
+			has_active_mission = SER_prodanovic_assassination_fallout
+			has_country_flag = SER_prodanovic_clue_2_gained
+		}
+
+		ai_will_do = { factor = 150 }
+		modifier = {
+			political_power_cost = 0.25
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_prodanovic_clue_3"
+			random_list = {
+				65 = {
+					subtract_from_variable = { SER_prodanovic_natpop_loss = 0.03 }
+					custom_effect_tooltip = SER_prodanovic_assassination_gain_clue_tt
+				}
+				35 = {
+					modifier = {
+						factor = 0
+						is_ai = yes
+						NOT = { has_game_rule = { rule = SER_path option = DEFAULT } }
+					}
+					custom_effect_tooltip = SER_prodanovic_assassination_no_effect_tt
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_prodanovic_clue_4 = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 25
+		days_remove = 14
+
+		visible = {
+			has_active_mission = SER_prodanovic_assassination_fallout
+			has_country_flag = SER_prodanovic_clue_2_gained
+		}
+
+		ai_will_do = { factor = 150 }
+		modifier = {
+			political_power_cost = 0.25
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_prodanovic_clue_4"
+			random_list = {
+				50 = {
+					subtract_from_variable = { SER_prodanovic_natpop_loss = 0.03 }
+					custom_effect_tooltip = SER_prodanovic_assassination_gain_clue_tt
+				}
+				50 = {
+					modifier = {
+						factor = 0
+						is_ai = yes
+						NOT = { has_game_rule = { rule = SER_path option = DEFAULT } }
+					}
+					custom_effect_tooltip = SER_prodanovic_assassination_no_effect_tt
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_remove_nedic = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 40
+
+		available = {
+			SER_can_take_anti_konspiracija_action = yes
+		}
+
+		visible = {
+			has_completed_focus = SER_promote_young_officers
+			has_character = SER_milutin_nedic
+			has_idea = SER_konspiracija_idea
+		}
+
+		ai_will_do = { factor = 150 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_remove_nedic"
+			retire_character = SER_milutin_nedic
+			add_popularity = {
+				ideology = national_populist
+				popularity = -0.04
+			}
+			if = {
+				limit = { has_idea = SER_ideologically_charged_army }
+				modify_timed_idea = {
+					idea = SER_ideologically_charged_army
+					days = 100
+				}
+			}
+			else = {
+				add_timed_idea = {
+					idea = SER_ideologically_charged_army
+					days = 100
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_remove_ilic = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 40
+
+		available = {
+			SER_can_take_anti_konspiracija_action = yes
+		}
+
+		visible = {
+			has_completed_focus = SER_promote_young_officers
+			has_character = SER_bogoljub_ilic
+			has_idea = SER_konspiracija_idea
+		}
+
+		ai_will_do = { factor = 150 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_remove_ilic"
+			retire_character = SER_bogoljub_ilic
+			add_popularity = {
+				ideology = national_populist
+				popularity = -0.04
+			}
+			if = {
+				limit = { has_idea = SER_ideologically_charged_army }
+				modify_timed_idea = {
+					idea = SER_ideologically_charged_army
+					days = 100
+				}
+			}
+			else = {
+				add_timed_idea = {
+					idea = SER_ideologically_charged_army
+					days = 100
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_remove_mihailovic = {
+		icon = GFX_decision_onmap_recruit_operative
+
+		fire_only_once = yes
+		cost = 40
+
+		available = {
+			SER_can_take_anti_konspiracija_action = yes
+		}
+
+		visible = {
+			has_completed_focus = SER_promote_young_officers
+			has_character = SER_dragoljub_mihailovic
+			has_idea = SER_konspiracija_idea
+		}
+
+		ai_will_do = { factor = 150 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete SER_remove_mihailovic"
+			retire_character = SER_dragoljub_mihailovic
+			add_popularity = {
+				ideology = national_populist
+				popularity = -0.04
+			}
+			if = {
+				limit = { has_idea = SER_ideologically_charged_army }
+				modify_timed_idea = {
+					idea = SER_ideologically_charged_army
+					days = 100
+				}
+			}
+			else = {
+				add_timed_idea = {
+					idea = SER_ideologically_charged_army
+					days = 100
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+SER_fighting_domestic_enemies = {
+	SER_fight_the_konspiracija = {# fight konspirajia
+		icon = GFX_decision_generic_industry
+		available = {
+			NOT = {
+				has_decision = SER_fight_monarchists_remnants
+				has_decision = SER_fight_socialists_terrorists
+			}
+		}
+		visible = {
+			has_completed_focus = SER_deal_with_domestic_enemies
+			OR = {
+				has_idea = SER_domestic_enemies_1
+				has_idea = SER_domestic_enemies_2
+				has_idea = SER_domestic_enemies_3
+			}
+		}
+
+		cost = 20
+
+		fire_only_once = yes
+		days_remove = 50
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_fight_the_konspiracija"
+			if = {
+				limit = { has_idea = SER_domestic_enemies_1 }
+				swap_ideas = {
+					remove_idea = SER_domestic_enemies_1
+					add_idea = SER_domestic_enemies_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = SER_domestic_enemies_2 }
+				swap_ideas = {
+					remove_idea = SER_domestic_enemies_2
+					add_idea = SER_domestic_enemies_3
+				}
+			}
+			else_if = {
+				limit = { has_idea = SER_domestic_enemies_3 }
+				remove_ideas = SER_domestic_enemies_3
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	SER_fight_monarchists_remnants = {
+		icon = GFX_decision_generic_industry
+		available = {
+			NOT = {
+				has_decision = SER_fight_socialists_terrorists
+				has_decision = SER_fight_the_konspiracija
+			}
+		}
+		visible = {
+			has_completed_focus = SER_deal_with_domestic_enemies
+			OR = {
+				has_idea = SER_domestic_enemies_1
+				has_idea = SER_domestic_enemies_2
+				has_idea = SER_domestic_enemies_3
+			}
+		}
+
+		cost = 20
+
+		fire_only_once = yes
+		days_remove = 50
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_fight_monarchists_remnants"
+			if = {
+				limit = { has_idea = SER_domestic_enemies_1 }
+				swap_ideas = {
+					remove_idea = SER_domestic_enemies_1
+					add_idea = SER_domestic_enemies_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = SER_domestic_enemies_2 }
+				swap_ideas = {
+					remove_idea = SER_domestic_enemies_2
+					add_idea = SER_domestic_enemies_3
+				}
+			}
+			else_if = {
+				limit = { has_idea = SER_domestic_enemies_3 }
+				remove_ideas = SER_domestic_enemies_3
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_fight_socialists_terrorists = {
+		icon = GFX_decision_generic_industry
+		available = {
+			NOT = {
+				has_decision = SER_fight_monarchists_remnants
+				has_decision = SER_fight_the_konspiracija
+			}
+		}
+		visible = {
+			has_completed_focus = SER_deal_with_domestic_enemies
+			OR = {
+				has_idea = SER_domestic_enemies_1
+				has_idea = SER_domestic_enemies_2
+				has_idea = SER_domestic_enemies_3
+			}
+		}
+
+		cost = 20
+
+		fire_only_once = yes
+		days_remove = 50
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove SER_fight_socialists_terrorists"
+			if = {
+				limit = { has_idea = SER_domestic_enemies_1 }
+				swap_ideas = {
+					remove_idea = SER_domestic_enemies_1
+					add_idea = SER_domestic_enemies_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = SER_domestic_enemies_2 }
+				swap_ideas = {
+					remove_idea = SER_domestic_enemies_2
+					add_idea = SER_domestic_enemies_3
+				}
+			}
+			else_if = {
+				limit = { has_idea = SER_domestic_enemies_3 }
+				remove_ideas = SER_domestic_enemies_3
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+SER_yugoslavia_ethnic_relations_decisions = {
+	# "Hey Aug, why did you make each point of patronage expenditure a separate decision instead of creating a repeating decision to increase your expenditure, thus increasing your code size like tenfold"
+	# Well you see, young coder who is trekking through Serbia rework code for some reason
+	# I wanted each level to have a differently coloured number, and this was the quickest way to do it
+	# Well actually having six separate decisions also makes pressing the button flow faster but the first answer makes it funnier
+	YUG_rounds_system_mission = {
+		icon = generic_prepare_civil_war
+		priority = 120
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		cancel_trigger = {
+			SER_has_founded_yugoslavia = no
+		}
+
+		selectable_mission = no
+		is_good = yes
+		days_mission_timeout = 90
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout YUG_rounds_system_mission"
+			YUG_refresh_yugoslavia_minigame = yes
+		}
+		fixed_random_seed = no
+	}
+	YUG_serbia_expenditure_0 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 200
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_serbia = YUG_AI_target_serbia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_serbia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_serbia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_serbia_expenditure_0"
+			custom_override_tooltip = {
+				tooltip = YUG_patronage_spending_SER
+				SER_decrease_political_capital = yes
+				add_to_variable = { YUG_pc_expenditure_serbia = 1 }
+			}
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_serbia_expenditure_1 target = event_target:SER_dummy }
+				remove_targeted_decision = { decision = YUG_serbia_expenditure_0 target = event_target:SER_dummy }
+				set_variable = { YUG_decision_counter_serbia = 1 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_serbia_expenditure_1 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 200
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_serbia = YUG_AI_target_serbia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_serbia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_serbia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_serbia_expenditure_1"
+			SER_increase_expenditure_serbia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_serbia_expenditure_2 target = event_target:SER_dummy }
+				remove_targeted_decision = { decision = YUG_serbia_expenditure_1 target = event_target:SER_dummy }
+				set_variable = { YUG_decision_counter_serbia = 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_serbia_expenditure_2 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 200
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_serbia = YUG_AI_target_serbia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_serbia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_serbia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_serbia_expenditure_2"
+			SER_increase_expenditure_serbia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_serbia_expenditure_3 target = event_target:SER_dummy }
+				remove_targeted_decision = { decision = YUG_serbia_expenditure_2 target = event_target:SER_dummy }
+				set_variable = { YUG_decision_counter_serbia = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_serbia_expenditure_3 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 200
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_serbia = YUG_AI_target_serbia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_serbia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_serbia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_serbia_expenditure_3"
+			SER_increase_expenditure_serbia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_serbia_expenditure_4 target = event_target:SER_dummy }
+				remove_targeted_decision = { decision = YUG_serbia_expenditure_3 target = event_target:SER_dummy }
+				set_variable = { YUG_decision_counter_serbia = 4 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_serbia_expenditure_4 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 200
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_serbia = YUG_AI_target_serbia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_serbia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_serbia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_serbia_expenditure_4"
+			SER_increase_expenditure_serbia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_serbia_expenditure_5 target = event_target:SER_dummy }
+				remove_targeted_decision = { decision = YUG_serbia_expenditure_4 target = event_target:SER_dummy }
+				set_variable = { YUG_decision_counter_serbia = 5 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_serbia_expenditure_5 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 200
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = YUG_patronage_spending_maximum_five
+				always = no
+			}
+		}
+
+		target_non_existing = yes
+		fixed_random_seed = no
+	}
+
+	YUG_croatia_expenditure_0 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 180
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_croatia = YUG_AI_target_croatia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_croatia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_croatia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_croatia_expenditure_0"
+			SER_increase_expenditure_croatia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_croatia_expenditure_1 target = CRO }
+				remove_targeted_decision = { decision = YUG_croatia_expenditure_0 target = CRO }
+				set_variable = { YUG_decision_counter_croatia = 1 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_croatia_expenditure_1 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 180
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_croatia = YUG_AI_target_croatia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_croatia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_croatia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_croatia_expenditure_1"
+			SER_increase_expenditure_croatia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_croatia_expenditure_2 target = CRO }
+				remove_targeted_decision = { decision = YUG_croatia_expenditure_1 target = CRO }
+				set_variable = { YUG_decision_counter_croatia = 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_croatia_expenditure_2 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 180
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_croatia = YUG_AI_target_croatia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_croatia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_croatia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_croatia_expenditure_2"
+			SER_increase_expenditure_croatia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_croatia_expenditure_3 target = CRO }
+				remove_targeted_decision = { decision = YUG_croatia_expenditure_2 target = CRO }
+				set_variable = { YUG_decision_counter_croatia = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_croatia_expenditure_3 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 180
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_croatia = YUG_AI_target_croatia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_croatia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_croatia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_croatia_expenditure_3"
+			SER_increase_expenditure_croatia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_croatia_expenditure_4 target = CRO }
+				remove_targeted_decision = { decision = YUG_croatia_expenditure_3 target = CRO }
+				set_variable = { YUG_decision_counter_croatia = 4 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_croatia_expenditure_4 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 180
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_croatia = YUG_AI_target_croatia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_croatia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_croatia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_croatia_expenditure_4"
+			SER_increase_expenditure_croatia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_croatia_expenditure_5 target = CRO }
+				remove_targeted_decision = { decision = YUG_croatia_expenditure_4 target = CRO }
+				set_variable = { YUG_decision_counter_croatia = 5 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_croatia_expenditure_5 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 180
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = YUG_patronage_spending_maximum_five
+				always = no
+			}
+		}
+
+		target_non_existing = yes
+		fixed_random_seed = no
+	}
+
+	YUG_bosnia_expenditure_0 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 160
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_bosnia = YUG_AI_target_bosnia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_bosnia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_bosnia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_bosnia_expenditure_0"
+			SER_increase_expenditure_bosnia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_bosnia_expenditure_1 target = BOS }
+				remove_targeted_decision = { decision = YUG_bosnia_expenditure_0 target = BOS }
+				set_variable = { YUG_decision_counter_bosnia = 1 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_bosnia_expenditure_1 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 160
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_bosnia = YUG_AI_target_bosnia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_bosnia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_bosnia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_bosnia_expenditure_1"
+			SER_increase_expenditure_bosnia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_bosnia_expenditure_2 target = BOS }
+				remove_targeted_decision = { decision = YUG_bosnia_expenditure_1 target = BOS }
+				set_variable = { YUG_decision_counter_bosnia = 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_bosnia_expenditure_2 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 160
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_bosnia = YUG_AI_target_bosnia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_bosnia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_bosnia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_bosnia_expenditure_2"
+			SER_increase_expenditure_bosnia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_bosnia_expenditure_3 target = BOS }
+				remove_targeted_decision = { decision = YUG_bosnia_expenditure_2 target = BOS }
+				set_variable = { YUG_decision_counter_bosnia = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_bosnia_expenditure_3 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 160
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_bosnia = YUG_AI_target_bosnia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_bosnia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_bosnia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_bosnia_expenditure_3"
+			SER_increase_expenditure_bosnia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_bosnia_expenditure_4 target = BOS }
+				remove_targeted_decision = { decision = YUG_bosnia_expenditure_3 target = BOS }
+				set_variable = { YUG_decision_counter_bosnia = 4 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_bosnia_expenditure_4 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 160
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_bosnia = YUG_AI_target_bosnia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_bosnia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_bosnia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_bosnia_expenditure_4"
+			SER_increase_expenditure_bosnia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_bosnia_expenditure_5 target = BOS }
+				remove_targeted_decision = { decision = YUG_bosnia_expenditure_4 target = BOS }
+				set_variable = { YUG_decision_counter_bosnia = 5 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_bosnia_expenditure_5 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 160
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = YUG_patronage_spending_maximum_five
+				always = no
+			}
+		}
+
+		target_non_existing = yes
+		fixed_random_seed = no
+	}
+
+	YUG_slovenia_expenditure_0 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 140
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_slovenia = YUG_AI_target_slovenia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_slovenia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_slovenia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_slovenia_expenditure_0"
+			SER_increase_expenditure_slovenia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_slovenia_expenditure_1 target = SLV }
+				remove_targeted_decision = { decision = YUG_slovenia_expenditure_0 target = SLV }
+				set_variable = { YUG_decision_counter_slovenia = 1 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_slovenia_expenditure_1 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 140
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_slovenia = YUG_AI_target_slovenia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_slovenia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_slovenia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_slovenia_expenditure_1"
+			SER_increase_expenditure_slovenia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_slovenia_expenditure_2 target = SLV }
+				remove_targeted_decision = { decision = YUG_slovenia_expenditure_1 target = SLV }
+				set_variable = { YUG_decision_counter_slovenia = 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_slovenia_expenditure_2 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 140
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_slovenia = YUG_AI_target_slovenia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_slovenia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_slovenia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_slovenia_expenditure_2"
+			SER_increase_expenditure_slovenia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_slovenia_expenditure_3 target = SLV }
+				remove_targeted_decision = { decision = YUG_slovenia_expenditure_2 target = SLV }
+				set_variable = { YUG_decision_counter_slovenia = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_slovenia_expenditure_3 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 140
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_slovenia = YUG_AI_target_slovenia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_slovenia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_slovenia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_slovenia_expenditure_3"
+			SER_increase_expenditure_slovenia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_slovenia_expenditure_4 target = SLV }
+				remove_targeted_decision = { decision = YUG_slovenia_expenditure_3 target = SLV }
+				set_variable = { YUG_decision_counter_slovenia = 4 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_slovenia_expenditure_4 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 140
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_slovenia = YUG_AI_target_slovenia }
+			}
+			modifier = {
+				factor = YUG_AI_factor_slovenia #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_slovenia #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_slovenia_expenditure_4"
+			SER_increase_expenditure_slovenia = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_slovenia_expenditure_5 target = SLV }
+				remove_targeted_decision = { decision = YUG_slovenia_expenditure_4 target = SLV }
+				set_variable = { YUG_decision_counter_slovenia = 5 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_slovenia_expenditure_5 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 140
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = YUG_patronage_spending_maximum_five
+				always = no
+			}
+		}
+
+		target_non_existing = yes
+		fixed_random_seed = no
+	}
+
+	YUG_other_expenditure_0 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 120
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_other = YUG_AI_target_other }
+			}
+			modifier = {
+				factor = YUG_AI_factor_other #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_other #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_other_expenditure_0"
+			SER_increase_expenditure_other_yugoslavs = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_other_expenditure_1 target = ALB }
+				remove_targeted_decision = { decision = YUG_other_expenditure_0 target = ALB }
+				set_variable = { YUG_decision_counter_other = 1 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_other_expenditure_1 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 120
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_other = YUG_AI_target_other }
+			}
+			modifier = {
+				factor = YUG_AI_factor_other #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_other #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_other_expenditure_1"
+			SER_increase_expenditure_other_yugoslavs = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_other_expenditure_2 target = ALB }
+				remove_targeted_decision = { decision = YUG_other_expenditure_1 target = ALB }
+				set_variable = { YUG_decision_counter_other = 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_other_expenditure_2 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 120
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_other = YUG_AI_target_other }
+			}
+			modifier = {
+				factor = YUG_AI_factor_other #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_other #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_other_expenditure_2"
+			SER_increase_expenditure_other_yugoslavs = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_other_expenditure_3 target = ALB }
+				remove_targeted_decision = { decision = YUG_other_expenditure_2 target = ALB }
+				set_variable = { YUG_decision_counter_other = 3 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_other_expenditure_3 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 120
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_other = YUG_AI_target_other }
+			}
+			modifier = {
+				factor = YUG_AI_factor_other #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_other #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_other_expenditure_3"
+			SER_increase_expenditure_other_yugoslavs = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_other_expenditure_4 target = ALB }
+				remove_targeted_decision = { decision = YUG_other_expenditure_3 target = ALB }
+				set_variable = { YUG_decision_counter_other = 4 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_other_expenditure_4 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 120
+
+		allowed = { always = no } #manually activated
+
+		target_non_existing = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { YUG_pc_expenditure_other = YUG_AI_target_other }
+			}
+			modifier = {
+				factor = YUG_AI_factor_other #5 -> 2.5 -> 1.67 -> 1.25 -> 1 depending on the turn's requirements
+			}
+			modifier = {
+				factor = YUG_AI_focus_other #10-1 depending on the current relation leve
+			}
+		}
+
+		custom_cost_text = YUG_1PC
+		custom_cost_trigger = {
+			check_variable = { YUG_political_capital > 0 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete YUG_other_expenditure_4"
+			SER_increase_expenditure_other_yugoslavs = yes
+			hidden_effect = {
+				activate_targeted_decision = { decision = YUG_other_expenditure_5 target = ALB }
+				remove_targeted_decision = { decision = YUG_other_expenditure_4 target = ALB }
+				set_variable = { YUG_decision_counter_other = 5 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	YUG_other_expenditure_5 = {
+		icon = GFX_decision_generic_nationalism
+		priority = 120
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = YUG_patronage_spending_maximum_five
+				always = no
+			}
+		}
+
+		target_non_existing = yes
+		fixed_random_seed = no
+	}
+
+	SER_YUG_redraw_borders = {
+		icon = generic_flags
+
+		available = {
+			controls_state = FROM
+		}
+
+		visible = {
+			owns_state = FROM
+			FROM = { is_core_of = ROOT }
+			OR = {
+				has_completed_focus = SER_YUG_referendum_federalism
+				has_completed_focus = SER_YUG_royal_referendum_federalism
+			}
+			NOT = {
+				has_completed_focus = SER_YUG_brotherhood_and_unity
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		state_target = yes
+		targets = { 106 765 163 109 104 } # Macedonia, Kosovo, two Croatian states, Bosnia
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = SER_YUG_referendum_federalism
+				has_completed_focus = SER_YUG_royal_referendum_federalism
+			}
+		}
+		target_trigger = {
+			FROM = { is_core_of = ROOT }
+		}
+
+		ai_will_do = { factor = 20 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_redraw_borders"
+			if = {
+				limit = {
+					FROM = {
+						OR = {
+							state = 106
+							state = 765
+						}
+					}
+				}
+				set_variable = { YUG_other_pp_requirement = 0 }
+				custom_effect_tooltip = SER_YUG_other_zero_demand_tt
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						OR = {
+							state = 163
+							state = 109
+						}
+					}
+				}
+				set_variable = { YUG_croatia_pp_requirement = 0 }
+				custom_effect_tooltip = SER_YUG_croatia_zero_demand_tt
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 104
+					}
+				}
+				set_variable = { YUG_bosnia_pp_requirement = 0 }
+				custom_effect_tooltip = SER_YUG_bosnia_zero_demand_tt
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_denationalisation_campaign = {
+		icon = generic_flags
+
+		available = {
+			controls_state = FROM
+			FROM = { is_core_of = ROOT }
+		}
+
+		visible = {
+			owns_state = FROM
+			has_completed_focus = SER_YUG_soc_denationalization
+			NOT = {
+				has_completed_focus = SER_YUG_brotherhood_and_unity
+			}
+		}
+
+		cost = 70
+		fire_only_once = yes
+
+		state_target = yes
+		targets = { 106 109 104 102 107 } # Macedonia, Croatia, Bosnia, Slovenia, Serbia
+		target_root_trigger = { has_completed_focus = SER_YUG_soc_denationalization }
+		target_trigger = {
+			FROM = { is_core_of = ROOT }
+		}
+
+		ai_will_do = { factor = 20 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_denationalisation_campaign"
+			if = {
+				limit = {
+					FROM = {
+						state = 106
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = YUG_pc_expenditure_other }
+				clamp_temp_variable = { var = YUG_political_capital_gain_change max = 3 }
+				SER_increase_political_capital_gain = yes
+				set_variable = { YUG_pc_expenditure_other = 0 tooltip = SER_YUG_other_zero_expenditure_tt }
+				YUG_update_expenditure_missions_other = yes
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 109
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = YUG_pc_expenditure_croatia }
+				clamp_temp_variable = { var = YUG_political_capital_gain_change max = 3 }
+				SER_increase_political_capital_gain = yes
+				set_variable = { YUG_pc_expenditure_croatia = 0 tooltip = SER_YUG_croatia_zero_expenditure_tt }
+				YUG_update_expenditure_missions_croatia = yes
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 104
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = YUG_pc_expenditure_bosnia }
+				clamp_temp_variable = { var = YUG_political_capital_gain_change max = 3 }
+				SER_increase_political_capital_gain = yes
+				set_variable = { YUG_pc_expenditure_bosnia = 0 tooltip = SER_YUG_bosnia_zero_expenditure_tt }
+				YUG_update_expenditure_missions_bosnia = yes
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 102
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = YUG_pc_expenditure_slovenia }
+				clamp_temp_variable = { var = YUG_political_capital_gain_change max = 3 }
+				SER_increase_political_capital_gain = yes
+				set_variable = { YUG_pc_expenditure_slovenia = 0 tooltip = SER_YUG_slovenia_zero_expenditure_tt }
+				YUG_update_expenditure_missions_slovenia = yes
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 107
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = YUG_pc_expenditure_serbia }
+				clamp_temp_variable = { var = YUG_political_capital_gain_change max = 3 }
+				SER_increase_political_capital_gain = yes
+				set_variable = { YUG_pc_expenditure_serbia = 0 tooltip = SER_YUG_serbia_zero_expenditure_tt }
+				YUG_update_expenditure_missions_serbia = yes
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_integralism_campaign = {
+		icon = generic_flags
+
+		available = {
+			controls_state = FROM
+			FROM = { is_core_of = ROOT }
+		}
+
+		visible = {
+			owns_state = FROM
+			has_completed_focus = SER_YUG_defeat_tribalism
+			NOT = {
+				has_completed_focus = SER_YUG_brotherhood_and_unity
+			}
+		}
+
+		cost = 40
+		fire_only_once = yes
+
+		state_target = yes
+		targets = { 106 109 104 102 107 } # Macedonia, Croatia, Bosnia, Slovenia, Serbia
+		target_root_trigger = { has_completed_focus = SER_YUG_defeat_tribalism }
+		target_trigger = {
+			FROM = { is_core_of = ROOT }
+		}
+
+		ai_will_do = { factor = 20 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_integralism_campaign"
+			if = {
+				limit = {
+					FROM = {
+						state = 106
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = 1 }
+				SER_decrease_political_capital_gain = yes
+				if = {
+					limit = {
+						check_variable = { YUG_other_relations_level < 8 }
+					}
+					set_temp_variable = { checked_state = 5 }
+					set_temp_variable = { ethnic_situation = 3 }
+					custom_effect_tooltip = YUG_other_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_other_relations_level < 9 }
+					}
+					set_temp_variable = { checked_state = 5 }
+					set_temp_variable = { ethnic_situation = 2 }
+					custom_effect_tooltip = YUG_bosnia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_other_relations_level < 10 }
+					}
+					set_temp_variable = { checked_state = 5 }
+					set_temp_variable = { ethnic_situation = 1 }
+					custom_effect_tooltip = YUG_other_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 109
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = 1 }
+				SER_decrease_political_capital_gain = yes
+				if = {
+					limit = {
+						check_variable = { YUG_croatia_relations_level < 8 }
+					}
+					set_temp_variable = { checked_state = 2 }
+					set_temp_variable = { ethnic_situation = 3 }
+					custom_effect_tooltip = YUG_croatia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_croatia_relations_level < 9 }
+					}
+					set_temp_variable = { checked_state = 2 }
+					set_temp_variable = { ethnic_situation = 2 }
+					custom_effect_tooltip = YUG_croatia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_croatia_relations_level < 10 }
+					}
+					set_temp_variable = { checked_state = 2 }
+					set_temp_variable = { ethnic_situation = 1 }
+					custom_effect_tooltip = YUG_croatia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 104
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = 1 }
+				SER_decrease_political_capital_gain = yes
+				if = {
+					limit = {
+						check_variable = { YUG_bosnia_relations_level < 8 }
+					}
+					set_temp_variable = { checked_state = 3 }
+					set_temp_variable = { ethnic_situation = 3 }
+					custom_effect_tooltip = YUG_bosnia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_bosnia_relations_level < 9 }
+					}
+					set_temp_variable = { checked_state = 3 }
+					set_temp_variable = { ethnic_situation = 2 }
+					custom_effect_tooltip = YUG_bosnia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_bosnia_relations_level < 10 }
+					}
+					set_temp_variable = { checked_state = 3 }
+					set_temp_variable = { ethnic_situation = 1 }
+					custom_effect_tooltip = YUG_bosnia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 102
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = 1 }
+				SER_decrease_political_capital_gain = yes
+				if = {
+					limit = {
+						check_variable = { YUG_slovenia_relations_level < 8 }
+					}
+					set_temp_variable = { checked_state = 4 }
+					set_temp_variable = { ethnic_situation = 3 }
+					custom_effect_tooltip = YUG_slovenia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_slovenia_relations_level < 9 }
+					}
+					set_temp_variable = { checked_state = 4 }
+					set_temp_variable = { ethnic_situation = 2 }
+					custom_effect_tooltip = YUG_slovenia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_slovenia_relations_level < 10 }
+					}
+					set_temp_variable = { checked_state = 4 }
+					set_temp_variable = { ethnic_situation = 1 }
+					custom_effect_tooltip = YUG_slovenia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+			}
+			else_if = {
+				limit = {
+					FROM = {
+						state = 107
+					}
+				}
+				set_temp_variable = { YUG_political_capital_gain_change = 1 }
+				SER_decrease_political_capital_gain = yes
+				if = {
+					limit = {
+						check_variable = { YUG_serbia_relations_level < 8 }
+					}
+					set_temp_variable = { checked_state = 1 }
+					set_temp_variable = { ethnic_situation = 3 }
+					custom_effect_tooltip = YUG_serbia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_serbia_relations_level < 9 }
+					}
+					set_temp_variable = { checked_state = 1 }
+					set_temp_variable = { ethnic_situation = 2 }
+					custom_effect_tooltip = YUG_serbia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+				else_if = {
+					limit = {
+						check_variable = { YUG_serbia_relations_level < 10 }
+					}
+					set_temp_variable = { checked_state = 1 }
+					set_temp_variable = { ethnic_situation = 1 }
+					custom_effect_tooltip = YUG_serbia_improve_relations_tt
+					YUG_update_ethnic_situation = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	SER_YUG_economic_centralisation = {
+		icon = generic_flags
+
+		available = {
+			controls_state = FROM
+			FROM = { is_core_of = ROOT }
+			check_variable = { ROOT.YUG_political_capital > 2 }
+		}
+
+		visible = {
+			owns_state = FROM
+			has_completed_focus = SER_YUG_political_centralisation
+			NOT = {
+				has_completed_focus = SER_YUG_brotherhood_and_unity
+			}
+		}
+
+		cost = 70
+		fire_only_once = yes
+
+		state_target = yes
+		targets = { 106 109 104 102 107 } # Macedonia, Croatia, Bosnia, Slovenia, Serbia
+		target_root_trigger = { has_completed_focus = SER_YUG_political_centralisation }
+		target_trigger = {
+			FROM = { is_core_of = ROOT }
+		}
+
+		ai_will_do = { factor = 20 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove SER_YUG_economic_centralisation"
+			set_temp_variable = { YUG_political_capital_change = 3 }
+			SER_decrease_political_capital = yes
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+

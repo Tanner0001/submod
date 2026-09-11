@@ -1,0 +1,422 @@
+on_actions = {
+
+	on_startup = {
+		effect = {
+			every_country = {
+				limit = { is_ally_with = JAP }
+				add_to_tech_sharing_group = japan_research
+			}
+		}
+	}
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			FROM = {
+				if = {
+					limit = { tag = JAP }
+					if = {
+						limit = {
+							LEC = {
+								exists = yes
+								is_subject = no
+							}
+						}
+						LEC = {
+							country_event = { id = legation_cities_events.130 hours = 12 }
+						}
+					}
+					JAP_fading_sun = yes
+					FNG_break_with_japan = yes
+				}
+				else = {
+					JAP_remove_from_economic_sphere = yes
+					remove_from_tech_sharing_group = japan_research
+				}
+
+				if = {
+					limit = {
+						has_country_flag = has_offsite_mils_from_JAP
+						country_exists = JAP
+					}
+					clr_country_flag = has_offsite_mils_from_JAP
+					add_offsite_building = { type = arms_factory level = -2 }
+					JAP = {
+						every_owned_state = {
+							limit = { has_variable = JAP_mils_to_china_state }
+							add_building_construction = {
+								type = arms_factory
+								level = var:JAP_mils_to_china_state
+								instant_build = yes
+							}
+							clear_variable = JAP_mils_to_china_state
+						}
+					}
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			if = {
+				limit = {
+					original_tag = JAP
+					is_faction_leader = yes
+					NOT = { has_global_flag = JAP_Fading_Sun }
+				}
+				JAP_capitulation_effect = yes
+				if = {
+					limit = { has_war_with = GEA }
+					log = "KR_Event_Logging;GEA WINS GEA-JAP WAR"
+				}
+			}
+		}
+	}
+
+	#ROOT is winner, FROM is loser (called for all winners against all losers)
+	on_before_peace_conference_start = {
+		effect = {
+			FROM = {
+				if = {
+					limit = {
+						original_tag = JAP
+						surrender_progress > 0.9
+						is_faction_leader = yes
+						NOT = { has_global_flag = JAP_Fading_Sun }
+					}
+					JAP_capitulation_effect = yes
+					if = {
+						limit = { has_war_with = GEA }
+						log = "KR_Event_Logging;GEA WINS GEA-JAP WAR"
+					}
+				}
+			}
+		}
+	}
+
+	#FROM is war target
+	on_declare_war = {
+		effect = {
+			# removing from Japanese economic sphere
+			if = {
+				limit = {
+					FROM = { tag = JAP }
+					is_in_economic_sphere_led_by_FROM = yes
+				}
+				JAP_remove_from_economic_sphere = yes
+			}
+			if = {
+				limit = {
+					tag = JAP
+					FROM = { is_in_economic_sphere_led_by_ROOT = yes }
+				}
+				FROM = { JAP_remove_from_economic_sphere = yes }
+			}
+
+			# removing Japanese extra mils
+			if = {
+				limit = {
+					FROM = { has_country_flag = has_offsite_mils_from_JAP }
+					ROOT = { tag = JAP }
+				}
+				FROM = {
+					add_offsite_building = { type = arms_factory level = -2 }
+					clr_country_flag = has_offsite_mils_from_JAP
+				}
+				ROOT = {
+					every_owned_state = {
+						limit = { has_variable = JAP_mils_to_china_state }
+						add_building_construction = {
+							type = arms_factory
+							level = var:JAP_mils_to_china_state
+							instant_build = yes
+						}
+						clear_variable = JAP_mils_to_china_state
+					}
+				}
+			}
+			if = {
+				limit = {
+					ROOT = { has_country_flag = has_offsite_mils_from_JAP }
+					FROM = { tag = JAP }
+				}
+				ROOT = {
+					add_offsite_building = { type = arms_factory level = -2 }
+					clr_country_flag = has_offsite_mils_from_JAP
+				}
+				FROM = {
+					every_owned_state = {
+						limit = { has_variable = JAP_mils_to_china_state }
+						add_building_construction = {
+							type = arms_factory
+							level = var:JAP_mils_to_china_state
+							instant_build = yes
+						}
+						clear_variable = JAP_mils_to_china_state
+					}
+				}
+			}
+			if = {
+				limit = {
+					ROOT = { tag = JAP }
+					FROM = { tag = GEA }
+				}
+				log = "KR_Event_Logging;GEA-JAP WAR START"
+			}
+		}
+	}
+
+	on_ruling_party_change_immediate = {
+		effect = {
+			if = {
+				limit = {
+					JAP = { is_leader_of_economic_sphere_of_ROOT = yes }
+					OR = {
+						has_socialist_government = yes
+						AND = {
+							is_subject = yes
+							NOT = { is_ally_with = JAP }
+						}
+					}
+				}
+				JAP_remove_from_economic_sphere = yes
+			}
+			if = {
+				limit = {
+					tag = FNG
+					is_subject_of = JAP
+					FNG_JAP_hostile = yes
+				}
+
+				# Add defeated FNG to econ sphere
+				if = {
+					limit = { JAP = { has_completed_focus = JAP_osaka_conference } }
+					JAP_add_to_economic_sphere = yes
+				}
+
+				# Readd Concordia Advisors
+				FNG_sun_qichang = { set_nationality = FNG }
+				FNG_ding_jianxiu = { set_nationality = FNG }
+				FNG_zhang_jinghui = { set_nationality = FNG }
+				FNG_zhang_zongxiang = { set_nationality = FNG }
+				FNG_lu_zongyu = { set_nationality = FNG }
+				FNG_kita_seiichi = { set_nationality = FNG }
+				FNG_wang_yitang = { set_nationality = FNG }
+				if = {
+					limit = { NOT = { MAN = { has_country_leader = { character = FNG_ruan_zhenduo } } } }
+					FNG_ruan_zhenduo = { set_nationality = FNG }
+				}
+
+				# Remove Zhang Advisors
+				FNG_lu_ronghuan = { retire = yes }
+				FNG_yuan_jinkai = { retire = yes }
+				FNG_wu_junsheng = { retire = yes }
+				FNG_zhang_zuoxiang = { retire = yes }
+				FNG_zhang_zuolin = { retire = yes }
+				FNG_zhang_xueliang = { retire = yes }
+
+				#uncomplete unification by negotiation
+				unlock_national_focus = FNG_Begin_the_War_of_National_Reclamation
+				unlock_national_focus = FNG_From_Beijing_to_the_Begonia_Leaf
+				if = {
+					limit = { has_completed_focus = FNG_against_imperialism_of_all_forms }
+					unlock_national_focus = FNG_the_marshal_and_the_emperor
+					uncomplete_national_focus = {
+						focus = FNG_against_imperialism_of_all_forms
+						uncomplete_children = yes
+					}
+				}
+				else_if = {
+					limit = { NOT = { has_completed_focus = FNG_the_marshal_and_the_emperor } }
+					complete_national_focus = FNG_the_marshal_and_the_emperor
+				}
+				unlock_national_focus = FNG_from_the_ashes
+			}
+			if = {
+				limit = {
+					is_co_prosperity_candidate = yes
+					is_subject_of = JAP
+				}
+				add_to_array = { global.JAP_possible_allies_array = ROOT }
+			}
+		}
+	}
+
+	on_state_control_changed = {
+		effect = {
+			if = { #SSJW flag for Japan to help Japan identify stalemate
+				limit = {
+					ROOT = {
+						is_ally_with = JAP
+						has_war_with = CUF
+					}
+					FROM = { is_ally_with = CUF }
+					FROM.FROM = { is_coastal = no }
+				}
+				JAP = { set_country_flag = JAP_SSJW_last_major_frontline_change_flag }
+			}
+		}
+	}
+
+	on_naval_invasion = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = {
+						tag = JAP
+					}
+					NOT = { has_state_flag = landing_priority }
+					is_island_state = no
+				}
+				if = {
+					limit = {
+						ROOT = {
+							NOT = { has_country_flag = JAP_landing_priority_boost }
+						}
+					}
+					ROOT = { set_country_flag = JAP_landing_priority_boost }
+					set_state_flag = {
+						flag = landing_priority
+						days = 30
+						value = 1
+					}
+				}
+				else_if = {
+					limit = {
+						ROOT = {
+							has_country_flag = JAP_landing_priority_boost
+						}
+					}
+					ROOT = { set_country_flag = JAP_landing_priority_boost }
+					set_state_flag = {
+						flag = landing_priority
+						days = 25
+						value = 1
+					}
+				}
+			}
+			if = {
+				limit = {
+					ROOT = {
+						tag = JAP
+						NOT = { has_country_flag = JAP_recent_naval_invasion }
+					}
+					is_island_state = no
+				}
+				ROOT = {
+					set_country_flag = {
+						flag = JAP_recent_naval_invasion
+						days = 30
+						value = 1
+					}
+				}
+			}
+		}
+	}
+
+	on_new_term_election = {
+		effect = {
+			if = {
+				limit = { tag = JAP }
+				country_event = japan_domestic_events.3	#1936
+				country_event = japan_domestic_events.54	#1940
+				country_event = japan_domestic_events.55	#1944
+				country_event = japan_domestic_events.239  #dem puppet elections
+			}
+		}
+	}
+
+	#FROM is country getting invited.
+	on_offer_join_faction = {
+		effect = {
+			# clear sphere refusal flags if a tag joins the CPS
+			if = {
+				limit = { is_ally_with = JAP }
+				FROM = {
+					clr_country_flag = JAP_refused_tokyo_conference
+					clr_country_flag = JAP_refused_sphere_invitation
+					clr_country_flag = JAP_refused_dockyards
+				}
+			}
+			# removing from Japan's economic sphere
+			if = {
+				limit = {
+					JAP = {
+						FROM = { is_in_economic_sphere_led_by_PREV = yes }
+						NOT = { is_ally_with = FROM }
+					}
+				}
+				FROM = { save_event_target_as = withdraw_country }
+				JAP = { country_event = japan_foreign_events.411 }
+			}
+
+			# remove BRM's German guarantee
+			if = {
+				limit = {
+					FROM = {
+						tag = BRM
+						has_guarantor = yes
+					}
+				}
+				every_other_country = {
+					limit = { has_guaranteed = BRM }
+					diplomatic_relation = {
+						country = BRM
+						relation = guarantee
+						active = no
+					}
+				}
+			}
+		}
+	}
+
+	on_monthly_JAP = {
+		effect = {
+			country_event = japan_foreign_events.400
+
+			# Japan - China war status
+			if = {
+				limit = { date > 1939.1.1 }
+				JAP_log_war_progress_in_china = yes
+			}
+		}
+	}
+
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							original_tag = JAP
+							is_faction_leader = yes
+							FROM = {
+								is_american_tag = yes
+								is_major = yes
+								is_subject = no
+							}
+						}
+						AND = {
+							is_american_tag = yes
+							is_major = yes
+							is_subject = no
+							FROM = {
+								original_tag = JAP
+								is_faction_leader = yes
+							}
+						}
+					}
+					has_global_flag = USA_civil_war_over_flag
+					NOT = { has_global_flag = JAP_great_pacific_war }
+				}
+				set_global_flag = JAP_great_pacific_war
+				news_event = { id = japan_news_events.2 days = 1 }
+				if = {
+					limit = { country_exists = ACC }
+					ACC = { country_event = { id = america_constitutional_coalition_events.64 days = 5 } }
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,137 @@
+#Alaska - annexation_alaska
+can_release_463 = { #Alaska
+	463 = { annexations_state_is_tied_to_annexation_decision = yes } #Alaska
+	ROOT = {
+		OR = {
+			is_subject = yes
+			any_state_of = {
+				target = { 385 471 637 } #Oregon, Yukon, Kamchatka
+				is_claim_or_core_of_ROOT = yes
+			}
+			385 = { #Oregon
+				annexations_state_owner_is_valid_grant_target = yes
+				owner = { ROOT_can_grant_land = yes }
+			}
+			471 = { #Oregon
+				annexations_state_owner_is_valid_grant_target = yes
+				owner = { ROOT_can_grant_land = yes }
+			}
+		}
+	}
+	add_state_to_resistance_target_array = yes
+	ROOT = {
+		should_release_america_first = yes
+		should_release_canada_first = yes
+	}
+}
+
+#United States - annexation_united_states
+can_release_361 = { #Maryland
+	361 = { annexations_state_is_tied_to_annexation_decision = yes } #Maryland
+	ROOT = {
+		is_american_tag = no
+		NOT = { has_war_with = USA }
+		NOT = { has_war_with = WCA }
+		NOT = { has_war_with = APG }
+		NOT = { has_war_with = ACC }
+		NOT = { has_war_with = NEE }
+		OR = {
+			tag = CAN
+			NOT = {
+				country_exists = USA
+				country_exists = WCA
+				country_exists = APG
+				country_exists = ACC
+				is_ally_with = NEE
+			}
+		}
+	}
+	add_state_to_resistance_target_array = yes
+}
+
+#Canada - annexation_canada
+can_release_739 = { #Ottawa
+	739 = { annexations_state_is_tied_to_annexation_decision = yes } #Ottawa
+	NOT = { country_exists = CAN }
+	add_state_to_resistance_target_array = yes
+}
+
+#New England - annexation_new_england
+can_release_932 = { #Massachusetts
+	932 = { annexations_state_is_tied_to_annexation_decision = yes } #Massachusetts
+	NOT = { country_exists = NEE }
+	ROOT = {
+		NOT = { tag = CAN }
+		OR = {
+			is_subject = yes
+			has_socialist_government = no
+			361 = { is_claim_or_core_of_ROOT = yes } #Maryland
+			361 = { #Maryland
+				annexations_state_owner_is_valid_grant_target = yes
+				owner = { ROOT_can_grant_land = yes }
+			}
+		}
+	}
+	add_state_to_resistance_target_array = yes
+	ROOT = {
+		should_release_america_first = yes
+	}
+}
+
+#Greenland - annexation_greenland
+can_release_101 = { #Greenland
+	101 = { annexations_state_is_tied_to_annexation_decision = yes } #Greenland
+	ROOT = {
+		OR = {
+			is_subject = yes
+			any_state_of = {
+				target = { 37 110 } #Zealand, Ostlandet
+				is_claim_or_core_of_ROOT = yes
+			}
+			tag = CAN
+			is_american_tag = yes
+			37 = { #Zealand
+				annexations_state_owner_is_valid_grant_target = yes
+				owner = { ROOT_can_grant_land = yes }
+			}
+			110 = { #Ostlandet
+				annexations_state_owner_is_valid_grant_target = yes
+				owner = { ROOT_can_grant_land = yes }
+			}
+			CAN = { ROOT_can_grant_land = yes }
+			var:932.owner = { #Massachussets
+				is_american_tag = yes
+				ROOT_can_grant_land = yes
+			}
+			var:361.owner = { #Maryland
+				is_american_tag = yes
+				ROOT_can_grant_land = yes
+			}
+		}
+	}
+	add_state_to_resistance_target_array = yes
+	ROOT = {
+		should_release_denmark_first = yes
+		should_release_norway_first = yes
+		should_release_canada_first = yes
+		should_release_america_first = yes
+	}
+}
+
+### SPECIAL TRIGGERS ###
+should_release_america_first = {
+	OR = {
+		country_exists = USA
+		country_exists = WCA
+		country_exists = APG
+		country_exists = ACC
+		361 = { annexations_state_has_valid_annexation = no } #Maryland
+	}
+}
+
+should_release_canada_first = {
+	OR = {
+		country_exists = CAN
+		739 = { annexations_state_has_valid_annexation = no } #Ottawa
+	}
+}

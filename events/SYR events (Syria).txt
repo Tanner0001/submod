@@ -1,0 +1,1792 @@
+#############################
+# KR Syria Events by Jeankedezeehond
+#############################
+
+#######################
+# GREAT SYRIAN REVOLT #
+#######################
+
+add_namespace = syrian_revolution_events
+
+country_event = {	#Syrian Revolt
+	id = syrian_revolution_events.1
+	title = syrian_revolution_events.1.t
+	desc = syrian_revolution_events.1.d
+
+	picture = GFX_IRQ_Machine_Gun
+
+	trigger = {
+		tag = OTT
+		has_war_with = EGY
+		554 = { is_owned_and_controlled_by = ROOT }
+		NOT = { has_completed_focus = OTT_Union_Party_State }
+		is_subject = no
+	}
+
+	fire_only_once = yes
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	immediate = {
+		hidden_effect = {
+			554 = {
+				teleport_armies = {
+					limit = { is_ally_with = ROOT }
+					to_province = 4111
+				}
+				set_state_owner_to = SYR
+			}
+			SYR = {
+				set_province_controller = 7184
+				set_province_controller = 4486
+				transfer_technology_without_doctrines = yes
+				division_template = {
+					name = "Militia Damascus"
+					is_locked = yes
+					division_names_group = SAU_MIL_01
+					regiments = {
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+					}
+					template_counter = 68
+				}
+				division_template = {
+					name = "Druze Camelry"
+					division_names_group = SAU_CAV_01
+					regiments = {
+						camelry = { x = 0 y = 0 }
+						camelry = { x = 0 y = 1 }
+						camelry = { x = 1 y = 0 }
+						camelry = { x = 1 y = 1 }
+					}
+					priority = 2
+				}
+				554 = {
+					create_unit = {
+						division = "name = \"Druze Camelry\" division_template = \"Druze Camelry\" start_experience_factor = 0"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 7184
+						owner = PREV
+						count = 2
+					}
+				}
+				add_country_leader_role = {
+					character = SYR_sultan_al_atrash
+					country_leader = {
+						desc = SYR_sultan_al_atrash_leader_desc
+						ideology = authoritarian_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				set_politics = {
+					ruling_party = authoritarian_democrat
+					elections_allowed = no
+				}
+				declare_war_on = {
+					target = OTT
+					type = annex_everything
+				}
+				add_ideas = ott_syrian_uprising
+			}
+			EGY = { add_to_faction = SYR }
+			news_event = { id = levant_crisis_news_events.5 days = 1 }
+			random_list = {
+				66 = {
+					EGY = { country_event = { id = operation_abul_awar_events.3 days = 7 } }
+					OTT = { country_event = { id = operation_abul_awar_events.3 days = 7 } }
+				}
+				33 = {
+					EGY = { country_event = { id = operation_abul_awar_events.4 days = 7 } }
+					OTT = { country_event = { id = operation_abul_awar_events.4 days = 7 } }
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_revolution_events.1 option syrian_revolution_events.1.a"
+		name = syrian_revolution_events.1.a
+		custom_effect_tooltip = ott_syr_spread
+		custom_effect_tooltip = tooltip_white_line
+		every_owned_state = {
+			limit = { is_core_of = SYR }
+			ott_increase_revolt_risk = yes
+		}
+	}
+}
+
+### GENERIC SYRIANS
+# Generic Revolters
+country_event = {	#Damascus joins the revolt
+	id = syrian_revolution_events.2
+	title = syrian_revolution_events.2.t
+	desc = syrian_revolution_events.2.d
+
+	trigger = {
+		has_war_with = SYR
+	}
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			554 = {
+				teleport_armies = { limit = { is_ally_with = ROOT } }
+				set_state_controller_to = SYR
+				create_unit = {
+					division = "name = \"Syrian Rebels\" division_template = \"Militia Damascus\""
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 4111
+					owner = SYR
+					count = 2
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_revolution_events.2 option syrian_revolution_events.2.a"
+		name = syrian_revolution_events.2.a
+		custom_effect_tooltip = ott_syr_spread
+	}
+}
+country_event = {	#Al-Karak joins the revolt
+	id = syrian_revolution_events.3
+	title = syrian_revolution_events.3.t
+	desc = syrian_revolution_events.3.d
+
+	trigger = {
+		has_war_with = SYR
+		455 = { is_owned_and_controlled_by = ROOT } #Karak
+	}
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			455 = {
+				teleport_armies = { limit = { is_ally_with = ROOT } }
+				set_state_controller_to = SYR
+				create_unit = {
+					division = "name = \"Syrian Rebels\" division_template = \"Militia Damascus\""
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 7151
+					owner = SYR
+					count = 2
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_revolution_events.3 option syrian_revolution_events.3.a"
+		name = syrian_revolution_events.3.a
+		custom_effect_tooltip = ott_syr_spread
+	}
+}
+
+country_event = {	#Halep joins the revolt
+	id = syrian_revolution_events.5
+	title = syrian_revolution_events.5.t
+	desc = syrian_revolution_events.5.d
+
+	trigger = {
+		has_war_with = SYR
+		677 = { is_owned_and_controlled_by = ROOT } #Aleppo
+	}
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			677 = {
+				teleport_armies = { limit = { is_ally_with = ROOT } }
+				set_state_controller_to = SYR
+				create_unit = {
+					division = "name = \"Syrian Rebels\" division_template = \"Militia Damascus\""
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 12473
+					owner = SYR
+					count = 2
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_revolution_events.5 option syrian_revolution_events.5.a"
+		name = syrian_revolution_events.5.a
+		custom_effect_tooltip = ott_syr_spread
+	}
+}
+
+country_event = {	#Homs joins the revolt
+	id = syrian_revolution_events.6
+	title = syrian_revolution_events.6.t
+	desc = syrian_revolution_events.6.d
+
+	trigger = {
+		has_war_with = SYR
+		995 = { is_owned_and_controlled_by = ROOT } #Homs
+	}
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			995 = {
+				teleport_armies = { limit = { is_ally_with = ROOT } }
+				set_state_controller_to = SYR
+				create_unit = {
+					division = "name = \"Syrian Rebels\" division_template = \"Militia Damascus\""
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 11919
+					owner = SYR
+					count = 2
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_revolution_events.6 option syrian_revolution_events.6.a"
+		name = syrian_revolution_events.6.a
+		custom_effect_tooltip = ott_syr_spread
+	}
+}
+
+country_event = {	#Haifa joins the revolt
+	id = syrian_revolution_events.7
+	title = syrian_revolution_events.7.t
+	desc = syrian_revolution_events.7.d
+
+	trigger = {
+		has_war_with = SYR
+		992 = { is_owned_and_controlled_by = ROOT } #Haifa
+	}
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			992 = {
+				teleport_armies = { limit = { is_ally_with = ROOT } }
+				set_state_controller_to = SYR
+				create_unit = {
+					division = "name = \"Syrian Rebels\" division_template = \"Militia Damascus\""
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 1065
+					owner = SYR
+					count = 2
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_revolution_events.7 option syrian_revolution_events.7.a"
+		name = syrian_revolution_events.7.a
+		custom_effect_tooltip = ott_syr_spread
+	}
+}
+
+#Crushed Insurrection
+country_event = {	#Arab Revolt Crushed
+	id = syrian_revolution_events.8
+	title = syrian_revolution_events.8.t
+	desc = syrian_revolution_events.8.d
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	trigger = {
+		tag = OTT
+		owns_state = 554 #Damascus
+		NOT = { country_exists = SYR }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_revolution_events.8 option syrian_revolution_events.8.a"
+		name = syrian_revolution_events.8.a
+		every_owned_state = {
+			limit = { region = 28 } #Levant
+			ott_decrease_revolt_risk = yes
+		}
+	}
+}
+
+###############
+# Arab League #
+###############
+add_namespace = syrian_foreign_policy_events
+
+country_event = {	#Invitation to the Arab League
+	id = syrian_foreign_policy_events.1
+	title = syrian_foreign_policy_events.1.t
+	desc = syrian_foreign_policy_events.1.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_foreign_policy_events.1 option syrian_foreign_policy_events.1.a"
+		name = syrian_foreign_policy_events.1.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				tag = OMA
+				NOT = { has_completed_focus = OMA_compromises_for_our_independence }
+			}
+			modifier = {
+				factor = 0
+				tag = SAU
+			}
+			modifier = {
+				factor = 0
+				tag = YEM
+				has_government = paternal_autocrat
+			}
+			modifier = {
+				factor = 0
+				tag = IRQ
+				has_country_leader = { character = IRQ_ajami_al_saadun }
+				NOT = { has_game_rule = { rule = IRQ_forpol option = IRQ_FORPOL_ARAB_FED } }
+			}
+			modifier = {
+				factor = 0
+				tag = IRQ
+				NOT = { has_game_rule = { rule = IRQ_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = IRQ_forpol option = IRQ_FORPOL_ARAB_FED } }
+			}
+		}
+		LOA_join_syrian_sphere = yes
+		SYR = { country_event = syrian_foreign_policy_events.2 }
+
+		### give effects of Iraqi foci
+		if = {
+			limit = {
+				SYR = {
+					has_completed_focus = SYR_Economic_Social_Council
+				}
+			}
+			add_ideas = IRQ_Economic_Social_Council_idea
+		}
+		if = {
+			limit = {
+				SYR = {
+					has_completed_focus = SYR_Arab_Unified_Command
+				}
+			}
+			add_ideas = IRQ_Unified_Arab_Command
+		}
+		if = {
+			limit = {
+				SYR = {
+					has_completed_focus = SYR_Arab_Parliament
+				}
+			}
+			SYR = {
+				puppet = {
+					target = ROOT
+					end_wars = no
+				}
+			}
+		}
+		if = {
+			limit = {
+				SYR = {
+					has_completed_focus = SYR_Council_of_Social_Affairs
+				}
+			}
+			add_ideas = IRQ_Council_Social_Affairs
+		}
+		if = {
+			limit = {
+				SYR = {
+					has_completed_focus = SYR_Arab_Federation
+				}
+			}
+			every_unit_leader = { set_nationality = SYR }
+			every_core_state = { add_claim_by = SYR }
+			SYR = {
+				annex_country = {
+					target = ROOT
+					transfer_troops = yes
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_foreign_policy_events.1 option syrian_foreign_policy_events.1.b"
+		name = syrian_foreign_policy_events.1.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				tag = SAU
+			}
+			modifier = {
+				add = 100
+				tag = OMA
+				has_completed_focus = OMA_compromises_for_our_independence
+			}
+			modifier = {
+				add = 100
+				tag = YEM
+				has_government = paternal_autocrat
+			}
+			modifier = {
+				add = 100
+				tag = IRQ
+				has_country_leader = { character = IRQ_ajami_al_saadun }
+				NOT = { has_game_rule = { rule = IRQ_forpol option = IRQ_FORPOL_ARAB_FED } }
+			}
+			modifier = {
+				add = 100
+				tag = IRQ
+				NOT = { has_game_rule = { rule = IRQ_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = IRQ_forpol option = IRQ_FORPOL_ARAB_FED } }
+			}
+		}
+		SYR = {
+			country_event = syrian_foreign_policy_events.3
+		}
+	}
+}
+country_event = {	#Invitation accepted
+	id = syrian_foreign_policy_events.2
+	title = syrian_foreign_policy_events.2.t
+	desc = syrian_foreign_policy_events.2.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_foreign_policy_events.2 option syrian_foreign_policy_events.2.a"
+		name = syrian_foreign_policy_events.2.a
+		add_political_power = 10
+	}
+}
+country_event = {	#Invitation refused
+	id = syrian_foreign_policy_events.3
+	title = syrian_foreign_policy_events.3.t
+	desc = syrian_foreign_policy_events.3.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_foreign_policy_events.3 option syrian_foreign_policy_events.3.a"
+		name = syrian_foreign_policy_events.3.a
+		add_political_power = -10
+		FROM = {
+			set_country_flag = refused_loa
+		}
+		if = {
+			limit = {
+				FROM = {
+					tag = OMA
+				}
+			}
+			create_wargoal = {
+				target = OMA
+				type = topple_government
+			}
+		}
+		if = {
+			limit = {
+				FROM = {
+					tag = YEM
+				}
+			}
+			create_wargoal = {
+				target = YEM
+				type = topple_government
+			}
+		}
+	}
+}
+
+country_event = {	#SYR tries to join a faction
+	id = syrian_foreign_policy_events.4
+	title = syrian_foreign_policy_events.4.t
+	desc = syrian_foreign_policy_events.4.d
+	picture = GFX_report_event_generic_conference1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_foreign_policy_events.4 option syrian_foreign_policy_events.4.a"
+		name = syrian_foreign_policy_events.4.a
+		ai_chance = { base = 100 }
+		add_to_faction = FROM
+		FROM = { country_event = syrian_foreign_policy_events.5 }
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_foreign_policy_events.4 option syrian_foreign_policy_events.4.b"
+		ai_chance = { base = 0 }
+		name = syrian_foreign_policy_events.4.b
+		FROM = { country_event = syrian_foreign_policy_events.6 }
+	}
+}
+
+country_event = {	#SYR is accepted into the faction
+	id = syrian_foreign_policy_events.5
+	title = syrian_foreign_policy_events.5.t
+	desc = syrian_foreign_policy_events.5.d
+	picture = GFX_report_event_generic_diplomacy1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_foreign_policy_events.5 option syrian_foreign_policy_events.5.a"
+		name = syrian_foreign_policy_events.5.a
+		effect_tooltip = {
+			add_to_faction = FROM
+		}
+	}
+}
+
+country_event = {	#SYR is rejected
+	id = syrian_foreign_policy_events.6
+	title = syrian_foreign_policy_events.6.t
+	desc = syrian_foreign_policy_events.6.d
+	picture = GFX_OTT_Damascus
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_foreign_policy_events.6 option syrian_foreign_policy_events.6.a"
+		name = syrian_foreign_policy_events.6.a
+	}
+}
+
+###################
+# SYRIAN REPUBLIC #
+###################
+add_namespace = syrian_republic_events
+
+country_event = {	#Proclamation of the Syrian Republic
+	id = syrian_republic_events.1
+	title = syrian_republic_events.1.t
+	desc = syrian_republic_events.1.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = syr_elections_ongoing #set here to prevent from just delaying the events until the focus is complete
+			SYR_raghib_al_nashashibi = { set_nationality = SYR } #bring him back from MoJ
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.1 option syrian_republic_events.1.a"
+		name = syrian_republic_events.1.a
+		add_political_power = 10
+		add_stability = 0.03
+		country_event = { id = syrian_republic_events.2 days = 3 }
+		hidden_effect = {
+			country_event = { id = yishuv_flavour_events.1 days = 14 }
+		}
+	}
+}
+
+country_event = {	#The Damascene All-Syria Congress: National Bloc & People's Party
+	id = syrian_republic_events.2
+	title = syrian_republic_events.2.t
+	desc = syrian_republic_events.2.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.2 option syrian_republic_events.2.a"
+		name = syrian_republic_events.2.a
+		country_event = { id = syrian_republic_events.3 days = 2 }
+	}
+}
+
+country_event = {	#The Damascene All-Syria Congress: The Second Generation
+	id = syrian_republic_events.3
+	title = syrian_republic_events.3.t
+	desc = syrian_republic_events.3.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.3 option syrian_republic_events.3.a"
+		name = syrian_republic_events.3.a
+		country_event = { id = syrian_republic_events.4 days = 1 }
+	}
+}
+
+country_event = {	#Said al-Jazairi Announces Elections
+	id = syrian_republic_events.4
+	title = syrian_republic_events.4.t
+	desc = syrian_republic_events.4.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.4 option syrian_republic_events.4.a"
+		name = syrian_republic_events.4.a
+		custom_effect_tooltip = syr_elections_30_days
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.7 days = 10 }
+			country_event = { id = syrian_republic_events.5 days = 20 }
+			country_event = { id = syrian_republic_events.6 days = 30 }
+			country_event = { id = yishuv_flavour_events.2 days = 7 }
+		}
+	}
+}
+
+country_event = {	#Chaos at the Ballots
+	id = syrian_republic_events.5
+	title = syrian_republic_events.5.t
+	desc = syrian_republic_events.5.d
+
+	picture = GFX_OTT_Diyarabakir
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.5 option syrian_republic_events.5.a"
+		name = syrian_republic_events.5.a
+		add_stability = -0.10
+	}
+}
+
+country_event = {	#The First Syrian Elections
+	id = syrian_republic_events.6
+	title = syrian_republic_events.6.t
+	desc = syrian_republic_events.6.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.13 days = 50 }
+			country_event = { id = syrian_republic_events.22 days = 100 }
+			country_event = { id = syrian_republic_events.23 days = 130 }
+			country_event = { id = syrian_republic_events.24 days = 85 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.6 option syrian_republic_events.6.a"
+		name = syrian_republic_events.6.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SYR_path option = SYR_PATH_SOCCON }
+					has_game_rule = { rule = SYR_path option = SYR_PATH_PATAUT }
+					has_game_rule = { rule = SYR_path option = SYR_PATH_NATPOP }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		activate_advisor = SYR_rushdi_al_kikhiya_sic
+		add_to_coalition = yes
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.11 days = 1 }
+		}
+		complete_national_focus = SYR_republic_of_equals
+		set_country_flag = syr_is_liberal
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.6 option syrian_republic_events.6.b"
+		name = syrian_republic_events.6.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SYR_path option = SYR_PATH_SOCLIB }
+					has_game_rule = { rule = SYR_path option = SYR_PATH_MARLIB }
+				}
+			}
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		activate_advisor = SYR_jamil_mardam_bey_sic
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.8 days = 20 }
+			country_event = { id = syrian_republic_events.9 days = 40 }
+			country_event = { id = syrian_republic_events.27 days = 150 }
+		}
+		complete_national_focus = SYR_status_quo
+	}
+	after = {
+		clr_country_flag = syr_elections_ongoing
+	}
+}
+
+country_event = {	#Shukri al-Quwatli Takes over the National Bloc
+	id = syrian_republic_events.7
+	title = syrian_republic_events.7.t
+	desc = syrian_republic_events.7.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.7 option syrian_republic_events.7.a"
+		name = syrian_republic_events.7.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.03
+		}
+		add_political_power = 10
+		add_country_leader_role = {
+			character = SYR_shukri_al_quwatli
+			country_leader = {
+				desc = SYR_shukri_al_quwatli_leader_desc
+				ideology = social_conservative_subtype
+			}
+			promote_leader = yes
+		}
+	}
+}
+
+country_event = {	#Bechara El Khoury Joins Forces with al-Quwatli
+	id = syrian_republic_events.8
+	title = syrian_republic_events.8.t
+	desc = syrian_republic_events.8.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { country_exists = LEB }
+	}
+
+	immediate = {
+		hidden_effect = {
+			LEB = { LEB_bechara_el_khoury = { set_nationality = SYR } }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.8 option syrian_republic_events.8.a"
+		name = syrian_republic_events.8.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.07
+		}
+		add_stability = 0.03
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = LEB_bechara_el_khoury_advisor
+	}
+}
+
+country_event = {	#Ahmad Sharabati Appointed Minister of Education
+	id = syrian_republic_events.9
+	title = syrian_republic_events.9.t
+	desc = syrian_republic_events.9.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.9 option syrian_republic_events.9.a"
+		name = syrian_republic_events.9.a
+		### add sharabati as minister
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.04
+		}
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.10 days = 60 }
+		}
+	}
+}
+
+country_event = {	#The Sharabati Reforms
+	id = syrian_republic_events.10
+	title = syrian_republic_events.10.t
+	desc = syrian_republic_events.10.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.10 option syrian_republic_events.10.a"
+		name = syrian_republic_events.10.a
+		add_political_power = 30
+		USA = {
+			add_opinion_modifier = {
+				target = SYR
+				modifier = small_increase
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.10 option syrian_republic_events.10.b"
+		name = syrian_republic_events.10.b
+		add_political_power = 30
+		GER = {
+			add_opinion_modifier = {
+				target = SYR
+				modifier = small_increase
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.10 option syrian_republic_events.10.c"
+		name = syrian_republic_events.10.c
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.01
+		}
+	}
+}
+
+country_event = {	#People's Party Wins the Elections
+	id = syrian_republic_events.11
+	title = syrian_republic_events.11.t
+	desc = syrian_republic_events.11.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.12 days = 30 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.11 option syrian_republic_events.11.a"
+		name = syrian_republic_events.11.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = SYR_path option = SYR_PATH_MARLIB }
+			}
+		}
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.08
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.11 option syrian_republic_events.11.b"
+		name = syrian_republic_events.11.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = SYR_path option = SYR_PATH_SOCLIB }
+			}
+		}
+		add_stability = -0.05
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+		}
+		activate_advisor = SYR_said_al_jazairi_sic
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+	}
+}
+
+country_event = {	#A Coalition of Compromise
+	id = syrian_republic_events.12
+	title = syrian_republic_events.12.t
+	desc = syrian_republic_events.12.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.12 option syrian_republic_events.12.a"
+		name = syrian_republic_events.12.a
+		add_stability = -0.03
+	}
+}
+
+country_event = {	#Famine in Syria
+	id = syrian_republic_events.13
+	title = syrian_republic_events.13.t
+	desc = syrian_republic_events.13.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.13 option syrian_republic_events.13.a"
+		name = syrian_republic_events.13.a
+		add_timed_idea = {
+			idea = syr_famine
+			days = 365
+		}
+	}
+}
+
+country_event = {	#The State of the Syrian Army
+	id = syrian_republic_events.14
+	title = syrian_republic_events.14.t
+	desc = syrian_republic_events.14.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.14 option syrian_republic_events.14.a"
+		name = syrian_republic_events.14.a
+		trigger = { is_subject = no } # Prevent puppet SYR from switching ideology
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SYR_path option = SYR_PATH_SOCLIB }
+					has_game_rule = { rule = SYR_path option = SYR_PATH_MARLIB }
+					has_game_rule = { rule = SYR_path option = SYR_PATH_SOCCON }
+				}
+			}
+		}
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.15 hours = 6 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.14 option syrian_republic_events.14.b"
+		name = syrian_republic_events.14.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = SYR_path option = SYR_PATH_PATAUT }
+					has_game_rule = { rule = SYR_path option = SYR_PATH_NATPOP }
+				}
+			}
+		}
+		army_experience = 20
+	}
+}
+
+country_event = {	#Coup d'Etat in Damascus
+	id = syrian_republic_events.15
+	title = syrian_republic_events.15.t
+	desc = syrian_republic_events.15.d
+
+	trigger = {
+		has_character = SYR_husni_al_zaim
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.15 option syrian_republic_events.15.a"
+		name = syrian_republic_events.15.a
+		country_event = { id = syrian_republic_events.16 days = 3 }
+	}
+}
+
+country_event = {	#[SYR.GetLeader] Submits His Resignation
+	id = syrian_republic_events.16
+	title = syrian_republic_events.16.t
+	desc = syrian_republic_events.16.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.16 option syrian_republic_events.16.a"
+		name = syrian_republic_events.16.a
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		end_coalition = yes
+		activate_advisor = SYR_muhsen_al_barazi_sic
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.2
+		}
+		complete_national_focus = SYR_army_with_a_state
+		if = {
+			limit = {
+				is_ai = yes
+				has_game_rule = { rule = SYR_path option = SYR_PATH_PATAUT }
+			}
+			FRA_remove_from_phalanstere = yes
+		}
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.17 days = 10 }
+			country_event = { id = syrian_republic_events.18 days = 30 }
+			country_event = { id = syrian_republic_events.19 days = 100 }
+			country_event = { id = syrian_republic_events.20 days = 120 }
+		}
+	}
+}
+
+country_event = {	#Enemies of the State
+	id = syrian_republic_events.17
+	title = syrian_republic_events.17.t
+	desc = syrian_republic_events.17.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_leader = { character = SYR_husni_al_zaim }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.17 option syrian_republic_events.17.a"
+		name = syrian_republic_events.17.a
+		### add Hourani as minister
+		add_popularity = {
+			ideology = totalist
+			popularity = 0.05
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.17 option syrian_republic_events.17.b"
+		name = syrian_republic_events.17.b
+		add_popularity = {
+			ideology = radical_socialist
+			popularity = -0.1
+		}
+		add_popularity = {
+			ideology = syndicalist
+			popularity = -0.1
+		}
+	}
+}
+
+country_event = {	#Introduction of Agrarian Reforms
+	id = syrian_republic_events.18
+	title = syrian_republic_events.18.t
+	desc = syrian_republic_events.18.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_leader = { character = SYR_husni_al_zaim }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.18 option syrian_republic_events.18.a"
+		name = syrian_republic_events.18.a
+		add_stability = 0.05
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.1
+		}
+	}
+}
+
+country_event = {	#al-Zaim Introduces Social Reforms
+	id = syrian_republic_events.19
+	title = syrian_republic_events.19.t
+	desc = syrian_republic_events.19.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_leader = { character = SYR_husni_al_zaim }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.19 option syrian_republic_events.19.a"
+		name = syrian_republic_events.19.a
+		add_stability = -0.05
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = -0.05
+		}
+	}
+}
+
+country_event = {	#Elections in Syria
+	id = syrian_republic_events.20
+	title = syrian_republic_events.20.t
+	desc = syrian_republic_events.20.d
+
+	picture = GFX_SYR_Parliament
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_leader = { character = SYR_husni_al_zaim }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.20 option syrian_republic_events.20.a"
+		name = syrian_republic_events.20.a
+		add_stability = -0.1
+		add_political_power = 100
+		add_popularity = {
+			ideology = paternal_autocrat
+			popularity = 0.15
+		}
+	}
+}
+
+country_event = {	#Coup d'Etat in Damascus
+	id = syrian_republic_events.21
+	title = syrian_republic_events.21.t
+	desc = syrian_republic_events.21.d
+
+	fire_only_once = yes
+
+	trigger = {
+		has_country_leader = { character = SYR_husni_al_zaim }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.21 option syrian_republic_events.21.a"
+		name = syrian_republic_events.21.a
+		add_stability = -0.1
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+		end_coalition = yes
+		add_country_leader_role = {
+			character = SYR_sami_al_hinawi
+			country_leader = {
+				desc = SYR_sami_al_hinawi_high_command_desc
+				ideology = paternal_autocrat_subtype
+			}
+			promote_leader = yes
+		}
+		activate_advisor = SYR_adib_idb_hassan_al_shishakli_sic
+		SYR_husni_al_zaim = { kill_character = yes }
+		country_event = { id = syrian_republic_events.29 days = 5 }
+	}
+}
+
+country_event = {	#Bread Riots in Aleppo
+	id = syrian_republic_events.22
+	title = syrian_republic_events.22.t
+	desc = syrian_republic_events.22.d
+
+	fire_only_once = yes
+
+	trigger = {
+		has_marlib_or_soclib_government = no
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.22 option syrian_republic_events.22.a"
+		name = syrian_republic_events.22.a
+		add_stability = -0.02
+		set_temp_variable = { ideology_change_var = -0.05 }
+		change_ruling_party_popularity = yes
+	}
+}
+
+country_event = {	#Death of Saadallah al-Jabiri
+	id = syrian_republic_events.23
+	title = syrian_republic_events.23.t
+	desc = syrian_republic_events.23.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.23 option syrian_republic_events.23.a"
+		name = syrian_republic_events.23.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.07
+		}
+		SYR_saadallah_al_jabiri = { kill_character = yes }
+	}
+}
+
+country_event = {	#Marada Intensify Attacks in Northern Lebanon
+	id = syrian_republic_events.24
+	title = syrian_republic_events.24.t
+	desc = syrian_republic_events.24.d
+
+	fire_only_once = yes
+
+	trigger = {
+		has_idea = syr_lebanese_unrest
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.24 option syrian_republic_events.24.a"
+		name = syrian_republic_events.24.a
+		add_stability = -0.02
+	}
+}
+
+country_event = {	#Unrest in the Lebanese Ranks
+	id = syrian_republic_events.25
+	title = syrian_republic_events.25.t
+	desc = syrian_republic_events.25.d
+
+	fire_only_once = yes
+
+	trigger = {
+		has_idea = syr_lebanese_unrest
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.25 option syrian_republic_events.25.a"
+		name = syrian_republic_events.25.a
+		add_political_power = -50
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.31 days = 5 }
+		}
+	}
+}
+
+country_event = {	#Fouad Chehab Declares the Independence of Lebanon
+	id = syrian_republic_events.26
+	title = syrian_republic_events.26.t
+	desc = syrian_republic_events.26.d
+
+	fire_only_once = yes
+
+	trigger = {
+		has_idea = syr_lebanese_unrest
+		OR = {
+			is_subject = no
+			has_country_leader = { character = EGY_abdel_moneim_i }
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.26 option syrian_republic_events.26.a"
+		name = syrian_republic_events.26.a
+		ai_chance = { base = 100 }
+		remove_state_core = 553
+		add_state_claim = 553
+		swap_ideas = {
+			remove_idea = syr_lebanese_unrest
+			add_idea = SYR_lebanon_war_dont_call_allies
+		}
+		hidden_effect = {
+			LEB_launch_revolt_setup = yes
+			LEB = { activate_mission = LEB_lebanon_independence_war }
+		}
+		activate_mission = SYR_lebanon_independence_war
+		declare_war_on = {
+			target = LEB
+			type = annex_everything
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.26 option syrian_republic_events.26.b"
+		name = syrian_republic_events.26.b
+		ai_chance = { base = 0 }
+		remove_state_core = 553
+		add_state_claim = 553
+		swap_ideas = {
+			remove_idea = syr_lebanese_unrest
+			add_idea = SYR_lebanon_war_dont_call_allies
+		}
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.2600 hours = 25 }
+			LEB_launch_revolt_setup = yes
+		}
+		LEB = { change_tag_from = ROOT }
+	}
+}
+
+country_event = { #hidden event to start the war
+	id = syrian_republic_events.2600
+	hidden = yes
+
+	trigger = {
+		can_declare_war_on = LEB
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.2600 option 1"
+		declare_war_on = {
+			target = LEB
+			type = annex_everything
+		}
+		LEB = { activate_mission = LEB_lebanon_independence_war }
+		activate_mission = SYR_lebanon_independence_war
+	}
+}
+
+country_event = {	#Lebanese Representatives Protest Damascene Influence
+	id = syrian_republic_events.27
+	title = syrian_republic_events.27.t
+	desc = syrian_republic_events.27.d
+
+	fire_only_once = yes
+
+	trigger = {
+		owns_state = 553
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.27 option syrian_republic_events.27.a"
+		name = syrian_republic_events.27.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.02
+		}
+	}
+}
+
+country_event = {	#Plebiscite in Cilicia
+	id = syrian_republic_events.28
+	title = syrian_republic_events.28.t
+	desc = syrian_republic_events.28.d
+
+	fire_only_once = yes
+
+	trigger = {
+		owns_state = 553
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.28 option syrian_republic_events.28.a"
+		name = syrian_republic_events.28.a
+		remove_state_core = 344
+		add_state_claim = 344
+		TUR = {
+			add_state_core = 344
+			transfer_state = 344
+		}
+	}
+}
+
+country_event = {	#Sami al-Hinawi Restores Democracy
+	id = syrian_republic_events.29
+	title = syrian_republic_events.29.t
+	desc = {
+		text = syrian_republic_events.29.d
+		trigger = { NOT = { has_country_flag = syr_is_liberal } }
+	}
+	desc = {
+		text = syrian_republic_events.29.d.Alt
+		trigger = { has_country_flag = syr_is_liberal }
+	}
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.29 option syrian_republic_events.29.a"
+		Trigger = {
+			NOT = { has_country_flag = syr_is_liberal }
+		}
+		name = syrian_republic_events.29.a
+		set_political_party = {
+			ideology = paternal_autocrat
+			popularity = 0
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = yes
+		}
+		activate_advisor = SYR_shukri_al_quwatli_sic
+		add_popularity = {
+			ideology = social_conservative
+			popularity = 0.2
+		}
+		end_coalition = yes
+		promote_character = SYR_hashim_al_atassi
+		SYR_sami_al_hinawi = { promote_leader = yes }
+	}
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.29 option syrian_republic_events.29.b"
+		name = syrian_republic_events.29.b
+		Trigger = {
+			has_country_flag = syr_is_liberal
+		}
+		set_political_party = {
+			ideology = paternal_autocrat
+			popularity = 0
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		activate_advisor = SYR_rushdi_al_kikhiya_sic
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.2
+		}
+		end_coalition = yes
+	}
+}
+
+country_event = {	#The Document of Zouk Mikael
+	id = syrian_republic_events.30
+	title = syrian_republic_events.30.t
+	desc = syrian_republic_events.30.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.30 option syrian_republic_events.30.a"
+		name = syrian_republic_events.30.a
+		add_political_power = -10
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.26 days = 7 }
+		}
+	}
+}
+
+country_event = {	#Lebanese public figures convene at Beiteddine Palace
+	id = syrian_republic_events.31
+	title = syrian_republic_events.31.t
+	desc = syrian_republic_events.31.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.31 option syrian_republic_events.31.a"
+		name = syrian_republic_events.31.a
+		add_popularity = {
+			ideology = social_conservative
+			popularity = -0.03
+		}
+		hidden_effect = {
+			country_event = { id = syrian_republic_events.30 days = 2 }
+		}
+	}
+}
+
+country_event = {	#The Jaffa Conference
+	id = syrian_republic_events.32
+	title = syrian_republic_events.32.t
+	desc = syrian_republic_events.32.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.32 option syrian_republic_events.32.a"
+		name = syrian_republic_events.32.a
+	}
+}
+
+country_event = {	#Coup d'Etat in Damascus
+	id = syrian_republic_events.35
+	title = syrian_republic_events.35.t
+	desc = syrian_republic_events.35.d
+
+	trigger = {
+		has_country_leader = { character = SYR_husni_al_zaim }
+	}
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event syrian_republic_events.35 option syrian_republic_events.35.a"
+		name = syrian_republic_events.35.a
+		add_stability = -0.1
+		add_country_leader_role = {
+			character = SYR_adib_idb_hassan_al_shishakli
+			country_leader = {
+				desc = SYR_adib_idb_hassan_al_shishakli_sic_desc
+				ideology = national_populist_subtype
+			}
+			promote_leader = yes
+		}
+		set_politics = {
+			ruling_party = national_populist
+			elections_allowed = no
+		}
+		end_coalition = yes
+		activate_advisor = SYR_antun_saadeh_sic
+		clear_all_relations = yes
+		custom_effect_tooltip = tooltip_white_line
+		FRA_remove_from_phalanstere = yes
+		hidden_effect = {
+			add_country_leader_role = {
+				character = SYR_sami_al_hinawi
+				country_leader = {
+					desc = SYR_sami_al_hinawi_high_command_desc
+					ideology = paternal_autocrat_subtype
+				}
+				promote_leader = yes
+			}
+			SYR_husni_al_zaim = { kill_character = yes }
+		}
+	}
+}
+
+###########################
+# Yishuv Flavour (by Ido) #
+###########################
+
+add_namespace = yishuv_flavour_events
+
+country_event = {	#JNC resumes peacetime activities
+	id = yishuv_flavour_events.1
+	title = yishuv_flavour_events.1.t
+	desc = yishuv_flavour_events.1.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.1 option yishuv_flavour_events.1.a"
+		name = yishuv_flavour_events.1.a
+		add_political_power = 10
+	}
+}
+
+country_event = {	#JNC endorses al-Jazairi
+	id = yishuv_flavour_events.2
+	title = yishuv_flavour_events.2.t
+	desc = yishuv_flavour_events.2.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.2 option yishuv_flavour_events.2.a"
+		name = yishuv_flavour_events.2.a
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.01
+		}
+		hidden_effect = {
+			country_event = { id = yishuv_flavour_events.3 days = 21 }
+		}
+	}
+}
+
+country_event = {	#Irgun mad
+	id = yishuv_flavour_events.3
+	title = yishuv_flavour_events.3.t
+	desc = yishuv_flavour_events.3.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = syr_is_liberal
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.3 option yishuv_flavour_events.3.a"
+		name = yishuv_flavour_events.3.a
+		add_stability = -0.02
+		hidden_effect = {
+			country_event = { id = yishuv_flavour_events.4 days = 90 }
+		}
+	}
+}
+
+country_event = {	#Yishuv election
+	id = yishuv_flavour_events.4
+	title = yishuv_flavour_events.4.t
+	desc = yishuv_flavour_events.4.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = syr_is_liberal
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.4 option yishuv_flavour_events.4.a"
+		name = yishuv_flavour_events.4.a
+		add_political_power = 20
+		hidden_effect = {
+			country_event = { id = yishuv_flavour_events.5 days = 120 }
+		}
+	}
+}
+
+country_event = {	#Irgun uprising
+	id = yishuv_flavour_events.5
+	title = yishuv_flavour_events.5.t
+	desc = yishuv_flavour_events.5.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = syr_is_liberal
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.5 option yishuv_flavour_events.5.a"
+		name = yishuv_flavour_events.5.a
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = yishuv_flavour_events.6 days = 30 }
+		}
+	}
+}
+
+country_event = {	#Irgun attack
+	id = yishuv_flavour_events.6
+	title = yishuv_flavour_events.6.t
+	desc = yishuv_flavour_events.6.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = syr_is_liberal
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.6 option yishuv_flavour_events.6.a"
+		name = yishuv_flavour_events.6.a
+		add_stability = -0.05
+		hidden_effect = {
+			country_event = { id = yishuv_flavour_events.7 days = 3 }
+		}
+	}
+}
+
+country_event = {	#Haganah fights Irgun
+	id = yishuv_flavour_events.7
+	title = yishuv_flavour_events.7.t
+	desc = yishuv_flavour_events.7.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = syr_is_liberal
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.7 option yishuv_flavour_events.7.a"
+		name = yishuv_flavour_events.7.a
+		add_manpower = -200
+		hidden_effect = {
+			country_event = { id = yishuv_flavour_events.8 days = 28 }
+		}
+	}
+}
+
+country_event = {	#Jabotinsky exile
+	id = yishuv_flavour_events.8
+	title = yishuv_flavour_events.8.t
+	desc = yishuv_flavour_events.8.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = syr_is_liberal
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.8 option yishuv_flavour_events.8.a"
+		name = yishuv_flavour_events.8.a
+		add_stability = 0.05
+		hidden_effect = {
+			country_event = { id = yishuv_flavour_events.9 days = 200 }
+		}
+	}
+}
+
+country_event = {	#trees
+	id = yishuv_flavour_events.9
+	title = yishuv_flavour_events.9.t
+	desc = yishuv_flavour_events.9.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_flag = syr_is_liberal
+	}
+
+	option = {
+		log = "[GetLogInfo]: event yishuv_flavour_events.9 option yishuv_flavour_events.9.a"
+		name = yishuv_flavour_events.9.a
+	}
+}

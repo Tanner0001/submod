@@ -1,0 +1,2835 @@
+###########################
+# Portugal Focus Tree
+# By TheBlackWinds
+###########################
+
+focus_tree = {
+	id = portugal_focus
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = POR
+		}
+	}
+	default = no
+	continuous_focus_position = { x = 2650 y = 670 }
+
+### Political Tree ###
+	focus = {
+		id = POR_matters_of_the_realm
+		icon = GFX_goal_matters_of_realm
+		cost = 8
+
+		x = 6
+		y = 0
+
+		available = {
+			OR = {
+				has_global_flag = MAF_NoAttack_Portugal
+				NOT = { country_exists = MAF }
+				NOT = { owns_state = 544 }
+			}
+			is_monarchy = yes
+		}
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_matters_of_the_realm"
+			add_stability = 0.02
+			unlock_decision_tooltip = POR_join_Entente
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_the_king_and_country
+		icon = GFX_GRE_empower_monarchy
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 1
+		y = 1
+
+		prerequisite = { focus = POR_matters_of_the_realm }
+		mutually_exclusive = {
+			focus = POR_the_organic_kingdom
+		}
+		available = {
+			NOT = { owns_state = 544 }
+			is_monarchy = yes
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = POR_path option = POR_PATH_NATPOP }
+			}
+			modifier = {
+				factor = 50
+				OR = {
+					has_game_rule = { rule = POR_path option = POR_PATH_PATAUT }
+					has_game_rule = { rule = POR_path option = POR_PATH_AUTDEM }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_the_king_and_country"
+			add_stability = 0.03
+			add_ideas = POR_deus_salve_o_rei_1
+			country_event = portugal_events.313
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_centralised_leadership
+		icon = GFX_focus_rom_royal_dictatorship
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 3
+		y = 2
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_the_king_and_country }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_centralised_leadership"
+			add_stability = 0.1
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_tarrafal
+		icon = GFX_HOL_papua_camps
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 3
+		y = 3
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_centralised_leadership }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_tarrafal"
+			add_ideas = POR_tarrafal_idea
+		}
+		search_filters = { FOCUS_FILTER_RESISTANCE }
+	}
+
+	focus = {
+		id = POR_royal_edicts
+		icon = GFX_focus_generic_treaty
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 3
+		y = 4
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_tarrafal }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_royal_edicts"
+			add_ideas = POR_royal_edicts_idea
+		}
+	}
+
+	focus = {
+		id = POR_the_moderating_power
+		icon = GFX_goal_state_economy
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 2
+		y = 5
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_royal_edicts }
+		prerequisite = { focus = POR_the_burden }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_the_moderating_power"
+			add_ideas = POR_poder_moderador
+		}
+	}
+
+	focus = {
+		id = POR_pursue_traitors
+		icon = GFX_goal_generic_crush_syndicalists
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 5
+		y = 4
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_tarrafal }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_pursue_traitors"
+			add_popularity = {
+				ideology = radical_socialist popularity = -0.10
+			}
+			add_popularity = {
+				ideology = totalist popularity = -0.10
+			}
+			add_popularity = {
+				ideology = syndicalist popularity = -0.10
+			}
+		}
+	}
+
+	focus = {
+		id = POR_ban_republican_parties
+		icon = GFX_goal_generic_martial_law
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 5
+		y = 5
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_pursue_traitors }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_ban_republican_parties"
+			add_popularity = {
+				ideology = social_democrat popularity = -0.10
+			}
+			add_popularity = {
+				ideology = market_liberal popularity = -0.10
+			}
+			add_popularity = {
+				ideology = social_conservative popularity = -0.10
+			}
+			add_popularity = {
+				ideology = social_liberal popularity = -0.10
+			}
+		}
+	}
+
+	focus = {
+		id = POR_colonial_empire
+		icon = GFX_goal_generic_marines2
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 5
+		y = 3
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_centralised_leadership }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_colonial_empire"
+			add_ideas = POR_ultramarine_empire
+		}
+		search_filters = { FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = POR_political_realities
+		icon = GFX_goal_generic_army_high_command
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 1
+		y = 2
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_the_king_and_country }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_political_realities"
+			swap_ideas = {
+				remove_idea = POR_deus_salve_o_rei_1
+				add_idea = POR_deus_salve_o_rei_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = POR_imperial_pride
+		icon = GFX_focus_generic_monarchy_2
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 1
+		y = 3
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_political_realities }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_imperial_pride"
+			swap_ideas = {
+				remove_idea = POR_deus_salve_o_rei_2
+				add_idea = POR_deus_salve_o_rei_3
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_the_burden
+		icon = GFX_focus_DEN_no_regulations
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 1
+		y = 4
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_imperial_pride }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_the_burden"
+			swap_ideas = {
+				remove_idea = POR_deus_salve_o_rei_3
+				add_idea = POR_deus_salve_o_rei_4
+			}
+		}
+	}
+
+	focus = {
+		id = POR_moral_monarchy
+		icon = GFX_goal_POR_Kingdom_Emblem
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = 4
+		y = 6
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_the_moderating_power }
+		prerequisite = { focus = POR_ban_republican_parties }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_moral_monarchy"
+			add_stability = 0.1
+			swap_ideas = {
+				remove_idea = POR_deus_salve_o_rei_4
+				add_idea = POR_deus_salve_o_rei_5
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_the_organic_kingdom
+		icon = GFX_goal_integralism
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -1
+		y = 1
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_matters_of_the_realm }
+		mutually_exclusive = {
+			focus = POR_the_king_and_country
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = POR_path option = POR_PATH_PATAUT }
+					has_game_rule = { rule = POR_path option = POR_PATH_AUTDEM }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_the_organic_kingdom"
+			add_ideas = POR_organic_kingdom
+			country_event = portugal_events.314
+		}
+	}
+
+	focus = {
+		id = POR_state_of_faithful
+		icon = GFX_focus_por_concordat
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -3
+		y = 2
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_the_organic_kingdom }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_state_of_faithful"
+			add_ideas = POR_faith_and_state
+		}
+	}
+
+	focus = {
+		id = POR_youth
+		icon = GFX_goal_generic_army_cooperation
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -4
+		y = 3
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_state_of_faithful }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_youth"
+			army_experience = 10
+			add_ideas = POR_youth_league
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = POR_organic_laws
+		icon = GFX_goal_generic_trial
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -5
+		y = 4
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_youth }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_organic_laws"
+			add_ideas = POR_organic_legal_system
+		}
+		search_filters = { FOCUS_FILTER_RESISTANCE }
+	}
+
+	focus = {
+		id = POR_state_priorities
+		icon = GFX_focus_SWE_landsverk
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -5
+		y = 5
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_organic_laws }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_state_priorities"
+			add_tech_bonus = {
+				name = POR_state_priorities
+				bonus = 1
+				uses = 1
+				category = industry
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_patriotic_fervour
+		icon = GFX_focus_generic_full_social_mobilization
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -3
+		y = 4
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_youth }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_patriotic_fervour"
+			swap_ideas = {
+				add_idea = POR_patriot_youth
+				remove_idea = POR_youth_league
+			}
+		}
+	}
+
+	focus = {
+		id = POR_baroes_assinalados
+		icon = GFX_goal_COS_War
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -3
+		y = 5
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_patriotic_fervour }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_baroes_assinalados"
+			army_experience = 20
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = POR_suspend_parliament
+		icon = GFX_focus_ETH_re-convene_the_parliament
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -1
+		y = 2
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_the_organic_kingdom }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_suspend_parliament"
+			add_stability = 0.06
+			add_ideas = POR_parliament_suspended
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_local_leadership
+		icon = GFX_goal_social_reforms
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -1
+		y = 3
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_suspend_parliament }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_local_leadership"
+			add_stability = 0.1
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_local_autonomy
+		icon = GFX_goal_champagne_diplomacy
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -1
+		y = 4
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_local_leadership }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_local_autonomy"
+			swap_ideas = {
+				add_idea = POR_integral_leadership
+				remove_idea = POR_organic_kingdom
+			}
+		}
+	}
+
+	focus = {
+		id = POR_codified_decentralisation
+		icon = GFX_goal_agency
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -1
+		y = 5
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_local_autonomy }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_codified_decentralisation"
+			add_stability = 0.1
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_abolish_parlament
+		icon = GFX_goal_NFA_end_parliamentarism
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -1
+		y = 6
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_codified_decentralisation }
+		prerequisite = { focus = POR_baroes_assinalados }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_abolish_parlament"
+			add_stability = 0.1
+			swap_ideas = {
+				add_idea = POR_parliament_abolished
+				remove_idea = POR_parliament_suspended
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_economic_strongstance
+		icon = GFX_focus_ICE_state_corporatism
+		cost = 8
+
+		relative_position_id = POR_matters_of_the_realm
+		x = -4
+		y = 6
+
+		available = { is_monarchy = yes }
+
+		prerequisite = { focus = POR_state_priorities }
+		prerequisite = { focus = POR_baroes_assinalados }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_economic_strongstance"
+			add_ideas = POR_organic_eco
+		}
+	}
+
+### Naval and Colonial Tree ###
+	focus = {
+		id = POR_navy
+		icon = GFX_goal_POR_Navy_Emblem
+		cost = 8
+
+		x = 19
+		y = 0
+
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_navy"
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP }
+	}
+
+	focus = {
+		id = POR_raise_regulos
+		icon = GFX_focus_SOV_penal_battalions
+		cost = 12
+
+		relative_position_id = POR_navy
+		x = 4
+		y = 1
+
+		prerequisite = { focus = POR_navy }
+		available = {
+			has_war_with = MAF
+			any_state_of = {
+				target = { 544 950 }
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+		ai_will_do = { factor = 30 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_raise_regulos"
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Força de Defesa de Mozambique"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 5 }
+				}
+				if = {
+					limit = { has_template = "Força de Defesa de Mozambique" }
+					delete_unit_template_and_units = { division_template = "Força de Defesa de Mozambique" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Força de Defesa de Mozambique"
+					division_names_group = POR_MIL_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 0 y = 3 }
+						infantry = { x = 1 y = 0 }
+					}
+					template_counter = 68
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 544 950 }
+				#limit = { valid_state_for_spawning_friendly_unit = yes }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 3
+						TYPE = "Força de Defesa de Mozambique"
+					}
+					create_unit = {
+						division = "name = \"1º Regimento Régulo 'Chokwe'\" division_template = \"Força de Defesa de Mozambique\" start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2º Regimento Régulo 'Lunda'\" division_template = \"Força de Defesa de Mozambique\" start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"3º Regimento Régulo 'Ovimbundu'\" division_template = \"Força de Defesa de Mozambique\" start_experience_factor = 0.1"
+						owner = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = POR_colonial_war_effort
+		icon = GFX_focus_generic_provoke_border_clashes
+		cost = 8
+
+		relative_position_id = POR_navy
+		x = 2
+		y = 1
+
+		prerequisite = { focus = POR_navy }
+		available = {
+			has_war_with = MAF
+			any_state_of = {
+				target = { 544 950 }
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+		bypass = {
+			POR_won_against_mittelafrika = yes
+		}
+		ai_will_do = { factor = 1000 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_colonial_war_effort"
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Divisão de Infantaria da Guarda"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 9 }
+					SUPPORT_1 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+				}
+				if = {
+					limit = { has_template = "Divisão de Infantaria da Guarda" }
+					delete_unit_template_and_units = { division_template = "Divisão de Infantaria da Guarda" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Divisão de Infantaria da Guarda"
+					division_names_group = POR_INF_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
+					}
+					support = {
+						artillery = { x = 0 y = 0 }
+					}
+					template_counter = 91
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 544 950 }
+				#limit = { valid_state_for_spawning_friendly_unit = yes }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 2
+						TYPE = "Divisão de Infantaria da Guarda"
+					}
+					create_unit = {
+						division = "name = \"1º Corpo Expedicionário Ultramarino\" division_template = \"Divisão de Infantaria da Guarda\" start_experience_factor = 0.1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2º Corpo Expedicionário Ultramarino\" division_template = \"Divisão de Infantaria da Guarda\" start_experience_factor = 0.1"
+						owner = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = POR_imperio
+		icon = GFX_goal_portugal
+		cost = 8
+
+		relative_position_id = POR_navy
+		x = 0
+		y = 1
+
+		prerequisite = { focus = POR_navy }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_imperio"
+			add_stability = 0.05
+			add_war_support = 0.05
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_enforce_colonial_act
+		icon = GFX_focus_generic_africa_defense
+		cost = 8
+
+		relative_position_id = POR_imperio
+		x = 0
+		y = 1
+
+		prerequisite = { focus = POR_imperio }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_enforce_colonial_act"
+			add_ideas = POR_colonial_act
+		}
+	}
+
+	focus = {
+		id = POR_protect_mozambique
+		icon = GFX_goal_POR_protect_mozambique
+		cost = 5
+
+		relative_position_id = POR_imperio
+		x = -1
+		y = 2
+
+		available = {
+			950 = { is_owned_by_ROOT_or_subject = yes }
+		}
+		prerequisite = { focus = POR_enforce_colonial_act }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_protect_mozambique"
+			950 = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 13811
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 2
+						province = 2120
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 2
+						VP = 2120
+					}
+				}
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 5155
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_protect_angola
+		icon = GFX_goal_POR_protect_angola
+		cost = 5
+
+		relative_position_id = POR_imperio
+		x = 1
+		y = 2
+
+		available = {
+			540 = { is_owned_by_ROOT_or_subject = yes }
+			917 = { is_owned_by_ROOT_or_subject = yes }
+		}
+		prerequisite = { focus = POR_enforce_colonial_act }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_protect_angola"
+			540 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 2
+						province = 8248
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 2
+						VP = 8248
+					}
+				}
+			}
+			917 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 2
+						province = 10966
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 2
+						VP = 10966
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_modernized_administators
+		icon = GFX_focus_BRA_rio_protocol
+		cost = 8
+
+		relative_position_id = POR_imperio
+		x = 0
+		y = 3
+
+		prerequisite = { focus = POR_enforce_colonial_act }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_modernized_administators"
+			swap_ideas = {
+				add_idea = POR_colonial_admin
+				remove_idea = POR_colonial_act
+			}
+		}
+	}
+
+	focus = {
+		id = POR_academia_imperial
+		icon = GFX_focus_research
+		cost = 8
+
+		relative_position_id = POR_imperio
+		x = 1
+		y = 4
+
+		prerequisite = { focus = POR_modernized_administators }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_academia_imperial"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_casa_dos_estudantes_do_imperio
+		icon = GFX_goal_KTG_Educate_natives
+		cost = 8
+
+		relative_position_id = POR_imperio
+		x = 1
+		y = 5
+
+		prerequisite = { focus = POR_academia_imperial }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_casa_dos_estudantes_do_imperio"
+			add_ideas = POR_estudantes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_colonial_development
+		icon = GFX_focus_por_luso_tropicalism
+		cost = 8
+
+		relative_position_id = POR_imperio
+		x = -1
+		y = 4
+
+		prerequisite = { focus = POR_modernized_administators }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_colonial_development"
+			unlock_decision_tooltip = POR_cape_verde
+			unlock_decision_tooltip = POR_sao_tome
+			unlock_decision_tooltip = POR_macau
+			unlock_decision_tooltip = POR_goa
+			unlock_decision_tooltip = POR_timor
+			hidden_effect = {
+				activate_targeted_decision = { target = THIS decision = POR_cape_verde }
+				activate_targeted_decision = { target = THIS decision = POR_sao_tome }
+				activate_targeted_decision = { target = THIS decision = POR_macau }
+				activate_targeted_decision = { target = THIS decision = POR_goa }
+				activate_targeted_decision = { target = THIS decision = POR_timor }
+			}
+		}
+	}
+
+	focus = {
+		id = POR_capital_shipyrds
+		icon = GFX_focus_generic_refit_civilian_ships
+		cost = 8
+
+		relative_position_id = POR_navy
+		x = -4
+		y = 1
+
+		prerequisite = { focus = POR_navy }
+		ai_will_do = { factor = 1 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_capital_shipyrds"
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_blueprints
+		icon = GFX_goal_generic_design_equipment_standards
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = 1
+		y = 1
+
+		prerequisite = { focus = POR_capital_shipyrds }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_blueprints"
+			navy_experience = 25
+			add_doctrine_cost_reduction = {
+				name = POR_blueprints
+				cost_reduction = 0.5
+				uses = 1
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_nau_capitania
+		icon = GFX_focus_generic_navy_battleship3alt
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = 1
+		y = 2
+
+		prerequisite = { focus = POR_blueprints }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_nau_capitania"
+			navy_experience = 15
+			add_tech_bonus = {
+				name = POR_nau_capitania
+				bonus = 1
+				uses = 1
+				category = bb_tech
+			}
+			add_tech_bonus = {
+				name = POR_nau_capitania
+				bonus = 1
+				uses = 1
+				category = ship_modules_tech
+			}
+			add_mastery_bonus = {
+				name = POR_nau_capitania
+				bonus = 0.1
+				days = 365
+				track = capital_ships
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_winds_of_change
+		icon = GFX_goal_anti_air
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = 1
+		y = 3
+
+		prerequisite = { focus = POR_nau_capitania }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_winds_of_change"
+			navy_experience = 15
+			air_experience = 15
+			add_tech_bonus = {
+				name = POR_winds_of_change
+				bonus = 1
+				uses = 1
+				category = cat_anti_air
+			}
+			add_tech_bonus = {
+				name = POR_winds_of_change
+				bonus = 1
+				uses = 1
+				category = naval_bomber
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_grande_armada
+		icon = GFX_goal_generic_navy_carrier
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = 1
+		y = 4
+
+		prerequisite = { focus = POR_winds_of_change }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_grande_armada"
+			navy_experience = 15
+			add_tech_bonus = {
+				name = POR_grande_armada
+				bonus = 1
+				uses = 1
+				category = cv_tech
+			}
+			add_tech_bonus = {
+				name = POR_grande_armada
+				bonus = 1
+				uses = 1
+				category = ship_modules_tech
+			}
+			add_mastery_bonus = {
+				name = POR_grande_armada
+				bonus = 0.1
+				days = 365
+				track = carriers
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_the_fleet_of_the_empire
+		icon = GFX_focus_SMB_blue_water_fleet
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = 1
+		y = 5
+
+		prerequisite = { focus = POR_grande_armada }
+		mutually_exclusive = { focus = POR_ubarcos }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_the_fleet_of_the_empire"
+			add_ideas = POR_heavyshipbuildcost
+			custom_effect_tooltip = tooltip_white_line
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+		}
+	}
+
+	focus = {
+		id = POR_escort_effort
+		icon = GFX_focus_generic_cruiser2
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = -1
+		y = 1
+
+		prerequisite = { focus = POR_capital_shipyrds }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_escort_effort"
+			navy_experience = 15
+			add_tech_bonus = {
+				name = POR_escort_effort
+				bonus = 1
+				uses = 1
+				category = ca_tech
+			}
+			add_tech_bonus = {
+				name = POR_escort_effort
+				bonus = 1
+				uses = 1
+				category = ship_modules_tech
+			}
+			add_mastery_bonus = {
+				name = POR_escort_effort
+				bonus = 0.1
+				days = 365
+				track = screens
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_raiders
+		icon = GFX_focus_generic_destroyer
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = -1
+		y = 2
+
+		prerequisite = { focus = POR_escort_effort }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_raiders"
+			navy_experience = 15
+			add_tech_bonus = {
+				name = POR_raiders
+				bonus = 1
+				uses = 1
+				category = dd_tech
+			}
+			add_tech_bonus = {
+				name = POR_raiders
+				bonus = 1
+				uses = 1
+				category = ship_modules_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_submarines
+		icon = GFX_goal_generic_navy_submarine
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = -1
+		y = 3
+
+		prerequisite = { focus = POR_raiders }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_submarines"
+			navy_experience = 15
+			add_tech_bonus = {
+				name = POR_submarines
+				bonus = 1
+				uses = 1
+				category = ss_tech
+			}
+			add_tech_bonus = {
+				name = POR_submarines
+				bonus = 1
+				uses = 1
+				category = cat_torpedoes
+			}
+			add_mastery_bonus = {
+				name = POR_submarines
+				bonus = 0.1
+				days = 365
+				track = submarines
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_raiding_squads
+		icon = GFX_goal_generic_coastal_navy2
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = -1
+		y = 4
+
+		prerequisite = { focus = POR_submarines }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_raiding_squads"
+			navy_experience = 25
+			add_doctrine_cost_reduction = {
+				name = POR_raiding_squads
+				cost_reduction = 0.5
+				uses = 1
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_ubarcos
+		icon = GFX_goal_generic_submarine_base
+		cost = 8
+
+		relative_position_id = POR_capital_shipyrds
+		x = -1
+		y = 5
+
+		prerequisite = { focus = POR_raiding_squads }
+		mutually_exclusive = { focus = POR_the_fleet_of_the_empire }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_ubarcos"
+			add_ideas = POR_smallshipbuildcost
+			custom_effect_tooltip = tooltip_white_line
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+		}
+	}
+
+	focus = {
+		id = POR_triumph_in_africa
+		icon = GFX_focus_SWE_refuge_from_war
+		cost = 4
+
+		relative_position_id = POR_colonial_war_effort
+		x = 1
+		y = 1
+
+		prerequisite = { focus = POR_colonial_war_effort }
+		available = {
+			POR_won_against_mittelafrika = yes
+			owns_state = 540
+			owns_state = 917
+			owns_state = 544
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_triumph_in_africa"
+			add_stability = 0.2
+			add_war_support = 0.2
+			add_timed_idea = {
+				idea = POR_african_triumph
+				days = 720
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = POR_reward_loyalty
+		icon = GFX_focus_BRA_reach_out_to_military_dem
+		cost = 2
+
+		relative_position_id = POR_triumph_in_africa
+		x = 0
+		y = 1
+
+		prerequisite = { focus = POR_triumph_in_africa }
+		available = {
+			owns_state = 540
+			owns_state = 917
+			owns_state = 544
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_reward_loyalty"
+			add_stability = 0.05
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = POR_redouble_investments
+		icon = GFX_goal_POR_mozambique
+		cost = 8
+
+		relative_position_id = POR_triumph_in_africa
+		x = -1
+		y = 2
+
+		prerequisite = { focus = POR_reward_loyalty }
+		available = {
+			owns_state = 112
+			544 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_redouble_investments"
+			random_owned_controlled_state = {
+				prioritize = { 544 }
+				limit = {
+					free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_loanda_imperial
+		icon = GFX_goal_POR_angola
+		cost = 8
+
+		relative_position_id = POR_triumph_in_africa
+		x = 0
+		y = 3
+
+		prerequisite = { focus = POR_reward_loyalty }
+		available = {
+			owns_state = 112
+			540 = { is_owned_and_controlled_by = ROOT }
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_loanda_imperial"
+			random_owned_controlled_state = {
+				prioritize = { 540 }
+				limit = {
+					free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_zambia_e_nossa
+		icon = GFX_goal_POR_zambia
+		cost = 8
+
+		relative_position_id = POR_triumph_in_africa
+		x = 1
+		y = 2
+
+		prerequisite = { focus = POR_triumph_in_africa }
+		available = {
+			OR = {
+				has_global_flag = MAF_collapse
+				NOT = { country_exists = MAF }
+			}
+			is_subject = no
+			813 = { #South Zambesia
+				owner = {
+					OR = {
+						tag = ROOT
+						is_subject_of = ROOT
+						NOT = { is_ally_with = ROOT }
+					}
+				}
+			}
+			955 = { #East Luangwa
+				owner = {
+					OR = {
+						tag = ROOT
+						is_subject_of = ROOT
+						NOT = { is_ally_with = ROOT }
+					}
+				}
+			}
+			956 = { #Northern Zambesia
+				owner = {
+					OR = {
+						tag = ROOT
+						is_subject_of = ROOT
+						NOT = { is_ally_with = ROOT }
+					}
+				}
+			}
+			958 = { #Barotseland
+				owner = {
+					OR = {
+						tag = ROOT
+						is_subject_of = ROOT
+						NOT = { is_ally_with = ROOT }
+					}
+				}
+			}
+		}
+		bypass = {
+			813 = { is_claimed_by = ROOT } #South Zambesia
+			955 = { is_claimed_by = ROOT } #East Luangwa
+			956 = { is_claimed_by = ROOT } #Northern Zambesia
+			958 = { is_claimed_by = ROOT } #Barotseland
+			NOT = { can_declare_war_on = ZAM }
+			NOT = { can_declare_war_on = BRT }
+		}
+		will_lead_to_war_with = ZAM
+		will_lead_to_war_with = BRT
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				can_declare_war_on = ZAM
+				ZAM = {
+					OR = {
+						default_attack_AI_trigger = yes
+						dont_start_major_faction_wars = yes
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				can_declare_war_on = BRT
+				BRT = {
+					OR = {
+						default_attack_AI_trigger = yes
+						dont_start_major_faction_wars = yes
+					}
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_zambia_e_nossa"
+			set_temp_variable = { target = ROOT }
+			813 = { #South Zambesia
+				add_claim_of_ROOT = yes
+				if = {
+					limit = {
+						owner = {
+							is_subject_of = ROOT
+							NOT = { tag = ZAM }
+							NOT = { tag = BRT }
+						}
+					}
+					transfer_state_during_war = yes
+				}
+			}
+			955 = { #East Luangwa
+				add_claim_of_ROOT = yes
+				if = {
+					limit = {
+						owner = {
+							is_subject_of = ROOT
+							NOT = { tag = ZAM }
+							NOT = { tag = BRT }
+						}
+					}
+					transfer_state_during_war = yes
+				}
+			}
+			956 = { #Northern Zambesia
+				add_claim_of_ROOT = yes
+				if = {
+					limit = {
+						owner = {
+							is_subject_of = ROOT
+							NOT = { tag = ZAM }
+							NOT = { tag = BRT }
+						}
+					}
+					transfer_state_during_war = yes
+				}
+			}
+			958 = { #Barotseland
+				add_claim_of_ROOT = yes
+				if = {
+					limit = {
+						owner = {
+							is_subject_of = ROOT
+							NOT = { tag = ZAM }
+							NOT = { tag = BRT }
+						}
+					}
+					transfer_state_during_war = yes
+				}
+			}
+			if = {
+				limit = { has_subject = ZAM }
+				annex_country = {
+					target = ZAM
+					transfer_troops = no
+				}
+			}
+			else_if = {
+				limit = { can_declare_war_on = ZAM }
+				create_wargoal = {
+					type = annex_everything
+					target = ZAM
+				}
+			}
+			if = {
+				limit = { has_subject = BRT }
+				annex_country = {
+					target = BRT
+					transfer_troops = no
+				}
+			}
+			else_if = {
+				limit = { can_declare_war_on = BRT }
+				create_wargoal = {
+					type = annex_everything
+					target = BRT
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = POR_pinko
+		icon = GFX_focus_por_the_pink_map
+		cost = 8
+
+		relative_position_id = POR_zambia_e_nossa
+		x = 1
+		y = 1
+
+		prerequisite = { focus = POR_zambia_e_nossa }
+		available = {
+			is_subject = no
+			871 = { #Nyasaland
+				owner = {
+					OR = {
+						tag = ROOT
+						is_subject_of = ROOT
+						NOT = { is_ally_with = ROOT }
+					}
+				}
+			}
+			879 = { #Katanga
+				owner = {
+					OR = {
+						tag = ROOT
+						is_subject_of = ROOT
+						NOT = { is_ally_with = ROOT }
+					}
+				}
+			}
+		}
+		bypass = {
+			545 = { is_claimed_by = ROOT } #Rhodesia
+			871 = { is_claimed_by = ROOT } #Nyasaland
+			879 = { is_claimed_by = ROOT } #Katanga
+			NOT = { can_declare_war_on = ZIM }
+			NOT = { can_declare_war_on = MLW }
+			NOT = { can_declare_war_on = KTG }
+		}
+		will_lead_to_war_with = ZIM
+		will_lead_to_war_with = MLW
+		will_lead_to_war_with = KTG
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+			modifier = {
+				factor = 0
+				can_declare_war_on = ZIM
+				ZIM = {
+					OR = {
+						default_attack_AI_trigger = yes
+						dont_start_major_faction_wars = yes
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				can_declare_war_on = MLW
+				MLW = {
+					OR = {
+						default_attack_AI_trigger = yes
+						dont_start_major_faction_wars = yes
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				can_declare_war_on = KTG
+				KTG = {
+					OR = {
+						default_attack_AI_trigger = yes
+						dont_start_major_faction_wars = yes
+					}
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_pinko"
+			set_temp_variable = { target = ROOT }
+			545 = { #Rhodesia
+				if = {
+					limit = {
+						owner = {
+							OR = {
+								tag = ROOT
+								is_subject_of = ROOT
+								NOT = { is_ally_with = ROOT }
+							}
+						}
+					}
+					add_claim_of_ROOT = yes
+					if = {
+						limit = {
+							owner = {
+								is_subject_of = ROOT
+								NOT = { tag = ZIM }
+								NOT = { tag = MLW }
+								NOT = { tag = KTG }
+							}
+						}
+						transfer_state_during_war = yes
+					}
+					custom_effect_tooltip = POR_zimbabwe_entente
+					custom_effect_tooltip = tooltip_white_line
+				}
+			}
+			871 = { #Nyasaland
+				add_claim_of_ROOT = yes
+				if = {
+					limit = {
+						owner = {
+							is_subject_of = ROOT
+							NOT = { tag = ZIM }
+							NOT = { tag = MLW }
+							NOT = { tag = KTG }
+						}
+					}
+					transfer_state_during_war = yes
+				}
+			}
+			879 = { #Katanga
+				add_claim_of_ROOT = yes
+				if = {
+					limit = {
+						owner = {
+							is_subject_of = ROOT
+							NOT = { tag = ZIM }
+							NOT = { tag = MLW }
+							NOT = { tag = KTG }
+						}
+					}
+					transfer_state_during_war = yes
+				}
+			}
+			if = {
+				limit = { has_subject = ZIM }
+				annex_country = {
+					target = ZIM
+					transfer_troops = no
+				}
+			}
+			else_if = {
+				limit = { can_declare_war_on = ZIM }
+				create_wargoal = {
+					type = annex_everything
+					target = ZIM
+				}
+			}
+			if = {
+				limit = { has_subject = MLW }
+				annex_country = {
+					target = MLW
+					transfer_troops = no
+				}
+			}
+			else_if = {
+				limit = { can_declare_war_on = MLW }
+				create_wargoal = {
+					type = annex_everything
+					target = MLW
+				}
+			}
+			if = {
+				limit = { has_subject = KTG }
+				annex_country = {
+					target = KTG
+					transfer_troops = no
+				}
+			}
+			else_if = {
+				limit = { can_declare_war_on = KTG }
+				if = {
+					limit = {
+						KTG = {
+							is_subject = no
+							is_in_faction = no
+						}
+					}
+					KTG = { country_event = katanga_events.53 }
+				}
+				else = {
+					create_wargoal = {
+						type = annex_everything
+						target = KTG
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = POR_congo_e_nosso
+		icon = GFX_goal_POR_flag_of_kongo
+		cost = 8
+
+		relative_position_id = POR_zambia_e_nossa
+		x = 0
+		y = 2
+
+		prerequisite = { focus = POR_zambia_e_nossa }
+		available = {
+			can_declare_war_on = COG
+			is_subject = no
+			COG = {
+				is_subject = no
+				NOT = { has_war_with = GER }
+				NOT = { has_war_with = MAF }
+			}
+		}
+		will_lead_to_war_with = COG
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_congo_e_nosso"
+			COG = { country_event = congo_events.1 }
+		}
+	}
+
+### Industrial Tree ###
+	focus = {
+		id = POR_manufacturies
+		icon = GFX_focus_generic_modernize_industry
+		cost = 6
+
+		x = 30
+		y = 0
+
+		ai_will_do = { factor = 90 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_manufacturies"
+			add_tech_bonus = {
+				name = POR_manufacturies
+				bonus = 1
+				uses = 1
+				category = industry
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_investments
+		icon = GFX_goal_generic_banking_legislation
+		cost = 6
+
+		relative_position_id = POR_manufacturies
+		x = -3
+		y = 1
+
+		prerequisite = { focus = POR_manufacturies }
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_investments"
+			add_tech_bonus = {
+				name = POR_investments
+				bonus = 1
+				uses = 1
+				category = industry
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_construction
+		icon = GFX_goal_factory_complex
+		cost = 6
+
+		relative_position_id = POR_manufacturies
+		x = -4
+		y = 2
+
+		available = {
+			owns_state = 112
+		}
+		prerequisite = { focus = POR_investments }
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_construction"
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+					prefer_home_area_states_unless_filled = yes
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_linha_vedras
+		icon = GFX_goal_fortify_the_westwall
+		cost = 6
+
+		relative_position_id = POR_construction
+		x = 1
+		y = 1
+
+		prerequisite = { focus = POR_investments }
+		ai_will_do = { factor = 1 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_linha_vedras"
+			112 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 3
+						province = 11805
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 3
+						VP = 11805
+					}
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 3
+						province = 924
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 3
+						VP = 924
+					}
+				}
+				add_building_construction = {
+					type = bunker
+					level = 3
+					province = 799
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_prodeff
+		icon = GFX_goal_munitions_factories
+		cost = 6
+
+		relative_position_id = POR_manufacturies
+		x = -1
+		y = 3
+
+		prerequisite = { focus = POR_railways }
+		prerequisite = { focus = POR_guns }
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_prodeff"
+			add_ideas = POR_milprod
+		}
+	}
+
+	focus = {
+		id = POR_milindu
+		icon = GFX_goal_generic_artillery_factories
+		cost = 6
+
+		relative_position_id = POR_prodeff
+		x = -1
+		y = 1
+
+		available = {
+			owns_state = 112
+		}
+		prerequisite = { focus = POR_linha_vedras }
+		prerequisite = { focus = POR_prodeff }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_milindu"
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					free_building_slots = { building = arms_factory size > 2 include_locked = yes }
+					prefer_home_area_states_unless_filled = yes
+				}
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = arms_factory
+					level = 3
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_railways
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 6
+
+		relative_position_id = POR_manufacturies
+		x = -2
+		y = 2
+
+		available = {
+			owns_state = 112
+			owns_state = 180
+			owns_state = 181
+		}
+		prerequisite = { focus = POR_investments }
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_railways"
+			112 = { #Lisbon
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			180 = { #Porto
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			181 = { #Guarda
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_guns
+		icon = GFX_focus_generic_reorient_production
+		cost = 6
+
+		relative_position_id = POR_manufacturies
+		x = 0
+		y = 1
+
+		available = {
+			owns_state = 112
+		}
+		prerequisite = { focus = POR_manufacturies }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_guns"
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					free_building_slots = { building = arms_factory size > 1 include_locked = yes }
+					prefer_home_area_states_unless_filled = yes
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_dockyard
+		icon = GFX_goal_generic_construct_naval_dockyard
+		cost = 6
+
+		relative_position_id = POR_guns
+		x = 0
+		y = 1
+
+		available = {
+			owns_state = 112
+		}
+		prerequisite = { focus = POR_guns }
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_dockyard"
+			random_owned_controlled_state = {
+				limit = {
+					is_coastal = yes
+					free_building_slots = { building = dockyard size > 0 include_locked = yes }
+					prefer_home_area_states_unless_filled_dockyard = yes
+				}
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = dockyard
+					level = 3
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_naval_supply
+		icon = GFX_goal_generic_shipyard
+		cost = 6
+
+		relative_position_id = POR_dockyard
+		x = 1
+		y = 1
+
+		prerequisite = { focus = POR_dockyard focus = POR_civfac }
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_naval_supply"
+			112 = {
+				add_extra_state_shared_building_slots = 1
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = 11805
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = naval_base
+						NUMBER = 2
+						VP = 11805
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_state_construction
+		icon = GFX_focus_generic_road_investment
+		cost = 6
+
+		relative_position_id = POR_dockyard
+		x = 0
+		y = 2
+
+		available = {
+			owns_state = 112
+		}
+		prerequisite = { focus = POR_naval_supply }
+		prerequisite = { focus = POR_prodeff }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_state_construction"
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_econimical_recovery
+		icon = GFX_goal_bankruptcy
+		cost = 6
+
+		relative_position_id = POR_manufacturies
+		x = 2
+		y = 1
+
+		prerequisite = { focus = POR_manufacturies }
+		ai_will_do = { factor = 90 }
+		available = {
+			has_idea = POR_black_monday
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_econimical_recovery"
+			swap_ideas = {
+				add_idea = POR_partial_recovery
+				remove_idea = POR_black_monday
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_civfac
+		icon = GFX_goal_generic_construct_civ_factory
+		cost = 6
+
+		relative_position_id = POR_econimical_recovery
+		x = 0
+		y = 1
+
+		available = {
+			owns_state = 112
+		}
+		prerequisite = { focus = POR_econimical_recovery }
+		ai_will_do = { factor = 90 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_civfac"
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = { building = industrial_complex size > 0 include_locked = yes }
+					prefer_home_area_states_unless_filled = yes
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_education
+		icon = GFX_focus_research
+		cost = 6
+
+		relative_position_id = POR_civfac
+		x = 1
+		y = 1
+
+		prerequisite = { focus = POR_civfac }
+		ai_will_do = { factor = 90 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_education"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_christian_austerity
+		icon = GFX_goal_Ban_against_Luxuries
+		cost = 6
+
+		relative_position_id = POR_education
+		x = 0
+		y = 1
+
+		prerequisite = { focus = POR_education }
+		ai_will_do = { factor = 90 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_christian_austerity"
+			swap_ideas = {
+				add_idea = POR_austerity
+				remove_idea = POR_partial_recovery
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+### Army Tree ###
+	focus = {
+		id = POR_army
+		icon = GFX_goal_POR_Army_Emblem
+		cost = 8
+
+		x = 39
+		y = 0
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_army"
+			army_experience = 40
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = POR_infeq
+		icon = GFX_focus_generic_military_equipment
+		cost = 8
+
+		relative_position_id = POR_army
+		x = 2
+		y = 1
+
+		prerequisite = { focus = POR_army }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_infeq"
+			add_tech_bonus = {
+				name = POR_infeq
+				bonus = 1
+				uses = 1
+				category = infantry_weapons
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_training
+		icon = GFX_goal_generic_army_training
+		cost = 8
+
+		relative_position_id = POR_army
+		x = 2
+		y = 2
+
+		prerequisite = { focus = POR_infeq }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_training"
+			add_ideas = POR_trainingi
+		}
+	}
+
+	focus = {
+		id = POR_artillerybattalion
+		icon = GFX_goal_national_artillery
+		cost = 8
+
+		relative_position_id = POR_army
+		x = 0
+		y = 2
+
+		prerequisite = { focus = POR_army }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_artillerybattalion"
+			add_tech_bonus = {
+				name = POR_artillerybattalion
+				bonus = 1
+				uses = 1
+				category = artillery
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_knights
+		icon = GFX_goal_POR_knights_of_portugal
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -1
+		y = 1
+
+		prerequisite = { focus = POR_army }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_knights"
+			add_ideas = POR_knights
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = POR_motorized_dragoons
+		icon = GFX_goal_generic_mobile_trucks
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -1
+		y = 3
+
+		prerequisite = { focus = POR_knights }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_motorized_dragoons"
+			add_tech_bonus = {
+				name = POR_motorized_dragoons
+				bonus = 1
+				uses = 1
+				category = motorized_equipment
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_loghtank
+		icon = GFX_goal_POL_light_tanks
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -2
+		y = 4
+
+		prerequisite = { focus = POR_motorized_dragoons }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_loghtank"
+			add_tech_bonus = {
+				name = POR_loghtank
+				bonus = 0.75
+				uses = 1
+				category = armor
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_tankarmy
+		icon = GFX_goal_generic_heavy_armour_british
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -2
+		y = 6
+
+		prerequisite = { focus = POR_loghtank }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_tankarmy"
+			add_tech_bonus = {
+				name = POR_tankarmy
+				bonus = 0.75
+				uses = 1
+				category = armor
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_doctrine_reform
+		icon = GFX_focus_generic_military_academy
+		cost = 8
+
+		relative_position_id = POR_army
+		x = 0
+		y = 4
+
+		prerequisite = { focus = POR_motorized_dragoons focus = POR_hearvy_art_batteries }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_doctrine_reform"
+			add_doctrine_cost_reduction = {
+				name = POR_doctrine_reform
+				cost_reduction = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+			add_mastery_bonus = {
+				name = POR_doctrine_reform
+				bonus = 0.1
+				days = 365
+				folder = land
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_herois_do_mar
+		icon = GFX_goal_generic_amphibious_assault
+		cost = 8
+
+		relative_position_id = POR_army
+		x = 0
+		y = 6
+
+		prerequisite = { focus = POR_doctrine_reform }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_herois_do_mar"
+			add_ideas = POR_herois_do_mari
+			add_tech_bonus = {
+				name = POR_herois_do_mar
+				bonus = 1
+				uses = 1
+				category = marine_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_our_legacy
+		icon = GFX_EGY_Palestine_Defence
+		cost = 8
+
+		relative_position_id = POR_army
+		x = 1
+		y = 5
+
+		prerequisite = { focus = POR_doctrine_reform }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_our_legacy"
+			army_experience = 15
+			add_doctrine_cost_reduction = {
+				name = POR_our_legacy
+				cost_reduction = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_suebi
+		icon = GFX_goal_authority
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -1
+		y = 5
+
+		prerequisite = { focus = POR_doctrine_reform }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_suebi"
+			add_ideas = POR_bravery
+		}
+	}
+
+	focus = {
+		id = POR_hearvy_art_batteries
+		icon = GFX_goal_GEO_Artillery_Tactics
+		cost = 8
+
+		relative_position_id = POR_army
+		x = 1
+		y = 3
+
+		prerequisite = { focus = POR_artillerybattalion }
+		prerequisite = { focus = POR_training }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_hearvy_art_batteries"
+			add_tech_bonus = {
+				name = POR_hearvy_art_batteries
+				bonus = 1
+				uses = 1
+				category = artillery
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_wewerentexpectingspecialforces
+		icon = GFX_goal_generic_special_forces
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -3
+		y = 1
+
+		prerequisite = { focus = POR_army }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_wewerentexpectingspecialforces"
+			add_tech_bonus = {
+				name = POR_wewerentexpectingspecialforces
+				bonus = 1
+				uses = 1
+				category = marine_tech
+				category = mountaineers_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_support_squads
+		icon = GFX_goal_generic_support_equipment
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -4
+		y = 2
+
+		prerequisite = { focus = POR_wewerentexpectingspecialforces }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_support_squads"
+			add_tech_bonus = {
+				name = POR_support_squads
+				bonus = 2
+				uses = 1
+				category = support_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_spotter_squads
+		icon = GFX_focus_prc_infiltration
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -4
+		y = 3
+
+		prerequisite = { focus = POR_support_squads }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_spotter_squads"
+			add_tech_bonus = {
+				name = POR_spotter_squads
+				bonus = 2
+				uses = 1
+				category = signal_company_tech
+				category = recon_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_paratroop
+		icon = GFX_focus_generic_paratrooper
+		cost = 8
+
+		relative_position_id = POR_army
+		x = -2
+		y = 2
+
+		prerequisite = { focus = POR_wewerentexpectingspecialforces }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_paratroop"
+			add_tech_bonus = {
+				name = POR_paratroop
+				bonus = 1
+				uses = 1
+				category = para_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+### Air Tree ###
+	focus = {
+		id = POR_airforce
+		icon = GFX_goal_POR_Airforce_Emblem
+		cost = 8
+
+		x = 44
+		y = 0
+
+		available = {
+			owns_state = 112
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_airforce"
+			if = {
+				limit = {
+					capital_scope = {
+						NOT = {
+							free_building_slots = { building = air_base size > 1 }
+						}
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						free_building_slots = { building = air_base size > 1 }
+					}
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = {
+					capital_scope = {
+						free_building_slots = { building = air_base size > 1 }
+					}
+				}
+				capital_scope = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = POR_air_superiority
+		icon = GFX_goal_new_airforce
+		cost = 8
+
+		relative_position_id = POR_airforce
+		x = -1
+		y = 1
+
+		prerequisite = { focus = POR_airforce }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_air_superiority"
+			add_tech_bonus = {
+				name = POR_air_superiority
+				bonus = 0.75
+				uses = 2
+				category = light_fighter
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_bomber
+		icon = GFX_goal_bombs_away
+		cost = 8
+
+		relative_position_id = POR_airforce
+		x = 1
+		y = 1
+
+		prerequisite = { focus = POR_airforce }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_bomber"
+			add_tech_bonus = {
+				name = POR_bomber
+				bonus = 0.75
+				uses = 2
+				category = tactical_bomber
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_fighterefforto
+		icon = GFX_goal_generic_air_heavy_fighter2_new
+		cost = 8
+
+		relative_position_id = POR_airforce
+		x = -1
+		y = 2
+
+		prerequisite = { focus = POR_air_superiority }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_fighterefforto"
+			add_tech_bonus = {
+				name = POR_fighterefforto
+				bonus = 0.75
+				uses = 2
+				category = cat_heavy_fighter
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_cas_focus
+		icon = GFX_goal_generic_air_CAS_german
+		cost = 8
+
+		relative_position_id = POR_airforce
+		x = 1
+		y = 2
+
+		prerequisite = { focus = POR_bomber }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_cas_focus"
+			add_tech_bonus = {
+				name = POR_cas_focus
+				bonus = 0.75
+				uses = 1
+				category = cas_bomber
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_carrier_groups_1
+		icon = GFX_goal_generic_navy_carrier
+		cost = 8
+
+		relative_position_id = POR_airforce
+		x = 0
+		y = 3
+
+		prerequisite = { focus = POR_fighterefforto }
+		prerequisite = { focus = POR_cas_focus }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_carrier_groups_1"
+			add_tech_bonus = {
+				name = POR_carrier_groups_1
+				bonus = 0.75
+				uses = 2
+				category = naval_air
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_projection_of_airpower
+		icon = GFX_goal_air_armada
+		cost = 8
+
+		relative_position_id = POR_airforce
+		x = -1
+		y = 4
+
+		prerequisite = { focus = POR_fighterefforto }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_projection_of_airpower"
+			add_doctrine_cost_reduction = {
+				name = POR_projection_of_airpower
+				cost_reduction = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+			add_mastery_bonus = {
+				name = POR_projection_of_airpower
+				bonus = 0.1
+				days = 365
+				folder = air
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_strategic_bomber
+		icon = GFX_goal_generic_air_strategic_bomber_new
+		cost = 8
+
+		relative_position_id = POR_airforce
+		x = 1
+		y = 4
+
+		prerequisite = { focus = POR_cas_focus }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_strategic_bomber"
+			add_tech_bonus = {
+				name = POR_strategic_bomber
+				bonus = 0.75
+				uses = 2
+				category = cat_strategic_bomber
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = POR_carrier_groups_2
+		icon = GFX_goal_generic_air_naval_bomber
+		cost = 8
+
+		relative_position_id = POR_airforce
+		x = 0
+		y = 5
+
+		prerequisite = { focus = POR_carrier_groups_1 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed POR_carrier_groups_2"
+			add_tech_bonus = {
+				name = POR_carrier_groups_2
+				bonus = 1
+				uses = 2
+				category = naval_air
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+}
+

@@ -1,0 +1,250 @@
+
+########################
+### ETS Timur vs Bughra ###
+########################
+
+ETS_change_popularities = {
+	set_temp_variable = { ETS_change_tooltip1 = { value = ETS_change multiply = 0.01 } }
+	set_temp_variable = { ETS_change_tooltip2 = { value = ETS_change_tooltip1 multiply = -1 } }
+	effect_tooltip = {
+		add_popularity = { ideology = national_populist popularity = ETS_change_tooltip1 }
+		add_popularity = { ideology = authoritarian_democrat popularity = ETS_change_tooltip2 }
+	}
+
+	set_temp_variable = { temp1 = party_popularity_100@national_populist }
+	set_temp_variable = { temp2 = party_popularity_100@authoritarian_democrat }
+	set_temp_variable = { temp3 = party_popularity_100@social_conservative }
+	set_temp_variable = { temp4 = party_popularity_100@paternal_autocrat }
+	set_temp_variable = { temp5 = party_popularity_100@totalist }
+	set_temp_variable = { temp6 = party_popularity_100@radical_socialist }
+	set_temp_variable = { temp7 = party_popularity_100@syndicalist }
+	set_temp_variable = { temp8 = party_popularity_100@social_democrat }
+	set_temp_variable = { temp9 = party_popularity_100@social_liberal }
+	set_temp_variable = { temp10 = party_popularity_100@market_liberal }
+
+	set_temp_variable = { temp_total = 100 }
+	subtract_from_temp_variable = { temp_total = temp1 }
+	subtract_from_temp_variable = { temp_total = temp2 }
+	subtract_from_temp_variable = { temp_total = temp3 }
+	subtract_from_temp_variable = { temp_total = temp4 }
+	subtract_from_temp_variable = { temp_total = temp5 }
+	subtract_from_temp_variable = { temp_total = temp6 }
+	subtract_from_temp_variable = { temp_total = temp7 }
+	subtract_from_temp_variable = { temp_total = temp8 }
+	subtract_from_temp_variable = { temp_total = temp9 }
+	subtract_from_temp_variable = { temp_total = temp10 }
+	add_to_temp_variable = { temp3 = temp_total }
+
+	add_to_temp_variable = { temp1 = ETS_change }
+	subtract_from_temp_variable = { temp2 = ETS_change }
+
+	hidden_effect = {
+		set_popularities = {
+			totalist = temp5
+			radical_socialist = temp6
+			syndicalist = temp7
+			social_democrat = temp8
+			social_liberal = temp9
+			market_liberal = temp10
+			social_conservative = temp3
+			authoritarian_democrat = temp2
+			paternal_autocrat = temp4
+			national_populist = temp1
+		}
+	}
+}
+
+ETS_puppet_setup = {
+	#IF YOU CHANGE THIS, MAKE SURE TO EDIT china_orchestrate_sinophile_coup
+
+	#Setup Rad Soc ETS
+	if = {
+		limit = {
+			china_alignment_left_kuomintang = yes
+			has_socialist_government = yes
+		}
+		ETS = {
+			SIK = { SIK_burhan_shahidi = { set_nationality = PREV.PREV } }
+			promote_character = {
+				character = SIK_burhan_shahidi
+				ideology = radical_socialist_subtype
+			}
+			set_politics = {
+				ruling_party = radical_socialist
+				elections_allowed = no
+			}
+			set_party_name = {
+				ideology = radical_socialist
+				long_name = SIK_radical_socialist_party_long
+				name = SIK_radical_socialist_party
+			}
+			#Rad Soc KMT Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 18
+				social_democrat = 12
+				social_liberal = 6
+				market_liberal = 3
+				social_conservative = 13
+				authoritarian_democrat = 15
+				paternal_autocrat = 20
+				national_populist = 8
+			}
+			#The KMT aligned Xinjiang leader is Burhan Shahidi
+		}
+	}
+	#Setup KMT ETS
+	else_if = {
+		limit = {
+			OR = {
+				china_alignment_left_kuomintang = yes
+				china_alignment_right_kuomintang = yes
+			}
+		}
+		ETS = {
+			SIK = { SIK_burhan_shahidi = { set_nationality = PREV.PREV } }
+			promote_character = {
+				character = SIK_burhan_shahidi
+				ideology = authoritarian_democrat_subtype
+			}
+			set_politics = {
+				ruling_party = authoritarian_democrat
+				elections_allowed = no
+			}
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = SIK_radical_socialist_party_long
+				name = SIK_radical_socialist_party
+			}
+			#Auth Dem KMT Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 10
+				social_democrat = 15
+				social_liberal = 6
+				market_liberal = 3
+				social_conservative = 13
+				authoritarian_democrat = 20
+				paternal_autocrat = 20
+				national_populist = 8
+			}
+			#The KMT aligned Xinjiang leader is Burhan Shahidi
+		}
+	}
+	#Setup Federalists and other Chinese moderates, be careful though to differentiate non-KMT Soc Dems vs KMT Soc Dems
+	else_if = {
+		limit = {
+			is_chinese_tag = yes
+			OR = {
+				china_is_aligned_with_federalists = yes
+				has_elected_government = yes
+			}
+		}
+		ETS = {
+			set_politics = {
+				ruling_party = social_conservative
+				elections_allowed = no
+			}
+			#Soc Con Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 6
+				social_democrat = 10
+				social_liberal = 8
+				market_liberal = 7
+				social_conservative = 20
+				authoritarian_democrat = 16
+				paternal_autocrat = 20
+				national_populist = 8
+			}
+			#This should release Soc Con Isa Alptekin
+		}
+	}
+	#Setup Chinese Reactionaries
+	else_if = {
+		limit = {
+			is_chinese_tag = yes
+		}
+		ETS = {
+			promote_character = {
+				character = ETS_masud_sabri
+				ideology = authoritarian_democrat_subtype
+			}
+			set_politics = {
+				ruling_party = authoritarian_democrat
+				elections_allowed = no
+			}
+			#Auth Dem Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 7
+				social_democrat = 12
+				social_liberal = 6
+				market_liberal = 5
+				social_conservative = 13
+				authoritarian_democrat = 25
+				paternal_autocrat = 18
+				national_populist = 9
+			}
+			#This should release Auth Dem Masud Sabri
+		}
+	}
+	else = {
+		ETS = {
+			#Baseline Puppet Popularity - ETS's a reactionary place but conquering it will disrupt their political situation
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 8
+				social_democrat = 13
+				social_liberal = 6
+				market_liberal = 5
+				social_conservative = 13
+				authoritarian_democrat = 18
+				paternal_autocrat = 23
+				national_populist = 9
+			}
+		}
+	}
+	hidden_effect = {
+		ETS = {
+			if = {
+				limit = { NOT = { has_completed_focus = ETS_uyghur_independence } }
+				complete_national_focus = ETS_uyghur_independence
+			}
+		}
+	}
+}
+
+ETS_remove_puppet_leader = {
+	ETS = {
+		if = {
+			limit = { has_character = SIK_burhan_shahidi }
+			SIK_burhan_shahidi = { set_nationality = SIK }
+			promote_character = { character = ETS_ishaq_beg_munonov ideology = radical_socialist_subtype }
+			set_party_name = {
+				ideology = radical_socialist
+				long_name = ETS_radical_socialist_party_long
+				name = ETS_radical_socialist_party
+			}
+			promote_character = { character = ETS_timur_beg ideology = authoritarian_democrat_subtype }
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = ETS_authoritarian_democrat_party_long
+				name = ETS_authoritarian_democrat_party
+			}
+		}
+	}
+}
+
+ETS_activate_turkic_diplo_decisions = {
+	activate_targeted_decision = { decision = ETS_reach_out_to_country_decision target = TRK }
+	activate_targeted_decision = { decision = ETS_reach_out_to_country_decision target = BUK }
+	activate_targeted_decision = { decision = ETS_reach_out_to_country_decision target = KAZ }
+	activate_targeted_decision = { decision = ETS_reach_out_to_country_decision target = AZR }
+	activate_targeted_decision = { decision = ETS_reach_out_to_country_decision target = OTT }
+}

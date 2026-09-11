@@ -1,0 +1,2823 @@
+##################
+#Far Eastern Army events#
+##################
+
+add_namespace = russia_far_east_events
+
+country_event = { #Bureau for Liberation of Russia
+	id = russia_far_east_events.1
+	title = russia_far_east_events.1.t
+	desc = {
+		trigger = { RUS = { RUS_savinkov = yes } }
+		text = russia_far_east_events.1.d.szrs
+	}
+	desc = {
+		trigger = { RUS = { has_socialist_government = yes } }
+		text = russia_far_east_events.1.d.soc
+	}
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov_2
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.1 option russia_far_east_events.1.a"
+		name = russia_far_east_events.1.a
+		trigger = { tag = FER }
+		add_war_support = 0.1
+		RUS = { country_event = russia_far_east_events.1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.1 option russia_far_east_events.1.b"
+		name = russia_far_east_events.1.b
+		trigger = { tag = RUS }
+		add_stability = -0.03
+	}
+}
+unit_leader_event = { #The Enemy of My Enemy
+	id = russia_far_east_events.2
+	title = russia_far_east_events.2.t
+	desc = russia_far_east_events.2.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.2 option russia_far_east_events.2.a"
+		name = russia_far_east_events.2.a
+		custom_effect_tooltip = FER_bop_tt
+		activate_mission = FER_secure_far_east
+		hidden_effect = {
+			country_event = russia_far_east_events.150 #AI chooses either Semyonov or Diterikhs
+			if = {
+				limit = { has_global_flag = allow_sound_events_flag }
+				scoped_play_song = march_of_the_siberian_riflemen
+			}
+		}
+	}
+}
+country_event = { #An Army or Rabble?
+	id = russia_far_east_events.3
+	title = russia_far_east_events.3.t
+	desc = russia_far_east_events.3.d
+	is_triggered_only = yes
+	trigger = { has_government = paternal_autocrat }
+	picture = GFX_report_event_RUS_army_march_1
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.3 option russia_far_east_events.3.a"
+		name = russia_far_east_events.3.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		add_timed_idea = {
+			idea = FER_raiding
+			days = 180
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.3 option russia_far_east_events.3.b"
+		name = russia_far_east_events.3.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		army_experience = 20
+		add_power_balance_value = { id = FER_power_balance value = 0.05 }
+	}
+}
+country_event = { #Semyonovite Commanders Replaced
+	id = russia_far_east_events.4
+	title = russia_far_east_events.4.t
+	desc = russia_far_east_events.4.d
+	is_triggered_only = yes
+	trigger = { has_government = paternal_autocrat }
+	picture = GFX_report_event_RUS_officer_1
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.4 option russia_far_east_events.4.a"
+		name = russia_far_east_events.4.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		add_popularity = { ideology = national_populist popularity = 0.03 }
+		add_power_balance_value = { id = FER_power_balance value = 0.1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.4 option russia_far_east_events.4.b"
+		name = russia_far_east_events.4.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		add_political_power = 40
+		army_experience = -15
+		add_power_balance_value = { id = FER_power_balance value = -0.05 }
+	}
+}
+country_event = { #Attempt on Semyonov's Life
+	id = russia_far_east_events.5
+	title = russia_far_east_events.5.t
+	desc = russia_far_east_events.5.d
+	is_triggered_only = yes
+	trigger = { has_government = paternal_autocrat }
+	picture = GFX_report_event_RUS_semyonov
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.5 option russia_far_east_events.5.a"
+		name = russia_far_east_events.5.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.5 option russia_far_east_events.5.b"
+		name = russia_far_east_events.5.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		add_power_balance_value = { id = FER_power_balance value = -0.02 }
+	}
+	after = {
+		add_stability = -0.05
+	}
+}
+country_event = { #Spies in Diterikhs' Staff
+	id = russia_far_east_events.6
+	title = russia_far_east_events.6.t
+	desc = russia_far_east_events.6.d
+	is_triggered_only = yes
+	trigger = { has_government = paternal_autocrat }
+	immediate = {
+		hidden_effect = {
+			country_event = { id = russia_far_east_events.7 days = 60 random_days = 20 }
+		}
+	}
+	picture = GFX_report_event_RUS_army_instructer
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.6 option russia_far_east_events.6.a"
+		name = russia_far_east_events.6.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		army_experience = -5
+		add_power_balance_value = { id = FER_power_balance value = -0.02 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.6 option russia_far_east_events.6.b"
+		name = russia_far_east_events.6.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		add_political_power = -20
+		add_power_balance_value = { id = FER_power_balance value = -0.06 }
+	}
+	after = {
+		RUS = {
+			add_intel = {
+				target = FER
+				army_intel = 20
+			}
+		}
+	}
+}
+country_event = { #Spy in Semyonov's Staff?
+	id = russia_far_east_events.7
+	title = russia_far_east_events.7.t
+	desc = russia_far_east_events.7.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.7 option russia_far_east_events.7.a"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		name = russia_far_east_events.7.a
+		add_political_power = -25
+		hidden_effect = {
+			RUS = {
+				add_intel = {
+					target = FER
+					army_intel = 20
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.7 option russia_far_east_events.7.b"
+		name = russia_far_east_events.7.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		RUS_gurgen_asriyants = { kill_character = yes }
+		add_popularity = { ideology = paternal_autocrat popularity = -0.04 }
+		add_power_balance_value = { id = FER_power_balance value = 0.05 }
+	}
+}
+country_event = { #The Night-Life of Khabarovsk
+	id = russia_far_east_events.8
+	title = russia_far_east_events.8.t
+	desc = russia_far_east_events.8.d
+	is_triggered_only = yes
+	picture = GFX_report_event_generic_diplomacy3
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.8 option russia_far_east_events.8.a"
+		name = russia_far_east_events.8.a
+		ai_chance = { base = 0 }
+		add_stability = 0.02
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.8 option russia_far_east_events.8.b"
+		name = russia_far_east_events.8.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		trigger = { has_government = paternal_autocrat }
+		set_temp_variable = { RUS_favour_change = 1 }
+		FER_japanese_favours_check = yes
+		add_political_power = -35
+		add_power_balance_value = { id = FER_power_balance value = -0.1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.8 option russia_far_east_events.8.c"
+		name = russia_far_east_events.8.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		set_temp_variable = { RUS_favour_change = -1 }
+		FER_japanese_favours_check = yes
+		add_political_power = -50
+		add_power_balance_value = { id = FER_power_balance value = 0.25 }
+	}
+}
+country_event = { #The Kalmykovites
+	id = russia_far_east_events.9
+	title = russia_far_east_events.9.t
+	desc = russia_far_east_events.9.d
+	is_triggered_only = yes
+	trigger = { controls_state = 566 } #Irkutsk
+	picture = GFX_report_event_RUS_kalmykov
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.9 option russia_far_east_events.9.a"
+		name = russia_far_east_events.9.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		set_temp_variable = { ideology_change_var = -3 }
+		change_ruling_party_popularity = yes
+		every_controlled_state = {
+			limit = {
+				OR = {
+					state = 566 #Irkutsk
+					state = 564 #Verkhneudinsk
+					state = 563 #Chita
+				}
+			}
+			add_resistance = 20
+			add_compliance = -5
+		}
+		add_power_balance_value = { id = FER_power_balance value = -0.05 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.9 option russia_far_east_events.9.b"
+		name = russia_far_east_events.9.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		army_experience = -10
+		add_manpower = -4200
+		RUS_ivan_kalmykov = { kill_character = yes }
+		add_power_balance_value = { id = FER_power_balance value = 0.1 }
+	}
+}
+unit_leader_event = { #Stab in the Back
+	id = russia_far_east_events.10
+	title = russia_far_east_events.10.t
+	desc = {
+		trigger = { NOT = { has_global_flag = JAP_Fading_Sun } }
+		text = russia_far_east_events.10.d.default
+	}
+	desc = {
+		trigger = { has_global_flag = JAP_Fading_Sun }
+		text = russia_far_east_events.10.d.fadingsun
+	}
+	is_triggered_only = yes
+	trigger = {
+		NOT = {
+			owns_state = 219 #Moscow
+			has_completed_focus = FER_banish_japanese
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { RUS_grigory_semyonov = { has_trait = RUS_liberator_of_siberia } }
+				add_country_leader_trait = RUS_liberator_of_siberia
+			}
+			set_country_flag = FER_diterikhs_coup
+			country_event = { id = russia_far_east_events.42 days = 5 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.10 option russia_far_east_events.10.a"
+		name = russia_far_east_events.10.a
+		RUS_grigory_semyonov = {
+			demote_leader = yes
+			remove_army_chief_role = yes
+		}
+		activate_advisor = RUS_grigory_semyonov_high_command
+		add_political_power = -25
+		add_popularity = { ideology = national_populist popularity = 0.1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.10 option russia_far_east_events.10.b"
+		name = russia_far_east_events.10.b
+		retire_character = RUS_grigory_semyonov
+		add_popularity = { ideology = national_populist popularity = 0.1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.10 option russia_far_east_events.10.c"
+		name = russia_far_east_events.10.c
+		RUS_grigory_semyonov = { kill_character = yes }
+		add_popularity = { ideology = national_populist popularity = 0.15 }
+	}
+	after = {
+		set_politics = {
+			ruling_party = national_populist
+			elections_allowed = no
+		}
+		add_stability = -0.1
+	}
+}
+country_event = { #The Krasnov Organisation
+	id = russia_far_east_events.11
+	title = russia_far_east_events.11.t
+	desc = {
+		trigger = { RUS = { has_socialist_government = yes } }
+		text = russia_far_east_events.11.d.soc
+	}
+	desc = {
+		trigger = { RUS = { RUS_savinkov = yes } }
+		text = russia_far_east_events.11.d.szrs
+	}
+	is_triggered_only = yes
+	trigger = {
+		RUS = { NOT = { has_character = RUS_pyotr_krasnov } }
+	}
+	picture = GFX_report_event_RUS_krasnov
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.11 option russia_far_east_events.11.a"
+		name = russia_far_east_events.11.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		RUS = { RUS_pyotr_krasnov = { set_nationality = FER } }
+		add_intel = {
+			target = RUS
+			civilian_intel = 3
+			army_intel = 2
+			navy_intel = 1
+			airforce_intel = 2
+		}
+		add_power_balance_value = { id = FER_power_balance value = 0.05 }
+		hidden_effect = {
+			RUS = {
+				if = {
+					limit = { has_socialist_government = yes }
+					country_event = { id = russia_far_east_events.12 days = 30 }
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.11 option russia_far_east_events.11.b"
+		name = russia_far_east_events.11.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+	}
+}
+country_event = { #Bombing by the Krasnov Organisation #
+	id = russia_far_east_events.12
+	title = russia_far_east_events.12.t
+	desc = russia_far_east_events.12.d
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = { has_socialist_government = yes }
+	picture = GFX_report_event_RUS_krasnov
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.12 option russia_far_east_events.12.a"
+		name = russia_far_east_events.12.a
+		add_manpower = -1720
+		add_stability = 0.03
+		if = {
+			limit = { RUS_is_spiridonist = yes }
+			add_to_variable = { RUS_faith = -1 }
+			RUS_add_faith = yes
+		}
+		else_if = {
+			limit = { RUS_is_maximalist = yes }
+			set_temp_variable = { RUS_maximalist_influence_change = 1 }
+			RUS_maximalist_influence = yes
+		}
+		else_if = {
+			limit = { RUS_VST = yes }
+			set_temp_variable = { RUS_relation_change = 1 }
+			RUS_RKP_relation = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.12 option russia_far_east_events.12.b"
+		name = russia_far_east_events.12.b
+		add_manpower = -82
+		add_stability = 0.02
+		if = {
+			limit = { RUS_VST = yes }
+			set_temp_variable = { RUS_relation_change = 1 }
+			RUS_PSR_relation = yes
+		}
+	}
+}
+country_event = { #The Glory Days
+	id = russia_far_east_events.13
+	title = russia_far_east_events.13.t
+	desc = russia_far_east_events.13.d
+	is_triggered_only = yes
+	trigger = { has_government = national_populist }
+	picture = GFX_report_event_RUS_volkov
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.13 option russia_far_east_events.13.a"
+		name = russia_far_east_events.13.a
+		add_stability = 0.01
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.13 option russia_far_east_events.13.b"
+		name = russia_far_east_events.13.b
+		random_list = {
+			12 = {
+				add_manpower = -1
+				add_stability = -0.01
+				RUS_vyacheslav_volkov = { kill_character = yes }
+				add_advisor_role = {
+					character = RUS_nikolay_bredov
+					activate = yes
+					advisor = {
+						slot = second_in_command
+						idea_token = RUS_nikolay_bredov_sic
+						desc = RUS_nikolay_bredov_high_command_desc
+						traits = { KR_old_general_sic }
+						can_be_fired = no
+					}
+				}
+			}
+			10 = {
+				army_experience = 40
+				add_popularity = { ideology = national_populist popularity = 0.06 }
+			}
+		}
+	}
+}
+country_event = { #Tomsk People's Army
+	id = russia_far_east_events.14
+	title = russia_far_east_events.14.t
+	desc = russia_far_east_events.14.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_army_march_2
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.14 option russia_far_east_events.14.a"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		name = russia_far_east_events.14.a
+		add_stability = -0.05
+		set_temp_variable = { ideology_change_var = 5 }
+		change_ruling_party_popularity = yes
+		add_manpower = -15400
+		every_controlled_state = {
+			limit = {
+				OR = {
+					state = 570 #Novonikolayevsk
+					state = 40 #Barnaul
+					state = 578 #Omsk
+				}
+			}
+			add_resistance = 20
+			add_compliance = -5
+		}
+		damage_units = {
+			state = 578
+			limit = { tag = FER }
+			damage = 0.3
+			ratio = yes
+			army = yes
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.14 option russia_far_east_events.14.b"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		name = russia_far_east_events.14.b
+		add_stability = 0.05
+		add_political_power = -50
+		every_controlled_state = {
+			limit = {
+				OR = {
+					state = 570 #Novonikolayevsk
+					state = 40 #Barnaul
+					state = 578 #Omsk
+				}
+			}
+			add_compliance = 8
+		}
+		add_popularity = { ideology = social_liberal popularity = 0.04 }
+		add_popularity = { ideology = social_democrat popularity = 0.04 }
+		add_power_balance_value = { id = FER_power_balance value = -0.05 }
+	}
+}
+
+country_event = { #Expectations in Siberia
+	id = russia_far_east_events.15
+	title = russia_far_east_events.15.t
+	desc = russia_far_east_events.15.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov_japan
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.15 option russia_far_east_events.15.a"
+		name = russia_far_east_events.15.a
+		activate_mission = FER_siberian_expectations
+	}
+}
+
+country_event = { #Mobilising Primorye Economy
+	id = russia_far_east_events.20
+	title = russia_far_east_events.20.t
+	desc = russia_far_east_events.20.d
+	is_triggered_only = yes
+	picture = GFX_report_event_generic_diplomacy3
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.20 option russia_far_east_events.20.a"
+		name = russia_far_east_events.20.a
+		add_political_power = 100
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.20 option russia_far_east_events.20.b"
+		name = russia_far_east_events.20.b
+		add_one_random_civilian_factory = yes
+		add_one_random_military_factory = yes
+	}
+}
+country_event = { #Gold of Amur
+	id = russia_far_east_events.21
+	title = russia_far_east_events.21.t
+	desc = russia_far_east_events.21.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_industry
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.21 option russia_far_east_events.21.a"
+		name = russia_far_east_events.21.a
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.21 option russia_far_east_events.21.b"
+		name = russia_far_east_events.21.b
+		add_political_power = -35
+		retire_character = RUS_nikolay_mordin
+		swap_ideas = {
+			remove_idea = FER_nationalised_gold
+			add_idea = FER_nationalised_gold_2
+		}
+	}
+}
+unit_leader_event = { #Arrival of Annenkov
+	id = russia_far_east_events.22
+	title = russia_far_east_events.22.t
+	desc = russia_far_east_events.22.d
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.22 option russia_far_east_events.22.a"
+		name = russia_far_east_events.22.a
+		add_power_balance_value = { id = FER_power_balance value = -0.05 }
+		custom_effect_tooltip = tooltip_white_line
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_create_division_template
+				NAME = "Kitayskaya Diviziya"
+				LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 4 }
+				LINE_2 = { localization_key = line_battalion_tt NAME = irregular_infantry ICON = GFX_unit_irregular_infantry_icon_small COUNT = 8 }
+				SUPPORT_1 = { localization_key = support_battalion_tt NAME = recon ICON = GFX_unit_recon_icon_small }
+				SUPPORT_2 = { localization_key = support_battalion_tt NAME = artillery ICON = GFX_unit_artillery_icon_small }
+			}
+			if = {
+				limit = { has_template = "Kitayskaya Diviziya" }
+				delete_unit_template_and_units = { division_template = "Kitayskaya Diviziya" disband = yes } #no cheating
+			}
+			division_template = {
+				name = "Kitayskaya Diviziya"
+				division_names_group = RUS_INF_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 0 y = 3 }
+					irregular_infantry = { x = 1 y = 0 }
+					irregular_infantry = { x = 1 y = 1 }
+					irregular_infantry = { x = 1 y = 2 }
+					irregular_infantry = { x = 1 y = 3 }
+					irregular_infantry = { x = 2 y = 0 }
+					irregular_infantry = { x = 2 y = 1 }
+					irregular_infantry = { x = 2 y = 2 }
+					irregular_infantry = { x = 2 y = 3 }
+				}
+				support = {
+					recon = { x = 0 y = 0 }
+					artillery = { x = 0 y = 1 }
+				}
+			}
+		}
+		custom_effect_tooltip = tooltip_white_line
+		capital_scope = {
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_unit
+					TYPE = "Kitayskaya Diviziya"
+				}
+				create_unit = {
+					division = "name = \"Diviziya Annenkova\" division_template = \"Kitayskaya Diviziya\" start_experience_factor = 0.75"
+					owner = ROOT
+				}
+			}
+		}
+	}
+}
+country_event = { #Negotiations with Mongolia
+	id = russia_far_east_events.23
+	title = russia_far_east_events.23.t
+	desc = russia_far_east_events.23.d
+	is_triggered_only = yes
+	picture = GFX_report_event_MON_mongols
+	trigger = {
+		NOT = { has_war_with = FROM }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.23 option russia_far_east_events.23.a"
+		name = russia_far_east_events.23.a
+		ai_chance = { base = 1 }
+		custom_effect_tooltip = FER_leads_to_war_tt
+		add_political_power = 80
+		if = {
+			limit = { 329 = { NOT = { is_claimed_by = ROOT } } }
+			add_state_claim = 329 #Tuva
+		}
+		FER = { country_event = { id = russia_far_east_events.24 days = 10 } }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.23 option russia_far_east_events.23.b"
+		name = russia_far_east_events.23.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 2
+				RUS = {
+					has_socialist_government = yes
+					NOT = { has_war_with = ROOT }
+				}
+				has_soclib_or_socdem_government = yes
+			}
+		}
+		FER = { country_event = { id = russia_far_east_events.2300 days = 10 } }
+	}
+}
+
+country_event = { #For FNG: Bandits flee north
+	id = russia_far_east_events.2300
+	title = russia_far_east_events.2300.t
+	desc = russia_far_east_events.2300.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.2300 option russia_far_east_events.2300.a"
+		name = russia_far_east_events.2300.a
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.2300 option russia_far_east_events.2300.b"
+		name = russia_far_east_events.2300.b
+		ai_chance = { base = 0 }
+		create_wargoal = {
+			type = puppet_wargoal_focus
+			target = MON
+		}
+	}
+}
+
+country_event = { #Treaty with Sternberg
+	id = russia_far_east_events.24
+	title = russia_far_east_events.24.t
+	desc = russia_far_east_events.24.d
+	is_triggered_only = yes
+	picture = GFX_report_event_MON_army1
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.24 option russia_far_east_events.24.a"
+		name = russia_far_east_events.24.a
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					KAZ = {
+						exists = yes
+						is_subject = no
+					}
+					TRK = {
+						exists = yes
+						is_subject = no
+					}
+					KHI = {
+						exists = yes
+						is_subject = no
+					}
+				}
+			}
+		}
+		add_war_support = 0.05
+		if = {
+			limit = { RUS = { has_socialist_government = yes } }
+			create_faction_from_template = { template = faction_template_generic name = white_alliance }
+		}
+		else = { create_faction_from_template = { template = faction_template_generic name = baikal_treaty } }
+		add_to_faction = MON
+		every_state = {
+			limit = {
+				is_controlled_by = MON
+				is_owned_by = RUS
+				is_core_of = RUS
+				NOT = { is_claimed_by = MON }
+				state = 329 #Tuva
+			}
+			set_state_controller_to = FER
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.24 option russia_far_east_events.24.b"
+		name = russia_far_east_events.24.b
+		trigger = {
+			OR = {
+				KAZ = {
+					exists = yes
+					is_subject = no
+				}
+				TRK = {
+					exists = yes
+					is_subject = no
+				}
+				KHI = {
+					exists = yes
+					is_subject = no
+				}
+			}
+		}
+		ai_chance = { base = 100 }
+		add_war_support = 0.05
+		if = {
+			limit = { RUS = { has_socialist_government = yes } }
+			create_faction_from_template = { template = faction_template_generic name = white_alliance }
+		}
+		else = { create_faction_from_template = { template = faction_template_generic name = baikal_treaty } }
+		add_to_faction = MON
+		if = {
+			limit = {
+				KAZ = {
+					is_subject = no
+					is_in_faction = no
+				}
+			}
+			KAZ = { country_event = russia_foreign_policy_events.70 }
+		}
+		if = {
+			limit = {
+				TRK = {
+					is_subject = no
+					is_in_faction = no
+				}
+			}
+			TRK = { country_event = russia_foreign_policy_events.70 }
+		}
+		if = {
+			limit = {
+				KHI = {
+					is_subject = no
+					is_in_faction = no
+				}
+			}
+			KHI = { country_event = russia_foreign_policy_events.70 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = MON
+				is_owned_by = RUS
+				is_core_of = RUS
+				NOT = { is_claimed_by = MON }
+				state = 329 #Tuva
+			}
+			set_state_controller_to = FER
+		}
+	}
+}
+country_event = { #Liberation of Peoples of Siberia
+	id = russia_far_east_events.25
+	title = russia_far_east_events.25.t
+	desc = russia_far_east_events.25.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_siberia1
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.25 option russia_far_east_events.25.a"
+		name = russia_far_east_events.25.a
+		add_political_power = 25
+		every_state = {
+			limit = {
+				is_siberia = yes
+				is_controlled_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+			add_compliance = 5
+		}
+	}
+}
+country_event = { #The Honghuzhi forces
+	id = russia_far_east_events.26
+	title = russia_far_east_events.26.t
+	desc = russia_far_east_events.26.d
+	is_triggered_only = yes
+	picture = GFX_report_event_CHN_honghuzi
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.26 option russia_far_east_events.26.a"
+		name = russia_far_east_events.26.a
+		add_political_power = -40
+		add_stability = 0.04
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.26 option russia_far_east_events.26.b"
+		name = russia_far_east_events.26.b
+		add_political_power = 20
+		every_state = {
+			limit = {
+				is_siberia = yes
+				is_controlled_by = ROOT
+				NOT = { is_core_of = ROOT }
+			}
+			add_compliance = -4
+		}
+	}
+}
+country_event = { #For FNG: Bandits flee north
+	id = russia_far_east_events.27
+	title = russia_far_east_events.27.t
+	desc = russia_far_east_events.27.d
+	is_triggered_only = yes
+	picture = GFX_report_event_CHN_honghuzi
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.27 option russia_far_east_events.27.a"
+		name = russia_far_east_events.27.a
+		add_stability = 0.08
+		add_manpower = -50400
+	}
+}
+country_event = { #Siberian Labour Camps
+	id = russia_far_east_events.28
+	title = russia_far_east_events.28.t
+	desc = {
+		trigger = { RUS = { RUS_savinkov = yes } }
+		text = russia_far_east_events.28.d.szrs
+	}
+	desc = {
+		trigger = { RUS = { has_socialist_government = yes } }
+		text = russia_far_east_events.28.d.soc
+	}
+	trigger = {
+		OR = {
+			controls_state = 574 #Yakutsk
+			controls_state = 562 #Okhotsk
+			controls_state = 637 #Kamchatka
+		}
+	}
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_industry
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.28 option russia_far_east_events.28.a"
+		name = russia_far_east_events.28.a
+		add_resource = {
+			type = steel
+			amount = 12
+			state = 562
+		}
+		add_political_power = -20
+		add_popularity = { ideology = social_democrat popularity = -0.04 }
+		add_popularity = { ideology = radical_socialist popularity = -0.04 }
+		add_popularity = { ideology = social_liberal popularity = -0.04 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.28 option russia_far_east_events.28.b"
+		name = russia_far_east_events.28.b
+		add_resource = {
+			type = steel
+			amount = 12
+			state = 562
+		}
+		give_resource_rights = { receiver = JAP state = 562 }
+		add_political_power = 40
+		set_temp_variable = { RUS_favour_change = 2 }
+		FER_japanese_favours_check = yes
+		set_temp_variable = { ideology_change_var = -4 }
+		change_ruling_party_popularity = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.28 option russia_far_east_events.28.c"
+		name = russia_far_east_events.28.c
+	}
+}
+country_event = { #Declaration of War for Restoration
+	id = russia_far_east_events.29
+	title = russia_far_east_events.29.t
+	desc = russia_far_east_events.29.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_tsar_nicholas_portrait
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.29 option russia_far_east_events.29.a"
+		name = russia_far_east_events.29.a
+		trigger = { tag = FER }
+		add_war_support = 0.05
+		add_popularity = { ideology = national_populist popularity = 0.05 }
+		hidden_effect = {
+			RUS = { country_event = russia_far_east_events.29 }
+			FER = { country_event = russia_far_east_events.29 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.29 option russia_far_east_events.29.b"
+		name = russia_far_east_events.29.b
+		trigger = { NOT = { tag = FER } }
+	}
+}
+country_event = { #Brigades of the Holy Cross
+	id = russia_far_east_events.30
+	title = russia_far_east_events.30.t
+	desc = russia_far_east_events.30.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_change_of_duty
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.30 option russia_far_east_events.30.a"
+		name = russia_far_east_events.30.a
+		add_war_support = 0.05
+		add_popularity = { ideology = national_populist popularity = 0.05 }
+	}
+}
+country_event = { #Religious Authority in the East
+	id = russia_far_east_events.31
+	title = russia_far_east_events.31.t
+	desc = russia_far_east_events.31.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_orthodox
+
+	immediate = {
+		hidden_effect = {
+			RUS_FER_metropolitan = {
+				remove_trait = {
+					slot = political_advisor
+					trait = KR_spiritual_leader
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.31 option russia_far_east_events.31.a"
+		name = russia_far_east_events.31.a
+		add_stability = 0.05
+		RUS_FER_metropolitan = {
+			set_character_name = RUS_metropolitan_vissarion
+			set_portraits = {
+				civilian = { small = GFX_portrait_RUS_metropolitan_vissarion_civilian_small }
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_replace_character_trait
+					ROLE = political_advisor
+					OLD_TRAIT = KR_spiritual_leader
+					NEW_TRAIT = RUS_gregorian_metropolitan
+				}
+				add_trait = {
+					slot = political_advisor
+					trait = RUS_gregorian_metropolitan
+				}
+			}
+			effect_tooltip = {
+				set_temp_variable = { modifier_change_tt = -0.05 tooltip = army_morale_factor_tooltip }
+				set_temp_variable = { modifier_change_tt = 0.05 tooltip = conscription_factor_tooltip }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.31 option russia_far_east_events.31.b"
+		name = russia_far_east_events.31.b
+		add_manpower = 82300
+		add_stability = -0.05
+		RUS_FER_metropolitan = {
+			set_character_name = RUS_metropolitan_afanasy
+			set_character_flag = old_believer
+			set_portraits = {
+				civilian = { small = GFX_portrait_RUS_metropolitan_afanasy_civilian_small }
+			}
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_replace_character_trait
+					ROLE = political_advisor
+					OLD_TRAIT = KR_spiritual_leader
+					NEW_TRAIT = RUS_old_believer_metropolitan
+				}
+				add_trait = {
+					slot = political_advisor
+					trait = RUS_old_believer_metropolitan
+				}
+			}
+			effect_tooltip = {
+				set_temp_variable = { modifier_change_tt = -0.10 tooltip = stability_factor_tooltip }
+				set_temp_variable = { modifier_change_tt = -0.05 tooltip = army_morale_factor_tooltip }
+				set_temp_variable = { modifier_change_tt = 0.10 tooltip = political_power_gain_tooltip }
+				set_temp_variable = { modifier_change_tt = 0.10 tooltip = army_defence_against_major_factor_tooltip }
+			}
+		}
+		566 = { add_extra_state_shared_building_slots = 1 } #Irkutsk
+	}
+}
+country_event = { #Democratic Groups Organise
+	id = russia_far_east_events.32
+	title = russia_far_east_events.32.t
+	desc = russia_far_east_events.32.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_kremlin_1
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.32 option russia_far_east_events.32.a"
+		name = russia_far_east_events.32.a
+		add_stability = 0.04
+		add_popularity = { ideology = social_liberal popularity = 0.04 }
+		add_popularity = { ideology = market_liberal popularity = 0.03 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.32 option russia_far_east_events.32.b"
+		name = russia_far_east_events.32.b
+		add_stability = -0.03
+		add_popularity = { ideology = social_liberal popularity = -0.04 }
+		add_popularity = { ideology = social_democrat popularity = -0.04 }
+		add_popularity = { ideology = market_liberal popularity = -0.03 }
+	}
+}
+country_event = { #Promise of Elections
+	id = russia_far_east_events.33
+	title = russia_far_east_events.33.t
+	desc = russia_far_east_events.33.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov_suit
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.33 option russia_far_east_events.33.a"
+		name = russia_far_east_events.33.a
+		add_war_support = 0.05
+		add_manpower = 62500
+		add_popularity = { ideology = social_democrat popularity = 0.02 }
+		add_popularity = { ideology = social_liberal popularity = 0.02 }
+		add_popularity = { ideology = market_liberal popularity = 0.02 }
+		add_popularity = { ideology = social_conservative popularity = 0.02 }
+	}
+}
+country_event = { #The Siberian Regional Assembly
+	id = russia_far_east_events.34
+	title = russia_far_east_events.34.t
+	desc = russia_far_east_events.34.d
+	is_triggered_only = yes
+	picture = GFX_report_event_BLR_sojm_meeting
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.34 option russia_far_east_events.34.a"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		name = russia_far_east_events.34.a
+		add_war_support = 0.04
+		add_stability = 0.08
+		add_popularity = { ideology = social_conservative popularity = 0.04 }
+		add_popularity = { ideology = social_liberal popularity = 0.04 }
+		add_popularity = { ideology = social_democrat popularity = 0.02 }
+		add_popularity = { ideology = market_liberal popularity = 0.03 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.34 option russia_far_east_events.34.b"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		name = russia_far_east_events.34.b
+		add_political_power = 40
+		set_temp_variable = { ideology_change_var = 4 }
+		change_ruling_party_popularity = yes
+		add_popularity = { ideology = social_conservative popularity = 0.03 }
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.02 }
+		add_power_balance_value = { id = FER_power_balance value = 0.1 }
+	}
+	after = {
+		add_country_leader_trait = RUS_liberator_of_siberia
+	}
+}
+country_event = { #Svobodniks of the Far East
+	id = russia_far_east_events.35
+	title = russia_far_east_events.35.t
+	desc = {
+		trigger = { RUS = { RUS_savinkov = yes } }
+		text = russia_far_east_events.35.d.szrs
+	}
+	desc = {
+		trigger = { RUS = { has_socialist_government = yes } }
+		text = russia_far_east_events.35.d.soc
+	}
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_Savinkov_rally
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.35 option russia_far_east_events.35.a"
+		name = russia_far_east_events.35.a
+		trigger = { RUS = { RUS_savinkov = yes } }
+		add_manpower = -53
+		add_popularity = { ideology = national_populist popularity = -0.03 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.35 option russia_far_east_events.35.b"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		name = russia_far_east_events.35.b
+		add_manpower = 53
+		add_popularity = { ideology = national_populist popularity = 0.02 }
+		add_power_balance_value = { id = FER_power_balance value = 0.05 }
+	}
+}
+
+country_event = { #Savinkov Dies, What Now?
+	id = russia_far_east_events.36
+	title = russia_far_east_events.36.t
+	desc = russia_far_east_events.36.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_savinkov2
+	trigger = {
+		RUS = { exists = yes }
+		OR = {
+			is_ai = yes
+			NOT = { has_government = national_populist }
+		}
+		### This trigger ensures that player Diterikhs won't get annexed by the event, though it could lead to weird scenario of Diterikhs fighting against restored monarchy, idk what to do about it?
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.36 option russia_far_east_events.36.a"
+		name = russia_far_east_events.36.a
+		ai_chance = {
+			base = num_controlled_states
+			modifier = {
+				factor = 0
+				has_government = national_populist
+			}
+			modifier = {
+				factor = 0
+				has_global_flag = JAP_Fading_Sun
+			}
+		}
+		add_war_support = -0.05
+		add_manpower = -102050
+		retire_character = RUS_mikhail_diterikhs
+		retire_character = RUS_fyodor_bredov
+		retire_character = RUS_nikolay_bredov
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.36 option russia_far_east_events.36.b"
+		name = russia_far_east_events.36.b
+		ai_chance = { base = 10 }
+		custom_effect_tooltip = FER_game_over_tt
+		hidden_effect = {
+			RUS = { country_event = russia_far_east_events.37 }
+		}
+	}
+}
+
+country_event = { #Far Eastern Revolt Collapses
+	id = russia_far_east_events.37
+	title = russia_far_east_events.37.t
+	desc = russia_far_east_events.37.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.37 option russia_far_east_events.37.a"
+		name = russia_far_east_events.37.a
+		annex_country = {
+			target = FER
+			transfer_troops = no
+		}
+		hidden_effect = {
+			country_event = { id = russia_events.616 days = 30 }
+		}
+	}
+}
+
+country_event = { #Dalzavod Lease to Japanese Company
+	id = russia_far_east_events.40
+	title = russia_far_east_events.40.t
+	desc = russia_far_east_events.40.d
+	is_triggered_only = yes
+	picture = GFX_report_event_JAP_economy_building
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.40 option russia_far_east_events.40.a"
+		name = russia_far_east_events.40.a
+		add_offsite_building = { type = dockyard level = 1 }
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 20
+			producer = RUS
+		}
+	}
+}
+country_event = { #Negotiations with the Kwantung General
+	id = russia_far_east_events.41
+	title = russia_far_east_events.41.t
+	desc = russia_far_east_events.41.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov_japan
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.41 option russia_far_east_events.41.a"
+		name = russia_far_east_events.41.a
+		ai_chance = { base = 20 }
+		give_resource_rights = { receiver = JAP state = 408 }
+		add_political_power = 40
+		set_temp_variable = { RUS_favour_change = 2 }
+		FER_japanese_favours_check = yes
+		set_temp_variable = { ideology_change_var = -3 }
+		change_ruling_party_popularity = yes
+		hidden_effect = {
+			408 = {
+				save_event_target_as = FER_lease
+				JAP = { country_event = russia_far_east_events.47 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.41 option russia_far_east_events.41.b"
+		name = russia_far_east_events.41.b
+		ai_chance = { base = 5 }
+		set_temp_variable = { RUS_favour_change = -1 }
+		FER_japanese_favours_check = yes
+	}
+}
+country_event = { #The Japanese Approach New Leadership
+	id = russia_far_east_events.42
+	title = russia_far_east_events.42.t
+	desc = russia_far_east_events.42.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_diterikhs
+	trigger = {
+		NOT = { has_global_flag = JAP_Fading_Sun }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.42 option russia_far_east_events.42.a"
+		name = russia_far_east_events.42.a
+		add_political_power = 30
+		add_power_balance_value = { id = FER_power_balance value = -0.1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.42 option russia_far_east_events.42.b"
+		name = russia_far_east_events.42.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		trigger = { check_variable = { FER_japan_favours > 1 } }
+		set_temp_variable = { ideology_change_var = 5 }
+		change_ruling_party_popularity = yes
+		set_temp_variable = { RUS_favour_change = -2 }
+		FER_japanese_favours_check = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.42 option russia_far_east_events.42.c"
+		name = russia_far_east_events.42.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		set_temp_variable = { ideology_change_var = 10 }
+		change_ruling_party_popularity = yes
+		FER_banish_japanese = yes
+	}
+}
+country_event = { #The Northern Direction
+	id = russia_far_east_events.43
+	title = russia_far_east_events.43.t
+	desc = russia_far_east_events.43.d
+	is_triggered_only = yes
+	picture = GFX_report_event_JAP_officer_saluting
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.43 option russia_far_east_events.43.a"
+		name = russia_far_east_events.43.a
+		add_war_support = 0.02
+	}
+}
+
+country_event = { #Russo-Japanese Industrial Company
+	id = russia_far_east_events.44
+	title = russia_far_east_events.44.t
+	desc = russia_far_east_events.44.d
+	is_triggered_only = yes
+	picture = GFX_report_event_JAP_economy_building
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.44 option russia_far_east_events.44.a"
+		name = russia_far_east_events.44.a
+		set_temp_variable = { RUS_favour_change = 1 }
+		FER_japanese_favours_check = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.44 option russia_far_east_events.44.b"
+		name = russia_far_east_events.44.b
+		trigger = { has_government = paternal_autocrat }
+		add_political_power = 40
+		set_temp_variable = { RUS_favour_change = -1 }
+		FER_japanese_favours_check = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.44 option russia_far_east_events.44.c"
+		name = russia_far_east_events.44.c
+		trigger = { has_government = national_populist }
+		add_stability = 0.05
+	}
+	after = {
+		409 = { add_building_construction = { type = infrastructure level = 1 } }
+	}
+}
+
+country_event = { #The Opium Problem
+	id = russia_far_east_events.45
+	title = russia_far_east_events.45.t
+	desc = russia_far_east_events.45.d
+	is_triggered_only = yes
+	picture = GFX_report_event_opium_den
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.45 option russia_far_east_events.45.a"
+		name = russia_far_east_events.45.a
+		add_stability = -0.06
+		add_war_support = -0.04
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.45 option russia_far_east_events.45.b"
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_semyonov_ai
+			}
+		}
+		name = russia_far_east_events.45.b
+		add_political_power = -40
+		set_temp_variable = { RUS_favour_change = -2 }
+		FER_japanese_favours_check = yes
+		add_power_balance_value = { id = FER_power_balance value = 0.05 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.45 option russia_far_east_events.45.c"
+		name = russia_far_east_events.45.c
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_country_flag = FER_diterikhs_ai
+			}
+		}
+		trigger = { has_government = paternal_autocrat }
+		add_timed_idea = {
+			idea = FER_opium_trade
+			days = 365
+		}
+		add_war_support = -0.05
+		add_power_balance_value = { id = FER_power_balance value = -0.05 }
+	}
+}
+
+country_event = { #Investments in Amur Pay Off
+	id = russia_far_east_events.46
+	title = russia_far_east_events.46.t
+	desc = russia_far_east_events.46.d
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.46 option russia_far_east_events.46.a"
+		name = russia_far_east_events.46.a
+		add_political_power = 20
+		add_offsite_building = { type = industrial_complex level = 1 }
+	}
+}
+
+country_event = { #Acquired Mining Rights in [FER_lease.GetName]
+	id = russia_far_east_events.47
+	title = russia_far_east_events.47.t
+	desc = russia_far_east_events.47.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.47 option russia_far_east_events.47.a"
+		name = russia_far_east_events.47.a
+		add_political_power = 5
+		effect_tooltip = {
+			FER = {
+				give_resource_rights = { receiver = JAP state = event_target:FER_lease }
+			}
+		}
+	}
+}
+
+country_event = { #Mitsubishi Bomber Exports
+	id = russia_far_east_events.48
+	title = russia_far_east_events.48.t
+	desc = russia_far_east_events.48.d
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.48 option russia_far_east_events.48.a"
+		name = russia_far_east_events.48.a
+		add_political_power = 10
+	}
+}
+
+country_event = { #FER wants to join our faction
+	id = russia_far_east_events.49
+	title = russia_far_east_events.49.t
+	desc = russia_far_east_events.49.d
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.49 option russia_far_east_events.49.a"
+		name = russia_far_east_events.49.a
+		add_to_faction = FER
+		FER = { JAP_add_to_economic_sphere = yes }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.49 option russia_far_east_events.49.b"
+		name = russia_far_east_events.49.b
+		ai_chance = { base = 0 }
+	}
+}
+country_event = { #FER banishes our businesses
+	id = russia_far_east_events.50
+	title = russia_far_east_events.50.t
+	desc = russia_far_east_events.50.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { has_war_with = FER }
+		is_subject = no
+		exists = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.50 option russia_far_east_events.50.a"
+		name = russia_far_east_events.50.a
+		ai_chance = { base = 5 }
+		add_political_power = -20
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.50 option russia_far_east_events.50.b"
+		name = russia_far_east_events.50.b
+		ai_chance = { base = 10 }
+		add_political_power = -40
+		send_embargo = FER
+		add_opinion_modifier = { target = FER modifier = KR_outraged }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.50 option russia_far_east_events.50.c"
+		name = russia_far_east_events.50.c
+		trigger = { is_faction_leader = yes }
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with_major = yes
+					is_faction_leader = no
+				}
+			}
+		}
+		add_political_power = -40
+		add_stability = -0.05
+		declare_war_on = {
+			target = FER
+			type = puppet_wargoal_focus
+		}
+	}
+}
+
+country_event = { #Japanese invade Sakhalin
+	id = russia_far_east_events.51
+	title = russia_far_east_events.51.t
+	desc = russia_far_east_events.51.d
+	is_triggered_only = yes
+	picture = GFX_report_event_JAP_foreign_minister_2
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.51 option russia_far_east_events.51.a"
+		name = russia_far_east_events.51.a
+		ai_chance = { base = 20 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.51 option russia_far_east_events.51.b"
+		name = russia_far_east_events.51.b
+		ai_chance = { base = 5 }
+		add_opinion_modifier = {
+			target = JAP
+			modifier = KR_hates_govt
+		}
+	}
+	after = {
+		effect_tooltip = { JAP = { transfer_state = 577 } }
+	}
+}
+
+### Postwar events
+country_event = { #Peace in the West
+	id = russia_far_east_events.52
+	title = russia_far_east_events.52.t
+	desc = russia_far_east_events.52.d
+	is_triggered_only = yes
+
+	trigger = {
+		exists = yes
+		NOT = { owns_state = 219 } #Moscow
+	}
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.52 option russia_far_east_events.52.a"
+		name = russia_far_east_events.52.a
+		add_stability = 0.1
+		if = {
+			limit = {
+				NOT = { has_completed_focus = FER_proper_statehood }
+			}
+			complete_national_focus = FER_proper_statehood
+		}
+	}
+}
+country_event = { #Rival Government Declared
+	id = russia_far_east_events.55
+	title = russia_far_east_events.55.t
+	desc = {
+		trigger = { FER = { has_government = paternal_autocrat } }
+		text = russia_far_east_events.55.d.semy
+	}
+	desc = {
+		trigger = { FER = { has_government = national_populist } }
+		text = russia_far_east_events.55.d.dite
+	}
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.55 option russia_far_east_events.55.a"
+		name = russia_far_east_events.55.a
+		add_war_support = 0.1
+	}
+}
+country_event = { #Purge Diterikhsites
+	id = russia_far_east_events.60
+	title = russia_far_east_events.60.t
+	desc = russia_far_east_events.60.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_circle_of_st_george
+	trigger = {
+		has_character = RUS_mikhail_diterikhs
+		has_government = paternal_autocrat
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.60 option russia_far_east_events.60.a"
+		name = russia_far_east_events.60.a
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.60 option russia_far_east_events.60.b"
+		name = russia_far_east_events.60.b
+		add_popularity = { ideology = national_populist popularity = -0.1 }
+		retire_character = RUS_mikhail_diterikhs
+		retire_character = RUS_nikolay_bredov
+		retire_character = RUS_vyacheslav_volkov
+	}
+	after = {
+		add_stability = -0.05
+	}
+}
+country_event = { #DNPVS-Semyonov
+	id = russia_far_east_events.61
+	title = russia_far_east_events.61.t
+	desc = russia_far_east_events.61.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov_suit
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.61 option russia_far_east_events.61.a"
+		name = russia_far_east_events.61.a
+		add_stability = 0.05
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.05 }
+		set_party_name = {
+			ideology = authoritarian_democrat
+			name = FER_authoritarian_democrat_party_2
+			long_name = FER_authoritarian_democrat_party_2_long
+		}
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+	}
+}
+country_event = { #Siberian Atamanate
+	id = russia_far_east_events.62
+	title = russia_far_east_events.62.t
+	desc = russia_far_east_events.62.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov_2
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.62 option russia_far_east_events.62.a"
+		name = russia_far_east_events.62.a
+		add_popularity = { ideology = paternal_autocrat popularity = 0.05 }
+		activate_advisor = RUS_sergey_taskin_sic
+	}
+}
+country_event = { #"Elections" of Siberian Republic
+	id = russia_far_east_events.63
+	title = russia_far_east_events.63.t
+	desc = russia_far_east_events.63.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_election
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.63 option russia_far_east_events.63.a"
+		name = russia_far_east_events.63.a
+		activate_advisor = RUS_sergey_taskin_sic
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.1 }
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.63 option russia_far_east_events.63.b"
+		name = russia_far_east_events.63.b
+		activate_advisor = RUS_ivan_serebrennikov_sic
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.05 }
+		add_popularity = { ideology = market_liberal popularity = 0.05 }
+		add_popularity = { ideology = social_liberal popularity = 0.05 }
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+		add_to_coalition = yes
+	}
+}
+country_event = { #Sweet Home
+	id = russia_far_east_events.70
+	title = russia_far_east_events.70.t
+	desc = russia_far_east_events.70.d
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.70 option russia_far_east_events.70.a"
+		name = russia_far_east_events.70.a
+		add_ideas = FER_reconstruction
+		if = {
+			limit = { has_global_flag = RUS_socrus_happened }
+			add_popularity = { ideology = totalist popularity = 0.05 }
+			add_popularity = { ideology = radical_socialist popularity = 0.1 }
+			add_popularity = { ideology = syndicalist popularity = 0.1 }
+			add_popularity = { ideology = social_democrat popularity = 0.1 }
+			add_popularity = { ideology = social_liberal popularity = 0.05 }
+			add_popularity = { ideology = market_liberal popularity = 0.05 }
+			add_popularity = { ideology = social_conservative popularity = 0.05 }
+		}
+		else = {
+			add_popularity = { ideology = totalist popularity = 0.05 }
+			add_popularity = { ideology = radical_socialist popularity = 0.05 }
+			add_popularity = { ideology = syndicalist popularity = 0.05 }
+			add_popularity = { ideology = social_democrat popularity = 0.05 }
+			add_popularity = { ideology = social_liberal popularity = 0.1 }
+			add_popularity = { ideology = market_liberal popularity = 0.1 }
+			add_popularity = { ideology = social_conservative popularity = 0.1 }
+		}
+	}
+}
+country_event = { #Trial of Svobodniks/Communists
+	id = russia_far_east_events.71
+	title = russia_far_east_events.71.t
+	desc = {
+		trigger = { has_global_flag = RUS_socrus_happened }
+		text = russia_far_east_events.71.d.soc
+	}
+	desc = {
+		trigger = { NOT = { has_global_flag = RUS_socrus_happened } }
+		text = russia_far_east_events.71.d.szrs
+	}
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_trial_1
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.71 option russia_far_east_events.71.a"
+		name = russia_far_east_events.71.a
+		add_stability = 0.05
+		add_manpower = -37800
+		if = {
+			limit = { has_global_flag = RUS_socrus_happened }
+			RUS = {
+				RUS_daniil_sulimov = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_grigory_zinovyev = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_lev_kamenev = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_mikhail_frunze = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_aleksey_ustinov = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_mikhail_tukhachevsky = { kill_character = yes }
+			}
+		}
+		else = {
+			RUS = {
+				RUS_karol_vendzyagolsky = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_vladimir_manstein = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_aleksandr_dikgof_derental = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_flegont_klepikov = { kill_character = yes }
+				custom_effect_tooltip = tooltip_white_line
+				RUS_karl_gopper = { kill_character = yes }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.71 option russia_far_east_events.71.b"
+		name = russia_far_east_events.71.b
+		trigger = { NOT = { has_government = national_populist } }
+		add_political_power = 20
+		add_manpower = 27800
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.71 option russia_far_east_events.71.c"
+		name = russia_far_east_events.71.c
+		trigger = { has_government = national_populist }
+		add_popularity = { ideology = national_populist popularity = 0.03 }
+		add_manpower = 22600
+	}
+}
+country_event = { #New Constitution
+	id = russia_far_east_events.72
+	title = russia_far_east_events.72.t
+	desc = {
+		trigger = { has_government = paternal_autocrat }
+		text = russia_far_east_events.72.d.semy
+	}
+	desc = {
+		trigger = { has_government = national_populist }
+		text = russia_far_east_events.72.d.dite
+	}
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_kremlin2
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.72 option russia_far_east_events.72.a"
+		name = russia_far_east_events.72.a
+		trigger = { has_authdem_or_pataut_government = yes }
+		set_country_flag = FER_constitution_restored
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.72 option russia_far_east_events.72.b"
+		name = russia_far_east_events.72.b
+		trigger = { has_government = paternal_autocrat }
+		set_country_flag = FER_hetman_constitution
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.72 option russia_far_east_events.72.c"
+		name = russia_far_east_events.72.c
+		trigger = { has_government = national_populist }
+	}
+}
+country_event = { #Coronation of Nikita and Diterikhs position
+	id = russia_far_east_events.73
+	title = russia_far_east_events.73.t
+	desc = russia_far_east_events.73.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_monarchy2
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.73 option russia_far_east_events.73.a"
+		name = russia_far_east_events.73.a
+		add_country_leader_role = {
+			character = RUS_nikita_romanov
+			promote_leader = yes
+			country_leader = {
+				desc = RUS_nikita_romanov_leader_desc
+				ideology = national_populist_subtype
+				traits = { RUS_tsar_of_all_rus }
+			}
+		}
+		hidden_effect = {
+			RUS_nikita_romanov = {
+				add_country_leader_role = {
+					promote_leader = yes
+					country_leader = {
+						desc = RUS_nikita_romanov_leader_desc
+						ideology = paternal_autocrat_subtype
+						traits = { RUS_tsar_of_all_rus }
+					}
+				}
+				add_country_leader_role = {
+					promote_leader = yes
+					country_leader = {
+						desc = RUS_nikita_romanov_leader_desc
+						ideology = authoritarian_democrat_subtype
+						traits = { RUS_tsar_of_all_rus }
+					}
+				}
+			}
+		}
+	}
+}
+country_event = { #Question of Church
+	id = russia_far_east_events.74
+	title = russia_far_east_events.74.t
+	desc = {
+		trigger = { NOT = { RUS_FER_metropolitan = { has_character_flag = old_believer } } }
+		text = russia_far_east_events.74.d.vissarion
+	}
+	desc = {
+		trigger = { RUS_FER_metropolitan = { has_character_flag = old_believer } }
+		text = russia_far_east_events.74.d.afanasy
+	}
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_orthodox
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.74 option russia_far_east_events.74.a"
+		name = russia_far_east_events.74.a
+		if = {
+			limit = { RUS_FER_metropolitan = { has_character_flag = old_believer } }
+			add_stability = -0.1
+		}
+		else = { add_stability = 0.1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.74 option russia_far_east_events.74.b"
+		name = russia_far_east_events.74.b
+		trigger = { RUS_FER_metropolitan = { has_character_flag = old_believer } }
+		add_stability = 0.05
+		add_political_power = -80
+		retire_character = RUS_FER_metropolitan
+	}
+}
+country_event = { #Death of Diterikhs
+	id = russia_far_east_events.75
+	title = russia_far_east_events.75.t
+	desc = russia_far_east_events.75.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_diterikhs
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = russia_far_east_events.104 days = 90 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.75 option russia_far_east_events.75.a"
+		name = russia_far_east_events.75.a
+		ai_chance = { base = 50 }
+		RUS_mikhail_diterikhs = { kill_character = yes }
+		country_event = russia_far_east_events.76
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.75 option russia_far_east_events.75.b"
+		name = russia_far_east_events.75.b
+		ai_chance = { base = 100 }
+		RUS_mikhail_diterikhs = { kill_character = yes }
+		RUS_viktorin_molchanov = { unit_leader_event = russia_far_east_events.77 }
+	}
+}
+country_event = { #Solonevich Ascends
+	id = russia_far_east_events.76
+	title = russia_far_east_events.76.t
+	desc = russia_far_east_events.76.d
+	picture = GFX_report_event_RUS_solonevich_4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.76 option russia_far_east_events.76.a"
+		name = russia_far_east_events.76.a
+		add_stability = -0.05
+		add_popularity = { ideology = national_populist popularity = 0.1 }
+		activate_advisor = RUS_ivan_solonevich_sic
+		add_advisor_role = {
+			character = RUS_mikhail_khanzhin
+			activate = yes
+			advisor = {
+				slot = army_chief
+				idea_token = RUS_mikhail_khanzhin_army_chief
+				desc = RUS_mikhail_khanzhin_high_command_desc
+				traits = { KR_army_chief_entrenchment_2 }
+				can_be_fired = no
+			}
+		}
+	}
+}
+unit_leader_event = { #Rule by Generals
+	id = russia_far_east_events.77
+	title = russia_far_east_events.77.t
+	desc = russia_far_east_events.77.d
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.77 option russia_far_east_events.77.a"
+		name = russia_far_east_events.77.a
+		add_advisor_role = {
+			character = RUS_pavel_petrov
+			activate = yes
+			advisor = {
+				slot = second_in_command
+				idea_token = RUS_pavel_petrov_sic
+				desc = RUS_pavel_petrov_advisor_desc
+				traits = { KR_reformist_soldier_sic }
+				can_be_fired = no
+			}
+		}
+		RUS_viktorin_molchanov = {
+			add_advisor_role = {
+				activate = yes
+				advisor = {
+					slot = army_chief
+					idea_token = RUS_viktorin_molchanov_army_chief
+					desc = RUS_viktorin_molchanov_high_command_desc
+					traits = { KR_army_chief_planning_2 }
+					can_be_fired = no
+				}
+			}
+			promote_leader = yes
+		}
+		retire_character = RUS_ivan_solonevich
+	}
+}
+country_event = { #Union of Musketeers
+	id = russia_far_east_events.78
+	title = russia_far_east_events.78.t
+	desc = russia_far_east_events.78.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_tsar_nicholas_portrait
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.78 option russia_far_east_events.78.a"
+		name = russia_far_east_events.78.a
+		add_popularity = { ideology = national_populist popularity = 0.04 }
+		if = {
+			limit = { has_character = RUS_vyacheslav_volkov }
+			add_advisor_role = {
+				character = RUS_vyacheslav_volkov
+				advisor = {
+					slot = political_advisor
+					idea_token = RUS_vyacheslav_volkov_advisor
+					desc = RUS_vyacheslav_volkov_sic_desc
+					traits = { KR_ultranationalist_agitator }
+					cost = 100
+				}
+			}
+		}
+	}
+}
+
+country_event = { #Semyonov Wins Presidential Election!
+	id = russia_far_east_events.80
+	title = russia_far_east_events.80.t
+	desc = russia_far_east_events.80.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov_suit
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.80 option russia_far_east_events.80.a"
+		name = russia_far_east_events.80.a
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.1 }
+	}
+}
+country_event = { #Russian Hetmanate
+	id = russia_far_east_events.81
+	title = russia_far_east_events.81.t
+	desc = russia_far_east_events.81.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_semyonov_2
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.81 option russia_far_east_events.81.a"
+		name = russia_far_east_events.81.a
+		add_popularity = { ideology = paternal_autocrat popularity = 0.05 }
+	}
+}
+country_event = { #People's Party
+	id = russia_far_east_events.82
+	title = russia_far_east_events.82.t
+	desc = russia_far_east_events.82.d
+	is_triggered_only = yes
+	picture = GFX_report_event_generic_diplomacy3
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.82 option russia_far_east_events.82.a"
+		name = russia_far_east_events.82.a
+		add_stability = 0.05
+	}
+}
+country_event = { #Working with Old Parties
+	id = russia_far_east_events.83
+	title = russia_far_east_events.83.t
+	desc = russia_far_east_events.83.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_kadets
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.83 option russia_far_east_events.83.a"
+		name = russia_far_east_events.83.a
+		add_political_power = 30
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		add_popularity = { ideology = market_liberal popularity = 0.1 }
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.05 }
+		RUS = { RUS_pavel_gronsky = { set_nationality = ROOT } }
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.83 option russia_far_east_events.83.b"
+		name = russia_far_east_events.83.b
+		add_stability = 0.05
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		add_popularity = { ideology = social_conservative popularity = 0.1 }
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.05 }
+		RUS = {
+			RUS_aleksandr_golitsyn = {
+				set_nationality = ROOT
+				add_advisor_role = {
+					activate = yes
+					advisor = {
+						slot = political_advisor
+						idea_token = RUS_aleksandr_golitsyn_advisor
+						desc = RUS_aleksandr_golitsyn_leader_desc
+						traits = { KR_pragmatic_statesman }
+						cost = 150
+					}
+				}
+			}
+		}
+	}
+}
+country_event = { #Rule by Veterans
+	id = russia_far_east_events.84
+	title = russia_far_east_events.84.t
+	desc = russia_far_east_events.84.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_army4
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.84 option russia_far_east_events.84.a"
+		name = russia_far_east_events.84.a
+		add_war_support = 0.05
+	}
+}
+
+country_event = { #Mongolian Generals Defect
+	id = russia_far_east_events.85
+	title = russia_far_east_events.85.t
+	desc = russia_far_east_events.85.d
+	is_triggered_only = yes
+	picture = GFX_report_event_MON_ungern1
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.85 option russia_far_east_events.85.a"
+		name = russia_far_east_events.85.a
+		effect_tooltip = {
+			MON_roman_ungern_sternberg = { set_nationality = FER }
+			MON_mikhail_tornovsky = { set_nationality = FER }
+			MON_boris_rezukhin = { set_nationality = FER }
+		}
+	}
+}
+
+country_event = { #End of Second Weltkrieg (scripted peace event)
+	id = russia_far_east_events.90
+	title = russia_far_east_events.90.t
+	desc = russia_far_east_events.90.d
+
+	trigger = {
+		has_war_with = RUS
+	}
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.90 option russia_far_east_events.90.a"
+		trigger = {
+			has_country_leader = { character = RUS_grigory_semyonov }
+			JAP = {
+				is_subject = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+		name = russia_far_east_events.90.a
+		set_temp_variable = { ideology_change_var = -10 }
+		change_ruling_party_popularity = yes
+		custom_effect_tooltip = russia_far_east_events.90.a.tt
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = {
+			localization_key = tooltip_disable_two_focuses
+			FOCUS1 = FER_rival_government
+			FOCUS2 = FER_return_to_kremlin
+		}
+		hidden_effect = {
+			JAP = { country_event = russia_far_east_events.92 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.90 option russia_far_east_events.90.b"
+		name = russia_far_east_events.90.b
+	}
+}
+
+country_event = { #End of Second Weltkrieg (scripted peace event) for RUS
+	id = russia_far_east_events.91
+	title = russia_far_east_events.91.t
+	desc = russia_far_east_events.91.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.91 option russia_far_east_events.91.a"
+		name = russia_far_east_events.91.a
+	}
+}
+
+country_event = { #End of Second Weltkrieg (scripted peace event) for JAP
+	id = russia_far_east_events.92
+	title = russia_far_east_events.92.t
+	desc = russia_far_east_events.92.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.92 option russia_far_east_events.92.a"
+		name = russia_far_east_events.92.a
+		effect_tooltip = {
+			FER = { white_peace = RUS }
+			JAP = {
+				set_autonomy = {
+					target = FER
+					autonomy_state = default_puppet
+					end_wars = yes
+				}
+			}
+		}
+		hidden_effect = {
+			FER = {
+				set_temp_variable = { target = FER }
+				every_controlled_state = {
+					limit = {
+						is_owned_by = RUS
+						is_core_of = RUS
+						OR = {
+							region = 148 #Primorye
+							region = 260 #Amur
+							region = 149 #Russian Far East
+							state = 577 #North Sakhalin
+						}
+					}
+					transfer_state_during_war = yes
+				}
+				if = { #Ensure Kamchatka doesn't become exclave
+					limit = { 562 = { is_controlled_by = FER } } #Okhotsk
+					637 = { #Kamchatka
+						transfer_state_during_war = yes
+					}
+				}
+				get_current_government_type = yes
+				JAP = {
+					set_autonomy = {
+						target = FER
+						autonomy_state = default_puppet
+						end_wars = yes
+					}
+				}
+				restore_previous_government_type = yes
+				diplomatic_relation = {
+					country = RUS
+					relation = non_aggression_pact
+				}
+				set_truce = {
+					target = RUS
+					days = 730
+				}
+				complete_national_focus = FER_proper_statehood
+				complete_national_focus = FER_masters_over_siberia
+			}
+			RUS = {
+				country_event = russia_far_east_events.91
+				every_owned_state = {
+					limit = { has_resources_rights = { receiver = JAP } }
+					JAP = { remove_resource_rights = PREV }
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.92 option russia_far_east_events.92.b"
+		name = russia_far_east_events.92.b
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #RSA-FER war (FER side)
+	id = russia_far_east_events.93
+	title = russia_far_east_events.93.t
+	desc = russia_far_east_events.93.d
+	is_triggered_only = yes
+	trigger = {
+		has_completed_focus = FER_siberian_state
+	}
+
+	option = { #Onwards!
+		log = "[GetLogInfo]: event russia_far_east_events.93 option russia_far_east_events.93.a"
+		name = russia_far_east_events.93.a
+		activate_mission = FER_defend_siberia
+		hidden_effect = {
+			RSA = { country_event = russia_far_east_events.96 }
+		}
+		if = {
+			limit = {
+				is_in_faction_with = JAP
+				JAP = { is_faction_leader = yes }
+			}
+			hidden_effect = {
+				RSA = {
+					country_event = { id = russia_far_east_events.97 days = 15 }
+				}
+			}
+		}
+	}
+}
+
+country_event = { #FER Siberia - end war with RSA?
+	id = russia_far_east_events.94
+	title = russia_far_east_events.94.t
+	desc = russia_far_east_events.94.d
+	is_triggered_only = yes
+
+	option = { #yes okay
+		log = "[GetLogInfo]: event russia_far_east_events.94 option russia_far_east_events.94.a"
+		name = russia_far_east_events.94.a
+		RSA = { country_event = russia_far_east_events.95 }
+	}
+	option = { #nop
+		log = "[GetLogInfo]: event russia_far_east_events.94 option russia_far_east_events.94.b"
+		ai_chance = { base = 0 }
+		name = russia_far_east_events.94.b
+	}
+}
+
+country_event = { #RSA - end war with FER Siberia?
+	id = russia_far_east_events.95
+	title = russia_far_east_events.95.t
+	desc = russia_far_east_events.95.d
+	is_triggered_only = yes
+
+	option = { #yes
+		log = "[GetLogInfo]: event russia_far_east_events.95 option russia_far_east_events.95.a"
+		name = russia_far_east_events.95.a
+		if = {
+			limit = {
+				FER = { has_country_flag = FER_occupied_siberia }
+			}
+			set_temp_variable = { target = FER }
+			every_controlled_state = {
+				limit = {
+					is_owned_by = RSA
+					is_core_of = RSA
+					is_claimed_by = FER
+				}
+				transfer_state_during_war = yes
+			}
+		}
+		else = {
+			FER = { white_peace = RSA }
+			diplomatic_relation = {
+				country = FER
+				relation = non_aggression_pact
+			}
+			set_truce = {
+				target = FER
+				days = 1460
+			}
+		}
+		if = {
+			limit = {
+				FER = {
+					controls_state = 566 #Irkutsk
+				}
+			}
+			FER = { set_cosmetic_tag = FER_SIB }
+		}
+	}
+	option = { #no
+		log = "[GetLogInfo]: event russia_far_east_events.95 option russia_far_east_events.95.b"
+		name = russia_far_east_events.95.b
+		ai_chance = { base = 0 }
+		set_temp_variable = { ideology_change_var = -10 }
+		change_ruling_party_popularity = yes
+		add_war_support = -0.2
+	}
+}
+
+country_event = { #RSA-FER war (RSA side)
+	id = russia_far_east_events.96
+	title = russia_far_east_events.96.t
+	desc = russia_far_east_events.96.d
+	is_triggered_only = yes
+
+	option = { #Onwards!
+		log = "[GetLogInfo]: event russia_far_east_events.96 option russia_far_east_events.96.a"
+		name = russia_far_east_events.96.a
+		activate_mission = RSA_take_siberia
+	}
+}
+
+country_event = { #RSA-FER war - RSA is at war with CoPro FER, appeals to German help
+	id = russia_far_east_events.97
+	title = russia_far_east_events.97.t
+	desc = russia_far_east_events.97.d
+	is_triggered_only = yes
+	trigger = {
+		GER = {
+			is_faction_leader = yes
+		}
+	}
+
+	option = { #appeal to Germany
+		log = "[GetLogInfo]: event russia_far_east_events.97 option russia_far_east_events.97.a"
+		name = russia_far_east_events.97.a
+		GER = { country_event = russia_far_east_events.98 }
+	}
+
+	option = { #don't appeal
+		log = "[GetLogInfo]: event russia_far_east_events.97 option russia_far_east_events.97.b"
+		name = russia_far_east_events.97.b
+		add_war_support = 0.1
+	}
+}
+
+country_event = { #RSA-FER war - RSA is at war with CoPro FER, appeals to German help (GER side)
+	id = russia_far_east_events.98
+	title = russia_far_east_events.98.t
+	desc = russia_far_east_events.98.d
+	is_triggered_only = yes
+
+	option = { #help RSA
+		log = "[GetLogInfo]: event russia_far_east_events.98 option russia_far_east_events.98.a"
+		name = russia_far_east_events.98.a
+		FROM = {
+			add_to_war = {
+				targeted_alliance = GER
+				enemy = FER
+			}
+		}
+		add_to_faction = FROM
+		hidden_effect = {
+			JAP = { country_event = { id = russia_far_east_events.99 days = 5 } }
+		}
+	}
+
+	option = { #no help
+		log = "[GetLogInfo]: event russia_far_east_events.98 option russia_far_east_events.98.b"
+		name = russia_far_east_events.98.b
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #RSA-FER war - JAP gets notification that GER joined war
+	id = russia_far_east_events.99
+	title = russia_far_east_events.99.t
+	desc = russia_far_east_events.99.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #peace out everyone
+		log = "[GetLogInfo]: event russia_far_east_events.99 option russia_far_east_events.99.a"
+		name = russia_far_east_events.99.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0 #JAP or allies control China
+				608 = { is_owned_by_ROOT_or_ally = yes } #Beijing
+				613 = { is_owned_by_ROOT_or_ally = yes } #Nanjing
+				592 = { is_owned_by_ROOT_or_ally = yes } #Guangzhou
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					FER = { is_ai = no }
+					RSA = { is_ai = no }
+				}
+			}
+			modifier = {
+				add = 10
+				any_enemy_country = {
+					is_actual_major = yes
+					NOT = {
+						is_in_faction_with = GER
+						tag = GER
+					}
+				}
+			}
+		}
+	}
+
+	option = { #full war
+		log = "[GetLogInfo]: event russia_far_east_events.99 option russia_far_east_events.99.b"
+		name = russia_far_east_events.99.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				add = -10
+				any_enemy_country = {
+					is_actual_major = yes
+					NOT = {
+						is_in_faction_with = GER
+						tag = GER
+					}
+				}
+			}
+		}
+	}
+}
+
+country_event = { #RSA-FER war - GER gets peace offer from JAP
+	id = russia_far_east_events.100
+	title = russia_far_east_events.100.t
+	desc = russia_far_east_events.100.d
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = { #peace out everyone
+		log = "[GetLogInfo]: event russia_far_east_events.100 option russia_far_east_events.100.a"
+		name = russia_far_east_events.100.a
+		FER = { white_peace = RSA }
+		diplomatic_relation = {
+			country = FER
+			relation = non_aggression_pact
+		}
+		set_truce = {
+			target = FER
+			days = 1500
+		}
+		remove_from_faction = RSA
+	}
+
+	option = { #full war
+		log = "[GetLogInfo]: event russia_far_east_events.100 option russia_far_east_events.100.b"
+		name = russia_far_east_events.100.b
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #Hidden AI event for choosing either Diterikhs or Semyonov
+	id = russia_far_east_events.150
+	hidden = yes
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = {
+		is_ai = yes
+	}
+
+	option = { #Semyonov
+		log = "[GetLogInfo]: event russia_far_east_events.150 option 1"
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = FER_path option = FER_PATH_NATPOP }
+			}
+		}
+		set_country_flag = FER_semyonov_ai
+	}
+
+	option = { #Diterikhs
+		log = "[GetLogInfo]: event russia_far_east_events.150 option 2"
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = FER_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = FER_path option = FER_PATH_NATPOP } }
+			}
+		}
+		set_country_flag = FER_diterikhs_ai
+	}
+}
+
+country_event = { #The Siberian Rebellion
+	id = russia_far_east_events.200
+	title = russia_far_east_events.200.t
+	desc = {
+		trigger = { FER = { NOT = { has_country_flag = FER_diterikhs_coup } } }
+		text = russia_far_east_events.200.d.semyonov
+	}
+	desc = {
+		trigger = { FER = { has_country_flag = FER_diterikhs_coup } }
+		text = russia_far_east_events.200.d.diterikhs
+	}
+	is_triggered_only = yes
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.200 option russia_far_east_events.200.a"
+		name = russia_far_east_events.200.a
+		trigger = { tag = FER }
+		custom_effect_tooltip = FER_collapse_tt
+		hidden_effect = {
+			add_popularity = { ideology = market_liberal popularity = 0.2 }
+			add_popularity = { ideology = social_conservative popularity = 0.1 }
+			promote_character = {
+				character = RUS_ivan_serebrennikov
+				ideology = market_liberal_subtype
+			}
+			set_politics = {
+				ruling_party = market_liberal
+				elections_allowed = yes
+			}
+			uncomplete_national_focus = {
+				focus = FER_rival_government
+				uncomplete_children = yes
+			}
+			var:global.russia = {
+				if = {
+					limit = {
+						tag = RSA
+						is_subject = no
+					}
+					country_event = { id = russia_far_east_events.200 days = 30 } #If there is ever playable democratic FER, make this event player choice
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.200 option russia_far_east_events.200.b"
+		name = russia_far_east_events.200.b
+		trigger = { NOT = { tag = FER } }
+		FER = {
+			RUS_ivan_serebrennikov = {
+				set_nationality = ROOT
+				add_advisor_role = {
+					advisor = {
+						slot = political_advisor
+						idea_token = RUS_ivan_serebrennikov_advisor
+						desc = RUS_ivan_serebrennikov_leader_desc
+						traits = { RUS_siberian_regionalist }
+						cost = 100
+					}
+				}
+			}
+		}
+		annex_country = {
+			target = FROM
+			transfer_troops = no
+		}
+		hidden_effect = {
+			every_owned_state = {
+				limit = {
+					NOT = { is_core_of = ROOT }
+					is_russia = yes
+				}
+				add_core_of = ROOT
+			}
+		}
+	}
+}
+
+country_event = { #Semyonov requests Entente alliance
+	id = russia_far_east_events.205
+	title = russia_far_east_events.205.t
+	desc = russia_far_east_events.205.d
+
+	trigger = {
+		is_faction_leader = yes
+		NOT = { has_war_with = FROM }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.205 option russia_far_east_events.205.a"
+		name = russia_far_east_events.205.a
+		every_other_country = {
+			limit = {
+				is_in_faction_with = FROM
+				is_subject = no
+			}
+			ROOT = { add_to_faction = PREV }
+		}
+		add_to_faction = FROM
+	}
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.205 option russia_far_east_events.205.b"
+		name = russia_far_east_events.205.b
+		ai_chance = { base = 0 }
+	}
+}
+
+country_event = { #War of National Reclamation
+	id = russia_far_east_events.101
+	title = russia_far_east_events.101.t
+	desc = {
+		trigger = { has_country_leader = { character = RUS_grigory_semyonov } }
+		text = russia_far_east_events.101.d
+	}
+	desc = {
+		trigger = { has_country_leader = { character = RUS_mikhail_diterikhs } }
+		text = russia_far_east_events.101.d2
+	}
+	is_triggered_only = yes
+	trigger = {
+		is_subject = no
+		has_completed_focus = FER_rival_government
+	}
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.101 option russia_far_east_events.101.a"
+		name = russia_far_east_events.101.a
+		add_war_support = 0.02
+	}
+}
+
+country_event = { #Meeting with Germans
+	id = russia_far_east_events.102
+	title = russia_far_east_events.102.t
+	desc = russia_far_east_events.102.d
+	is_triggered_only = yes
+	trigger = {
+		is_subject = no
+		GER = { is_faction_leader = yes }
+		NOT = { has_war_with = GER }
+	}
+	picture = GFX_report_event_generic_diplomacy2
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.102 option russia_far_east_events.102.a"
+		name = russia_far_east_events.102.a
+		add_stability = 0.05
+	}
+}
+
+country_event = { #Oprichniks
+	id = russia_far_east_events.103
+	title = russia_far_east_events.103.t
+	desc = russia_far_east_events.103.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_army3
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.103 option russia_far_east_events.103.a"
+		name = russia_far_east_events.103.a
+		add_stability = 0.02
+	}
+}
+
+country_event = { #End of the Second Troubles
+	id = russia_far_east_events.104
+	title = russia_far_east_events.104.t
+	desc = russia_far_east_events.104.d
+	is_triggered_only = yes
+	picture = GFX_report_event_RUS_shooting_squad
+
+	option = {
+		log = "[GetLogInfo]: event russia_far_east_events.104 option russia_far_east_events.104.a"
+		name = russia_far_east_events.104.a
+		add_stability = 0.02
+	}
+}
+
+#Far Eastern army unifies russia
+news_event = {
+	id = russia_far_east_events.1000
+	immediate = { log = "[GetLogInfo]: event russia_far_east_events.1000" }
+	title = russia_far_east_events.1000.t
+	desc = russia_far_east_events.1000.d
+	picture = [FER_unification_news_event_picture]
+
+	major = yes
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = russia_far_east_events.1000.a
+		trigger = { tag = FER }
+	}
+	option = {
+		name = russia_far_east_events.1000.b
+		trigger = { tag = JAP }
+	}
+	option = {
+		name = russia_far_east_events.1000.c
+		trigger = {
+			NOT = {
+				tag = JAP
+				tag = FER
+			}
+		}
+	}
+}
+

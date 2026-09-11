@@ -1,0 +1,4721 @@
+USA_initial_events = {
+	if = {
+		limit = { NOT = { has_global_flag = USA_leadup_to_the_war } }
+		set_global_flag = USA_leadup_to_the_war
+		USA = {
+			country_event = { id = american_civil_war_events.311 hours = 8 } #MacArthur's Warning
+			country_event = { id = american_civil_war_events.300 days = 3 } #New England riots
+			country_event = { id = american_civil_war_events.312 days = 25 } #Deadline Running Out
+			news_event = { id = american_civil_war_events.4 hours = 8 }
+		}
+		if = {
+			limit = { country_exists = WCA }
+			WCA = {
+				country_event = { id = american_civil_war_events.718 hours = 14 } #Siege of New York City
+				country_event = { id = american_civil_war_events.312 days = 25 } #Deadline Running Out
+			}
+		}
+		if = {
+			limit = { country_exists = ACC }
+			ACC = {
+				country_event = { id = american_civil_war_events.312 days = 25 } #Deadline Running Out
+			}
+		}
+		if = {
+			limit = { country_exists = APG }
+			APG = {
+				country_event = { id = american_civil_war_events.312 days = 25 } #Deadline Running Out
+			}
+		}
+		every_collection_element = {
+			input = collection:all_mainland_american_states
+			if = {
+				limit = { is_controlled_by = USA }
+				USA = { activate_targeted_decision = { decision = ACW_recruit_in_state target = PREV } }
+			}
+			else_if = {
+				limit = { is_controlled_by = WCA }
+				WCA = { activate_targeted_decision = { decision = ACW_recruit_in_state target = PREV } }
+			}
+			else_if = {
+				limit = { is_controlled_by = APG }
+				APG = { activate_targeted_decision = { decision = ACW_recruit_in_state target = PREV } }
+			}
+			else_if = {
+				limit = { is_controlled_by = ACC }
+				ACC = { activate_targeted_decision = { decision = ACW_recruit_in_state target = PREV } }
+			}
+		}
+		LEC = {
+			country_event = { id = legation_cities_american_events.9 days = 4 }
+		}
+		USA = {
+			if = {
+				limit = { has_country_flag = USA_ACW_austerity_rejected }
+				if = {
+					limit = { NOT = { has_country_flag = USA_ACW_borah_complete_success } }
+
+					country_event = { id = american_civil_war_events.320 days = 5 } #Minnesota
+					country_event = { id = american_civil_war_events.326 days = 9 } #New York/New Jersey
+					country_event = { id = american_civil_war_events.330 days = 12 } #Iowa
+					country_event = { id = american_civil_war_events.332 days = 15 } #Missouri
+					country_event = { id = american_civil_war_events.333 days = 20 } #Kentucky
+
+					APG = { set_cosmetic_tag = APG_compromise_rebels }
+					if = {
+						limit = { has_country_flag = USA_ACW_borah_south_pact }
+						every_owned_state = {
+							limit = {
+								OR = {
+									state = 150 #Louisiana
+									state = 371 #New Orleans
+									state = 372 #Arkansas
+									state = 374 #Oklahoma
+									state = 375 #Northern Texas
+									state = 833 #Southern Texas
+								}
+							}
+							add_core_of = APG
+							remove_core_of = PREV
+							add_claim_by = PREV
+							if = {
+								limit = { is_controlled_by = PREV }
+								start_state_integration_resistance = yes
+							}
+						}
+					}
+					else = {
+						every_owned_state = {
+							limit = {
+								OR = {
+									state = 364 #South Carolina
+									state = 365 #Georgia
+									state = 366 #Florida
+									state = 367 #Alabama
+									state = 370 #Mississippi
+								}
+							}
+							add_core_of = APG
+							remove_core_of = PREV
+							add_claim_by = PREV
+							if = {
+								limit = { is_controlled_by = PREV }
+								start_state_integration_resistance = yes
+							}
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { NOT = { has_government = paternal_autocrat } }
+				country_event = { id = american_civil_war_events.301 days = 5 } #Minnesota
+				country_event = { id = american_civil_war_events.302 days = 7 } #North Carolina
+				country_event = { id = american_civil_war_events.303 days = 9 } #Tennessee
+				country_event = { id = american_civil_war_events.304 days = 12 } #New York/New Jersey
+				country_event = { id = american_civil_war_events.306 days = 18 } #Southern Texas
+				country_event = { id = american_civil_war_events.307 days = 20 } #Iowa
+			}
+		}
+	}
+}
+
+USA_release_WCA = {
+	set_global_flag = USA_WCA_existed
+	effect_tooltip = { release = WCA }
+	hidden_effect = {
+		WCA = {
+			add_state_core = 261 #Ohio
+			add_state_core = 358 #New York City
+			add_state_core = 360 #Philadelphia
+			add_state_core = 393 #Michigan
+			add_state_core = 394 #Wisconsin
+			add_state_core = 395 #Illinois
+			add_state_core = 396 #Indiana
+			add_state_core = 929 #West Virginia
+			add_state_core = 975 #Pittsburg
+			set_cosmetic_tag = WCA_ACW
+		}
+
+		USA = {
+			delete_units = { division_template = "Infantry Division" disband = yes }
+			delete_units = { division_template = "National Guard Infantry Division" disband = yes }
+			delete_units = { division_template = "Cavalry Division" disband = yes }
+			delete_units = { division_template = "National Guard Cavalry Division" disband = yes }
+			delete_units = { division_template = "Armored Cavalry Division" disband = yes }
+			delete_units = { division_template = "Marine Division" disband = yes }
+			USA_spawn_starting_civil_war_divisions = yes
+			if = {
+				limit = { USA_has_blue_america_cosmetic_tag = yes }
+				set_cosmetic_tag = USA_ACW
+			}
+			else = {
+				set_cosmetic_tag = USA_ACW_macarthur
+			}
+			WCA = { transfer_technology_without_doctrines = yes }
+			if = {
+				limit = { has_country_flag = USA_ACW_austerity_rejected }
+				WCA = {
+					add_political_power = 100
+					add_manpower = 150000
+					add_war_support = 0.10
+					add_stability = 0.15
+				}
+				send_equipment_fraction = { target = WCA value = 0.4 }
+			}
+			else = {
+				send_equipment_fraction = { target = WCA value = 0.2 }
+			}
+			set_political_party = { ideology = totalist popularity = 0 }
+			set_political_party = { ideology = syndicalist popularity = 0 }
+			set_political_party = { ideology = radical_socialist popularity = 0 }
+			every_other_country = {
+				limit = { has_socialist_government = yes }
+				embargo_PREV = yes
+			}
+		}
+
+		every_owned_state = {
+			limit = { is_core_of = WCA }
+			transfer_state_to = WCA
+			teleport_armies = {
+				limit = { is_ally_with = USA }
+				to_state_array = owned_controlled_states
+			}
+		}
+
+		every_core_state = {
+			limit = {
+				NOT = {
+					is_core_of = WCA
+					is_claimed_by = WCA
+					state = 630 #Johnston Atoll
+					state = 631 #Midway Island
+					state = 632 #Wake Island
+					state = 638 #Guam
+					state = 685 #Panama Canal
+					state = 686 #Puerto Rico
+					state = 726 #Samoa
+					state = 727 #Line Islands
+				}
+			}
+			add_claim_by = WCA
+		}
+
+		WCA_herbert_charles_heitke = {
+			set_leader_description = WCA_herbert_charles_heitke_WCA_commander_desc
+			set_nationality = WCA
+		}
+		WCA_smedley_butler = {
+			set_leader_description = WCA_smedley_butler_WCA_commander_desc
+			promote_leader = yes
+			set_nationality = WCA
+		}
+
+		WCA_jack_reed = { set_nationality = WCA }
+		WCA_norman_thomas = { set_nationality = WCA }
+		WCA = {
+			add_civil_war_target = USA
+			promote_character = WCA_jack_reed
+			promote_character = WCA_norman_thomas
+			every_owned_state = {
+				set_demilitarized_zone = no
+				USA_remove_support_modifiers_from_state = yes
+			}
+			WCA_james_kelly_parsons = {
+				add_timed_unit_leader_trait = { trait = recently_promoted days = 100 }
+			}
+
+			WCA_john_whiteside_parsons = { set_nationality = PREV }
+			WCA_julius_robert_oppenheimer = { set_nationality = PREV }
+			WCA_karl_probst = { set_nationality = PREV }
+			WCA_peyton_marshall_magruder = { set_nationality = PREV }
+
+			set_temp_variable = { coalition_partner_var = token:totalist }
+			add_to_coalition = yes
+			set_temp_variable = { coalition_partner_var = token:radical_socialist }
+			add_to_coalition = yes
+
+			if = {
+				limit = { has_dlc_bba = yes }
+				load_oob = ACW_WCA_air_bba
+			}
+			else = {
+				load_oob = ACW_WCA_air_legacy
+			}
+
+			add_ideas = WCA_red_guard_militias_1
+			WCA_spawn_starting_civil_war_divisions = yes
+			WCA_add_extra_units_based_on_strength = yes
+			unit_limit_calculation_effect = yes
+
+			every_other_country = {
+				limit = { NOT = { is_in_faction_with = ENT } }
+				clear_embargo_PREV = yes
+			}
+
+			country_event = { id = america_workers_congress_events.150 days = 6 } # Initialization event
+			country_event = { id = american_civil_war_events.30 days = 40 random_days = 10 } # Dealing with the Rich
+			country_event = { id = american_civil_war_events.38 days = 70 random_days = 20 } # Revolutionary Propaganda
+			country_event = { id = american_civil_war_events.36 days = 100 random_days = 20 } # Internal Conflicts
+			country_event = { id = american_civil_war_events.40 days = 130 random_days = 20 } # Protecting against Saboteurs
+			country_event = { id = american_civil_war_events.41 days = 160 random_days = 20 } # Red Terror
+			country_event = { id = american_civil_war_events.41 days = 245 random_days = 20 } # Winter Resource Allocation Program
+
+			set_temp_variable = { days_to_event = 1633 }
+			calculate_days_since_game_start = yes
+			country_event = { id = america_workers_congress_events.216 days = days_to_event random_days = 180 } #Smedley Butler Passes Away
+		}
+
+		every_owned_state = {
+			limit = {
+				is_owned_by = USA
+				is_new_england = yes
+			}
+			set_demilitarized_zone = yes
+		}
+		359 = { set_demilitarized_zone = yes } #New Jersey
+		391 = { set_demilitarized_zone = yes } #Minnesota
+		392 = { set_demilitarized_zone = yes } #Iowa
+		if = {
+			limit = {
+				has_country_flag = USA_ACW_austerity_rejected
+				NOT = { has_country_flag = USA_ACW_borah_complete_success }
+			}
+			369 = { set_demilitarized_zone = yes } #Kentucky
+			373 = { set_demilitarized_zone = yes } #Missouri
+		}
+
+		#Inherit MIO levels and funds
+		if = {
+			limit = { has_dlc_aat = yes }
+			set_temp_variable = { USA_mio_transfer_originator = USA }
+			set_temp_variable = { USA_mio_transfer_target = WCA }
+			USA_transfer_mio_size_and_funds = yes
+		}
+	}
+}
+
+USA_release_APG = {
+	set_global_flag = USA_APG_existed
+	effect_tooltip = { release = APG }
+	hidden_effect = {
+		APG = {
+			add_state_core = 150 #Louisiana
+			add_state_core = 364 #South Carolina
+			add_state_core = 365 #Georgia
+			add_state_core = 366 #Florida
+			add_state_core = 367 #Alabama
+			add_state_core = 370 #Mississippi
+			add_state_core = 371 #New Orleans
+			add_state_core = 372 #Arkansas
+			add_state_core = 374 #Oklahoma
+			add_state_core = 375 #Northern Texas
+			add_state_core = 833 #Southern Texas
+			set_cosmetic_tag = APG_ACW
+		}
+
+		USA = {
+			APG = { transfer_technology_without_doctrines = yes }
+			send_equipment_fraction = { target = APG value = 0.312 } #31,2% of the remaining 80% = ~25%
+			set_political_party = { ideology = authoritarian_democrat popularity = 0 }
+			set_political_party = { ideology = national_populist popularity = 0 }
+			set_political_party = { ideology = syndicalist popularity = 0 }
+		}
+
+		every_owned_state = {
+			limit = { is_core_of = APG }
+			transfer_state_to = APG
+			teleport_armies = {
+				limit = { tag = USA }
+				to_state_array = owned_controlled_states
+			}
+		}
+
+		every_core_state = {
+			limit = {
+				NOT = {
+					is_core_of = APG
+					is_claimed_by = APG
+					state = 630 #Johnston Atoll
+					state = 631 #Midway Island
+					state = 632 #Wake Island
+					state = 638 #Guam
+					state = 685 #Panama Canal
+					state = 686 #Puerto Rico
+					state = 726 #Samoa
+					state = 727 #Line Islands
+				}
+			}
+			add_claim_by = APG
+		}
+
+		APG_fox_conner = {
+			promote_leader = yes
+			set_nationality = APG
+		}
+		APG_george_smith_patton = {
+			set_leader_description = APG_george_smith_patton_APG_commander_desc
+			set_nationality = APG
+		}
+		APG_george_van_horn_moseley = {
+			set_leader_description = APG_george_van_horn_moseley_theorist_desc
+			promote_leader = yes
+			set_nationality = APG
+			promote_character = paternal_autocrat_subtype
+		}
+
+		set_global_flag = ACW_southern_vps_changed
+		set_victory_points = { province = 1453 value = 25 } #Baton Rouge
+		set_victory_points = { province = 12401 value = 10 } #Shreveport
+		set_victory_points = { province = 12735 value = 15 } #Birmingham
+		set_victory_points = { province = 492 value = 15 } #Montgomery
+		set_victory_points = { province = 4565 value = 15 } #Jackson
+		set_victory_points = { province = 10407 value = 15 } #Tallahassee
+		set_victory_points = { province = 7480 value = 10 } #Montgomery
+		set_victory_points = { province = 11975 value = 10 } #Savannah
+		set_victory_points = { province = 12489 value = 10 } #Little Rock
+		set_victory_points = { province = 4464 value = 10 } #Biloxi
+		set_victory_points = { province = 4507 value = 5 } #Lafayette
+
+		APG_huey_long = {
+			set_nationality = APG
+			promote_character = authoritarian_democrat_subtype
+			promote_character = national_populist_subtype
+		}
+		APG = {
+			add_civil_war_target = USA
+			add_civil_war_target = WCA
+			APG_emory_scott_land = { set_nationality = PREV }
+			APG_john_walter_christie = { set_nationality = PREV }
+			APG_robert_hutchings_goddard = { set_nationality = PREV }
+
+			every_owned_state = {
+				set_demilitarized_zone = no
+				USA_remove_support_modifiers_from_state = yes
+			}
+
+			set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+			add_to_coalition = yes
+
+			every_other_country = {
+				limit = { has_socialist_government = yes }
+				embargo_PREV = yes
+			}
+
+			if = {
+				limit = { has_dlc_bba = yes }
+				load_oob = ACW_APG_air_bba
+			}
+			else = {
+				load_oob = ACW_APG_air_legacy
+			}
+
+			APG_spawn_starting_civil_war_divisions = yes
+			APG_add_extra_units_from_strength = yes
+			unit_limit_calculation_effect = yes
+
+			if = {
+				limit = { USA = { has_country_flag = USA_long_was_president } }
+				add_timed_idea = {
+					idea = APG_righteous_nation
+					days = 120
+				}
+			}
+
+			country_event = { id = america_peoples_government_events.150 days = 7 } #Initial Events
+			country_event = { id = american_civil_war_events.46 days = 10 } # Appeal to Reason
+		}
+
+		363 = { set_demilitarized_zone = yes } #North Carolina
+		368 = { set_demilitarized_zone = yes } #Tennessee
+		833 = { set_demilitarized_zone = yes } #South Texas
+
+		#Inherit MIO levels and funds
+		if = {
+			limit = { has_dlc_aat = yes }
+			set_temp_variable = { USA_mio_transfer_originator = USA }
+			set_temp_variable = { USA_mio_transfer_target = APG }
+			USA_transfer_mio_size_and_funds = yes
+		}
+	}
+}
+
+USA_release_ACC = {
+	set_global_flag = USA_ACC_existed
+	effect_tooltip = { release = ACC }
+	hidden_effect = {
+		set_political_party = { ideology = social_democrat popularity = 0 }
+
+		set_temp_variable = { USA_soclib_popularity = { value = party_popularity_100@social_liberal divide = 3 } }
+		set_political_party = { ideology = social_liberal popularity = USA_soclib_popularity }
+
+		set_temp_variable = { USA_marlib_popularity = { value = party_popularity_100@market_liberal divide = 2 } }
+		set_political_party = { ideology = market_liberal popularity = USA_marlib_popularity }
+
+		add_popularity = { ideology = paternal_autocrat popularity = 0.15 }
+
+		ACC = {
+			add_state_core = 378 #Northern California
+			add_state_core = 385 #Oregon
+			add_state_core = 386 #Washington
+			add_state_core = 463 #Alaska
+			add_state_core = 797 #San Francisco
+			add_state_core = 798 #Los Angeles
+			add_state_core = 829 #Southern California
+			set_cosmetic_tag = ACC_ACW
+			transfer_technology_without_doctrines = yes
+		}
+
+		every_owned_state = {
+			limit = { is_core_of = ACC }
+			transfer_state_to = ACC
+			teleport_armies = {
+				limit = { tag = USA }
+				to_state_array = owned_controlled_states
+			}
+		}
+
+		every_state = {
+			limit = {
+				is_core_of = USA
+				NOT = {
+					is_core_of = ACC
+					is_claimed_by = ACC
+					state = 630 #Johnston Atoll
+					state = 631 #Midway Island
+					state = 632 #Wake Island
+					state = 638 #Guam
+					state = 685 #Panama Canal
+					state = 686 #Puerto Rico
+					state = 726 #Samoa
+					state = 727 #Line Islands
+				}
+			}
+			add_claim_by = ACC
+		}
+
+		ACC_john_lesesne_dewitt = {
+			promote_leader = yes
+			set_nationality = ACC
+		}
+		ACC_george_catlett_marshall = {
+			set_leader_description = ACC_george_catlett_marshall_ACC_commander_desc
+			promote_leader = yes
+			set_nationality = ACC
+		}
+		ACC_henry_harley_arnold = {
+			set_leader_description = ACC_henry_harley_arnold_ACC_commander_desc
+			set_nationality = ACC
+		}
+		ACC_william_daniel_leahy = { set_nationality = ACC }
+		ACC_chester_william_nimitz = { set_nationality = ACC }
+		ACC_ernest_joseph_king = { set_nationality = ACC }
+
+		send_equipment_fraction = { target = ACC value = 0.45 } #45% of the remaining 55% = ~25%
+
+		USA_quentin_roosevelt = {
+			set_nationality = ACC
+			promote_character = market_liberal_subtype
+		}
+
+		ACC = {
+			add_civil_war_target = USA
+			add_civil_war_target = WCA
+			add_civil_war_target = APG
+			every_owned_state = { set_demilitarized_zone = no }
+
+			ACC_andrew_irwin_mckee = { set_nationality = PREV }
+			ACC_edward_curtis_wells = { set_nationality = PREV }
+			ACC_edwin_mattison_mcmillan = { set_nationality = PREV }
+			ACC_ernest_orlando_lawrence = { set_nationality = PREV }
+			ACC_paul_pigott = { set_nationality = PREV }
+
+			every_other_country = {
+				limit = { has_socialist_government = yes }
+				embargo_PREV = yes
+			}
+
+			if = {
+				limit = { has_dlc_bba = yes }
+				load_oob = ACW_ACC_air_bba
+			}
+			else = {
+				load_oob = ACW_ACC_air_legacy
+			}
+
+			ACC_spawn_starting_civil_war_divisions = yes
+			unit_limit_calculation_effect = yes
+
+			country_event = { id = america_constitutional_coalition_events.150 days = 1 } #Initial Events
+
+			set_temp_variable = { days_to_event = 3110 }
+			calculate_days_since_game_start = yes
+			#country_event = { id = united_states_events.187 days = days_to_event random_days = 180 } #Al Smith Passes Away
+		}
+
+		# Pacific Fleet
+		transfer_ship = { prefer_name = "USS Utah" type = battleship target = event_target:system }
+		transfer_ship = { prefer_name = "USS Arkansas" type = battleship target = event_target:system }
+		transfer_ship = { prefer_name = "USS Wyoming" type = battleship target = event_target:system }
+		transfer_ship = { prefer_name = "USS Texas" type = battleship target = event_target:system }
+		transfer_ship = { prefer_name = "USS South Carolina" type = battleship target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS Lexington" type = battle_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Saratoga" type = battle_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Norfolk" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Newark" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Omaha" type = light_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Milwaukee" type = light_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Raleigh" type = light_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Detroit" type = light_cruiser target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS Winslow" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Abel P. Upshur" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Hunt" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Welborn C. Wood" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS George E. Badger" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Branch" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Herndon" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Clemson" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Dahlgren" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Goldsborough" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Semmes" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Satterlee" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Greer" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Ward" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Claxton" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Hamilton" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Tarbell" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Yarnall" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Upshur" type = destroyer target = event_target:system }
+
+		#ADD DESTROYER LEADER FROM PRODUCTION
+		transfer_ship = { prefer_name = "USS Taylor" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Schley" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Chew" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Williams" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Crane" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Rathburne" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Sigourney" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Gregory" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Stringham" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Colhoun" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS McKean" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Fairfax" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Wickes" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Philip" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Evans" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Little" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Mason" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Jacob Jones" type = destroyer target = event_target:system }
+
+		# Pacific Submarine Fleet
+		transfer_ship = { prefer_name = "USS R11" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R12" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R13" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R14" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R15" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R16" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R17" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R18" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R19" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS R20" type = submarine target = event_target:system }
+
+		# Pacific Reserve Fleet
+		transfer_ship = { prefer_name = "USS Frankfort" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Columbus" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Helena" type = heavy_cruiser target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS Phelps" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Caldwell" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Craven" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Gwin" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Conner" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Stockton" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Manley" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Ballard" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Champlin" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Mugford" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Hazelwood" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Hart" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Ingraham" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Stribling" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Murray" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Israel" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Luce" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Maury" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Lansdale" type = destroyer target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS S1" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S4" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S11" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S12" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S13" type = submarine target = event_target:system }
+
+		# Asiatic Fleet
+		transfer_ship = { prefer_name = "USS Marion" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Marblehead" type = light_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Cincinnati" type = light_cruiser target = event_target:system }
+
+		#ADD DESTROYER LEADER FROM PRODUCTION
+		transfer_ship = { prefer_name = "USS Alden" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Whipple" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Edsall" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Stewart" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Barker" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Paul Jones" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Trever" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Decatur" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS John D. Ford" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Pope" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Peary" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Pillsbury" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Radford" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Gamble" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Badger" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Twiggs" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Babbitt" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Graham" type = destroyer target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS S3" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S7" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S8" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S9" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S24" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S25" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S26" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S27" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S28" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S29" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S30" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS S31" type = submarine target = event_target:system }
+
+		ACC = {
+			annex_country = { target = event_target:system }
+			load_oob = ACW_ACC_naval
+		}
+
+		#Inherit MIO levels and funds
+		if = {
+			limit = { has_dlc_aat = yes }
+			set_temp_variable = { USA_mio_transfer_originator = USA }
+			set_temp_variable = { USA_mio_transfer_target = ACC }
+			USA_transfer_mio_size_and_funds = yes
+		}
+	}
+}
+
+USA_civil_war_begins = {
+	hidden_effect = {
+		if = {
+			limit = { NOT = { has_global_flag = USA_civil_war_begun_flag } }
+			set_global_flag = USA_civil_war_begun_flag
+			log = "KR_Event_Logging;ACW START"
+			if = {
+				limit = { country_exists = APG }
+				log = "KR_Event_Logging;AUS JOINS ACW"
+			}
+			if = {
+				limit = { country_exists = WCA }
+				log = "KR_Event_Logging;WCA JOINS ACW"
+			}
+			if = {
+				limit = { country_exists = ACC }
+				log = "KR_Event_Logging;ACC JOINS ACW"
+			}
+
+			#declarations of war
+			if = {
+				limit = { country_exists = WCA }
+				WCA = { declare_war_on = { target = USA type = civil_war } }
+			}
+			if = {
+				limit = { country_exists = APG }
+				APG = { declare_war_on = { target = USA type = civil_war } }
+			}
+			if = {
+				limit = {
+					country_exists = WCA
+					country_exists = APG
+				}
+				WCA = { declare_war_on = { target = APG type = civil_war } }
+			}
+			if = {
+				limit = { country_exists = ACC }
+				WCA = { declare_war_on = { target = ACC type = civil_war } }
+				APG = { declare_war_on = { target = ACC type = civil_war } }
+				ACC = { declare_war_on = { target = USA type = civil_war } }
+			}
+
+			if = {
+				limit = { country_exists = WCA }
+				WCA = {
+					country_event = { id = american_civil_war_events.313 days = 1 }
+					country_event = { id = american_civil_war_events.90 days = 90 }
+					add_ideas = amcivwar_idea_WCA
+					if = {
+						limit = { USA = { has_country_flag = USA_ACW_austerity_rejected } }
+						add_timed_idea = { idea = ACW_fired_up days = 180 }
+					}
+				}
+			}
+			if = {
+				limit = { country_exists = APG }
+				APG = {
+					country_event = { id = american_civil_war_events.90 days = 90 }
+					add_ideas = amcivwar_idea_APG
+				}
+			}
+			if = {
+				limit = { country_exists = ACC }
+				ACC = {
+					country_event = { id = american_civil_war_events.90 days = 90 }
+					add_ideas = amcivwar_idea_ACC
+				}
+			}
+
+			# remove USA cores in uncontrolled territory
+			every_state = {
+				limit = { is_core_of = USA }
+				if = {
+					limit = {
+						OR = {
+							is_controlled_by = WCA
+							is_controlled_by = APG
+							is_controlled_by = ACC
+						}
+					}
+					remove_core_of = USA
+					add_claim_by = USA
+				}
+			}
+
+			#hidden looping event for ACW desertions
+			USA = { country_event = { id = american_civil_war_events.803 days = 1185 random_days = 100 } }
+			WCA = { country_event = { id = american_civil_war_events.803 days = 1185 random_days = 100 } }
+			NEE = { country_event = { id = american_civil_war_events.803 days = 1185 random_days = 100 } }
+			ACC = { country_event = { id = american_civil_war_events.803 days = 1185 random_days = 100 } }
+			APG = { country_event = { id = american_civil_war_events.803 days = 1185 random_days = 100 } }
+
+			USA = {
+				country_event = { id = hawaii_events.1 days = 1 random_days = 3 } # Hawaii Rebels
+				country_event = { id = american_civil_war_events.61 days = 2 random_days = 3 } # Conscription
+				country_event = { id = american_civil_war_events.62 days = 30 } # Recall the China Marines?
+				country_event = { id = american_civil_war_events.63 days = 6 } # Emergency Stockpiles
+				if = {
+					limit = { NOT = { has_country_flag = USA_ACW_austerity_rejected } }
+					country_event = { id = american_civil_war_events.90 days = 90 }
+				}
+				add_ideas = amcivwar_idea_USA
+				add_named_threat = {
+					threat = 12
+					name = american_civil_war_threat
+				}
+
+				# remove guarantees
+				if = {
+					limit = { GUA = { is_guaranteed_by = USA } }
+					diplomatic_relation = { country = GUA relation = guarantee active = no }
+				}
+				if = {
+					limit = { ELS = { is_guaranteed_by = USA } }
+					diplomatic_relation = { country = ELS relation = guarantee active = no }
+				}
+				if = {
+					limit = { HON = { is_guaranteed_by = USA } }
+					diplomatic_relation = { country = HON relation = guarantee active = no }
+				}
+				if = {
+					limit = { COS = { is_guaranteed_by = USA } }
+					diplomatic_relation = { country = COS relation = guarantee active = no }
+				}
+				if = {
+					limit = { PAN = { is_guaranteed_by = USA } }
+					diplomatic_relation = { country = PAN relation = guarantee active = no }
+				}
+				if = {
+					limit = { LEC = { is_guaranteed_by = USA } }
+					diplomatic_relation = { country = LEC relation = guarantee active = no }
+				}
+				if = {
+					limit = { HAI = { is_guaranteed_by = USA } }
+					diplomatic_relation = { country = HAI relation = guarantee active = no }
+				}
+				if = {
+					limit = { DOM = { is_guaranteed_by = USA } }
+					diplomatic_relation = { country = DOM relation = guarantee active = no }
+				}
+				if = {
+					limit = { HAI = { gives_military_access_to = USA } }
+					diplomatic_relation = { country = HAI relation = military_access active = no }
+				}
+				if = {
+					limit = { DOM = { gives_military_access_to = USA } }
+					diplomatic_relation = { country = DOM relation = military_access active = no }
+				}
+
+				country_event = { id = american_civil_war_events.65 days = 40 random_days = 10 } # Martial Law?
+				country_event = { id = american_civil_war_events.64 days = 90 random_days = 10 } # Hardtransfer_ship of the civil war
+				country_event = { id = american_civil_war_events.66 days = 120 random_days = 20 } # Loyalist Terror
+				country_event = { id = american_civil_war_events.67 days = 150 random_days = 20 } # Native American Code talkers
+				country_event = { id = american_civil_war_events.69 days = 180 random_days = 20 } # Double V Campaign
+				country_event = { id = american_civil_war_events.70 days = 200 random_days = 20 } # Militarize the WASPs?
+
+				news_event = { id = united_states_events.1000 hours = 4 } #main news event
+			}
+			WCA = {
+				country_event = { id = american_civil_war_events.35 days = 40 random_days = 80 } # Female Soldiers
+				country_event = { id = american_civil_war_events.34 days = 60 random_days = 120 } # Red Witches
+				country_event = { id = american_civil_war_events.32 days = 120 random_days = 240 } # Life During Wartime
+			}
+			ACC = {
+				country_event = { id = american_civil_war_events.62 days = 30 } # Recall the China Marines?
+			}
+
+			# Canada receives notification
+			CAN = {
+				country_event = { id = american_civil_war_events.150 hours = 8 }
+				country_event = { id = american_civil_war_events.151 days = 7 hours = 8 }
+			}
+
+			# USA colony events
+			LIB = { country_event = { id = american_civil_war_events.212 hours = 8 } }
+			PHI = { country_event = { id = philippines_political_events.020 hours = 8 } } #The Declaration of the Republic
+
+			# ACW related events for non-US nations
+			PAN = {
+				country_event = { id = panama_events.5 days = 2 }
+				remove_targeted_decision = { target = COS decision = PAN_pressure_coto_36 }
+				if = {
+					limit = { has_idea = CEN_monroe_doctrine }
+					activate_targeted_decision = { target = USA decision = PAN_remove_monroe }
+				}
+			}
+			COS = {
+				country_event = { id = costa_rica_events.23 days = 5 random_days = 15 }
+			}
+			NIC = {
+				country_event = { id = nicaragua_events.41 days = 3 }
+			}
+			ELS = {
+				country_event = { id = el_salvador_events.106 days = 3 }
+			}
+			HON = {
+				country_event = { id = honduras_events.101 days = 10 }
+			}
+			GUA = {
+				country_event = { id = guatemala_events.4 days = 3 }
+			}
+			MEX = {
+				activate_targeted_decision = { target = USA decision = MEX_nationalize_oil }
+				if = {
+					limit = { has_socialist_government = yes }
+					activate_targeted_decision = { target = WCA decision = MEX_intervene_WCA }
+					activate_targeted_decision = { target = GUA decision = MEX_support_socialists }
+					activate_targeted_decision = { target = ELS decision = MEX_support_socialists }
+					activate_targeted_decision = { target = HON decision = MEX_support_socialists }
+					activate_targeted_decision = { target = NIC decision = MEX_support_socialists }
+					activate_targeted_decision = { target = CEN decision = MEX_fight_reactionary_central_america }
+				}
+				if = {
+					limit = { has_government = national_populist }
+					activate_targeted_decision = { target = THIS decision = MEX_claim_central_america }
+					activate_targeted_decision = { target = THIS decision = MEX_reconquista_decision }
+				}
+			}
+			BRA = {
+				country_event = { id = brazil_events.203 days = 45 random_days = 180 } #Refugees from the ACW
+				country_event = { id = brazil_events.215 days = 90 random_days = 270 } #Increasing German Alignment
+			}
+			HAI = {
+				country_event = { id = haiti_events.15 days = 7 random_days = 3 } #Haiti breaks free
+			}
+			HOL = {
+				country_event = { id = netherlands_post_election_events.43 days = 45 random_days = 45 }
+			}
+			QIE = {
+				if = {
+					limit = { has_country_leader = { character = QIE_hu_shih } }
+					country_event = { id = qing_flavour_events.10 days = 30 random_days = 4 } #Edith Clifford Williams
+				}
+			}
+			PAL = {
+				country_event = palestine_events.5
+			}
+			LEC = {
+				country_event = { id = legation_cities_american_events.11 days = 5 }
+			}
+			IRE = {
+				IRE_ACW_start_effect = yes
+			}
+			RUS = {
+				country_event = { id = russia_flavour_events.123 days = 30 random_days = 30 } #The American Kolchak
+			}
+		}
+	}
+}
+
+USA_civil_war_ends = {
+	hidden_effect = {
+		if = {
+			limit = { NOT = { has_global_flag = USA_civil_war_over_flag } }
+			set_global_flag = USA_civil_war_over_flag
+			USA = {
+				clr_country_flag = ACW_is_recruiting
+				if = {
+					limit = { has_cosmetic_tag = USA_ACW }
+					USA_swap_to_blue_cosmetic_tag = yes
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_cosmetic_tag = USA_ACW_colourless
+							has_cosmetic_tag = USA_ACW_macarthur
+						}
+					}
+					USA_swap_to_colourless_cosmetic_tag = yes
+				}
+				if = {
+					limit = { exists = no }
+					remove_ideas = amcivwar_idea_USA
+					add_ideas = {
+						civilian_economy
+						volunteer_only
+						USA_civil_war_aftermath_idea
+						USA_civil_war_depression_idea
+					}
+				}
+			}
+			APG = {
+				clr_country_flag = ACW_is_recruiting
+				if = {
+					limit = { has_cosmetic_tag = APG_ACW }
+					drop_cosmetic_tag = yes
+				}
+				if = {
+					limit = { exists = no }
+					remove_ideas = amcivwar_idea_APG
+					add_ideas = {
+						civilian_economy
+						volunteer_only
+						USA_civil_war_aftermath_idea
+						USA_civil_war_depression_idea
+					}
+				}
+			}
+			WCA = {
+				clr_country_flag = ACW_is_recruiting
+				if = {
+					limit = { has_cosmetic_tag = WCA_ACW }
+					drop_cosmetic_tag = yes
+				}
+				if = {
+					limit = { exists = no }
+					remove_ideas = amcivwar_idea_WCA
+					add_ideas = {
+						civilian_economy
+						volunteer_only
+						USA_civil_war_aftermath_idea
+						USA_civil_war_depression_idea
+					}
+				}
+			}
+			ACC = {
+				clr_country_flag = ACW_is_recruiting
+				if = {
+					limit = { has_cosmetic_tag = ACC_ACW }
+					drop_cosmetic_tag = yes
+				}
+				if = {
+					limit = { exists = no }
+					remove_ideas = amcivwar_idea_ACC
+					add_ideas = {
+						civilian_economy
+						volunteer_only
+						USA_civil_war_aftermath_idea
+						USA_civil_war_depression_idea
+					}
+				}
+			}
+			every_collection_element = {
+				input = collection:all_mainland_american_states
+				clr_state_flag = ACW_recruited_militias
+				USA = { remove_targeted_decision = { decision = ACW_recruit_in_state target = PREV } }
+				WCA = { remove_targeted_decision = { decision = ACW_recruit_in_state target = PREV } }
+				APG = { remove_targeted_decision = { decision = ACW_recruit_in_state target = PREV } }
+				ACC = { remove_targeted_decision = { decision = ACW_recruit_in_state target = PREV } }
+			}
+			every_state = {
+				limit = {
+					owner = {
+						is_american_tag = yes
+						if = {
+							limit = { tag = NEE }
+							has_country_flag = NEE_entered_the_civil_war
+						}
+					}
+					arms_factory > 2
+				}
+				set_temp_variable = { state_factories = { value = building_level@arms_factory subtract = 1 } }
+				remove_building = { type = arms_factory level = state_factories }
+				subtract_from_temp_variable = { state_factories = 1 }
+				add_building_construction = { type = industrial_complex level = state_factories instant_build = yes }
+			}
+			every_country = {
+				USA = { remove_all_volunteer_relation_modifiers_from_PREV = yes }
+				WCA = { remove_all_volunteer_relation_modifiers_from_PREV = yes }
+				NEE = { remove_all_volunteer_relation_modifiers_from_PREV = yes }
+				ACC = { remove_all_volunteer_relation_modifiers_from_PREV = yes }
+				APG = { remove_all_volunteer_relation_modifiers_from_PREV = yes }
+			}
+			MEX = {
+				country_event = { id = mexico_events.135 days = 60 random_days = 300 }
+				remove_targeted_decision = { target = WCA decision = MEX_intervene_WCA }
+			}
+			BRA = {
+				country_event = { id = brazil_events.204 days = 40 random_days = 20 } #The Last Democracy?
+				country_event = { id = brazil_events.205 days = 30 random_days = 90 } #Send Osvaldo Aranha to the United States?
+			}
+			IRE = {
+				IRE_ACW_end_effect = yes
+			}
+			CUB = {
+				remove_targeted_decision = { target = THIS decision = CUB_waited_promotesoc_WCAdecision }
+				remove_targeted_decision = { target = THIS decision = CUB_waited_promotenonsoc_USAdecision }
+				remove_targeted_decision = { target = THIS decision = CUB_waited_promotenonsoc_ACCdecision }
+				remove_targeted_decision = { target = THIS decision = CUB_waited_promotenonsoc_APGdecision }
+				remove_targeted_decision = { target = THIS decision = CUB_waited_promotesoc_noWCAdecision }
+			}
+			CEN = {
+				if = {
+					limit = {
+						has_country_flag = CENmil_foreign_policy_open
+						ROOT = { has_socialist_government = no }
+					}
+					activate_targeted_decision = { target = ROOT decision = CENmil_request_foreign_protection }
+					clr_country_flag = CENmil_foreign_policy_open
+				}
+			}
+
+			#Power Projection event for Russia
+			RUS = { country_event = { id = russia_foreign_policy_events.258 days = 1 } }
+		}
+	}
+}
+
+# AI countries get the equipment back to help rebuild
+USA_demobilize_forces = {
+	every_possible_country = {
+		limit = { is_american_tag = yes }
+		delete_unit_template_and_units = { division_template = "Amerikavrijwilligers" }
+		delete_unit_template_and_units = { division_template = "German Militia Division" }
+		if = {
+			limit = { is_ai = no }
+			delete_unit = { id = 1776 }
+
+			#WCA
+			delete_unit_template_and_units = { division_template = "Red Guard" }
+			delete_unit_template_and_units = { division_template = "Continental Line" }
+			if = {
+				limit = { NOT = { tag = WCA } }
+				delete_unit_template_and_units = { division_template = "Continental Cavalry" }
+			}
+
+			#APG
+			delete_unit_template_and_units = { division_template = "Minutemen" }
+			delete_unit_template_and_units = { division_template = "National Guardsmen" }
+			if = {
+				limit = { NOT = { tag = APG } }
+				delete_unit_template_and_units = { division_template = "National Cavalry" }
+			}
+
+			#USA
+			delete_unit_template_and_units = { division_template = "Reserve Militia" }
+			delete_unit_template_and_units = { division_template = "Defense Force" }
+			delete_unit_template_and_units = { division_template = "Loyalist Cavalry" }
+
+			#ACC
+			delete_unit_template_and_units = { division_template = "State Militia" }
+			delete_unit_template_and_units = { division_template = "State Guard" }
+			if = {
+				limit = { NOT = { tag = ACC } }
+				delete_unit_template_and_units = { division_template = "Volunteer Cavalry" }
+			}
+		}
+		else = {
+			delete_unit = { id = 1776 disband = yes }
+
+			#WCA
+			delete_unit_template_and_units = { division_template = "Red Guard" disband = yes }
+			delete_unit_template_and_units = { division_template = "Continental Line" disband = yes }
+			if = {
+				limit = { NOT = { tag = WCA } }
+				delete_unit_template_and_units = { division_template = "Continental Cavalry" disband = yes }
+			}
+
+			#APG
+			delete_unit_template_and_units = { division_template = "Minutemen" disband = yes }
+			delete_unit_template_and_units = { division_template = "National Guardsmen" disband = yes }
+			if = {
+				limit = { NOT = { tag = APG } }
+				delete_unit_template_and_units = { division_template = "National Cavalry" disband = yes }
+			}
+
+			#USA
+			delete_unit_template_and_units = { division_template = "Reserve Militia" disband = yes }
+			delete_unit_template_and_units = { division_template = "Defense Force" disband = yes }
+			delete_unit_template_and_units = { division_template = "Loyalist Cavalry" disband = yes }
+
+			#ACC
+			delete_unit_template_and_units = { division_template = "State Militia" disband = yes }
+			delete_unit_template_and_units = { division_template = "State Guard" disband = yes }
+			if = {
+				limit = { NOT = { tag = ACC } }
+				delete_unit_template_and_units = { division_template = "Volunteer Cavalry" disband = yes }
+			}
+		}
+	}
+}
+
+remove_ACW_claims = {
+	hidden_effect = {
+		every_state = {
+			if = {
+				limit = {
+					NOT = { country_exists = USA }
+				}
+				remove_claim_by = USA
+			}
+			if = {
+				limit = {
+					NOT = { country_exists = WCA }
+				}
+				remove_claim_by = WCA
+			}
+			if = {
+				limit = {
+					NOT = { country_exists = ACC }
+				}
+				remove_claim_by = ACC
+			}
+			if = {
+				limit = {
+					NOT = { country_exists = APG }
+				}
+				remove_claim_by = APG
+			}
+			if = {
+				limit = {
+					NOT = { country_exists = NEE }
+				}
+				remove_claim_by = NEE
+			}
+			if = {
+				limit = {
+					NOT = { country_exists = HAW }
+				}
+				remove_claim_by = HAW
+			}
+		}
+	}
+}
+
+WCA_add_extra_units_based_on_strength = {
+	set_temp_variable = { strength = USA.SPA_strength }
+	if = {
+		limit = { USA = { has_country_flag = USA_ACW_austerity_rejected } }
+		multiply_temp_variable = { strength = 2 }
+	}
+	if = {
+		limit = { check_variable = { strength > 0 } }
+		for_loop_effect = {
+			end = strength
+			set_temp_variable = { w = v }
+			modulo_temp_variable = { w = 4 }
+			if = {
+				limit = { check_variable = { w = 3 } }
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Continental Line\" start_experience_factor = 0.3"
+						owner = WCA
+						id = 1776
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { w = 2 } }
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Continental Cavalry\" start_experience_factor = 0.3"
+						owner = WCA
+						id = 1776
+					}
+				}
+			}
+			else = {
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Red Guard\" start_experience_factor = 0.3"
+						owner = WCA
+						id = 1776
+					}
+				}
+			}
+		}
+	}
+}
+
+APG_add_extra_units_from_strength = {
+	set_temp_variable = { strength = USA.Long_strength }
+	if = {
+		limit = { check_variable = { strength > 0 } }
+		for_loop_effect = {
+			end = strength
+			set_temp_variable = { w = v }
+			modulo_temp_variable = { w = 4 }
+			if = {
+				limit = { check_variable = { w = 3 } }
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"National Guardsmen\" start_experience_factor = 0.3"
+						owner = APG
+						id = 1776
+					}
+				}
+			}
+			else_if = {
+				limit = { check_variable = { w = 2 } }
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"National Cavalry\" start_experience_factor = 0.3"
+						owner = APG
+						id = 1776
+					}
+				}
+			}
+			else = {
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Minutemen\" start_experience_factor = 0.3"
+						owner = APG
+						id = 1776
+					}
+				}
+			}
+		}
+	}
+}
+
+USA_restore_deleted_factories_WCA = {
+	hidden_effect = {
+		261 = { #Ohio
+			if = {
+				limit = { industrial_complex < 8 }
+				set_temp_variable = { ohio_factories = { value = 8 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = ohio_factories instant_build = yes }
+			}
+		}
+		360 = { #Philadelphia
+			if = {
+				limit = { industrial_complex < 3 }
+				set_temp_variable = { philadelphia_factories = { value = 3 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = philadelphia_factories instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 5 }
+				set_temp_variable = { philadelphia_dockyards = { value = 5 subtract = building_level@dockyard } }
+				add_building_construction = { type = industrial_complex level = philadelphia_dockyards instant_build = yes }
+			}
+		}
+		393 = { #Michigan
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 8 }
+				set_temp_variable = { michigan_factories = { value = 8 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = michigan_factories instant_build = yes }
+			}
+		}
+		394 = { #Wisconsin
+			if = {
+				limit = { industrial_complex < 3 }
+				set_temp_variable = { wisconsin_factories = { value = 3 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = wisconsin_factories instant_build = yes }
+			}
+		}
+		395 = { #Illinois
+			if = {
+				limit = { industrial_complex < 11 }
+				set_temp_variable = { illinois_factories = { value = 11 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = illinois_factories instant_build = yes }
+			}
+		}
+		396 = { #Indiana
+			if = {
+				limit = { industrial_complex < 8 }
+				set_temp_variable = { indiana_factories = { value = 8 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = indiana_factories instant_build = yes }
+			}
+		}
+		929 = { #West Virginia
+			if = {
+				limit = { industrial_complex < 2 }
+				set_temp_variable = { west_virginia_factories = { value = 2 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = west_virginia_factories instant_build = yes }
+			}
+		}
+		975 = { #Pittsburgh
+			if = {
+				limit = { industrial_complex < 8 }
+				set_temp_variable = { pittsburgh_factories = { value = 8 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = pittsburgh_factories instant_build = yes }
+			}
+		}
+	}
+}
+
+USA_restore_deleted_factories_APG = {
+	hidden_effect = {
+		150 = { #Louisiana
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+		364 = { #South Carolina
+			if = {
+				limit = { dockyard < 1 }
+				add_building_construction = { type = dockyard level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+		}
+		365 = { #Georgia
+			if = {
+				limit = { dockyard < 1 }
+				add_building_construction = { type = dockyard level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 3 }
+				set_temp_variable = { georgia_factories = { value = 3 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = georgia_factories instant_build = yes }
+			}
+		}
+		366 = { #Florida
+			if = {
+				limit = { industrial_complex < 4 }
+				set_temp_variable = { florida_factories = { value = 4 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = florida_factories instant_build = yes }
+			}
+		}
+		367 = { #Alabama
+			if = {
+				limit = { industrial_complex < 5 }
+				set_temp_variable = { alabama_factories = { value = 5 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = alabama_factories instant_build = yes }
+			}
+		}
+		370 = { #Mississippi
+			if = {
+				limit = { industrial_complex < 3 }
+				set_temp_variable = { mississippi_factories = { value = 3 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = mississippi_factories instant_build = yes }
+			}
+		}
+		371 = { #New Orleans
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 4 }
+				set_temp_variable = { new_orleans_factories = { value = 4 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = new_orleans_factories instant_build = yes }
+			}
+		}
+		372 = { #Arkansas
+			if = {
+				limit = { industrial_complex < 2 }
+				set_temp_variable = { arkansas_factories = { value = 2 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = arkansas_factories instant_build = yes }
+			}
+		}
+		374 = { #Oklahoma
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+		375 = { #Northern Texas
+			if = {
+				limit = { industrial_complex < 8 }
+				set_temp_variable = { northern_texas_factories = { value = 8 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = northern_texas_factories instant_build = yes }
+			}
+		}
+		833 = { #Southern Texas
+			if = {
+				limit = { industrial_complex < 4 }
+				set_temp_variable = { southern_texas_factories = { value = 4 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = southern_texas_factories instant_build = yes }
+			}
+			if = {
+				limit = {
+					USA = {
+						has_completed_focus = USA_gmbill_succeeds
+						has_country_flag = USA_southtexas_order
+					}
+					dockyard < 2
+				}
+				set_temp_variable = { southern_texas_dockyards = { value = 2 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = southern_texas_dockyards instant_build = yes }
+			}
+		}
+	}
+}
+
+USA_restore_deleted_factories_ACC = {
+	hidden_effect = {
+		829 = { #Southern California
+			if = {
+				limit = { industrial_complex < 3 }
+				set_temp_variable = { southern_california_factories = { value = 3 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = southern_california_factories instant_build = yes }
+			}
+		}
+		378 = { #Northern California
+			if = {
+				limit = { industrial_complex < 9 }
+				set_temp_variable = { northern_california_factories = { value = 9 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = northern_california_factories instant_build = yes }
+			}
+		}
+		798 = { #Los Angeles
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 7 }
+				set_temp_variable = { los_angeles_factories = { value = 7 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = los_angeles_factories instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 4 }
+				set_temp_variable = { los_angeles_dockyards = { value = 4 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = los_angeles_dockyards instant_build = yes }
+			}
+		}
+		797 = { #San Francisco
+			if = {
+				limit = { industrial_complex < 6 }
+				set_temp_variable = { san_francisco_factories = { value = 6 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = san_francisco_factories instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 5 }
+				set_temp_variable = { san_francisco_dockyards = { value = 5 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = san_francisco_dockyards instant_build = yes }
+			}
+		}
+		385 = { #Oregon
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+		386 = { #Washington
+			if = {
+				limit = { industrial_complex < 2 }
+				set_temp_variable = { washington_factories = { value = 2 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = washington_factories instant_build = yes }
+			}
+		}
+	}
+}
+
+USA_restore_deleted_factories_USA = {
+	hidden_effect = {
+		391 = { #Minnesota
+			if = {
+				limit = { industrial_complex < 1 }
+				set_temp_variable = { minnesota_factories = 1 }
+				if = {
+					limit = {
+						USA = {
+							has_completed_focus = USA_gmbill_succeeds
+							has_country_flag = USA_minnesota_order
+						}
+					}
+					add_to_temp_variable = { minnesota_factories = 1 }
+					if = {
+						limit = { arms_factory < 1 }
+						add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+					}
+				}
+				subtract_from_temp_variable = { minnesota_factories = building_level@industrial_complex }
+				add_building_construction = { type = industrial_complex level = minnesota_factories instant_build = yes }
+			}
+		}
+		392 = { #Iowa
+			if = {
+				limit = { industrial_complex < 2 }
+				set_temp_variable = { iowa_factories = 2 }
+				if = {
+					limit = {
+						USA = {
+							has_completed_focus = USA_gmbill_succeeds
+							has_country_flag = USA_iowa_order
+						}
+					}
+					add_to_temp_variable = { iowa_factories = 1 }
+					if = {
+						limit = { arms_factory < 1 }
+						add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+					}
+				}
+				subtract_from_temp_variable = { iowa_factories = building_level@industrial_complex }
+				add_building_construction = { type = industrial_complex level = iowa_factories instant_build = yes }
+			}
+		}
+		363 = { #North Carolina
+			if = {
+				limit = { industrial_complex < 3 }
+				set_temp_variable = { north_carolina_factories = { value = 3 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = north_carolina_factories instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 2 }
+				set_temp_variable = { north_carolina_dockyards = { value = 2 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = north_carolina_dockyards instant_build = yes }
+			}
+		}
+		368 = { #Tennessee
+			if = {
+				limit = { industrial_complex < 5 }
+				set_temp_variable = { tennessee_factories = 5 }
+				if = {
+					limit = {
+						USA = {
+							has_completed_focus = USA_gmbill_succeeds
+							has_country_flag = USA_tennessee_order
+						}
+					}
+					add_to_temp_variable = { tennessee_factories = 1 }
+					if = {
+						limit = { arms_factory < 1 }
+						add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+					}
+				}
+				subtract_from_temp_variable = { tennessee_factories = building_level@industrial_complex }
+				add_building_construction = { type = industrial_complex level = tennessee_factories instant_build = yes }
+			}
+		}
+		359 = { #New Jersey
+			if = {
+				limit = { industrial_complex < 4 }
+				set_temp_variable = { new_jersey_factories = { value = 4 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = new_jersey_factories instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 2 }
+				set_temp_variable = { new_jersey_dockyards = { value = 2 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = new_jersey_dockyards instant_build = yes }
+			}
+		}
+		358 = { #New York
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 2 }
+				set_temp_variable = { new_york_factories = { value = 2 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = new_york_factories instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 7 }
+				set_temp_variable = { new_york_dockyards = 7 }
+				if = {
+					limit = {
+						USA = {
+							has_completed_focus = USA_gmbill_succeeds
+							has_country_flag = USA_new_york_order
+						}
+					}
+					add_to_temp_variable = { new_york_dockyards = 2 }
+				}
+				subtract_from_temp_variable = { new_york_dockyards = building_level@dockyard }
+				add_building_construction = { type = dockyard level = new_york_dockyards instant_build = yes }
+			}
+		}
+		373 = { #Missouri
+			if = {
+				limit = { industrial_complex < 6 }
+				set_temp_variable = { missouri_factories = { value = 6 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = missouri_factories instant_build = yes }
+			}
+		}
+		369 = { #Kentucky
+			if = {
+				limit = { industrial_complex < 3 }
+				set_temp_variable = { kentucky_factories = { value = 3 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = kentucky_factories instant_build = yes }
+			}
+		}
+		362 = { #Virginia
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 4 }
+				set_temp_variable = { virginia_factories = { value = 4 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = virginia_factories instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 3 }
+				set_temp_variable = { virginia_dockyards = { value = 3 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = virginia_dockyards instant_build = yes }
+			}
+		}
+		361 = { #Maryland
+			if = {
+				limit = { industrial_complex < 7 }
+				set_temp_variable = { maryland_factories = { value = 7 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = maryland_factories instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 2 }
+				set_temp_variable = { maryland_dockyards = { value = 2 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = maryland_dockyards instant_build = yes }
+			}
+		}
+		383 = { #Kansas
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+		384 = { #Nebraska
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+		382 = { #Colorado
+			if = {
+				limit = { industrial_complex < 1 }
+				set_temp_variable = { colorado_factories = 1 }
+				if = {
+					limit = {
+						USA = {
+							has_completed_focus = USA_gmbill_succeeds
+							OR = {
+								has_country_flag = USA_minnesota_order
+								has_country_flag = USA_iowa_order
+								has_country_flag = USA_tennessee_order
+							}
+						}
+					}
+					add_to_temp_variable = { colorado_factories = 1 }
+				}
+				subtract_from_temp_variable = { colorado_factories = building_level@industrial_complex }
+				add_building_construction = { type = industrial_complex level = colorado_factories instant_build = yes }
+			}
+		}
+		384 = { #Arizona
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+	}
+	if = {
+		limit = {
+			USA = {
+				NOT = { has_government = paternal_autocrat }
+			}
+		}
+		USA_restore_deleted_factories_ACC = yes
+	}
+	if = {
+		limit = {
+			USA = { owns_state = 932 } #Massachusetts
+		}
+		USA_restore_deleted_factories_NEE = yes
+	}
+}
+
+USA_restore_deleted_factories_NEE = {
+	hidden_effect = {
+		357 = { #Maine
+			if = {
+				limit = { dockyard < 1 }
+				add_building_construction = { type = dockyard level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 2 }
+				set_temp_variable = { maine_factories = { value = 2 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = maine_factories instant_build = yes }
+			}
+		}
+		796 = { #Albany
+			if = {
+				limit = { industrial_complex < 3 }
+				set_temp_variable = { albany_factories = { value = 3 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = albany_factories instant_build = yes }
+			}
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+		}
+		930 = { #Buffalo
+			if = {
+				limit = { industrial_complex < 4 }
+				set_temp_variable = { buffalo_factories = { value = 4 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = buffalo_factories instant_build = yes }
+			}
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+		}
+		931 = { #Connecticut
+			if = {
+				limit = { arms_factory < 1 }
+				add_building_construction = { type = arms_factory level = 1 instant_build = yes }
+			}
+			if = {
+				limit = { dockyard < 2 }
+				set_temp_variable = { connecticut_dockyards = { value = 2 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = connecticut_dockyards instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 4 }
+				set_temp_variable = { connecticut_factories = { value = 4 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = connecticut_factories instant_build = yes }
+			}
+		}
+		932 = { #Massachusetts
+			if = {
+				limit = { dockyard < 2 }
+				set_temp_variable = { massachussets_dockyards = { value = 2 subtract = building_level@dockyard } }
+				add_building_construction = { type = dockyard level = massachussets_dockyards instant_build = yes }
+			}
+			if = {
+				limit = { industrial_complex < 2 }
+				set_temp_variable = { massachussets_factories = { value = 2 subtract = building_level@industrial_complex } }
+				add_building_construction = { type = industrial_complex level = massachussets_factories instant_build = yes }
+			}
+			if = {
+				limit = { arms_factory < 2 }
+				set_temp_variable = { massachussets_arms_factories = { value = 2 subtract = building_level@arms_factory } }
+				add_building_construction = { type = arms_factory level = massachussets_arms_factories instant_build = yes }
+			}
+		}
+		933 = { #New Hampshire
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+		934 = { #Vermont
+			if = {
+				limit = { industrial_complex < 1 }
+				add_building_construction = { type = industrial_complex level = 1 instant_build = yes }
+			}
+		}
+		935 = { #Rhode Island
+			if = {
+				limit = { dockyard < 1 }
+				add_building_construction = { type = dockyard level = 1 instant_build = yes }
+			}
+		}
+	}
+}
+
+ACW_navy_redistribution_WCA = {
+	hidden_effect = {
+		# Atlantic Battle Fleet
+		transfer_ship = { prefer_name = "USS Mississippi" type = battleship target = event_target:system }
+		transfer_ship = { prefer_name = "USS Idaho" type = battleship target = event_target:system }
+		transfer_ship = { prefer_name = "USS California" type = battleship target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS Constitution" type = battle_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Olympia" type = heavy_cruiser target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS Trenton" type = light_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Boise" type = light_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Honolulu" type = light_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Brooklyn" type = light_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Philadelphia" type = light_cruiser target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS Selfridge" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS McCormick" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Truxtun" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Hatfield" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Brooks" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Gilmer" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Fox" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Smith Thompson" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Tracy" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Borie" type = destroyer target = event_target:system }
+		transfer_ship = { prefer_name = "USS Ludlow" type = destroyer target = event_target:system }
+
+		# Atlantic Submarine Fleet
+		transfer_ship = { prefer_name = "USS O1" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O2" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O3" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O4" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O5" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O6" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O7" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O8" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O9" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS O10" type = submarine target = event_target:system }
+
+		# Pacific Fleet
+		if = {
+			limit = { country_exists = ACC }
+			ACC = {
+				transfer_ship = { prefer_name = "USS Wyoming" type = battleship target = event_target:system }
+				transfer_ship = { prefer_name = "USS Caldwell" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Craven" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Gwin" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Conner" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Stockton" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Manley" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Ward" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Claxton" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Hamilton" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Tarbell" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Yarnall" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Upshur" type = destroyer target = event_target:system }
+			}
+		}
+		else = {
+			transfer_ship = { prefer_name = "USS Wyoming" type = battleship target = event_target:system }
+			transfer_ship = { prefer_name = "USS Caldwell" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Craven" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Gwin" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Conner" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Stockton" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Manley" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Ward" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Claxton" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hamilton" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Tarbell" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Yarnall" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Upshur" type = destroyer target = event_target:system }
+		}
+
+		if = {
+			limit = { NOT = { country_exists = APG } }
+			transfer_ship = { prefer_name = "USS Tennessee" type = battleship target = event_target:system }
+			transfer_ship = { prefer_name = "USS Maryland" type = battleship target = event_target:system }
+
+			transfer_ship = { prefer_name = "USS Ranger" type = carrier target = event_target:system }
+
+			transfer_ship = { prefer_name = "USS Springfield" type = heavy_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS Tallahassee" type = heavy_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS Pensacola" type = heavy_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hartford" type = heavy_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS Nashville" type = light_cruiser target = event_target:system }
+
+			# Atlantic Submarine Fleet
+			transfer_ship = { prefer_name = "USS Barracuda" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Bass" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Bonita" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Cachalot" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Cuttlefish" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Dolphin" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Porpoise" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Pike" type = submarine target = event_target:system }
+
+			# Pacific Fleet
+			transfer_ship = { prefer_name = "USS Oklahoma" type = battleship target = event_target:system }
+			transfer_ship = { prefer_name = "USS Omaha" type = heavy_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS Ballard" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Champlin" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Mugford" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hazelwood" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hart" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Ingraham" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Taylor" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Schley" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Chew" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Colhoun" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS McKean" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Fairfax" type = destroyer target = event_target:system }
+		}
+
+		WCA = {
+			annex_country = { target = event_target:system }
+			if = {
+				limit = { NOT = { country_exists = APG } }
+				load_oob = ACW_WCA_naval_alone
+				if = {
+					limit = { has_dlc_bba = yes }
+					load_oob = ACW_WCA_naval_alone_air_bba
+				}
+				else = {
+					load_oob = ACW_WCA_naval_alone_air_legacy
+				}
+			}
+			else = {
+				load_oob = ACW_WCA_naval
+			}
+		}
+	}
+}
+
+ACW_navy_redistribution_APG = {
+	hidden_effect = {
+		# Atlantic Battle Fleet
+		transfer_ship = { prefer_name = "USS Tennessee" type = battleship target = event_target:system }
+		transfer_ship = { prefer_name = "USS Maryland" type = battleship target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS Ranger" type = carrier target = event_target:system }
+
+		transfer_ship = { prefer_name = "USS Springfield" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Tallahassee" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Pensacola" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Hartford" type = heavy_cruiser target = event_target:system }
+		transfer_ship = { prefer_name = "USS Nashville" type = light_cruiser target = event_target:system }
+
+		# Atlantic Submarine Fleet
+		transfer_ship = { prefer_name = "USS Barracuda" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS Bass" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS Bonita" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS Cachalot" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS Cuttlefish" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS Dolphin" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS Porpoise" type = submarine target = event_target:system }
+		transfer_ship = { prefer_name = "USS Pike" type = submarine target = event_target:system }
+
+		# Pacific Fleet
+		if = {
+			limit = { country_exists = ACC }
+			ACC = {
+				transfer_ship = { prefer_name = "USS Oklahoma" type = battleship target = event_target:system }
+				transfer_ship = { prefer_name = "USS Omaha" type = heavy_cruiser target = event_target:system }
+				transfer_ship = { prefer_name = "USS Ballard" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Champlin" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Mugford" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Hazelwood" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Hart" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Ingraham" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Taylor" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Schley" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Chew" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Colhoun" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS McKean" type = destroyer target = event_target:system }
+				transfer_ship = { prefer_name = "USS Fairfax" type = destroyer target = event_target:system }
+			}
+		}
+		else = {
+			transfer_ship = { prefer_name = "USS Oklahoma" type = battleship target = event_target:system }
+			transfer_ship = { prefer_name = "USS Omaha" type = heavy_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS Ballard" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Champlin" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Mugford" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hazelwood" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hart" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Ingraham" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Taylor" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Schley" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Chew" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Colhoun" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS McKean" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Fairfax" type = destroyer target = event_target:system }
+		}
+
+		if = {
+			limit = { NOT = { country_exists = WCA } }
+			# Atlantic Battle Fleet
+			transfer_ship = { prefer_name = "USS Mississippi" type = battleship target = event_target:system }
+			transfer_ship = { prefer_name = "USS Idaho" type = battleship target = event_target:system }
+			transfer_ship = { prefer_name = "USS California" type = battleship target = event_target:system }
+
+			transfer_ship = { prefer_name = "USS Constitution" type = battle_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS Olympia" type = heavy_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS Trenton" type = heavy_cruiser target = event_target:system }
+
+			transfer_ship = { prefer_name = "USS Selfridge" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS McCormick" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Truxtun" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hatfield" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Brooks" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Gilmer" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Fox" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Smith Thompson" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Tracy" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Borie" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Ludlow" type = destroyer target = event_target:system }
+
+			# Atlantic Submarine Fleet
+			transfer_ship = { prefer_name = "USS O1" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O2" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O3" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O4" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O5" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O6" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O7" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O8" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O9" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O10" type = submarine target = event_target:system }
+
+			transfer_ship = { prefer_name = "USS Wyoming" type = battleship target = event_target:system }
+			transfer_ship = { prefer_name = "USS Caldwell" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Craven" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Gwin" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Conner" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Stockton" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Manley" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Ward" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Claxton" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hamilton" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Tarbell" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Yarnall" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Upshur" type = destroyer target = event_target:system }
+		}
+		APG = {
+			APG_samuel_murray_robinson = { set_nationality = APG }
+			APG_david_worth_bagley = { set_nationality = APG }
+			APG_john_sidney_mccain_sr = { set_nationality = APG }
+
+			annex_country = { target = event_target:system }
+			load_oob = ACW_APG_naval
+			if = {
+				limit = { has_dlc_bba = yes }
+				load_oob = ACW_APG_naval_air_bba
+			}
+			else = {
+				load_oob = ACW_APG_naval_air_legacy
+			}
+		}
+	}
+}
+
+ACW_navy_redistribution_USA = {
+	hidden_effect = {
+		# Pacific Fleet
+		ACC = {
+			transfer_ship = { prefer_name = "USS Raleigh" type = light_cruiser target = event_target:system }
+			transfer_ship = { prefer_name = "USS R11" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R12" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R13" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R14" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R15" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R16" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R17" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R18" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R19" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS R20" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Clemson" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Dahlgren" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Goldsborough" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Semmes" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Satterlee" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Greer" type = destroyer target = event_target:system }
+		}
+		USA = {
+			annex_country = { target = event_target:system }
+			load_oob = ACW_USA_naval_pacific
+		}
+	}
+}
+
+USA_spawn_starting_civil_war_divisions = {
+	create_USA_militia_template = yes
+	create_USA_mounted_militia_template = yes
+	create_USA_garrison_template = yes
+	create_organised_reserve_template = yes
+	capital_scope = {
+		create_unit = {
+			division = "division_template = \"Infantry Division\" start_experience_factor = 0.3"
+			owner = PREV
+			count = 2
+		}
+		create_unit = {
+			division = "division_template = \"National Guard Infantry Division\" start_experience_factor = 0.2"
+			owner = PREV
+			count = 4
+		}
+		create_unit = {
+			division = "division_template = \"Organised Reserve Infantry Division\" start_experience_factor = 0.1"
+			owner = PREV
+			count = 4
+		}
+		create_unit = {
+			division = "division_template = \"National Guard Cavalry Division\" start_experience_factor = 0.2"
+			owner = PREV
+		}
+		create_unit = {
+			division = "division_template = \"Marine Division\" start_experience_factor = 0.3"
+			owner = PREV
+		}
+	}
+}
+
+WCA_spawn_starting_civil_war_divisions = {
+	create_WCA_militia_template = yes
+	create_WCA_garrison_template = yes
+	create_WCA_mounted_militia_template = yes
+	create_organised_reserve_template = yes
+	capital_scope = {
+		create_unit = {
+			division = "division_template = \"Continental Infantry Division\" start_experience_factor = 0.3"
+			owner = PREV
+			count = 2
+		}
+		create_unit = {
+			division = "division_template = \"Continental Guard Infantry Division\" start_experience_factor = 0.2"
+			owner = PREV
+			count = 3
+		}
+		create_unit = {
+			division = "division_template = \"Organised Reserve Infantry Division\" start_experience_factor = 0.1"
+			owner = PREV
+			count = 8
+		}
+		create_unit = {
+			division = "division_template = \"Continental Guard Cavalry Division\" start_experience_factor = 0.2"
+			owner = PREV
+			count = 3
+		}
+		create_unit = {
+			division = "division_template = \"Continental Marine Division\" start_experience_factor = 0.3"
+			owner = PREV
+		}
+		create_unit = {
+			division = "name = \"Experimental Tank Division\" division_template = \"Continental Armored Cavalry Division\" start_experience_factor = 0.3"
+			owner = PREV
+		}
+	}
+}
+
+APG_spawn_starting_civil_war_divisions = {
+	create_APG_militia_template = yes
+	create_APG_garrison_template = yes
+	create_APG_mounted_militia_template = yes
+	create_organised_reserve_template = yes
+	capital_scope = {
+		create_unit = {
+			division = "division_template = \"Infantry Division\" start_experience_factor = 0.3"
+			owner = PREV
+			count = 2
+		}
+		create_unit = {
+			division = "division_template = \"National Guard Infantry Division\" start_experience_factor = 0.2"
+			owner = PREV
+			count = 4
+		}
+		create_unit = {
+			division = "division_template = \"Organised Reserve Infantry Division\" start_experience_factor = 0.1"
+			owner = PREV
+			count = 6
+		}
+		create_unit = {
+			division = "division_template = \"Cavalry Division\" start_experience_factor = 0.3"
+			owner = PREV
+		}
+		create_unit = {
+			division = "division_template = \"National Guard Cavalry Division\" start_experience_factor = 0.2"
+			owner = PREV
+		}
+		create_unit = {
+			division = "division_template = \"Marine Division\" start_experience_factor = 0.3"
+			owner = PREV
+		}
+	}
+}
+
+ACC_spawn_starting_civil_war_divisions = {
+	create_ACC_militia_template = yes
+	create_ACC_garrison_template = yes
+	create_ACC_mounted_militia_template = yes
+	create_organised_reserve_template = yes
+	capital_scope = {
+		create_unit = {
+			division = "division_template = \"Infantry Division\" start_experience_factor = 0.3"
+			owner = PREV
+			count = 2
+		}
+		create_unit = {
+			division = "division_template = \"National Guard Infantry Division\" start_experience_factor = 0.2"
+			owner = PREV
+			count = 5
+		}
+		create_unit = {
+			division = "division_template = \"Organised Reserve Infantry Division\" start_experience_factor = 0.1"
+			owner = PREV
+			count = 8
+		}
+		create_unit = {
+			division = "division_template = \"Cavalry Division\" start_experience_factor = 0.3"
+			owner = PREV
+			count = 2
+		}
+		create_unit = {
+			division = "division_template = \"National Guard Cavalry Division\" start_experience_factor = 0.2"
+			owner = PREV
+			count = 2
+		}
+		create_unit = {
+			division = "division_template = \"Marine Division\" start_experience_factor = 0.3"
+			owner = PREV
+		}
+	}
+}
+
+### Templates ###
+create_organised_reserve_template = {
+	meta_effect = {
+		text = {
+			division_template = {
+				name = "Organised Reserve Infantry Division"
+				division_names_group = [PREFIX]_INF_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+					infantry = { x = 1 y = 2 }
+					infantry = { x = 2 y = 0 }
+					infantry = { x = 2 y = 1 }
+					infantry = { x = 2 y = 2 }
+				}
+				template_counter = 6
+			}
+		}
+		PREFIX = "[USA_GetNameListPrefix]"
+	}
+}
+
+create_militia_template = {
+	hidden_effect = {
+		if = {
+			limit = { tag = WCA }
+			create_WCA_militia_template = yes
+		}
+		else_if = {
+			limit = { tag = USA }
+			create_USA_militia_template = yes
+		}
+		else_if = {
+			limit = { tag = APG }
+			create_APG_militia_template = yes
+		}
+		else_if = {
+			limit = { tag = ACC }
+			create_ACC_militia_template = yes
+		}
+	}
+}
+create_garrison_template = {
+	hidden_effect = {
+		if = {
+			limit = { tag = WCA }
+			create_WCA_garrison_template = yes
+		}
+		else_if = {
+			limit = { tag = USA }
+			create_USA_garrison_template = yes
+		}
+		else_if = {
+			limit = { tag = APG }
+			create_APG_garrison_template = yes
+		}
+		else_if = {
+			limit = { tag = ACC }
+			create_ACC_garrison_template = yes
+		}
+	}
+}
+create_mounted_militia_template = {
+	hidden_effect = {
+		if = {
+			limit = { tag = WCA }
+			create_WCA_mounted_militia_template = yes
+		}
+		else_if = {
+			limit = { tag = USA }
+			create_USA_mounted_militia_template = yes
+		}
+		else_if = {
+			limit = { tag = APG }
+			create_APG_mounted_militia_template = yes
+		}
+		else_if = {
+			limit = { tag = ACC }
+			create_ACC_mounted_militia_template = yes
+		}
+	}
+}
+
+### USA templates ###
+
+create_USA_militia_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "Reserve Militia" }
+		}
+		division_template = {
+			name = "Reserve Militia"
+			division_names_group = USA_GAR_01
+			regiments = {
+				militia = { x = 0 y = 0 }
+				militia = { x = 0 y = 1 }
+				militia = { x = 0 y = 2 }
+				militia = { x = 0 y = 3 }
+				militia = { x = 1 y = 0 }
+			}
+			priority = 0
+		}
+	}
+}
+
+create_USA_garrison_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "Defense Force" }
+		}
+		division_template = {
+			name = "Defense Force"
+			division_names_group = USA_GAR_01
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+				infantry = { x = 0 y = 2 }
+				infantry = { x = 1 y = 0 }
+				infantry = { x = 1 y = 1 }
+				infantry = { x = 1 y = 2 }
+			}
+			template_counter = 6
+			priority = 0
+		}
+	}
+}
+
+create_USA_mounted_militia_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "Loyalist Cavalry" }
+		}
+		division_template = {
+			name = "Loyalist Cavalry"
+			division_names_group = USA_GAR_01
+			regiments = {
+				cavalry = { x = 0 y = 0 }
+				cavalry = { x = 0 y = 1 }
+				cavalry = { x = 0 y = 2 }
+				cavalry = { x = 1 y = 0 }
+				cavalry = { x = 1 y = 1 }
+				cavalry = { x = 1 y = 2 }
+			}
+		}
+	}
+}
+
+### WCA templates ###
+
+create_WCA_militia_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "Red Guard" }
+		}
+		division_template = {
+			name = "Red Guard"
+			division_names_group = WCA_GAR_01
+			regiments = {
+				militia = { x = 0 y = 0 }
+				militia = { x = 0 y = 1 }
+				militia = { x = 0 y = 2 }
+				militia = { x = 0 y = 3 }
+				militia = { x = 1 y = 0 }
+			}
+			priority = 0
+		}
+	}
+}
+
+create_WCA_garrison_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "Continental Line" }
+		}
+		division_template = {
+			name = "Continental Line"
+			division_names_group = WCA_GAR_02
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+				infantry = { x = 0 y = 2 }
+				infantry = { x = 1 y = 0 }
+				infantry = { x = 1 y = 1 }
+				infantry = { x = 1 y = 2 }
+			}
+			template_counter = 6
+			priority = 0
+		}
+	}
+}
+
+create_WCA_mounted_militia_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "Continental Cavalry" }
+		}
+		division_template = {
+			name = "Continental Cavalry"
+			division_names_group = USA_CAV_01
+			regiments = {
+				cavalry = { x = 0 y = 0 }
+				cavalry = { x = 0 y = 1 }
+				cavalry = { x = 0 y = 2 }
+				cavalry = { x = 1 y = 0 }
+				cavalry = { x = 1 y = 1 }
+				cavalry = { x = 1 y = 2 }
+			}
+		}
+	}
+}
+
+### ACC templates ###
+
+create_ACC_militia_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "State Militia" }
+		}
+		division_template = {
+			name = "State Militia"
+			division_names_group = USA_GAR_01
+			regiments = {
+				militia = { x = 0 y = 0 }
+				militia = { x = 0 y = 1 }
+				militia = { x = 0 y = 2 }
+				militia = { x = 0 y = 3 }
+				militia = { x = 1 y = 0 }
+			}
+			priority = 0
+		}
+	}
+}
+
+create_ACC_garrison_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "State Guard" }
+		}
+		division_template = {
+			name = "State Guard"
+			division_names_group = USA_GAR_01
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+				infantry = { x = 0 y = 2 }
+				infantry = { x = 1 y = 0 }
+				infantry = { x = 1 y = 1 }
+				infantry = { x = 1 y = 2 }
+			}
+			template_counter = 6
+			priority = 0
+		}
+	}
+}
+
+create_ACC_mounted_militia_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "Volunteer Cavalry" }
+		}
+		division_template = {
+			name = "Volunteer Cavalry"
+			division_names_group = USA_GAR_01
+			regiments = {
+				cavalry = { x = 0 y = 0 }
+				cavalry = { x = 0 y = 1 }
+				cavalry = { x = 0 y = 2 }
+				cavalry = { x = 1 y = 0 }
+				cavalry = { x = 1 y = 1 }
+				cavalry = { x = 1 y = 2 }
+			}
+		}
+	}
+}
+
+### APG templates ###
+
+create_APG_militia_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "Minutemen" }
+		}
+		division_template = {
+			name = "Minutemen"
+			division_names_group = APG_INF_01
+			regiments = {
+				militia = { x = 0 y = 0 }
+				militia = { x = 0 y = 1 }
+				militia = { x = 0 y = 2 }
+				militia = { x = 0 y = 3 }
+				militia = { x = 1 y = 0 }
+			}
+			priority = 0
+		}
+	}
+}
+
+create_APG_garrison_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "National Guardsmen" }
+		}
+		division_template = {
+			name = "National Guardsmen"
+			division_names_group = APG_GAR_01
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+				infantry = { x = 0 y = 2 }
+				infantry = { x = 1 y = 0 }
+				infantry = { x = 1 y = 1 }
+				infantry = { x = 1 y = 2 }
+			}
+			template_counter = 6
+			priority = 0
+		}
+	}
+}
+
+create_APG_mounted_militia_template = {
+	if = {
+		limit = {
+			NOT = { has_template = "National Cavalry" }
+		}
+		division_template = {
+			name = "National Cavalry"
+			division_names_group = APG_GAR_01
+			regiments = {
+				cavalry = { x = 0 y = 0 }
+				cavalry = { x = 0 y = 1 }
+				cavalry = { x = 0 y = 2 }
+				cavalry = { x = 1 y = 0 }
+				cavalry = { x = 1 y = 1 }
+				cavalry = { x = 1 y = 2 }
+			}
+		}
+	}
+}
+
+USA_macarthur_coup = {
+	hidden_effect = {
+		set_country_flag = USA_macarthur_coup
+		set_party_name = {
+			ideology = paternal_autocrat
+			long_name = USA_paternal_autocrat_party_postwar_long
+			name = USA_paternal_autocrat_party_postwar
+		}
+	}
+}
+
+USA_macarthur_coup_effect = {
+	set_politics = {
+		ruling_party = paternal_autocrat
+		elections_allowed = yes
+	}
+	USA_united_states_congress = {
+		custom_effect_tooltip = {
+			localization_key = tooltip_replace_character_trait
+			ROLE = second_in_command
+			OLD_TRAIT = KR_parliament_sic
+			NEW_TRAIT = KR_authoritarian_sic
+		}
+		effect_tooltip = {
+			set_temp_variable = { modifier_change_tt = 0.05 tooltip = stability_factor_tooltip }
+			set_temp_variable = { modifier_change_tt = 0.10 tooltip = war_support_factor_tooltip }
+			set_temp_variable = { modifier_change_tt = -0.08 tooltip = political_power_factor_tooltip }
+		}
+	}
+	hidden_effect = {
+		remove_mission = USA_father_coxs_march
+		USA_swap_to_colourless_cosmetic_tag = yes
+		country_event = { id = united_states_crisis_events.309 days = 1 }
+		country_event = { id = united_states_events.283 days = 6 }
+		LEC = { country_event = { id = legation_cities_american_events.8 days = 1 } }
+	}
+}
+
+USA_civil_war_parties = {
+	hidden_effect = {
+		set_party_name = {
+			ideology = syndicalist
+			long_name = USA_syndicalist_party_no_Farmer_Labor_long
+			name = USA_syndicalist_party_no_Farmer_Labor
+		}
+		set_party_name = {
+			ideology = radical_socialist
+			long_name = USA_radical_socialist_party_no_Farmer_Labor_long
+			name = USA_radical_socialist_party_no_Farmer_Labor
+		}
+		set_party_name = {
+			ideology = social_democrat
+			long_name = USA_social_democrat_party_no_Farmer_Labor_long
+			name = USA_social_democrat_party_no_Farmer_Labor
+		}
+		set_party_name = {
+			ideology = market_liberal
+			long_name = USA_market_liberal_party_postwar_long
+			name = USA_market_liberal_party_postwar
+		}
+	}
+}
+
+USA_reset_southern_VP_values = {
+	if = {
+		limit = { has_global_flag = ACW_southern_vps_changed }
+		clr_global_flag = ACW_southern_vps_changed
+		if = {
+			limit = { NOT = { country_exists = APG } }
+			clr_country_flag = APG_baton_rouge_kept
+			set_victory_points = { province = 1453 value = 12 } #Baton Rouge
+		}
+		set_victory_points = { province = 12401 value = 3 } #Shreveport
+		set_victory_points = { province = 12735 value = 5 } #Birmingham
+		set_victory_points = { province = 4565 value = 5 } #Jackson
+		set_victory_points = { province = 492 value = 3 } #Montgomery
+		set_victory_points = { province = 10407 value = 3 } #Tallahassee
+		set_victory_points = { province = 7480 value = 3 } #Montgomery
+		set_victory_points = { province = 11975 value = 3 } #Savannah
+		set_victory_points = { province = 12489 value = 3 } #Little Rock
+		set_victory_points = { province = 4464 value = 2 } #Biloxi
+		set_victory_points = { province = 7480 value = 2 } #Mobile
+		set_victory_points = { province = 4507 value = 1 } #Lafayette
+	}
+}
+
+USA_canada_seizes_new_england = {
+	set_global_flag = CAN_seized_new_england
+	USA_restore_deleted_factories_NEE = yes
+	CAN = {
+		complete_national_focus = CAN_new_england_question
+	}
+	USA = {
+		every_owned_state = {
+			limit = { is_new_england = yes }
+			add_core_of = NEE
+			set_demilitarized_zone = no
+			save_current_factory_count = yes
+			transfer_state_to = CAN
+			restore_previous_factory_count = yes
+			if = {
+				limit = { is_core_of = USA }
+				remove_core_of = USA
+				add_claim_by = USA
+			}
+			add_compliance = 25
+		}
+	}
+}
+
+USA_spawn_new_england = {
+	add_political_power = 50
+	every_owned_state = {
+		limit = { is_new_england = yes }
+		if = {
+			limit = { is_claimed_by = CAN }
+			remove_claim_by = CAN
+		}
+		add_core_of = NEE
+		save_current_factory_count = yes
+		transfer_state_to = NEE
+		restore_previous_factory_count = yes
+	}
+	set_autonomy = {
+		target = NEE
+		autonomy_state = autonomous_puppet
+		end_wars = no
+	}
+	add_to_faction = NEE
+	hidden_effect = {
+		USA = { NEE = { transfer_technology_without_doctrines = yes } } #nested for PREV to work
+		NEE = {
+			country_event = { id = new_england_events.6 days = 2 }
+			add_equipment_production = {
+				equipment = {
+					type = artillery_equipment_1
+				}
+				progress = 0.83
+				efficiency = 100
+			}
+			add_equipment_production = {
+				equipment = {
+					type = support_equipment_1
+				}
+				progress = 0.44
+				efficiency = 100
+			}
+			add_equipment_production = {
+				equipment = {
+					type = infantry_equipment_1
+				}
+				requested_factories = 3
+				progress = 0.82
+				efficiency = 100
+			}
+			357 = { #Maine
+				create_unit = {
+					division = "name = \"Maine National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 12459
+				}
+			}
+			933 = { #Vermont
+				create_unit = {
+					division = "name = \"Vermont National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 4445
+				}
+			}
+			934 = { #New Hampshire
+				create_unit = {
+					division = "name = \"New Hampshire National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 3712
+				}
+			}
+			932 = { #Massachusetts
+				create_unit = {
+					division = "name = \"1st Massachusetts National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 6732
+				}
+				create_unit = {
+					division = "name = \"2nd Massachusetts National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 6732
+				}
+			}
+			931 = { #Connecticut
+				create_unit = {
+					division = "name = \"Connecticut National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 9850
+				}
+			}
+			935 = { #Rhode Island
+				create_unit = {
+					division = "name = \"Rhode Island National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 9832
+				}
+			}
+			796 = { #Albany
+				create_unit = {
+					division = "name = \"1st New York National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 9693
+				}
+				create_unit = {
+					division = "name = \"2nd New York National Guard\" division_template = \"National Guard\" start_experience_factor = 0.2"
+					owner = PREV
+					prioritize_location = 9693
+				}
+			}
+			set_research_slots = 4
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = social_liberal
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 1
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+			set_popularities = {
+				totalist = 0
+				radical_socialist = 4
+				syndicalist = 9
+				social_democrat = 5
+				social_liberal = 28
+				market_liberal = 33
+				social_conservative = 7
+				authoritarian_democrat = 9
+				paternal_autocrat = 2
+				national_populist = 3
+			}
+		}
+		USA = {
+			transfer_ship = { prefer_name = "USS McDougal" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Farragut" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Dewey" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Hull" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Macdonough" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Worden" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Dale" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Monaghan" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Aylwin" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Mahan" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Cummings" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Drayton" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Percival" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Kane" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Humphreys" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Flusser" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Reid" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Case" type = destroyer target = event_target:system }
+			transfer_ship = { prefer_name = "USS Conyngham" type = destroyer target = event_target:system }
+
+			transfer_ship = { prefer_name = "USS O11" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O12" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O13" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O14" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O15" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS O16" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS R21" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS R22" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS R23" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS R24" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS R25" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS R26" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS R27" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Argonaut" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Narwhal" type = submarine target = event_target:system }
+			transfer_ship = { prefer_name = "USS Nautilus" type = submarine target = event_target:system }
+		}
+		NEE = {
+			NEE_harold_stark = { set_nationality = PREV }
+
+			NEE_arthur_william_sidney_herrington = { set_nationality = PREV }
+			NEE_vannevar_bush = { set_nationality = PREV }
+			NEE_william_francis_gibbs = { set_nationality = PREV }
+
+			annex_country = { target = event_target:system }
+			load_oob = ACW_NEE_naval
+			if = {
+				limit = { has_global_flag = CAN_supports_USA }
+				add_ideas = ACW_support_USA
+			}
+			else_if = {
+				limit = { has_global_flag = CAN_supports_ACC }
+				add_ideas = ACW_support_ACC
+			}
+			else_if = {
+				limit = { has_global_flag = CAN_supports_APG }
+				add_ideas = ACW_support_APG
+			}
+			separate_peace_all_wars = yes
+			country_event = new_england_events.500
+			country_event = new_england_events.501
+			country_event = new_england_events.502
+		}
+		if = {
+			limit = { has_dlc_lar = yes }
+			NEE = { USA_create_virginia_hall_operative = yes }
+		}
+		USA = { country_event = { id = new_england_events.1 hours = 8 } } #gives the player an option to switch to NEE
+		WCA = { country_event = { id = new_england_events.1 hours = 8 } }
+		ACC = { country_event = { id = new_england_events.1 hours = 8 } }
+		APG = { country_event = { id = new_england_events.1 hours = 8 } }
+
+		#Inherit MIO levels and funds
+		if = {
+			limit = { has_dlc_aat = yes }
+			set_temp_variable = { USA_mio_transfer_originator = USA }
+			set_temp_variable = { USA_mio_transfer_target = NEE }
+			USA_transfer_mio_size_and_funds = yes
+		}
+	}
+}
+
+ACW_spawn_militia_divisions = {
+	# lock out the state for further recruitment
+	set_state_flag = ACW_recruited_militias
+
+	### calculate number of units to spawn
+	set_temp_variable = {
+		units_to_spawn = {
+			value = state_population_k
+			multiply = 0.001
+			clamp = { min = 1 max = 50 } ### failsafe so at least one unit is always spawned
+		}
+	}
+
+	### if core, get twice the units
+	if = {
+		limit = { is_core_of = ROOT }
+		multiply_temp_variable = { units_to_spawn = 2 }
+	}
+	### ACC gets more units and cores in USA-owned cores
+	else_if = {
+		limit = {
+			ROOT = { tag = ACC }
+			is_core_of = USA
+			is_owned_by = USA
+		}
+		multiply_temp_variable = { units_to_spawn = 2 }
+	}
+	round_temp_variable = units_to_spawn
+
+	### tooltip
+	custom_effect_tooltip = ACW_recruit_units
+
+	### if 5 or more units or a metropolis/megalopolis, covert 25% to garrison-template units
+	if = {
+		limit = {
+			OR = {
+				is_metropolis_state = yes
+				NOT = { check_variable = { units_to_spawn < 5 } }
+			}
+		}
+		set_temp_variable = {
+			garrisons_to_spawn = {
+				value = units_to_spawn
+				multiply = 0.25
+				clamp = { min = 1 max = 25 }
+				round = yes
+			}
+		}
+		subtract_from_temp_variable = { units_to_spawn = garrisons_to_spawn }
+	}
+
+	### specific states get mounted militia units
+	if = {
+		limit = {
+			OR = {
+				state = 373 #Missouri
+				state = 375 #Northern Texas
+				state = 376 #New Mexico
+				state = 382 #Colorado
+				state = 384 #Nebraska
+				state = 388 #Montana
+				state = 389 #North Dakota
+				state = 390 #South Dakota
+				state = 391 #Minnesota
+				state = 833 #Southern Texas
+			}
+		}
+		set_temp_variable = { mounties_to_spawn = 1 }
+		if = {
+			limit = {
+				OR = {
+					state = 833 #Southern Texas
+					state = 375 #Northern Texas
+				}
+			}
+			add_to_temp_variable = { mounties_to_spawn = 1 } #Texas gets two units
+		}
+		subtract_from_temp_variable = { units_to_spawn = mounties_to_spawn }
+	}
+
+	### spawn normal militias
+	set_temp_variable = { counter = 1 }
+	if = {
+		limit = {
+			NOT = { check_variable = { units_to_spawn < 1 } }
+		}
+		ROOT = { create_militia_template = yes }
+		for_loop_effect = {
+			start = 1
+			end = units_to_spawn
+			compare = less_than_or_equals
+
+			meta_effect = {
+				text = {
+					create_unit = {
+						division = "name = [DIVISION] division_template = [TEMPLATE] start_equipment_factor = 0.8"
+						allow_spawning_on_enemy_provs = yes
+						owner = ROOT
+						id = 1776
+					}
+				}
+				DIVISION = "\\\"[?counter][GetACWOrdinalSuffix] [THIS.GetName] [GetACWMilitiaName]\\\""
+				TEMPLATE = "\\\"[GetACWMilitiaTemplate]\\\""
+			}
+			add_to_temp_variable = { counter = 1 }
+		}
+	}
+
+	### spawn garrisons
+	if = {
+		limit = { has_variable = garrisons_to_spawn }
+		ROOT = { create_garrison_template = yes }
+		for_loop_effect = {
+			start = 1
+			end = garrisons_to_spawn
+			compare = less_than_or_equals
+
+			meta_effect = {
+				text = {
+					create_unit = {
+						division = "name = [DIVISION] division_template = [TEMPLATE] start_equipment_factor = 0.8"
+						allow_spawning_on_enemy_provs = yes
+						owner = ROOT
+						id = 1776
+					}
+				}
+				DIVISION = "\\\"[?counter][GetACWOrdinalSuffix] [THIS.GetName] [GetACWGarrisonName]\\\""
+				TEMPLATE = "\\\"[GetACWGarrisonTemplate]\\\""
+			}
+			add_to_temp_variable = { counter = 1 }
+		}
+	}
+
+	### spawn mounted militias
+	if = {
+		limit = { has_variable = mounties_to_spawn }
+		ROOT = { create_mounted_militia_template = yes }
+		for_loop_effect = {
+			start = 1
+			end = mounties_to_spawn
+			compare = less_than_or_equals
+
+			meta_effect = {
+				text = {
+					create_unit = {
+						division = "name = [DIVISION] division_template = [TEMPLATE] start_equipment_factor = 0.8"
+						allow_spawning_on_enemy_provs = yes
+						owner = ROOT
+						id = 1776
+					}
+				}
+				DIVISION = "\\\"[?counter][GetACWOrdinalSuffix] [THIS.GetName] [GetACWMountedMilitiaName]\\\""
+				TEMPLATE = "\\\"[GetACWMountedMilitiaTemplate]\\\""
+			}
+			add_to_temp_variable = { counter = 1 }
+		}
+	}
+}
+
+USA_starting_techs = {
+	### Starting Technologies ###
+	set_technology = {
+		### General ###
+		electronic_mechanical_engineering = 1
+
+		### Infantry ###
+		infantry_weapons = 1
+		infantry_weapons1 = 1
+		tech_support = 1
+		tech_engineers = 1
+		tech_recon = 1
+		tech_trucks = 1
+		motorised_infantry = 1
+		gw_artillery = 1
+		marines = 1
+		tech_mountaineers = 1
+
+		### Trains ###
+		basic_train = 1
+	}
+
+	### Planes ###
+	if = {
+		limit = { has_dlc_bba = yes }
+		set_technology = {
+			iw_small_airframe = 1
+			basic_small_airframe = 1
+			iw_medium_airframe = 1
+			basic_medium_airframe = 1
+			engines_1 = 1
+			engines_2 = 1
+			aa_lmg = 1
+			early_bombs = 1
+			aircraft_construction = 1
+			air_torpedoe_1 = 1
+			bba_early_transport_plane = 1
+		}
+	}
+	else = {
+		set_technology = {
+			early_fighter = 1
+			cv_early_fighter = 1
+			cv_naval_bomber1 = 1
+			cv_CAS1 = 1
+			naval_bomber1 = 1
+			CAS1 = 1
+			early_bomber = 1
+			tactical_bomber1 = 1
+			early_transport_plane = 1
+		}
+	}
+
+	### Tanks ###
+	if = {
+		limit = { has_dlc_nsb = yes }
+		set_technology = {
+			gwtank_chassis = 1
+			basic_light_tank_chassis = 1
+			engine_tech_1 = 1
+		}
+		add_ideas = bureau_of_ordnance_spirit
+	}
+	else = {
+		set_technology = {
+			gwtank = 1
+			basic_light_tank = 1
+		}
+	}
+
+	### Navy ###
+	set_technology = {
+		early_ship_hull_light = 1
+		basic_ship_hull_light = 1
+		early_ship_hull_cruiser = 1
+		basic_ship_hull_cruiser = 1
+		early_ship_hull_submarine = 1
+		basic_ship_hull_submarine = 1
+		early_ship_hull_carrier = 1
+		basic_ship_hull_carrier = 1
+		early_ship_hull_heavy = 1
+		basic_ship_hull_heavy = 1
+
+		## Modules##
+		basic_depth_charges = 1
+		basic_torpedo = 1
+		basic_battery = 1
+		basic_light_battery = 1
+		basic_cruiser_armor_scheme = 1
+		basic_heavy_armor_scheme = 1
+		basic_heavy_battery = 1
+		sonar = 1
+		basic_naval_mines = 1
+		submarine_mine_laying = 1
+
+		### Transport ###
+		mtg_transport = 1
+
+		### GTD - cruiser sub iteration rewards ###
+		tech_gtd_unlock_cruiser_sub_modules = 1
+	}
+
+	### Special Projects ###
+	complete_special_project = sp:sp_naval_super_heavy_battleship
+	complete_special_project = sp:sp_naval_cruiser_submarine
+	add_breakthrough_progress = {
+		specialization = specialization_land
+		value = 0.3
+	}
+	add_breakthrough_progress = {
+		specialization = specialization_naval
+		value = 0.8
+	}
+	add_breakthrough_progress = {
+		specialization = specialization_air
+		value = 0.4
+	}
+}
+
+USA_starting_tank_variants = {
+	if = {
+		limit = { has_dlc_nsb = yes }
+		create_equipment_variant = {
+			name = "M1 Combat Car"
+			show_position = no
+			type = light_tank_chassis_1
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_heavy_machine_gun
+				turret_type_slot = tank_light_two_man_tank_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = additional_machine_guns
+			}
+			upgrades = {
+				tank_nsb_armor_upgrade = 2
+				tank_nsb_engine_upgrade = 4
+			}
+			obsolete = yes
+			design_team = mio:USA_american_car_and_foundry_organisation
+			icon = GFX_USA_light_1_combat_car_m1_medium
+		}
+		create_equipment_variant = {
+			name = "M2A2"
+			show_position = no
+			type = light_tank_chassis_1
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_heavy_machine_gun
+				turret_type_slot = tank_light_one_man_tank_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = additional_machine_guns
+				special_type_slot_2 = tank_radio_1
+			}
+			upgrades = {
+				tank_nsb_armor_upgrade = 2
+				tank_nsb_engine_upgrade = 4
+			}
+			design_team = mio:USA_american_car_and_foundry_organisation
+			icon = GFX_USA_light_1_light_m2a2_medium
+		}
+		create_equipment_variant = {
+			name = "HMC T3"
+			show_position = no
+			type = light_tank_artillery_chassis_1
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_close_support_gun
+				turret_type_slot = tank_light_fixed_superstructure_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = additional_machine_guns
+			}
+			upgrades = {
+				tank_nsb_armor_upgrade = 2
+				tank_nsb_engine_upgrade = 4
+			}
+			design_team = mio:USA_american_car_and_foundry_organisation
+			icon = GFX_USA_basic_light_art_medium
+		}
+		create_equipment_variant = {
+			name = "Medium M2"
+			show_position = no
+			type = medium_tank_chassis_0
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_small_cannon
+				turret_type_slot = tank_medium_two_man_tank_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = additional_machine_guns
+				special_type_slot_2 = additional_machine_guns
+				special_type_slot_3 = additional_machine_guns
+				special_type_slot_4 = additional_machine_guns
+			}
+			design_team = mio:USA_chrysler_organisation		# Should be Rock Island Arsenal, but Chrysler will also work
+			icon = GFX_USA_medium_1_medium_m2_medium
+		}
+		create_equipment_variant = {
+			name = "T2"
+			show_position = no
+			type = heavy_tank_chassis_0
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_small_cannon
+				turret_type_slot = tank_heavy_two_man_tank_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = secondary_turret_small_cannon
+				special_type_slot_2 = additional_machine_guns
+				special_type_slot_3 = wet_ammo_storage
+			}
+			upgrades = {
+				tank_nsb_armor_upgrade = 1
+				tank_nsb_engine_upgrade = 2
+			}
+			design_team = mio:USA_baldwin_organisation
+		}
+	}
+}
+
+USA_starting_tank_variants_HAW = {
+	if = {
+		limit = { has_dlc_nsb = yes }
+		create_equipment_variant = {
+			name = "M1 Combat Car"
+			show_position = no
+			type = light_tank_chassis_1
+			parent_version = 0
+			modules = {
+				main_armament_slot = tank_heavy_machine_gun
+				turret_type_slot = tank_light_two_man_tank_turret
+				suspension_type_slot = tank_bogie_suspension
+				armor_type_slot = tank_riveted_armor
+				engine_type_slot = tank_gasoline_engine
+				special_type_slot_1 = additional_machine_guns
+			}
+			upgrades = {
+				tank_nsb_armor_upgrade = 2
+				tank_nsb_engine_upgrade = 4
+			}
+			icon = GFX_USA_light_1_combat_car_m1_medium
+		}
+	}
+}
+
+USA_starting_naval_variants = {
+	##################################################################
+	### UPDATE EQUIVALENTS IN WCA HISTORY FILE IF YOU CHANGE THESE ###
+	##################################################################
+
+	create_equipment_variant = {
+		name = "Porpoise Class"
+		type = ship_hull_submarine_2
+		name_group = USA_FISH
+		show_position = no
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_2
+			rear_1_custom_slot = empty
+		}
+	}
+	create_equipment_variant = {
+		name = "Barracuda/Dolphin/Cachalot Class"
+		type = ship_hull_submarine_2
+		name_group = USA_FISH
+		show_position = no
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_1
+			rear_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {			# represents O/R class, S class
+		name = "O/R/S Class"
+		type = ship_hull_submarine_1
+		name_group = USA_FISH
+		show_position = no
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_1
+			rear_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+
+	create_equipment_variant = {
+		name = "Argonaut Class"
+		type = ship_hull_cruiser_submarine
+		name_group = USA_FISH
+		show_position = no
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_1
+			front_1_custom_slot = ship_torpedo_sub_1
+			rear_1_custom_slot = ship_mine_layer_sub
+		}
+	}
+	create_equipment_variant = {
+		name = "Narwhal Class"				# cruiser submarine
+		type = ship_hull_cruiser_submarine
+		name_group = USA_FISH
+		show_position = no
+		modules = {
+			fixed_ship_torpedo_slot = ship_torpedo_sub_1
+			fixed_ship_engine_slot = sub_ship_engine_2
+			front_1_custom_slot = ship_airplane_launcher_1
+			rear_1_custom_slot = ship_torpedo_sub_1
+		}
+	}
+
+	###DESTROYERS
+	create_equipment_variant = {
+		name = "Porter/Somers Class"				# represents Porter, Somers classes
+		type = ship_hull_light_2
+		name_group = USA_HEROES_NAVY
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = ship_sonar_1
+			fixed_ship_engine_slot = light_ship_engine_2
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = ship_anti_air_1
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+	}
+	create_equipment_variant = {
+		name = "Rodgers/Bagley Class"				# represents Gridley, Badley classes
+		type = ship_hull_light_2
+		name_group = USA_HEROES_NAVY
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = ship_sonar_1
+			fixed_ship_engine_slot = light_ship_engine_2
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+	}
+	create_equipment_variant = {
+		name = "Farragut/Mahan Class"				# represents Farragut, Mahan classes
+		type = ship_hull_light_2
+		name_group = USA_HEROES_NAVY
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = ship_sonar_1
+			fixed_ship_engine_slot = light_ship_engine_2
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = empty
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Caldwell/Clemson/Wickes Class"				# represents Caldwell, Clemson, and Wickes classes
+		type = ship_hull_light_1
+		name_group = USA_HEROES_NAVY
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = light_ship_engine_1
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+		obsolete = yes
+	}
+
+	###LIGHT CRUISERS
+	create_equipment_variant = {
+		name = "Pensacola Class"                    #not OTL class - composition like in Wichita class because we haven't OTL naval treaties
+		type = ship_hull_cruiser_2
+		name_group = USA_CITIES
+		show_position = no
+		modules = {
+			fixed_ship_armor_slot = ship_armor_cruiser_2
+			fixed_ship_battery_slot = ship_medium_battery_1
+			front_1_custom_slot = ship_medium_battery_1
+			rear_1_custom_slot = ship_airplane_launcher_1
+			fixed_ship_secondaries_slot = empty
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_2
+			mid_1_custom_slot = ship_medium_battery_1
+			mid_2_custom_slot = ship_secondaries_1
+		}
+	}
+	create_equipment_variant = {
+		name = "Brooklyn Class"
+		type = ship_hull_cruiser_2
+		name_group = USA_CITIES
+		show_position = no
+		role_icon_index = 3
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_2
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_2
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+
+			mid_1_custom_slot = ship_airplane_launcher_1
+			mid_2_custom_slot = ship_airplane_launcher_1
+			rear_1_custom_slot = ship_light_battery_2
+			front_1_custom_slot = ship_anti_air_1
+		}
+	}
+	create_equipment_variant = {
+		name = "Omaha Class"
+		type = ship_hull_cruiser_1
+		name_group = USA_CITIES
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_light_medium_battery_2
+			fixed_ship_secondaries_slot = empty
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_1
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			rear_1_custom_slot = ship_light_medium_battery_2
+			mid_1_custom_slot = ship_torpedo_1
+			mid_2_custom_slot = ship_mine_layer_1
+		}
+	}
+
+	###CRUISERS
+	create_equipment_variant = {					#Fictional Post WW1 Heavy Cruiser Design to replace aging Armoured Cruisers
+		name = "Augusta Class"
+		type = ship_hull_cruiser_1
+		name_group = USA_CITIES
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_medium_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_2
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_armor_slot = ship_armor_cruiser_2
+			mid_1_custom_slot = ship_medium_battery_1
+			mid_2_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = ship_medium_battery_1
+		}
+	}
+
+	create_equipment_variant = {					#Fictional Late Interwar Heavy Cruiser Design close to Admiral Hipper Class
+		name = "Olympia Class"
+		type = ship_hull_cruiser_2
+		name_group = USA_CITIES
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_medium_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_2
+			fixed_ship_secondaries_slot = ship_secondaries_2
+			fixed_ship_armor_slot = ship_armor_cruiser_2
+			front_1_custom_slot = ship_medium_battery_2
+			mid_1_custom_slot = ship_torpedo_2
+			mid_2_custom_slot = ship_airplane_launcher_1
+			rear_1_custom_slot = ship_medium_battery_2
+		}
+	}
+
+	###ARMORED CRUISERS
+
+	create_equipment_variant = {
+		name = "Lexington Class"                    #were finished in KRTL, little different design without influence of Hood
+		type = ship_hull_heavy_1
+		name_group = USA_BATTLES
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_heavy_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_2
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_armor_slot = ship_armor_bc_1
+			front_1_custom_slot = ship_anti_air_1
+			mid_1_custom_slot = ship_secondaries_1
+			mid_2_custom_slot = ship_airplane_launcher_1
+			rear_1_custom_slot = ship_heavy_battery_2
+		}
+	}
+
+	###BATTLESHIPS
+	create_equipment_variant = {
+		name = "Iowa Class"
+		type = ship_hull_heavy_2
+		name_group = USA_STATES
+		show_position = no
+		modules = {
+			fixed_ship_armor_slot = ship_armor_bb_2
+			front_1_custom_slot = ship_heavy_battery_2
+			fixed_ship_battery_slot = ship_heavy_battery_2
+			rear_1_custom_slot = ship_heavy_battery_2
+			mid_1_custom_slot = ship_secondaries_2
+			mid_2_custom_slot = ship_secondaries_2
+			fixed_ship_secondaries_slot = ship_secondaries_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_2
+		}
+	}
+	create_equipment_variant = {
+		name = "Colorado Class"
+		type = ship_hull_heavy_1
+		name_group = USA_STATES
+		show_position = no
+		modules = {
+			fixed_ship_armor_slot = ship_armor_bb_2
+			front_1_custom_slot = ship_heavy_battery_2
+			fixed_ship_battery_slot = ship_heavy_battery_2
+			rear_1_custom_slot = ship_heavy_battery_2
+			mid_1_custom_slot = ship_secondaries_2
+			mid_2_custom_slot = ship_secondaries_2
+			fixed_ship_secondaries_slot = ship_secondaries_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Tennessee Class"
+		type = ship_hull_heavy_1
+		name_group = USA_STATES
+		show_position = no
+		modules = {
+			fixed_ship_armor_slot = ship_armor_bb_2
+			front_1_custom_slot = ship_heavy_battery_2
+			fixed_ship_battery_slot = ship_heavy_battery_2
+			rear_1_custom_slot = empty
+			mid_1_custom_slot = ship_secondaries_2
+			mid_2_custom_slot = ship_airplane_launcher_1
+			fixed_ship_secondaries_slot = ship_secondaries_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Pennsylvania/New Mexico Class"
+		type = ship_hull_heavy_1
+		name_group = USA_STATES
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_heavy_battery_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_armor_slot = ship_armor_bb_1
+			mid_1_custom_slot = ship_airplane_launcher_1
+			mid_2_custom_slot = ship_secondaries_2
+			rear_1_custom_slot = ship_heavy_battery_2
+			front_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Florida/Wyoming/New York Class"
+		type = ship_hull_heavy_1
+		name_group = USA_STATES
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_heavy_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_armor_slot = ship_armor_bb_1
+			mid_1_custom_slot = ship_airplane_launcher_1
+			mid_2_custom_slot = ship_secondaries_1
+			rear_1_custom_slot = ship_heavy_battery_1
+			front_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+
+	###DREADNOUGHTS
+	create_equipment_variant = {
+		name = "South Carolina Class"                    #Tillman project of Dreadnoughts, tho, little chagned and upgraded to 1936 - instead of South Dakotas
+		type = ship_hull_super_heavy_1
+		name_group = USA_STATES
+		show_position = no
+		modules = {
+			fixed_ship_battery_slot = ship_super_heavy_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_2
+			fixed_ship_secondaries_slot = ship_secondaries_2
+			fixed_ship_armor_slot = ship_armor_shbb
+			front_1_custom_slot = ship_super_heavy_battery_1
+			mid_1_custom_slot = ship_anti_air_1
+			mid_2_custom_slot = ship_secondaries_2
+			mid_3_custom_slot = empty
+			rear_1_custom_slot = ship_super_heavy_battery_1
+			rear_2_custom_slot = ship_airplane_launcher_1
+		}
+	}
+
+	###CARRIERS
+
+	create_equipment_variant = {
+		name = "Ranger Class"                    #Converted ship of Lexington project
+		type = ship_hull_carrier_conversion_bb
+		name_group = USA_CV_HISTORICAL
+		show_position = no
+		modules = {
+			fixed_ship_deck_slot_1 = ship_deck_space
+			fixed_ship_deck_slot_2 = ship_deck_space
+			mid_1_custom_slot = ship_deck_space
+			fixed_ship_engine_slot = heavy_ship_engine_2
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_radar_slot = empty
+			fixed_ship_secondaries_slot = ship_secondaries_2
+		}
+	}
+	create_equipment_variant = {
+		name = "Massachusetts Class"                    #Converted ship of Tillman project
+		type = ship_hull_carrier_conversion_bb
+		name_group = USA_STATES
+		show_position = no
+		modules = {
+			fixed_ship_deck_slot_1 = ship_deck_space
+			fixed_ship_deck_slot_2 = ship_deck_space
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+			fixed_ship_secondaries_slot = empty
+			mid_1_custom_slot = ship_deck_space
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Yorktown Class"                    #Yorktown Class
+		type = ship_hull_carrier_1
+		name_group = USA_CV_HISTORICAL
+		show_position = no
+		modules = {
+			fixed_ship_deck_slot_1 = ship_deck_space
+			fixed_ship_deck_slot_2 = ship_deck_space
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = carrier_ship_engine_2
+			fixed_ship_secondaries_slot = ship_secondaries_2
+			front_1_custom_slot = ship_deck_space
+		}
+	}
+}
+
+USA_starting_plane_variants = {
+	if = {
+		limit = { has_dlc_bba = yes }
+	### Small planes
+		create_equipment_variant = {
+			name = "P-36C"
+			type = small_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_4x		# P-36 had notoriously small number of MGs. This fictional variant hosts 4 MGs, IRL version had only 2 MGs
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:USA_curtiss_wright_organisation
+			# Tag-specific icon is applied
+		}
+		create_equipment_variant = {
+			name = "P-36A"
+			type = small_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_2x
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			obsolete = yes
+			design_team = mio:USA_curtiss_wright_organisation
+			icon = GFX_USA_small_1_p_35a_medium
+		}
+		create_equipment_variant = {
+			name = "A-17"
+			type = small_plane_cas_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = bomb_locks
+				fixed_auxiliary_weapon_slot_1 = light_mg_2x
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:USA_vought_organisation		# Should be Grumman, but it is limited to nav planes only
+			# Tag-specific icon is applied
+		}
+	### Obsolete small planes
+		create_equipment_variant = {
+			name = "P-6"
+			type = small_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_2x		# 2x7.62 mg
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			obsolete = yes
+			design_team = mio:USA_curtiss_wright_organisation
+			icon = GFX_USA_small_0_p_6d_medium
+		}
+		create_equipment_variant = {
+			name = "P-26A"
+			type = small_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_2x		# 2x7.62 mg
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			obsolete = yes
+			design_team = mio:USA_curtiss_wright_organisation		# Should be Boeing, which is locked to heavy planes
+			# Tag-specific icon is applied
+		}
+		create_equipment_variant = {
+			name = "A-12"
+			type = small_plane_cas_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = bomb_locks
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			obsolete = yes
+			design_team = mio:USA_vought_organisation		# Probably should be Grumman, but it is limited to nav planes only
+			icon = GFX_USA_small_1_a_12_medium
+		}
+		create_equipment_variant = {
+			name = "A-3"
+			type = small_plane_cas_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = bomb_locks
+				fixed_auxiliary_weapon_slot_1 = light_mg_2x
+				engine_type_slot = engine_1_1x
+			}
+			obsolete = yes
+			design_team = mio:USA_vought_organisation		# Probably should be Grumman, but it is limited to nav planes only
+			icon = GFX_USA_small_0_a_3_medium
+		}
+	### CV planes
+		create_equipment_variant = {
+			name = "FF"
+			type = cv_small_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_2x
+				engine_type_slot = engine_2_1x
+				special_type_slot_1 = empty
+			}
+			design_team = mio:USA_grumman_organisation
+			icon = GFX_USA_carrier_0_ff_1_medium
+		}
+	### Obsolete CV planes
+		create_equipment_variant = {
+			name = "F4B"
+			type = cv_small_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_2x
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			obsolete = yes
+			design_team = mio:USA_grumman_organisation		# Should be Boeing, which is locked to heavy planes
+			icon = GFX_USA_carrier_0_f4b_2_medium
+		}
+		create_equipment_variant = {
+			name = "SBU Corsair"
+			type = cv_small_plane_cas_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = bomb_locks
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = dive_brakes_small
+			}
+			obsolete = yes
+			design_team = mio:USA_vought_organisation
+			icon = GFX_USA_carrier_0_sbu_1_medium
+		}
+		create_equipment_variant = {
+			name = "DT-2"
+			type = cv_small_plane_naval_bomber_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = torpedo_mounting
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			obsolete = yes
+			design_team = mio:USA_vought_organisation		# Should be Douglas, which is locked to heavy planes
+			icon = GFX_USA_carrier_0_dt_2_medium
+		}
+	### Medium planes
+		create_equipment_variant = {
+			name = "B-18"
+			type = medium_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay		# Up to 1000kg, comparable to Ju.86
+				engine_type_slot = engine_2_2x
+				special_type_slot_1 = lmg_defense_turret
+			}
+			design_team = mio:USA_douglas_organisation
+			# Tag-specific icon is applied
+		}
+		create_equipment_variant = {
+			name = "PBY"
+			type = medium_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay
+				fixed_auxiliary_weapon_slot_1 = torpedo_mounting
+				fixed_auxiliary_weapon_slot_2 = torpedo_mounting
+				engine_type_slot = engine_2_2x
+				special_type_slot_1 = flying_boat_medium
+				special_type_slot_2 = lmg_defense_turret
+			}
+			design_team = mio:USA_consolidated_organisation
+			model = USA_medium_plane_1_entity		# This model is pulled straight from vanilla for BBA users. Since this effect is only executed in BBA scope, it will always be available
+			icon = GFX_USA_medium_1_pby_1_medium
+		}
+	### Obsolete medium planes
+		create_equipment_variant = {
+			name = "B-10"
+			type = medium_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay
+				engine_type_slot = engine_1_2x
+				special_type_slot_1 = lmg_defense_turret
+			}
+			obsolete = yes
+			design_team = mio:USA_douglas_organisation		# Should be Martin, which is not available
+			icon = GFX_USA_medium_1_b_10_medium
+		}
+		create_equipment_variant = {
+			name = "B-2"
+			type = medium_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay
+				engine_type_slot = engine_1_2x
+				special_type_slot_1 = lmg_defense_turret
+			}
+			obsolete = yes
+			design_team = mio:USA_douglas_organisation		# No idea who was the actual manufacturer
+			icon = GFX_USA_medium_0_b_2_medium
+		}
+		create_equipment_variant = {
+			name = "P2Y"
+			type = medium_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay
+				fixed_auxiliary_weapon_slot_1 = medium_bomb_bay
+				engine_type_slot = engine_2_2x
+				special_type_slot_1 = flying_boat_medium
+				special_type_slot_2 = lmg_defense_turret
+			}
+			obsolete = yes
+			design_team = mio:USA_consolidated_organisation
+			model = USA_medium_plane_1_entity		# This model is pulled straight from vanilla for BBA users. Since this effect is only executed in BBA scope, it will always be available
+			icon = GFX_USA_medium_0_p2y_medium
+		}
+	}
+}
+
+# Limited effect with no MIOs assigned
+USA_starting_plane_variants_HAW = {
+	if = {
+		limit = { has_dlc_bba = yes }
+		create_equipment_variant = {
+			name = "P-26A"
+			type = small_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_2x		# 2x7.62 mg
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+		}
+		create_equipment_variant = {
+			name = "F4B"
+			type = cv_small_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = light_mg_2x
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			icon = GFX_USA_carrier_0_f4b_2_medium
+		}
+		create_equipment_variant = {
+			name = "SBU Corsair"
+			type = cv_small_plane_cas_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = bomb_locks
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = dive_brakes_small
+			}
+			icon = GFX_USA_carrier_0_sbu_1_medium
+		}
+		create_equipment_variant = {
+			name = "DT-2"
+			type = cv_small_plane_naval_bomber_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = torpedo_mounting
+				engine_type_slot = engine_1_1x
+				special_type_slot_1 = empty
+			}
+			icon = GFX_USA_carrier_0_dt_2_medium
+		}
+		create_equipment_variant = {
+			name = "B-10"
+			type = medium_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay
+				engine_type_slot = engine_1_2x
+				special_type_slot_1 = lmg_defense_turret
+			}
+			icon = GFX_USA_medium_1_b_10_medium
+		}
+		create_equipment_variant = {
+			name = "PBY"
+			type = medium_plane_airframe_1
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay
+				fixed_auxiliary_weapon_slot_1 = torpedo_mounting
+				fixed_auxiliary_weapon_slot_2 = torpedo_mounting
+				engine_type_slot = engine_2_2x
+				special_type_slot_1 = flying_boat_medium
+				special_type_slot_2 = lmg_defense_turret
+			}
+			model = USA_medium_plane_1_entity		# This model is pulled straight from vanilla for BBA users. Since this effect is only executed in BBA scope, it will always be available
+			icon = GFX_USA_medium_1_pby_1_medium
+		}
+		create_equipment_variant = {
+			name = "P2Y"
+			type = medium_plane_airframe_0
+			show_position = no
+			modules = {
+				fixed_main_weapon_slot = medium_bomb_bay
+				fixed_auxiliary_weapon_slot_1 = medium_bomb_bay
+				engine_type_slot = engine_2_2x
+				special_type_slot_1 = flying_boat_medium
+				special_type_slot_2 = lmg_defense_turret
+			}
+			model = USA_medium_plane_1_entity		# This model is pulled straight from vanilla for BBA users. Since this effect is only executed in BBA scope, it will always be available
+			icon = GFX_USA_medium_0_p2y_medium
+		}
+	}
+}
+
+ACW_whole_country_unit_desertion = {
+	custom_effect_tooltip = ACW_unit_desertion_tt
+	damage_units = {
+		region = 185
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 118
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 228
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 119
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 229
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 120
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 227
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 230
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 233
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 226
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+	damage_units = {
+		region = 186
+		limit = { has_country_flag = tag_to_damage_units_in }
+		org_damage = 0.25
+		str_damage = 0.1
+		ratio = yes
+		army = yes
+	}
+}
+
+APG_fire_long_events = {
+	country_event = { id = america_peoples_government_events.15 days = 90 random_days = 20 }
+	country_event = { id = america_peoples_government_events.14 days = 120 random_days = 20 }
+	country_event = { id = america_peoples_government_events.13 days = 150 random_days = 20 }
+	country_event = { id = america_peoples_government_events.11 days = 180 random_days = 20 }
+	country_event = { id = america_peoples_government_events.16 days = 210 random_days = 30 }
+	country_event = { id = america_peoples_government_events.17 days = 240 random_days = 30 }
+	country_event = { id = america_peoples_government_events.18 days = 270 random_days = 40 }
+	country_event = { id = america_peoples_government_events.19 days = 300 random_days = 40 }
+	country_event = { id = america_peoples_government_events.20 days = 330 random_days = 100 }
+	country_event = { id = america_peoples_government_events.12 days = 400 random_days = 100 }
+}
+
+APG_fire_business_plot_events = {
+	country_event = { id = america_peoples_government_events.36 days = 90 random_days = 20 }
+	country_event = { id = america_peoples_government_events.32 days = 120 random_days = 20 }
+	country_event = { id = america_peoples_government_events.37 days = 150 random_days = 30 }
+	country_event = { id = america_peoples_government_events.38 days = 180 random_days = 40 }
+	country_event = { id = america_peoples_government_events.40 days = 55 random_days = 20 }
+	country_event = { id = america_peoples_government_events.41 days = 235 random_days = 20 }
+}
+
+APG_fire_huac_events = {
+	country_event = { id = america_peoples_government_events.51 days = 90 random_days = 20 } #The Figurehead of State
+	country_event = { id = america_peoples_government_events.52 days = 120 random_days = 20 } #The Sixth Party System
+	country_event = { id = america_peoples_government_events.53 days = 150 random_days = 20 } #Movie Reefer Madness
+	country_event = { id = america_peoples_government_events.54 days = 180 random_days = 20 } #Investigating the Klan
+	country_event = { id = america_peoples_government_events.55 days = 210 random_days = 20 } #Dance Marathons Banned
+	country_event = { id = america_peoples_government_events.56 days = 240 random_days = 20 } #Democrats Fracture
+	country_event = { id = america_peoples_government_events.57 days = 270 random_days = 20 } #Growing Nativism
+	country_event = { id = america_peoples_government_events.58 days = 300 random_days = 20 } #Antarctic Snow Cruiser Decommissioned
+	country_event = { id = america_peoples_government_events.59 days = 330 random_days = 20 } #Yellow Unions in America
+	country_event = { id = america_peoples_government_events.60 days = 360 random_days = 20 } #Disappointment Clubs
+	country_event = { id = america_peoples_government_events.61 days = 270 random_days = 20 } #The Republicans Rally
+	country_event = { id = america_peoples_government_events.62 days = 300 random_days = 20 } #Myron Fagan and the Hollywood Blacklist
+	country_event = { id = america_peoples_government_events.63 days = 330 random_days = 20 } #Civil Rights Congress
+}
+
+APG_increase_share_the_wealth_costs = {
+	custom_effect_tooltip = tooltip_white_line
+	if = {
+		limit = { NOT = { has_active_mission = APG_growing_share_the_wealth_costs } }
+		set_variable = { APG_growing_share_the_wealth_costs_timeout = 270 }
+		activate_mission = APG_growing_share_the_wealth_costs
+	}
+	else = {
+		if = {
+			limit = { NOT = { has_variable = APG_growing_share_the_wealth_costs_timeout } }
+			set_variable = { APG_growing_share_the_wealth_costs_timeout = 270 }
+		}
+		subtract_from_variable = {
+			APG_growing_share_the_wealth_costs_timeout = 45
+			tooltip = APG_growing_share_the_wealth_costs_timeout
+		}
+		add_days_mission_timeout = {
+			mission = APG_growing_share_the_wealth_costs
+			days = -45
+		}
+	}
+}
+
+USA_add_light_armored_div = {
+	if = {
+		limit = { NOT = { has_template = "Light Armored Division" } }
+		division_template = {
+			name = "Light Armored Division"
+			division_names_group = USA_ARM_01
+			is_locked = no
+			regiments = {
+				light_armor = { x = 0 y = 0 }
+				light_armor = { x = 0 y = 1 }
+				light_armor = { x = 0 y = 2 }
+				motorized = { x = 1 y = 0 }
+				motorized = { x = 1 y = 1 }
+				motorized = { x = 1 y = 2 }
+			}
+			priority = 2
+		}
+	}
+}
+
+USA_add_medium_armored_div = {
+	if = {
+		limit = { NOT = { has_template = "Medium Armored Division" } }
+		division_template = {
+			name = "Medium Armored Division"
+			division_names_group = USA_ARM_01
+			is_locked = no
+			regiments = {
+				medium_armor = { x = 0 y = 0 }
+				medium_armor = { x = 0 y = 1 }
+				medium_armor = { x = 0 y = 2 }
+				motorized = { x = 1 y = 0 }
+				motorized = { x = 1 y = 1 }
+				motorized = { x = 1 y = 2 }
+			}
+			priority = 2
+		}
+	}
+}
+
+USA_add_heavy_armored_div = {
+	if = {
+		limit = { NOT = { has_template = "Heavy Armored Division" } }
+		division_template = {
+			name = "Heavy Armored Division"
+			division_names_group = USA_ARM_01
+			is_locked = no
+			regiments = {
+				heavy_armor = { x = 0 y = 0 }
+				heavy_armor = { x = 0 y = 1 }
+				heavy_armor = { x = 0 y = 2 }
+				motorized = { x = 1 y = 0 }
+				motorized = { x = 1 y = 1 }
+				motorized = { x = 1 y = 2 }
+			}
+			priority = 2
+		}
+	}
+}
+
+USA_add_light_infantry_division = {
+	if = {
+		limit = { NOT = { has_template = "Light Infantry Division" } }
+		division_template = {
+			name = "Light Infantry Division"
+			division_names_group = USA_INF_01
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+				infantry = { x = 0 y = 2 }
+				infantry = { x = 1 y = 0 }
+				infantry = { x = 1 y = 1 }
+				infantry = { x = 1 y = 2 }
+				infantry = { x = 2 y = 0 }
+			}
+			support = {
+				engineer = { x = 0 y = 0 }
+				recon = { x = 0 y = 1 }
+			}
+			template_counter = 7
+		}
+	}
+}
+
+USA_add_heavy_infantry_division = {
+	if = {
+		limit = { NOT = { has_template = "Heavy Infantry Division" } }
+		division_template = {
+			name = "Heavy Infantry Division"
+			division_names_group = USA_INF_01
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+				infantry = { x = 0 y = 2 }
+				infantry = { x = 1 y = 0 }
+				infantry = { x = 1 y = 1 }
+				infantry = { x = 1 y = 2 }
+				infantry = { x = 1 y = 3 }
+				artillery_brigade = { x = 2 y = 0 }
+				artillery_brigade = { x = 2 y = 1 }
+			}
+			support = {
+				artillery = { x = 0 y = 0 }
+			}
+			template_counter = 6
+		}
+	}
+}
+
+USA_add_motorised_division = {
+	if = {
+		limit = { NOT = { has_template = "Light Motorized Division" } }
+		division_template = {
+			name = "Light Motorized Division"
+			division_names_group = USA_MEC_01
+			regiments = {
+				motorized = { x = 0 y = 0 }
+				motorized = { x = 0 y = 1 }
+				motorized = { x = 0 y = 2 }
+				motorized = { x = 1 y = 0 }
+				motorized = { x = 1 y = 1 }
+				motorized = { x = 1 y = 2 }
+				motorized = { x = 2 y = 0 }
+				motorized = { x = 2 y = 1 }
+				motorized = { x = 2 y = 2 }
+			}
+			support = {
+				engineer = { x = 0 y = 0 }
+				artillery = { x = 0 y = 1 }
+				recon = { x = 0 y = 2 }
+			}
+			template_counter = 28
+		}
+	}
+}
+
+america_move_scientists_effect = {
+	###########
+	### USA ###
+	###########
+	if = {
+		limit = { NOT = { has_character = USA_john_charles_niedermair } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = USA_john_charles_niedermair
+			}
+			USA = { USA_john_charles_niedermair = { set_nationality = ROOT } }
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = USA_john_henry_manley } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = USA_john_henry_manley
+			}
+			USA = { USA_john_henry_manley = { set_nationality = ROOT } }
+		}
+	}
+
+	###########
+	### WCA ###
+	###########
+	if = {
+		limit = {
+			NOT = { tag = APG }
+			NOT = { has_government = paternal_autocrat }
+		}
+		if = {
+			limit = { NOT = { has_character = WCA_john_whiteside_parsons } }
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_available_scientist
+					CHARACTER = WCA_john_whiteside_parsons
+				}
+				WCA = { WCA_john_whiteside_parsons = { set_nationality = ROOT } }
+			}
+		}
+		if = {
+			limit = { NOT = { has_character = WCA_julius_robert_oppenheimer } }
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_available_scientist
+					CHARACTER = WCA_julius_robert_oppenheimer
+				}
+				WCA = { WCA_julius_robert_oppenheimer = { set_nationality = ROOT } }
+			}
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = WCA_karl_probst } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = WCA_karl_probst
+			}
+			WCA = { WCA_karl_probst = { set_nationality = ROOT } }
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = WCA_peyton_marshall_magruder } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = WCA_peyton_marshall_magruder
+			}
+			WCA = { WCA_peyton_marshall_magruder = { set_nationality = ROOT } }
+		}
+	}
+
+	###########
+	### ACC ###
+	###########
+	if = {
+		limit = { NOT = { has_character = ACC_edward_curtis_wells } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = ACC_edward_curtis_wells
+			}
+			ACC = { ACC_edward_curtis_wells = { set_nationality = ROOT } }
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = ACC_edwin_mattison_mcmillan } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = ACC_edwin_mattison_mcmillan
+			}
+			ACC = { ACC_edwin_mattison_mcmillan = { set_nationality = ROOT } }
+		}
+	}
+	if = {
+		limit = {
+			has_socialist_government = no
+			NOT = { has_character = ACC_ernest_orlando_lawrence }
+		}
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = ACC_ernest_orlando_lawrence
+			}
+			ACC = { ACC_ernest_orlando_lawrence = { set_nationality = ROOT } }
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = ACC_paul_pigott } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = ACC_paul_pigott
+			}
+			ACC = { ACC_paul_pigott = { set_nationality = ROOT } }
+		}
+	}
+	if = {
+		limit = {
+			NOT = { tag = ACC }
+			ACC = { has_character = LEP_chien_shiung_wu }
+		}
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = LEP_chien_shiung_wu
+			}
+			LEP = { LEP_chien_shiung_wu = { set_nationality = ROOT } }
+		}
+	}
+
+	###########
+	### NEE ###
+	###########
+	if = {
+		limit = { NOT = { has_character = NEE_arthur_william_sidney_herrington } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = NEE_arthur_william_sidney_herrington
+			}
+			NEE = { NEE_arthur_william_sidney_herrington = { set_nationality = ROOT } }
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = NEE_vannevar_bush } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = NEE_vannevar_bush
+			}
+			NEE = { NEE_vannevar_bush = { set_nationality = ROOT } }
+		}
+	}
+	if = {
+		limit = { NOT = { has_character = NEE_william_francis_gibbs } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = NEE_william_francis_gibbs
+			}
+			NEE = { NEE_william_francis_gibbs = { set_nationality = ROOT } }
+		}
+	}
+
+	###########
+	### APG ###
+	###########
+	if = {
+		limit = { NOT = { has_character = APG_robert_hutchings_goddard } }
+		custom_override_tooltip = {
+			tooltip = {
+				localization_key = tooltip_available_scientist
+				CHARACTER = APG_robert_hutchings_goddard
+			}
+			APG = { APG_robert_hutchings_goddard = { set_nationality = ROOT } }
+		}
+	}
+}
+
+USA_transfer_mio_size_and_funds = {
+	# set temp vars: USA_mio_transfer_originator and USA_mio_transfer_target first to run effect
+	var:USA_mio_transfer_originator = {
+		every_military_industrial_organization = {
+			limit = {
+				# Exclude NEE's unique organisations
+				NOT = {
+					is_military_industrial_organization = NEE_tank_destroyer_board_organization
+					is_military_industrial_organization = NEE_Main_Battle_Tanks_organisation
+				}
+			}
+			add_to_array = { PREV.USA_all_mios = THIS }
+			log = "TAG: [PREV.GetTag] | MIO Name: [THIS.GetName]"
+		}
+	}
+	log = "L -----------------------------------"
+	var:USA_mio_transfer_target = {
+		every_military_industrial_organization = {
+			limit = {
+				# Exclude NEE's unique organisations
+				NOT = {
+					is_military_industrial_organization = NEE_tank_destroyer_board_organization
+					is_military_industrial_organization = NEE_Main_Battle_Tanks_organisation
+				}
+			}
+			add_to_array = { PREV.USA_all_mios = THIS }
+			log = "TAG: [PREV.GetTag] | MIO Name: [THIS.GetName]"
+		}
+	}
+	log = "L -----------------------------------"
+	if = {
+		limit = { check_variable = { USA_mio_transfer_originator:USA_all_mios^num = USA_mio_transfer_target:USA_all_mios^num } }
+		log = "Total MIOs in both arrays are equal. [?USA_mio_transfer_originator:USA_all_mios^num] = [?USA_mio_transfer_target:USA_all_mios^num]"
+	}
+	log = "After Transfer:"
+	for_loop_effect = {
+		start = 0
+		end = USA_mio_transfer_originator:USA_all_mios^num
+		compare = less_than
+		value = i #indexes of MIOs in both scopes refer to the same MIOs
+
+		var:USA_mio_transfer_originator = {
+			set_temp_variable = { current_mio = THIS.USA_all_mios^i }
+			var:current_mio = {
+				set_temp_variable = { current_mio_size = THIS.size }
+				set_temp_variable = { current_mio_funds = THIS.funds }
+				log = "TAG: [PREV.GetTag] | MIO Name: [THIS.GetName] | Size: [?size] | Funds: [?funds]"
+			}
+			#log = "TAG: [THIS.GetTag] | MIO Name: [?current_mio.GetName] | Size: [?current_mio.size] | Funds: [?current_mio.funds]"
+		}
+		var:USA_mio_transfer_target = {
+			set_temp_variable = { current_mio = THIS.USA_all_mios^i }
+			var:current_mio = {
+				add_mio_size = current_mio_size
+				add_mio_funds = current_mio_funds
+				log = "TAG: [PREV.GetTag] | MIO Name: [THIS.GetName] | Size: [?size] | Funds: [?funds]"
+			}
+			#log = "TAG: [THIS.GetTag] | MIO Name: [?current_mio.GetName] | Size: [?current_mio.size] | Funds: [?current_mio.funds]"
+		}
+		log = "L -----------------------------------"
+	}
+	clear_array = USA_mio_transfer_originator:USA_all_mios
+	clear_array = USA_mio_transfer_target:USA_all_mios
+}
+
+USA_mio_merger_effect = {
+	set_mio_flag = USA_MIO_merger_senior_partner #Senior Merger Partner
+	FROM = {
+		var:MIO_target = {
+			set_temp_variable = { temp_level = size }
+			set_temp_variable = { temp_funds = funds }
+			set_mio_flag = USA_MIO_merger_junior_partner #Junior Merger Partner
+		}
+	}
+	custom_effect_tooltip = USA_MIO_funds_and_level_merger_tt
+	add_mio_size = temp_level
+	add_mio_funds = temp_funds
+	custom_effect_tooltip = tooltip_white_line
+}
+
+USA_mio_maintain_independence = {
+	set_mio_flag = USA_MIO_maintain_independence
+}
+
+USA_support_side_decision_complete_effect = {
+	FROM = { USA_set_side_as_supported_by_PREV = yes }
+	army_experience = 5
+	send_equipment = { type = infantry_equipment amount = 2000 target = FROM }
+	FROM = { country_event = american_civil_war_events.611 }
+	if = {
+		limit = { has_completed_focus = GER_german_american_self_defence }
+		FROM = { GER_USA_militias_spawn_effect = yes }
+	}
+	if = {
+		limit = {
+			OR = {
+				original_tag = GER
+				is_ally_with = ENT
+			}
+		}
+		IRE_handle_ACW_volunteers = yes
+	}
+	hidden_effect = { update_volunteer_AI = yes }
+}
+
+USA_set_side_as_supported_by_PREV = {
+	hidden_effect = {
+		if = {
+			limit = { has_variable = PREV.ACW_supported_tag }
+			PREV = {
+				meta_effect = {
+					text = {
+						if = {
+							limit = { has_relation_modifier = { modifier = volunteer_limit_plus_one target = PREV } }
+							remove_relation_modifier = { modifier = volunteer_limit_plus_one target = [TARGET] }
+							add_relation_modifier = { modifier = volunteer_limit_plus_one target = PREV }
+						}
+						if = {
+							limit = { has_relation_modifier = { modifier = volunteer_limit_plus_two target = PREV } }
+							remove_relation_modifier = { modifier = volunteer_limit_plus_two target = [TARGET] }
+							add_relation_modifier = { modifier = volunteer_limit_plus_two target = PREV }
+						}
+						if = {
+							limit = { has_relation_modifier = { modifier = volunteer_limit_plus_three target = PREV } }
+							remove_relation_modifier = { modifier = volunteer_limit_plus_three target = [TARGET] }
+							add_relation_modifier = { modifier = volunteer_limit_plus_three target = PREV }
+						}
+						if = {
+							limit = { has_relation_modifier = { modifier = volunteer_limit_plus_fifty_percent target = PREV } }
+							remove_relation_modifier = { modifier = volunteer_limit_plus_fifty_percent target = [TARGET] }
+							add_relation_modifier = { modifier = volunteer_limit_plus_fifty_percent target = PREV }
+						}
+						if = {
+							limit = { has_relation_modifier = { modifier = volunteer_limit_plus_hundred_percent target = PREV } }
+							remove_relation_modifier = { modifier = volunteer_limit_plus_hundred_percent target = [TARGET] }
+							add_relation_modifier = { modifier = volunteer_limit_plus_hundred_percent target = PREV }
+						}
+					}
+					TARGET = "[GetACWSupportedTag]"
+				}
+			}
+		}
+	}
+	set_variable = { PREV.ACW_supported_tag = THIS }
+}

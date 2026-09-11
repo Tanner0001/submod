@@ -1,0 +1,549 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			159 = { set_variable = { italy_default_core = LOM } } #Lombardy
+
+			160 = { set_variable = { italy_default_core = VNC } } #Venetia
+			488 = { set_variable = { italy_default_core = VNC } } #Trieste
+			759 = { set_variable = { italy_default_core = VNC } } #Friuli
+			783 = { set_variable = { italy_default_core = VNC } } #Trentino
+
+			114 = { set_variable = { italy_default_core = SRD } } #Sardinia
+			158 = { set_variable = { italy_default_core = SRD } } #Piedmont
+			838 = { set_variable = { italy_default_core = SRD } } #Liguria
+			1003 = { set_variable = { italy_default_core = SRD } } #Aosta
+
+			1004 = { set_variable = { italy_default_core = EMI } } #Emilia
+
+			162 = { set_variable = { italy_default_core = TUS } } #Tuscany
+
+			2 = { set_variable = { italy_default_core = PAP } } #Latium
+			157 = { set_variable = { italy_default_core = PAP } } #Marches
+			161 = { set_variable = { italy_default_core = PAP } } #Romagna
+			764 = { set_variable = { italy_default_core = PAP } } #Viterbo
+			1005 = { set_variable = { italy_default_core = PAP } } #Umbria
+
+			115 = { set_variable = { italy_default_core = SIC } } #Sicily
+			117 = { set_variable = { italy_default_core = SIC } } #Campania
+			156 = { set_variable = { italy_default_core = SIC } } #Calabria
+			837 = { set_variable = { italy_default_core = SIC } } #Apulia
+			742 = { set_variable = { italy_default_core = SIC } } #Abruzzo
+
+			every_collection_element = {
+				input = collection:italian_countries
+				if = {
+					limit = { NOT = { tag = SIC } }
+					activate_targeted_decision = { decision = SIC_develop_campania_steel_mines target = 117 }
+					activate_targeted_decision = { decision = SIC_develop_campania_aluminium_mines target = 117 }
+				}
+				if = {
+					limit = { NOT = { tag = SRD } }
+					activate_targeted_decision = { decision = SRD_develop_cagliari_coal_mines target = 114 }
+				}
+				if = {
+					limit = { NOT = { tag = LOM } }
+					activate_targeted_decision = { decision = LOM_develop_lombardy_coal_mines target = 159 }
+				}
+				if = {
+					limit = { NOT = { tag = TUS } }
+					activate_targeted_decision = { decision = TUS_develop_tuscany_coal_mines target = 162 }
+				}
+			}
+
+			#So ITA has coalition now that italy_events.1 is used for the intro UI
+			ITA = {
+				set_temp_variable = { coalition_partner_var = token:social_democrat }
+				add_to_coalition = yes
+			}
+			SRI = {
+				set_temp_variable = { coalition_partner_var = token:totalist }
+				add_to_coalition = yes
+			}
+
+			SRD = {
+				every_other_country = {
+					limit = {
+						OR = {
+							is_in_faction_with = ENT
+							tag = RAJ
+						}
+					}
+					set_up_non_faction_ally_relations = yes
+				}
+			}
+		}
+	}
+
+	on_peace = {
+		effect = {
+			if = {
+				limit = { is_italian_tag = yes }
+				set_country_flag = ITA_recent_peace
+			}
+		}
+	}
+
+	#ROOT is winner #FROM is loser
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = {
+					FROM = { tag = SRI }
+				}
+				PAP = { country_event = papal_state_events.65 }
+				ITA = { country_event = italy_events.173 }
+			}
+			if = {
+				limit = { original_tag = VNC }
+				country_event = { id = italy_events.42 days = 1 }
+			}
+			else_if = {
+				limit = { FROM = { original_tag = VNC } }
+				FROM = { country_event = { id = italy_events.42 days = 1 } }
+			}
+			if = {
+				limit = {
+					tag = SRI
+					FROM = { tag = ITA }
+					country_exists = VNC
+				}
+				VNC = {
+					country_event = { id = italy_events.44 days = 2 random_days = 4 }
+				}
+			}
+			if = {
+				limit = {
+					tag = ITA
+					FROM = { tag = VNC }
+				}
+				AUS = {
+					country_event = { id = italy_events.122 days = 1 random_days = 2 }
+				}
+				ROM = {
+					country_event = { id = romania_events.169 days = 3 }
+				}
+			}
+			if = {
+				limit = { has_country_flag = ITA_libya_war_@FROM }
+				clr_country_flag = ITA_libya_war_@FROM
+				clr_country_flag = ITA_war_for_libya
+			}
+			if = {
+				limit = { is_italian_tag = yes }
+				italy_move_capital_to_rome = yes
+				if = {
+					limit = { original_tag = SRD }
+					country_event = { id = sardinia_events.42 days = 55 }
+				}
+			}
+
+			#check character transfers
+			if = {
+				limit = {
+					is_italian_tag = yes
+					has_socialist_government = no
+				}
+				every_owned_state = {
+					limit = {
+						has_variable = characters_tied_to_state
+						is_italy = yes
+					}
+					for_each_scope_loop = {
+						array = characters_tied_to_state
+						if = {
+							limit = { is_retired = yes }
+							set_nationality = PREV.owner
+							demote_to_general = yes
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_state_control_changed = {
+		effect = {
+			FROM.FROM = {
+				if = {
+					limit = {
+						has_variable = characters_tied_to_state^num
+						is_controlled_by = owner
+						owner = {
+							is_italian_tag = yes
+							has_socialist_government = no
+						}
+					}
+					for_each_scope_loop = {
+						array = characters_tied_to_state
+						if = {
+							limit = { is_retired = yes }
+							set_nationality = PREV.owner
+						}
+					}
+				}
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			if = {
+				limit = {
+					tag = SRI
+					FROM = { tag = ITA }
+				}
+				AUS = { country_event = { id = italy_events.38 hours = 1 } }
+				if = {
+					limit = { country_exists = VNC }
+					VNC = { country_event = { id = italy_events.38 hours = 2 } }
+				}
+			}
+			if = {
+				limit = { FROM = { tag = SIC } }
+				FROM = {
+					clr_country_flag = SIC_confed
+					clr_country_flag = SIC_empire
+					drop_cosmetic_tag = yes
+					SIC_unlock_italian_annexations = yes
+				}
+			}
+			if = {
+				limit = {
+					ROOT = { has_country_flag = ITA_libya_war_@FROM }
+				}
+				ROOT = {
+					clr_country_flag = ITA_libya_war_@FROM
+					clr_country_flag = ITA_war_for_libya
+				}
+			}
+			if = {
+				limit = {
+					FROM = { has_country_flag = ITA_libya_war_@ROOT }
+				}
+				FROM = {
+					clr_country_flag = ITA_libya_war_@ROOT
+					clr_country_flag = ITA_war_for_libya
+				}
+			}
+			if = {
+				limit = { is_italian_tag = yes }
+				italy_move_capital_to_rome = yes
+			}
+			else_if = {
+				limit = { FROM = { is_italian_tag = yes } }
+				if = {
+					limit = { FROM = { tag = SRD } }
+					FROM = { SRD_remove_entente_support_idea = yes }
+				}
+			}
+			if = {
+				limit = {
+					FROM = {
+						tag = ITA
+						is_monarchy = yes
+						has_character = SRD_umberto_carignano
+					}
+				}
+				FROM = {
+					drop_cosmetic_tag = yes
+					if = {
+						limit = {
+							has_character = ITA_costanzo_ciano
+						}
+						promote_character = ITA_costanzo_ciano
+					}
+					else = {
+						promote_character = ITA_gian_galeazzo_ciano
+					}
+					SRD_umberto_carignano = {
+						set_nationality = SRD
+						set_character_name = SRD_umberto_carignano
+					}
+					SRD_amedeo_aosta = {
+						set_nationality = SRD
+						set_character_name = SRD_amedeo_aosta
+						promote_character = social_democrat_subtype
+						promote_character = social_liberal_subtype
+						promote_character = market_liberal_subtype
+						promote_character = social_conservative_subtype
+						promote_character = authoritarian_democrat_subtype
+						promote_character = paternal_autocrat_subtype
+						promote_character = national_populist_subtype
+					}
+					SRD_adalberto_genova = {
+						set_nationality = SRD
+					}
+					SRD_aimone_aosta = {
+						set_nationality = SRD
+					}
+				}
+			}
+			if = {
+				limit = {
+					FROM = { tag = ITA }
+				}
+				FROM = {
+					set_party_name = {
+						ideology = paternal_autocrat
+						long_name = ITA_paternal_autocrat_party
+						name = ITA_paternal_autocrat_party
+					}
+				}
+			}
+
+			#check character transfers
+			if = {
+				limit = {
+					is_italian_tag = yes
+					has_socialist_government = no
+				}
+				every_owned_state = {
+					limit = {
+						has_variable = characters_tied_to_state
+						is_italy = yes
+					}
+					for_each_scope_loop = {
+						array = characters_tied_to_state
+						if = {
+							limit = { is_retired = yes }
+							set_nationality = PREV.owner
+						}
+					}
+				}
+			}
+		}
+	}
+
+	#FROM is war target
+	on_declare_war = {
+		effect = {
+			if = {
+				limit = {
+					tag = SRI
+					has_socialist_government = yes
+					is_in_faction = no
+					FROM = { has_socialist_government = yes }
+					NOT = { has_country_flag = SRI_refused_intl_membership }
+				}
+				set_country_flag = SRI_refused_intl_membership
+				add_political_power = -200
+				add_stability = -0.20
+				every_other_country = {
+					limit = { has_socialist_government = yes }
+					add_opinion_modifier = { target = ROOT modifier = KR_hates_govt }
+				}
+			}
+		}
+	}
+
+	on_war_relation_added = { # Clear the Italian balance if a non-Italian country ends up at war with the SRI
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						tag = SRI
+						FROM = { tag = SRI }
+					}
+				}
+				SRI = { country_event = socialist_italy_events.1271 }
+			}
+		}
+	}
+
+	on_new_term_election = {
+		effect = {
+			### Republic of Italy ###
+			if = {
+				limit = { tag = ITA }
+				country_event = italy_events.12	#1936
+				country_event = italy_events.19	#1941
+			}
+			### Lombardy ###
+			else_if = {
+				limit = { tag = LOM }
+				country_event = lombardy_events.15
+			}
+			### Papal States ###
+			else_if = {
+				limit = { tag = PAP }
+				country_event = papal_state_events.10
+			}
+			### Two Sicilies ###
+			else_if = {
+				limit = { tag = SIC }
+				country_event = two_sicilies_events.10
+				country_event = two_sicilies_events.20
+			}
+			### Sardinia ###
+			else_if = {
+				limit = { tag = SRD }
+				country_event = sardinia_events.30 #Generic
+				country_event = sardinia_events.29 #First Elections
+				country_event = sardinia_events.17 #Generic Authoritarian Liberal Elections
+				country_event = sardinia_events.16 #Generic Badoglio Elections
+			}
+			### Venice ###
+			else_if = {
+				limit = { tag = VNC }
+				country_event = venice_events.50
+			}
+			### Red Italy ###
+			else_if = {
+				limit = { tag = SRI }
+				country_event = socialist_italy_events.3 # 1936 elections
+				country_event = socialist_italy_events.9 # BoP over
+				country_event = socialist_italy_events.137 # generic election for if italy isn't unified and the first election was held
+				country_event = socialist_italy_events.139 # Generic postwar syndie election event
+				country_event = socialist_italy_events.141 # Generic postwar radsoc election event (with constitutional restoration)
+				country_event = socialist_italy_events.140 # Generic postwar radsoc election event (w/o constitutional restoration)
+			}
+		}
+	}
+
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						tag = ITA
+						FROM = { tag = ITA }
+					}
+				}
+				ITA = {
+					country_event = { id = italy_events.61 days = 2 random_days = 5 }
+					country_event = { id = italy_events.68 days = 2 random_days = 5 }
+				}
+			}
+			if = {
+				limit = {
+					ROOT = {
+						OR = {
+							tag = INT
+							tag = SRD
+						}
+					}
+					FROM = {
+						OR = {
+							tag = INT
+							tag = SRD
+						}
+					}
+				}
+				SRD = {
+					country_event = { id = sardinia_events.41 days = 30 random_days = 180 }
+				}
+			}
+			if = {
+				limit = {
+					ROOT = {
+						OR = {
+							tag = INT
+							tag = ITA
+						}
+					}
+					FROM = {
+						OR = {
+							tag = INT
+							tag = ITA
+						}
+					}
+				}
+				ITA = {
+					country_event = { id = sardinia_events.41 days = 30 random_days = 180 }
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			### Transfer VNC navy to ITA
+			if = {
+				limit = {
+					original_tag = VNC
+					FROM = { original_tag = ITA }
+				}
+				transfer_navy = { target = FROM }
+			}
+		}
+	}
+
+	on_ruling_party_change_immediate = {
+		effect = {
+			if = {
+				limit = { original_tag = ITA }
+				if = {
+					limit = { has_government = social_liberal }
+					if = {
+						limit = { is_in_coalition_with_social_democrat = yes }
+						activate_advisor = ITA_giacomo_matteotti_sic
+					}
+					else = {
+						activate_advisor = ITA_federico_comandini_sic
+					}
+				}
+				else_if = {
+					limit = { has_government = market_liberal }
+					activate_advisor = ITA_marcello_soleri_sic
+				}
+				else_if = {
+					limit = { has_government = social_conservative }
+					activate_advisor = ITA_giovanni_uberti_sic
+				}
+				else_if = {
+					limit = { has_government = authoritarian_democrat }
+					if = {
+						limit = { has_country_leader = { character = ITA_pietro_ferdinando } }
+						activate_advisor = ITA_augusto_de_marsanich_sic
+					}
+					else = {
+						activate_advisor = ITA_cesare_forni_sic
+					}
+				}
+				else_if = { #PatAut
+					limit = { has_government = paternal_autocrat }
+					activate_advisor = ITA_emilio_de_bono_sic
+				}
+				else_if = { #NatPop
+					limit = { has_government = national_populist }
+					if = {
+						limit = {
+							is_monarchy = yes
+						}
+						if = {
+							limit = {
+								has_character = ITA_costanzo_ciano
+							}
+							activate_advisor = ITA_costanzo_ciano_sic
+						}
+						else = {
+							activate_advisor = ITA_gian_galeazzo_ciano_sic
+						}
+					}
+					else = {
+						activate_advisor = ITA_luigi_federzoni_sic
+					}
+				}
+				else_if = { #SocDem
+					limit = { has_government = social_democrat }
+					activate_advisor = ITA_meuccio_ruini_sic
+				}
+				else = { #socialist
+					activate_advisor = ITA_giacomo_matteotti_sic
+				}
+			}
+			if = {
+				limit = { is_italian_tag = yes }
+				if = {
+					limit = { has_government = national_populist }
+					39 = { set_variable = { ambition_area_@ROOT = 1 } } #Southern Tyrol
+				}
+				else = {
+					39 = { clear_variable = ambition_area_@ROOT }
+				}
+			}
+		}
+	}
+}

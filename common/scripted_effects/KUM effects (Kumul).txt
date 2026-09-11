@@ -1,0 +1,158 @@
+KUM_set_as_chinese_tag = {
+	if = {
+		limit = { NOT = { has_country_flag = KUM_is_chinese_tag } }
+		set_country_flag = KUM_is_chinese_tag
+		if = {
+			limit = { var:743.owner = { NOT = { has_country_flag = KUM_is_chinese_tag } } }
+			add_ideas = unequal_treaties_lesser
+		}
+		if = {
+			limit = { NOT = { is_in_array = { global.china_tags_array = THIS } } }
+			add_to_array = { global.china_tags_array = THIS }
+		}
+
+		activate_targeted_decision = { decision = china_create_united_front target = THIS }
+		activate_targeted_decision = { decision = china_northeastern_gambit target = THIS }
+		if = {
+			limit = {
+				has_event_target = china_united_front_leader
+				is_subject = no
+				is_in_faction = no
+				NOT = { has_country_flag = china_refused_ceasefire }
+			}
+			for_each_scope_loop = {
+				array = global.china_tags_array
+				if = {
+					limit = { NOT = { tag = PREV } }
+					PREV = { activate_targeted_decision = { decision = china_offer_ceasefire target = PREV } }
+				}
+			}
+		}
+		activate_targeted_decision = { decision = china_declare_government target = THIS }
+		activate_targeted_decision = { decision = china_declare_unification target = THIS }
+		activate_targeted_decision = { decision = china_declare_legitimacy_decision target = THIS }
+
+		every_state = {
+			limit = { is_core_china = yes }
+			enable_state_integration_50_compliance = yes
+		}
+		524 = { enable_state_integration_80_compliance = yes } #Taiwan
+		every_controlled_state = {
+			rename_state_effect = yes
+		}
+	}
+}
+
+KUM_set_as_non_chinese_tag = {
+	if = {
+		limit = { has_country_flag = KUM_is_chinese_tag }
+		clr_country_flag = KUM_is_chinese_tag
+		if = {
+			limit = {
+				OR = {
+					has_idea = unequal_treaties #just in case
+					has_idea = unequal_treaties_lesser
+				}
+			}
+			add_ideas = export_focus
+		}
+		if = {
+			limit = { is_in_array = { global.china_tags_array = THIS } }
+			remove_from_array = { global.china_tags_array = THIS }
+		}
+
+		remove_targeted_decision = { decision = china_create_united_front target = THIS }
+		for_each_scope_loop = {
+			array = global.china_tags_array
+			if = {
+				limit = { NOT = { tag = PREV } }
+				PREV = { remove_targeted_decision = { decision = china_offer_ceasefire target = PREV } }
+			}
+		}
+		remove_targeted_decision = { decision = china_declare_government target = THIS }
+		remove_targeted_decision = { decision = china_declare_unification target = THIS }
+
+		every_state = {
+			limit = { is_xinjiang = no }
+			disable_state_integration = yes
+		}
+		every_controlled_state = {
+			rename_state_effect = yes
+		}
+	}
+}
+
+KUM_puppet_setup = {
+	#IF YOU CHANGE THIS, MAKE SURE TO EDIT china_orchestrate_sinophile_coup
+	if = {
+		limit = {
+			china_alignment_left_kuomintang = yes
+			has_socialist_government = yes
+		}
+		KUM = {
+			SIK = { SIK_burhan_shahidi = { set_nationality = KUM } }
+			promote_character = {
+				character = SIK_burhan_shahidi
+				ideology = radical_socialist_subtype
+			}
+			set_politics = {
+				ruling_party = radical_socialist
+				elections_allowed = no
+			}
+			set_party_name = {
+				ideology = radical_socialist
+				long_name = SIK_radical_socialist_party_long
+				name = SIK_radical_socialist_party
+			}
+			#Rad Soc KMT Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 18
+				social_democrat = 12
+				social_liberal = 6
+				market_liberal = 3
+				social_conservative = 13
+				authoritarian_democrat = 15
+				paternal_autocrat = 20
+				national_populist = 8
+			}
+			KUM_set_as_chinese_tag = yes
+			drop_cosmetic_tag = yes
+			set_cosmetic_tag = KUM_xinjiang
+			#The KMT aligned Xinjiang leader is Burhan Shahidi
+		}
+	}
+	else = {
+		KUM = {
+			KUM_bashir_shah = { set_nationality = KUM }
+			promote_character = {
+				character = KUM_bashir_shah
+				ideology = paternal_autocrat_subtype
+			}
+			activate_advisor = KUM_yulbars_khan_sic
+			set_politics = {
+				ruling_party = paternal_autocrat
+				elections_allowed = no
+			}
+			set_party_name = {
+				ideology = paternal_autocrat
+				long_name = KUM_bashir_pataut_party_long
+				name = KUM_bashir_pataut_party
+			}
+			#Pat Aut Puppet Distribution
+			set_popularities = {
+				totalist = 3
+				syndicalist = 2
+				radical_socialist = 7
+				social_democrat = 12
+				social_liberal = 6
+				market_liberal = 5
+				social_conservative = 13
+				authoritarian_democrat = 18
+				paternal_autocrat = 25
+				national_populist = 9
+			}
+		}
+	}
+}

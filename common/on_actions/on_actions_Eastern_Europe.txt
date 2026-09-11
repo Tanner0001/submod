@@ -1,0 +1,323 @@
+on_actions = {
+	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
+	on_annex = {
+		effect = {
+			if = {
+				limit = { tag = POL }
+				country_event = { id = galicia_events.6 days = 3 random_days = 3 }
+			}
+			else_if = {
+				limit = { tag = UKR }
+				country_event = { id = galicia_events.8 days = 3 random_days = 3 }
+			}
+			FROM = {
+				MIE_remove_from_intermarium = yes
+				if = {
+					limit = { tag = GAL }
+					POL = { country_event = { id = galicia_events.6 days = 3 random_days = 3 } }
+					UKR = { country_event = { id = galicia_events.8 days = 3 random_days = 3 } }
+				}
+				else_if = {
+					limit = { tag = BAT }
+					LAT = {
+						remove_ideas = {
+							LAT_EST_roads_to_riga_1
+							LAT_EST_roads_to_riga_2
+							LAT_EST_roads_to_riga_3
+							LAT_EST_roads_to_riga_4
+						}
+						country_event = { id = latvia_events.26 days = 360 }
+					}
+					EST = {
+						remove_ideas = {
+							LAT_EST_roads_to_riga_1
+							LAT_EST_roads_to_riga_2
+							LAT_EST_roads_to_riga_3
+							LAT_EST_roads_to_riga_4
+						}
+					}
+					BAT = { clear_variable = BAT_mission_target }
+					POL = { country_event = united_baltic_duchy_events.70 }
+					LIT = { country_event = united_baltic_duchy_events.70 }
+					BLR = { country_event = united_baltic_duchy_events.70 }
+					UKR = { country_event = united_baltic_duchy_events.70 }
+					FIN = { country_event = united_baltic_duchy_events.70 }
+				}
+				else_if = {
+					limit = { tag = GER }
+					clr_global_flag = MIE_east_no_help
+					clr_global_flag = MIE_east_no_help_ee
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			### Transfer MIE ownership
+			if = {
+				limit = { tag = MIE }
+				MIE_move_to_next_intermarium_leader = yes
+			}
+
+			### Russia is defeated, disband MIE
+			if = {
+				limit = { original_tag = RUS }
+				MIE_intermarium_disbands = yes
+			}
+
+			### Disable EE hard mode if GER dies
+			else_if = {
+				limit = { tag = GER }
+				clr_global_flag = MIE_east_no_help
+				clr_global_flag = MIE_east_no_help_ee
+			}
+
+			# set up White Ruthenia
+			if = {
+				limit = {
+					tag = BLR
+					LIT = {
+						is_in_faction_with = BLR
+						controls_state = 96
+						controls_province = 3393
+						has_elected_government = yes
+					}
+				}
+				if = {
+					limit = { has_idea = BLR_weak_national_identity }
+					become_exiled_in = { target = LIT legitimacy = 0.20 }
+				}
+				else = {
+					become_exiled_in = { target = LIT legitimacy = 0.50 }
+				}
+				country_event = belarus_political_events.30 #government flees to Hrodna
+				LIT = {
+					country_event = belarus_political_events.31 #BLR establishes govt-in-exile in LIT
+					set_country_flag = BLR_exiled_in_LIT
+					activate_targeted_decision = { target = THIS decision = LIT_LitBel_lastouski_speech }
+					activate_targeted_decision = { target = THIS decision = LIT_internationale_propaganda }
+					activate_targeted_decision = { target = THIS decision = LIT_commit_to_the_reichspakt }
+					activate_targeted_decision = { target = THIS decision = LIT_encourage_agricultural_cooperatives }
+					activate_targeted_decision = { target = THIS decision = LIT_combat_nationalist_sentiment }
+				}
+			}
+		}
+	}
+
+	on_new_term_election = {
+		effect = {
+			### Estonia ###
+			if = {
+				limit = { tag = EST }
+				country_event = estonia_events.87
+			}
+			### Lithuania ###
+			else_if = {
+				limit = { tag = LIT }
+				country_event = lithuania_events.25
+				#country_event = lithuania_events.440
+			}
+			### White Ruthenia ###
+			if = {
+				limit = {
+					tag = BLR
+					has_war = no
+				}
+				country_event = belarus_political_events.25	#1939
+				country_event = belarus_political_events.26 #1943
+			}
+			if = {
+				limit = {
+					tag = BLR
+					has_war = yes
+				}
+				country_event = belarus_political_events.27 #polls closed
+			}
+		}
+	}
+
+	#FROM is country getting invited.
+	on_offer_join_faction = {
+		effect = {
+			# adding to Intermarium
+			if = {
+				limit = { FROM = { is_possible_intermarium_country = yes } }
+				if = {
+					limit = { tag = GER }
+					FROM = { MIE_add_to_intermarium = yes }
+				}
+				else = {
+					FROM = { MIE_remove_from_intermarium = yes }
+					if = {
+						limit = { FROM = { tag = MIE } }
+						MIE_move_to_next_intermarium_leader = yes
+					}
+				}
+			}
+			### Logalyzer logging
+			if = {
+				limit = {
+					FROM = {
+						original_tag = POL
+						is_subject = no
+					}
+				}
+				log = "KR_Event_Logging;POL ALLIANCE - [ROOT.GetFactionName]"
+			}
+		}
+	}
+
+	on_ruling_party_change_immediate = {
+		effect = {
+			if = {
+				limit = { original_tag = BAT }
+				if = {
+					limit = { has_authoritarian_government = yes }
+					880 = { enable_state_integration_80_compliance = yes } #Latgale
+				}
+				else = {
+					880 = { enable_state_integration_50_compliance = yes } #Latgale
+				}
+				if = {
+					limit = { has_government = national_populist }
+					activate_advisor = BAT_otto_von_kursell_sic
+				}
+				else_if = {
+					limit = { has_government = paternal_autocrat }
+					if = {
+						limit = { tag = RIG }
+						activate_advisor = BAT_arno_schickedanz_sic
+					}
+					else = {
+						activate_advisor = BAT_axel_von_freytagh_loringhoven_sic
+					}
+				}
+				else_if = {
+					limit = { has_soccon_or_marlib_government = yes }
+					activate_advisor = BAT_edwin_magnus_sic
+				}
+				else_if = {
+					limit = { has_country_leader = { character = BAT_adolf_friedrich } }
+					activate_advisor = BAT_friedrich_von_samson_himmelstjerna_sic
+				}
+				else = {
+					activate_advisor = BAT_ewald_ammende_sic
+				}
+			}
+			else_if = {
+				limit = { original_tag = BLR }
+				if = {
+					limit = {
+						has_socialist_government = yes
+						has_character = BLR_werner_kempf
+					}
+					retire_character = BLR_werner_kempf
+				}
+			}
+		}
+	}
+
+	#ROOT = attacking side
+	#FROM = defending side
+	#fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							tag = LIT
+							FROM = { tag = RUS }
+						}
+						AND = {
+							tag = RUS
+							FROM = { tag = LIT }
+						}
+					}
+				}
+				LIT = { country_event = { id = lithuania_events.300 days = 15 random_days = 45 } }
+			}
+		}
+	}
+
+	on_peace = {
+		effect = {
+			#NDA petitions Generalgouvernment Minsk
+			if = {
+				limit = { tag = BLR }
+				BLR = { country_event = belarus_political_events.59 }
+			}
+		}
+	}
+
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = { tag = POL }
+				country_event = { id = galicia_events.6 days = 3 random_days = 3 }
+			}
+			else_if = {
+				limit = { tag = UKR }
+				country_event = { id = galicia_events.8 days = 3 random_days = 3 }
+			}
+		}
+	}
+
+	on_startup = {
+		effect = {
+			BLR = { #To set up coalitions now that intro event uses new intro screen
+				set_temp_variable = { coalition_partner_var = token:radical_socialist }
+				add_to_coalition = yes
+				set_temp_variable = { coalition_partner_var = token:social_liberal }
+				add_to_coalition = yes
+			}
+		}
+	}
+
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							tag = LAT
+							FROM = { tag = RUS }
+						}
+						AND = {
+							tag = RUS
+							FROM = { tag = LAT }
+						}
+					}
+				}
+				GER = { country_event = { id = germany_foreign_events_new.89 days = 2 } }
+			}
+		}
+	}
+
+	on_monthly_GER = {
+		effect = {
+			if = {
+				limit = {
+					has_global_flag = MIE_east_no_help
+					NOT = {
+						any_allied_country = {
+							is_ai = no
+							is_possible_intermarium_country = yes
+						}
+						AUS = {
+							is_faction_leader = yes
+							any_allied_country = {
+								is_ai = no
+								is_possible_intermarium_country = yes
+							}
+						}
+					}
+				}
+				clr_global_flag = MIE_east_no_help
+				clr_global_flag = MIE_east_no_help_ee
+			}
+		}
+	}
+}

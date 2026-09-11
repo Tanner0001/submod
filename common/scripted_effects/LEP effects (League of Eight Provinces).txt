@@ -1,0 +1,523 @@
+
+LEP_modify_tsingtau_spirit = {
+	if = {
+		limit = { has_variable = LEP_tsingtau_level }
+		### Calculation ###
+		# Get Old LEP_tsingtau_level for meta effect later
+		set_temp_variable = { LEP_tsingtau_level_old = LEP_tsingtau_level }
+
+		# Get new LEP party pop before effect for party pop executes
+		set_temp_variable = { LEP_var_popularity = { value = party_popularity@market_liberal add = LEP_market_liberal_pp_change } }
+
+		# Determine new LEP_tsingtau_level
+		set_temp_variable = {
+			LEP_tsingtau_level_new = {
+				value = 0
+				if = { limit = { value = LEP_var_popularity less_than = 0.05 } add = 0 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.15 } add = 1 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.20 } add = 2 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.24 } add = 3 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.28 } add = 4 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.31 } add = 5 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.34 } add = 6 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.37 } add = 7 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.40 } add = 8 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.42 } add = 9 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.44 } add = 10 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.46 } add = 11 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.48 } add = 12 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.50 } add = 13 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.60 } add = 14 }
+				else_if = { limit = { value = LEP_var_popularity less_than = 0.75 } add = 15 }
+				else = { add = 16 }
+			}
+		}
+
+		### Tooltip ###
+		if = {
+			limit = { NOT = { check_variable = { LEP_market_liberal_pp_change = 0 } } }
+			add_popularity = { ideology = market_liberal popularity = LEP_market_liberal_pp_change }
+		}
+		if = {
+			limit = {
+				NOT = { check_variable = { LEP_tsingtau_level_new = LEP_tsingtau_level_old } }
+			}
+			meta_effect = {
+				text = {
+					swap_ideas = {
+						remove_idea = LEP_Tsingtau_Collaboration[TSINGTAU_LEVEL_OLD]
+						add_idea = LEP_Tsingtau_Collaboration[TSINGTAU_LEVEL_NEW]
+					}
+				}
+				TSINGTAU_LEVEL_OLD = "[?LEP_tsingtau_level_old]"
+				TSINGTAU_LEVEL_NEW = "[?LEP_tsingtau_level_new]"
+			}
+		}
+		else = {
+			meta_effect = {
+				text = {
+					custom_effect_tooltip = {
+						localization_key = LEP_Tsingtau_Collaboration_idea_unchanged
+						IDEA = LEP_Tsingtau_Collaboration[TSINGTAU_LEVEL_OLD]
+					}
+				}
+				TSINGTAU_LEVEL_OLD = "[?LEP_tsingtau_level_old]"
+			}
+		}
+
+		### Additonal Hidden Effects ###
+		hidden_effect = {
+			set_variable = { LEP_tsingtau_level = LEP_tsingtau_level_new }
+			if = {
+				limit = { check_variable = { LEP_tsingtau_level = 3 } }
+				country_event = league_german_influence_events.50
+			}
+			else_if = {
+				limit = { check_variable = { LEP_tsingtau_level = 4 } }
+				country_event = league_german_influence_events.53
+			}
+			else_if = {
+				limit = { check_variable = { LEP_tsingtau_level = 5 } }
+				country_event = league_german_influence_events.31
+			}
+			else_if = {
+				limit = { check_variable = { LEP_tsingtau_level = 7 } }
+				country_event = league_german_influence_events.54
+			}
+			else_if = {
+				limit = { check_variable = { LEP_tsingtau_level = 8 } }
+				country_event = league_german_influence_events.55
+			}
+			else_if = {
+				limit = { check_variable = { LEP_tsingtau_level = 13 } }
+				country_event = league_german_influence_events.56
+			}
+			else_if = {
+				limit = { check_variable = { LEP_tsingtau_level = 14 } }
+				country_event = league_german_influence_events.33
+			}
+
+			if = {
+				limit = {
+					check_variable = { LEP_tsingtau_level > 0 }
+				}
+				GEA = {
+					# Refresh docking rights - there are no triggers to check docking rights
+					# Applying it to the tag that already has docking rights causes error in log
+					diplomatic_relation = {
+						country = LEP
+						relation = docking_rights
+						active = no
+					}
+					diplomatic_relation = {
+						country = LEP
+						relation = docking_rights
+						active = yes
+					}
+				}
+				if = {
+					limit = {
+						check_variable = { LEP_tsingtau_level > 1 }
+						NOT = { GEA = { has_military_access_to = LEP } }
+					}
+					GEA = {
+						diplomatic_relation = {
+							country = LEP
+							relation = military_access
+							active = yes
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+LEP_reduce_damaged_industry = {
+	if = {
+		limit = {
+			has_idea = LEP_Damaged_Industry
+		}
+		swap_ideas = {
+			remove_idea = LEP_Damaged_Industry
+			add_idea = LEP_Damaged_Industry1
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = LEP_Damaged_Industry1
+		}
+		swap_ideas = {
+			remove_idea = LEP_Damaged_Industry1
+			add_idea = LEP_Damaged_Industry2
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = LEP_Damaged_Industry2
+		}
+		remove_ideas = LEP_Damaged_Industry2
+	}
+}
+
+LEP_reduce_widespread_destruction = {
+	if = {
+		limit = {
+			has_idea = LEP_Widespread_Destruction
+		}
+		swap_ideas = {
+			remove_idea = LEP_Widespread_Destruction
+			add_idea = LEP_Widespread_Destruction1
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = LEP_Widespread_Destruction1
+		}
+		swap_ideas = {
+			remove_idea = LEP_Widespread_Destruction1
+			add_idea = LEP_Widespread_Destruction2
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = LEP_Widespread_Destruction2
+		}
+		swap_ideas = {
+			remove_idea = LEP_Widespread_Destruction2
+			add_idea = LEP_Widespread_Destruction3
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = LEP_Widespread_Destruction3
+		}
+		swap_ideas = {
+			remove_idea = LEP_Widespread_Destruction3
+			add_idea = LEP_Widespread_Destruction4
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = LEP_Widespread_Destruction4
+		}
+		remove_ideas = LEP_Widespread_Destruction4
+		hidden_effect = {
+			remove_targeted_decision = { decision = LEP_village_reconstruction_decision target = LEP }
+		}
+	}
+}
+
+LEP_increase_kmt_unrest_level = {
+	add_to_variable = { lep_kmt_unrest_level = 1 }
+	clamp_variable = { var = lep_kmt_unrest_level min = 0 max = 4 }
+
+	set_variable = {
+		lep_suppress_kmt_mission_timeout = {
+			value = 120
+			subtract = { value = 20 multiply = lep_kmt_unrest_level }
+		}
+	}
+}
+LEP_decrease_kmt_unrest_level = {
+	add_to_variable = { lep_kmt_unrest_level = -1 }
+	clamp_variable = { var = lep_kmt_unrest_level min = 0 max = 4 }
+
+	set_variable = {
+		lep_suppress_kmt_mission_timeout = {
+			value = 120
+			subtract = { value = 20 multiply = lep_kmt_unrest_level }
+		}
+	}
+}
+LEP_increase_rural_banditry_unrest_level = {
+	add_to_variable = { lep_rural_unrest_level = 1 }
+	clamp_variable = { var = lep_rural_unrest_level min = 0 max = 4 }
+
+	set_variable = {
+		lep_suppress_rural_banditry_mission_timeout = {
+			value = 120
+			subtract = { value = 20 multiply = lep_rural_unrest_level }
+		}
+	}
+}
+LEP_decrease_rural_banditry_unrest_level = {
+	add_to_variable = { lep_rural_unrest_level = -1 }
+	clamp_variable = { var = lep_rural_unrest_level min = 0 max = 4 }
+
+	set_variable = {
+		lep_suppress_rural_banditry_mission_timeout = {
+			value = 120
+			subtract = { value = 20 multiply = lep_rural_unrest_level }
+		}
+	}
+}
+LEP_negative_kmt_event = {
+	# Pick Random Location
+	random_owned_state = {
+		limit = { region = 217 } #Dongnan
+		set_variable = { PREV.LEP_KMT_attack_location = THIS }
+	}
+	# Pick Random Event
+	if = {
+		limit = { has_variable = LEP_KMT_attack_location } #To avoid error log spam
+		random_list = {
+			11 = { #ambush
+				country_event = league_events.41
+			}
+			11 = { #railway bomb
+				country_event = league_events.42
+			}
+			11 = { #assassination
+				country_event = league_events.43
+			}
+			11 = { #factory bomb
+				country_event = league_events.44
+			}
+			11 = { #gunfight
+				country_event = league_events.45
+			}
+			11 = { #heavy factory bomb
+				country_event = league_events.46
+			}
+			11 = { #battle
+				country_event = league_events.47
+			}
+			11 = { #series of bombings, train
+				country_event = league_events.48
+			}
+			11 = { #series of bombings, factories
+				country_event = league_events.49
+			}
+		}
+	}
+}
+
+LEP_negative_rural_banditry_event = {
+	random_list = {
+		14 = { #opium storage attack
+			country_event = league_events.51
+		}
+		14 = { #assault on caravan
+			country_event = league_events.52
+		}
+		14 = { #patrol attack
+			country_event = league_events.53
+		}
+		14 = { #barracks attack
+			country_event = league_events.54
+		}
+		14 = { #town assault
+			country_event = league_events.55
+		}
+		14 = { #railway occupation
+			country_event = league_events.56
+		}
+		14 = { #army clashes
+			country_event = league_events.57
+		}
+	}
+}
+
+LEP_create_QIE_support_units = {
+	613 = {
+		create_unit = {
+			division = "name = \"Jiangsu Paobing Zhen\" division_template = \"Paobing Zhen\" start_experience_factor = 0.6"
+			prioritize_location = 11913
+			owner = LEP
+		}
+		create_unit = {
+			division = "name = \"Jiangsu Paobing Zhen\" division_template = \"Paobing Zhen\" start_experience_factor = 0.6"
+			prioritize_location = 11913
+			owner = LEP
+		}
+		create_unit = {
+			division = "name = \"Jiangsu Paobing Zhen\" division_template = \"Paobing Zhen\" start_experience_factor = 0.6"
+			prioritize_location = 11913
+			owner = LEP
+		}
+		create_unit = {
+			division = "division_template = \"Bubing Xie\" start_experience_factor = 0.3"
+			prioritize_location = 11913
+			owner = LEP
+		}
+		create_unit = {
+			division = "division_template = \"Bubing Xie\" start_experience_factor = 0.3"
+			prioritize_location = 11913
+			owner = LEP
+		}
+		create_unit = {
+			division = "division_template = \"Bubing Xie\" start_experience_factor = 0.3"
+			prioritize_location = 11913
+			owner = LEP
+		}
+	}
+}
+
+LEP_fortifying_our_positions_effect = {
+	custom_effect_tooltip = LEP_fortifying_our_positions_tt
+	add_command_power = -60
+	613 = {
+		custom_override_tooltip = {
+			add_building_construction = {
+				type = bunker
+				province = 10076
+				level = 1
+				instant_build = yes
+			}
+			tooltip = {
+				localization_key = tooltip_add_building_on_victory_point
+				BUILDING = bunker
+				NUMBER = 1
+				VP = 10076
+			}
+		}
+		add_building_construction = {
+			type = bunker
+			province = 7120
+			level = 1
+			instant_build = yes
+		}
+		add_building_construction = {
+			type = bunker
+			province = 11982
+			level = 1
+			instant_build = yes
+		}
+		custom_override_tooltip = {
+			add_building_construction = {
+				type = bunker
+				province = 11913
+				level = 1
+				instant_build = yes
+			}
+			tooltip = {
+				localization_key = tooltip_add_building_on_victory_point
+				BUILDING = bunker
+				NUMBER = 1
+				VP = 11913
+			}
+		}
+	}
+	1014 = {
+		custom_override_tooltip = {
+			add_building_construction = {
+				type = bunker
+				province = 1099
+				level = 1
+				instant_build = yes
+			}
+			tooltip = {
+				localization_key = tooltip_add_building_on_victory_point
+				BUILDING = bunker
+				NUMBER = 1
+				VP = 1099
+			}
+		}
+		add_building_construction = {
+			type = bunker
+			province = 1171
+			level = 1
+			instant_build = yes
+		}
+		add_building_construction = {
+			type = bunker
+			province = 11937
+			level = 1
+			instant_build = yes
+		}
+		add_building_construction = {
+			type = bunker
+			province = 10044
+			level = 1
+			instant_build = yes
+		}
+	}
+	1044 = {
+		add_building_construction = {
+			type = bunker
+			province = 1153
+			level = 1
+			instant_build = yes
+		}
+	}
+	598 = { #Huiyang
+		custom_override_tooltip = {
+			add_building_construction = {
+				type = coastal_bunker
+				province = {
+					all_provinces = yes
+					limit_to_coastal = yes
+				}
+				level = 1
+				instant_build = yes
+			}
+			tooltip = {
+				localization_key = tooltip_add_building_on_coastal_provinces
+				BUILDING = coastal_bunker
+				NUMBER = 1
+			}
+		}
+	}
+	1075 = { #Nantong
+		custom_override_tooltip = {
+			add_building_construction = {
+				type = coastal_bunker
+				province = 13707
+				level = 1
+				instant_build = yes
+			}
+			tooltip = {
+				localization_key = tooltip_add_building_on_victory_point
+				BUILDING = coastal_bunker
+				NUMBER = 1
+				VP = 13707
+			}
+		}
+	}
+}
+
+LEP_create_starting_league_war_units = {
+	598 = { #Yancheng
+		create_unit = {
+			division = "name = \"Nantong Bubing Xie\" division_template = \"Bubing Xie\" start_experience_factor = 0.5"
+			owner = PREV
+			prioritize_location = 4091
+		}
+	}
+	613 = { #Nanjing
+		create_unit = {
+			division = "name = \"Qi Xieyuan Paobing 1 Zhen\" division_template = \"Paobing Zhen\" start_experience_factor = 0.5"
+			owner = PREV
+			prioritize_location = 11913
+		}
+		create_unit = {
+			division = "name = \"Qi Xieyuan Paobing 2 Zhen\" division_template = \"Paobing Zhen\" start_experience_factor = 0.5"
+			owner = PREV
+			prioritize_location = 11913
+		}
+
+		create_unit = {
+			division = "name = \"Qi Xieyuan Bubing Di 1 Zhen\" division_template = \"Bubing Zhen\" start_experience_factor = 0.5"
+			owner = PREV
+			prioritize_location = 11913
+		}
+		create_unit = {
+			division = "name = \"Qi Xieyuan Bubing Di 2 Zhen\" division_template = \"Bubing Zhen\" start_experience_factor = 0.5"
+			owner = PREV
+			prioritize_location = 11913
+		}
+
+		create_unit = {
+			division = "name = \"Wuxi Bubing Xie Di 1\" division_template = \"Bubing Xie\" start_experience_factor = 0.87"
+			owner = PREV
+			prioritize_location = 10076
+		}
+		create_unit = {
+			division = "name = \"Wuxi Bubing Xie Di 2\" division_template = \"Bubing Xie\" start_experience_factor = 0.87"
+			owner = PREV
+			prioritize_location = 10076
+		}
+	}
+}
+

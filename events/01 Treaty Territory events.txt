@@ -1,0 +1,267 @@
+###########################
+# Treaty Territories	  #
+###########################
+
+add_namespace = treaty_territory_events
+
+country_event = { #invasion of a holding upon war declaration
+	id = treaty_territory_events.1
+	title = treaty_territory_events.1.t
+	desc = treaty_territory_events.1.d
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					has_war_with = GTM
+					controls_state = 820
+				}
+				GTM_end_lease = yes
+			}
+			if = {
+				limit = {
+					has_war_with = MSN
+					controls_state = 318
+				}
+				MSN_end_lease = yes
+			}
+			if = {
+				limit = {
+					has_war_with = SAM
+					controls_state = 319
+				}
+				SAM_end_lease = yes
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.1 option treaty_territory_events.1.a"
+		name = treaty_territory_events.1.a
+		add_political_power = -25
+		#effects?
+	}
+}
+
+country_event = { #seizure notification
+	id = treaty_territory_events.2
+	title = treaty_territory_events.2.t
+	desc = treaty_territory_events.2.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.2 option treaty_territory_events.2.a"
+		name = treaty_territory_events.2.a
+		add_political_power = -25
+		#seize_lease opinion modifier?
+	}
+}
+
+country_event = { #wartime occupation
+	id = treaty_territory_events.3
+	title = treaty_territory_events.3.t
+	desc = treaty_territory_events.3.d
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					event_target:treaty_target_temp = { state = 820 }
+				}
+				GTM = {
+					country_event = treaty_territory_events.4
+					save_global_event_target_as = wantsgitmoback
+				}
+				GTM_end_lease = yes
+			}
+			else_if = {
+				limit = {
+					event_target:treaty_target_temp = { state = 318 }
+				}
+				MSN = {
+					country_event = treaty_territory_events.4
+					save_global_event_target_as = wantsmoleback
+				}
+				MSN_end_lease = yes
+			}
+			else_if = {
+				limit = {
+					event_target:treaty_target_temp = { state = 319 }
+				}
+				SAM = {
+					country_event = treaty_territory_events.4
+					save_global_event_target_as = wantssamanaback
+				}
+				SAM_end_lease = yes
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.3 option treaty_territory_events.3.a"
+		name = treaty_territory_events.3.a
+	}
+}
+
+country_event = { #third party seizure notification
+	id = treaty_territory_events.4
+	title = treaty_territory_events.4.t
+	desc = treaty_territory_events.4.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.4 option treaty_territory_events.4.a"
+		name = treaty_territory_events.4.a
+		add_political_power = -25
+		#seize_lease opinion modifier?
+	}
+}
+
+country_event = { #returning a territory
+	id = treaty_territory_events.5
+	title = treaty_territory_events.5.t
+	desc = treaty_territory_events.5.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.5 option treaty_territory_events.5.a"
+		name = treaty_territory_events.5.a
+		if = {
+			limit = {
+				event_target:treaty_target_temp2 = { state = 820 }
+			}
+			event_target:wantsgitmoback = {
+				GTM_start_lease = yes
+				hidden_effect = { country_event = treaty_territory_events.6 }
+			}
+			clear_global_event_target = wantsgitmoback
+		}
+		else_if = {
+			limit = {
+				event_target:treaty_target_temp2 = { state = 318 }
+			}
+			event_target:wantsmoleback = {
+				MSN_start_lease = yes
+				hidden_effect = { country_event = treaty_territory_events.6 }
+			}
+			clear_global_event_target = wantsmoleback
+		}
+		else_if = {
+			limit = {
+				event_target:treaty_target_temp2 = { state = 319 }
+			}
+			event_target:wantssamanaback = {
+				SAM_start_lease = yes
+				hidden_effect = { country_event = treaty_territory_events.6 }
+			}
+			clear_global_event_target = wantssamanaback
+		}
+	}
+}
+
+country_event = { #return notification
+	id = treaty_territory_events.6
+	title = treaty_territory_events.6.t
+	desc = treaty_territory_events.6.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.6 option treaty_territory_events.6.a"
+		name = treaty_territory_events.6.a
+		add_political_power = 25
+		#opinion modifier?
+	}
+}
+
+country_event = { #unilaterally revoking a territory
+	id = treaty_territory_events.7
+	title = treaty_territory_events.7.t
+	desc = treaty_territory_events.7.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.7 option treaty_territory_events.5.a"
+		name = treaty_territory_events.5.a
+		hidden_effect = {
+			if = {
+				limit = {
+					event_target:treaty_target_temp2 = { state = 820 }
+				}
+				event_target:wantsgitmoback = { country_event = treaty_territory_events.8 }
+				clear_global_event_target = wantsgitmoback
+			}
+			else_if = {
+				limit = {
+					event_target:treaty_target_temp2 = { state = 318 }
+				}
+				event_target:wantsmoleback = { country_event = treaty_territory_events.8 }
+				clear_global_event_target = wantsmoleback
+			}
+			else_if = {
+				limit = {
+					event_target:treaty_target_temp2 = { state = 319 }
+				}
+				event_target:wantssamanaback = { country_event = treaty_territory_events.8 }
+				clear_global_event_target = wantssamanaback
+			}
+		}
+	}
+}
+
+country_event = { #renounciation notification
+	id = treaty_territory_events.8
+	title = treaty_territory_events.8.t
+	desc = treaty_territory_events.8.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.8 option treaty_territory_events.8.a"
+		name = treaty_territory_events.8.a
+	}
+}
+
+country_event = { #unilaterally revoking a territory due to capitulation
+	id = treaty_territory_events.9
+	title = treaty_territory_events.9.t
+	desc = treaty_territory_events.9.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event treaty_territory_events.9 option treaty_territory_events.9.a"
+		name = treaty_territory_events.9.a
+		if = {
+			limit = { FROM = { tag = GTM } }
+			if = {
+				limit = { country_exists = GTM }
+				GTM = { country_event = treaty_territory_events.8 }
+			}
+			GTM_end_lease = yes
+		}
+		if = {
+			limit = { FROM = { tag = MSN } }
+			if = {
+				limit = { country_exists = MSN }
+				MSN = { country_event = treaty_territory_events.8 }
+			}
+			MSN_end_lease = yes
+		}
+		if = {
+			limit = { FROM = { tag = SAM } }
+			if = {
+				limit = { country_exists = SAM }
+				SAM = { country_event = treaty_territory_events.8 }
+			}
+			SAM_end_lease = yes
+		}
+	}
+}
+

@@ -1,0 +1,4212 @@
+#########################################
+## Military Central America Focus Tree ##
+##		By Wladyslaw Sikorski		   ##
+#########################################
+
+focus_tree = {
+	id = CA_military_focus
+	country = {
+		factor = 0
+	}
+
+	default = no
+	continuous_focus_position = { x = 2150 y = 600 }
+
+	### Political Tree ###
+	focus = {
+		id = CENmil_military_congress
+		icon = GFX_goal_CEN_COA
+		cost = 10
+
+		x = 8
+		y = 0
+
+		ai_will_do = { factor = 10000 }
+		cancelable = no
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus CENmil_military_congress"
+			if = {
+				limit = { is_subject = no }
+				country_event = { id = central_america_dictatorship_events.3 days = 3 }
+			}
+			else = {
+				country_event = { id = central_america_dictatorship_events.2 days = 30 }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_military_congress"
+			add_political_power = 100
+			add_stability = 0.1
+			custom_effect_tooltip = cenmil_congress_events_tt
+			hidden_effect = { country_event = central_america_dictatorship_events.12 }
+		}
+	}
+
+	## NatPop ##
+	focus = {
+		id = CENmil_military_state
+		icon = GFX_goal_ideology_national_populist
+		cost = 0
+
+		relative_position_id = CENmil_military_congress
+		x = -6
+		y = 1
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		prerequisite = {
+			focus = CENmil_military_congress
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_military_state"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENmil_catholic_union
+		icon = GFX_BEL_Improve_Catholic_Relations
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -7
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_military_state
+		}
+		available = {
+			has_government = national_populist
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_catholic_union"
+			add_ideas = CENmil_united_in_faith
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_speak_spanish
+		icon = GFX_goal_spain
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -7
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_catholic_union
+		}
+		available = {
+			has_government = national_populist
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_speak_spanish"
+			swap_ideas = {
+				add_idea = CENmil_creating_a_national_identity
+				remove_idea = CENmil_united_in_faith
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_eradicate_syndies
+		icon = GFX_HOL_crackdown_syndie
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -5
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_military_state
+		}
+		available = {
+			has_government = national_populist
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_eradicate_syndies"
+			add_political_power = -50
+			add_stability = -0.05
+			add_popularity = {
+				ideology = totalist
+				popularity = -0.07
+			}
+			add_popularity = {
+				ideology = syndicalist
+				popularity = -0.07
+			}
+			add_popularity = {
+				ideology = radical_socialist
+				popularity = -0.07
+			}
+			add_popularity = {
+				ideology = social_democrat
+				popularity = -0.03
+			}
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = CEN decision = CENmil_combat_crime }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENmil_tighter_borders
+		icon = GFX_goal_generic_construct_military
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -5
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_eradicate_syndies
+		}
+		available = {
+			has_government = national_populist
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_tighter_borders"
+			add_political_power = 50
+			add_war_support = 0.05
+			313 = { #Guatemala
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						level = 1
+						instant_build = yes
+						province = {
+							all_provinces = yes
+							limit_to_border_country = MEX
+						}
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_border_provinces_with_tag
+						BUILDING = bunker
+						NUMBER = 1
+						TAG = "[MEX.GetTag]"
+					}
+				}
+			}
+			if = {
+				limit = { 311 = { is_owned_by = CEN } }
+				311 = { #Belize
+					custom_override_tooltip = {
+						add_building_construction = {
+							type = bunker
+							level = 1
+							instant_build = yes
+							province = {
+								all_provinces = yes
+								limit_to_border_country = MEX
+							}
+						}
+						tooltip = {
+							localization_key = tooltip_add_building_on_border_provinces_with_tag
+							BUILDING = bunker
+							NUMBER = 1
+							TAG = "[MEX.GetTag]"
+						}
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_centralized_union
+		icon = GFX_focus_generic_military_dictatorship
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -6
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_speak_spanish
+		}
+		prerequisite = {
+			focus = CENmil_tighter_borders
+		}
+		available = {
+			has_government = national_populist
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_centralized_union"
+			add_ideas = CENmil_centralised_union
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = CEN decision = CENmil_affordable_housing }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_lasting_regime
+		icon = GFX_goal_national_populism
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -6
+		y = 5
+
+		prerequisite = {
+			focus = CENmil_centralized_union
+		}
+		prerequisite = {
+			focus = CENmil_destroy_opposition
+		}
+		available = {
+			has_government = national_populist
+		}
+		ai_will_do = { factor = 140 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_lasting_regime"
+			remove_ideas = CENmil_political_instability_idea_3
+			add_political_power = 100
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.1
+			}
+			CEN_activate_guarantee_decisions = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	## PatAuths ##
+	focus = {
+		id = CENmil_military_centralism
+		icon = GFX_goal_ideology_paternal_autocrat
+		cost = 0
+
+		relative_position_id = CENmil_military_congress
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_military_congress
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_military_centralism"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENmil_watch_pop
+		icon = GFX_goal_conspiracy
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_military_centralism
+		}
+		available = {
+			has_government = paternal_autocrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_watch_pop"
+			add_ideas = CENmil_spy_idea1
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = CEN decision = CENmil_public_works }
+			hidden_effect = {
+				country_event = { id = central_america_dictatorship_events.15 days = 30 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_spy_networks
+		icon = GFX_goal_secret_agents
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -1
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_watch_pop
+		}
+		available = {
+			has_government = paternal_autocrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_spy_networks"
+			if = {
+				limit = {
+					has_dlc_lar = yes
+				}
+				swap_ideas = {
+					add_idea = CENmil_spy_idea2_lar
+					remove_idea = CENmil_spy_idea1
+				}
+				if = {
+					limit = { has_intelligence_agency = no }
+					create_intelligence_agency = yes
+				}
+				else_if = {
+					limit = { NOT = { has_done_agency_upgrade = upgrade_psycho_warfare } }
+					upgrade_intelligence_agency = upgrade_psycho_warfare
+				}
+				else = {
+					gain_random_agency_upgrade = yes
+				}
+			}
+			else = {
+				swap_ideas = {
+					add_idea = CENmil_spy_idea2
+					remove_idea = CENmil_spy_idea1
+				}
+				add_stability = 0.05
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENmil_militarize_nation
+		icon = GFX_focus_generic_military_academy
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_military_centralism
+		}
+		available = {
+			has_government = paternal_autocrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_militarize_nation"
+			add_war_support = 0.10
+			activate_targeted_decision = { target = CEN decision = CENmil_combat_corruption }
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = CENmil_replace_bureaucrats
+		icon = GFX_goal_generic_controlled_board
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_militarize_nation
+		}
+		available = {
+			has_government = paternal_autocrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_replace_bureaucrats"
+			add_political_power = 50
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.1
+			}
+			activate_targeted_decision = { target = CEN decision = CENmil_more_ubiquistas }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_loyal_military
+		icon = GFX_focus_generic_military_mission
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_spy_networks
+		}
+		prerequisite = {
+			focus = CENmil_replace_bureaucrats
+		}
+		available = {
+			has_government = paternal_autocrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_loyal_military"
+			add_ideas = CENmil_loyal_military_idea
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_political_domination
+		icon = GFX_goal_authoritarian
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 0
+		y = 5
+
+		prerequisite = {
+			focus = CENmil_loyal_military
+		}
+		prerequisite = {
+			focus = CENmil_destroy_opposition
+		}
+		available = {
+			has_government = paternal_autocrat
+		}
+		ai_will_do = { factor = 140 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_political_domination"
+			remove_ideas = CENmil_political_instability_idea_3
+			add_political_power = 100
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.1
+			}
+			CEN_activate_guarantee_decisions = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	## Shared NatPop/PatAuth Tree ##
+	focus = {
+		id = CENmil_one_party_state
+		icon = GFX_goal_generic_political_pressure
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -3
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_military_state
+			focus = CENmil_military_centralism
+		}
+		available = {
+			has_dictatorship_government = yes
+		}
+		ai_will_do = { factor = 140 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_one_party_state"
+			swap_ideas = {
+				add_idea = CENmil_political_instability_idea_2
+				remove_idea = CENmil_political_instability_idea
+			}
+			add_stability = -0.10
+			if = {
+				limit = { has_dictatorship_government = no }
+				custom_effect_tooltip = cenmil_if_pataut_tt
+				add_popularity = {
+					ideology = paternal_autocrat
+					popularity = 0.05
+				}
+				activate_targeted_decision = { target = CEN decision = CENmil_travel_casual }
+				activate_targeted_decision = { target = CEN decision = CENmil_travel_big_time }
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = cenmil_if_natpop_tt
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.05
+				}
+				activate_targeted_decision = { target = CEN decision = CENmil_soft_loans }
+				activate_targeted_decision = { target = CEN decision = CENmil_combat_debt }
+			}
+			else_if = {
+				limit = {
+					has_government = paternal_autocrat
+				}
+				add_popularity = {
+					ideology = paternal_autocrat
+					popularity = 0.05
+				}
+				if = {
+					limit = { has_country_flag = CENmil_pataut_coallition }
+					set_temp_variable = { coalition_partner_var = token:national_populist }
+					remove_from_coalition = yes
+					clr_country_flag = CENmil_pataut_coallition
+				}
+				activate_targeted_decision = { target = CEN decision = CENmil_travel_casual }
+				activate_targeted_decision = { target = CEN decision = CENmil_travel_big_time }
+				hidden_effect = {
+					country_event = central_america_dictatorship_events.36
+				}
+			}
+			else = {
+				add_popularity = {
+					ideology = national_populist
+					popularity = 0.05
+				}
+				if = {
+					limit = { has_country_flag = CENmil_natpop_coallition }
+					set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+					remove_from_coalition = yes
+					set_country_flag = CENmil_natpop_coallition
+				}
+				activate_targeted_decision = { target = CEN decision = CENmil_soft_loans }
+				activate_targeted_decision = { target = CEN decision = CENmil_combat_debt }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENmil_abolish_elections     ###Now abolish the congress
+		icon = GFX_goal_generic_dissolve_parliament1
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -3
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_one_party_state
+		}
+		available = {
+			has_dictatorship_government = yes
+		}
+		ai_will_do = { factor = 140 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_abolish_elections"
+			swap_ideas = {
+				add_idea = CENmil_political_instability_idea_3
+				remove_idea = CENmil_political_instability_idea_2
+			}
+			country_event = central_america_dictatorship_events.13
+			custom_effect_tooltip = tooltip_event_allows_choice
+			custom_effect_tooltip = tooltip_event_choice_option_1
+			event_option_tooltip = central_america_dictatorship_events.13.a
+			custom_effect_tooltip = tooltip_event_choice_option_2
+			event_option_tooltip = central_america_dictatorship_events.13.b
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENmil_destroy_opposition
+		icon = GFX_goal_purge_opposition
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = -3
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_tighter_borders
+			focus = CENmil_spy_networks
+		}
+		prerequisite = {
+			focus = CENmil_abolish_elections
+		}
+		available = {
+			has_dictatorship_government = yes
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_destroy_opposition"
+			add_political_power = -50
+			add_stability = -0.05
+			add_popularity = {
+				ideology = social_democrat
+				popularity = -1
+			}
+			add_popularity = {
+				ideology = social_liberal
+				popularity = -1
+			}
+			add_popularity = {
+				ideology = market_liberal
+				popularity = -1
+			}
+			add_popularity = {
+				ideology = social_conservative
+				popularity = -1
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	## AuthDem ##
+	focus = {
+		id = CENmil_military_control
+		icon = GFX_goal_ideology_authoritarian_democrat
+		cost = 0
+
+		relative_position_id = CENmil_military_congress
+		x = 6
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_military_congress
+		}
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_military_control"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENmil_puppet_civil_state
+		icon = GFX_focus_generic_authoritarian_government
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 3
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_military_control
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 140 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_puppet_civil_state"
+			swap_ideas = {
+				add_idea = CENmil_political_instability_idea_2
+				remove_idea = CENmil_political_instability_idea
+			}
+			country_event = central_america_dictatorship_events.16	### How much civilian do we tolerate
+			custom_effect_tooltip = tooltip_event_allows_choice
+			custom_effect_tooltip = tooltip_event_choice_option_1
+			event_option_tooltip = central_america_dictatorship_events.16.a
+			custom_effect_tooltip = tooltip_event_choice_option_2
+			event_option_tooltip = central_america_dictatorship_events.16.b
+			custom_effect_tooltip = tooltip_event_choice_option_3
+			event_option_tooltip = central_america_dictatorship_events.16.c
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENmil_permit_elections
+		icon = GFX_goal_shadow_government
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 3
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_puppet_civil_state
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 140 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_permit_elections"
+			swap_ideas = {
+				add_idea = CENmil_political_instability_idea_3
+				remove_idea = CENmil_political_instability_idea_2
+			}
+			if = {
+				limit = { has_country_flag = CENmil_autdem_coallition }
+				set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+				remove_from_coalition = yes
+				clr_country_flag = CENmil_autdem_coallition
+			}
+			country_event = central_america_dictatorship_events.17	### rigged election for funs
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENmil_check_opposition
+		icon = GFX_goal_generic_police_state
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 3
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_permit_elections
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_check_opposition"
+			add_ideas = CENmil_check_opposition_idea
+		}
+		search_filters = { FOCUS_FILTER_RESISTANCE FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENmil_foreign_collaboration
+		icon = GFX_goal_generic_deals
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 5
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_military_control
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_foreign_collaboration"
+			add_ideas = CENmil_foreign_collaboration_idea
+			if = {
+				limit = { NOT = { has_country_flag = CENmil_grand_visit_done } }
+				if = {
+					limit = { country_exists = USA }
+					activate_targeted_decision = { target = USA decision = CENmil_visit_world_power }
+				}
+				if = {
+					limit = { country_exists = APG }
+					activate_targeted_decision = { target = APG decision = CENmil_visit_world_power }
+				}
+				if = {
+					limit = { country_exists = GER }
+					activate_targeted_decision = { target = GER decision = CENmil_visit_world_power }
+				}
+				if = {
+					limit = { country_exists = ENT }
+					activate_targeted_decision = { target = ENT decision = CENmil_visit_world_power }
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = CEN decision = CENmil_backing_from_world_power }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_empower_companies
+		icon = GFX_goal_capitalist_system
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 5
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_foreign_collaboration
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_empower_companies"
+			swap_ideas = {
+				add_idea = CENmil_foreign_collaboration_idea_2
+				remove_idea = CENmil_foreign_collaboration_idea
+			}
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_edit_constitution
+		icon = GFX_goal_generic_forceful_treaty
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 7
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_military_control
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_edit_constitution"
+			add_political_power = 50
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.1
+			}
+			activate_targeted_decision = { target = CEN decision = CENmil_eat_more_land }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_limit_rights
+		icon = GFX_goal_generic_suspend_constitution
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 7
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_edit_constitution
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_limit_rights"
+			add_political_power = 100
+			add_stability = -0.05
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENmil_economic_control
+		icon = GFX_goal_generic_seize_money
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 6
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_limit_rights
+		}
+		prerequisite = {
+			focus = CENmil_empower_companies
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_economic_control"
+			swap_ideas = {
+				add_idea = CENmil_economic_control_idea
+				remove_idea = CENmil_foreign_collaboration_idea_2
+			}
+			activate_targeted_decision = { target = CEN decision = CENmil_block_enemies }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_national_monopoly
+		icon = GFX_focus_generic_self_management
+		cost = 6
+
+		relative_position_id = CENmil_military_congress
+		x = 5
+		y = 5
+
+		prerequisite = {
+			focus = CENmil_economic_control
+		}
+		prerequisite = {
+			focus = CENmil_check_opposition
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+		ai_will_do = { factor = 140 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_national_monopoly"
+			remove_ideas = CENmil_political_instability_idea_3
+			add_political_power = 100
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.1
+			}
+			CEN_activate_guarantee_decisions = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	### Economic Tree ###
+	focus = {
+		id = CENmil_interventionism
+		icon = GFX_goal_generic_forceful_treaty
+		cost = 0
+
+		x = 24
+		y = 0
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_interventionism"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENmil_laissez_faire
+		icon = GFX_focus_chi_mission_to_the_us
+		cost = 0
+
+		relative_position_id = CENmil_interventionism
+		x = 2
+		y = 0
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_laissez_faire"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	## Industrial Tree ##
+	# Infrastructure #
+	focus = {
+		id = CENmil_infrastructure_fund
+		icon = GFX_goal_generic_position_armies
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = -5
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_interventionism
+			focus = CENmil_laissez_faire
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_infrastructure_fund"
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_political_power = -50
+				custom_effect_tooltip = cenmil_money_tt
+				subtract_from_variable = {
+					var = UFC_power
+					value = 1
+					tooltip = cenmil_foreign_influence_decreases_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_political_power = -15
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = { add_political_power = -50 }
+				custom_effect_tooltip = cenmil_money_tt
+				subtract_from_variable = {
+					var = UFC_power
+					value = 1
+					tooltip = cenmil_foreign_influence_decreases_tt
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = { add_political_power = -15 }
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+			}
+			CEN_reduce_economic_instability = yes
+			unlock_decision_category_tooltip = CENmil_infrastructure_decisions
+			hidden_effect = {
+				clr_country_flag = CENmil_irca_nationalized
+				clr_country_flag = CENmil_clarified_irca_flag
+				activate_targeted_decision = { target = CEN decision = CENmil_clarify_irca }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_portuary_expansion
+		icon = GFX_goal_generic_construct_naval_dockyard
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = -6
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_infrastructure_fund
+		}
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0.3
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_portuary_expansion"
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+			every_owned_state = {
+				random_select_amount = 4
+				limit = {
+					naval_base > 0
+					naval_base < 10
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 2
+						province = {
+							all_provinces = yes
+							limit_to_naval_base = yes
+						}
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_naval_base_levels
+						BUILDING = naval_base
+						NUMBER = 2
+					}
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_country_flag = CENmil_big_strike_happenned }
+					country_event = { id = central_america_dictatorship_events.253 days = 120 random_days = 80 }
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_world_exports
+		icon = GFX_goal_AST_new_markets
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = -7
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_portuary_expansion
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_world_exports"
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_ideas = CENmil_world_exports_inter_idea
+				add_offsite_building = { type = industrial_complex level = 1 }
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_ideas = CENmil_world_exports_lf_idea
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = {
+					add_ideas = CENmil_world_exports_inter_idea
+					add_offsite_building = { type = industrial_complex level = 1 }
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = { add_ideas = CENmil_world_exports_lf_idea }
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_roads_and_rails
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = -4
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_infrastructure_fund
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0.4
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_roads_and_rails"
+			activate_targeted_decision = { target = CEN decision = CENmil_atlantic_rails }
+			activate_targeted_decision = { target = CEN decision = CENmil_central_american_highway_1 }
+			activate_targeted_decision = { target = CEN decision = CENmil_central_american_highway_2 }
+			if = {
+				limit = { NOT = { owns_state = 311 } } # Belize
+				custom_effect_tooltip = CENdem_belize_railway_unlock_tooltip
+			}
+			activate_targeted_decision = { target = CEN decision = CENmil_belize_rails }
+			hidden_effect = {
+				if = {
+					limit = { has_country_flag = CENmil_port_strike_happenned }
+					country_event = { id = central_america_dictatorship_events.257 days = 120 random_days = 80 }
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_infrastructural_profits
+		icon = GFX_goal_generic_consumer_goods
+		cost = 6
+
+		x = 19
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_portuary_expansion
+		}
+		prerequisite = {
+			focus = CENmil_roads_and_rails
+		}
+		available = {
+			has_country_flag = CENmil_pay_for_itself_flag
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_infrastructural_profits"
+			if = {
+				limit = { has_idea = CENmil_large_investments }
+				remove_ideas = CENmil_large_investments
+			}
+			else_if = {
+				limit = { has_idea = CENmil_medium_investments }
+				remove_ideas = CENmil_medium_investments
+			}
+			else = {
+				remove_ideas = CENmil_small_investments
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_briding_ca
+		icon = GFX_goal_generic_radar
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = -3
+		y = 3
+
+		available = {
+			has_tech = electronic_mechanical_engineering
+		}
+		prerequisite = {
+			focus = CENmil_roads_and_rails
+		}
+		ai_will_do = {
+			factor = 60
+			modifier = {
+				factor = 0
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_briding_ca"
+			if = {
+				limit = { NOT = { has_tech = radio } }
+				set_technology = { radio = 1 }
+				custom_effect_tooltip = tooltip_white_line
+				add_tech_bonus = {
+					name = CENmil_briding_ca
+					bonus = 0.75
+					uses = 2
+					category = electronics
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_briding_ca
+					bonus = 1
+					uses = 2
+					category = electronics
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	# Industry #
+	focus = {
+		id = CENmil_industrialization_program
+		icon = GFX_goal_generic_construction
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_interventionism
+			focus = CENmil_laissez_faire
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_industrialization_program"
+			add_timed_idea = {
+				idea = CENmil_investing_in_industry
+				days = 360
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_political_power = -100
+				custom_effect_tooltip = cenmil_money_tt
+				subtract_from_variable = {
+					var = UFC_power
+					value = 1
+					tooltip = cenmil_foreign_influence_decreases_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else_if = {
+				limit = {
+					has_completed_focus = CENmil_laissez_faire
+				}
+				add_to_variable = {
+					var = UFC_power
+					value = 5
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = { add_political_power = -100 }
+				custom_effect_tooltip = cenmil_money_tt
+				subtract_from_variable = {
+					var = UFC_power
+					value = 1
+					tooltip = cenmil_foreign_influence_decreases_tt
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				add_to_variable = {
+					var = UFC_power
+					value = 5
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_local_manufacturing
+		icon = GFX_goal_factory_complex
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_industrialization_program
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_local_manufacturing"
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_political_power = -50
+				add_one_random_civilian_factory = yes
+				add_one_random_civilian_factory = yes
+				add_one_random_military_factory = yes
+				custom_effect_tooltip = cenmil_money_tt
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_one_random_civilian_factory = yes
+				add_one_random_civilian_factory = yes
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = {
+					add_political_power = -50
+					add_one_random_civilian_factory = yes
+					add_one_random_civilian_factory = yes
+					add_one_random_military_factory = yes
+				}
+				custom_effect_tooltip = cenmil_money_tt
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = {
+					add_one_random_civilian_factory = yes
+					add_one_random_civilian_factory = yes
+				}
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_made_in_ca
+		icon = GFX_goal_economic_control
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = -1
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_local_manufacturing
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0.5
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_made_in_ca"
+			add_ideas = CENmil_made_in_ca_idea
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_one_random_civilian_factory = yes
+			}
+			else_if = {
+				limit = { NOT = { has_completed_focus = CENmil_interventionism } }
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = {
+					add_one_random_civilian_factory = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_invite_foreign
+		icon = GFX_focus_chi_mission_to_the_us
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 2
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_industrialization_program
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0.5
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_invite_foreign"
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_political_power = -50
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_to_variable = {
+					var = UFC_power
+					value = 10
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = { add_political_power = -50 }
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				add_to_variable = {
+					var = UFC_power
+					value = 10
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+			}
+			CEN_reduce_economic_instability = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_corporate_investments
+		icon = GFX_goal_generic_construct_civ_factory
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_invite_foreign
+		}
+		prerequisite = {
+			focus = CENmil_local_manufacturing
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0.5
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_corporate_investments"
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = industrial_complex size > 1 include_locked = yes }
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_one_random_dockyard = yes
+				add_to_variable = {
+					var = UFC_power
+					value = 5
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				add_to_variable = {
+					var = UFC_power
+					value = 2
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = {
+					add_one_random_dockyard = yes
+				}
+				add_to_variable = {
+					var = UFC_power
+					value = 5
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_cheap_labour
+		icon = GFX_goal_production
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 3
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_invite_foreign
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0.5
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_cheap_labour"
+			add_ideas = CENmil_cheap_labour_idea
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_one_random_civilian_factory = yes
+			}
+			else_if = {
+				limit = { NOT = { has_completed_focus = CENmil_interventionism } }
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = {
+					add_one_random_civilian_factory = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	# Agricultural #
+	focus = {
+		id = CENmil_agricultural_dev
+		icon = GFX_focus_generic_coffee
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 7
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_interventionism
+			focus = CENmil_laissez_faire
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0.5
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_agricultural_dev"
+			add_timed_idea = {
+				idea = CENmil_support_for_the_farmers
+				days = 180
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_political_power = -50
+				custom_effect_tooltip = cenmil_money_tt
+				subtract_from_variable = {
+					var = UFC_power
+					value = 1
+					tooltip = cenmil_foreign_influence_decreases_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_political_power = -15
+				add_to_variable = {
+					var = UFC_power
+					value = 3
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = { add_political_power = -50 }
+				custom_effect_tooltip = cenmil_money_tt
+				subtract_from_variable = {
+					var = UFC_power
+					value = 1
+					tooltip = cenmil_foreign_influence_decreases_tt
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = { add_political_power = -15 }
+				add_to_variable = {
+					var = UFC_power
+					value = 3
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_ufc_protecc
+		icon = GFX_HON_ufc
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 6
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_agricultural_dev
+		}
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_ufc_protecc"
+			CEN_reduce_economic_instability = yes
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_ideas = CENmil_protecting_UFC_land_inter
+				add_political_power = 25
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_ideas = CENmil_protecting_UFC_land_lf
+				add_political_power = 50
+				add_to_variable = {
+					var = UFC_power
+					value = 5
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+				hidden_effect = {
+					update_CENmil_UFC = yes
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = {
+					add_ideas = CENmil_protecting_UFC_land_inter
+					add_political_power = 25
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = {
+					add_ideas = CENmil_protecting_UFC_land_lf
+					add_political_power = 50
+				}
+				add_to_variable = {
+					var = UFC_power
+					value = 5
+					tooltip = cenmil_foreign_influence_grows_tt
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_ufc_attacc
+		icon = GFX_goal_bag_of_money
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 5
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_ufc_protecc
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0
+				CENmil_has_political_instability = yes
+				NOT = { has_completed_focus = CENmil_laissez_faire }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_ufc_attacc"
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				swap_ideas = {
+					remove_idea = CENmil_protecting_UFC_land_inter
+					add_idea = CENmil_protecting_UFC_land_inter_2
+				}
+				add_political_power = 10
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				swap_ideas = {
+					remove_idea = CENmil_protecting_UFC_land_lf
+					add_idea = CENmil_protecting_UFC_land_lf_2
+				}
+				add_political_power = 25
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = {
+					swap_ideas = {
+						remove_idea = CENmil_protecting_UFC_land_inter
+						add_idea = CENmil_protecting_UFC_land_inter_2
+					}
+					add_political_power = 10
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = {
+					swap_ideas = {
+						remove_idea = CENmil_protecting_UFC_land_lf
+						add_idea = CENmil_protecting_UFC_land_lf_2
+					}
+					add_political_power = 25
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = CEN decision = CENmil_land_grants }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_cash_crop_export
+		icon = GFX_focus_AUS_agriculture
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 8
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_agricultural_dev
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0.5
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_cash_crop_export"
+			add_ideas = CENmil_cash_crops
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				add_one_random_dockyard = yes
+			}
+			else_if = {
+				limit = { NOT = { has_completed_focus = CENmil_interventionism } }
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = {
+					add_one_random_dockyard = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_efficent_plantations
+		icon = GFX_goal_agrarian_reform
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 9
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_cash_crop_export
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_efficent_plantations"
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				swap_ideas = {
+					remove_idea = CENmil_cash_crops
+					add_idea = CENmil_agri_boom_idea
+				}
+			}
+			else_if = {
+				limit = { has_completed_focus = CENmil_laissez_faire }
+				swap_ideas = {
+					remove_idea = CENmil_cash_crops
+					add_idea = CENmil_agri_money_idea
+				}
+			}
+			else = {
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = {
+					swap_ideas = {
+						remove_idea = CENmil_cash_crops
+						add_idea = CENmil_agri_boom_idea
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_laissez_faire
+				}
+				effect_tooltip = {
+					swap_ideas = {
+						remove_idea = CENmil_cash_crops
+						add_idea = CENmil_agri_money_idea
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENmil_diverse_output
+		icon = GFX_goal_generic_positive_trade_relations
+		cost = 6
+
+		relative_position_id = CENmil_interventionism
+		x = 7
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_cash_crop_export
+		}
+		prerequisite = {
+			focus = CENmil_ufc_protecc
+		}
+		ai_will_do = { factor = 120 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_diverse_output"
+			add_research_slot_until_five = yes
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_completed_focus = CENmil_interventionism }
+				add_political_power = -100
+			}
+			else_if = {
+				limit = { NOT = { has_completed_focus = CENmil_laissez_faire } }
+				custom_effect_tooltip = {
+					localization_key = tooltip_if_focus_completed
+					FOCUS = CENmil_interventionism
+				}
+				effect_tooltip = {
+					add_political_power = -100
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
+	}
+
+	### Army Tree ###
+	focus = {
+		id = CENmil_army_investments
+		icon = GFX_goal_generic_axis_build_infantry
+		cost = 6
+
+		x = 40
+		y = 0
+
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_army_investments"
+			if = {
+				limit = { has_land_grand_doctrine = no }
+				set_grand_doctrine = grand_battleplan
+				set_sub_doctrine = large_unit_tactics
+			}
+			else = {
+				if = {
+					limit = { has_subdoctrine_in_track = infantry }
+					army_experience = 50
+				}
+				else = {
+					army_experience = 25
+					set_sub_doctrine = large_unit_tactics
+				}
+			}
+			add_daily_mastery = {
+				name = CENmil_army_investments
+				amount = 0.5
+				days = 200
+				track = infantry
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	## Warfare with European Characteristics ##
+	focus = {
+		id = CENmil_army_european
+		icon = GFX_focus_chi_army_reform
+		cost = 6
+
+		relative_position_id = CENmil_army_investments
+		x = -4
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_army_investments
+		}
+		available = {
+			has_country_flag = CENmil_professional_army_doctrine
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_army_european"
+			if = {
+				limit = { has_subdoctrine_in_track = operations }
+				army_experience = 25
+			}
+			else = {
+				set_sub_doctrine = grand_assault
+			}
+			add_ideas = CENmil_european_doctrine
+			add_daily_mastery = {
+				name = CENmil_army_european
+				amount = 0.5
+				days = 200
+				track = operations
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_standardised_equipment
+		icon = GFX_focus_generic_combined_arms
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -5
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_army_european
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_standardised_equipment"
+			add_ideas = CENmil_better_equipment
+			custom_effect_tooltip = tooltip_white_line
+			add_tech_bonus = {
+				name = CENmil_standardised_equipment
+				bonus = 1
+				uses = 1
+				category = infantry_weapons
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_1
+				amount = 1000
+				producer = CEN
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_heavy_guns
+		icon = GFX_goal_generic_army_artillery2
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -5
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_standardised_equipment
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_heavy_guns"
+			swap_ideas = {
+				remove_idea = CENmil_better_equipment
+				add_idea = CENmil_better_equipment_2
+			}
+			add_tech_bonus = {
+				name = CENmil_heavy_guns
+				bonus = 1
+				uses = 1
+				category = artillery
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment_1
+				amount = 100
+				producer = CEN
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_motorisation_effort
+		icon = GFX_focus_generic_truck
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -5
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_heavy_guns
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_motorisation_effort"
+			swap_ideas = {
+				remove_idea = CENmil_better_equipment_2
+				add_idea = CENmil_better_equipment_3
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_tech = motorised_infantry
+					}
+				}
+				set_technology = { motorised_infantry = 1 }
+			}
+			else = {
+				add_equipment_to_stockpile = {
+					type = motorized_equipment_1
+					amount = 100
+					producer = CEN
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_chain_command
+		icon = GFX_goal_generic_army_high_command
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -3
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_army_european
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_chain_command"
+			swap_ideas = {
+				add_idea = CENmil_chain_command_idea
+				remove_idea = CENmil_european_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = CENmil_trained_officers
+		icon = GFX_focus_generic_military_academy
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -3
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_chain_command
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_trained_officers"
+			swap_ideas = {
+				add_idea = CENmil_chain_command_idea_2
+				remove_idea = CENmil_chain_command_idea
+			}
+			every_army_leader = {
+				add_planning = 1
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENmil_border_exercises
+		icon = GFX_goal_generic_position_armies
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -3
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_trained_officers
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_border_exercises"
+			army_experience = 25
+			add_mastery_bonus = {
+				name = CENmil_border_exercises
+				bonus = 0.1
+				days = 365
+				folder = land
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_professional_soldiers
+		icon = GFX_goal_generic_army_training
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -4
+		y = 5
+
+		prerequisite = {
+			focus = CENmil_border_exercises
+		}
+		prerequisite = {
+			focus = CENmil_motorisation_effort
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_professional_soldiers"
+			remove_ideas = CENmil_chaotic_army_idea
+			custom_effect_tooltip = tooltip_white_line
+			swap_ideas = {
+				add_idea = CENmil_professional_army_idea
+				remove_idea = CENmil_chain_command_idea_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER }
+	}
+
+	## Central Army Tree ##
+	focus = {
+		id = CENmil_industrial_warfare
+		icon = GFX_focus_generic_industry_3
+		cost = 7
+
+		relative_position_id = CENmil_army_investments
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_army_investments
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+			modifier = {
+				factor = 0.5
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_industrial_warfare"
+			add_ideas = CENmil_updating_our_arsenal
+			custom_effect_tooltip = tooltip_white_line
+			add_tech_bonus = {
+				name = CENmil_industrial_warfare
+				bonus = 1
+				uses = 1
+				category = industry
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_mil_ind_complex
+		icon = GFX_goal_generic_construct_mil_factory
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_industrial_warfare
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+			modifier = {
+				factor = 0.5
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_mil_ind_complex"
+			add_one_random_military_factory = yes
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_scientific_warfare
+		icon = GFX_goal_military_research
+		cost = 7
+
+		relative_position_id = CENmil_army_investments
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_industrial_warfare
+		}
+		ai_will_do = {
+			factor = 60
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_scientific_warfare"
+			swap_ideas = {
+				add_idea = CENmil_updating_our_arsenal_2
+				remove_idea = CENmil_updating_our_arsenal
+			}
+			add_breakthrough_progress = {
+				specialization = specialization_land
+				value = 0.5
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_tech_bonus = {
+				name = CENmil_scientific_warfare
+				bonus = 1
+				uses = 1
+				category = electronics
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_military_science
+		icon = GFX_focus_research
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = -1
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_mil_ind_complex
+		}
+		prerequisite = {
+			focus = CENmil_scientific_warfare
+		}
+		ai_will_do = {
+			factor = 120
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_military_science"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_economic_warfare
+		icon = GFX_goal_generic_production2
+		cost = 7
+
+		relative_position_id = CENmil_army_investments
+		x = 0
+		y = 5
+
+		prerequisite = {
+			focus = CENmil_scientific_warfare
+		}
+		ai_will_do = {
+			factor = 60
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_economic_warfare"
+			swap_ideas = {
+				add_idea = CENmil_updating_our_arsenal_3
+				remove_idea = CENmil_updating_our_arsenal_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_arms_deals
+		icon = GFX_goal_generic_small_arms
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_industrial_warfare
+		}
+		ai_will_do = {
+			factor = 40
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_arms_deals"
+			activate_targeted_decision = { target = GER decision = CENmil_buy_guns }
+			activate_targeted_decision = { target = RUS decision = CENmil_buy_artillery }
+			activate_targeted_decision = { target = NFA decision = CENmil_buy_tanks }
+			activate_targeted_decision = { target = ENT decision = CENmil_buy_planes }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_saving_our_men
+		icon = GFX_goal_healthcare
+		cost = 5
+
+		x = 41
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_scientific_warfare
+		}
+		prerequisite = {
+			focus = CENmil_arms_deals
+		}
+		ai_will_do = {
+			factor = 60
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_saving_our_men"
+			enable_tech_improved_field_hospitals = yes
+			if = {
+				limit = {
+					NOT = { has_tech = tech_field_hospital }
+				}
+				set_technology = { tech_field_hospital = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_saving_our_men
+					bonus = 1
+					uses = 1
+					category = support_tech
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	## Warfare with Central American Characteristics ##
+	focus = {
+		id = CENmil_army_ca
+		icon = GFX_goal_generic_army_cooperation
+		cost = 6
+
+		relative_position_id = CENmil_army_investments
+		x = 4
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_army_investments
+		}
+		available = {
+			has_country_flag = CENmil_mass_assault_doctrine
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_army_ca"
+			if = {
+				limit = { has_subdoctrine_in_track = operations }
+				army_experience = 35
+			}
+			else = {
+				set_sub_doctrine = infiltration_tactics
+			}
+			add_daily_mastery = {
+				name = CENmil_army_ca
+				amount = 0.7
+				days = 150
+				track = operations
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_autonomous_officers
+		icon = GFX_goal_officers
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = 3
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_army_ca
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_autonomous_officers"
+			add_ideas = CENmil_autonomous_officers_idea
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENmil_adapt_terrain
+		icon = GFX_SIA_jungletraining
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = 3
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_autonomous_officers
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_adapt_terrain"
+			enable_tech_ski_infantry = yes
+			custom_effect_tooltip = tooltip_white_line
+			enable_tech_jungle_warfare = yes
+			custom_effect_tooltip = tooltip_white_line
+			add_mastery_bonus = {
+				name = CENmil_adapt_terrain
+				bonus = 0.1
+				days = 365
+				folder = land
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENmil_small_units
+		icon = GFX_goal_army_guy
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = 3
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_adapt_terrain
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_small_units"
+			swap_ideas = {
+				add_idea = CENmil_small_units_idea
+				remove_idea = CENmil_autonomous_officers_idea
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENmil_improved_conscrip
+		icon = GFX_goal_generic_military_sphere
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = 5
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_army_ca
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_improved_conscrip"
+			add_ideas = CENmil_extended_recruitment
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = CENmil_guerrila_tactics
+		icon = GFX_focus_prc_infiltration
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = 5
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_improved_conscrip
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_guerrila_tactics"
+			add_ideas = CENmil_guerilla_tactics_idea
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = CENmil_guerilla_spirit
+		icon = GFX_goal_conscription
+		cost = 5
+
+		x = 45
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_guerrila_tactics
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_guerilla_spirit"
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Brigada de Milicia"
+					LINE_1 = { localization_key = line_battalion_tt NAME = militia ICON = GFX_unit_militia_icon_small COUNT = 8 }
+				}
+				if = {
+					limit = { has_template = "Brigada de Milicia" }
+					delete_unit_template_and_units = { division_template = "Brigada de Milicia" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Brigada de Milicia"
+					division_names_group = SPAN_INF_01
+					regiments = {
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+						militia = { x = 0 y = 3 }
+						militia = { x = 1 y = 0 }
+						militia = { x = 1 y = 1 }
+						militia = { x = 1 y = 2 }
+						militia = { x = 1 y = 3 }
+					}
+					template_counter = 68
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			random_owned_controlled_state = {
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 3
+						TYPE = "Brigada de Milicia"
+					}
+					create_unit = {
+						division = "division_template = \"Brigada de Milicia\" start_experience_factor = 0.4"
+						owner = ROOT
+						count = 3
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = CENmil_large_force
+		icon = GFX_goal_generic_army_mass_assault
+		cost = 5
+
+		relative_position_id = CENmil_army_investments
+		x = 4
+		y = 5
+
+		prerequisite = {
+			focus = CENmil_small_units
+		}
+		prerequisite = {
+			focus = CENmil_guerilla_spirit
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_large_force"
+			remove_ideas = CENmil_chaotic_army_idea
+			custom_effect_tooltip = tooltip_white_line
+			add_manpower = 10000
+			add_war_support = 0.1
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_MANPOWER }
+	}
+
+	# Finisher of Entire Tree #
+	focus = {
+		id = CENmil_military_with_a_state
+		icon = GFX_goal_generic_army_doctrines
+		cost = 8
+
+		relative_position_id = CENmil_army_investments
+		x = 0
+		y = 6
+
+		prerequisite = {
+			focus = CENmil_professional_soldiers
+			focus = CENmil_large_force
+		}
+		prerequisite = {
+			focus = CENmil_economic_warfare
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_military_with_a_state"
+			add_war_support = 0.2
+			add_ideas = CENmil_powerful_military
+			custom_effect_tooltip = tooltip_white_line
+			add_mastery_bonus = {
+				name = CENmil_military_with_a_state
+				bonus = 0.1
+				days = 365
+				folder = land
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	### Air and Naval Tree ### ### Yes it literally is the Honduran one, it's a good tree eh ###
+	## Air Tree ##
+	focus = {
+		id = CENmil_faca
+		icon = GFX_goal_continuous_air_production
+		cost = 7
+
+		x = 49
+		y = 0
+
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+			modifier = {
+				factor = 0
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_faca"
+			air_experience = 50    ### Maybe add a flavour event
+			add_doctrine_cost_reduction = {
+				name = CENmil_faca
+				cost_reduction = 0.5
+				uses = 2
+				category = air_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP }
+	}
+
+	focus = {
+		id = CENmil_air_lads
+		icon = GFX_focus_SOV_flying_clubs
+		cost = 6
+
+		relative_position_id = CENmil_faca
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_faca
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_air_lads"
+			air_experience = 25
+			add_daily_mastery = {
+				name = CENmil_protecc_sky
+				amount = 0.5
+				days = 200
+				track = fighter_aircraft
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = CENmil_air_officers
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = CENmil_aa_positions
+		icon = GFX_goal_anti_air
+		cost = 6
+
+		relative_position_id = CENmil_faca
+		x = -2
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_air_lads
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_aa_positions"
+			if = {
+				limit = { NOT = { has_tech = interwar_antiair } }
+				set_technology = { interwar_antiair = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_aa_positions
+					bonus = 1
+					uses = 1
+					category = artillery
+				}
+			}
+			every_owned_state = {
+				limit = {
+					is_core_of = ROOT
+					air_base > 0
+					anti_air_building < 5
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_airfield_expansion
+		icon = GFX_goal_generic_construction
+		cost = 6
+
+		relative_position_id = CENmil_faca
+		x = 0
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_faca
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_airfield_expansion"
+			every_owned_state = {
+				limit = {
+					is_core_of = ROOT
+					air_base > 0
+					air_base < 10
+				}
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_fighters
+		icon = GFX_goal_generic_air_fighter
+		cost = 8
+
+		relative_position_id = CENmil_faca
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_airfield_expansion
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_fighters"
+			if = {
+				limit = { has_dlc_bba = no }
+				if = {
+					limit = { NOT = { has_tech = fighter1 } }
+					if = {
+						limit = { NOT = { has_tech = early_fighter } }
+						set_technology = { early_fighter = 1 }
+					}
+					set_technology = { fighter1 = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENmil_fighters
+						bonus = 1
+						uses = 1
+						category = light_air
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = basic_small_airframe } }
+					if = {
+						limit = { NOT = { has_tech = iw_small_airframe } }
+						set_technology = { iw_small_airframe = 1 }
+					}
+					set_technology = { basic_small_airframe = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENmil_fighters
+						bonus = 1
+						uses = 1
+						category = light_air
+					}
+				}
+				set_temp_variable = { tech_bonus_count = 3 }
+				if = {
+					limit = { NOT = { has_tech = aa_lmg } }
+					set_technology = { aa_lmg = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = engines_1 } }
+					set_technology = { engines_1 = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = engines_2 } }
+					set_technology = { engines_2 = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { check_variable = { tech_bonus_count = 3 } }
+					add_tech_bonus = {
+						name = CENmil_fighters
+						bonus = 0.5
+						uses = 3 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 2 } }
+					add_tech_bonus = {
+						name = CENmil_fighters
+						bonus = 0.75
+						uses = 2 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 1 } }
+					add_tech_bonus = {
+						name = CENmil_fighters
+						bonus = 1
+						uses = 1 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				create_equipment_variant = {
+					name = "PT-19"
+					type = small_plane_airframe_1
+					allow_without_tech = yes
+					parent_version = 0
+					modules = {
+						fixed_main_weapon_slot = light_mg_4x
+						fixed_auxiliary_weapon_slot_1 = light_mg_4x
+						engine_type_slot = engine_2_1x
+						special_type_slot_1 = empty
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_equipment_to_stockpile = {
+				type = small_plane_airframe
+				amount = 100
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_AIRFORCE_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_cas
+		icon = GFX_goal_generic_air_CAS_new
+		cost = 8
+
+		relative_position_id = CENmil_faca
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = CENmil_airfield_expansion
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_cas"
+			if = {
+				limit = { has_dlc_bba = no }
+				if = {
+					limit = { NOT = { has_tech = CAS1 } }
+					if = {
+						limit = { NOT = { has_tech = early_fighter } }
+						set_technology = { early_fighter = 1 }
+					}
+					set_technology = { CAS1 = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENmil_cas
+						bonus = 1
+						uses = 1
+						category = light_air
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = basic_small_airframe } }
+					if = {
+						limit = { NOT = { has_tech = iw_small_airframe } }
+						set_technology = { iw_small_airframe = 1 }
+					}
+					set_technology = { basic_small_airframe = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENmil_cas
+						bonus = 1
+						uses = 1
+						category = light_air
+					}
+				}
+				set_temp_variable = { tech_bonus_count = 4 }
+				if = {
+					limit = { NOT = { has_tech = early_bombs } }
+					set_technology = { early_bombs = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = aa_lmg } }
+					set_technology = { aa_lmg = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = engines_1 } }
+					set_technology = { engines_1 = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = engines_2 } }
+					set_technology = { engines_2 = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = aircraft_construction } }
+					set_technology = { aircraft_construction = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { check_variable = { tech_bonus_count = 4 } }
+					add_tech_bonus = {
+						name = CENmil_cas
+						bonus = 0.25
+						uses = 4 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 3 } }
+					add_tech_bonus = {
+						name = CENmil_cas
+						bonus = 0.5
+						uses = 3 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 2 } }
+					add_tech_bonus = {
+						name = CENmil_cas
+						bonus = 0.75
+						uses = 2 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 1 } }
+					add_tech_bonus = {
+						name = CENmil_cas
+						bonus = 1
+						uses = 1 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				create_equipment_variant = {
+					name = "A.P.1"
+					type = small_plane_cas_airframe_1
+					allow_without_tech = yes
+					parent_version = 0
+					modules = {
+						fixed_main_weapon_slot = bomb_locks
+						engine_type_slot = engine_2_1x
+						special_type_slot_1 = lmg_defense_turret
+						special_type_slot_2 = dive_brakes_small
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_equipment_to_stockpile = {
+				type = small_plane_cas_airframe
+				amount = 100
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_AIRFORCE_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_bombers
+		icon = GFX_goal_generic_air_bomber_new
+		cost = 8
+
+		relative_position_id = CENmil_faca
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_fighters
+		}
+		prerequisite = {
+			focus = CENmil_cas
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_bombers"
+			if = {
+				limit = { has_dlc_bba = no }
+				if = {
+					limit = { NOT = { has_tech = tactical_bomber1 } }
+					if = {
+						limit = { NOT = { has_tech = early_bomber } }
+						set_technology = { early_bomber = 1 }
+					}
+					set_technology = { tactical_bomber1 = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENmil_bombers
+						bonus = 1
+						uses = 1
+						category = medium_air
+						category = heavy_air
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = basic_medium_airframe } }
+					if = {
+						limit = { NOT = { has_tech = iw_medium_airframe } }
+						set_technology = { iw_medium_airframe = 1 }
+					}
+					set_technology = { basic_medium_airframe = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENmil_bombers
+						bonus = 1
+						uses = 1
+						category = medium_air
+					}
+				}
+				set_temp_variable = { tech_bonus_count = 3 }
+				if = {
+					limit = { NOT = { has_tech = early_bombs } }
+					set_technology = { early_bombs = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = aa_lmg } }
+					set_technology = { aa_lmg = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = engines_1 } }
+					set_technology = { engines_1 = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = engines_2 } }
+					set_technology = { engines_2 = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { check_variable = { tech_bonus_count = 3 } }
+					add_tech_bonus = {
+						name = CENmil_bombers
+						bonus = 0.5
+						uses = 3 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 2 } }
+					add_tech_bonus = {
+						name = CENmil_bombers
+						bonus = 0.75
+						uses = 2 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 1 } }
+					add_tech_bonus = {
+						name = CENmil_bombers
+						bonus = 1
+						uses = 1 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				create_equipment_variant = {
+					name = "B-23"
+					type = medium_plane_airframe_1
+					allow_without_tech = yes
+					parent_version = 0
+					modules = {
+						fixed_main_weapon_slot = medium_bomb_bay
+						fixed_auxiliary_weapon_slot_1 = medium_bomb_bay
+						engine_type_slot = engine_2_2x
+						special_type_slot_1 = lmg_defense_turret_2x
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_equipment_to_stockpile = {
+				type = medium_plane_airframe
+				amount = 50
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_AIRFORCE_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_protecc_sky
+		icon = GFX_goal_generic_air_doctrine
+		cost = 6
+
+		relative_position_id = CENmil_faca
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_aa_positions
+		}
+		prerequisite = {
+			focus = CENmil_bombers
+		}
+		prerequisite = {
+			focus = CENmil_nav_bombers
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_protecc_sky"
+			air_experience = 50
+			add_war_support = 0.05
+			custom_effect_tooltip = tooltip_white_line
+			swap_ideas = {
+				add_idea = CENmil_air_officers2
+				remove_idea = CENmil_air_officers
+			}
+			add_mastery_bonus = {
+				name = CENmil_protecc_sky
+				bonus = 0.15
+				days = 365
+				folder = air
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	# Shared Air/Navy Tree #
+	focus = {
+		id = CENmil_naval_air_coord
+		icon = GFX_focus_generic_cryptologic_bomb
+		cost = 6
+
+		relative_position_id = CENmil_faca
+		x = 2
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_faca
+		}
+		prerequisite = {
+			focus = CENmil_fnca
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_naval_air_coord"
+			add_ideas = CENmil_naval_air_coord_idea
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS FOCUS_FILTER_NAVY_BONUS }
+	}
+
+	focus = {
+		id = CENmil_nav_bombers
+		icon = GFX_goal_generic_air_naval_bomber2_new
+		cost = 8
+
+		relative_position_id = CENmil_faca
+		x = 2
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_naval_air_coord
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_nav_bombers"
+			if = {
+				limit = { has_dlc_bba = no }
+				if = {
+					limit = { NOT = { has_tech = naval_bomber1 } }
+					if = {
+						limit = { NOT = { has_tech = early_fighter } }
+						set_technology = { early_fighter = 1 }
+					}
+					set_technology = { naval_bomber1 = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENmil_nav_bombers
+						bonus = 1
+						uses = 1
+						category = naval_bomber
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = basic_small_airframe } }
+					if = {
+						limit = { NOT = { has_tech = iw_small_airframe } }
+						set_technology = { iw_small_airframe = 1 }
+					}
+					set_technology = { basic_small_airframe = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENmil_nav_bombers
+						bonus = 1
+						uses = 1
+						category = light_air
+					}
+				}
+				set_temp_variable = { tech_bonus_count = 3 }
+				if = {
+					limit = { NOT = { has_tech = air_torpedoe_1 } }
+					set_technology = { air_torpedoe_1 = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = aa_lmg } }
+					set_technology = { aa_lmg = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { NOT = { has_tech = engines_1 } }
+					set_technology = { engines_1 = 1 }
+					add_to_temp_variable = { tech_bonus_count = -1 }
+				}
+				if = {
+					limit = { check_variable = { tech_bonus_count = 3 } }
+					add_tech_bonus = {
+						name = CENmil_nav_bombers
+						bonus = 0.75
+						uses = 3 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 2 } }
+					add_tech_bonus = {
+						name = CENmil_nav_bombers
+						bonus = 0.75
+						uses = 2 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				else_if = {
+					limit = { check_variable = { tech_bonus_count = 1 } }
+					add_tech_bonus = {
+						name = CENmil_nav_bombers
+						bonus = 1
+						uses = 1 #doesn't accept variables
+						category = plane_modules_tech
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				create_equipment_variant = {
+					name = "T-6"
+					type = small_plane_naval_bomber_airframe_1
+					allow_without_tech = yes
+					parent_version = 0
+					modules = {
+						fixed_main_weapon_slot = torpedo_mounting
+						engine_type_slot = engine_1_1x
+						special_type_slot_1 = lmg_defense_turret
+						special_type_slot_2 = empty
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_equipment_to_stockpile = {
+				type = small_plane_naval_bomber_airframe
+				amount = 75
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_AIRFORCE_BONUS FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	## Naval Tree ##
+	focus = {
+		id = CENmil_fnca
+		icon = GFX_goal_continuous_naval_production
+		cost = 7
+
+		relative_position_id = CENmil_faca
+		x = 4
+		y = 0
+
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+			modifier = {
+				factor = 0
+				CENmil_has_political_instability = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_fnca"
+			navy_experience = 50 ### maybe a flavour event in addition
+			add_doctrine_cost_reduction = {
+				name = CENmil_fnca
+				cost_reduction = 0.5
+				uses = 2
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_select_main_port
+		icon = GFX_goal_generic_construct_naval_dockyard
+		cost = 8
+
+		relative_position_id = CENmil_faca
+		x = 4
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_fnca
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_select_main_port"
+			every_core_state = {
+				limit = {
+					is_owned_and_controlled_by = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = dockyard size > 0 include_locked = yes }
+				}
+				random_select_amount = 3
+				display_individual_scopes = yes
+
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = naval_base
+						level = 1
+						province = {
+							all_provinces = yes
+							limit_to_naval_base = yes
+						}
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_naval_base_levels
+						BUILDING = naval_base
+						NUMBER = 1
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENmil_screens
+		icon = GFX_focus_generic_destroyer
+		cost = 8
+
+		relative_position_id = CENmil_faca
+		x = 3
+		y = 2
+
+		available = {
+			has_tech = electronic_mechanical_engineering
+		}
+		prerequisite = {
+			focus = CENmil_select_main_port
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_screens"
+			if = {
+				limit = { NOT = { has_tech = early_ship_hull_light } }
+				set_technology = { early_ship_hull_light = 1 }
+				set_technology = { basic_ship_hull_light = 1 }
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_ship_hull_light } }
+				set_technology = { basic_ship_hull_light = 1 }
+				add_tech_bonus = {
+					name = CENmil_screens
+					bonus = 1
+					uses = 1
+					category = dd_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_screens
+					bonus = 0.75
+					uses = 2
+					category = dd_tech
+				}
+			}
+			if = {
+				limit = { NOT = { has_tech = basic_depth_charges } }
+				set_technology = { basic_depth_charges = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_screens
+					bonus = 1
+					uses = 1
+					category = asw_tech
+				}
+			}
+			if = {
+				limit = { NOT = { has_tech = basic_torpedo } }
+				set_technology = { basic_torpedo = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_screens
+					bonus = 1
+					uses = 1
+					category = cat_torpedoes
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			create_equipment_variant = {
+				name = "José Cecilio Díaz del Valle Class"
+				type = ship_hull_light_2
+				allow_without_tech = yes #irrelevant, but makes a cleaner tooltip
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = light_ship_engine_2
+					fixed_ship_torpedo_slot = ship_torpedo_1
+					rear_1_custom_slot = ship_light_battery_1
+					mid_1_custom_slot = ship_depth_charge_1
+				}
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_light_2
+					version_name = "José Cecilio Díaz del Valle Class"
+				}
+				progress = 0.5
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_light_2
+					version_name = "José Cecilio Díaz del Valle Class"
+				}
+				progress = 0.5
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_light_2
+					version_name = "José Cecilio Díaz del Valle Class"
+				}
+				progress = 0.5
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_light_2
+					version_name = "José Cecilio Díaz del Valle Class"
+				}
+				progress = 0.5
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_cruisers
+		icon = GFX_focus_generic_cruiser2
+		cost = 8
+
+		relative_position_id = CENmil_faca
+		x = 5
+		y = 2
+
+		available = {
+			has_tech = electronic_mechanical_engineering
+		}
+		prerequisite = {
+			focus = CENmil_select_main_port
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_cruisers"
+			if = {
+				limit = { NOT = { has_tech = early_ship_hull_cruiser } }
+				set_technology = { early_ship_hull_cruiser = 1 }
+				set_technology = { basic_ship_hull_cruiser = 1 }
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_ship_hull_cruiser } }
+				set_technology = { basic_ship_hull_cruiser = 1 }
+				add_tech_bonus = {
+					name = CENmil_cruisers
+					bonus = 1
+					uses = 1
+					category = ca_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_cruisers
+					bonus = 0.75
+					uses = 2
+					category = ca_tech
+				}
+			}
+			if = {
+				limit = { NOT = { has_tech = basic_battery } }
+				set_technology = { basic_battery = 1 }
+				add_tech_bonus = {
+					name = CENmil_cruisers
+					bonus = 1
+					uses = 1
+					category = ship_modules_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_cruisers
+					bonus = 0.75
+					uses = 2
+					category = ship_modules_tech
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			create_equipment_variant = {
+				name = "Progreso Class"
+				type = ship_hull_cruiser_2
+				allow_without_tech = yes
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_medium_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_2
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					rear_1_custom_slot = ship_light_medium_battery_1
+					mid_1_custom_slot = ship_torpedo_1
+				}
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_cruiser_2
+					version_name = "Progreso Class"
+				}
+				progress = 0.7
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_cruiser_2
+					version_name = "Progreso Class"
+				}
+				progress = 0.7
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_flagship
+		icon = GFX_focus_generic_navy_battleship2
+		cost = 8
+
+		relative_position_id = CENmil_faca
+		x = 4
+		y = 3
+
+		available = {
+			has_tech = interwar_antiair
+			has_tech = mechanical_computing
+		}
+		prerequisite = {
+			focus = CENmil_screens
+		}
+		prerequisite = {
+			focus = CENmil_cruisers
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_flagship"
+			if = {
+				limit = { NOT = { has_tech = basic_fire_control_system } }
+				set_technology = { basic_fire_control_system = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_flagship
+					bonus = 1
+					uses = 1
+					category = electronics
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_tech = basic_heavy_battery }
+					NOT = { has_tech = basic_cruiser_armor_scheme }
+				}
+				set_technology = { basic_heavy_battery = 1 }
+				set_technology = { basic_cruiser_armor_scheme = 1 }
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_heavy_battery } }
+				set_technology = { basic_heavy_battery = 1 }
+				add_tech_bonus = {
+					name = CENmil_flagship
+					bonus = 1
+					uses = 1
+					category = ship_modules_tech
+				}
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_cruiser_armor_scheme } }
+				set_technology = { basic_cruiser_armor_scheme = 1 }
+				add_tech_bonus = {
+					name = CENmil_flagship
+					bonus = 1
+					uses = 1
+					category = ship_modules_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENmil_flagship
+					bonus = 0.75
+					uses = 2
+					category = ship_modules_tech
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			create_equipment_variant = {
+				name = "Gabino Gaínza y Fernández de Medrano Class"
+				type = ship_hull_cruiser_2
+				allow_without_tech = yes
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_medium_battery_2
+					fixed_ship_anti_air_slot = ship_anti_air_2
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_1
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_2
+					fixed_ship_secondaries_slot = ship_secondaries_2
+					fixed_ship_armor_slot = ship_armor_cruiser_2
+					rear_1_custom_slot = ship_medium_battery_2
+					mid_1_custom_slot = empty
+					mid_2_custom_slot = ship_torpedo_1
+					front_1_custom_slot = ship_medium_battery_2
+				}
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_cruiser_2
+					version_name = "Gabino Gaínza y Fernández de Medrano Class"
+				}
+				progress = 0.4
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_naval_lads
+		icon = GFX_goal_navy_hat_ships
+		cost = 6
+
+		relative_position_id = CENmil_faca
+		x = 6
+		y = 1
+
+		prerequisite = {
+			focus = CENmil_fnca
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_naval_lads"
+			navy_experience = 25
+			add_daily_mastery = {
+				name = CENmil_naval_lads
+				amount = 0.5
+				days = 200
+				track = screens
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = CENmil_naval_officers
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENmil_merchant_navy
+		icon = GFX_goal_generic_navy_cruiser
+		cost = 6
+
+		relative_position_id = CENmil_faca
+		x = 6
+		y = 3
+
+		prerequisite = {
+			focus = CENmil_naval_lads
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_merchant_navy"
+			add_equipment_to_stockpile = {
+				type = convoy
+				amount = 75
+			}
+			add_one_random_dockyard = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY FOCUS_FILTER_NAVY_BONUS }
+	}
+
+	focus = {
+		id = CENmil_dual_sea_protecc
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		cost = 6
+
+		relative_position_id = CENmil_faca
+		x = 4
+		y = 4
+
+		prerequisite = {
+			focus = CENmil_nav_bombers
+		}
+		prerequisite = {
+			focus = CENmil_flagship
+		}
+		prerequisite = {
+			focus = CENmil_merchant_navy
+		}
+		ai_will_do = {
+			factor = 70
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENmil_dual_sea_protecc"
+			navy_experience = 50
+			add_war_support = 0.05
+			custom_effect_tooltip = tooltip_white_line
+			swap_ideas = {
+				add_idea = CENmil_naval_officers2
+				remove_idea = CENmil_naval_officers
+			}
+			add_mastery_bonus = {
+				name = CENmil_dual_sea_protecc
+				bonus = 0.15
+				days = 365
+				folder = naval
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH FOCUS_FILTER_WAR_SUPPORT }
+	}
+}
+

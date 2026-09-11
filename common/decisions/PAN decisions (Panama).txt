@@ -1,0 +1,318 @@
+###########################
+# Panamanian Decisions
+###########################
+# By JakeR2000
+###########################
+
+PAN_panama_canal_category = {
+	PAN_seize_canal = {
+		icon = GFX_decision_hand_grab
+		allowed = { always = no }		# Activated by PAN_canal_in_crisis
+		cost = 20
+		days_remove = 14
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove PAN_seize_canal"
+			transfer_state = 685
+			hidden_effect = {
+				CAN = {
+					country_event = { id = panama_events.99 days = 5 } #Canadian reaction
+				}
+				USA = {
+					country_event = { id = panama_events.100 days = 5 } #US reaction
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	PAN_remove_monroe = {
+		icon = GFX_decision_generic_flags
+		allowed = { always = no }		# Activated by USA_civil_war_begun_flag flag
+		cost = 20
+		days_remove = 10
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove PAN_remove_monroe"
+			remove_ideas = CEN_monroe_doctrine
+			USA = {
+				country_event = { id = panama_events.107 days = 1 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	PAN_survive_invasion = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = { always = no }		# Activated by event panama_events.8
+
+		available = {
+			NOT = { has_war_with = CAN }
+		}
+
+		selectable_mission = no
+		days_mission_timeout = 180
+		fire_only_once = yes
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout PAN_survive_invasion"
+			country_event = { id = panama_events.103 days = 1 } # Canada white peace event
+		}
+		fixed_random_seed = no
+	}
+}
+
+PAN_coto_category = {
+	PAN_pressure_coto_36 = {
+		icon = eng_trade_unions_demand
+		allowed = { always = no }	# Activated by elections event
+		cost = 20
+		days_remove = 5
+		fire_only_once = yes
+
+		ai_will_do = { factor = 1000 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove PAN_pressure_coto_36"
+			remove_ideas = CEN_monroe_doctrine
+			hidden_effect = {
+				USA = {
+					country_event = { id = panama_events.31 days = 5 }
+				}
+			}
+			COS = {
+				country_event = { id = panama_events.30 days = 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	PAN_pressure_coto_2 = {
+		name = PAN_pressure_coto_36
+		icon = generic_ignite_civil_war
+		allowed = { always = no }	# Activated by various events
+		available = {
+			is_in_faction = no
+			is_subject = no
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_in_faction = yes
+				is_subject = yes
+				NOT = { can_declare_war_on = FROM }
+			}
+		}
+
+		cost = 25
+		days_remove = 15
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel PAN_pressure_coto_2"
+			add_political_power = 25
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove PAN_pressure_coto_2"
+			FROM = {
+				country_event = { id = costa_rica_events.30 days = 2 }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+PAN_foreign_category = {
+	PAN_investment_decision = {
+		icon = hol_attract_foreign_investors
+
+		allowed = { always = no } #activated by PAN_on_global_stage
+
+		available = {
+			has_war = no
+		}
+
+		visible = {
+			FROM = {
+				exists = yes
+				is_subject = no
+				NOT = { has_war_with = ROOT }
+			}
+			OR = {
+				is_subject = no
+				is_subject_of = FROM
+			}
+		}
+
+		cost = 25
+		fire_only_once = yes
+
+		ai_will_do = { factor = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove PAN_investment_decision"
+			FROM = { country_event = panama_events.35 }
+		}
+		fixed_random_seed = no
+	}
+	PAN_entente_trade = {
+		icon = GFX_decision_global_trade
+
+		allowed = { always = no } #activated by PAN_encourage_entente_trade
+
+		visible = {
+			ENT = {
+				exists = yes
+				is_subject = no
+				NOT = { has_war_with = PAN }
+			}
+			OR = {
+				is_subject = no
+				is_subject_of = ENT
+			}
+			check_variable = { PAN_can_only_take_three < 3 }
+		}
+
+		cost = 40
+		days_remove = 120
+
+		modifier = {
+			consumer_goods_factor = 0.2
+		}
+
+		available = {
+			check_variable = {
+				tooltip = PAN_only_three
+				PAN_can_only_take_three < 3
+			}
+		}
+
+		ai_will_do = { factor = 50 }
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PAN_entente_trade"
+			add_to_variable = {
+				var = PAN_can_only_take_three
+				value = 1
+			}
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove PAN_entente_trade"
+			add_offsite_building = { type = industrial_complex level = 1 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+PAN_industrial_development = {
+	PAN_land_development = {
+		icon = GFX_decision_generic_agriculture
+
+		allowed = { always = no } #activated by PAN_survey_new_industrial_zones
+
+		available = {
+			controls_state = 304
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		modifier = { civilian_factory_use = 1 }
+		cancel_trigger = {
+			NOT = { controls_state = 304 }
+		}
+
+		cost = 60
+		days_remove = 70
+		fire_only_once = yes
+
+		ai_will_do = { base = 250 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove PAN_land_development"
+			304 = { increase_state_category_by_one_level = yes }
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = PAN decision = PAN_continue_industrial_expansion }
+			activate_targeted_decision = { target = PAN decision = PAN_fuel_for_our_industries }
+		}
+		fixed_random_seed = no
+	}
+	PAN_continue_industrial_expansion = {
+		icon = GFX_decision_factories
+
+		allowed = { always = no } #activated by PAN_land_development
+
+		available = {
+			controls_state = 304
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		modifier = { civilian_factory_use = 2 }
+		cancel_trigger = {
+			NOT = { controls_state = 304 }
+		}
+
+		cost = 120
+		days_remove = 70
+		fire_only_once = yes
+
+		ai_will_do = { base = 250 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove PAN_continue_industrial_expansion"
+			304 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	PAN_fuel_for_our_industries = {
+		icon = GFX_decision_oil
+
+		allowed = { always = no } #activated by PAN_land_development
+
+		available = {
+			controls_state = 304
+			has_tech = synth_oil_experiments
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		modifier = { civilian_factory_use = 2 }
+		cancel_trigger = {
+			NOT = { controls_state = 304 }
+		}
+
+		cost = 120
+		days_remove = 70
+		fire_only_once = yes
+
+		ai_will_do = { base = 100 }
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove PAN_fuel_for_our_industries"
+			304 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}

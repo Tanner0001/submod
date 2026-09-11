@@ -1,0 +1,386 @@
+political_actions = {
+	PER_country_namechange_decision = {
+		icon = generic_form_nation
+
+		allowed = { tag = PER }
+
+		available = {
+			is_subject = no
+		}
+
+		visible = {
+			date > 1937.1.1
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_government = paternal_autocrat
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PER_country_namechange_decision"
+			if = {
+				limit = { is_monarchy = yes }
+				set_cosmetic_tag = PER_iran_monarchy
+			}
+			else = {
+				add_stability = 0.10
+				set_cosmetic_tag = PER_iran
+			}
+		}
+		fixed_random_seed = no
+	}
+	PER_embargo_anti_socialists = {
+		icon = generic_form_nation
+
+		allowed = { tag = PER }
+
+		available = {
+			is_subject = no
+		}
+
+		visible = {
+			has_socialist_government = yes
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PER_embargo_anti_socialists"
+			custom_effect_tooltip = PER_embargo_anti_socialists_tt
+			hidden_effect = {
+				every_other_country = {
+					display_individual_scopes = yes
+					limit = {
+						OR = {
+							is_ally_with = GER
+							is_ally_with = ENT
+							is_ally_with = RUS
+						}
+						has_socialist_government = no
+					}
+					embargo_ROOT = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+PER_war_for_the_gulf = {
+	# Arm Barzinji
+	PER_Arm_Barzinji = {
+		icon = GFX_decision_generic_prepare_civil_war
+
+		available = {
+			date > 1938.11.01
+			has_war_support > 0.15
+			OTT = { controls_state = 819 }
+		}
+
+		visible = {
+			owns_state = 421
+			OTT = { owns_state = 819 }
+			NOT = { has_rule = can_not_declare_war }
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		fire_only_once = yes
+
+		cost = 20
+
+		highlight_states = {
+			highlight_state_targets = { state = 421 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PER_Arm_Barzinji"
+			set_country_flag = barzinji_contact
+			custom_effect_tooltip = per_arm_barzinji_tt
+			OTT = { country_event = kurdistan_events.3 }
+			effect_tooltip = {
+				819 = { ott_increase_revolt_risk = yes }
+			}
+		}
+		fixed_random_seed = no
+	}
+	# Launch Sulaymaniyah revolt
+	PER_Sulaymaniyah_Revolt = {
+		icon = GFX_decision_generic_ignite_civil_war
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = PER_Arm_Barzinji }
+				has_country_flag = barzinji_contact
+			}
+			has_war_support > 0.20
+			819 = {
+				is_controlled_by = OTT
+				OTT_revolt_risk_medium = yes
+			}
+		}
+
+		visible = {
+			OTT = { owns_state = 819 }
+			NOT = { has_rule = can_not_declare_war }
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		fire_only_once = yes
+
+		cost = 50
+
+		highlight_states = {
+			highlight_state_targets = { state = 819 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PER_Sulaymaniyah_Revolt"
+			819 = { ott_increase_revolt_risk = yes }
+			OTT = { country_event = kurdistan_events.2 }
+			effect_tooltip = {
+				KUR = {
+					set_province_controller = 6826
+					declare_war_on = {
+						target = OTT
+						type = annex_everything
+					}
+				}
+			}
+			custom_effect_tooltip = PER_puppet_kurdistan_upon_war_tt
+		}
+		fixed_random_seed = no
+	}
+	# Hengam Island
+	PER_Hengam_Island = {
+		icon = GFX_decision_eng_trade_unions_demand
+
+		available = {
+			date > 1937.01.01
+			has_war_support > 0.10
+			controls_state = 412
+		}
+
+		visible = {
+			owns_state = 412
+			NOT = { has_rule = can_not_declare_war }
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		fire_only_once = yes
+
+		cost = 10
+
+		highlight_states = {
+			highlight_state_targets = { state = 412 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PER_Hengam_Island"
+			add_war_support = 0.05
+			OTT = {
+				country_event = ottomans_separatist_events.23
+			}
+		}
+		fixed_random_seed = no
+	}
+	# Dubai Jalbut
+	PER_Dubai_Jalbut = {
+		icon = GFX_decision_generic_naval
+
+		available = {
+			date > 1938.01.01
+			has_war_support > 0.15
+			OTT = { controls_state = 658 }
+		}
+
+		visible = {
+			OTT = { owns_state = 658 }
+			NOT = { has_rule = can_not_declare_war }
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		fire_only_once = yes
+
+		cost = 10
+
+		highlight_states = {
+			highlight_state_targets = { state = 658 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PER_Dubai_Jalbut"
+			add_war_support = 0.05
+			OTT = {
+				country_event = ottomans_separatist_events.25
+			}
+		}
+		fixed_random_seed = no
+	}
+	# Khasab
+	PER_Khasab_Invasion = {
+		icon = infiltrate_state
+
+		available = {
+			OMA = { controls_state = 347 }
+			date > 1938.08.01
+		}
+
+		visible = {
+			OMA = { owns_state = 347 }
+			NOT = { has_rule = can_not_declare_war }
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		fire_only_once = yes
+
+		cost = 0
+
+		highlight_states = {
+			highlight_state_targets = { state = 347 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PER_Khasab_Invasion"
+			country_event = ottomans_separatist_events.29
+			OTT = { country_event = ottomans_separatist_events.29 }
+			custom_effect_tooltip = per_khasab_invasion_tt
+			effect_tooltip = {
+				transfer_state = 347
+			}
+			custom_effect_tooltip = per_khasab_invasion_tt2
+		}
+		fixed_random_seed = no
+	}
+	# Bahrain
+	PER_Bahrain_Unrest = {
+		icon = GFX_decision_generic_political_rally
+
+		available = {
+			date > 1937.01.01
+			OTT = { controls_state = 907 }
+		}
+
+		visible = {
+			OTT = { owns_state = 907 }
+			NOT = { has_rule = can_not_declare_war }
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		fire_only_once = yes
+
+		cost = 10
+
+		highlight_states = {
+			highlight_state_targets = { state = 907 }
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete PER_Bahrain_Unrest"
+			add_war_support = 0.05
+			OTT = { country_event = ottomans_separatist_events.24 }
+			effect_tooltip = {
+				907 = { ott_increase_revolt_risk = yes }
+			}
+		}
+		fixed_random_seed = no
+	}
+	# Cancel 1913 Shatt-al-Arab Border Protocol
+	PER_Shatt_al_Arab_Protocol = {
+		icon = GFX_decision_border_war
+
+		available = {
+			has_war_support > 0.25
+			OR = {
+				date > 1939.02.01
+				EGY = { has_war_with = FROM }
+			}
+			NOT = {
+				has_global_flag = RUSSIAN_OTTOMAN_DEAL
+			}
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			NOT = { has_rule = can_not_declare_war }
+			OTT_ottomans_defeated = no #OTT has already lost
+			FROM = {
+				owns_any_state_of = {
+					291 #Baghdad
+					352 #Van
+					812 #Basra
+					819 #Sulaymaniyah
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1000 }
+
+		cost = 20
+		days_remove = 30
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+		cancel_if_not_visible = yes
+
+		targets = { OTT }
+		target_trigger = {
+			can_declare_war_on = FROM
+			NOT = { has_rule = can_not_declare_war }
+			FROM = {
+				owns_any_state_of = {
+					291 #Baghdad
+					352 #Van
+					812 #Basra
+					819 #Sulaymaniyah
+				}
+			}
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 812 }
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel PER_Shatt_al_Arab_Protocol"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete PER_Shatt_al_Arab_Protocol"
+			setup_decision_attack_AI = yes
+			FROM = { incoming_war_notification_effect = yes }
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove PER_Shatt_al_Arab_Protocol"
+			clear_decision_attack_AI = yes
+			add_war_support = 0.10
+			if = {
+				limit = { FROM = { controls_state = 812 } }
+				812 = { ott_increase_revolt_risk = yes }
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			PER_puppet_KUR = yes
+			FROM = { country_event = ottomans_separatist_events.34 }
+		}
+		fixed_random_seed = no
+	}
+}

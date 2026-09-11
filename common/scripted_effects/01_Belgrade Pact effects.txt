@@ -1,0 +1,346 @@
+#	Scripted triggers for Belgrade Pact events
+#
+#	By wyandotte
+
+# Cedes land and grants cores for the Belgrade Pact members
+belgrade_pact_gain_land_from_bulgaria = {
+	# give Ottoman lands if they're occupied
+	if = {
+		limit = {
+			OTT = { has_country_flag = OTT_war_for_thrace }
+		}
+		every_state = {
+			limit = {
+				is_owned_by = BUL
+				has_state_flag = SER_transfer_to_OTT
+			}
+			transfer_state_to = OTT
+			if = {
+				limit = { 341 = { OTT_is_sovereign_province = yes } } #Adrianople
+				ott_set_authority_vilayet_low = yes
+			}
+			else_if = {
+				limit = { 341 = { OTT_is_autonomous_province = yes } } #Adrianople
+				ott_set_authority_vilayet_medium = yes
+			}
+			else = {
+				ott_set_authority_vilayet_high = yes
+			}
+		}
+	}
+
+	# give Serbian lands
+	if = {
+		limit = {
+			NOT = { has_event_target = balkan_war_limited_bpl_victory }
+		}
+		every_state = {
+			limit = {
+				is_owned_by = BUL
+				OR = {
+					is_core_of = SER
+					is_claimed_by = SER
+					state = 106 #Macedonia
+				}
+			}
+			if = {
+				limit = {
+					NOT = { is_claimed_by = SER }
+					NOT = { is_core_of = SER }
+				}
+				add_claim_by = SER
+			}
+			transfer_state_to = SER
+			if = {
+				limit = {
+					is_core_of = BUL
+				}
+				remove_core_of = BUL
+				add_claim_by = BUL
+			}
+			else = {
+				remove_claim_by = BUL
+			}
+		}
+		hidden_effect = {
+			BUL = {
+				country_event = { id = bulgaria_events.29 days = 3 }
+				country_event = { id = serbia_events.22 days = 7 random_days = 3 }
+			}
+			SER = {
+				country_event = { id = serbia_events.23 days = 14 random_days = 7 }
+			}
+		}
+	}
+	else = {
+		767 = { transfer_state_to = SER } #Nish
+	}
+
+	if = {
+		limit = {
+			NOT = { has_event_target = balkan_war_limited_bpl_victory }
+			106 = { is_owned_by = SER }
+			731 = { is_owned_by = BUL }
+			GRE = {
+				NOT = {
+					is_in_faction_with = SER
+					has_country_flag = SER_joined_balkan_war
+					has_war_with = BUL
+				}
+			}
+		}
+		SER = { transfer_state = 731 }
+		731 = {
+			if = {
+				limit = {
+					is_core_of = BUL
+				}
+				remove_core_of = BUL
+				add_claim_by = BUL
+			}
+			else = {
+				remove_claim_by = BUL
+			}
+		}
+	}
+
+	# give Romanian lands
+	if = {
+		limit = {
+			OR = {
+				ROM = { is_in_faction_with = SER }
+				ROM = { has_country_flag = SER_joined_balkan_war }
+			}
+			NOT = { has_event_target = balkan_war_limited_bpl_victory }
+		}
+		every_state = {
+			limit = {
+				is_owned_by = BUL
+				OR = {
+					is_core_of = ROM
+					is_claimed_by = ROM
+				}
+			}
+			transfer_state_to = ROM
+			if = {
+				limit = {
+					is_core_of = BUL
+				}
+				remove_core_of = BUL
+				add_claim_by = BUL
+			}
+			else = {
+				remove_claim_by = BUL
+			}
+		}
+	}
+	else = {
+		772 = { #Constantza
+			if = {
+				limit = { is_owned_by = BUL }
+				transfer_state_to = ROM
+			}
+			if = {
+				limit = {
+					NOT = { is_claimed_by = ROM }
+					NOT = { is_core_of = ROM }
+				}
+				add_claim_by = ROM
+			}
+			add_compliance = 25
+		}
+	}
+
+	# give Greek lands
+	if = {
+		limit = {
+			OR = {
+				GRE = { is_in_faction_with = SER }
+				GRE = { has_country_flag = SER_joined_balkan_war }
+			}
+			NOT = { has_event_target = balkan_war_limited_bpl_victory }
+		}
+		every_state = {
+			limit = {
+				is_owned_by = BUL
+				NOT = { has_state_flag = SER_transfer_to_OTT }
+				OR = {
+					is_core_of = GRE
+					state = 731 #Florina
+					state = 769 #Serres
+					state = 184 #Komotini
+					state = 341 #Adrianople
+				}
+			}
+			if = {
+				limit = {
+					NOT = { is_claimed_by = GRE }
+					NOT = { is_core_of = GRE }
+				}
+				add_claim_by = GRE
+			}
+			transfer_state_to = GRE
+			if = {
+				limit = {
+					is_core_of = BUL
+				}
+				remove_core_of = BUL
+				add_claim_by = BUL
+			}
+			else = {
+				remove_claim_by = BUL
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				GRE = { is_in_faction_with = SER }
+				GRE = { has_country_flag = SER_joined_balkan_war }
+			}
+		}
+		GRE = { transfer_state = 731 } #Florina
+	}
+}
+
+belgrade_pact_loot_factory_from_bulgaria = {
+	if = {
+		limit = { NOT = { has_global_flag = belgrade_pact_took_bulgarian_factories } }
+		set_global_flag = belgrade_pact_took_bulgarian_factories
+		# Bulgaria loses one civilian and one military factory
+		BUL = {
+			if = {
+				limit = {
+					any_owned_state = {
+						is_controlled_by = BUL
+						industrial_complex > 0
+					}
+				}
+				ROOT = { set_country_flag = gets_ic }
+				random_owned_controlled_state = {
+					limit = { industrial_complex > 0 }
+					remove_building = { type = industrial_complex level = 1 }
+				}
+			}
+			if = {
+				limit = {
+					any_owned_state = {
+						is_controlled_by = BUL
+						arms_factory > 0
+					}
+				}
+				ROOT = { set_country_flag = gets_af }
+				random_owned_controlled_state = {
+					limit = { arms_factory > 0 }
+					remove_building = { type = arms_factory level = 1 }
+				}
+			}
+		}
+
+		# ROOT gains two factories
+		if = {
+			limit = {
+				OR = {
+					BUL = {
+						any_owned_state = {
+							is_controlled_by = BUL
+							industrial_complex > 0
+						}
+					}
+					has_country_flag = gets_ic
+				}
+			}
+			clr_country_flag = gets_ic
+			add_one_random_civilian_factory = yes
+		}
+		if = {
+			limit = {
+				OR = {
+					BUL = {
+						any_owned_state = {
+							is_controlled_by = BUL
+							arms_factory > 0
+						}
+					}
+					has_country_flag = gets_af
+				}
+			}
+			clr_country_flag = gets_af
+			add_one_random_military_factory = yes
+		}
+	}
+}
+
+belgrade_pact_gain_land_from_albania = {
+	if = {
+		limit = {
+			766 = { is_owned_by = ALB } #Northern Epirus
+			GRE = { is_in_faction_with = BPL }
+		}
+		GRE = {
+			transfer_state = 766 # Northern Epirus
+			hidden_effect = {
+				766 = { add_claim_by = GRE } # Northern Epirus
+			}
+		}
+	}
+	if = {
+		limit = {
+			1053 = { is_owned_by = ALB } #Ghegeria
+			SER = { is_in_faction_with = BPL }
+		}
+		SER = {
+			transfer_state = 1053 # Ghegeria
+			hidden_effect = {
+				1053 = { add_claim_by = SER } #Ghegeria
+			}
+		}
+	}
+}
+
+belgrade_pact_is_disbanded = {
+	if = {
+		limit = { is_in_tech_sharing_group = balkan_research }
+		remove_from_tech_sharing_group = balkan_research
+	}
+	if = {
+		limit = { is_in_faction_with = BPL }
+		save_event_target_as = former_pact_leader
+		if = {
+			limit = { has_event_target = future_serbian_ally }
+			every_allied_country = {
+				limit = {
+					is_subject = no
+					has_capitulated = no
+					if = {
+						limit = {
+							any_allied_country = { has_country_flag = ALB_aligned }
+							ALB = { is_subject = no }
+						}
+						NOT = { original_tag = ALB }
+					}
+				}
+				country_event = serbia_events.40
+			}
+		}
+		else = {
+			every_allied_country = {
+				country_event = serbia_events.40
+			}
+		}
+		faction_leader = { dismantle_faction = yes }
+	}
+	clr_country_flag = SER_founded_belgradepact
+	clr_global_flag = SER_keeping_the_pact
+}
+
+belgrade_pact_dissolve_pact_of_organisation = {
+	every_country = {
+		limit = { is_in_array = { global.balkan_economic_union = THIS } }
+		remove_dynamic_modifier = { modifier = BPL_pact_of_organisation }
+	}
+	clear_variable = global.BPL_pact_of_organisation_construction_speed
+	clear_variable = global.BPL_pact_of_organisation_building_slots
+	clear_variable = global.BPL_pact_of_organisation_research_speed
+	clear_array = global.balkan_economic_union
+}

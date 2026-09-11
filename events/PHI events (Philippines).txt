@@ -1,0 +1,2113 @@
+##################################
+#       Philippine Events        #
+##################################
+# By Chiang Kai-Shrek, Suzuha, Verniy, Silentio, and Marc
+# Based on work by PPsyrius
+##################################
+
+########################################
+#####- Section 0: Namespaces - #########
+########################################
+add_namespace = philippines_political_events #Political Events
+add_namespace = philippines_military_events #Military Events
+
+###- Table of Contents -###
+
+#- Section 1: Political Events -#
+
+## Section 1a - Quezon's First Term (1936-1939)
+## Section 1b - Quezon's Second Term (1939-1943+)
+## Section 1c - Roxas's Presidency (1939-1943+)
+## Section 1d - Aguinaldo's Presidency (1939-1943+)
+## Section 1e - Recto's Presidency (1939-1943+)
+## Section 1f - Evangelista's Presidency (1939-1943+)
+
+#- Section 2: Military Events -#
+
+########################################
+####- Section 01: Political Events -####
+########################################
+
+###- Section 1a - Quezon's First Term (1936-1939) [philippines_political_events.000-philippines_political_events.199] -###
+
+###Initial Black Monday Chain (000-019)
+country_event = { #Black Monday Rocks the Philippines
+	id = philippines_political_events.001
+	title = philippines_political_events.001.t
+	desc = philippines_political_events.001.d
+	picture = GFX_report_event_PHI_manila_uprising
+
+	is_triggered_only = yes #Triggered by EFFECT: fire_black_monday_events
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = philippines_political_events.002 days = 7 }
+		}
+	}
+
+	option = {
+		name = philippines_political_events.001.a #We are up to the challenge.
+		log = "[GetLogInfo]: event philippines_political_events.001 option philippines_political_events.001.a"
+		add_ideas = PHI_black_monday_1
+	}
+}
+
+country_event = { #The Philippine Political Scene
+	id = philippines_political_events.002
+	title = philippines_political_events.002.t
+	desc = philippines_political_events.002.d
+	picture = GFX_report_event_PHI_manuel_quezon_writing
+
+	is_triggered_only = yes #Triggered by EVENT philippines_political_events.001
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = philippines_political_events.003 days = 7 }
+
+			country_event = philippines_political_events.006 #Hidden AI event because random_list apparently broke
+		}
+	}
+
+	option = {
+		name = philippines_political_events.002.a #But can he hang on forever?
+		log = "[GetLogInfo]: event philippines_political_events.002 option philippines_political_events.002.a"
+		set_power_balance = {
+			id = PHI_power_balance
+			left_side = PHI_elitist_anger_side
+			right_side = PHI_populist_anger_side
+			set_value = 0.20
+		}
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = PHI_bop_decisions_available_tt
+	}
+}
+
+country_event = { #The Philippine Political Scene Pt2
+	id = philippines_political_events.003
+	title = philippines_political_events.003.t
+	desc = philippines_political_events.003.d
+	picture = GFX_report_event_PHI_philippine_women_sewing_flag
+
+	is_triggered_only = yes #Triggered by EVENT philippines_political_events.001
+
+	option = {
+		name = philippines_political_events.003.a #In politics, it's all about who you know.
+		log = "[GetLogInfo]: event philippines_political_events.003 option philippines_political_events.003.a"
+		ai_chance = {
+			base = 50
+			modifier = {
+				#Ai will be taught to take this focus when available if set on certain Quezon Strategies
+				factor = 10
+				PHI_ai_should_anger_populists_trigger = yes
+			}
+		}
+		PHI_populist_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.003.b #The future of the Philippines rests with the people.
+		log = "[GetLogInfo]: event philippines_political_events.003 option philippines_political_events.003.b"
+		ai_chance = {
+			base = 50
+			modifier = {
+				#Ai will be taught to take this focus when available if set on certain Quezon Strategies
+				factor = 10
+				PHI_ai_should_anger_elitists_trigger = yes
+			}
+		}
+		PHI_elitist_small_effect = yes
+	}
+}
+
+country_event = { #The Elites are Angry
+	id = philippines_political_events.004
+	title = philippines_political_events.004.t
+	desc = philippines_political_events.004.d
+	picture = GFX_report_event_PHI_philippine_legislators
+
+	is_triggered_only = yes #Triggered by BOP philippines_political_events.001
+	fire_only_once = yes #You only get one warning
+
+	option = {
+		name = philippines_political_events.004.a #The President decides!
+		log = "[GetLogInfo]: event philippines_political_events.004 option philippines_political_events.004.a"
+		ai_chance = {
+			base = 50
+			modifier = {
+				#Ai will be taught to take this focus when available if set on certain Quezon Strategies
+				factor = 10
+				PHI_ai_should_anger_elitists_trigger = yes
+			}
+		}
+		add_stability = -0.20
+		add_popularity = { ideology = market_liberal popularity = -0.10 }
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.10 }
+		PHI_elitist_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.004.b #Don't worry, Quezon has not forgotten the big people.
+		log = "[GetLogInfo]: event philippines_political_events.004 option philippines_political_events.004.b"
+		ai_chance = {
+			base = 50
+			modifier = {
+				#Ai will be taught to take this focus when available if set on certain Quezon Strategies
+				factor = 10
+				PHI_ai_should_anger_populists_trigger = yes
+			}
+		}
+		add_stability = -0.10
+		add_political_power = -50
+		PHI_populist_medium_effect = yes
+	}
+
+	after = {
+		custom_effect_tooltip = PHI_elitist_too_high_warning_tt
+	}
+}
+
+country_event = { #The Populists are Angry
+	id = philippines_political_events.005
+	title = philippines_political_events.005.t
+	desc = philippines_political_events.005.d
+	picture = GFX_report_event_PHI_hukbalahap_rebels
+
+	is_triggered_only = yes #Triggered by BOP philippines_political_events.001
+	fire_only_once = yes #You only get one warning
+
+	option = {
+		name = philippines_political_events.005.a #Our position is unassailable!
+		log = "[GetLogInfo]: event philippines_political_events.005 option philippines_political_events.005.a"
+		ai_chance = {
+			base = 50
+			modifier = {
+				#Ai will be taught to take this focus when available if set on certain Quezon Strategies
+				factor = 10
+				PHI_ai_should_anger_populists_trigger = yes
+			}
+		}
+		add_war_support = -0.20
+		add_popularity = { ideology = market_liberal popularity = -0.10 }
+		add_popularity = { ideology = syndicalist popularity = 0.033 }
+		add_popularity = { ideology = social_liberal popularity = 0.033 }
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.033 }
+		PHI_populist_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.005.b #Perhaps we should throw the masses a bone.
+		log = "[GetLogInfo]: event philippines_political_events.005 option philippines_political_events.005.b"
+		ai_chance = {
+			base = 50
+			modifier = {
+				#Ai will be taught to take this focus when available if set on certain Quezon Strategies
+				factor = 10
+				PHI_ai_should_anger_elitists_trigger = yes
+			}
+		}
+		add_war_support = -0.10
+		add_political_power = -50
+		PHI_elitist_medium_effect = yes
+	}
+
+	after = {
+		custom_effect_tooltip = PHI_populist_too_high_warning_tt
+	}
+}
+
+country_event = {
+	id = philippines_political_events.006 #AI event to choose a path because random_list broke
+	hidden = yes
+	is_triggered_only = yes #Trigged by [EVENT] philippines_political-events.002
+	trigger = {
+		is_ai = yes
+	}
+
+	#This will set the ai to go down one of three strategies - target is 50-25-25 (Quezon, Roxas, Populists)
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.006 option 1" #Will go moderate/try to stay in the middle
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PHI_path option = PHI_PATH_ROXAS_AUTDEM }
+					has_game_rule = { rule = PHI_path option = PHI_PATH_SOCLIB }
+					has_game_rule = { rule = PHI_path option = PHI_PATH_AGUINALDO_AUTDEM }
+					has_game_rule = { rule = PHI_path option = PHI_PATH_SYNDIE }
+				}
+			}
+		}
+		set_country_flag = PHI_quezon_chooses_moderate_ai_plan_flag
+	}
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.006 option 2" #Will go conservative, result in a populist ending
+		ai_chance = {
+			base = 35 #Raised up the chance of choosing this because the external support decisions have increased both Roxas and Quezon's win rates
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PHI_path option = PHI_PATH_MARLIB }
+					has_game_rule = { rule = PHI_path option = PHI_PATH_ROXAS_AUTDEM }
+				}
+			}
+		}
+		set_country_flag = PHI_quezon_chooses_conservative_ai_plan_flag
+	}
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.006 option 3" #Will go progressive, result in a elitist ending
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = PHI_path option = PHI_PATH_MARLIB }
+					has_game_rule = { rule = PHI_path option = PHI_PATH_SOCLIB }
+					has_game_rule = { rule = PHI_path option = PHI_PATH_AGUINALDO_AUTDEM }
+					has_game_rule = { rule = PHI_path option = PHI_PATH_SYNDIE }
+				}
+			}
+		}
+		set_country_flag = PHI_quezon_chooses_progressive_ai_plan_flag
+	}
+}
+
+### American Civil War Chain (020-039)
+country_event = { #The Declaration of the Republic
+	id = philippines_political_events.020
+	title = philippines_political_events.020.t
+	desc = philippines_political_events.020.d
+	picture = GFX_report_event_PHI_philippine_independence_protest
+
+	is_triggered_only = yes #Triggered by EFFECT USA_civil_war_begins
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = philippines_political_events.040 days = 3 } #The Fight for the Philippines (PHI Version)
+			#Set in-game elections to every 4 years instead of 6
+			set_politics = {
+				ruling_party = market_liberal
+				last_election = "1935.09.16"
+				election_frequency = 48
+				elections_allowed = yes
+			}
+		}
+	}
+
+	option = {
+		name = philippines_political_events.020.a #These rifles and jeeps make small payment for occupation.
+		log = "[GetLogInfo]: event philippines_political_events.020 option philippines_political_events.020.a"
+		ai_chance = { base = 100 } #We want the ai to be as strong as possible for WW2
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_1
+			amount = 2500
+			producer = USA
+		}
+		add_stability = -0.2
+		reverse_add_opinion_modifier = {
+			target = USA
+			modifier = KR_disapproves_of_govt
+		}
+		PHI_add_IND_alignment_small_effect = yes
+		PHI_sub_USA_alignment_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.020.b #Have them stand down, but leave them their property.
+		log = "[GetLogInfo]: event philippines_political_events.020 option philippines_political_events.020.b"
+		ai_chance = { base = 0 }
+		add_stability = -0.1
+		reverse_add_opinion_modifier = {
+			target = USA
+			modifier = KR_pleased
+		}
+		PHI_add_USA_alignment_small_effect = yes
+		PHI_sub_IND_alignment_small_effect = yes
+	}
+
+	after = {
+		overlord = {
+			set_autonomy = {
+				target = PHI
+				autonomy_state = autonomy_free
+			}
+		}
+		drop_cosmetic_tag = yes
+		separate_peace_all_wars = yes
+	}
+}
+
+### Fight for the Philippines Events (040-059)
+country_event = { #The Fight for the Philippines
+	id = philippines_political_events.040
+	title = philippines_political_events.040.t
+
+	desc = {
+		text = philippines_political_events.040.d.PHI
+		trigger = { original_tag = PHI }
+	}
+	desc = {
+		text = philippines_political_events.040.d.GER
+		trigger = { original_tag = GEA }
+	}
+	desc = {
+		text = philippines_political_events.040.d.JAP
+		trigger = { original_tag = JAP }
+	}
+	desc = {
+		text = philippines_political_events.040.d.USA
+		trigger = {
+			NOT = { original_tag = PHI }
+			NOT = { original_tag = GEA }
+			NOT = { original_tag = JAP }
+		}
+	}
+
+	picture = GFX_report_event_PHI_manila_uprising2
+
+	is_triggered_only = yes #Triggered in PHI by EVENT philippines_political_events.020 and also triggers itself in GEA and JAP
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { original_tag = PHI }
+				set_country_flag = PHI_fight_for_the_philippines_active_flag
+				PHI_update_pie_chart = yes
+				GEA = { country_event = { id = philippines_political_events.040 days = 1 } }
+				JAP = { country_event = { id = philippines_political_events.040 days = 1 } }
+			}
+		}
+	}
+
+	option = {
+		name = philippines_political_events.040.a #Favour the Germans.
+		log = "[GetLogInfo]: event philippines_political_events.040 option philippines_political_events.040.a"
+		trigger = {
+			original_tag = PHI
+		}
+		ai_chance = { base = 40 }
+		add_command_power = 50
+		add_political_power = 50
+		PHI_add_GEA_alignment_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.040.b #Favour the Japanese.
+		log = "[GetLogInfo]: event philippines_political_events.040 option philippines_political_events.040.b"
+		trigger = {
+			original_tag = PHI
+		}
+		ai_chance = { base = 40 }
+		add_command_power = 50
+		add_political_power = 50
+		PHI_add_CPS_alignment_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.040.c #Maintain a position of neutrality.
+		log = "[GetLogInfo]: event philippines_political_events.040 option philippines_political_events.040.c"
+		trigger = {
+			original_tag = PHI
+		}
+		ai_chance = { base = 20 } #Ai generally should avoid getting gutted in WW2
+		add_command_power = 50
+		add_political_power = 50
+		PHI_add_IND_alignment_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.040.e #Bolster the German consulate in Manila.
+		log = "[GetLogInfo]: event philippines_political_events.040 option philippines_political_events.040.e"
+		trigger = {
+			original_tag = GEA
+		}
+		ai_chance = { base = 50 } #Removed German bias for now - was 150.
+		add_political_power = -15
+		PHI_add_GEA_alignment_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.040.f #Bolster the Japanese consulate in Manila.
+		log = "[GetLogInfo]: event philippines_political_events.040 option philippines_political_events.040.f"
+		trigger = {
+			original_tag = JAP
+		}
+		ai_chance = { base = 50 }
+		add_political_power = -15
+		PHI_add_CPS_alignment_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.040.g #Tell them that the Americans are back!
+		log = "[GetLogInfo]: event philippines_political_events.040 option philippines_political_events.040.g"
+		trigger = {
+			NOT = { original_tag = PHI }
+			NOT = { original_tag = GEA }
+			NOT = { original_tag = JAP }
+		}
+		ai_chance = { base = 40 }
+		add_political_power = -15
+		PHI_add_USA_alignment_small_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.040.h #...and we are here to stay!
+		log = "[GetLogInfo]: event philippines_political_events.040 option philippines_political_events.040.h"
+		trigger = {
+			NOT = { original_tag = PHI }
+			NOT = { original_tag = GEA }
+			NOT = { original_tag = JAP }
+		}
+		ai_chance = { base = 10 }
+		add_political_power = -50
+		PHI_add_USA_alignment_large_effect = yes #USA is playing catch up so help them out a bit.
+		if = {
+			limit = {
+				ROOT = { has_socialist_government = yes }
+			}
+			PHI = { PHI_populist_large_effect = yes } #Socialist USA needs a populist ending to get an ally.
+		}
+		else = {
+			PHI = { PHI_elitist_large_effect = yes } #Conversely Non-Socialist USA cannot ally with people if populists win
+		}
+		custom_effect_tooltip = tooltip_white_line
+		PHI = { country_event = philippines_political_events.041 } #The Americans Have Returned
+	}
+
+	option = {
+		name = philippines_political_events.040.i #This isn't worth our attention right now.
+		log = "[GetLogInfo]: event philippines_political_events.040 option philippines_political_events.040.i"
+		trigger = {
+			NOT = { tag = PHI }
+		}
+		ai_chance = { base = 50 }
+	}
+}
+
+country_event = { #The Americans Have Returned
+	id = philippines_political_events.041
+	title = philippines_political_events.041.t
+
+	desc = {
+		text = philippines_political_events.041.d.socialistamerica
+		trigger = { FROM = { has_socialist_government = yes } }
+	}
+	desc = {
+		text = philippines_political_events.041.d.nonsocialistamerica
+		trigger = { NOT = { FROM = { has_socialist_government = yes } } }
+	}
+
+	picture = GFX_report_event_USA_capitol_hill
+
+	is_triggered_only = yes #Triggered in PHI by EVENT philippines_political_events.040.h
+
+	option = {
+		name = philippines_political_events.041.a #...but as equals right?
+		log = "[GetLogInfo]: event philippines_political_events.041 option philippines_political_events.041.a"
+		add_political_power = 50
+		effect_tooltip = {
+			PHI_add_USA_alignment_large_effect = yes #USA is playing catch up so help them out a bit.
+			if = {
+				limit = {
+					FROM = { has_socialist_government = yes }
+				}
+				PHI_populist_large_effect = yes #Socialist USA needs a populist ending to get an ally.
+			}
+			else = {
+				PHI_elitist_large_effect = yes #Conversely Non-Socialist USA cannot ally with people if populists win
+			}
+		}
+	}
+}
+
+country_event = { #German economic aid package to the Philippines
+	id = philippines_political_events.050
+	title = philippines_political_events.050.t
+	desc = philippines_political_events.050.d
+	is_triggered_only = yes
+
+	picture = GFX_report_event_PHI_benguet_gold_miners
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.050 option philippines_political_events.050.a"
+		name = philippines_political_events.050.a #We'll take all the help we can get!
+		ai_chance = {
+			base = 100
+
+			modifier = {
+				factor = 0
+				GEA = { is_ai = yes }
+
+				OR = {
+					AND = {
+						PHI_ai_should_anger_elitists_trigger = yes
+						#Basically if you want to be angering Elitists and your Elitist anger is high, you will not accept.
+						is_power_balance_in_range = {
+							id = PHI_power_balance
+							range < PHI_bop_elitist_tensions
+						}
+					}
+					AND = {
+						PHI_ai_should_anger_populists_trigger = yes
+						#If you want to be angering Populists and your Populist anger is high, you will not accept.
+						is_power_balance_in_range = {
+							id = PHI_power_balance
+							range > PHI_bop_populist_tensions
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_idea = PHI_foreign_industrial_support_idea }
+			modify_timed_idea = {
+				idea = PHI_foreign_industrial_support_idea
+				days = 365
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = PHI_foreign_industrial_support_idea
+				days = 365
+			}
+		}
+		PHI_add_GEA_alignment_medium_effect = yes
+		PHI_ctr_bop_large_effect = yes
+		hidden_effect = {
+			GEA = {
+				country_event = { id = philippines_political_events.053 days = 1 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.050 option philippines_political_events.050.b"
+		name = philippines_political_events.050.b #No thank you.
+
+		ai_chance = {
+			base = 0
+
+			modifier = {
+				add = 100
+				GEA = { is_ai = yes }
+
+				OR = {
+					AND = {
+						PHI_ai_should_anger_elitists_trigger = yes
+						#Basically if you want to be angering Elitists and your Elitist anger is high, you will not accept.
+						is_power_balance_in_range = {
+							id = PHI_power_balance
+							range < PHI_bop_elitist_tensions
+						}
+					}
+					AND = {
+						PHI_ai_should_anger_populists_trigger = yes
+						#If you want to be angering Populists and your Populist anger is high, you will not accept.
+						is_power_balance_in_range = {
+							id = PHI_power_balance
+							range > PHI_bop_populist_tensions
+						}
+					}
+				}
+			}
+		}
+		set_country_flag = PHI_reject_german_economic_aid
+		hidden_effect = {
+			GEA = {
+				country_event = { id = philippines_political_events.054 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = { #American economic aid package to the Philippines
+	id = philippines_political_events.051
+	title = philippines_political_events.051.t
+	desc = philippines_political_events.051.d
+	is_triggered_only = yes
+	picture = GFX_report_event_PHI_benguet_gold_miners
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.051 option philippines_political_events.051.a"
+		name = philippines_political_events.051.a #We'll take all the help we can get!
+		ai_chance = {
+			base = 100
+
+			modifier = {
+				factor = 0
+				USA = { is_ai = yes } #Let the player get their way since this entire mechanic is meant to help them influence PHI and USA in particular is vulnerable to being shut out if their favored domestic leader doesn't win.
+
+				OR = {
+					AND = {
+						PHI_ai_should_anger_elitists_trigger = yes
+						FROM = { has_socialist_government = no }
+					}
+					AND = {
+						PHI_ai_should_anger_populists_trigger = yes
+						FROM = { has_socialist_government = yes }
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_idea = PHI_foreign_industrial_support_idea }
+			modify_timed_idea = {
+				idea = PHI_foreign_industrial_support_idea
+				days = 365
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = PHI_foreign_industrial_support_idea
+				days = 365
+			}
+		}
+		PHI_add_USA_alignment_medium_effect = yes
+		if = {
+			limit = {
+				FROM = { has_socialist_government = yes }
+			}
+			PHI_populist_large_effect = yes #Socialist USA needs a populist ending to get an ally.
+		}
+		else = {
+			PHI_elitist_large_effect = yes #Conversely Non-Socialist USA cannot ally with people if populists win
+		}
+		hidden_effect = {
+			USA = {
+				country_event = { id = philippines_political_events.053 days = 1 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.051 option philippines_political_events.051.b"
+		name = philippines_political_events.051.b #No thank you.
+		ai_chance = { base = 0 } #Don't turn down a free lunch
+		set_country_flag = PHI_reject_american_economic_aid
+		hidden_effect = {
+			USA = {
+				country_event = { id = philippines_political_events.054 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = { #Japanese economic aid package to the Philippines
+	id = philippines_political_events.052
+	title = philippines_political_events.052.t
+	desc = philippines_political_events.052.d
+	is_triggered_only = yes
+	picture = GFX_report_event_PHI_benguet_gold_miners
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.052 option philippines_political_events.052.a"
+		name = philippines_political_events.052.a #We'll take all the help we can get!
+		ai_chance = {
+			base = 100
+
+			modifier = {
+				factor = 0
+				JAP = { is_ai = yes }
+
+				OR = {
+					AND = {
+						PHI_ai_should_anger_elitists_trigger = yes
+						#Basically if you want to be angering Elitists and your Elitist anger is high, you will not accept.
+						is_power_balance_in_range = {
+							id = PHI_power_balance
+							range < PHI_bop_elitist_tensions
+						}
+					}
+					AND = {
+						PHI_ai_should_anger_populists_trigger = yes
+						#If you want to be angering Populists and your Populist anger is high, you will not accept.
+						is_power_balance_in_range = {
+							id = PHI_power_balance
+							range > PHI_bop_populist_tensions
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_idea = PHI_foreign_industrial_support_idea }
+			modify_timed_idea = {
+				idea = PHI_foreign_industrial_support_idea
+				days = 365
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = PHI_foreign_industrial_support_idea
+				days = 365
+			}
+		}
+		PHI_add_CPS_alignment_medium_effect = yes
+		PHI_ctr_bop_large_effect = yes
+		hidden_effect = {
+			JAP = {
+				country_event = { id = philippines_political_events.053 days = 1 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.052 option philippines_political_events.052.b"
+		name = philippines_political_events.052.b #No thank you.
+		ai_chance = {
+			base = 0
+
+			modifier = {
+				add = 100
+				GEA = { is_ai = yes }
+
+				OR = {
+					AND = {
+						PHI_ai_should_anger_elitists_trigger = yes
+						#Basically if you want to be angering Elitists and your Elitist anger is high, you will not accept.
+						is_power_balance_in_range = {
+							id = PHI_power_balance
+							range < PHI_bop_elitist_tensions
+						}
+					}
+					AND = {
+						PHI_ai_should_anger_populists_trigger = yes
+						#If you want to be angering Populists and your Populist anger is high, you will not accept.
+						is_power_balance_in_range = {
+							id = PHI_power_balance
+							range > PHI_bop_populist_tensions
+						}
+					}
+				}
+			}
+		}
+		set_country_flag = PHI_reject_japanese_economic_aid
+		hidden_effect = {
+			JAP = {
+				country_event = { id = philippines_political_events.054 days = 1 }
+			}
+		}
+	}
+}
+
+country_event = { #The Philippines Accepts Our Economic Support
+	id = philippines_political_events.053
+	title = philippines_political_events.053.t
+	desc = philippines_political_events.053.d
+	is_triggered_only = yes
+	picture = GFX_report_event_PHI_benguet_gold_miners
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.053 option philippines_political_events.053.a"
+		name = philippines_political_events.053.a #Wonderful News!
+	}
+}
+
+country_event = { #The Philippines Declines Our Economic Support
+	id = philippines_political_events.054
+	title = philippines_political_events.054.t
+	desc = philippines_political_events.054.d
+	is_triggered_only = yes
+	picture = GFX_report_event_PHI_benguet_gold_miners
+
+	option = {
+		log = "[GetLogInfo]: event philippines_political_events.054 option philippines_political_events.054.a"
+		name = philippines_political_events.054.a #Unfortunate.
+	}
+}
+
+country_event = { #The Germans Depart From Manila
+	id = philippines_political_events.045
+	title = philippines_political_events.045.t
+	desc = {
+		text = philippines_political_events.045.d.GEA_invaded
+		trigger = {
+			PHI = { has_war_with = GEA }
+		}
+	}
+	desc = {
+		text = philippines_political_events.045.d.GEA_dead
+		trigger = {
+			PHI = { NOT = { has_war_with = GEA } }
+		}
+	}
+	picture = GFX_report_event_GEA_falkenhausen
+
+	is_triggered_only = yes #Triggered in PHI by on_actions if GEA attacks PHI or GEA has lost Singapore
+
+	option = {
+		name = philippines_political_events.045.a #They shall bother us no more.
+		log = "[GetLogInfo]: event philippines_political_events.045 option philippines_political_events.045.a"
+		trigger = {
+			tag = PHI
+		}
+		set_variable = { var = PHI_GEA_alignment_var value = 0 }
+	}
+
+	option = {
+		name = philippines_political_events.045.b #We shall return some day...
+		log = "[GetLogInfo]: event philippines_political_events.045 option philippines_political_events.045.b"
+		trigger = {
+			NOT = { tag = PHI }
+		}
+	}
+
+	after = {
+		custom_effect_tooltip = PHI_GEA_disqualified_tt
+	}
+}
+
+country_event = { #The Japanese Depart From Manila
+	id = philippines_political_events.046
+	title = philippines_political_events.046.t
+	desc = {
+		text = philippines_political_events.046.d.JAP_invaded
+		trigger = {
+			PHI = { has_war_with = JAP }
+		}
+	}
+	desc = {
+		text = philippines_political_events.046.d.JAP_dead
+		trigger = {
+			PHI = { NOT = { has_war_with = JAP } }
+		}
+	}
+	picture = GFX_report_event_JAP_officer_saluting
+
+	is_triggered_only = yes #Triggered in PHI by on_actions if JAP attacks PHI or JAP has lost Taiwan
+
+	option = {
+		name = philippines_political_events.046.a #They shall bother us no more.
+		log = "[GetLogInfo]: event philippines_political_events.046 option philippines_political_events.046.a"
+		trigger = {
+			tag = PHI
+		}
+		set_variable = { var = PHI_CPS_alignment_var value = 0 }
+	}
+
+	option = {
+		name = philippines_political_events.045.b #We shall return some day...
+		log = "[GetLogInfo]: event philippines_political_events.046 option philippines_political_events.045.b"
+		trigger = {
+			NOT = { tag = PHI }
+		}
+	}
+
+	after = {
+		custom_effect_tooltip = PHI_CPS_disqualified_tt
+	}
+}
+
+###Neutrality Alignment (070-089)
+
+country_event = { #The Philippines Entrenches its Neutrality (PHI Version)
+	id = philippines_political_events.070
+	title = philippines_political_events.070.t
+	desc = philippines_political_events.070.d
+	picture = GFX_report_event_PHI_philippine_soldiers_with_knives
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	immediate = {
+		hidden_effect = { news_event = philippines_political_events.071 } #The Philippines Entrenches its Neutrality (World News)
+	}
+
+	option = {
+		name = philippines_political_events.070.a #For now, we keep our options open and hope for the best.
+		log = "[GetLogInfo]: event philippines_political_events.070 option philippines_political_events.070.a"
+		activate_targeted_decision = { target = JAP decision = PHI_join_faction }
+		activate_targeted_decision = { target = GER decision = PHI_join_faction }
+		activate_targeted_decision = { target = ENT decision = PHI_join_faction }
+		activate_targeted_decision = { target = USA decision = PHI_join_faction }
+		activate_targeted_decision = { target = WCA decision = PHI_join_faction }
+		activate_targeted_decision = { target = APG decision = PHI_join_faction }
+		activate_targeted_decision = { target = ACC decision = PHI_join_faction }
+		activate_targeted_decision = { target = NEE decision = PHI_join_faction }
+		set_country_flag = PHI_PHI_won_fight_for_philippines_flag
+		log = "KR_Event_Logging;PHI ForPol - Independence, Other"
+		#Options to join INT, HND, and CHI's factions are handled in their respective decisions.
+	}
+}
+
+news_event = {
+	id = philippines_political_events.071 #The Philippines Entrenches its Neutrality (World News)
+	immediate = { log = "[GetLogInfo]: event philippines_political_events.071" }
+	title = philippines_political_events.071.t
+	desc = philippines_political_events.071.d
+	picture = GFX_news_event_PHI_independence
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_asia_news = yes
+			is_american_tag = yes
+		}
+	}
+
+	option = {
+		name = philippines_political_events.071.a #Do they really think they can survive on their own?
+	}
+}
+
+country_event = { #[FROM.Capital.GetCapitalVictoryPointName] Forces Us Into Neutrality
+	id = philippines_political_events.072
+	title = philippines_political_events.072.t
+	desc = philippines_political_events.072.d
+	picture = GFX_report_event_PHI_philippine_scouts
+
+	is_triggered_only = yes #Triggered by EVENTS philippines_political_events.090 philippines_political_events.110 philippines_political_events.130
+
+	option = {
+		name = philippines_political_events.072.a #Then so be it.
+		log = "[GetLogInfo]: event philippines_political_events.072 option philippines_political_events.072.a"
+		add_war_support = -0.20 #Punished for losing minigame and not even getting an alliance - will be handicapped in terms of joining a faction.
+		PHI = { country_event = { id = philippines_political_events.070 days = 3 } } #The Philippines Entrenches its Neutrality (PHI Version)
+	}
+}
+
+###Reichspakt Alignment (090-109)
+country_event = { #Our Triumph in Manila (GER Edition)
+	id = philippines_political_events.090
+	title = philippines_political_events.090.t
+	desc = philippines_political_events.090.d
+	picture = GFX_report_event_GEA_carrier
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	immediate = {
+		hidden_effect = { GEA = { country_event = { id = philippines_political_events.093 days = 14 } } } #Our Triumph in Manila (GEA) Edition
+	}
+
+	option = {
+		name = philippines_political_events.090.a #With these treaties we will bind them to us.
+		log = "[GetLogInfo]: event philippines_political_events.090 option philippines_political_events.090.a"
+		ai_chance = { base = 100 }
+		PHI = { country_event = philippines_political_events.091 } #The Philippines Joins the Reichspakt (PHI Version)
+	}
+
+	option = {
+		name = philippines_political_events.090.b #A neutral Philippines serves our interests best.
+		log = "[GetLogInfo]: event philippines_political_events.090 option philippines_political_events.090.b"
+		ai_chance = { base = 0 }
+		PHI = { country_event = philippines_political_events.072 } #[FROM.Capital.GetCapitalVictoryPointName] Forces Us Into Neutrality
+	}
+}
+
+country_event = { #The Philippines Joins the Reichspakt (PHI Version)
+	id = philippines_political_events.091
+	title = philippines_political_events.091.t
+	desc = philippines_political_events.091.d
+	picture = GFX_report_event_GEA_carrier
+
+	is_triggered_only = yes #Triggered by EVENT philippines_political_events.091.a
+
+	immediate = {
+		hidden_effect = { news_event = philippines_political_events.092 } #The Philippines Joins the Reichspakt (World News)
+	}
+
+	option = {
+		name = philippines_political_events.091.a #Berlin is our only hope against the Japanese menace.
+		log = "[GetLogInfo]: event philippines_political_events.091 option philippines_political_events.091.a"
+		GER = { add_to_faction = PHI }
+		add_named_threat = {
+			threat = -1 #Goes down because Germans want lower tensions
+			name = PHI_aligned_with_GEA_threat_tt
+		}
+		set_country_flag = PHI_GER_won_fight_for_philippines_flag
+		log = "KR_Event_Logging;PHI ForPol - Germans, Other"
+	}
+}
+
+news_event = {
+	id = philippines_political_events.092 #The Philippines Joins the Reichspakt (World News)
+	immediate = { log = "[GetLogInfo]: event philippines_political_events.092" }
+	title = philippines_political_events.092.t
+	desc = philippines_political_events.092.d
+	picture = GFX_news_event_PHI_manila_uprising2
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_asia_news = yes
+			is_in_faction_with = GER
+			is_american_tag = yes
+		}
+	}
+
+	option = {
+		name = philippines_political_events.092.a #The Tides Shift Towards Singapore
+		effect_tooltip = {
+			add_named_threat = {
+				threat = -1 #Goes down because Germans want lower tensions
+				name = PHI_aligned_with_GEA_threat_tt
+			}
+		}
+	}
+}
+
+country_event = { #Our Triumph in Manila (GEA Edition)
+	id = philippines_political_events.093
+	title = philippines_political_events.093.t
+	desc = philippines_political_events.093.d
+	picture = GFX_report_event_GEA_carrier
+
+	is_triggered_only = yes #Triggered by EVENT philippines_political_events.090
+
+	option = {
+		name = philippines_political_events.093.a #We have done our duty well.
+		log = "[GetLogInfo]: event philippines_political_events.093 option philippines_political_events.093.a"
+	}
+}
+
+###Sphere Alignment (110-129)
+country_event = { #Our Triumph in Manila (JAP Edition)
+	id = philippines_political_events.110
+	title = philippines_political_events.110.t
+	desc = philippines_political_events.110.d
+	picture = GFX_report_event_JAP_battleship_kongo
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	option = {
+		name = philippines_political_events.110.a #With these treaties we will bind them to us.
+		log = "[GetLogInfo]: event philippines_political_events.110 option philippines_political_events.110.a"
+		ai_chance = { base = 100 }
+		PHI = { country_event = philippines_political_events.111 } #The Philippines Joins the Sphere (PHI Version)
+	}
+
+	option = {
+		name = philippines_political_events.110.b #A neutral Philippines serves our interests best.
+		log = "[GetLogInfo]: event philippines_political_events.110 option philippines_political_events.110.b"
+		ai_chance = { base = 0 }
+		PHI = { country_event = philippines_political_events.072 } #[FROM.Capital.GetCapitalVictoryPointName] Forces Us Into Neutrality
+	}
+}
+
+country_event = { #The Philippines Joins the Sphere (PHI Version)
+	id = philippines_political_events.111
+	title = philippines_political_events.111.t
+	desc = philippines_political_events.111.d
+	picture = GFX_report_event_JAP_battleship_kongo
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	immediate = {
+		hidden_effect = { news_event = philippines_political_events.112 } #The Philippines Joins the Sphere (World News)
+	}
+
+	option = {
+		name = philippines_political_events.111.a #Tokyo will bring peace and prosperity to Asia.
+		log = "[GetLogInfo]: event philippines_political_events.111 option philippines_political_events.111.a"
+		JAP = { add_to_faction = PHI }
+		add_named_threat = {
+			threat = 1
+			name = PHI_aligned_with_CPS_threat_tt
+		}
+		set_country_flag = PHI_JAP_won_fight_for_philippines_flag
+		log = "KR_Event_Logging;PHI ForPol - Japanese, Other"
+	}
+}
+
+news_event = {
+	id = philippines_political_events.112 #The Philippines Joins the Sphere (World News)
+	immediate = { log = "[GetLogInfo]: event philippines_political_events.112" }
+	title = philippines_political_events.112.t
+	desc = philippines_political_events.112.d
+	picture = GFX_news_event_PHI_manila_uprising2
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_asia_news = yes
+			is_american_tag = yes
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		name = philippines_political_events.112.a #The Tides Shift Towards Tokyo
+		effect_tooltip = {
+			add_named_threat = {
+				threat = 1
+				name = PHI_aligned_with_CPS_threat_tt
+			}
+		}
+	}
+}
+
+###American Alignment (130-149)
+country_event = { #Our Triumph in Manila (USA Edition)
+	id = philippines_political_events.130
+	title = philippines_political_events.130.t
+	desc = philippines_political_events.130.d
+	picture = GFX_report_event_PHI_philippine_and_us_army_forces
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	option = {
+		name = philippines_political_events.130.a #With these treaties we will bind them to us.
+		log = "[GetLogInfo]: event philippines_political_events.130 option philippines_political_events.130.a"
+		ai_chance = { base = 100 }
+		PHI = { country_event = philippines_political_events.131 } #The Philippines Realigns with America (PHI Version)
+	}
+
+	option = {
+		name = philippines_political_events.130.b #A neutral Philippines serves our interests best.
+		log = "[GetLogInfo]: event philippines_political_events.130 option philippines_political_events.130.b"
+		ai_chance = { base = 0 }
+		PHI = { country_event = philippines_political_events.072 } #[FROM.Capital.GetCapitalVictoryPointName] Forces Us Into Neutrality
+	}
+}
+
+country_event = { #The Philippines Realigns with America (PHI Version)
+	id = philippines_political_events.131
+	title = philippines_political_events.131.t
+	desc = philippines_political_events.131.d
+	picture = GFX_report_event_PHI_philippine_and_us_army_forces
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	immediate = {
+		hidden_effect = { news_event = philippines_political_events.132 } #The Philippines Realigns with America (World News)
+	}
+
+	option = {
+		name = philippines_political_events.131.a #Washington returns as our protector.
+		log = "[GetLogInfo]: event philippines_political_events.131 option philippines_political_events.131.a"
+		every_country = {
+			limit = {
+				is_american_tag = yes
+				is_subject = no
+			}
+			diplomatic_relation = {
+				country = PHI
+				relation = non_aggression_pact
+			}
+			give_military_access = PHI
+			give_guarantee = PHI
+			PHI = {
+				give_guarantee = PREV
+				give_military_access = PREV
+				activate_targeted_decision = { target = PREV decision = PHI_join_faction }
+				set_country_flag = PHI_USA_won_fight_for_philippines_flag
+				log = "KR_Event_Logging;PHI ForPol - Americans, Other"
+			}
+		}
+	}
+}
+
+news_event = {
+	id = philippines_political_events.132 #The Philippines Realigns with America (World News)
+	immediate = { log = "[GetLogInfo]: event philippines_political_events.132" }
+	title = philippines_political_events.132.t
+	desc = philippines_political_events.132.d
+	picture = GFX_news_event_PHI_independence
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		OR = {
+			regional_asia_news = yes
+			is_american_tag = yes
+		}
+	}
+
+	option = {
+		name = philippines_political_events.132.a #A new partnership? Or a return to servitude?
+	}
+}
+
+### 1939 Elections Events (150-199)
+country_event = { #The 1939 Campaign Season Opens
+	id = philippines_political_events.150
+	title = philippines_political_events.150.t
+	desc = philippines_political_events.150.d
+	picture = GFX_report_event_PHI_manuel_quezon_speech
+
+	is_triggered_only = yes #Triggered by On Start Up
+
+	immediate = {
+		hidden_effect = {
+			activate_mission = PHI_election_in_180_days_mission_timer
+
+			#Loop in JAP, GEA, and USA if they have a winner.
+			JAP = { country_event = philippines_political_events.151 }
+			GEA = { country_event = philippines_political_events.151 }
+			if = {
+				limit = { has_global_flag = USA_civil_war_over_flag }
+				every_country = {
+					limit = { is_american_tag = yes }
+					country_event = philippines_political_events.151 #The 1939 Philippine Elections Approaches
+				}
+			}
+		}
+	}
+
+	option = {
+		name = philippines_political_events.150.a #Order and expertise will deliver results!
+		log = "[GetLogInfo]: event philippines_political_events.150 option philippines_political_events.150.a"
+		ai_chance = {
+			base = 40
+			modifier = {
+				#Ai will be taught to take this focus when available if set on certain Quezon Strategies
+				factor = 10
+				PHI_ai_should_anger_populists_trigger = yes
+			}
+		}
+		PHI_populist_medium_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.150.b #Progress and fraternity lift up the masses!
+		log = "[GetLogInfo]: event philippines_political_events.150 option philippines_political_events.150.b"
+		ai_chance = {
+			base = 40
+			modifier = {
+				#Ai will be taught to take this focus when available if set on certain Quezon Strategies
+				factor = 10
+				PHI_ai_should_anger_elitists_trigger = yes
+			}
+		}
+		PHI_elitist_medium_effect = yes
+	}
+
+	option = {
+		name = philippines_political_events.150.c #As one nation we will protect our independence.
+		log = "[GetLogInfo]: event philippines_political_events.150 option philippines_political_events.150.c"
+		ai_chance = { base = 20 }
+		PHI_add_IND_alignment_medium_effect = yes
+	}
+}
+
+country_event = { #The 1939 Philippine Elections Approaches
+	id = philippines_political_events.151
+	title = philippines_political_events.151.t
+	desc = philippines_political_events.151.d
+	picture = GFX_report_event_PHI_manuel_quezon_speech
+
+	is_triggered_only = yes #Triggered by philippines_political_events.150
+
+	immediate = {
+		hidden_effect = {
+			activate_mission = PHI_election_in_180_days_dummy_mission_timer
+			set_temp_variable = { PHI_election_timer_temp_var = PHI.days_mission_timeout@PHI_election_in_180_days_mission_timer }
+			add_days_mission_timeout = {
+				mission = PHI_election_in_180_days_dummy_mission_timer
+				days = PHI_election_timer_temp_var
+			}
+		}
+	}
+
+	option = {
+		name = philippines_political_events.151.a #We must step up our efforts!
+		log = "[GetLogInfo]: event philippines_political_events.151 option philippines_political_events.151.a"
+		ai_chance = {
+			base = 50
+			#Readded German bias for now
+			modifier = {
+				factor = 1.5
+				tag = GEA
+			}
+		}
+		add_political_power = -40
+		if = {
+			limit = { tag = JAP }
+			PHI_add_CPS_alignment_medium_effect = yes
+		}
+		else_if = {
+			limit = { tag = GEA }
+			PHI_add_GEA_alignment_medium_effect = yes
+		}
+		else = {
+			PHI_add_USA_alignment_medium_effect = yes
+		}
+	}
+
+	option = {
+		name = philippines_political_events.151.b #Noted.
+		log = "[GetLogInfo]: event philippines_political_events.151 option philippines_political_events.151.b"
+		ai_chance = { base = 50 }
+		add_political_power = 10
+	}
+}
+
+###- Section 1b - Quezon's Second Term (1939-1943+) [philippines_political_events.200-philippines_political_events.299] -###
+country_event = { #President Quezon Cruises to Reelection
+	id = philippines_political_events.200
+	title = philippines_political_events.200.t
+	desc = philippines_political_events.200.d
+	picture = GFX_report_event_PHI_manuel_quezon_and_sergio_osmena
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	trigger = {
+		is_subject = no #So if PHI gets puppeted they don't elect Quezon
+	}
+
+	option = {
+		name = philippines_political_events.200.a #Congratulations President Quezon
+		log = "[GetLogInfo]: event philippines_political_events.200 option philippines_political_events.200.a"
+		PHI_manuel_luis_quezon = { promote_character = market_liberal_subtype }
+		activate_advisor = PHI_sergio_osmena_sic
+		add_popularity = {
+			ideology = market_liberal
+			popularity = 0.10
+		}
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = market_liberal
+				long_name = PHI_market_liberal_party_long
+				name = PHI_market_liberal_party
+			}
+			country_event = { id = philippines_political_events.201 days = 1460 } #The 1943 Presidential Elections
+
+			#Remove BOP and Foreign Influence Mechanic
+			PHI_cleanup_elections_mechanic_effect = yes
+
+			log = "KR_Event_Logging;PHI Path - Quezon"
+		}
+	}
+}
+
+country_event = { #The 1943 Presidential Elections
+	id = philippines_political_events.201
+	title = philippines_political_events.201.t
+	desc = philippines_political_events.201.d
+	picture = GFX_report_event_PHI_manuel_quezon_and_sergio_osmena
+
+	is_triggered_only = yes #Triggered by EVENT philippines_political_events.200
+
+	option = {
+		name = philippines_political_events.201.a #Congratulations President Osmena
+		log = "[GetLogInfo]: event philippines_political_events.201 option philippines_political_events.201.a"
+		PHI_sergio_osmena = { promote_character = market_liberal_subtype }
+		activate_advisor = PHI_elpidio_quirino_sic
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		set_politics = {
+			ruling_party = market_liberal
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = market_liberal
+				long_name = PHI_market_liberal_party_long
+				name = PHI_market_liberal_party
+			}
+		}
+	}
+}
+
+###- Section 1c - Roxas's Presidency (1939-1943+) [philippines_political_events.300-philippines_political_events.399] -###
+country_event = { #Roxas and the Elite reassert Control
+	id = philippines_political_events.300
+	title = philippines_political_events.300.t
+	desc = philippines_political_events.300.d
+	picture = GFX_report_event_PHI_manuel_roxas_and_elpidio_quirino
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	option = {
+		name = philippines_political_events.300.a #Congratulations President Roxas
+		log = "[GetLogInfo]: event philippines_political_events.300 option philippines_political_events.300.a"
+		PHI_manuel_roxas = { promote_character = authoritarian_democrat_subtype }
+		activate_advisor = PHI_elpidio_quirino_sic
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.10
+		}
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = PHI_authoritarian_democrat_party_roxas_long
+				name = PHI_authoritarian_democrat_party_roxas
+			}
+			#Remove BOP and Foreign Influence Mechanic
+			PHI_cleanup_elections_mechanic_effect = yes
+
+			log = "KR_Event_Logging;PHI Path - Roxas"
+		}
+	}
+}
+
+###- Section 1d - Aguinaldo's Presidency (1939-1943+) [philippines_political_events.400-philippines_political_events.499] -###
+country_event = { #Aguinaldo Upsets the Establishment
+	id = philippines_political_events.400
+	title = philippines_political_events.400.t
+	desc = philippines_political_events.400.d
+	picture = GFX_report_event_PHI_emilio_aguinaldo
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	option = {
+		name = philippines_political_events.400.a #Congratulations President Aguinaldo
+		log = "[GetLogInfo]: event philippines_political_events.400 option philippines_political_events.400.a"
+		PHI_emilio_aguinaldo = { promote_character = authoritarian_democrat_subtype }
+		activate_advisor = PHI_raymundo_melliza_sic
+		add_popularity = {
+			ideology = authoritarian_democrat
+			popularity = 0.10
+		}
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = PHI_authoritarian_democrat_party_long
+				name = PHI_authoritarian_democrat_party
+			}
+			#Remove BOP and Foreign Influence Mechanic
+			PHI_cleanup_elections_mechanic_effect = yes
+
+			log = "KR_Event_Logging;PHI Path - Aguinaldo"
+		}
+	}
+}
+
+###- Section 1e - Recto's Presidency (1939-1943+) [philippines_political_events.500-philippines_political_events.599] -###
+country_event = { #Recto Rallies Populist Forces
+	id = philippines_political_events.500
+	title = philippines_political_events.500.t
+	desc = philippines_political_events.500.d
+	picture = GFX_report_event_PHI_claro_recto
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	option = {
+		name = philippines_political_events.500.a #Congratulations President Recto
+		log = "[GetLogInfo]: event philippines_political_events.500 option philippines_political_events.500.a"
+		PHI_claro_recto = { promote_character = social_liberal_subtype }
+		activate_advisor = PHI_vicente_sotto_sic
+		add_popularity = {
+			ideology = social_liberal
+			popularity = 0.10
+		}
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = social_liberal
+				long_name = PHI_social_liberal_party_long
+				name = PHI_social_liberal_party
+			}
+			#Remove BOP and Foreign Influence Mechanic
+			PHI_cleanup_elections_mechanic_effect = yes
+
+			log = "KR_Event_Logging;PHI Path - Recto"
+		}
+	}
+}
+
+###- Section 1f - Evangelista's Presidency (1939-1943+) [philippines_political_events.600-philippines_political_events.699] -###
+country_event = { #Evangelista Leads a Socialist Revolution
+	id = philippines_political_events.600
+	title = philippines_political_events.600.t
+	desc = philippines_political_events.600.d
+	picture = GFX_report_event_PHI_crisanto_evangelista
+
+	is_triggered_only = yes #Triggered by effect PHI_1939_election_outcome_effect
+
+	immediate = {
+		hidden_effect = {
+			PHI_recruit_socialist_characters_effect = yes
+			PHI_retire_non_socialist_compatible_characters_effect = yes
+		}
+	}
+
+	option = {
+		name = philippines_political_events.600.a #Proletarians of the Philippines, united.
+		log = "[GetLogInfo]: event philippines_political_events.600 option philippines_political_events.600.a"
+		PHI_crisanto_evangelista = { promote_character = syndicalist_subtype }
+		activate_advisor = PHI_guillermo_capadocia_sic
+		add_popularity = {
+			ideology = syndicalist
+			popularity = 0.10
+		}
+		set_politics = {
+			ruling_party = syndicalist
+			elections_allowed = yes
+			election_frequency = 48
+		}
+		effect_tooltip = {
+			PHI_recruit_socialist_characters_effect = yes
+			PHI_retire_non_socialist_compatible_characters_effect = yes
+		}
+		#For some reason the Philippines embargo by socialist countries continued
+		every_other_country = {
+			limit = { has_socialist_government = yes }
+			clear_embargo_ROOT = yes
+			PHI = {
+				clear_embargo_PREV = yes
+			}
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = syndicalist
+				long_name = PHI_syndicalist_party_long
+				name = PHI_syndicalist_party
+			}
+			#Remove BOP and Foreign Influence Mechanic
+			PHI_cleanup_elections_mechanic_effect = yes
+
+			log = "KR_Event_Logging;PHI Path - Evangelista"
+			drop_cosmetic_tag = yes
+		}
+	}
+}
+
+########################################
+####- Section 02: Military Events -#####
+########################################
+country_event = { #Increase Military Aid Procurement
+	id = philippines_military_events.001
+	title = philippines_military_events.001.t
+	desc = philippines_military_events.001.d
+	picture = GFX_report_event_PHI_philippine_constabulary
+
+	is_triggered_only = yes #Triggered by EFFECT: fire_black_monday_events
+
+	option = { #germany
+		name = philippines_military_events.001.a
+		log = "[GetLogInfo]: event philippines_military_events.001 option philippines_military_events.001.a"
+		trigger = {
+			GER = {
+				exists = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 33 }
+		add_tech_bonus = {
+			name = philippines_military_events.001.t
+			bonus = 1
+			uses = 1
+			category = support_tech
+		}
+	}
+
+	option = { #japan
+		name = philippines_military_events.001.b
+		log = "[GetLogInfo]: event philippines_military_events.001 option philippines_military_events.001.b"
+		trigger = {
+			JAP = {
+				exists = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 33 }
+		add_tech_bonus = {
+			name = philippines_military_events.001.t
+			bonus = 1
+			uses = 1
+			category = infantry_weapons
+		}
+	}
+	option = { #USA
+		name = philippines_military_events.001.c
+		log = "[GetLogInfo]: event philippines_military_events.001 option philippines_military_events.001.c"
+		trigger = {
+			has_global_flag = USA_civil_war_over_flag
+			var:361.owner = {
+				is_american_tag = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 33 }
+		add_tech_bonus = {
+			name = philippines_military_events.001.t
+			bonus = 1
+			uses = 1
+			category = artillery
+		}
+	}
+	option = {
+		name = philippines_military_events.001.e
+		log = "[GetLogInfo]: event philippines_military_events.001 option philippines_military_events.001.e"
+		ai_chance = { base = 0 } #Mainly for player benefit
+		add_political_power = -100
+		add_offsite_building = {
+			type = arms_factory
+			level = 1
+		}
+	}
+}
+
+country_event = { #Foreign Naval Aid
+	id = philippines_military_events.020
+	title = philippines_military_events.020.t
+	desc = philippines_military_events.020.d
+	picture = GFX_report_event_PHI_philippine_sailors_in_US_navy
+
+	is_triggered_only = yes #Triggered by EFFECT: fire_black_monday_events
+
+	option = { #germany
+		name = philippines_military_events.020.a
+		log = "[GetLogInfo]: event philippines_military_events.020 option philippines_military_events.020.a"
+		trigger = {
+			GER = {
+				exists = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 33 }
+		add_tech_bonus = {
+			name = philippines_military_events.020.t
+			bonus = 1
+			uses = 1
+			category = mio_cat_tech_all_submarine_and_modules
+		}
+	}
+
+	option = { #Japan
+		name = philippines_military_events.020.b
+		log = "[GetLogInfo]: event philippines_military_events.020 option philippines_military_events.020.b"
+		trigger = {
+			JAP = {
+				exists = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 33 }
+		add_tech_bonus = {
+			name = philippines_military_events.020.t
+			bonus = 1
+			uses = 1
+			category = mio_cat_all_naval_bomber_and_modules
+		}
+	}
+	option = { #USA
+		name = philippines_military_events.020.c
+		log = "[GetLogInfo]: event philippines_military_events.020 option philippines_military_events.020.c"
+		trigger = {
+			has_global_flag = USA_civil_war_over_flag
+			var:361.owner = {
+				is_american_tag = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 33 }
+		add_tech_bonus = {
+			name = philippines_military_events.020.t
+			bonus = 1
+			uses = 1
+			category = mio_cat_tech_all_destroyer_and_modules
+		}
+	}
+	option = {
+		name = philippines_military_events.020.e
+		log = "[GetLogInfo]: event philippines_military_events.020 option philippines_military_events.020.e"
+		ai_chance = { base = 0 } #This option is for player benefit
+		add_political_power = -100
+		add_offsite_building = {
+			type = dockyard
+			level = 1
+		}
+	}
+}
+country_event = { #Foreign Air Aid
+	id = philippines_military_events.040
+	title = philippines_military_events.040.t
+	desc = philippines_military_events.040.d
+	picture = GFX_report_event_JAP_troops_zero
+
+	is_triggered_only = yes #Triggered by EFFECT: fire_black_monday_events
+
+	option = { #germany
+		name = philippines_military_events.040.a
+		log = "[GetLogInfo]: event philippines_military_events.040 option philippines_military_events.040.a"
+		trigger = {
+			GER = {
+				exists = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 25 }
+		add_tech_bonus = {
+			name = philippines_military_events.040.t
+			bonus = 1
+			uses = 1
+			category = mio_cat_all_naval_bomber_and_modules
+		}
+	}
+
+	option = { #japan
+		name = philippines_military_events.040.b
+		log = "[GetLogInfo]: event philippines_military_events.040 option philippines_military_events.040.b"
+		trigger = {
+			JAP = {
+				exists = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 25 }
+		add_tech_bonus = {
+			name = philippines_military_events.040.t
+			bonus = 1
+			uses = 1
+			category = mio_cat_all_light_fighter_and_modules
+		}
+	}
+	option = { #USA
+		name = philippines_military_events.040.c
+		log = "[GetLogInfo]: event philippines_military_events.040 option philippines_military_events.040.c"
+		trigger = {
+			has_global_flag = USA_civil_war_over_flag
+			var:361.owner = {
+				is_american_tag = yes
+				NOT = { has_war_with = ROOT }
+				both_socialist_or_both_not_socialist = yes
+				is_major = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		ai_chance = { base = 25 }
+		air_experience = 50
+	}
+	option = {
+		name = philippines_military_events.040.e
+		log = "[GetLogInfo]: event philippines_military_events.040 option philippines_military_events.040.e"
+		ai_chance = { base = 25 }
+		add_doctrine_cost_reduction = {
+			name = philippines_military_events.040.t
+			cost_reduction = 0.25
+			uses = 2
+			category = air_doctrine
+		}
+	}
+}
+country_event = {
+	id = philippines_military_events.060 #The Germans Offer Military Aid
+	title = philippines_military_events.060.t
+	desc = philippines_military_events.060.d
+	is_triggered_only = yes #Triggered by decision GEA_arms_shipments_to_the_philippines
+	picture = GFX_report_event_PHI_philippine_military_officers
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.060 option philippines_military_events.060.a"
+		name = philippines_military_events.060.a #More guns please!
+
+		ai_chance = { base = 100 }
+		if = {
+			limit = { has_idea = PHI_foreign_military_mission }
+			add_political_power = -50
+			custom_effect_tooltip = PHI_clashing_advisors_tt
+			modify_timed_idea = {
+				idea = PHI_foreign_military_mission
+				days = 365
+			}
+			custom_effect_tooltip = GEA_PHI_arms_shipments_tt
+		}
+		else = {
+			custom_effect_tooltip = GEA_PHI_arms_shipments_tt
+			add_timed_idea = {
+				idea = PHI_foreign_military_mission
+				days = 365
+			}
+		}
+		PHI_add_GEA_alignment_large_effect = yes
+		hidden_effect = {
+			GEA = {
+				country_event = { id = philippines_military_events.063 days = 1 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.060 option philippines_military_events.060.b"
+		name = philippines_military_events.060.b #We must decline
+
+		ai_chance = { base = 0 }
+		hidden_effect = {
+			GEA = {
+				country_event = { id = philippines_military_events.064 days = 1 }
+			}
+			set_country_flag = PHI_reject_german_military_aid
+		}
+	}
+}
+country_event = {
+	id = philippines_military_events.061 #The Americans Offer Military Aid
+	title = philippines_military_events.061.t
+	desc = philippines_military_events.061.d
+	is_triggered_only = yes #Triggered by decision USA_arms_shipments_to_the_philippines
+	picture = GFX_report_event_PHI_philippine_military_officers
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.061 option philippines_military_events.061.a"
+		name = philippines_military_events.061.a #More guns please!
+
+		ai_chance = { base = 100 }
+		if = {
+			limit = { has_idea = PHI_foreign_military_mission }
+			add_political_power = -50
+			custom_effect_tooltip = PHI_clashing_advisors_tt
+			modify_timed_idea = {
+				idea = PHI_foreign_military_mission
+				days = 365
+			}
+			custom_effect_tooltip = USA_PHI_arms_shipments_tt
+		}
+		else = {
+			custom_effect_tooltip = USA_PHI_arms_shipments_tt
+			add_timed_idea = {
+				idea = PHI_foreign_military_mission
+				days = 365
+			}
+		}
+		PHI_add_USA_alignment_large_effect = yes
+		hidden_effect = {
+			USA = {
+				country_event = { id = philippines_military_events.063 days = 1 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.061 option philippines_military_events.061.b"
+		name = philippines_military_events.061.b #We must decline
+
+		ai_chance = { base = 0 }
+		hidden_effect = {
+			USA = {
+				country_event = { id = philippines_military_events.064 days = 1 }
+			}
+			set_country_flag = PHI_reject_american_military_aid
+		}
+	}
+}
+country_event = {
+	id = philippines_military_events.062 #The Japanese Offer Military Aid
+	title = philippines_military_events.062.t
+	desc = philippines_military_events.062.d
+	is_triggered_only = yes #Triggered by decision JAP_arms_shipments_to_the_philippines
+	picture = GFX_report_event_PHI_philippine_military_officers
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.062 option philippines_military_events.062.a"
+		name = philippines_military_events.062.a #More guns please!
+
+		ai_chance = { base = 100 }
+		if = {
+			limit = { has_idea = PHI_foreign_military_mission }
+			add_political_power = -50
+			custom_effect_tooltip = PHI_clashing_advisors_tt
+			modify_timed_idea = {
+				idea = PHI_foreign_military_mission
+				days = 365
+			}
+			custom_effect_tooltip = JAP_PHI_arms_shipments_tt
+		}
+		else = {
+			add_timed_idea = {
+				idea = PHI_foreign_military_mission
+				days = 365
+			}
+			custom_effect_tooltip = JAP_PHI_arms_shipments_tt
+		}
+		PHI_add_CPS_alignment_large_effect = yes
+		hidden_effect = {
+			JAP = {
+				country_event = { id = philippines_military_events.063 days = 1 }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.062 option philippines_military_events.062.b"
+		name = philippines_military_events.062.b #We must decline
+
+		ai_chance = { base = 0 }
+		hidden_effect = {
+			JAP = {
+				country_event = { id = philippines_military_events.064 days = 1 }
+			}
+			set_country_flag = PHI_reject_japanese_military_aid
+		}
+	}
+}
+country_event = {
+	id = philippines_military_events.063 #The Philippines Accepts Our Military Aid
+	title = philippines_military_events.063.t
+	desc = philippines_military_events.063.d
+	is_triggered_only = yes #Triggered by Arms Shipments to the Philippines decisions
+	picture = GFX_report_event_PHI_philippine_military_officers
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.063 option philippines_military_events.063.a"
+		name = philippines_military_events.063.a #All according to plan
+	}
+}
+country_event = {
+	id = philippines_military_events.064 #The Philippines Declines Our Military Aid
+	title = philippines_military_events.064.t
+	desc = philippines_military_events.064.d
+	is_triggered_only = yes #Triggered by Arms Shipments to the Philippines decisions
+	picture = GFX_report_event_PHI_philippine_military_officers
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.064 option philippines_military_events.064.a"
+		name = philippines_military_events.064.a #In time they will realise their mistake
+		custom_effect_tooltip = PHI_arms_refunded_tt
+	}
+}
+country_event = {
+	id = philippines_military_events.065 #Foreign-Equipped Division
+	title = philippines_military_events.065.t
+	desc = philippines_military_events.065.d
+	is_triggered_only = yes #Triggered by Arms Shipments to the Philippines decisions
+	picture = GFX_report_event_PHI_philippine_scouts
+
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.065 option philippines_military_events.065.a"
+		name = philippines_military_events.065.a #A modern division for modern war!
+		if = {
+			limit = { NOT = { has_country_flag = PHI_created_foreign_division } }
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Foreign-Equipped Division"
+					LINE_1 = { localization_key = line_battalion_tt NAME = infantry ICON = GFX_unit_infantry_icon_small COUNT = 9 }
+					LINE_2 = { localization_key = line_battalion_tt NAME = artillery_brigade ICON = GFX_unit_artillery_brigade_icon_small COUNT = 1 }
+					SUPPORT_1 = { localization_key = support_battalion_tt NAME = engineer ICON = GFX_unit_engineer_icon_small }
+					SUPPORT_2 = { localization_key = support_battalion_tt NAME = recon ICON = GFX_unit_recon_icon_small }
+				}
+				if = {
+					limit = { has_template = "Foreign-Equipped Division" }
+					delete_unit_template_and_units = { division_template = "Foreign-Equipped Division" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Foreign-Equipped Division"
+					division_names_group = PHI_INF_01
+					is_locked = yes			# No cheating
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
+						artillery_brigade = { x = 3 y = 0 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+						recon = { x = 0 y = 1 }
+					}
+				}
+			}
+			set_country_flag = PHI_created_foreign_division
+			custom_effect_tooltip = PHI_create_locked_division
+		}
+		random_owned_controlled_state = {
+			limit = { is_in_home_area = yes }
+			prioritize = { 327 } #Manila
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_spawn_unit
+					TYPE = "Foreign-Equipped Division"
+				}
+				create_unit = {
+					division = "division_template = \"Foreign-Equipped Division\" start_experience_factor = 0.60"
+					owner = PHI
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event philippines_military_events.065 option philippines_military_events.065.b"
+		name = philippines_military_events.065.b #Just equipment please
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = FROM
+		}
+		add_equipment_to_stockpile = {
+			type = artillery_equipment
+			amount = 50
+			producer = FROM
+		}
+		add_equipment_to_stockpile = {
+			type = support_equipment
+			amount = 50
+			producer = FROM
+		}
+	}
+}

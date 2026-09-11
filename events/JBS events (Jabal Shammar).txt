@@ -1,0 +1,2549 @@
+### Jabal Shammar by Jeankedezeehond ###
+
+add_namespace = jabal_shammar_events
+
+country_event = { # Economic Woes In The Emirate
+	id = jabal_shammar_events.1
+	title = jabal_shammar_events.1.t
+	desc = jabal_shammar_events.1.d
+	picture = GFX_OTT_Famine
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.1 option jabal_shammar_events.1.a"
+		name = jabal_shammar_events.1.a
+		add_stability = -0.10
+		JBS_Decrease_Urban_Nobility_Support = yes
+	}
+}
+
+country_event = { # The Syrian Exchange Program
+	id = jabal_shammar_events.2
+	title = jabal_shammar_events.2.t
+	desc = jabal_shammar_events.2.d
+	picture = GFX_OTT_Military_School
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.2 option jabal_shammar_events.2.a"
+		name = jabal_shammar_events.2.a
+	}
+}
+
+country_event = { # Abolishment of the Majlis
+	id = jabal_shammar_events.3
+	title = jabal_shammar_events.3.t
+	desc = jabal_shammar_events.3.d
+	picture = GFX_OTT_Parliament_Baghdad
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.3 option jabal_shammar_events.3.a"
+		name = jabal_shammar_events.3.a
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no
+		}
+	}
+}
+
+country_event = { # The Conquest of Buraida
+	id = jabal_shammar_events.4
+	title = jabal_shammar_events.4.t
+	desc = jabal_shammar_events.4.d
+	picture = GFX_OTT_Gendarmerie
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.4 option jabal_shammar_events.4.a"
+		name = jabal_shammar_events.4.a
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.5 days = 6 }
+			SAU = { country_event = jabal_shammar_events.22 }
+			OTT = { country_event = { id = ottomans_foreign_policy_events.1 days = 1 } }
+		}
+	}
+}
+
+country_event = { # Ottoman Army Withdraws
+	id = jabal_shammar_events.5
+	title = jabal_shammar_events.5.t
+	desc = jabal_shammar_events.5.d
+	picture = GFX_OTT_Fezzan
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.5 option jabal_shammar_events.5.a"
+		name = jabal_shammar_events.5.a
+		if = {
+			limit = {
+				is_subject = yes
+				overlord = {
+					NOT = {
+						has_war_with = EGY
+						has_war_with = PER
+					}
+				}
+			}
+			overlord = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_free
+				}
+			}
+			leave_faction = yes
+			separate_peace_all_wars = yes
+		}
+		declare_war_on = {
+			target = SAU
+			type = annex_everything
+		}
+		hidden_effect = {
+			country_event = jabal_shammar_events.1000
+			country_event = { id = jabal_shammar_events.5001 days = 26 }#event to remove recruitment decisions in 26 days (so ones fired before could finish
+		}
+	}
+}
+
+### Ikhwan Revolt ###
+country_event = { # Unrest amongst the Ikhwan
+	id = jabal_shammar_events.6
+	title = jabal_shammar_events.6.t
+	desc = jabal_shammar_events.6.d
+	picture = GFX_report_event_JBS_Ikhwan
+
+	trigger = {
+		OR = {
+			is_subject = no
+			is_subject_of = OTT
+		}
+		has_capitulated = no
+		controls_state = 991
+		NOT = {
+			has_war_with = SAU
+			has_country_flag = JBS_SAU_will_rebel
+		}
+	}
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.6 option jabal_shammar_events.6.a"
+		name = jabal_shammar_events.6.a
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.7 days = 20 }
+		}
+	}
+}
+
+country_event = { # Faisal al-Duwaish Imposes Demands
+	id = jabal_shammar_events.7
+	title = jabal_shammar_events.7.t
+	desc = jabal_shammar_events.7.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.7 option jabal_shammar_events.7.a"
+		name = jabal_shammar_events.7.a
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.8 days = 30 }
+		}
+	}
+}
+
+country_event = { # The Ikhwan Revolt
+	id = jabal_shammar_events.8
+	title = jabal_shammar_events.8.t
+	desc = jabal_shammar_events.8.d
+	picture = GFX_report_event_JBS_Ikhwan
+
+	trigger = {
+		has_capitulated = no
+		controls_state = 991
+		controls_state = 675
+		OR = {
+			is_subject = no
+			has_autonomy_state = ottoman_emirate
+		}
+	}
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.8 option jabal_shammar_events.8.a"
+		name = jabal_shammar_events.8.a
+		set_country_flag = jbs_revolt
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = -3500
+		}
+		if = {
+			limit = {
+				is_subject = yes
+				overlord = {
+					NOT = {
+						has_war_with = EGY
+						has_war_with = PER
+					}
+				}
+			}
+			overlord = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_free
+				}
+			}
+			leave_faction = yes
+			separate_peace_all_wars = yes
+		}
+		hidden_effect = {
+			IKH_start_rebellion = yes
+			set_province_controller = 10923
+			set_province_controller = 7995
+			#declare war on SAU if it exists just in the case this happens at the same time as SAU rebellion
+			if = {
+				limit = { country_exists = SAU }
+				IKH = {
+					declare_war_on = {
+						target = SAU
+						type = annex_everything
+					}
+				}
+			}
+		}
+		goto_province = 10791
+	}
+}
+
+### Pro-Saudi Insurrection
+country_event = { # Wahabbist Ulemma Defame [JBS.GetLeader]
+	id = jabal_shammar_events.9
+	title = jabal_shammar_events.9.t
+	desc = jabal_shammar_events.9.d
+	picture = GFX_OTT_Sheikh_Islam
+
+	trigger = {
+		has_completed_focus = JBS_second_rashidi_state
+		NOT = {
+			has_war_with = IKH
+			has_country_flag = JBS_IKH_will_rebel
+		}
+	}
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.9 option jabal_shammar_events.9.a"
+		name = jabal_shammar_events.9.a
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.10 days = 20 }
+		}
+		add_political_power = -30
+	}
+}
+
+country_event = { # Confrontation in Qasim
+	id = jabal_shammar_events.10
+	title = jabal_shammar_events.10.t
+	desc = jabal_shammar_events.10.d
+	picture = GFX_LBA_Camel2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.10 option jabal_shammar_events.10.a"
+		name = jabal_shammar_events.10.a
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.11 days = 20 }
+		}
+		add_stability = -0.10
+	}
+}
+
+country_event = { # Riyadh Ousts the Shammari Garrison
+	id = jabal_shammar_events.11
+	title = jabal_shammar_events.11.t
+	desc = jabal_shammar_events.11.d
+	picture = GFX_OTT_Fezzan
+
+	trigger = {
+		OR = {
+			is_subject = no
+			has_autonomy_state = ottoman_emirate
+		}
+	}
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.11 option jabal_shammar_events.11.a"
+		name = jabal_shammar_events.11.a
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.12 days = 5 }
+		}
+		add_stability = -0.10
+		set_country_flag = jbs_revolt
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = -5000
+		}
+		if = {
+			limit = {
+				is_subject = yes
+				overlord = {
+					NOT = {
+						has_war_with = EGY
+						has_war_with = PER
+					}
+				}
+			}
+			overlord = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_free
+				}
+			}
+			leave_faction = yes
+			separate_peace_all_wars = yes
+		}
+		every_owned_state = {
+			limit = {
+				is_core_of = JBS
+				OR = {
+					state = 292
+					state = 675
+					state = 991
+					state = 656
+				}
+			}
+			add_core_of = SAU
+		}
+		add_ideas = JBS_fighting_revolt
+		SAU = {
+			set_equipment_fraction = 0
+			set_war_support = 0.3
+			activate_targeted_decision = { target = EGY decision = SAU_Join_Cairo_Pact }
+			transfer_state = 292
+			hidden_effect = {
+				SAU_create_saud_bin_abdulaziz_al_saud = yes
+			}
+			#Units
+			division_template = {
+				name = "Saudi Loyalists"
+				division_names_group = SAU_CAV_01
+				is_locked = no
+				regiments = {
+					cavalry = { x = 0 y = 0 }
+					cavalry = { x = 0 y = 1 }
+					cavalry = { x = 0 y = 2 }
+				}
+			}
+			292 = {
+				create_unit = {
+					division = "name = \"Duwasir\" division_template = \"Saudi Loyalists\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					owner = PREV
+					prioritize_location = 4974
+				}
+				create_unit = {
+					division = "name = \"Duwasir\" division_template = \"Saudi Loyalists\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					owner = PREV
+					prioritize_location = 4974
+				}
+			}
+			declare_war_on = {
+				target = JBS
+				type = annex_everything
+			}
+			#declare war on IKH if it exists just in the case this revolt happens at the same time as IKH rebellion (so they won't split arabia)
+			if = {
+				limit = { country_exists = IKH }
+				declare_war_on = {
+					target = IKH
+					type = annex_everything
+				}
+			}
+			add_ideas = SAU_Saudi_revolt
+		}
+	}
+}
+
+country_event = { # Saudi Bannermen Answer the Call to Arms!
+	id = jabal_shammar_events.12
+	title = jabal_shammar_events.12.t
+	desc = jabal_shammar_events.12.d
+	picture = GFX_report_event_JBS_Ikhwan
+
+	trigger = {
+		JBS_ulemma_influence = {
+			OR = {
+				has_trait = JBS_Ulemma_Discontent
+				has_trait = JBS_Ulemma_Unhappy
+				has_trait = JBS_Ulemma_Very_Unhappy
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			SAU = {
+				transfer_state = 1035
+				transfer_state = 675
+				1035 = {
+					create_unit = {
+						division = "name = \"Zafir\" division_template = \"Saudi Loyalists\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						owner = PREV
+						prioritize_location = 4974
+					}
+					create_unit = {
+						division = "name = \"Anizzah\" division_template = \"Saudi Loyalists\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						owner = PREV
+						prioritize_location = 4951
+					}
+				}
+				675 = {
+					create_unit = {
+						division = "name = \"Zafir\" division_template = \"Saudi Loyalists\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						owner = PREV
+						prioritize_location = 10892
+					}
+				}
+			}
+			set_province_controller = 10923
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.12 option jabal_shammar_events.12.a"
+		name = jabal_shammar_events.12.a
+	}
+}
+
+## Overthrowal of Saud (al Rashidi)
+country_event = { # A Meeting In The Desert
+	id = jabal_shammar_events.13
+	title = jabal_shammar_events.13.t
+	desc = jabal_shammar_events.13.d
+	picture = GFX_LBA_Camel2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.13 option jabal_shammar_events.13.a"
+		name = jabal_shammar_events.13.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_OTT }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_EGY }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_MITAB }
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.13 option jabal_shammar_events.13.b"
+		name = jabal_shammar_events.13.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = JBS_emir option = JBS_EMIR_AZIZ }
+			}
+		}
+		custom_effect_tooltip = jbs_abdullah_goes_woop
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.14 days = 7 }
+		}
+	}
+}
+
+country_event = { # Abdullah Returns To Ha'il
+	id = jabal_shammar_events.14
+	title = jabal_shammar_events.14.t
+	desc = jabal_shammar_events.14.d
+	picture = GFX_report_event_JBS_Barzan2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.14 option jabal_shammar_events.14.a"
+		name = jabal_shammar_events.14.a
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.15 days = 2 }
+		}
+	}
+}
+
+country_event = { # The Mercenary Gambit
+	id = jabal_shammar_events.15
+	title = jabal_shammar_events.15.t
+	desc = jabal_shammar_events.15.d
+	picture = GFX_report_event_JBS_Barzan
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.15 option jabal_shammar_events.15.a"
+		name = jabal_shammar_events.15.a
+		ai_chance = { base = 1 }
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.16 days = 7 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.15 option jabal_shammar_events.15.b"
+		name = jabal_shammar_events.15.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_OTT }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_EGY }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_MITAB }
+				}
+			}
+		}
+	}
+}
+
+country_event = { # The Emir Returns
+	id = jabal_shammar_events.16
+	title = jabal_shammar_events.16.t
+	desc = jabal_shammar_events.16.d
+	picture = GFX_report_event_JBS_Barzan2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.36 days = 10 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.16 option jabal_shammar_events.16.a"
+		name = jabal_shammar_events.16.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_MITAB }
+			}
+		}
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.17 hours = 2 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.16 option jabal_shammar_events.16.b"
+		name = jabal_shammar_events.16.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_OTT }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_EGY }
+				}
+			}
+		}
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.18 hours = 2 }
+		}
+	}
+	after = {
+		JBS_create_abdallah_ibn_talal = yes
+		JBS_saud_bin_abd_al_aziz = { kill_character = yes }
+	}
+}
+
+country_event = { # The Coup Successful
+	id = jabal_shammar_events.17
+	title = jabal_shammar_events.17.t
+	desc = jabal_shammar_events.17.d
+	picture = GFX_OTT_Sultan_Speech
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.17 option jabal_shammar_events.17.a"
+		name = jabal_shammar_events.17.a
+		JBS_Decrease_Bedouin_Support = yes
+		JBS_Decrease_Ulemma_Support = yes
+	}
+}
+
+country_event = { # Abdullah Killed!
+	id = jabal_shammar_events.18
+	title = jabal_shammar_events.18.t
+	desc = jabal_shammar_events.18.d
+	picture = GFX_OTT_Arabs_Angry
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.18 option jabal_shammar_events.18.a"
+		name = jabal_shammar_events.18.a
+		JBS_create_abdallah_ibn_mitab = yes
+		JBS_abdallah_ibn_talal_al_rashid = { kill_character = yes }
+		JBS_Decrease_Ulemma_Support = yes
+		JBS_Decrease_Urban_Nobility_Support = yes
+	}
+}
+
+## Overthrowal of the House of Rashid
+country_event = { # Coup in Ha'il
+	id = jabal_shammar_events.19
+	title = jabal_shammar_events.19.t
+	desc = {
+		trigger = { NOT = { has_completed_focus = JBS_relinquish_power } }
+		text = jabal_shammar_events.19.d
+	}
+	desc = {
+		trigger = { has_completed_focus = JBS_relinquish_power }
+		text = jabal_shammar_events.19.d.2
+	}
+	picture = GFX_OTT_Parliament_Baghdad
+
+	trigger = {
+		OR = {
+			JBS_urban_nobility_influence = {
+				has_trait = JBS_Urban_Nobility_Very_Unhappy
+			}
+			AND = {
+				JBS_urban_nobility_influence = {
+					has_trait = JBS_Urban_Nobility_Unhappy
+				}
+				has_completed_focus = JBS_curb_authorities
+			}
+		}
+		has_completed_focus = JBS_second_rashidi_state
+		has_completed_focus = JBS_integrate_central_nejd
+		OTT_EGY_scripted_peace = no
+		OTT_EGY_was_defeated = no
+		NOT = {
+			AND = {
+				is_ai = yes
+				has_game_rule = { rule = JBS_path option = JBS_PATH_PATAUT }
+			}
+		}
+		NOT = {
+			AND = {
+				is_ai = yes
+				NOT = { has_game_rule = { rule = JBS_emir option = DEFAULT } }
+				NOT = { has_game_rule = { rule = JBS_emir option = JBS_EMIR_SUBHAN } }
+			}
+		}
+	}
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.19 option jabal_shammar_events.19.a"
+		name = jabal_shammar_events.19.a
+		JBS_Decrease_Bedouin_Support = yes
+		JBS_Decrease_Ulemma_Support = yes
+		JBS_Increase_Urban_Nobility_Support = yes
+		JBS_create_muhammad_ibn_talil_al_rashid = yes
+		remove_ideas = JBS_centralised_authority_idea
+		complete_national_focus = JBS_relinquish_power
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = no
+		}
+		if = {
+			limit = { authoritarian_democrat_plurality = no }
+			add_popularity = {
+				popularity = 0.20
+				ideology = authoritarian_democrat
+			}
+		}
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.20 days = 100 }
+		}
+	}
+}
+
+country_event = { # The Fall of the Rashidi Dynasty
+	id = jabal_shammar_events.20
+	title = jabal_shammar_events.20.t
+	desc = jabal_shammar_events.20.d
+	picture = GFX_OTT_Parliament_Baghdad
+
+	trigger = {
+		has_country_leader = { character = JBS_muhammad_ibn_talal_al_rashid }
+	}
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.20 option jabal_shammar_events.20.a"
+		name = jabal_shammar_events.20.a
+		JBS_Decrease_Bedouin_Support = yes
+		JBS_Decrease_Ulemma_Support = yes
+		JBS_remove_rashids = yes
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.26 days = 30 }
+			OTT = {
+				country_event = { id = jabal_shammar_events.30 days = 50 }
+			}
+			news_event = jabal_shammar_events.71
+		}
+	}
+}
+
+### War Events ###
+country_event = { # Faisal al-Duwaish Refuses Call to Arms
+	id = jabal_shammar_events.21
+	title = jabal_shammar_events.21.t
+	desc = jabal_shammar_events.21.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.21 option jabal_shammar_events.21.a"
+		name = jabal_shammar_events.21.a
+		effect_tooltip = {
+			delete_unit_template_and_units = { division_template = "Ikhwan" }
+			effect_tooltip = { retire_character = IKH_faisal_al_duwaish }
+			hidden_effect = {
+				SAU = { IKH_faisal_al_duwaish = { set_nationality = IKH } }
+				IKH = {
+					IKH_faisal_al_duwaish = {
+						add_country_leader_role = {
+							country_leader = {
+								desc = IKH_faisal_al_duwaish_leader_desc
+								ideology = paternal_autocrat_subtype
+							}
+							promote_leader = yes
+						}
+						promote_leader = yes
+						remove_trait = { trait = recently_promoted }
+					}
+				}
+			}
+		}
+	}
+}
+
+country_event = { # The Conquest of Buraida
+	id = jabal_shammar_events.22
+	title = jabal_shammar_events.22.t
+	desc = jabal_shammar_events.22.d
+	picture = GFX_OTT_Gendarmerie
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.22 option jabal_shammar_events.22.a"
+		name = jabal_shammar_events.22.a
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.23 days = 6 }
+		}
+	}
+}
+
+country_event = { # Ottoman Army Withdraws
+	id = jabal_shammar_events.23
+	title = jabal_shammar_events.23.t
+	desc = jabal_shammar_events.23.d
+	picture = GFX_OTT_Fezzan
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.23 option jabal_shammar_events.23.a"
+		name = jabal_shammar_events.23.a
+	}
+}
+
+### Cultural Flavor Events ###
+country_event = { # Conflict in Medina
+	id = jabal_shammar_events.24
+	title = jabal_shammar_events.24.t
+	desc = jabal_shammar_events.24.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.24 option jabal_shammar_events.24.a"
+		name = jabal_shammar_events.24.a
+		JBS_Decrease_Bedouin_Support = yes
+	}
+}
+
+country_event = { # The End of Sabaism
+	id = jabal_shammar_events.25
+	title = jabal_shammar_events.25.t
+	desc = jabal_shammar_events.25.d
+	picture = GFX_LBA_Camel2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.25 option jabal_shammar_events.25.a"
+		name = jabal_shammar_events.25.a
+	}
+}
+
+country_event = { # Unrest amongst the Bedouin
+	id = jabal_shammar_events.26
+	title = jabal_shammar_events.26.t
+	desc = jabal_shammar_events.26.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.26 option jabal_shammar_events.26.a"
+		name = jabal_shammar_events.26.a
+		JBS_Decrease_Bedouin_Support = yes
+		add_stability = -0.05
+	}
+}
+
+country_event = { # The Petroleum Affair
+	id = jabal_shammar_events.27
+	title = jabal_shammar_events.27.t
+	desc = {
+		trigger = {
+			OTT_ottomans_defeated = no
+		}
+		text = jabal_shammar_events.27.d1
+	}
+	desc = {
+		trigger = {
+			OTT_ottomans_defeated = yes
+		}
+		text = jabal_shammar_events.27.d2
+	}
+	picture = GFX_LBA_Expedition
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.27 option jabal_shammar_events.27.a"
+		name = jabal_shammar_events.27.a
+		trigger = {
+			OTT_ottomans_defeated = no
+		}
+		set_country_flag = TPC_tt
+		### add idea TPC
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.27 option jabal_shammar_events.27.b"
+		name = jabal_shammar_events.27.b
+		set_country_flag = DAMAG_tt
+		country_event = { id = jabal_shammar_events.28 days = 10 }
+	}
+	after = {
+		add_offsite_building = {
+			type = industrial_complex
+			level = 1
+		}
+	}
+}
+
+country_event = { # Creation of the DAMAG
+	id = jabal_shammar_events.28
+	title = jabal_shammar_events.28.t
+	desc = jabal_shammar_events.28.d
+	picture = GFX_OTT_Oil1
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.28 option jabal_shammar_events.28.a"
+		name = jabal_shammar_events.28.a
+		### add idea DAMAG
+	}
+}
+
+country_event = { # Camel Racing in Ha'il
+	id = jabal_shammar_events.29
+	title = jabal_shammar_events.29.t
+	desc = jabal_shammar_events.29.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.29 option jabal_shammar_events.29.a"
+		name = jabal_shammar_events.29.a
+		add_stability = 0.01
+	}
+}
+
+### Restoration of the House of Rashid
+country_event = { # Rashidi Prince Pleads for Assistance
+	id = jabal_shammar_events.30
+	title = jabal_shammar_events.30.t
+	desc = jabal_shammar_events.30.d
+	picture = GFX_LBA_Camel3
+
+	trigger = {
+		controls_state = 679
+		NOT = {
+			has_war_with = JBS
+		}
+	}
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.30 option jabal_shammar_events.30.a"
+		name = jabal_shammar_events.30.a
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = -500
+		}
+		add_political_power = -30
+		JBS = {
+			country_event = jabal_shammar_events.31
+			set_country_flag = ott_aid
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.30 option jabal_shammar_events.30.b"
+		name = jabal_shammar_events.30.b
+		679 = {
+			ott_increase_revolt_risk = yes
+		}
+		754 = {
+			ott_increase_revolt_risk = yes
+		}
+		random_list = {
+			20 = {
+				JBS = {
+					country_event = jabal_shammar_events.31
+				}
+			}
+			80 = {
+
+			}
+		}
+	}
+}
+
+country_event = { # Jeddah Backs Prince Abdallah ibn Mitab al Rashid
+	id = jabal_shammar_events.31
+	title = jabal_shammar_events.31.t
+	desc = jabal_shammar_events.31.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			add_timed_idea = {
+				idea = JBS_looming_invasion
+				days = 60
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.31 option jabal_shammar_events.31.a"
+		name = jabal_shammar_events.31.a
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 3
+				EGY = {
+					is_ai = no
+				}
+			}
+		}
+		EGY = {
+			country_event = jabal_shammar_events.32
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.31 option jabal_shammar_events.31.b"
+		name = jabal_shammar_events.31.b
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 5
+				OTT = {
+					is_ai = no
+				}
+			}
+		}
+		add_stability = 0.05
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.35 days = 30 }
+		}
+	}
+}
+
+country_event = { # Ha'il Calls for Aid
+	id = jabal_shammar_events.32
+	title = jabal_shammar_events.32.t
+	desc = jabal_shammar_events.32.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.32 option jabal_shammar_events.32.a"
+		name = jabal_shammar_events.32.a
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 3
+				JBS = {
+					is_ai = no
+				}
+			}
+		}
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = -500
+		}
+		add_political_power = -30
+		JBS = {
+			country_event = { id = jabal_shammar_events.33 days = 5 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.32 option jabal_shammar_events.32.b"
+		name = jabal_shammar_events.32.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 5
+				OTT = {
+					is_ai = no
+				}
+			}
+		}
+		JBS = {
+			country_event = { id = jabal_shammar_events.34 days = 5 }
+		}
+	}
+}
+
+country_event = { # Egypt Sends Aid
+	id = jabal_shammar_events.33
+	title = jabal_shammar_events.33.t
+	desc = jabal_shammar_events.33.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.33 option jabal_shammar_events.33.a"
+		name = jabal_shammar_events.33.a
+		set_country_flag = egy_aid
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.35 days = 30 }
+		}
+	}
+}
+
+country_event = { # Egypt Stalls
+	id = jabal_shammar_events.34
+	title = jabal_shammar_events.34.t
+	desc = jabal_shammar_events.34.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.34 option jabal_shammar_events.34.a"
+		name = jabal_shammar_events.34.a
+		add_political_power = -20
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.35 days = 30 }
+		}
+	}
+}
+
+country_event = { # The Battle for Ha'il
+	id = jabal_shammar_events.35
+	title = jabal_shammar_events.35.t
+	desc = jabal_shammar_events.35.d
+	picture = GFX_report_event_JBS_Ikhwan
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			remove_ideas = JBS_looming_invasion
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.35 option jabal_shammar_events.35.a"
+		name = jabal_shammar_events.35.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = JBS_emir option = JBS_EMIR_SUBHAN }
+			}
+			modifier = {
+				factor = 3
+				has_country_flag = ott_aid
+			}
+			modifier = {
+				factor = 2
+				has_country_flag = ott_aid
+				OTT = { is_ai = no }
+			}
+		}
+		leave_faction = yes
+		if = {
+			limit = { has_war_with = OTT }
+			OTT = { white_peace_with_ROOT = yes }
+		}
+		JBS_restore_rashids = yes
+		hidden_effect = {
+			news_event = jabal_shammar_events.72
+			if = {
+				limit = { has_country_flag = ott_aid }
+				country_event = { id = jabal_shammar_events.68 days = 5 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.35 option jabal_shammar_events.35.b"
+		name = jabal_shammar_events.35.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 3
+				has_country_flag = egy_aid
+			}
+			modifier = {
+				factor = 2
+				has_country_flag = egy_aid
+				EGY = {
+					is_ai = no
+				}
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_MITAB }
+			}
+		}
+		add_stability = 0.10
+	}
+	after = {
+		JBS_Increase_Bedouin_Support = yes
+		JBS_Increase_Ulemma_Support = yes
+		JBS_Increase_Urban_Nobility_Support = yes
+	}
+}
+
+### Chaos in the Realm
+country_event = { # Succession Crisis in Ha'il
+	id = jabal_shammar_events.36
+	title = jabal_shammar_events.36.t
+	desc = jabal_shammar_events.36.d
+	picture = GFX_report_event_JBS_Barzan2
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.36 option jabal_shammar_events.36.a"
+		name = jabal_shammar_events.36.a
+		add_timed_idea = {
+			idea = JBS_unbridled_fratricide
+			days = 105
+		}
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.37 days = 20 }
+		}
+	}
+}
+
+country_event = { # The Death of Zaid bin Talal al Rashid
+	id = jabal_shammar_events.37
+	title = jabal_shammar_events.37.t
+	desc = jabal_shammar_events.37.d
+	picture = GFX_report_event_JBS_Barzan
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.38 days = 20 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.37 option jabal_shammar_events.37.a"
+		name = jabal_shammar_events.37.a
+		add_stability = -0.03
+	}
+}
+
+country_event = { # The Death of Faisal bin Hamud al Rashid
+	id = jabal_shammar_events.38
+	title = jabal_shammar_events.38.t
+	desc = jabal_shammar_events.38.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.39 days = 20 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.38 option jabal_shammar_events.38.a"
+		name = jabal_shammar_events.38.a
+		add_stability = -0.03
+	}
+}
+
+country_event = { # The Death of Muhammad bin Abdulaziz al Rashid
+	id = jabal_shammar_events.39
+	title = jabal_shammar_events.39.t
+	desc = jabal_shammar_events.39.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.40 days = 20 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.39 option jabal_shammar_events.39.a"
+		name = jabal_shammar_events.39.a
+		add_stability = -0.03
+	}
+}
+
+country_event = { # The Death of Abdullah bin Hamud al Rashid
+	id = jabal_shammar_events.40
+	title = jabal_shammar_events.40.t
+	desc = jabal_shammar_events.40.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.41 days = 20 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.40 option jabal_shammar_events.40.a"
+		name = jabal_shammar_events.40.a
+		add_stability = -0.03
+	}
+}
+
+country_event = { # The Death of Abdullah bin Hamud al Rashid
+	id = jabal_shammar_events.41
+	title = jabal_shammar_events.41.t
+	desc = jabal_shammar_events.41.d
+	picture = GFX_LBA_Camel3
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = { id = jabal_shammar_events.42 days = 5 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.41 option jabal_shammar_events.41.a"
+		name = jabal_shammar_events.41.a
+		add_stability = -0.03
+	}
+}
+
+country_event = { # End of the Succession Crisis
+	id = jabal_shammar_events.42
+	title = jabal_shammar_events.42.t
+	desc = jabal_shammar_events.42.d
+	picture = GFX_report_event_JBS_Barzan
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			remove_ideas = JBS_unbridled_fratricide
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.42 option jabal_shammar_events.42.a"
+		name = jabal_shammar_events.42.a
+		add_stability = 0.20
+		set_temp_variable = { ideology_change_var = 0.1 }
+		change_ruling_party_popularity = yes
+		JBS_Increase_Bedouin_Support = yes
+		JBS_Increase_Ulemma_Support = yes
+		JBS_Increase_Urban_Nobility_Support = yes
+	}
+}
+
+### Rashidi-Ottoman Events
+country_event = { # Caliph [OTT.GetLeader] appoints [JBS.GetLeader] Emir of Ha'il and Najd
+	id = jabal_shammar_events.59
+	title = jabal_shammar_events.59.t
+	desc = jabal_shammar_events.59.d
+	picture = GFX_OTT_Dolmabahce
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.59 option jabal_shammar_events.59.a"
+		name = jabal_shammar_events.59.a
+		get_current_government_type = yes
+		OTT = {
+			set_autonomy = {
+				target = JBS
+				autonomy_state = ottoman_emirate
+				end_wars = no
+			}
+		}
+		restore_previous_government_type = yes
+		JBS_readd_claims_after_puppeting = yes
+	}
+}
+
+country_event = { # Arab Congress comes to an end
+	id = jabal_shammar_events.60
+	title = jabal_shammar_events.60.t
+	desc = jabal_shammar_events.60.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	trigger = {
+		has_completed_focus = JBS_unite_arabs
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.60 option jabal_shammar_events.60.a"
+		name = jabal_shammar_events.60.a
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				has_global_flag = EGY_cunts
+			}
+			modifier = {
+				factor = 3
+				OTT = {
+					has_government = social_conservative
+				}
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_EGY }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_SUBHAN }
+				}
+			}
+		}
+		OTT = {
+			country_event = jabal_shammar_events.61
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.60 option jabal_shammar_events.60.b"
+		name = jabal_shammar_events.60.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 10
+				OTT = {
+					has_completed_focus = OTT_Intervene_Arab_Unification_War
+				}
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_AZIZ }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_OTT }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_MITAB }
+				}
+			}
+		}
+		add_war_support = 0.05
+	}
+}
+
+country_event = { # The Emir of Jabal Shammar pledges his allegiance
+	id = jabal_shammar_events.61
+	title = jabal_shammar_events.61.t
+	desc = jabal_shammar_events.61.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.61 option jabal_shammar_events.61.a"
+		name = jabal_shammar_events.61.a
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 0.2
+				has_political_power < -100
+			}
+		}
+		add_political_power = -100
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = -2000
+		}
+		give_guarantee = JBS
+		diplomatic_relation = {
+			country = JBS
+			relation = non_aggression_pact
+			active = yes
+		}
+		JBS = {
+			country_event = jabal_shammar_events.62
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.61 option jabal_shammar_events.61.b"
+		name = jabal_shammar_events.61.b
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_AZIZ }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_TALAL_OTT }
+					has_game_rule = { rule = JBS_emir option = JBS_EMIR_IBN_MITAB }
+				}
+			}
+		}
+		JBS = {
+			country_event = jabal_shammar_events.63
+		}
+	}
+}
+
+country_event = { # Jabal Shammar sides with Istanbul
+	id = jabal_shammar_events.62
+	title = jabal_shammar_events.62.t
+	desc = jabal_shammar_events.62.d
+	picture = GFX_OTT_Dolmabahce
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.62 option jabal_shammar_events.62.a"
+		name = jabal_shammar_events.62.a
+		add_political_power = 100
+		add_equipment_to_stockpile = {
+			type = infantry_equipment_0
+			amount = 2000
+		}
+		EGY = {
+			remove_from_faction = JBS
+		}
+	}
+}
+
+country_event = { # Jabal Shammar sides with Cairo
+	id = jabal_shammar_events.63
+	title = jabal_shammar_events.63.t
+	desc = jabal_shammar_events.63.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.63 option jabal_shammar_events.63.a"
+		name = jabal_shammar_events.63.a
+	}
+}
+
+country_event = { # Jabal Shammar joins the war against the CP
+	id = jabal_shammar_events.64
+	title = jabal_shammar_events.64.t
+	desc = jabal_shammar_events.64.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.64 option jabal_shammar_events.64.a"
+		name = jabal_shammar_events.64.a
+		FROM = {
+			if = {
+				limit = {
+					can_declare_war_on = HEJ
+					HEJ = { is_in_faction_with = EGY }
+				}
+				declare_war_on = {
+					target = HEJ
+					type = annex_everything
+				}
+			}
+			else = {
+				add_to_war = {
+					targeted_alliance = ROOT
+					enemy = EGY
+				}
+			}
+		}
+		set_global_flag = JBS_joined_istanbul_pact
+		JBS = {
+			add_offsite_building = {
+				type = arms_factory
+				level = 1
+			}
+		}
+	}
+}
+
+country_event = { # Jabal Shammar demands compensation
+	id = jabal_shammar_events.65
+	title = jabal_shammar_events.65.t
+	desc = jabal_shammar_events.65.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	trigger = {
+		OR = {
+			has_global_flag = JBS_joined_istanbul_pact
+			is_ally_with = JBS
+		}
+		JBS = {
+			exists = yes
+			NOT = { has_war_with = ROOT }
+			OR = {
+				is_subject = no
+				has_autonomy_state = ottoman_emirate
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.65 option jabal_shammar_events.65.a"
+		name = jabal_shammar_events.65.a
+		ai_chance = { base = 90 }
+		trigger = {
+			981 = {
+				is_owned_by_ROOT_or_subject = yes
+			}
+			982 = {
+				is_owned_by_ROOT_or_subject = yes
+			}
+		}
+		JBS = {
+			hidden_effect = {
+				if = {
+					limit = { 981 = { is_claimed_by = PREV } }
+					remove_state_claim = 981
+				}
+			}
+			add_state_core = 981
+			transfer_state = 981
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.65 option jabal_shammar_events.65.b"
+		name = jabal_shammar_events.65.b
+		ai_chance = { base = 10 }
+		if = {
+			limit = {
+				981 = { is_claim_or_core_of_ROOT = no } #Najran
+			}
+			add_state_claim = 981 #Najran
+		}
+		JBS = { country_event = jabal_shammar_events.66 }
+	}
+}
+
+country_event = { # Jabal Shammar receives zilch
+	id = jabal_shammar_events.66
+	title = jabal_shammar_events.66.t
+	desc = jabal_shammar_events.66.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.66 option jabal_shammar_events.66.a"
+		name = jabal_shammar_events.66.a
+		trigger = { is_ai = yes }
+		add_political_power = -100
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.66 option jabal_shammar_events.66.a"
+		name = jabal_shammar_events.66.a
+		trigger = { is_ai = no }
+		JBS = { clear_all_relations = yes }
+	}
+}
+
+country_event = { # [JBS.GetLeader] Breaks Ties with the Sublime Porte
+	id = jabal_shammar_events.67
+	title = jabal_shammar_events.67.t
+	desc = jabal_shammar_events.67.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.67 option jabal_shammar_events.67.a"
+		name = jabal_shammar_events.67.a
+		effect_tooltip = {
+			set_autonomy = {
+				target = FROM
+				autonomy_state = autonomy_free
+			}
+			remove_from_faction = FROM
+		}
+	}
+}
+
+country_event = { # The Porte demands compensation
+	id = jabal_shammar_events.68
+	title = jabal_shammar_events.68.t
+	desc = jabal_shammar_events.68.d
+	picture = GFX_OTT_Dolmabahce
+
+	trigger = {
+		OTT = {
+			NOT = {
+				has_war_with = JBS
+			}
+			owns_state = 658
+			owns_state = 812
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.68 option jabal_shammar_events.68.a"
+		name = jabal_shammar_events.68.a
+		ai_chance = { base = 100 }
+		get_current_government_type = yes
+		OTT = {
+			effect_tooltip = { transfer_state = 656 }
+			set_autonomy = {
+				target = JBS
+				autonomy_state = ottoman_emirate
+				end_wars = no
+			}
+			country_event = jabal_shammar_events.69
+		}
+		restore_previous_government_type = yes
+		JBS_readd_claims_after_puppeting = yes
+		custom_effect_tooltip = tooltip_white_line
+		JBS_Decrease_Urban_Nobility_Support = yes
+		JBS_Decrease_Bedouin_Support = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.68 option jabal_shammar_events.68.b"
+		name = jabal_shammar_events.68.b
+		ai_chance = { base = 0 }
+		leave_faction = yes
+		if = {
+			limit = { is_subject = yes }
+			overlord = {
+				set_autonomy = {
+					target = JBS
+					autonomy_state = autonomy_free
+				}
+				country_event = jabal_shammar_events.70
+			}
+		}
+		separate_peace_all_wars = yes
+		custom_effect_tooltip = tooltip_white_line
+		JBS_Increase_Urban_Nobility_Support = yes
+		JBS_Increase_Bedouin_Support = yes
+		complete_national_focus = JBS_unite_arabs
+	}
+}
+
+country_event = { # Ha'il hands over al-Hasa
+	id = jabal_shammar_events.69
+	title = jabal_shammar_events.69.t
+	desc = jabal_shammar_events.69.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.69 option jabal_shammar_events.69.a"
+		name = jabal_shammar_events.69.a
+		transfer_state = 656
+		add_state_claim = 656
+	}
+}
+
+country_event = { # Ha'il refuses demands!
+	id = jabal_shammar_events.70
+	title = jabal_shammar_events.70.t
+	desc = jabal_shammar_events.70.d
+	picture = GFX_OTT_Civil_War_Jabal
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.70 option jabal_shammar_events.70.a"
+		name = jabal_shammar_events.70.a
+		add_political_power = -20
+	}
+}
+
+# Fall of the Rashidi Emirate
+news_event = {
+	id = jabal_shammar_events.71
+	immediate = { log = "[GetLogInfo]: event jabal_shammar_events.71" }
+	title = jabal_shammar_events.71.t
+
+	desc = {
+		text = jabal_shammar_events.71.d.OTT
+		trigger = { OTT_ottomans_defeated = no }
+	}
+	desc = {
+		text = jabal_shammar_events.71.d.no_OTT
+		trigger = { OTT_ottomans_defeated = yes }
+	}
+
+	picture = GFX_news_event_OTT_fall_rashidis
+
+	major = yes
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		regional_middle_east_news = yes
+		NOT = { tag = OTT }
+		NOT = { tag = JBS }
+	}
+
+	option = {
+		name = jabal_shammar_events.71.a
+	}
+}
+
+# Restoration of the Rashidi Emirate
+news_event = {
+	id = jabal_shammar_events.72
+	immediate = { log = "[GetLogInfo]: event jabal_shammar_events.72" }
+	title = jabal_shammar_events.72.t
+	desc = jabal_shammar_events.72.d
+	picture = GFX_news_event_OTT_return_rashidis
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_middle_east_news = yes }
+
+	option = {
+		name = jabal_shammar_events.72.a
+	}
+}
+
+# The Ikhwan Revolt
+news_event = {
+	id = jabal_shammar_events.73
+	immediate = { log = "[GetLogInfo]: event jabal_shammar_events.73" }
+	title = jabal_shammar_events.73.t
+	desc = jabal_shammar_events.73.d
+	picture = GFX_news_event_OTT_ikhwan
+
+	major = yes
+
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = {
+		regional_middle_east_news = yes
+		NOT = { tag = SAU }
+		NOT = { tag = OMA }
+	}
+
+	option = {
+		name = jabal_shammar_events.73.a
+	}
+}
+
+# Chaos in Arabia
+news_event = {
+	id = jabal_shammar_events.74
+	immediate = { log = "[GetLogInfo]: event jabal_shammar_events.74" }
+	title = jabal_shammar_events.74.t
+	desc = jabal_shammar_events.74.d
+	picture = GFX_news_event_OTT_ikhwan
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes }
+
+	show_major = { regional_middle_east_news = yes }
+
+	option = {
+		name = jabal_shammar_events.74.a
+	}
+}
+
+country_event = { # War breaks out
+	id = jabal_shammar_events.1000
+
+	is_triggered_only = yes
+
+	hidden = yes
+
+	immediate = {
+		##########
+		### JBS ##
+		##########
+		add_ideas = JBS_arabian_war_of_unification
+		activate_mission = JBS_War_of_Unification_Peace
+		### Harb
+		if = {
+			limit = {
+				has_country_flag = harb_recruited
+			}
+			division_template = {
+				name = "Harb"
+				division_names_group = SAU_CAV_01
+				is_locked = yes
+				regiments = {
+					cavalry = { x = 0 y = 0 }
+					cavalry = { x = 0 y = 1 }
+					cavalry = { x = 1 y = 0 }
+					cavalry = { x = 1 y = 1 }
+				}
+			}
+			915 = {
+				create_unit = {
+					division = "name = \"Harb\" division_template = \"Harb\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 12758
+					owner = JBS
+				}
+			}
+			clr_country_flag = harb_recruited
+		}
+
+		### Hutaim
+		if = {
+			limit = {
+				has_country_flag = hutaim_recruited
+			}
+			division_template = {
+				name = "Hutaim"
+				division_names_group = SAU_MIL_01
+				is_locked = yes
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+				}
+			}
+			994 = {
+				create_unit = {
+					division = "name = \"Hutaim\" division_template = \"Hutaim\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 7970
+					owner = JBS
+				}
+			}
+			show_unit_leaders_tooltip = JBS_dulaim_ibn_barrak
+			hidden_effect = {
+				JBS_dulaim_ibn_barrak = { set_nationality = ROOT }
+			}
+			clr_country_flag = hutaim_recruited
+		}
+
+		### Muntafiq
+		if = {
+			limit = {
+				has_country_flag = muntafiq_recruited
+			}
+			division_template = {
+				name = "Iraqi Camel Corps"
+				division_names_group = SAU_CAV_01
+				is_locked = yes
+				regiments = {
+					camelry = { x = 0 y = 0 }
+					camelry = { x = 0 y = 1 }
+					camelry = { x = 0 y = 2 }
+					camelry = { x = 1 y = 0 }
+					camelry = { x = 1 y = 1 }
+					camelry = { x = 1 y = 2 }
+					camelry = { x = 2 y = 0 }
+					camelry = { x = 2 y = 1 }
+					camelry = { x = 2 y = 2 }
+				}
+			}
+			1035 = {
+				create_unit = {
+					division = "name = \"Iraqi Camel Corps\" division_template = \"Iraqi Camel Corps\" start_experience_factor = 0.8"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 5058
+					owner = JBS
+				}
+			}
+			IRQ = { IRQ_ajami_al_saadun = { set_nationality = PREV.PREV } }
+			clr_country_flag = muntafiq_recruited
+		}
+
+		### Anizzah
+		if = {
+			limit = {
+				has_country_flag = anizzah_recruited
+			}
+			division_template = {
+				name = "Anizzah"
+				division_names_group = SAU_CAV_01
+				is_locked = yes
+				regiments = {
+					cavalry = { x = 0 y = 0 }
+					cavalry = { x = 0 y = 1 }
+					cavalry = { x = 1 y = 0 }
+					cavalry = { x = 1 y = 1 }
+				}
+			}
+			division_template = {
+				name = "Wuld Sulaiman"
+				division_names_group = SAU_MIL_01
+				is_locked = yes
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+				}
+			}
+			1035 = {
+				create_unit = {
+					division = "name = \"Amarat\" division_template = \"Anizzah\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 5099
+					owner = JBS
+				}
+				create_unit = {
+					division = "name = \"Damasha\" division_template = \"Anizzah\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 12316
+					owner = JBS
+				}
+			}
+			915 = {
+				create_unit = {
+					division = "name = \"Wuld Sulaiman\" division_template = \"Wuld Sulaiman\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 5027
+					owner = JBS
+				}
+			}
+			clr_country_flag = anizzah_recruited
+		}
+
+		### Mutair
+		if = {
+			limit = {
+				has_country_flag = mutair_busayis_recruited
+			}
+			division_template = {
+				name = "Mutair"
+				division_names_group = SAU_CAV_01
+				is_locked = yes
+				regiments = {
+					cavalry = { x = 0 y = 0 }
+					cavalry = { x = 0 y = 1 }
+					cavalry = { x = 1 y = 0 }
+					cavalry = { x = 1 y = 1 }
+				}
+			}
+			675 = {
+				create_unit = {
+					division = "name = \"Mutair\" division_template = \"Mutair\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 10892
+					owner = JBS
+				}
+			}
+			clr_country_flag = mutair_busayis_recruited
+		}
+
+		### Ajman
+		if = {
+			limit = {
+				has_country_flag = ajman_recruited
+			}
+			division_template = {
+				name = "Ajman"
+				division_names_group = SAU_CAV_01
+				is_locked = yes
+				regiments = {
+					cavalry = { x = 0 y = 0 }
+					cavalry = { x = 0 y = 1 }
+					cavalry = { x = 1 y = 0 }
+					cavalry = { x = 1 y = 1 }
+				}
+			}
+			division_template = {
+				name = "Ajman Militia"
+				division_names_group = SAU_MIL_01
+				is_locked = yes
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+				}
+			}
+			991 = {
+				create_unit = {
+					division = "name = \"Ajman\" division_template = \"Ajman\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 5024
+					owner = JBS
+				}
+				create_unit = {
+					division = "name = \"Ajman\" division_template = \"Ajman Militia\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 1631
+					owner = JBS
+				}
+			}
+			IKH = { IKH_zaidan_ibn_hithlain = { set_nationality = PREV.PREV } }
+			clr_country_flag = ajman_recruited
+		}
+
+		### Utaibah
+		if = {
+			limit = {
+				has_country_flag = utaibah_recruited
+			}
+			division_template = {
+				name = "Utaibah"
+				division_names_group = SAU_CAV_01
+				is_locked = yes
+				regiments = {
+					cavalry = { x = 0 y = 0 }
+					cavalry = { x = 0 y = 1 }
+					cavalry = { x = 1 y = 0 }
+					cavalry = { x = 1 y = 1 }
+				}
+			}
+			division_template = {
+				name = "Utaibah Militia"
+				division_names_group = SAU_MIL_01
+				is_locked = yes
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+				}
+			}
+			675 = {
+				create_unit = {
+					division = "name = \"Utaibah\" division_template = \"Utaibah\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 2090
+					owner = JBS
+				}
+				create_unit = {
+					division = "name = \"Utaibah\" division_template = \"Utaibah Militia\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 8004
+					owner = JBS
+				}
+			}
+			show_unit_leaders_tooltip = JBS_abd_al_rahman_ibn_rubayin
+			hidden_effect = {
+				JBS_abd_al_rahman_ibn_rubayin = { set_nationality = ROOT }
+			}
+			clr_country_flag = utaibah_recruited
+		}
+
+		### Awazim
+		if = {
+			limit = {
+				has_country_flag = awazim_recruited
+			}
+			division_template = {
+				name = "Awazim"
+				division_names_group = SAU_MIL_01
+				is_locked = yes
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+				}
+			}
+			656 = {
+				create_unit = {
+					division = "name = \"Awazim\" division_template = \"Awazim\" start_experience_factor = 0.1"
+					allow_spawning_on_enemy_provs = yes
+					prioritize_location = 1955
+					owner = JBS
+				}
+			}
+			clr_country_flag = awazim_recruited
+		}
+
+		if = {
+			limit = {
+				has_country_flag = swaying_faisal
+			}
+			SAU = {
+				delete_unit_template_and_units = { division_template = "Ikhwan" }
+				country_event = jabal_shammar_events.21
+			}
+		}
+
+		#########
+		## SAU ##
+		#########
+		SAU = {
+			add_ideas = SAU_arabian_war_of_unification
+			activate_mission = SAU_War_of_Unification_Peace
+		### Ruwala
+			if = {
+				limit = {
+					has_country_flag = ruwala_recruited
+				}
+				division_template = {
+					name = "Ruwala"
+					division_names_group = SAU_CAV_01
+					is_locked = yes
+					regiments = {
+						cavalry = { x = 0 y = 0 }
+						cavalry = { x = 0 y = 1 }
+						cavalry = { x = 1 y = 0 }
+						cavalry = { x = 1 y = 1 }
+					}
+				}
+				1035 = {
+					create_unit = {
+						division = "name = \"Ruwala\" division_template = \"Ruwala\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 5099
+						owner = SAU
+					}
+				}
+				clr_country_flag = ruwala_recruited
+			}
+		### Anizzah
+			if = {
+				limit = {
+					has_country_flag = anizzah_recruited
+				}
+				division_template = {
+					name = "Anizzah"
+					division_names_group = SAU_CAV_01
+					is_locked = yes
+					regiments = {
+						cavalry = { x = 0 y = 0 }
+						cavalry = { x = 0 y = 1 }
+						cavalry = { x = 1 y = 0 }
+						cavalry = { x = 1 y = 1 }
+					}
+				}
+				division_template = {
+					name = "Wuld Sulaiman"
+					division_names_group = SAU_MIL_01
+					is_locked = yes
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+					}
+				}
+				1035 = {
+					create_unit = {
+						division = "name = \"Amarat\" division_template = \"Anizzah\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 5099
+						owner = SAU
+					}
+					create_unit = {
+						division = "name = \"Damasha\" division_template = \"Anizzah\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 12316
+						owner = SAU
+					}
+				}
+				915 = {
+					create_unit = {
+						division = "name = \"Wuld Sulaiman\" division_template = \"Wuld Sulaiman\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 5027
+						owner = SAU
+					}
+				}
+				clr_country_flag = anizzah_recruited
+			}
+		### Dhafir
+			if = {
+				limit = {
+					has_country_flag = dhafir_recruited
+				}
+				division_template = {
+					name = "Dhafir"
+					division_names_group = SAU_CAV_01
+					is_locked = yes
+					regiments = {
+						cavalry = { x = 0 y = 0 }
+						cavalry = { x = 0 y = 1 }
+						cavalry = { x = 1 y = 0 }
+						cavalry = { x = 1 y = 1 }
+					}
+				}
+				1035 = {
+					create_unit = {
+						division = "name = \"Dhafir\" division_template = \"Dhafir\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 10744
+						owner = SAU
+					}
+				}
+				clr_country_flag = dhafir_recruited
+			}
+
+		### Mutair
+			if = {
+				limit = {
+					has_country_flag = mutair_busayis_recruited
+				}
+				division_template = {
+					name = "Mutair"
+					division_names_group = SAU_CAV_01
+					is_locked = yes
+					regiments = {
+						cavalry = { x = 0 y = 0 }
+						cavalry = { x = 0 y = 1 }
+						cavalry = { x = 1 y = 0 }
+						cavalry = { x = 1 y = 1 }
+					}
+				}
+				675 = {
+					create_unit = {
+						division = "name = \"Mutair\" division_template = \"Mutair\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 10892
+						owner = SAU
+					}
+				}
+				clr_country_flag = mutair_busayis_recruited
+			}
+		### Utaibah (Ikhwan)
+			if = {
+				limit = {
+					has_country_flag = utaibah_sultan_recruited
+				}
+				division_template = {
+					name = "Utaibah"
+					division_names_group = SAU_CAV_01
+					is_locked = yes
+					regiments = {
+						cavalry = { x = 0 y = 0 }
+						cavalry = { x = 0 y = 1 }
+						cavalry = { x = 1 y = 0 }
+						cavalry = { x = 1 y = 1 }
+					}
+				}
+				675 = {
+					create_unit = {
+						division = "name = \"Utaibah\" division_template = \"Utaibah\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 2090
+						owner = SAU
+					}
+					create_unit = {
+						division = "name = \"Utaibah\" division_template = \"Utaibah\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 12813
+						owner = SAU
+					}
+				}
+				clr_country_flag = utaibah_sultan_recruited
+			}
+		### Utaibah
+			if = {
+				limit = {
+					has_country_flag = utaibah_rubayin_recruited
+				}
+				division_template = {
+					name = "Utaibah"
+					division_names_group = SAU_CAV_01
+					is_locked = yes
+					regiments = {
+						cavalry = { x = 0 y = 0 }
+						cavalry = { x = 0 y = 1 }
+						cavalry = { x = 1 y = 0 }
+						cavalry = { x = 1 y = 1 }
+					}
+				}
+				division_template = {
+					name = "Utaibah Militia"
+					division_names_group = SAU_MIL_01
+					is_locked = yes
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+					}
+				}
+				675 = {
+					create_unit = {
+						division = "name = \"Utaibah\" division_template = \"Utaibah\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 2090
+						owner = SAU
+					}
+					create_unit = {
+						division = "name = \"Utaibah\" division_template = \"Utaibah Militia\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 8004
+						owner = SAU
+					}
+				}
+				clr_country_flag = utaibah_rubayin_recruited
+			}
+		### Duwasir
+			if = {
+				limit = {
+					has_country_flag = duwasir_recruited
+				}
+				division_template = {
+					name = "Duwasir"
+					division_names_group = SAU_MIL_01
+					is_locked = yes
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+					}
+				}
+				292 = {
+					create_unit = {
+						division = "name = \"Duwasir\" division_template = \"Duwasir\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 4974
+						owner = SAU
+					}
+					create_unit = {
+						division = "name = \"Duwasir\" division_template = \"Duwasir\" start_experience_factor = 0.1"
+						allow_spawning_on_enemy_provs = yes
+						prioritize_location = 5093
+						owner = SAU
+					}
+				}
+				clr_country_flag = duwasir_recruited
+			}
+		}
+	}
+}
+
+country_event = { # Ikhwan Civil War
+	id = jabal_shammar_events.2000
+
+	hidden = yes
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.2000 option 1"
+		IKH_Split_into_four = yes
+		news_event = jabal_shammar_events.74
+	}
+}
+
+country_event = { # Ikhwan invades Hejaz
+	id = jabal_shammar_events.2001
+
+	hidden = yes
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.2001 option 1"
+		915 = {
+			create_unit = {
+				division = "name = \"Ikhwan\" division_template = \"Ikhwan\" start_experience_factor = 0.3"
+				allow_spawning_on_enemy_provs = yes
+				owner = ROOT
+				prioritize_location = 7934
+			}
+			create_unit = {
+				division = "name = \"Ikhwan\" division_template = \"Ikhwan\" start_experience_factor = 0.3"
+				allow_spawning_on_enemy_provs = yes
+				owner = ROOT
+				prioritize_location = 13666
+			}
+		}
+		add_state_claim = 679
+		add_state_claim = 754
+		declare_war_on = {
+			target = 679.controller
+			type = annex_everything
+		}
+		if = {
+			limit = {
+				can_declare_war_on = 754.controller
+			}
+			declare_war_on = {
+				target = 754.controller
+				type = annex_everything
+			}
+		}
+		if = {
+			limit = {
+				can_declare_war_on = 679.owner
+			}
+			declare_war_on = {
+				target = 679.owner
+				type = annex_everything
+			}
+		}
+		if = {
+			limit = {
+				can_declare_war_on = 754.owner
+			}
+			declare_war_on = {
+				target = 754.owner
+				type = annex_everything
+			}
+		}
+	}
+}
+
+country_event = { # hidden event to fire the remove decision effect
+	id = jabal_shammar_events.5001
+
+	hidden = yes
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event jabal_shammar_events.5001 option 1"
+		JBS_SAU_Remove_Power_Struggle_Decisions = yes
+	}
+}
+

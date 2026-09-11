@@ -1,0 +1,1244 @@
+##################################
+# West Indies Federation Decisions
+##################################
+# By Beelzebub, Roparex and Jackob
+##################################
+
+political_actions = {
+	WIF_moyne_report_timer = {
+		icon = eng_trade_unions_support
+		priority = 100
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		days_mission_timeout = 365
+		is_good = yes
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout WIF_moyne_report_timer"
+			country_event = west_indies_federation_politics_events.28
+		}
+		fixed_random_seed = no
+	}
+}
+
+WIF_tension_category = {
+	WIF_combat_tax_evasion = {
+		icon = GFX_decision_oppression
+		fire_only_once = yes
+		cost = 50
+
+		ai_will_do = {
+			base = 2000
+			modifier = {
+				factor = 25
+				has_country_flag = WIF_autdem_ai
+			}
+			modifier = {
+				factor = 0
+				has_country_flag = WIF_socialist_ai
+			}
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_combat_tax_evasion"
+			add_offsite_building = { type = industrial_complex level = 1 }
+			set_temp_variable = { WIF_empire_tensions_change_var = 4 }
+			WIF_increase_empire_tensions = yes
+			set_temp_variable = { WIF_socialist_tensions_change_var = 3 }
+			WIF_decrease_socialist_tensions = yes
+		}
+		fixed_random_seed = no
+	}
+
+	WIF_combat_illegal_french_activity = {
+		icon = GFX_decision_oppression
+		fire_only_once = yes
+		visible = {
+			NOT = {
+				has_government = social_democrat
+			}
+			NOT = {
+				has_government = social_liberal
+			}
+		}
+		available = {
+			if = {
+				limit = { is_ai = no }
+				divisions_in_state = {
+					type = infantry
+					size > 0
+					state = 694
+				}
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				factor = 0
+				OR = {
+					date < 1936.2.1
+					has_country_flag = WIF_autdem_ai
+					WIF_patriotic_union_path = yes
+				}
+			}
+		}
+
+		days_remove = 100
+		modifier = {
+			political_power_gain = -0.1
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_combat_illegal_french_activity"
+			add_stability = 0.08
+			set_temp_variable = { WIF_empire_tensions_change_var = 2 }
+			WIF_decrease_empire_tensions = yes
+			set_temp_variable = { WIF_socialist_tensions_change_var = 5 }
+			WIF_increase_socialist_tensions = yes
+		}
+		fixed_random_seed = no
+	}
+
+	WIF_mandatory_english = {
+		icon = GFX_decision_oppression
+		fire_only_once = yes
+		visible = {
+			has_government = social_conservative
+		}
+		cost = 80
+		ai_will_do = { base = 2000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_mandatory_english"
+			add_ideas = WIF_mending_language_divide_idea
+			set_temp_variable = { WIF_socialist_tensions_change_var = 7 }
+			WIF_increase_socialist_tensions = yes
+		}
+		fixed_random_seed = no
+	}
+
+	WIF_allow_yellow_unions = {
+		icon = GFX_decision_oppression
+		fire_only_once = yes
+		visible = {
+			has_soclib_or_socdem_government = no
+		}
+		cost = 25
+		ai_will_do = {
+			base = 10000
+			modifier = {
+				factor = 0
+				OR = {
+					has_country_flag = WIF_socialist_ai
+					has_country_flag = WIF_autdem_ai # Should use it right after coup
+				}
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_allow_yellow_unions"
+			add_war_support = 0.05
+			set_temp_variable = { WIF_socialist_tensions_change_var = 6 }
+			WIF_decrease_socialist_tensions = yes
+		}
+		fixed_random_seed = no
+	}
+}
+WIF_airway_project_category = {
+	WIF_jamaica_airport = {
+		icon = GFX_decision_generic_air
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 0
+		}
+		modifier = {
+			civilian_factory_use = 1
+		}
+		ai_will_do = {
+			base = 500
+			modifier = {
+				factor = 3
+				num_of_factories > 3
+			}
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+
+		cost = 30
+		fire_only_once = yes
+		days_remove = 40
+		state_target = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete WIF_jamaica_airport"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove WIF_jamaica_airport"
+			FROM = {
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	WIF_bahamas_airport = {
+		icon = GFX_decision_generic_operation
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 0
+		}
+		modifier = {
+			civilian_factory_use = 1
+		}
+		ai_will_do = {
+			base = 650
+			modifier = {
+				factor = 3
+				num_of_factories > 3
+			}
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+
+		cost = 30
+		fire_only_once = yes
+		days_remove = 40
+		state_target = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete WIF_bahamas_airport"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove WIF_bahamas_airport"
+			FROM = {
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	WIF_bermuda_airport = {
+		icon = GFX_decision_generic_construction
+		allowed = { always = no }
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 0
+		}
+		modifier = {
+			civilian_factory_use = 1
+		}
+		ai_will_do = {
+			base = 750
+			modifier = {
+				factor = 3
+				num_of_factories > 3
+			}
+			modifier = {
+				has_war = yes
+				factor = 2
+			}
+		}
+
+		cost = 30
+		fire_only_once = yes
+		days_remove = 40
+		state_target = yes
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete WIF_bermuda_airport"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove WIF_bermuda_airport"
+			FROM = {
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+####################################
+WIF_integration_process_NCP_guiana_category = {
+	#police to FG
+	WIF_integration_process_NCP_send_police = {
+		icon = GFX_decision_generic_army_support
+		allowed = { always = no }
+		available = {
+			if = {
+				limit = {
+					is_ai = no
+				}
+				has_manpower > 50
+			}
+		}
+		modifier = {
+			stability_weekly = 0.01
+		}
+
+		ai_will_do = { base = 30000 }
+
+		cost = 15
+		fire_only_once = yes
+		days_remove = 15
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_send_police"
+			add_manpower = -50
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_send_police"
+			310 = {
+				set_demilitarized_zone = no
+			}
+			add_war_support = 0.03
+			add_political_power = 40
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_federal_institute }
+			activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_unity_propaganda }
+			activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_aluminium }
+		}
+		fixed_random_seed = no
+	}
+	#aluminium mine strike in FG suppressed
+	WIF_integration_process_NCP_aluminium = {
+		icon = GFX_decision_aluminium
+		allowed = { always = no }
+		modifier = {
+			civilian_factory_use = 1
+		}
+
+		ai_will_do = { base = 30000 }
+
+		cost = 25
+		fire_only_once = yes
+		days_remove = 10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_aluminium"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_aluminium"
+			add_resource = {
+				type = aluminium
+				amount = 5
+				state = 310
+			}
+			310 = { remove_dynamic_modifier = { modifier = WIF_bauxite_mine_strike } }
+		}
+		fixed_random_seed = no
+	}
+	#FG unity propaganda
+	WIF_integration_process_NCP_unity_propaganda = {
+		icon = GFX_decision_generic_nationalism
+		allowed = { always = no }
+		modifier = {
+			stability_weekly = 0.005
+		}
+
+		ai_will_do = { base = 30000 }
+
+		cost = 15
+		fire_only_once = yes
+		days_remove = 40
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_unity_propaganda"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_unity_propaganda"
+			set_country_flag = WIF_propaganda_campaign_flag
+			add_political_power = 10
+			add_stability = 0.01
+		}
+		fixed_random_seed = no
+	}
+	#Federal Institute- responsible for lowering autonomy of French Colonies
+	WIF_integration_process_NCP_federal_institute = {
+		icon = GFX_decision_generic_decision
+		allowed = { always = no }
+		available = {
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = WIF_integration_process_NCP_aluminium }
+				310 = { NOT = { has_dynamic_modifier = WIF_bauxite_mine_strike } }
+			}
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = WIF_integration_process_NCP_unity_propaganda }
+				has_country_flag = WIF_propaganda_campaign_flag
+			}
+		}
+
+		ai_will_do = { base = 30000 }
+
+		cost = 20
+		fire_only_once = yes
+		days_remove = 30
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_federal_institute"
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_federal_institute"
+			add_ideas = WIF_federal_institute
+			clr_country_flag = WIF_propaganda_campaign_flag
+			custom_effect_tooltip = tooltip_white_line
+			activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_royal_assistance }
+			hidden_effect = {
+				country_event = { id = west_indies_federation_politics_events.512 days = 25 random_days = 15 }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+####################################
+WIF_integration_process_NCP_category = {
+	WIF_integration_process_NCP_timer = {
+		icon = GFX_decision_infiltrate_state
+		allowed = { always = no }
+		available = {
+			hidden_trigger = { always = no }
+		}
+		is_good = no
+		days_mission_timeout = 300
+		fire_only_once = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout WIF_integration_process_NCP_timer"
+			if = {
+				limit = { NOT = { check_variable = { WIF_integration_var < 30 } } }
+				if = {
+					limit = { check_variable = { WIF_integration_var < 50 } }
+					add_ideas = WIF_consolidation_idea_2
+					set_temp_variable = { WIF_empire_tensions_change_var = 5 }
+					WIF_increase_empire_tensions = yes
+					set_temp_variable = { WIF_socialist_tensions_change_var = 10 }
+					WIF_increase_socialist_tensions = yes
+				}
+				else_if = {
+					limit = { check_variable = { WIF_integration_var < 80 } }
+					add_ideas = WIF_consolidation_idea_3
+				}
+				else = {
+					add_ideas = WIF_consolidation_idea_4
+				}
+				WIF_restore_french_caribbean_cores = yes
+			}
+			else = {
+				add_ideas = WIF_consolidation_idea_1
+				set_temp_variable = { WIF_empire_tensions_change_var = 15 }
+				WIF_increase_empire_tensions = yes
+				set_temp_variable = { WIF_socialist_tensions_change_var = 25 }
+				WIF_increase_socialist_tensions = yes
+			}
+			WIF_teardown_integration_process_NCP = yes
+		}
+		fixed_random_seed = no
+	}
+	#Ask for royal assistance
+	WIF_integration_process_NCP_royal_assistance = {
+		icon = GFX_decision_aluminium
+		allowed = { always = no }
+		modifier = {
+			political_power_gain = 0.4
+		}
+
+		ai_will_do = { base = 30000 }
+
+		cost = 20
+		fire_only_once = yes
+		days_remove = 290
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_royal_assistance"
+			if = {
+				limit = { has_country_flag = WIF_ottawa_pledge_assistance_provided }
+				add_offsite_building = {
+					type = arms_factory
+					level = -1
+				}
+				clr_country_flag = WIF_ottawa_pledge_assistance_provided
+			}
+			add_resource = {
+				type = aluminium
+				amount = -50
+				state = 310
+			}
+			add_resource = {
+				type = aluminium
+				amount = 10
+				state = 466
+			}
+			310 = { set_state_flag = WIF_NCP_royal_assistance_aluminium }
+			if = {
+				limit = { has_completed_focus = WIF_merely_lower }
+				set_temp_variable = { WIF_integration_change_var = 30 }
+				hidden_effect = { WIF_increase_integration = yes }
+			}
+			WIF_start_integration_process_timer_NCP = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_royal_assistance"
+			if = {
+				limit = { 310 = { has_state_flag = WIF_NCP_royal_assistance_aluminium } }
+				310 = { clr_state_flag = WIF_NCP_royal_assistance_aluminium }
+				add_resource = {
+					type = aluminium
+					amount = 50
+					state = 310
+				}
+				add_resource = {
+					type = aluminium
+					amount = -10
+					state = 466
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	WIF_integration_process_NCP_guyana_trials = {
+		icon = GFX_decision_generic_political_discourse
+		allowed = { always = no }
+
+		ai_will_do = { base = 35000 }
+
+		cost = 100
+		fire_only_once = yes
+		days_remove = 30
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_guyana_trials"
+			set_country_flag = WIF_guyana_trials_have_started
+			activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_francophonie }
+			activate_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_flyer }
+			set_temp_variable = { WIF_integration_change_var = 10 }
+			WIF_increase_integration = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_guyana_trials"
+			country_event = west_indies_federation_politics_events.508
+		}
+		fixed_random_seed = no
+	}
+	WIF_integration_process_NCP_judiciary_unification = {
+		icon = GFX_decision_generic_decision
+		allowed = { always = no }
+		available = {
+			custom_override_tooltip = {
+				tooltip = { localization_key = has_completed_decision DECISION = WIF_integration_process_NCP_guyana_trials }
+				has_country_flag = WIF_guyana_trials_have_started
+			}
+		}
+		is_good = no
+		days_mission_timeout = 100
+		fire_only_once = yes
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout WIF_integration_process_NCP_judiciary_unification"
+			set_temp_variable = { WIF_integration_change_var = 15 }
+			WIF_decrease_integration = yes
+			country_event = west_indies_federation_politics_events.516
+			clr_country_flag = WIF_guyana_trials_have_started
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_judiciary_unification"
+			add_political_power = 50
+			clr_country_flag = WIF_guyana_trials_have_started
+		}
+		fixed_random_seed = no
+	}
+	WIF_integration_process_NCP_french_conscription = {
+		icon = GFX_decision_generic_army_support
+		allowed = { always = no }
+		available = {
+			has_completed_focus = WIF_revoke_french_conscription
+		}
+
+		ai_will_do = { base = 29000 }
+
+		cost = 25
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_french_conscription"
+			army_experience = -15
+			add_war_support = -0.03
+			set_temp_variable = { WIF_integration_change_var = 5 }
+			WIF_increase_integration = yes
+		}
+		fixed_random_seed = no
+	}
+	WIF_integration_process_NCP_universal_rights = {
+		icon = GFX_decision_generic_nationalism
+		allowed = { always = no }
+		available = {
+			has_completed_focus = WIF_universal_rights
+		}
+
+		ai_will_do = { base = 30000 }
+
+		cost = 50
+		fire_only_once = yes
+		days_remove = 10
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_universal_rights"
+			add_popularity = {
+				ideology = social_conservative
+				popularity = 0.03
+			}
+			add_war_support = 0.03
+			set_temp_variable = { WIF_integration_change_var = 10 }
+			WIF_increase_integration = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_universal_rights"
+		}
+		fixed_random_seed = no
+	}
+	WIF_integration_process_NCP_meetings = {
+		icon = GFX_decision_generic_agreement
+		allowed = { always = no }
+		modifier = {
+			political_power_gain = -0.2
+		}
+
+		ai_will_do = {
+			base = 25000
+			modifier = {
+				factor = 2
+				has_completed_focus = WIF_completely_revoke
+			}
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { WIF_integration_var < 80 } }
+			}
+		}
+
+		cost = 5
+		days_remove = 7
+		days_re_enable = 45
+		fixed_random_seed = no
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_meetings"
+			random_list = {
+				40 = {
+					add_stability = -0.01
+					set_temp_variable = { WIF_integration_change_var = 1 }
+					WIF_increase_integration = yes
+				}
+				35 = {
+					add_stability = 0.01
+					set_temp_variable = { WIF_integration_change_var = 2 }
+					WIF_increase_integration = yes
+				}
+				25 = {
+					add_stability = 0.02
+					set_temp_variable = { WIF_integration_change_var = 3 }
+					WIF_increase_integration = yes
+				}
+			}
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_meetings"
+		}
+	}
+	WIF_integration_process_NCP_flyer = {
+		icon = GFX_decision_generic_research
+		allowed = { always = no }
+
+		ai_will_do = { base = 1000 }
+
+		days_remove = 90
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_flyer"
+			add_popularity = {
+				ideology = social_conservative
+				popularity = -0.025
+			}
+			country_event = west_indies_federation_politics_events.517
+			set_temp_variable = { WIF_integration_change_var = 5 }
+			WIF_increase_integration = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_flyer"
+			hidden_effect = {
+				if = {
+					limit = {
+						has_country_flag = WIF_flyer_economic_integration
+						has_country_flag = WIF_flyer_great_exhibition
+						has_country_flag = WIF_flyer_mount_pelee
+					}
+					remove_targeted_decision = { target = THIS decision = WIF_integration_process_NCP_flyer }
+					clr_country_flag = WIF_flyer_economic_integration
+					clr_country_flag = WIF_flyer_great_exhibition
+					clr_country_flag = WIF_flyer_mount_pelee
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	WIF_integration_process_NCP_francophonie = {
+		icon = GFX_decision_generic_research
+		allowed = { always = no }
+		available = {
+			if = {
+				limit = { is_ai = no }
+				var:16.owner = { has_opinion = { target = ROOT value > 49 } }
+			}
+			else = {
+				has_opinion_modifier = WIF_FRA_exchange
+			}
+		}
+		modifier = {
+			war_support_weekly = -0.01
+		}
+
+		ai_will_do = { base = 32000 }
+
+		cost = 60
+		days_remove = 30
+		fire_only_once = yes
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_integration_process_NCP_francophonie"
+			add_popularity = {
+				ideology = social_conservative
+				popularity = 0.025
+			}
+			set_temp_variable = { WIF_integration_change_var = 10 }
+			WIF_increase_integration = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_integration_process_NCP_francophonie"
+		}
+		fixed_random_seed = no
+	}
+}
+
+####################################
+WIF_NCP_new_constitution_category = {
+	WIF_NCP_new_constitution_free_trade = {
+		icon = GFX_decision_generic_political_discourse
+		allowed = { always = no }
+
+		ai_will_do = { base = 29000 }
+
+		cost = 35
+		fire_only_once = yes
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_NCP_new_constitution_free_trade"
+			country_event = west_indies_federation_politics_events.525
+			WIF_constitution_vote_decision_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	WIF_NCP_new_constitution_personal_liberties = {
+		icon = GFX_decision_generic_political_discourse
+		allowed = { always = no }
+
+		ai_will_do = { base = 28000 }
+
+		cost = 35
+		fire_only_once = yes
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_NCP_new_constitution_personal_liberties"
+			country_event = west_indies_federation_politics_events.526
+			WIF_constitution_vote_decision_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	WIF_NCP_new_constitution_political_system = {
+		icon = GFX_decision_generic_political_discourse
+		allowed = { always = no }
+
+		ai_will_do = { base = 30000 }
+
+		cost = 35
+		fire_only_once = yes
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_NCP_new_constitution_political_system"
+			country_event = west_indies_federation_politics_events.527
+			WIF_constitution_vote_decision_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	WIF_NCP_new_constitution_rule_of_law = {
+		icon = GFX_decision_generic_political_discourse
+		allowed = { always = no }
+
+		ai_will_do = { base = 28000 }
+
+		cost = 35
+		fire_only_once = yes
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_NCP_new_constitution_rule_of_law"
+			country_event = west_indies_federation_politics_events.528
+			WIF_constitution_vote_decision_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	WIF_NCP_new_constitution_canada = {
+		icon = GFX_decision_generic_political_discourse
+		allowed = { always = no }
+
+		ai_will_do = { base = 29000 }
+
+		cost = 35
+		fire_only_once = yes
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_NCP_new_constitution_canada"
+			country_event = west_indies_federation_politics_events.529
+			WIF_constitution_vote_decision_effect = yes
+		}
+		fixed_random_seed = no
+	}
+	WIF_NCP_final_voting = {
+		icon = GFX_decision_generic_decision
+		allowed = { always = no }
+		available = {
+			check_variable = {
+				WIF_constitution_vote_decisions_taken = 5
+				tooltip = WIF_NCP_all_new_constitution_decision_taken_tt
+			}
+		}
+
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				factor = 0
+				NOT = { check_variable = { WIF_constitution_votes_for_var > WIF_constitution_votes_against_var } }
+			}
+		}
+
+		fire_only_once = yes
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_NCP_final_voting"
+			if = {
+				limit = {
+					NOT = { check_variable = { WIF_constitution_votes_for_var > WIF_constitution_votes_against_var } }
+				}
+				add_stability = -0.1
+				custom_effect_tooltip = WIF_no_constitution
+			}
+			else_if = {
+				limit = {
+					check_variable = { WIF_constitution_votes_for_var > WIF_constitution_votes_against_var }
+					check_variable = { WIF_constitution_quality_var < 50 }
+				}
+				add_ideas = WIF_new_const_bad
+				set_temp_variable = { WIF_empire_tensions_change_var = 7 }
+				WIF_decrease_empire_tensions = yes
+				set_temp_variable = { WIF_socialist_tensions_change_var = 7 }
+				WIF_decrease_socialist_tensions = yes
+			}
+			else = {
+				add_ideas = WIF_new_const_good
+				set_temp_variable = { WIF_empire_tensions_change_var = 10 }
+				WIF_decrease_empire_tensions = yes
+				set_temp_variable = { WIF_socialist_tensions_change_var = 10 }
+				WIF_decrease_socialist_tensions = yes
+			}
+			WIF_teardown_constitution_process_NCP = yes
+		}
+		fixed_random_seed = no
+	}
+	WIF_NCP_final_voting_gain_votes = {
+		icon = GFX_decision_generic_decision
+		allowed = { always = no }
+		available = {
+			check_variable = {
+				WIF_constitution_vote_decisions_taken = 5
+				tooltip = WIF_NCP_all_new_constitution_decision_taken_tt
+			}
+		}
+		visible = {
+			NOT = { check_variable = { WIF_constitution_votes_for_var > WIF_constitution_votes_against_var } }
+		}
+		ai_will_do = { base = 30000 }
+		days_remove = 7
+		cost = 20
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_NCP_final_voting_gain_votes"
+			set_temp_variable = { WIF_constitution_votes_for_change_var = 3 }
+			WIF_gain_constitution_votes_for = yes
+		}
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove WIF_NCP_final_voting_gain_votes"
+		}
+		fixed_random_seed = no
+	}
+}
+####################################
+WIF_2nd_cayenne_conference_category = {
+	WIF_2nd_cayenne_organise_meeting = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		available = {
+			NOT = {
+				check_variable = {
+					WIF_2nd_cayenne_conference_for < 40
+					tooltip = WIF_forging_new_agreement_trigger
+				}
+			}
+		}
+
+		ai_will_do = { base = 30000 }
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_2nd_cayenne_organise_meeting"
+			set_country_flag = WIF_2nd_cayenne_conference_organised
+			activate_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_voting }
+			if = {
+				limit = { has_completed_focus = WIF_hear_people }
+				activate_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_gain_votes_NCP }
+			}
+			if = {
+				limit = { has_completed_focus = WIF_ties_unity }
+				activate_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_gain_votes_unity }
+			}
+			else_if = {
+				limit = { has_completed_focus = WIF_reconcile_socialists }
+				activate_targeted_decision = { target = THIS decision = WIF_2nd_cayenne_gain_votes_social_democrat }
+			}
+		}
+		fixed_random_seed = no
+	}
+	#Vote
+	WIF_2nd_cayenne_voting = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		available = {
+			NOT = {
+				check_variable = {
+					WIF_2nd_cayenne_conference_for < 51
+					tooltip = WIF_forging_new_agreement_trigger
+				}
+			}
+		}
+
+		ai_will_do = { base = 28000 }
+
+		cost = 30
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_2nd_cayenne_voting"
+			WIF_teardown_2nd_cayenne_agreement_PA_LP = yes # Must be run before flag is set
+			swap_ideas = {
+				remove_idea = WIF_cayenne_agreement
+				add_idea = WIF_2nd_Cayenne_Agreement
+			}
+		}
+		fixed_random_seed = no
+	}
+	#NCP
+	WIF_2nd_cayenne_gain_votes_NCP = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		ai_will_do = { base = 29000 } # Takes it even if enough votes for extra PP
+
+		cost = 30
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_2nd_cayenne_gain_votes_NCP"
+			country_event = west_indies_federation_politics_events.612
+		}
+		fixed_random_seed = no
+	}
+	#Unity
+	WIF_2nd_cayenne_gain_votes_unity = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		ai_will_do = { base = 30000 } # Takes it even if enough votes for extra PP
+
+		cost = 20
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_2nd_cayenne_gain_votes_unity"
+			country_event = west_indies_federation_politics_events.613
+		}
+		fixed_random_seed = no
+	}
+	#Social Dem
+	WIF_2nd_cayenne_gain_votes_social_democrat = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		ai_will_do = { base = 30000 } # Takes it even if enough votes for extra PP
+
+		cost = 20
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_2nd_cayenne_gain_votes_social_democrat"
+			country_event = west_indies_federation_politics_events.614
+		}
+		fixed_random_seed = no
+	}
+}
+########
+WIF_PA_LP_coalition_category = {
+	##improving stability
+	WIF_stabilise_coalition_with_LP = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		available = {
+			NOT = {
+				check_variable = {
+					WIF_coalition_stability_var > 3
+					tooltip = WIF_coalition_stability_stable_NOT
+				}
+			}
+		}
+
+		ai_will_do = { base = 25000 }
+
+		cost = WIF_stabilise_coalition_cost
+		fire_only_once = no
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_stabilise_coalition_with_LP"
+			WIF_increase_coalition_stability = yes
+			if = {
+				limit = { NOT = { has_idea = WIF_2nd_Cayenne_Agreement } }
+				add_to_variable = { WIF_stabilise_coalition_cost = 20 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	##stability events
+	WIF_report_on_the_party_status = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		available = {
+			has_country_flag = WIF_coalition_majority_government
+		}
+
+		is_good = no
+		fixed_random_seed = no
+		days_mission_timeout = 50
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout WIF_report_on_the_party_status"
+			if = {
+				limit = { has_idea = WIF_2nd_Cayenne_Agreement }
+				if = {
+					limit = { has_political_power < 0 }
+					add_political_power = 40
+				}
+				if = {
+					limit = { NOT = { check_variable = { WIF_stabilise_coalition_cost < 30 } } }
+					subtract_from_variable = {
+						WIF_stabilise_coalition_cost = 30
+						tooltip = WIF_coalition_stabilise_coalition_lower_cost_tt
+					}
+				}
+			}
+			else_if = {
+				limit = { has_political_power < 0 }
+				add_political_power = 25
+			}
+			if = {
+				limit = { check_variable = { WIF_coalition_stability_var < 3 } }
+				add_political_power = 20
+				random_list = {
+					20 = {}
+					15 = {
+						country_event = west_indies_federation_politics_events.617
+					}
+					15 = {
+						country_event = west_indies_federation_politics_events.618
+					}
+					20 = {
+						country_event = west_indies_federation_politics_events.619
+					}
+					30 = {
+						country_event = west_indies_federation_politics_events.620
+					}
+				}
+			}
+			else = {
+				add_stability = 0.025
+				random_list = {
+					10 = {
+						if = {
+							limit = { has_stability < 0.6 }
+							add_stability = 0.025
+						}
+						else = {
+							add_political_power = 20
+						}
+					}
+					10 = {
+						country_event = west_indies_federation_politics_events.622
+					}
+					10 = {
+						country_event = west_indies_federation_politics_events.621
+					}
+				}
+			}
+			activate_mission = WIF_report_on_the_party_status
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_report_on_the_party_status"
+		}
+	}
+	### form majority coalition
+	WIF_form_a_coalition = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		available = {
+			check_variable = {
+				tooltip = WIF_coalition_stability_working_or_stable
+				WIF_coalition_stability_var > 2
+			}
+			custom_override_tooltip = {
+				tooltip = WIF_coalition_2nd_cayenne_agreement_voted_tt
+				has_idea = WIF_2nd_Cayenne_Agreement
+			}
+		}
+
+		visible = {
+			NOT = { has_country_flag = WIF_coalition_majority_government }
+		}
+
+		ai_will_do = { base = 30000 }
+		cost = 25
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_form_a_coalition"
+			country_event = west_indies_federation_politics_events.623
+		}
+		fixed_random_seed = no
+	}
+	### falling LP- PA coalition
+	WIF_collapsing_coalition_penalties = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		available = {
+			OR = {
+				has_country_flag = WIF_coalition_majority_government
+				check_variable = {
+					tooltip = WIF_coalition_stability_not_collapsing
+					WIF_coalition_stability_var > 1
+				}
+			}
+		}
+
+		is_good = no
+		days_mission_timeout = 50
+		fire_only_once = no
+		fixed_random_seed = no
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout WIF_collapsing_coalition_penalties"
+			custom_effect_tooltip = WIF_coalition_stability_is_collapsing_tt
+			set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+			WIF_increase_empire_tensions = yes
+			set_temp_variable = { WIF_socialist_tensions_change_var = 1 }
+			WIF_increase_socialist_tensions = yes
+			add_stability = -0.05
+			activate_mission = WIF_collapsing_coalition_penalties
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_collapsing_coalition_penalties"
+		}
+	}
+	### form majority government (FINAL DECISION)
+	WIF_form_majority_government = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = WIF_formed_majority_coalition_tt
+				has_coalition = yes
+			}
+			check_variable = {
+				tooltip = WIF_coalition_stability_working_or_stable
+				WIF_coalition_stability_var > 2
+			}
+			custom_override_tooltip = {
+				tooltip = WIF_coalition_2nd_cayenne_agreement_voted_tt
+				has_idea = WIF_2nd_Cayenne_Agreement
+			}
+		}
+
+		ai_will_do = { base = 30000 }
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_form_majority_government"
+			set_country_flag = WIF_coalition_majority_government
+			custom_effect_tooltip = WIF_coalition_form_majority_government_tt
+			set_temp_variable = { WIF_empire_tensions_change_var = 5 }
+			WIF_decrease_empire_tensions = yes
+			set_temp_variable = { WIF_socialist_tensions_change_var = 10 }
+			WIF_decrease_socialist_tensions = yes
+		}
+		fixed_random_seed = no
+	}
+	#### Minority penalties
+	WIF_minority_government_penalties = {
+		icon = GFX_decision_generic_political_discourse
+
+		allowed = { always = no }
+
+		available = {
+			has_country_flag = WIF_coalition_majority_government
+		}
+
+		is_good = no
+		days_mission_timeout = 21
+		fixed_random_seed = no
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout WIF_minority_government_penalties"
+			set_temp_variable = { WIF_empire_tensions_change_var = 1 }
+			WIF_increase_empire_tensions = yes
+			set_temp_variable = { WIF_socialist_tensions_change_var = 1 }
+			WIF_increase_socialist_tensions = yes
+			add_stability = -0.015
+			activate_mission = WIF_minority_government_penalties
+		}
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete WIF_minority_government_penalties"
+		}
+	}
+}
+

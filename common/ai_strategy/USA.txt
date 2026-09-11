@@ -1,0 +1,68 @@
+################
+### Military ###
+################
+USA_civil_war_prepare_for_war = {
+	allowed = {
+		original_tag = USA
+	}
+
+	enable = {
+		NOT = { has_global_flag = USA_civil_war_begun_flag }
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = prepare_for_war
+		id = WCA
+		value = 200
+	}
+	ai_strategy = {
+		type = prepare_for_war
+		id = APG
+		value = 100
+	}
+	ai_strategy = {
+		type = prepare_for_war
+		id = ACC
+		value = 100
+	}
+}
+
+USA_civil_war_invade_wca = {
+	allowed = { tag = USA }
+
+	enable = {
+		has_war_with = WCA
+		WCA = { has_capitulated = no }
+		surrender_progress < 0.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = invade
+		id = "WCA"
+		value = 10 #just enough to overcome the AI's reluctance to invade when directly bordering an enemy
+	}
+}
+
+USA_civil_war_invade_apg = {
+	allowed = { tag = USA }
+
+	enable = {
+		has_war_with = APG
+		num_divisions > 72 #three full armies
+		APG = { has_capitulated = no }
+		OR = {
+			NOT = { has_war_with = WCA }
+			WCA = { has_capitulated = yes }
+		}
+		surrender_progress < 0.1
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = invade
+		id = "APG"
+		value = 10 #just enough to overcome the AI's reluctance to invade when directly bordering an enemy
+	}
+}

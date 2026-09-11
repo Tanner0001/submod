@@ -1,0 +1,1026 @@
+MON_foreign_policy_decisions = {
+	MON_hold_out_russian_war = {
+		icon = generic_ignite_civil_war
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			NOT = { has_war_with = RUS }
+		}
+
+		cancel_trigger = {
+			OR = {
+				RUS = { is_valid_peace_target = no }
+				is_valid_peace_target = no
+			}
+		}
+
+		is_good = no
+		fire_only_once = yes
+		days_mission_timeout = 180
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout MON_hold_out_russian_war"
+			effect_tooltip = {
+				RUS = { country_event = russia_foreign_policy_events.54 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_ask_tibet_for_faction_decision = {
+		icon = hol_exchange_intelligence_data
+
+		allowed = {
+			original_tag = MON
+		}
+
+		available = {
+			is_subject = no
+			has_socialist_government = no
+			TIB = {
+				has_socialist_government = no
+				is_subject = no
+			}
+		}
+
+		visible = {
+			country_exists = TIB
+			has_global_flag = northwest_conflict_ended
+			has_completed_focus = MON_the_khanate_unshackled
+		}
+
+		fire_only_once = yes
+
+		cost = 0
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_ask_tibet_for_faction_decision"
+			TIB = { country_event = mongolia_events.59 }
+		}
+		fixed_random_seed = no
+	}
+	MON_attack_the_mas_decision = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			original_tag = MON
+		}
+
+		available = {
+			has_global_flag = northwest_conflict_begun
+			has_capitulated = no
+			NOT = { has_non_aggression_pact_with = XSM }
+		}
+
+		visible = {
+			can_declare_war_on = FROM
+			is_in_faction = no #Prevent MON from declaring war if they have since joined Russia
+			NOT = { has_country_flag = MON_defeated_in_northwest_war_flag }
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_in_faction = yes
+				is_subject = yes
+				has_capitulated = yes
+				NOT = { can_declare_war_on = FROM }
+				has_country_flag = MON_defeated_in_northwest_war_flag
+				has_global_flag = northwest_conflict_ended
+			}
+		}
+
+		cost = 0
+		days_remove = 10
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		targets = { XSM }
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				country_is_in_dangerous_war = yes
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel MON_attack_the_mas_decision"
+			clear_decision_attack_AI = yes
+			clr_country_flag = MON_about_to_attack_XSM
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MON_attack_the_mas_decision"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+			set_country_flag = MON_about_to_attack_XSM
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove MON_attack_the_mas_decision"
+			clear_decision_attack_AI = yes
+			clr_country_flag = MON_about_to_attack_XSM
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			hidden_effect = { #Give northwest war idea to MON
+				add_ideas = MON_northwest_war_idea
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_attack_for_pan_mongol_claim_decision = {
+		name = attack_country
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			original_tag = MON
+		}
+
+		available = {
+			has_capitulated = no
+			NOT = { is_in_faction_with = var:global.russia }
+			is_neighbor_of = FROM
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_in_faction = yes
+				is_subject = yes
+				has_capitulated = yes
+				NOT = { can_declare_war_on = FROM }
+				NOT = { is_neighbor_of = FROM }
+			}
+		}
+
+		cost = 0
+		days_remove = 40
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		targets = {
+			611.OWNER #South Chahar
+			618.OWNER #Dzungaria
+			996.OWNER #Barga
+			1083.OWNER #Kumul
+		}
+		target_root_trigger = { has_country_flag = MON_enacted_pan_mongol_claims }
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes } #Ai will avoid striking opponent that is way stronger.
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					tag = RUS
+					surrender_progress < 0.25
+				}
+			}
+			modifier = {
+				add = 100
+				#Mongolia will attack if they outnumber their opponent by more than 2x
+				FROM = {
+					strength_ratio = {
+						tag = MON
+						ratio < 0.5
+					}
+				}
+			}
+			modifier = {
+				add = 100
+				#Mongolia strike if they have a slight advantage and their opponent is already being ganked
+				FROM = {
+					strength_ratio = {
+						tag = MON
+						ratio < 0.75
+					}
+					surrender_progress > 0.15
+				}
+			}
+			modifier = {
+				add = 100
+				#Mongolia will always strike if they meet the below checks and their opponent is down bad.
+				FROM = { surrender_progress > 0.65 }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel MON_attack_for_pan_mongol_claim_decision"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MON_attack_for_pan_mongol_claim_decision"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove MON_attack_for_pan_mongol_claim_decision"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_state_focus
+				generator = { 611 618 996 1083 }
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_attack_for_transsiberian_claim_decision = {
+		name = attack_country
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			is_in_faction = no #Prevent MON from declaring war if they have since joined Russia
+		}
+
+		available = {
+			has_capitulated = no
+		}
+
+		cancel_trigger = {
+			OR = {
+				is_in_faction = yes
+				is_subject = yes
+				has_capitulated = yes
+				NOT = { can_declare_war_on = FROM }
+			}
+		}
+
+		cost = 0
+		days_remove = 40
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		targets = { 563.OWNER 564.OWNER 654.OWNER }
+		target_root_trigger = { has_country_flag = MON_enacted_transsiberian_claims }
+		target_trigger = {
+			can_declare_war_on = FROM
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					country_has_any_active_threat = yes
+					FROM = { dont_start_major_faction_wars = yes }
+					FROM = { default_attack_AI_trigger = yes }
+				}
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					tag = RUS
+					surrender_progress < 0.25
+				}
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel MON_attack_for_transsiberian_claim_decision"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MON_attack_for_transsiberian_claim_decision"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove MON_attack_for_transsiberian_claim_decision"
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_state_focus
+				generator = { 563 564 654 811 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	MON_declare_pan_mongol_state_decision = {
+		icon = generic_nationalism
+
+		allowed = {
+			original_tag = MON
+		}
+
+		available = {
+			is_subject = no
+			owns_state = 654
+			owns_state = 564
+			owns_state = 563
+			owns_state = 618
+			owns_state = 1083
+			owns_state = 348
+			owns_state = 616
+			owns_state = 621
+			owns_state = 612
+			owns_state = 996
+			owns_state = 329
+			owns_state = 1084
+			owns_state = 330
+			owns_state = 611
+		}
+
+		visible = {
+			owns_state = 348
+			owns_state = 616
+			owns_state = 621
+		}
+
+		cost = 0
+		fire_only_once = yes
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_declare_pan_mongol_state_decision"
+			country_event = mongolia_events.184
+		}
+		fixed_random_seed = no
+	}
+
+	MON_join_co_pro = {
+		icon = eng_trade_unions_support
+
+		allowed = { tag = MON }
+
+		available = {
+			has_global_flag = northwest_conflict_ended
+			OR = {
+				has_war_with = CHN
+				custom_override_tooltip = {
+					tooltip = china_has_war_with_CUF_tt
+					has_war_with = CUF
+				}
+				AND = {
+					FNG = { is_in_faction_with = JAP }
+					FNG = { china_is_the_unifier_of_china_trigger = yes }
+					NOT = { FNG = { has_wargoal_against = ROOT } }
+				}
+			}
+			any_neighbor_country = {
+				is_in_faction_with = JAP
+			}
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			is_subject = no
+			is_in_faction = no
+			has_completed_focus = MON_the_khanate_unshackled
+			NOT = { has_global_flag = JAP_defeated_by_china }
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		targets = { JAP }
+		target_root_trigger = {
+			has_completed_focus = MON_the_khanate_unshackled
+		}
+		target_trigger = {
+			FROM = { is_subject = no }
+			FROM = { is_faction_leader = yes }
+			NOT = { has_war_with = FROM }
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				FROM = { surrender_progress > 0.1 } #Wont join if Japan is being invaded
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MON_join_co_pro"
+			FROM = { ask_to_join_faction = yes }
+		}
+		fixed_random_seed = no
+	}
+}
+
+MON_western_rebellion_decisions = {
+	MON_reinforce_troops_in_west_decision = {
+		icon = eng_ally_imperialist_coup
+
+		allowed = {
+			original_tag = MON
+		}
+
+		fire_only_once = no
+		days_remove = 20
+		cost = 25
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_reinforce_troops_in_west_decision"
+			add_stability = 0.05
+			add_war_support = 0.05
+			set_temp_variable = { ideology_change_var = 0.05 }
+			change_ruling_party_popularity = yes
+		}
+		fixed_random_seed = no
+	}
+	MON_an_olive_branch_to_the_bandits = {
+		icon = hol_exchange_intelligence_data
+
+		visible = {
+			MON_has_regular_govt = yes
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 0
+				MON_ruling_party_has_highest_pop = no
+			}
+			modifier = {
+				factor = 0
+				MON_ruling_party_has_highest_pop = yes
+				MON_any_group_within_5_pop = yes
+			}
+			modifier = {
+				factor = 2
+				MON_ruling_party_has_highest_pop = yes
+				MON_any_group_within_10_pop = no
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_an_olive_branch_to_the_bandits"
+			country_event = mongolia_events.61
+		}
+		fixed_random_seed = no
+	}
+	MON_bring_sainsham_garrison_decision = {
+		icon = eng_blackshirt_march
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			owns_state = 330
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 330 }
+		}
+
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				has_stability < 0.25
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_bring_sainsham_garrison_decision"
+			add_stability = 0.02
+			add_war_support = 0.08
+		}
+		fixed_random_seed = no
+	}
+	MON_reinvade_ulaangom_decision = {
+		icon = generic_operation
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			has_country_flag = MON_bandits_occupy_ulaangom
+			owns_state = 1084
+		}
+
+		custom_cost_text = CP_15
+		custom_cost_trigger = {
+			NOT = { command_power < 15 }
+		}
+
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 1084 }
+		}
+
+		ai_will_do = {
+			base = 25
+			modifier = {
+				add = ROOT.command_power
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_reinvade_ulaangom_decision"
+			hidden_effect = {
+				add_command_power = -15
+			}
+			country_event = mongolia_events.26
+		}
+		fixed_random_seed = no
+	}
+	MON_siege_of_uliastai_decision = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			owns_state = 1084
+			has_country_flag = MON_bandits_occupy_uliastai
+		}
+
+		custom_cost_text = CP_15
+		custom_cost_trigger = {
+			NOT = { command_power < 15 }
+		}
+
+		fire_only_once = yes
+
+		highlight_states = {
+			highlight_state_targets = { state = 1084 }
+		}
+
+		ai_will_do = {
+			base = 25
+			modifier = {
+				add = ROOT.command_power
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_siege_of_uliastai_decision"
+			hidden_effect = {
+				add_command_power = -15
+			}
+			country_event = mongolia_events.33
+		}
+		fixed_random_seed = no
+	}
+}
+
+MON_chaos_in_capital_decisions = {
+	MON_securing_the_capital = {
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			has_government = paternal_autocrat
+		}
+
+		cost = 25
+
+		days_remove = 25
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_securing_the_capital"
+			add_popularity = {
+				ideology = paternal_autocrat
+				popularity = 0.05
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_crack_on_MAN_decision = {
+		icon = oppression
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			MON_has_regular_govt = yes
+			NOT = { has_government = social_democrat }
+			OR = {
+				social_democrat > 0.05
+				social_democrat > party_popularity@ruling_party
+			}
+		}
+
+		cost = 25
+
+		days_remove = 30
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				MON_socdem_within_10_pop = no
+			}
+			modifier = {
+				factor = 5
+				MON_socdem_within_5_pop = yes
+			}
+			modifier = {
+				factor = 2
+				social_democrat > party_popularity@ruling_party
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_crack_on_MAN_decision"
+			add_popularity = {
+				ideology = social_democrat
+				popularity = -0.05
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_bribe_aristocrats_decision = {
+		icon = hol_attract_foreign_investors
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			MON_has_regular_govt = yes
+			NOT = { has_government = authoritarian_democrat }
+			OR = {
+				authoritarian_democrat > 0.05
+				authoritarian_democrat > party_popularity@ruling_party
+			}
+		}
+
+		cost = 50
+
+		days_remove = 30
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				MON_authdem_within_10_pop = no
+			}
+			modifier = {
+				factor = 5
+				MON_authdem_within_5_pop = yes
+			}
+			modifier = {
+				factor = 2
+				authoritarian_democrat > party_popularity@ruling_party
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_bribe_aristocrats_decision"
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = -0.05
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_discourse_in_MAN_decision = {
+		icon = eng_propaganda_campaigns
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			MON_has_regular_govt = yes
+			NOT = { has_government = social_democrat }
+		}
+
+		cost = 15
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				MON_socdem_within_10_pop = no
+			}
+			modifier = {
+				factor = 5
+				MON_socdem_within_5_pop = yes
+			}
+			modifier = {
+				factor = 2
+				social_democrat > party_popularity@ruling_party
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_discourse_in_MAN_decision"
+			add_popularity = {
+				ideology = social_democrat
+				popularity = -0.05
+			}
+			add_popularity = {
+				ideology = radical_socialist
+				popularity = 0.05
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_cede_to_aristocrats_decision = {
+		icon = eng_ally_imperialist_coup
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			MON_has_regular_govt = yes
+			NOT = { has_government = authoritarian_democrat }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_political_power > 25
+			}
+			modifier = {
+				factor = 0
+				MON_ruling_party_has_highest_pop = yes
+				MON_any_group_within_5_pop = no
+			}
+			modifier = {
+				factor = 0
+				MON_authdem_within_10_pop = yes
+			}
+			modifier = {
+				factor = 5
+				MON_ruling_party_has_highest_pop = no
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_cede_to_aristocrats_decision"
+			add_political_power = 50
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.05
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_cede_to_monks_decision = {
+		icon = eng_blackshirt_march
+
+		allowed = {
+			original_tag = MON
+		}
+
+		visible = {
+			MON_has_regular_govt = yes
+			NOT = { has_government = national_populist }
+		}
+
+		days_remove = 30
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_political_power > 25
+			}
+			modifier = {
+				factor = 0
+				MON_ruling_party_has_highest_pop = yes
+				MON_any_group_within_5_pop = no
+			}
+			modifier = {
+				factor = 0
+				MON_natpop_within_10_pop = yes
+			}
+			modifier = {
+				factor = 5
+				MON_ruling_party_has_highest_pop = no
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_cede_to_monks_decision"
+			add_political_power = 50
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+MON_mongolian_highway_decisions = {
+	MON_connect_to_chahar_decision = {
+		icon = generic_construction
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			controls_state = 612
+			controls_state = 330
+			num_of_civilian_factories_available_for_projects > 0
+		}
+
+		fire_only_once = yes
+		state_target = yes
+
+		cost = 50
+		days_remove = 200
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+
+		ai_will_do = { factor = 15 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MON_connect_to_chahar_decision"
+			build_railway = {
+				fallback = yes
+				path = { 10578 10647 4873 4222 10372 1608 11752 }
+				start_province = 10578
+				target_province = 11752
+			}
+			612 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+				add_building_construction = {
+					type = supply_node
+					level = 1
+					province = 11752
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_connect_to_ningxia_decision = {
+		icon = generic_construction
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			controls_state = 348
+			controls_state = 330
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+		days_remove = 200
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		ai_will_do = { factor = 15 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MON_connect_to_ningxia_decision"
+			build_railway = {
+				start_province = 4801
+				target_province = 4783
+			}
+			348 = {
+				add_core_of = ROOT
+				remove_claim_by = ROOT
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+				add_building_construction = {
+					type = supply_node
+					level = 1
+					province = 4783
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+	MON_connect_to_ordos_decision = {
+		icon = generic_construction
+
+		allowed = { always = no } #activated by effect
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 0
+			controls_state = 616
+		}
+
+		fire_only_once = yes
+		state_target = yes
+
+		cost = 50
+		days_remove = 200
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+
+		ai_will_do = { factor = 15 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete MON_connect_to_ordos_decision"
+			616 = {
+				add_core_of = ROOT
+				remove_claim_by = ROOT
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+MON_dealing_with_the_leftover_bandits_decisions = {
+	MON_pacify_western_bandits_decision = {
+		icon = oppression
+
+		visible = {
+			has_idea = MON_western_banditry_idea
+		}
+
+		remove_trigger = {
+			NOT = { has_idea = MON_western_banditry_idea }
+		}
+
+		highlight_states = {
+			highlight_state_targets = { state = 1084 }
+		}
+
+		modifier = {
+			army_org_factor = -0.05
+			army_morale_factor = -0.05
+			supply_consumption_factor = 0.05
+		}
+
+		cost = 0
+		days_remove = 180
+		fire_only_once = no
+
+		ai_will_do = { base = 1000 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete MON_pacify_western_bandits_decision"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove MON_pacify_western_bandits_decision"
+			remove_ideas = MON_western_banditry_idea
+			army_experience = 10
+			add_stability = 0.05
+			add_war_support = 0.05
+		}
+		fixed_random_seed = no
+	}
+}
+

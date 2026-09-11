@@ -1,0 +1,2171 @@
+SZC_armament_collapse = {
+	modify_country_flag = {
+		flag = SZC_armament_defeats
+		value = 1
+	}
+	hidden_effect = {
+		if = {
+			limit = {
+				has_country_flag = SZC_zhili_supports_armament
+				has_country_flag = {
+					flag = SZC_armament_defeats
+					value > 1
+				}
+			}
+			country_event = { id = sichuan_events.62 days = 1 }
+		}
+		else_if = {
+			limit = {
+				NOT = { has_country_flag = SZC_zhili_supports_armament }
+				has_country_flag = {
+					flag = SZC_armament_defeats
+					value > 0
+				}
+			}
+			country_event = { id = sichuan_events.62 days = 1 }
+		}
+	}
+}
+
+SZC_accelerated_reduce_popularity = {
+	set_temp_variable = {
+		SZC_temp_Auth_Dem_New_Pop = {
+			value = party_popularity@authoritarian_democrat
+			multiply = 200
+			divide = 3
+			round = yes
+		}
+	}
+	set_political_party = { ideology = authoritarian_democrat popularity = SZC_temp_Auth_Dem_New_Pop }
+}
+
+SZC_armament_department_wins_civil_war = {
+	SZC_clear_all_victor_flags = yes
+	set_country_flag = SZC_armament_department_in_power
+	mark_focus_tree_layout_dirty = yes
+	swap_ideas = {
+		remove_idea = SZC_civil_war_idea
+		add_idea = SZC_aftermath_of_the_civil_war_1
+	}
+	set_temp_variable = { coalition_partner_var = token:social_liberal }
+	add_to_coalition = yes
+	set_temp_variable = { coalition_partner_var = token:social_conservative }
+	add_to_coalition = yes
+	set_temp_variable = { coalition_partner_var = token:paternal_autocrat }
+	add_to_coalition = yes
+	set_temp_variable = { coalition_partner_var = token:national_populist }
+	add_to_coalition = yes
+	clr_country_flag = SZC_zhili_supports_armament
+	clr_country_flag = SZC_yunnan_supports_officers
+	hidden_effect = {
+		SZC_add_all_accelerated_yang_sen_characters = yes
+		activate_advisor = SZC_liu_cunhou_sic
+		complete_national_focus = SZC_Chengdu_Holds_On
+		#De-obscuring this code for ease of readability
+		SZC_li_jiayu = { CHN_recruit_character_effect = yes }
+		#Luo Zezhuo and Li Jiayu remain due to pro-Yang Sen ties. Will retire if Liu Cunhou takes charge
+		every_character = {
+			limit = { has_character_flag = SZC_accelerated_liu_leader }
+			retire = yes
+		}
+		SZC_liu_cunhou = { promote_to_field_marshal = yes }
+		country_lock_all_division_template = no
+		delete_unit_template_and_units = { division_template = "Sucheng Bubing Shi" }
+		delete_unit_template_and_units = { division_template = "Sucheng Jingying Shi" }
+		#Liu Cunhou's troops
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12767
+			}
+		}
+		661 = { #Daxian
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 2091
+			}
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12274
+			}
+		}
+		#Yang Sen's troops
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.15 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4925
+			}
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.15 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 1395
+			}
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.15 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 7240
+			}
+		}
+		#Deng Xihou's troops
+		788 = { #Aba
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10787
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4403
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 5193
+			}
+		}
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Baoding Xi Jingying Shi\" start_experience_factor = 0.3 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 10132
+			}
+		}
+		#Liu Wenhui's troops
+		601 = { #Xikang
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 1918
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 8104
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12724
+			}
+		}
+		1015 = { #Ya'an
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 2067
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10726
+			}
+		}
+		#deserting Liu Xiang troops
+		650 = { #Chongqing
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 1893
+			}
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 6999
+			}
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4431
+			}
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4141
+			}
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10822
+			}
+		}
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 12705
+			}
+		}
+		661 = { #Daxian
+			create_unit = {
+				division = "division_template = \"Wubei Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 11865
+			}
+		}
+	}
+}
+
+SZC_baoding_department_wins_civil_war = {
+	SZC_clear_all_victor_flags = yes
+	set_country_flag = SZC_baoding_department_in_power
+	mark_focus_tree_layout_dirty = yes
+	swap_ideas = {
+		remove_idea = SZC_civil_war_idea
+		add_idea = SZC_aftermath_of_the_civil_war_1
+	}
+	set_politics = {
+		ruling_party = social_conservative
+		elections_allowed = no
+	}
+	clr_country_flag = SZC_zhili_supports_armament
+	clr_country_flag = SZC_yunnan_supports_officers
+	hidden_effect = {
+		SZC_add_all_baoding_characters = yes
+		complete_national_focus = SZC_A_Victory_From_Baoding
+		activate_advisor = SZC_qiu_yanxun_sic
+		#De-obscuring this code for ease of readability
+		SZC_li_jiayu = { CHN_recruit_character_effect = yes }
+		every_character = {
+			limit = { has_character_flag = SZC_accelerated_liu_leader }
+			retire = yes
+		}
+		650 = { set_demilitarized_zone = no }
+		1049 = { set_demilitarized_zone = no }
+		SZC_deng_xihou = { promote_to_field_marshal = yes }
+		SZC_liu_wenhui = { promote_to_field_marshal = yes }
+		SZC_tian_songyao = { promote_to_field_marshal = yes }
+		country_lock_all_division_template = no
+		delete_unit_template_and_units = { division_template = "Wubei Xi Bubing Shi" }
+		delete_unit_template_and_units = { division_template = "Sucheng Bubing Shi" }
+		delete_unit_template_and_units = { division_template = "Sucheng Jingying Shi" }
+		#former Armament troops
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12767
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4925
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 1395
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 7240
+			}
+		}
+		661 = { #Daxian
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 2091
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.10 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12274
+			}
+		}
+		#Deng Xihou's troops
+		788 = { #Aba
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10787
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4403
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 5193
+			}
+		}
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Baoding Xi Jingying Shi\" start_experience_factor = 0.3 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 10132
+			}
+		}
+		#Liu Wenhui's troops
+		601 = { #Xikang
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 1918
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 8104
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12724
+			}
+		}
+		1015 = { #Ya'an
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 2067
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10726
+			}
+		}
+		#deserting Liu Xiang troops
+		650 = { #Chongqing
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 1893
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 6999
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4431
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4141
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10822
+			}
+		}
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 12705
+			}
+		}
+		661 = { #Daxian
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 11865
+			}
+		}
+		QIE = { country_event = qing_foreign_policy_events.116 }
+	}
+}
+
+SZC_accelerated_liu_xiang_wins_civil_war = {
+	SZC_clear_all_victor_flags = yes
+	set_country_flag = SZC_accelerated_department_in_power
+	mark_focus_tree_layout_dirty = yes
+	remove_ideas = SZC_baoding_influence
+	swap_ideas = {
+		remove_idea = SZC_civil_war_idea
+		add_idea = SZC_aftermath_of_the_civil_war_1
+	}
+	set_politics = {
+		ruling_party = authoritarian_democrat
+		elections_allowed = no
+	}
+	promote_character = {
+		ideology = authoritarian_democrat_subtype
+		character = SZC_liu_xiang
+	}
+	SZC_luo_zezhou = { retire = yes }
+	clr_country_flag = SZC_zhili_supports_armament
+	clr_country_flag = SZC_yunnan_supports_officers
+	set_capital = { state = 650 remember_old_capital = no }
+	hidden_effect = {
+		SZC_add_all_Accelerated_liu_xiang_characters = yes
+		activate_advisor = SZC_pan_wenhua_sic
+		complete_national_focus = SZC_Chongqing_Victory
+		#De-obscuring this code for ease of readability
+		set_country_flag = SZC_li_jiayu_unavailable
+		set_country_flag = SZC_liu_cunhou_unavailable
+		set_country_flag = SZC_deng_xihou_unavailable
+		if = {
+			limit = { has_character = SZC_yang_sen }
+			set_country_flag = SZC_yang_sen_unavailable
+			every_character = {
+				limit = {
+					OR = {
+						has_character_flag = SZC_accelerated_yang_leader
+						has_character_flag = SZC_armament_leader
+					}
+					NOT = { is_character = SZC_liu_Cunhou }
+				}
+				retire = yes
+			}
+		}
+
+		set_country_flag = SZC_liu_wenhui_unavailable
+		650 = { set_demilitarized_zone = no }
+		1049 = { set_demilitarized_zone = no }
+		601 = { set_demilitarized_zone = yes }
+		1015 = { set_demilitarized_zone = yes }
+
+		country_lock_all_division_template = no
+		delete_unit_template_and_units = { division_template = "Wubei Xi Bubing Shi" }
+		delete_unit_template_and_units = { division_template = "Baoding Xi Bubing Shi" }
+		delete_unit_template_and_units = { division_template = "Baoding Xi Jingying Shi" }
+		if = {
+			limit = { is_ai = no }
+			set_division_template_lock = {
+				division_template = "Xikang Shandi Shi"
+				is_locked = yes
+			}
+		}
+		#deserting Armament troops
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12767
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4925
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 1395
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 7240
+			}
+		}
+		661 = { #Daxian
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 2091
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12274
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10144
+			}
+		}
+		#deserting Baoding troops
+		788 = { #Aba
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10787
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4403
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 5193
+			}
+		}
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4375
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12141
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12819
+			}
+		}
+		788 = { #Aba
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 5011
+			}
+		}
+		#Liu Xiang's Troops
+		650 = { #Chongqing
+			create_unit = {
+				division = "division_template = \"Sucheng Jingying Shi\" start_experience_factor = 0.3 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 6999
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 6999
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 1893
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4431
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4141
+			}
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10822
+			}
+		}
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 12705
+			}
+		}
+		661 = { #Daxian
+			create_unit = {
+				division = "division_template = \"Sucheng Bubing Shi\" start_experience_factor = 0.05 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 11865
+			}
+		}
+		QIE = { country_event = qing_foreign_policy_events.115 }
+	}
+}
+
+SZC_officer_department_wins_civil_war = {
+	SZC_clear_all_victor_flags = yes
+	set_country_flag = SZC_officer_department_in_power
+	mark_focus_tree_layout_dirty = yes
+	remove_ideas = SZC_baoding_influence
+	swap_ideas = {
+		remove_idea = SZC_civil_war_idea
+		add_idea = SZC_aftermath_of_the_civil_war_1
+	}
+	set_politics = {
+		ruling_party = social_liberal
+		elections_allowed = no
+	}
+	set_temp_variable = { coalition_partner_var = token:market_liberal }
+	add_to_coalition = yes
+	set_capital = { state = 650 remember_old_capital = no }
+	custom_effect_tooltip = tooltip_white_line
+	country_event = { id = sichuan_events.509 days = 3 } #Event to determine if Xiong or Li Jiayu
+	set_country_flag = SZC_lu_chao_available_flag
+	clr_country_flag = SZC_zhili_supports_armament
+	clr_country_flag = SZC_yunnan_supports_officers
+	hidden_effect = {
+		activate_advisor = SZC_xiong_kewu_sic
+		#De-obscuring this code for ease of readability
+		SZC_li_jiayu = { CHN_recruit_character_effect = yes }
+		SZC_xiong_kewu = { promote_to_field_marshal = yes }
+		SZC_luo_zezhou = { promote_to_field_marshal = yes }
+		SZC_li_jiayu = { promote_to_field_marshal = yes }
+		every_character = {
+			limit = {
+				OR = {
+					has_character_flag = SZC_accelerated_yang_leader
+					has_character_flag = SZC_armament_leader
+					has_character_flag = SZC_accelerated_liu_leader
+				}
+			}
+			retire = yes
+		}
+
+		650 = { set_demilitarized_zone = no }
+		1049 = { set_demilitarized_zone = no }
+		country_lock_all_division_template = no
+		delete_unit_template_and_units = { division_template = "Wubei Xi Bubing Shi" }
+		delete_unit_template_and_units = { division_template = "Sucheng Bubing Shi" }
+		delete_unit_template_and_units = { division_template = "Sucheng Jingying Shi" }
+		division_template = { #Officer Department Infantry Division
+			name = "Junguan Xi Bubing Shi"
+			division_names_group = CHYN_INF_01
+			regiments = {
+				irregular_infantry = { x = 0 y = 0 }
+				irregular_infantry = { x = 0 y = 1 }
+				irregular_infantry = { x = 1 y = 0 }
+				irregular_infantry = { x = 1 y = 1 }
+			}
+		}
+		#Deng Xihou's troops
+		788 = { #Aba
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10787
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4403
+			}
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 5193
+			}
+		}
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Baoding Xi Jingying Shi\" start_experience_factor = 0.3 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 10132
+			}
+		}
+		#Liu Wenhui's troops
+		601 = { #Xikang
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 1918
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 8104
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12724
+			}
+		}
+		1015 = { #Ya'an
+			create_unit = {
+				division = "division_template = \"Baoding Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 2067
+			}
+			create_unit = {
+				division = "division_template = \"Xikang Shandi Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10726
+			}
+		}
+		#defecting Armament troops
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12767
+			}
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4925
+			}
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 1395
+			}
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 7240
+			}
+		}
+		661 = { #Daxian
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 2091
+			}
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12274
+			}
+		}
+		#deserting Liu Xiang troops
+		650 = { #Chongqing
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 1893
+			}
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 6999
+			}
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4431
+			}
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 4141
+			}
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 10822
+			}
+		}
+		605 = { #Chengdu
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 12705
+			}
+		}
+		661 = { #Daxian
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				prioritize_location = 11865
+			}
+		}
+		#Officer Department troops
+		650 = { #Chongqing
+			create_unit = {
+				division = "division_template = \"Junguan Xi Bubing Shi\" start_experience_factor = 0.1 start_equipment_factor = 0.75"
+				owner = PREV
+				count = 2
+				prioritize_location = 6999
+			}
+		}
+		QIE = { country_event = qing_foreign_policy_events.117 }
+	}
+}
+
+SZC_armament_department_flees = {
+	set_country_flag = SZC_yang_sen_unavailable
+	set_country_flag = SZC_liu_cunhou_unavailable
+	every_character = {
+		limit = {
+			OR = {
+				has_character_flag = SZC_accelerated_yang_leader
+				has_character_flag = SZC_armament_leader
+			}
+		}
+		retire = yes
+	}
+	country_event = { id = sichuan_events.1005 days = 14 random_hours = 288 }
+}
+
+SZC_clear_all_victor_flags = {
+	clr_country_flag = SZC_armament_department_in_power
+	clr_country_flag = SZC_baoding_department_in_power
+	clr_country_flag = SZC_accelerated_department_in_power
+	clr_country_flag = SZC_officer_department_in_power
+}
+
+SZC_unlock_mountaineer_template = {
+	set_division_template_lock = {
+		division_template = "Xikang Shandi Shi"
+		is_locked = no
+	}
+}
+
+SZC_political_recovery = {
+	if = {
+		limit = {
+			OR = {
+				has_idea = SZC_internal_divisions
+				has_idea = SZC_civil_war_idea
+			}
+		}
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = SZC_aftermath_of_the_civil_war_1
+				add_idea = SZC_aftermath_of_the_civil_war_2
+			}
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_aftermath_of_the_civil_war_1 }
+		swap_ideas = {
+			remove_idea = SZC_aftermath_of_the_civil_war_1
+			add_idea = SZC_aftermath_of_the_civil_war_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_aftermath_of_the_civil_war_2 }
+		swap_ideas = {
+			remove_idea = SZC_aftermath_of_the_civil_war_2
+			add_idea = SZC_aftermath_of_the_civil_war_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_aftermath_of_the_civil_war_3 }
+		swap_ideas = {
+			remove_idea = SZC_aftermath_of_the_civil_war_3
+			add_idea = SZC_aftermath_of_the_civil_war_4
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_aftermath_of_the_civil_war_4 }
+		remove_ideas = SZC_aftermath_of_the_civil_war_4
+	}
+}
+
+SZC_reduce_famine_small = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = SZC_major_famine } }
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = SZC_major_famine
+		}
+		add_to_variable = {
+			SZC_famine_monthly_population = 0.05
+			tooltip = monthly_population_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_stability_factor = 0.005
+			tooltip = stability_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_war_support_factor = 0.02
+			tooltip = war_support_factor_tooltip
+		}
+		SZC_end_famine = yes
+	}
+}
+
+SZC_increase_famine_small = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = SZC_major_famine } }
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = SZC_major_famine
+		}
+		add_to_variable = {
+			SZC_famine_monthly_population = -0.05
+			tooltip = monthly_population_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_stability_factor = -0.005
+			tooltip = stability_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_war_support_factor = -0.02
+			tooltip = war_support_factor_tooltip
+		}
+	}
+}
+
+SZC_reduce_famine_medium = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = SZC_major_famine } }
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = SZC_major_famine
+		}
+		add_to_variable = {
+			SZC_famine_monthly_population = 0.1
+			tooltip = monthly_population_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_stability_factor = 0.01
+			tooltip = stability_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_war_support_factor = 0.04
+			tooltip = war_support_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_consumer_goods_factor = -0.02
+			tooltip = consumer_goods_factor_tooltip
+		}
+		SZC_end_famine = yes
+	}
+}
+
+SZC_increase_famine_medium = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = SZC_major_famine } }
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = SZC_major_famine
+		}
+		add_to_variable = {
+			SZC_famine_monthly_population = -0.1
+			tooltip = monthly_population_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_stability_factor = -0.01
+			tooltip = stability_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_war_support_factor = -0.04
+			tooltip = war_support_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_consumer_goods_factor = 0.02
+			tooltip = consumer_goods_factor_tooltip
+		}
+	}
+}
+
+SZC_increase_famine_medium_large = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = SZC_major_famine } }
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = SZC_major_famine
+		}
+		add_to_variable = {
+			SZC_famine_monthly_population = -0.15
+			tooltip = monthly_population_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_stability_factor = -0.015
+			tooltip = stability_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_war_support_factor = -0.06
+			tooltip = war_support_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_consumer_goods_factor = 0.04
+			tooltip = consumer_goods_factor_tooltip
+		}
+	}
+}
+
+SZC_reduce_famine_large = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = SZC_major_famine } }
+		custom_effect_tooltip = {
+			localization_key = tooltip_modify_dynmod
+			DYNMOD = SZC_major_famine
+		}
+		add_to_variable = {
+			SZC_famine_monthly_population = 0.2
+			tooltip = monthly_population_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_stability_factor = 0.02
+			tooltip = stability_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_war_support_factor = 0.08
+			tooltip = war_support_factor_tooltip
+		}
+		add_to_variable = {
+			SZC_famine_consumer_goods_factor = -0.04
+			tooltip = consumer_goods_factor_tooltip
+		}
+		SZC_end_famine = yes
+	}
+}
+
+SZC_end_famine = {
+	if = {
+		limit = {
+			has_dynamic_modifier = { modifier = SZC_major_famine }
+			check_variable = { SZC_famine_monthly_population > -0.01 }
+		}
+
+		#remove modifier, apply ideas
+		hidden_effect = {
+			remove_dynamic_modifier = { modifier = SZC_major_famine }
+			if = {
+				limit = { has_country_flag = SZC_chose_famine_relief_labour }
+				add_timed_idea = {
+					idea = SZC_recovering_from_the_famine_1
+					days = 1095
+				}
+			}
+			else = {
+				add_timed_idea = {
+					idea = SZC_recovering_from_the_famine_2
+					days = 1095
+				}
+			}
+			country_event = sichuan_events.127
+			country_event = { id = sichuan_events.200 days = 15 random_days = 10 }
+		}
+
+		#delete relief variables/flags
+		clear_variable = SZC_famine_PP
+		clr_country_flag = SZC_extra_import_unlocked
+		clr_country_flag = SZC_importing_grain
+
+		#disable decisions
+		remove_targeted_decision = { decision = SZC_Service_For_Food target = THIS }
+		remove_targeted_decision = { decision = SZC_Labour_Relief target = THIS }
+		remove_targeted_decision = { decision = SZC_Allocate_More_Government_Funds target = THIS }
+		remove_targeted_decision = { decision = SZC_Enact_Price_Controls target = THIS }
+		remove_targeted_decision = { decision = SZC_Increase_Relief_Efforts target = THIS }
+		remove_targeted_decision = { decision = SZC_Food_Banks target = THIS }
+		remove_targeted_decision = { decision = SZC_Subsidise_Food_Production target = THIS }
+		remove_targeted_decision = { decision = SZC_Child_Protection_Programme target = THIS }
+		remove_targeted_decision = { decision = SZC_International_Famine_Relief target = THIS }
+
+		remove_targeted_decision = { decision = SZC_Request_Aid target = QIE }
+		remove_targeted_decision = { decision = SZC_Request_Aid target = FNG }
+		remove_targeted_decision = { decision = SZC_Request_Aid target = GXC }
+		remove_targeted_decision = { decision = SZC_Request_Aid target = LEC }
+
+		remove_targeted_decision = { decision = SZC_Import_Grain target = USA }
+		remove_targeted_decision = { decision = SZC_Import_Grain target = GEA }
+		remove_targeted_decision = { decision = SZC_Import_Grain target = GXC }
+		remove_targeted_decision = { decision = SZC_Import_Grain target = AST }
+		remove_targeted_decision = { decision = SZC_Import_Grain target = CAN }
+
+		#delete modifier variables
+		clear_variable = SZC_famine_monthly_population
+		clear_variable = SZC_famine_stability_factor
+		clear_variable = SZC_famine_war_support_factor
+		clear_variable = SZC_famine_conscription_factor
+		clear_variable = SZC_famine_consumer_goods_factor
+
+		#delete event flags
+		clr_country_flag = SZC_dujiangyan_damaged_event
+		clr_country_flag = SZC_james_yen_event
+		clr_country_flag = SZC_clay_eaters_event
+		clr_country_flag = SZC_rice_riots_event
+		clr_country_flag = SZC_market_violence_event
+		clr_country_flag = SZC_unusual_solutions_event
+		clr_country_flag = SZC_child_poverty_event
+		clr_country_flag = SZC_refugees_event
+		clr_country_flag = SZC_first_corruption_event
+		clr_country_flag = SZC_corruption_event
+		clr_country_flag = SZC_black_market_event
+		clr_country_flag = SZC_left_kmt_raids_event
+		clr_country_flag = SZC_xiangs_prayers_event
+	}
+}
+
+SZC_increase_opium_control = {
+	divide_temp_variable = { SZC_opium_control_change = 100 }
+	add_to_variable = { SZC_opium_control = SZC_opium_control_change }
+	custom_effect_tooltip = SZC_increase_opium_control_tooltip
+	if = {
+		limit = {
+			check_variable = { SZC_opium_control > 0.79 }
+			has_idea = SZC_opium_monopoly_4
+		}
+		swap_ideas = {
+			remove_idea = SZC_opium_monopoly_4
+			add_idea = SZC_opium_monopoly_5
+		}
+	}
+	else_if = {
+		limit = {
+			check_variable = { SZC_opium_control > 0.59 }
+			has_idea = SZC_opium_monopoly_3
+		}
+		swap_ideas = {
+			remove_idea = SZC_opium_monopoly_3
+			add_idea = SZC_opium_monopoly_4
+		}
+		hidden_effect = {
+			country_event = { id = sichuan_events.222 days = 10 random_days = 10 }
+		}
+	}
+	else_if = {
+		limit = {
+			check_variable = { SZC_opium_control > 0.39 }
+			has_idea = SZC_opium_monopoly_2
+		}
+		swap_ideas = {
+			remove_idea = SZC_opium_monopoly_2
+			add_idea = SZC_opium_monopoly_3
+		}
+		hidden_effect = {
+			country_event = { id = sichuan_events.219 days = 10 random_days = 10 }
+		}
+	}
+	else_if = {
+		limit = {
+			check_variable = { SZC_opium_control > 0.19 }
+			has_idea = SZC_opium_monopoly_1
+		}
+		swap_ideas = {
+			remove_idea = SZC_opium_monopoly_1
+			add_idea = SZC_opium_monopoly_2
+		}
+		hidden_effect = {
+			country_event = { id = sichuan_events.217 days = 10 random_days = 10 }
+		}
+	}
+	else_if = {
+		limit = {
+			check_variable = { SZC_opium_control > 0.04 }
+			NOT = {
+				has_idea = SZC_opium_monopoly_1
+				has_idea = SZC_opium_monopoly_2
+				has_idea = SZC_opium_monopoly_3
+				has_idea = SZC_opium_monopoly_4
+				has_idea = SZC_opium_monopoly_5
+			}
+		}
+		add_ideas = SZC_opium_monopoly_1
+	}
+}
+
+SZC_reduce_opium_spread = {
+	divide_temp_variable = { SZC_opium_spread_change = 100 }
+	add_to_variable = { SZC_opium_spread = SZC_opium_spread_change }
+	custom_effect_tooltip = SZC_reduce_opium_spread_tooltip
+	if = {
+		limit = {
+			has_idea = SZC_opium_spread_1
+			check_variable = { SZC_opium_spread < 0.49 }
+		}
+		swap_ideas = {
+			remove_idea = SZC_opium_spread_1
+			add_idea = SZC_opium_spread_2
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SZC_opium_spread_2
+			check_variable = { SZC_opium_spread < 0.37 }
+		}
+		swap_ideas = {
+			remove_idea = SZC_opium_spread_2
+			add_idea = SZC_opium_spread_3
+		}
+		hidden_effect = {
+			country_event = { id = sichuan_events.213 days = 10 random_days = 10 }
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SZC_opium_spread_3
+			check_variable = { SZC_opium_spread < 0.25 }
+		}
+		swap_ideas = {
+			remove_idea = SZC_opium_spread_3
+			add_idea = SZC_opium_spread_4
+		}
+		hidden_effect = {
+			country_event = { id = sichuan_events.214 days = 2 }
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SZC_opium_spread_4
+			check_variable = { SZC_opium_spread < 0.13 }
+		}
+		swap_ideas = {
+			remove_idea = SZC_opium_spread_4
+			add_idea = SZC_opium_spread_5
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SZC_opium_spread_5
+			check_variable = { SZC_opium_spread < 0.06 }
+		}
+		remove_ideas = SZC_opium_spread_5
+	}
+}
+
+SZC_reduce_corruption = {
+	if = {
+		limit = { has_idea = SZC_opium_corruption_1 }
+		swap_ideas = {
+			remove_idea = SZC_opium_corruption_1
+			add_idea = SZC_opium_corruption_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_corruption_2 }
+		swap_ideas = {
+			remove_idea = SZC_opium_corruption_2
+			add_idea = SZC_opium_corruption_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_corruption_3 }
+		swap_ideas = {
+			remove_idea = SZC_opium_corruption_3
+			add_idea = SZC_opium_corruption_4
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_corruption_4 }
+		swap_ideas = {
+			remove_idea = SZC_opium_corruption_4
+			add_idea = SZC_opium_corruption_5
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_corruption_5 }
+		remove_ideas = SZC_opium_corruption_5
+	}
+}
+
+SZC_reduce_smuggling = {
+	if = {
+		limit = { has_idea = SZC_opium_smuggling_1 }
+		swap_ideas = {
+			remove_idea = SZC_opium_smuggling_1
+			add_idea = SZC_opium_smuggling_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_smuggling_2 }
+		swap_ideas = {
+			remove_idea = SZC_opium_smuggling_2
+			add_idea = SZC_opium_smuggling_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_smuggling_3 }
+		swap_ideas = {
+			remove_idea = SZC_opium_smuggling_3
+			add_idea = SZC_opium_smuggling_4
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_smuggling_4 }
+		remove_ideas = SZC_opium_smuggling_4
+	}
+}
+
+SZC_reduce_addiction = {
+	if = {
+		limit = { has_idea = SZC_opium_addiction_1 }
+		swap_ideas = {
+			remove_idea = SZC_opium_addiction_1
+			add_idea = SZC_opium_addiction_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_addiction_2 }
+		swap_ideas = {
+			remove_idea = SZC_opium_addiction_2
+			add_idea = SZC_opium_addiction_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_addiction_3 }
+		swap_ideas = {
+			remove_idea = SZC_opium_addiction_3
+			add_idea = SZC_opium_addiction_4
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_opium_addiction_4 }
+		remove_ideas = SZC_opium_addiction_4
+	}
+}
+
+SZC_end_opium_crisis = {
+	set_country_flag = SZC_opium_crisis_solved
+
+	#delete variables
+	clear_variable = SZC_opium_control
+	clear_variable = SZC_opium_spread
+
+	#delete event flags
+	clr_country_flag = SZC_monopoly_path
+	clr_country_flag = SZC_removal_path
+	clr_country_flag = SZC_civil_corruption_event
+	clr_country_flag = SZC_army_corruption_event
+	clr_country_flag = SZC_smugglers_administration_event
+	clr_country_flag = SZC_opium_corruption_event
+	clr_country_flag = SZC_assassinations_event
+	clr_country_flag = SZC_first_tax_evasion_event
+	clr_country_flag = SZC_second_tax_evasion_event
+	clr_country_flag = SZC_merchant_resistance_event
+	clr_country_flag = SZC_illegal_production_event
+	clr_country_flag = SZC_corruption_event_delays
+	clr_country_flag = SZC_corruption_event_bribes
+	clr_country_flag = SZC_corruption_event_no_enforcement
+}
+
+SZC_diarchy_increase_wenhui = {
+	if = {
+		limit = { has_power_balance = { id = SZC_baoding_power_balance } }
+		custom_effect_tooltip = SZC_diarchy_increase_wenhui_tooltip
+		add_power_balance_value = { id = SZC_baoding_power_balance value = -0.20 }
+	}
+}
+
+SZC_diarchy_increase_wenhui_small = {
+	if = {
+		limit = { has_power_balance = { id = SZC_baoding_power_balance } }
+		custom_effect_tooltip = SZC_diarchy_increase_wenhui_tooltip
+		add_power_balance_value = { id = SZC_baoding_power_balance value = -0.10 }
+	}
+}
+
+SZC_diarchy_increase_xihou = {
+	if = {
+		limit = { has_power_balance = { id = SZC_baoding_power_balance } }
+		custom_effect_tooltip = SZC_diarchy_increase_xihou_tooltip
+		add_power_balance_value = { id = SZC_baoding_power_balance value = 0.20 }
+	}
+}
+
+SZC_diarchy_increase_xihou_small = {
+	if = {
+		limit = { has_power_balance = { id = SZC_baoding_power_balance } }
+		custom_effect_tooltip = SZC_diarchy_increase_xihou_tooltip
+		add_power_balance_value = { id = SZC_baoding_power_balance value = 0.10 }
+	}
+}
+
+SZC_add_all_nine_men_regiment_characters = {
+	hidden_effect = {
+		SZC_xiong_kewu = { CHN_recruit_character_effect = yes }
+		SZC_dan_maoxin = { CHN_recruit_character_effect = yes }
+		SZC_yu_peidi = { CHN_recruit_character_effect = yes }
+		SZC_yu_jitang = { CHN_recruit_character_effect = yes }
+		SZC_zhao_weibin = { CHN_recruit_character_effect = yes }
+		SZC_li_weiru = { CHN_recruit_character_effect = yes }
+		SZC_liu_guanglie = { CHN_recruit_character_effect = yes }
+		SZC_shi_tiyuan = { CHN_recruit_character_effect = yes }
+		SZC_hu_ziang = { CHN_recruit_character_effect = yes }
+		SZC_xiong_zhefan = { CHN_recruit_character_effect = yes }
+	}
+}
+
+SZC_add_all_officer_characters = {
+	hidden_effect = {
+		SZC_luo_zezhou = { CHN_recruit_character_effect = yes }
+		SZC_lai_xinhui = { CHN_recruit_character_effect = yes }
+		SZC_chen_lanting = { CHN_recruit_character_effect = yes }
+		SZC_li_zongfang = { CHN_recruit_character_effect = yes }
+		SZC_chen_li = { CHN_recruit_character_effect = yes }
+		SZC_peng_shifu = { CHN_recruit_character_effect = yes }
+	}
+}
+
+SZC_add_all_baoding_characters = {
+	hidden_effect = {
+		# Baoding Department - deng and tian side
+		SZC_deng_xihou = { CHN_recruit_character_effect = yes }
+		SZC_tian_songyao = { CHN_recruit_character_effect = yes }
+		SZC_huang_yin = { CHN_recruit_character_effect = yes }
+		SZC_chen_dingxun = { CHN_recruit_character_effect = yes }
+		SZC_sun_zhen = { CHN_recruit_character_effect = yes }
+		SZC_wang_mingzhang = { CHN_recruit_character_effect = yes }
+		SZC_dong_songheng = { CHN_recruit_character_effect = yes }
+		SZC_qiu_yanxun = { CHN_recruit_character_effect = yes }
+		SZC_hu_lincong = { CHN_recruit_character_effect = yes }
+		SZC_ma_guorong = { CHN_recruit_character_effect = yes }
+		SZC_chen_li = { CHN_recruit_character_effect = yes }
+
+		# Baoding Department - Liu side
+		SZC_liu_wenhui = { CHN_recruit_character_effect = yes }
+		SZC_xia_shouxun = { CHN_recruit_character_effect = yes }
+		SZC_xiang_chuanyi = { CHN_recruit_character_effect = yes }
+		SZC_liu_yuanxuan = { CHN_recruit_character_effect = yes }
+		SZC_wu_jingbo = { CHN_recruit_character_effect = yes }
+		SZC_wang_yunxiang = { CHN_recruit_character_effect = yes }
+		SZC_leng_yindong = { CHN_recruit_character_effect = yes }
+		SZC_liu_wencai = { CHN_recruit_character_effect = yes }
+		SZC_shao_shichi = { CHN_recruit_character_effect = yes }
+		SZC_zeng_shufan = { CHN_recruit_character_effect = yes }
+		SZC_li_zemin = { CHN_recruit_character_effect = yes }
+	}
+}
+
+SZC_add_tian_baoding_characters = {
+	hidden_effect = {
+		SZC_tian_songyao = { CHN_recruit_character_effect = yes }
+		SZC_sun_zhen = { CHN_recruit_character_effect = yes }
+		SZC_wang_mingzhang = { CHN_recruit_character_effect = yes }
+		SZC_dong_songheng = { CHN_recruit_character_effect = yes }
+		SZC_hu_lincong = { CHN_recruit_character_effect = yes }
+		SZC_chen_li = { CHN_recruit_character_effect = yes }
+	}
+}
+
+SZC_add_deng_baoding_characters = {
+	hidden_effect = {
+		SZC_deng_xihou = { CHN_recruit_character_effect = yes }
+		SZC_huang_yin = { CHN_recruit_character_effect = yes }
+		SZC_chen_dingxun = { CHN_recruit_character_effect = yes }
+		SZC_qiu_yanxun = { CHN_recruit_character_effect = yes }
+		SZC_ma_guorong = { CHN_recruit_character_effect = yes }
+		SZC_chen_li = { CHN_recruit_character_effect = yes }
+	}
+}
+
+SZC_add_all_armament_characters = {
+	hidden_effect = {
+		SZC_liu_cunhou = { CHN_recruit_character_effect = yes }
+		SZC_liao_zhen = { CHN_recruit_character_effect = yes }
+		SZC_zhou_daogang = { CHN_recruit_character_effect = yes }
+		SZC_liu_bangjun = { CHN_recruit_character_effect = yes }
+		SZC_chen_hongfan = { CHN_recruit_character_effect = yes }
+		SZC_zhao_ronghua = { CHN_recruit_character_effect = yes }
+		SZC_zhao_xi = { CHN_recruit_character_effect = yes }
+		SZC_yin_changling = { CHN_recruit_character_effect = yes }
+		SZC_liu_shiliang = { CHN_recruit_character_effect = yes }
+	}
+}
+
+SZC_add_all_accelerated_yang_sen_characters = {
+	hidden_effect = {
+		SZC_yang_sen = { CHN_recruit_character_effect = yes }
+		SZC_fan_shaozeng = { CHN_recruit_character_effect = yes }
+		SZC_he_guoguang = { CHN_recruit_character_effect = yes }
+		SZC_guo_rudong = { CHN_recruit_character_effect = yes }
+		SZC_yang_hanyu = { CHN_recruit_character_effect = yes }
+		SZC_xia_jiong = { CHN_recruit_character_effect = yes }
+		SZC_zhou_weizhen = { CHN_recruit_character_effect = yes }
+		SZC_mu_zibin = { CHN_recruit_character_effect = yes }
+		SZC_liu_xianying = { CHN_recruit_character_effect = yes }
+	}
+}
+
+SZC_add_all_accelerated_liu_xiang_characters = {
+	hidden_effect = {
+		SZC_liu_xiang = { CHN_recruit_character_effect = yes }
+		SZC_pan_wenhua = { CHN_recruit_character_effect = yes }
+		SZC_tang_shizun = { CHN_recruit_character_effect = yes }
+		SZC_wang_zuanxu = { CHN_recruit_character_effect = yes }
+		SZC_wang_lingji = { CHN_recruit_character_effect = yes }
+		SZC_guo_xunqi = { CHN_recruit_character_effect = yes }
+		SZC_xu_shaozong = { CHN_recruit_character_effect = yes }
+		SZC_pan_changyou = { CHN_recruit_character_effect = yes }
+		SZC_deng_hanxiang = { CHN_recruit_character_effect = yes }
+		SZC_liu_congyun = { CHN_recruit_character_effect = yes }
+		SZC_lu_zuofu = { CHN_recruit_character_effect = yes }
+		SZC_liu_hangchen = { CHN_recruit_character_effect = yes }
+		SZC_qiao_yifu = { CHN_recruit_character_effect = yes }
+	}
+}
+
+SZC_switch_to_federalist_tree = {
+	SZC_clear_all_victor_flags = yes
+	set_country_flag = SZC_federalists_in_power
+	mark_focus_tree_layout_dirty = yes
+	if = {
+		limit = { has_completed_focus = SZC_standardise_troop_numbers }
+		set_country_flag = SZC_standardise_troop_numbers_completed
+	}
+	if = {
+		limit = { has_completed_focus = SZC_unify_provincial_currency }
+		set_country_flag = SZC_unify_provincial_currency_completed
+	}
+	complete_national_focus = SZC_the_last_bastion_of_federalism
+	if = {
+		limit = { has_country_flag = SZC_standardise_troop_numbers_completed }
+		clr_country_flag = SZC_standardise_troop_numbers_completed
+		unlock_national_focus = SZC_taking_stock_of_the_military
+	}
+	if = {
+		limit = { has_country_flag = SZC_unify_provincial_currency_completed }
+		clr_country_flag = SZC_unify_provincial_currency_completed
+		unlock_national_focus = SZC_a_new_unified_currency
+	}
+	hidden_effect = {
+		remove_ideas = {
+			SZC_preparing_for_federalism_1
+			SZC_preparing_for_federalism_2
+			SZC_preparing_for_federalism_3
+			SZC_preparing_for_federalism_4
+			SZC_preparing_for_federalism_5
+			SZC_preparing_for_federalism_6
+			SZC_preparing_for_federalism_7
+			SZC_preparing_for_federalism_8
+			SZC_preparing_for_federalism_9
+		}
+	}
+	custom_effect_tooltip = tooltip_white_line
+	add_ideas = SZC_federal_governmental_legitimacy_1
+	set_potential_national_government = yes
+}
+
+SZC_improve_zhili_republic_legitimacy = {
+	if = {
+		limit = { has_idea = SZC_legitimacy_of_the_republic }
+		swap_ideas = {
+			remove_idea = SZC_legitimacy_of_the_republic
+			add_idea = SZC_legitimacy_of_the_republic_1
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_legitimacy_of_the_republic_1 }
+		swap_ideas = {
+			remove_idea = SZC_legitimacy_of_the_republic_1
+			add_idea = SZC_legitimacy_of_the_republic_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_legitimacy_of_the_republic_2 }
+		swap_ideas = {
+			remove_idea = SZC_legitimacy_of_the_republic_2
+			add_idea = SZC_legitimacy_of_the_republic_3
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SZC_legitimacy_of_the_republic_3
+			has_completed_focus = SZC_the_path_of_reform
+		}
+		swap_ideas = {
+			remove_idea = SZC_legitimacy_of_the_republic_3
+			add_idea = SZC_legitimacy_of_the_republic_4_civilian
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SZC_legitimacy_of_the_republic_3
+			has_completed_focus = SZC_the_return_of_tianjin
+		}
+		swap_ideas = {
+			remove_idea = SZC_legitimacy_of_the_republic_3
+			add_idea = SZC_legitimacy_of_the_republic_4_military
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SZC_legitimacy_of_the_republic_4_civilian
+		}
+		swap_ideas = {
+			remove_idea = SZC_legitimacy_of_the_republic_4_civilian
+			add_idea = SZC_legitimacy_of_the_republic_5_civilian
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SZC_legitimacy_of_the_republic_4_military
+		}
+		swap_ideas = {
+			remove_idea = SZC_legitimacy_of_the_republic_4_military
+			add_idea = SZC_legitimacy_of_the_republic_5_military
+		}
+	}
+	else = {
+		custom_effect_tooltip = SZC_improve_legitimacy_tt
+	}
+}
+
+SZC_improve_federalist_goverment_legitimacy = {
+	if = {
+		limit = { has_idea = SZC_federal_governmental_legitimacy_1 }
+		swap_ideas = {
+			remove_idea = SZC_federal_governmental_legitimacy_1
+			add_idea = SZC_federal_governmental_legitimacy_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_federal_governmental_legitimacy_2 }
+		swap_ideas = {
+			remove_idea = SZC_federal_governmental_legitimacy_2
+			add_idea = SZC_federal_governmental_legitimacy_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_federal_governmental_legitimacy_3 }
+		swap_ideas = {
+			remove_idea = SZC_federal_governmental_legitimacy_3
+			add_idea = SZC_federal_governmental_legitimacy_4
+		}
+	}
+	else_if = {
+		limit = { has_idea = SZC_federal_governmental_legitimacy_4 }
+		swap_ideas = {
+			remove_idea = SZC_federal_governmental_legitimacy_4
+			add_idea = SZC_federal_governmental_legitimacy_5
+		}
+	}
+	else = {
+		custom_effect_tooltip = SZC_improve_legitimacy_tt
+	}
+}
+
+SZC_UPC_uncomplete_endgame_focuses = {
+	if = {
+		limit = {
+			has_completed_focus = SZC_the_vibrant_bipartisan_democracy
+		}
+		uncomplete_national_focus = {
+			focus = SZC_the_vibrant_bipartisan_democracy
+			uncomplete_children = no #Avoid removing shared focuses
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_a_forum_for_the_level_headed
+		}
+		uncomplete_national_focus = {
+			focus = SZC_a_forum_for_the_level_headed
+			uncomplete_children = no #Avoid removing shared focuses
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_encourage_local_initiative
+		}
+		uncomplete_national_focus = {
+			focus = SZC_encourage_local_initiative
+			uncomplete_children = yes
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_promoting_harmonious_bipartisanship
+		}
+		uncomplete_national_focus = {
+			focus = SZC_promoting_harmonious_bipartisanship
+			uncomplete_children = no
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_enshrine_provincial_constitutions
+		}
+		uncomplete_national_focus = {
+			focus = SZC_enshrine_provincial_constitutions
+			uncomplete_children = yes
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_bicameral_democracy_realised
+		}
+		uncomplete_national_focus = {
+			focus = SZC_bicameral_democracy_realised
+			uncomplete_children = no
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_from_resistance_to_reconstruction
+		}
+		uncomplete_national_focus = {
+			focus = SZC_from_resistance_to_reconstruction
+			uncomplete_children = no
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_mobilising_the_broadest_masses
+		}
+		uncomplete_national_focus = {
+			focus = SZC_mobilising_the_broadest_masses
+			uncomplete_children = yes
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_the_wisdom_of_west_and_east
+		}
+		uncomplete_national_focus = {
+			focus = SZC_the_wisdom_of_west_and_east
+			uncomplete_children = yes
+			refund_political_power = no
+		}
+	}
+	if = {
+		limit = {
+			has_completed_focus = SZC_democracy_as_the_key
+		}
+		uncomplete_national_focus = {
+			focus = SZC_democracy_as_the_key
+			uncomplete_children = no
+			refund_political_power = no
+		}
+	}
+}
+
+SZC_the_wisdom_of_west_and_east_nanjing_effect = {
+	613 = { #Nanjing
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = industrial_complex
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+SZC_the_wisdom_of_west_and_east_guangzhou_effect = {
+	592 = { #Guangzhou
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = industrial_complex
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+SZC_the_wisdom_of_west_and_east_wuhan_effect = {
+	1048 = { #Wuhan
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = industrial_complex
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+SZC_the_wisdom_of_west_and_east_beijing_effect = {
+	608 = { #Beijing
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = industrial_complex
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+SZC_the_wisdom_of_west_and_east_effect = {
+	custom_effect_tooltip = SZC_the_wisdom_of_west_and_east_effect_tt
+	set_temp_variable = {
+		SZC_the_wisdom_of_west_and_east_var = {
+			value = party_popularity@social_democrat
+			add = party_popularity@social_liberal
+			add = party_popularity@social_conservative
+			add = party_popularity@market_liberal
+			multiply = 10 #Party Pop ranges from 0-1. Multiply it by ten so range is 0-10
+			clamp = { min = 0 max = 10 }
+			round = yes
+		}
+	}
+	if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 2 } }
+		613 = { #Nanjing
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 3 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 4 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+		592 = { #Guangzhou
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 5 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+		SZC_the_wisdom_of_west_and_east_guangzhou_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 6 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+		SZC_the_wisdom_of_west_and_east_guangzhou_effect = yes
+		1048 = { #Wuhan
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 7 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+		SZC_the_wisdom_of_west_and_east_guangzhou_effect = yes
+		SZC_the_wisdom_of_west_and_east_wuhan_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 8 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+		SZC_the_wisdom_of_west_and_east_guangzhou_effect = yes
+		SZC_the_wisdom_of_west_and_east_wuhan_effect = yes
+		608 = { #Beijing
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 9 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+		SZC_the_wisdom_of_west_and_east_guangzhou_effect = yes
+		SZC_the_wisdom_of_west_and_east_wuhan_effect = yes
+		SZC_the_wisdom_of_west_and_east_beijing_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 10 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+		SZC_the_wisdom_of_west_and_east_guangzhou_effect = yes
+		SZC_the_wisdom_of_west_and_east_wuhan_effect = yes
+		SZC_the_wisdom_of_west_and_east_beijing_effect = yes
+		602 = { #Changsha
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_wisdom_of_west_and_east_var < 11 } }
+		SZC_the_wisdom_of_west_and_east_nanjing_effect = yes
+		SZC_the_wisdom_of_west_and_east_guangzhou_effect = yes
+		SZC_the_wisdom_of_west_and_east_wuhan_effect = yes
+		SZC_the_wisdom_of_west_and_east_beijing_effect = yes
+		602 = { #Changsha
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+SZC_specialised_practical_schools_effect = {
+	if = {
+		limit = {
+			SZC_xiong_zhefan = { is_political_advisor = yes }
+			SZC_xian_ying = { is_political_advisor = yes }
+			SZC_li_zemin = { is_political_advisor = yes }
+		}
+		add_timed_idea = {
+			idea = SZC_specialised_practical_schools_2
+			days = 200
+		}
+	}
+	else_if = {
+		limit = {
+			count_triggers = {
+				amount = 2
+				SZC_xiong_zhefan = { is_political_advisor = yes }
+				SZC_xian_ying = { is_political_advisor = yes }
+				SZC_li_zemin = { is_political_advisor = yes }
+			}
+		}
+		add_timed_idea = {
+			idea = SZC_specialised_practical_schools_1
+			days = 150
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				SZC_xiong_zhefan = { is_political_advisor = yes }
+				SZC_li_zemin = { is_political_advisor = yes }
+				SZC_xian_ying = { is_political_advisor = yes }
+			}
+		}
+		add_timed_idea = {
+			idea = SZC_specialised_practical_schools_0
+			days = 150
+		}
+	}
+}
+
+SZC_the_push_for_efficiency_effect_nanjing_effect = {
+	613 = { #Nanjing
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = arms_factory
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+SZC_the_push_for_efficiency_effect_guangzhou_effect = {
+	592 = { #Guangzhou
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = arms_factory
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+SZC_the_push_for_efficiency_effect_wuhan_effect = {
+	1048 = { #Wuhan
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = arms_factory
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+SZC_the_push_for_efficiency_effect_beijing_effect = {
+	608 = { #Beijing
+		add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+			type = arms_factory
+			level = 1
+			instant_build = yes
+		}
+	}
+}
+SZC_the_push_for_efficiency_effect = {
+	custom_effect_tooltip = SZC_the_push_for_efficiency_effect_tt
+	set_temp_variable = {
+		SZC_the_push_for_efficiency_effect_var = {
+			value = party_popularity@authoritarian_democrat
+			multiply = 10 #Party Pop ranges from 0-1. Multiply it by ten so range is 0-10
+			clamp = { min = 0 max = 10 }
+			round = yes
+		}
+	}
+	if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 2 } }
+		613 = { #Nanjing
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 3 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 4 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+		592 = { #Guangzhou
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 5 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+		SZC_the_push_for_efficiency_effect_guangzhou_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 6 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+		SZC_the_push_for_efficiency_effect_guangzhou_effect = yes
+		1048 = { #Wuhan
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 7 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+		SZC_the_push_for_efficiency_effect_guangzhou_effect = yes
+		SZC_the_push_for_efficiency_effect_wuhan_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 8 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+		SZC_the_push_for_efficiency_effect_guangzhou_effect = yes
+		SZC_the_push_for_efficiency_effect_wuhan_effect = yes
+		608 = { #Beijing
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 9 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+		SZC_the_push_for_efficiency_effect_guangzhou_effect = yes
+		SZC_the_push_for_efficiency_effect_wuhan_effect = yes
+		SZC_the_push_for_efficiency_effect_beijing_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 10 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+		SZC_the_push_for_efficiency_effect_guangzhou_effect = yes
+		SZC_the_push_for_efficiency_effect_wuhan_effect = yes
+		SZC_the_push_for_efficiency_effect_beijing_effect = yes
+		602 = { #Changsha
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+	else_if = {
+		limit = { check_variable = { SZC_the_push_for_efficiency_effect_var < 11 } }
+		SZC_the_push_for_efficiency_effect_nanjing_effect = yes
+		SZC_the_push_for_efficiency_effect_guangzhou_effect = yes
+		SZC_the_push_for_efficiency_effect_wuhan_effect = yes
+		SZC_the_push_for_efficiency_effect_beijing_effect = yes
+		602 = { #Changsha
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+SZC_to_seek_prosperity_effect = {
+	custom_effect_tooltip = SZC_to_seek_prosperity_effect_tt
+	set_temp_variable = {
+		SZC_to_seek_prosperity_base_temp_var = {
+			value = party_popularity@social_conservative
+			add = party_popularity@social_liberal
+			add = party_popularity@authoritarian_democrat
+			add = party_popularity@market_liberal
+			add = party_popularity@paternal_autocrat
+			multiply = 5
+			clamp = { min = 0 max = 10 }
+			round = yes
+		}
+	}
+	if = {
+		limit = { check_variable = { SZC_to_seek_prosperity_base_temp_var < 2 } }
+		YUN_revolutionary_datong_aut_dem_nanjing_effect = yes #To save code repetition I am reusing the CCC effects
+	}
+	else_if = {
+		limit = { check_variable = { SZC_to_seek_prosperity_base_temp_var < 4 } }
+		YUN_revolutionary_datong_aut_dem_nanjing_effect = yes
+		YUN_revolutionary_datong_aut_dem_guangzhou_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_to_seek_prosperity_base_temp_var < 6 } }
+		YUN_revolutionary_datong_aut_dem_nanjing_effect = yes
+		YUN_revolutionary_datong_aut_dem_guangzhou_effect = yes
+		YUN_revolutionary_datong_aut_dem_wuhan_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_to_seek_prosperity_base_temp_var < 8 } }
+		YUN_revolutionary_datong_aut_dem_nanjing_effect = yes
+		YUN_revolutionary_datong_aut_dem_guangzhou_effect = yes
+		YUN_revolutionary_datong_aut_dem_wuhan_effect = yes
+		YUN_revolutionary_datong_aut_dem_beijing_effect = yes
+	}
+	else_if = {
+		limit = { check_variable = { SZC_to_seek_prosperity_base_temp_var < 11 } }
+		YUN_revolutionary_datong_aut_dem_nanjing_effect = yes
+		YUN_revolutionary_datong_aut_dem_guangzhou_effect = yes
+		YUN_revolutionary_datong_aut_dem_wuhan_effect = yes
+		YUN_revolutionary_datong_aut_dem_beijing_effect = yes
+		602 = { #Changsha
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+}
+
+SZC_new_style_education_effect = {
+	if = {
+		limit = {
+			SZC_xiong_zhefan = { is_political_advisor = yes }
+			QIE = { QIE_shen_junru = { is_political_advisor = yes } }
+			YUN = { YUN_luo_longji = { is_political_advisor = yes } }
+		}
+		add_timed_idea = {
+			idea = SZC_new_style_education_scheme_2
+			days = 200
+		}
+	}
+	else_if = {
+		limit = {
+			count_triggers = {
+				amount = 2
+				SZC_xiong_zhefan = { is_political_advisor = yes }
+				QIE = { QIE_shen_junru = { is_political_advisor = yes } }
+				YUN = { YUN_luo_longji = { is_political_advisor = yes } }
+			}
+		}
+		add_timed_idea = {
+			idea = SZC_new_style_education_scheme_1
+			days = 150
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				SZC_xiong_zhefan = { is_political_advisor = yes }
+				QIE = { QIE_shen_junru = { is_political_advisor = yes } }
+				YUN = { YUN_luo_longji = { is_political_advisor = yes } }
+			}
+		}
+		add_timed_idea = {
+			idea = SZC_new_style_education_scheme
+			days = 150
+		}
+	}
+}

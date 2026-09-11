@@ -1,0 +1,2059 @@
+#############################
+# East Turkestan focus tree #
+#############################
+# By Beelzebub/Von Laughing/Pietrus/WordZero
+###########################
+
+focus_tree = {
+	id = ETS_focus
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = ETS
+		}
+	}
+	default = no
+
+	continuous_focus_position = { x = 100 y = 2000 }
+
+	focus = {
+		id = ETS_uyghur_revolution
+		icon = GFX_goal_flames_of_rebellion
+		cost = 0
+
+		x = 8
+		y = 0
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		bypass = {
+			is_subject = yes
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_uyghur_revolution"
+			custom_effect_tooltip = unlock_focuses
+			hidden_effect = {
+				set_variable = { ETS_gold_amount = 0 }
+				# Economy Decisions
+				activate_targeted_decision = { decision = ETS_convert_gold_to_currency target = ROOT }
+				activate_targeted_decision = { decision = ETS_complete_hotan_conversion target = ROOT }
+
+				# Military Decisions
+				activate_targeted_decision = { decision = ETS_bughra_raise_militia target = 287 }
+				activate_targeted_decision = { decision = ETS_timur_raise_militia target = 619 }
+				activate_targeted_decision = { decision = ETS_war_with_KUM target = KUM }
+			}
+		}
+	}
+
+	focus = {
+		id = ETS_seek_foreign_support
+		icon = GFX_goal_foreign_diplomacy
+		cost = 1
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -3
+		y = 1
+
+		prerequisite = {
+			focus = ETS_uyghur_revolution
+		}
+
+		bypass = {
+			is_subject = yes
+		}
+
+		ai_will_do = { factor = 300 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_seek_foreign_support"
+			add_stability = 0.05
+			add_war_support = 0.05
+			add_manpower = 10000
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = RUS
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = TUR
+			}
+			unlock_decision_category_tooltip = ETS_foreign_diplomacy
+			hidden_effect = {
+				country_event = east_turkestan_events.1
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_construct_kashgar_hotan_highway
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 5
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -3
+		y = 2
+
+		prerequisite = {
+			focus = ETS_seek_foreign_support
+		}
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = ETS_can_construct_kashgar_hotan_highway
+				can_build_railway = { build_only_on_allied = yes path = { 2015 10870 1970 5216 4973 } }
+			}
+		}
+
+		ai_will_do = { factor = 150 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_construct_kashgar_hotan_highway"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 750
+				producer = RUS
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 750
+				producer = TUR
+			}
+			619 = { #Kashgar
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = { controls_state = 287 } #Qiemo
+				287 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			else = {
+				custom_effect_tooltip = ETS_building_the_kashgar_hotan_highway_tt
+			}
+			build_railway = {
+				level = 1
+				build_only_on_allied = yes
+				path = { 2015 10870 1970 5216 4973 }
+			}
+			if = {
+				limit = { is_subject = no }
+				custom_effect_tooltip = ETS_request_equipment_with_highway_tt
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_emergency_factory_conversion
+		icon = GFX_goal_generic_industry_reallocation
+		cost = 1
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = ETS_uyghur_revolution
+		}
+
+		bypass = {
+			is_subject = yes
+		}
+
+		ai_will_do = { factor = 200 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_emergency_factory_conversion"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = ETS
+			}
+			custom_effect_tooltip = ETS_convert_hotan_factory_tt
+			activate_targeted_decision = { decision = ETS_hire_firearm_expert_local target = ROOT }
+			activate_targeted_decision = { decision = ETS_learn_gunpowder_local target = ROOT }
+			activate_targeted_decision = { decision = ETS_learn_mineral_processing_local target = ROOT }
+		}
+	}
+
+	focus = {
+		id = ETS_build_second_military_factory
+		icon = GFX_goal_munitions_factories
+		cost = 5
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = ETS_emergency_factory_conversion
+		}
+
+		ai_will_do = { factor = 150 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_build_second_military_factory"
+			619 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_army_training
+		icon = GFX_goal_army_guy
+		cost = 1
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = ETS_uyghur_revolution
+		}
+
+		bypass = {
+			is_subject = yes
+		}
+
+		ai_will_do = { factor = 500 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_army_training"
+			add_manpower = 15000
+			custom_effect_tooltip = ETS_army_training_tt
+			activate_targeted_decision = { decision = ETS_army_training_adopt_formation_local target = ROOT }
+			activate_targeted_decision = { decision = ETS_army_training_combat_techniques_local target = ROOT }
+			random_owned_controlled_state = {
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				prioritize = { 619 }
+				create_unit = {
+					division = "name = \"Uyghur Volunteers\" division_template = \"Uyghur Guard\" start_experience_factor = 0.15 start_equipment_factor = 0.6"
+					owner = ETS
+				}
+			}
+			random_owned_controlled_state = {
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				prioritize = { 619 }
+				create_unit = {
+					division = "name = \"Uyghur Militia\" division_template = \"Uyghur Guard\" start_experience_factor = 0.15 start_equipment_factor = 0.6"
+					owner = ETS
+				}
+			}
+			random_owned_controlled_state = {
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				prioritize = { 619 }
+				create_unit = {
+					division = "name = \"Uyghur Worker Brigade\" division_template = \"Uyghur Guard\" start_experience_factor = 0.15 start_equipment_factor = 0.6"
+					owner = ETS
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = ETS_timur_military_academy
+		icon = GFX_goal_military_academy
+		cost = 5
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = ETS_army_training
+		}
+
+		ai_will_do = { factor = 500 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_timur_military_academy"
+			add_research_slot_until_four = yes
+			army_experience = 20
+			add_war_support = 0.10
+			set_temp_variable = { ETS_change = -5 }
+			ETS_change_popularities = yes
+			random_owned_controlled_state = {
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				prioritize = { 619 }
+				create_unit = {
+					division = "name = \"Timur Cavalry Unit\" division_template = \"Cavalry Unit\" start_experience_factor = 0.3 start_equipment_factor = 0.8"
+					owner = ETS
+				}
+			}
+			random_owned_controlled_state = {
+				limit = { valid_state_for_spawning_friendly_unit = yes }
+				prioritize = { 619 }
+				create_unit = {
+					division = "name = \"Youth Cadet Brigade\" division_template = \"Revolutionary Brigade\" start_experience_factor = 0.3 start_equipment_factor = 0.8"
+					owner = ETS
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = ETS_organise_seized_gold_and_rifle
+		icon = GFX_goal_generic_seize_money
+		cost = 1
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 3
+		y = 1
+
+		prerequisite = {
+			focus = ETS_uyghur_revolution
+		}
+
+		bypass = {
+			is_subject = yes
+		}
+
+		ai_will_do = { factor = 250 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_organise_seized_gold_and_rifle"
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 1500
+				producer = SIK
+			}
+			add_to_variable = { ETS_gold_amount = 1.5 tooltip = ETS_gold_increase }
+		}
+	}
+
+	focus = {
+		id = ETS_hotan_gold
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		cost = 5
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 3
+		y = 2
+
+		prerequisite = {
+			focus = ETS_organise_seized_gold_and_rifle
+		}
+
+		bypass = {
+			is_subject = yes
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_hotan_gold"
+			add_to_variable = { ETS_gold_amount = 5.0 tooltip = ETS_gold_increase }
+			activate_mission = ETS_weekly_hotan_gold
+			add_stability = 0.1
+			add_political_power = 100
+			set_temp_variable = { ETS_change = 5 }
+			ETS_change_popularities = yes
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_uyghur_independence
+		icon = GFX_goal_OTT_caliph
+		cost = 1
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = ETS_construct_kashgar_hotan_highway
+		}
+		prerequisite = {
+			focus = ETS_build_second_military_factory
+		}
+		prerequisite = {
+			focus = ETS_timur_military_academy
+		}
+		prerequisite = {
+			focus = ETS_hotan_gold
+		}
+
+		available = {
+			custom_override_tooltip = {
+				tooltip = ETS_has_won_in_xinjiang
+				NOT = { country_exists = SIK }
+				NOT = { country_exists = KUM }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_uyghur_independence"
+			if = {
+				limit = { is_subject = no }
+				log = "KR_Event_Logging;Republic of East Turkestan WINS XINJIANG WAR"
+				set_global_flag = ETS_rebellion_victory
+				country_event = east_turkestan_events.16
+			}
+			SIK = {
+				SIK_guanglu = { set_nationality = ROOT }
+				SIK_yibulayin = { set_nationality = ROOT }
+			}
+			hidden_effect = {
+				#Disable all decisions
+				add_to_temp_array = { ETS_targets_to_remove_major = RUS }
+				add_to_temp_array = { ETS_targets_to_remove_major = RAJ }
+				add_to_temp_array = { ETS_targets_to_remove_major = TUR }
+				add_to_temp_array = { ETS_targets_to_remove_minor = AFG }
+				add_to_temp_array = { ETS_targets_to_remove_minor = BUK }
+				add_to_temp_array = { ETS_targets_to_remove_minor = TRK }
+
+				#Diplomatic Decisions
+				for_each_scope_loop = {
+					array = ETS_targets_to_remove_major
+					PREV = {
+						remove_targeted_decision = { decision = ETS_foreign_support_send_delegations_major target = PREV }
+						remove_targeted_decision = { decision = ETS_foreign_support_more_equipment_full_support target = PREV }
+						remove_targeted_decision = { decision = ETS_foreign_support_more_equipment_partial_support target = PREV }
+					}
+				}
+				for_each_scope_loop = {
+					array = ETS_targets_to_remove_minor
+					PREV = {
+						remove_targeted_decision = { decision = ETS_foreign_support_send_delegations_minor target = PREV }
+						remove_targeted_decision = { decision = ETS_foreign_support_more_equipment_full_support target = PREV }
+						remove_targeted_decision = { decision = ETS_foreign_support_more_equipment_partial_support target = PREV }
+					}
+				}
+
+				# Economic Decisions
+				if = { #These decisions should stay after the war if not a puppet
+					limit = { is_subject = yes }
+					remove_targeted_decision = { decision = ETS_convert_gold_to_currency target = ROOT }
+					remove_mission = ETS_weekly_hotan_gold
+					clear_variable = ETS_gold_amount
+				}
+				remove_targeted_decision = { decision = ETS_complete_hotan_conversion target = ROOT }
+				remove_targeted_decision = { decision = ETS_hire_firearm_expert_local target = ROOT }
+				remove_targeted_decision = { decision = ETS_learn_gunpowder_local target = ROOT }
+				remove_targeted_decision = { decision = ETS_learn_mineral_processing_local target = ROOT }
+				for_each_scope_loop = {
+					array = ETS_targets_to_remove_major
+					PREV = {
+						remove_targeted_decision = { decision = ETS_hire_firearm_expert_foreign target = PREV }
+						remove_targeted_decision = { decision = ETS_learn_gunpowder_foreign target = PREV }
+						remove_targeted_decision = { decision = ETS_learn_mineral_processing_foreign target = PREV }
+					}
+				}
+				clr_country_flag = ETS_firearm_expert_hired
+				clr_country_flag = ETS_gunpowder_learned
+				clr_country_flag = ETS_mineral_processing_learned
+				clr_country_flag = ETS_hotan_conversion_completed
+
+				# Military Decisions
+				remove_targeted_decision = { decision = ETS_bughra_raise_militia target = 287 }
+				remove_targeted_decision = { decision = ETS_timur_raise_militia target = 619 }
+				remove_targeted_decision = { decision = ETS_army_training_adopt_formation_local target = ROOT }
+				remove_targeted_decision = { decision = ETS_army_training_combat_techniques_local target = ROOT }
+				for_each_scope_loop = {
+					array = ETS_targets_to_remove_major
+					PREV = {
+						remove_targeted_decision = { decision = ETS_army_training_adopt_formation_foreign target = PREV }
+						remove_targeted_decision = { decision = ETS_army_training_combat_techniques_foreign target = PREV }
+					}
+				}
+				remove_targeted_decision = { decision = ETS_war_with_KUM target = KUM }
+
+				#Power Projection event for RUS
+				RUS = { country_event = { id = russia_foreign_policy_events.260 days = 1 } }
+			}
+		}
+	}
+
+	focus = {
+		id = ETS_a_night_to_remember
+		icon = GFX_goal_backstab
+		cost = 0
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 0
+		y = 4
+
+		prerequisite = {
+			focus = ETS_uyghur_independence
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		bypass = {
+			is_subject = yes
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_a_night_to_remember"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = ETS_timur_win
+		icon = GFX_goal_ideology_authoritarian_democrat
+		cost = 0
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -6
+		y = 5
+
+		prerequisite = {
+			focus = ETS_a_night_to_remember
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_timur_win"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = ETS_victory_parade
+		icon = GFX_goal_enlist_the_police
+		cost = 2
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -6
+		y = 6
+
+		prerequisite = {
+			focus = ETS_timur_win
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_victory_parade"
+			country_event = east_turkestan_events.21
+		}
+	}
+
+	focus = {
+		id = ETS_timur_open_elections
+		icon = GFX_goal_DOM_Call_Special_Election
+		cost = 2
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -8
+		y = 7
+
+		prerequisite = {
+			focus = ETS_victory_parade
+		}
+		mutually_exclusive = {
+			focus = ETS_strong_arm_council
+		}
+		available = {
+			has_country_flag = ETS_openelectimur
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_timur_open_elections"
+			add_political_power = 30
+			set_country_flag = ETS_auth_election
+			custom_effect_tooltip = ETS_authelect_tt
+			hidden_effect = {
+				country_event = east_turkestan_events.100
+				meta_effect = {
+					text = {
+						set_temp_variable = { ETS_election_year = global.year }
+						if = {
+							limit = { date > [YEAR].1.28 }
+							add_to_temp_variable = { ETS_election_year = 1 }
+						}
+						set_politics = {
+							ruling_party = authoritarian_democrat
+							last_election = "[YEAR].1.28"
+							election_frequency = 48
+							elections_allowed = yes
+						}
+					}
+					YEAR = "[?ETS_election_year]"
+				}
+				if = {
+					limit = { is_subject = no }
+					ETS_activate_turkic_diplo_decisions = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_dilate_presidential_powers
+		icon = GFX_goal_Centralised_Government
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -8
+		y = 8
+
+		prerequisite = {
+			focus = ETS_timur_open_elections
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_dilate_presidential_powers"
+			remove_ideas = ETS_amateur_bureaucrats_2
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = ETS_rewrite_constitution
+		icon = GFX_goal_generic_forceful_treaty
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -8
+		y = 9
+
+		prerequisite = {
+			focus = ETS_dilate_presidential_powers
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_rewrite_constitution"
+			add_stability = 0.15
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_flexible_prime_minister
+		icon = GFX_goal_generic_loans
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -8
+		y = 10
+
+		prerequisite = {
+			focus = ETS_rewrite_constitution
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_flexible_prime_minister"
+			add_ideas = ETS_flex_bureau
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_business_ties
+		icon = GFX_goal_bag_of_money
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -6
+		y = 9
+
+		prerequisite = {
+			focus = ETS_timur_caravan
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_business_ties"
+			add_offsite_building = { type = industrial_complex level = 1 }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_force_sabit_into_retirement
+		icon = GFX_focus_eng_concessions_to_the_trade_unions
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -6
+		y = 10
+
+		prerequisite = {
+			focus = ETS_business_ties
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_force_sabit_into_retirement"
+			retire_character = ETS_sabit_damulla_abdulbaki
+			set_temp_variable = { ETS_change = -5 }
+			ETS_change_popularities = yes
+			add_political_power = 100
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_strong_arm_council
+		icon = GFX_goal_DEI_focus_disband_volksraad
+		cost = 2
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -4
+		y = 7
+
+		prerequisite = {
+			focus = ETS_victory_parade
+		}
+		mutually_exclusive = {
+			focus = ETS_timur_open_elections
+		}
+		available = {
+			has_country_flag = ETS_timurshah_flag
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_strong_arm_council"
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = 0.03
+			}
+			hidden_effect = {
+				if = {
+					limit = { is_subject = no }
+					ETS_activate_turkic_diplo_decisions = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = ETS_military_might
+		icon = GFX_goal_authoritarian
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -4
+		y = 8
+
+		prerequisite = {
+			focus = ETS_strong_arm_council
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_military_might"
+			set_temp_variable = { ETS_change = -5 }
+			ETS_change_popularities = yes
+			add_war_support = 0.05
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = ETS_merge_president_prime_minister
+		icon = GFX_goal_generic_political_pressure
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -4
+		y = 9
+
+		prerequisite = {
+			focus = ETS_military_might
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_merge_president_prime_minister"
+			add_political_power = 200
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_timur_shah
+		icon = GFX_goal_monarchism_black
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -4
+		y = 10
+
+		prerequisite = {
+			focus = ETS_merge_president_prime_minister
+		}
+		available = {
+			has_government = authoritarian_democrat
+			has_country_leader = { character = ETS_timur_beg }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_timur_shah"
+			country_event = east_turkestan_events.29
+		}
+	}
+
+	focus = {
+		id = ETS_timur_caravan
+		icon = GFX_goal_OTT_camels
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = -6
+		y = 8
+
+		prerequisite = {
+			focus = ETS_timur_open_elections
+			focus = ETS_strong_arm_council
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_timur_caravan"
+			add_political_power = 150
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_bughra_win
+		icon = GFX_goal_ideology_national_populist
+		cost = 0
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 6
+		y = 5
+
+		prerequisite = {
+			focus = ETS_a_night_to_remember
+		}
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		bypass = {
+			is_subject = yes
+			has_dictatorship_government = yes
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_bughra_win"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = ETS_a_piece_in_the_puzzle
+		icon = GFX_goal_OTT_Muslim_Relations
+		cost = 2
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 6
+		y = 6
+
+		prerequisite = {
+			focus = ETS_bughra_win
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_a_piece_in_the_puzzle"
+			country_event = east_turkestan_events.24
+		}
+	}
+
+	focus = {
+		id = ETS_islam_in_one_country
+		icon = GFX_goal_islamic_government
+		cost = 2
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 4
+		y = 7
+
+		prerequisite = {
+			focus = ETS_a_piece_in_the_puzzle
+		}
+		mutually_exclusive = {
+			focus = ETS_realm_of_turks
+		}
+		available = {
+			has_country_flag = ETS_islamiccountry
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_islam_in_one_country"
+			add_stability = 0.03
+			hidden_effect = {
+				if = {
+					limit = { is_subject = no }
+					ETS_activate_turkic_diplo_decisions = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_fight_inauthentic
+		icon = GFX_goal_ETS_authentic_religion
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 4
+		y = 8
+
+		prerequisite = {
+			focus = ETS_islam_in_one_country
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_fight_inauthentic"
+			add_stability = 0.05
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_all_madrasas
+		icon = GFX_goal_OTT_opda
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 4
+		y = 9
+
+		prerequisite = {
+			focus = ETS_fight_inauthentic
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_all_madrasas"
+			add_ideas = ETS_madrassa_idea
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = ETS_transform_desert
+		icon = GFX_goal_OTT_Land_Reform
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 4
+		y = 10
+
+		prerequisite = {
+			focus = ETS_all_madrasas
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_transform_desert"
+			country_event = east_turkestan_events.31
+		}
+	}
+
+	focus = {
+		id = ETS_tighten_government_grip
+		icon = GFX_focus_generic_authoritarian_government
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 6
+		y = 8
+
+		prerequisite = {
+			focus = ETS_islam_in_one_country
+			focus = ETS_realm_of_turks
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_tighten_government_grip"
+			add_stability = 0.05
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.075
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_turkic_nationalism
+		icon = GFX_goal_national_populism
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 6
+		y = 9
+
+		prerequisite = {
+			focus = ETS_tighten_government_grip
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_turkic_nationalism"
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.05
+			}
+			add_war_support = 0.1
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {
+		id = ETS_hotan_development
+		icon = GFX_goal_generic_construction
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 6
+		y = 10
+
+		prerequisite = {
+			focus = ETS_turkic_nationalism
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_hotan_development"
+			287 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					level = 3
+					province = 4973
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_realm_of_turks
+		icon = GFX_goal_OTT_Muslim_Solidarity
+		cost = 2
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 8
+		y = 7
+
+		prerequisite = {
+			focus = ETS_a_piece_in_the_puzzle
+		}
+		mutually_exclusive = {
+			focus = ETS_islam_in_one_country
+		}
+		available = {
+			has_country_flag = ETS_turkiccountry
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_realm_of_turks"
+			add_popularity = {
+				ideology = national_populist
+				popularity = 0.03
+			}
+			hidden_effect = {
+				if = {
+					limit = { is_subject = no }
+					ETS_activate_turkic_diplo_decisions = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = ETS_unified_language
+		icon = GFX_goal_KTG_Bookstack
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 8
+		y = 8
+
+		prerequisite = {
+			focus = ETS_realm_of_turks
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_unified_language"
+			add_political_power = 50
+			add_stability = 0.05
+			hidden_effect = { country_event = east_turkestan_events.39 }
+		}
+	}
+
+	focus = {
+		id = ETS_internationalize_council
+		icon = GFX_goal_authoritarian
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 8
+		y = 9
+
+		prerequisite = {
+			focus = ETS_unified_language
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_internationalize_council"
+			add_stability = 0.15
+			add_popularity = {
+				ideology = national_populist
+				popularity = -0.05
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_unfied_infrastructure
+		icon = GFX_goal_OTT_Railroad
+		cost = 8
+
+		relative_position_id = ETS_uyghur_revolution
+		x = 8
+		y = 10
+
+		prerequisite = {
+			focus = ETS_internationalize_council
+		}
+		available = {
+			has_government = national_populist
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_unfied_infrastructure"
+			add_tech_bonus = {
+				name = ETS_unfied_infrastructure
+				bonus = 1
+				uses = 2
+				category = construction_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+# Democratic Tree
+
+	focus = {
+		id = ETS_republic_inequals
+		icon = GFX_goal_COS_Ferrer_Coup
+		cost = 0
+
+		x = 8
+		y = 5
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		bypass = {
+			is_subject = yes
+			has_dictatorship_government = no
+		}
+
+		prerequisite = {
+			focus = ETS_a_night_to_remember
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_republic_inequals"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = ETS_look_east
+		icon = GFX_focus_chi_one_china_policy
+		cost = 2
+
+		x = 8
+		y = 6
+
+		prerequisite = {
+			focus = ETS_republic_inequals
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_look_east"
+			country_event = east_turkestan_events.26
+		}
+	}
+
+	focus = {
+		id = ETS_democracy
+		icon = GFX_goal_ideology_social_conservative
+		cost = 2
+
+		x = 6
+		y = 7
+
+		prerequisite = {
+			focus = ETS_look_east
+		}
+		mutually_exclusive = {
+			focus = ETS_maintain_rule
+		}
+		available = {
+			has_country_flag = ETS_demoflag
+			OR = {
+				has_government = social_democrat
+				has_government = social_conservative
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_democracy"
+			add_political_power = 25
+			set_country_flag = ETS_dem_election
+			custom_effect_tooltip = ETS_demelect_tt
+			hidden_effect = {
+				country_event = east_turkestan_events.101
+				if = {
+					limit = { is_subject = no }
+					ETS_activate_turkic_diplo_decisions = yes
+				}
+			}
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = var:current_party_ideology_group
+						last_election = "[ELECTION_DATE_TAG]"
+						election_frequency = 48
+						elections_allowed = yes
+					}
+				}
+				ELECTION_DATE_TAG = "[GetYear].1.28"
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_ensure_constitution
+		icon = GFX_focus_generic_treaty
+		cost = 8
+
+		x = 6
+		y = 8
+
+		prerequisite = {
+			focus = ETS_democracy
+		}
+		available = {
+			OR = {
+				has_government = social_democrat
+				has_conservative_government = yes
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_ensure_constitution"
+			set_temp_variable = { ideology_change_var = 10 }
+			change_ruling_party_popularity = yes
+		}
+	}
+
+	focus = {
+		id = ETS_investigation_office
+		icon = GFX_goal_DOM_The_Trial
+		cost = 8
+
+		x = 6
+		y = 9
+
+		prerequisite = {
+			focus = ETS_ensure_constitution
+		}
+		available = {
+			OR = {
+				has_government = social_democrat
+				has_conservative_government = yes
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_investigation_office"
+			swap_ideas = {
+				remove_idea = ETS_amateur_bureaucrats_2
+				add_idea = ETS_invest_branch
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_ensure_women
+		icon = GFX_focus_generic_female_rights
+		cost = 8
+
+		x = 6
+		y = 10
+
+		prerequisite = {
+			focus = ETS_investigation_office
+		}
+		available = {
+			OR = {
+				has_government = social_democrat
+				has_conservative_government = yes
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_ensure_women"
+			add_political_power = 50
+			set_temp_variable = { ideology_change_var = 5 }
+			change_ruling_party_popularity = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = ETS_patronize_poor
+		icon = GFX_focus_generic_concessions
+		cost = 8
+
+		x = 8
+		y = 8
+
+		prerequisite = {
+			focus = ETS_maintain_rule
+			focus = ETS_democracy
+		}
+		available = {
+			OR = {
+				has_government = social_democrat
+				has_conservative_government = yes
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_patronize_poor"
+			add_ideas = ETS_welfare_idea
+			add_stability = 0.05
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_business_reform
+		icon = GFX_goal_generic_deals
+		cost = 8
+
+		x = 8
+		y = 9
+
+		prerequisite = {
+			focus = ETS_patronize_poor
+		}
+		available = {
+			OR = {
+				has_government = social_democrat
+				has_conservative_government = yes
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_business_reform"
+			add_stability = 0.1
+			add_political_power = -25
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_unify_the_people
+		icon = GFX_goal_foreign_diplomacy
+		cost = 8
+
+		x = 8
+		y = 10
+
+		prerequisite = {
+			focus = ETS_business_reform
+		}
+		available = {
+			OR = {
+				has_government = social_democrat
+				has_conservative_government = yes
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_unify_the_people"
+			set_temp_variable = { ideology_change_var = 0.1 }
+			change_ruling_party_popularity = yes
+		}
+	}
+
+	focus = {
+		id = ETS_maintain_rule
+		icon = GFX_goal_ideology_authoritarian_democrat
+		cost = 2
+
+		x = 10
+		y = 7
+
+		prerequisite = {
+			focus = ETS_look_east
+		}
+		mutually_exclusive = {
+			focus = ETS_democracy
+		}
+		available = {
+			has_country_flag = ETS_sabriflag
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_maintain_rule"
+			add_stability = 0.03
+			hidden_effect = {
+				if = {
+					limit = { is_subject = no }
+					ETS_activate_turkic_diplo_decisions = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_smash_amirs
+		icon = GFX_goal_HOL_amend_wapenwet
+		cost = 8
+
+		x = 10
+		y = 8
+
+		prerequisite = {
+			focus = ETS_maintain_rule
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_smash_amirs"
+			add_stability = 0.15
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_foreign_talent
+		icon = GFX_goal_brain
+		cost = 8
+
+		x = 10
+		y = 9
+
+		prerequisite = {
+			focus = ETS_smash_amirs
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_foreign_talent"
+			swap_ideas = {
+				remove_idea = ETS_amateur_bureaucrats_2
+				add_idea = ETS_foreign_talent_idea
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_turk_trade
+		icon = GFX_goal_OTT_gendarmerie
+		cost = 8
+
+		x = 10
+		y = 10
+
+		prerequisite = {
+			focus = ETS_foreign_talent
+		}
+		available = {
+			has_government = authoritarian_democrat
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_turk_trade"
+			add_stability = -0.05
+			swap_ideas = {
+				remove_idea = ETS_foreign_talent_idea
+				add_idea = ETS_new_gentry_idea
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = ETS_military_modernisation
+		icon = GFX_goal_ETS_army
+		cost = 10
+
+		x = 17
+		y = 0
+
+		available = {
+			NOT = { country_exists = SIK }
+			NOT = { country_exists = KUM }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_military_modernisation"
+			army_experience = 75
+			add_war_support = 0.05
+			if = {
+				limit = { has_dynamic_modifier = { modifier = ETS_fledgling_military } }
+				remove_dynamic_modifier = { modifier = ETS_fledgling_military }
+				clear_variable = ETS_fledgling_military_army_morale_factor
+				clear_variable = ETS_fledgling_military_army_org_factor
+				clear_variable = ETS_fledgling_military_planning_speed
+				clear_variable = ETS_fledgling_military_max_planning
+				clear_variable = ETS_fledgling_military_army_attack_factor
+				clear_variable = ETS_fledgling_military_army_defence_factor
+				clear_variable = ETS_fledgling_military_recon_factor
+			}
+			hidden_effect = {
+				KUM = {
+					every_character = {
+						limit = {
+							OR = {
+								is_character = KUM_ospan_islamuly
+								is_character = KUM_dalelkhan_sugirbayev
+								is_character = KUM_kalibek_rakhimbekovich
+							}
+						}
+						set_nationality = ETS
+					}
+				}
+			}
+			custom_effect_tooltip = ETS_get_new_advisors
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = ETS_expand_districts_system
+		icon = GFX_focus_generic_oppression
+		cost = 8
+
+		relative_position_id = ETS_military_modernisation
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = ETS_military_modernisation
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_expand_districts_system"
+			add_stability = 0.05
+			add_command_power = 50
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = ETS_research_scavenged_weapons
+		icon = GFX_goal_generic_small_arms
+		cost = 8
+
+		relative_position_id = ETS_military_modernisation
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = ETS_military_modernisation
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_research_scavenged_weapons"
+			add_tech_bonus = {
+				name = ETS_research_scavenged_weapons
+				bonus = 0.75
+				uses = 2
+				category = infantry_weapons
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = ETS_create_air_force
+		icon = GFX_goal_ELS_Basic_Fighter_Development
+		cost = 8
+
+		relative_position_id = ETS_military_modernisation
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = ETS_expand_districts_system
+			focus = ETS_research_scavenged_weapons
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_create_air_force"
+			country_event = east_turkestan_events.47
+		}
+	}
+
+	focus = {
+		id = ETS_mountainous_officer_training
+		icon = GFX_goal_generic_construction2
+		cost = 8
+
+		relative_position_id = ETS_military_modernisation
+		x = 2
+		y = 2
+
+		prerequisite = {
+			focus = ETS_expand_districts_system
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_mountainous_officer_training"
+			enable_tech_ski_infantry = yes
+		}
+	}
+
+	focus = {
+		id = ETS_artillery_integration
+		icon = GFX_goal_generic_army_artillery2
+		cost = 8
+
+		relative_position_id = ETS_military_modernisation
+		x = -2
+		y = 2
+
+		prerequisite = {
+			focus = ETS_research_scavenged_weapons
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_artillery_integration"
+			add_tech_bonus = {
+				name = ETS_artillery_integration
+				bonus = 0.75
+				uses = 2
+				category = artillery
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = ETS_doctrine_research
+		icon = GFX_goal_generic_army_doctrines
+		cost = 8
+
+		relative_position_id = ETS_military_modernisation
+		x = 1
+		y = 3
+
+		prerequisite = {
+			focus = ETS_mountainous_officer_training
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_doctrine_research"
+			add_doctrine_cost_reduction = {
+				name = ETS_doctrine_research
+				cost_reduction = 0.5
+				uses = 2
+				category = land_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = ETS_thorough_army_training
+		icon = GFX_goal_conscription
+		cost = 8
+
+		relative_position_id = ETS_military_modernisation
+		x = -1
+		y = 3
+
+		prerequisite = {
+			focus = ETS_artillery_integration
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_thorough_army_training"
+			add_war_support = 0.05
+			army_experience = 125
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = ETS_connect_to_dihua
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 10
+
+		x = 23
+		y = 0
+
+		available = {
+			NOT = { has_war_with = SIK }
+			NOT = { has_war_with = KUM }
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_connect_to_dihua"
+			add_one_random_infrastructure = yes
+			add_one_random_infrastructure = yes
+			add_one_random_infrastructure = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_develop_the_cities
+		icon = GFX_goal_generic_construction
+		cost = 10
+
+		relative_position_id = ETS_connect_to_dihua
+		x = 1
+		y = 1
+
+		prerequisite = {
+			focus = ETS_connect_to_dihua
+		}
+
+		available = {
+			controls_state = 287
+			controls_state = 619
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_develop_the_cities"
+			287 = { #Qiemo
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			619 = { #Kashgar
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = ETS_connect_to_the_outer_areas
+		icon = GFX_goal_reichsautobahn
+		cost = 10
+
+		relative_position_id = ETS_connect_to_dihua
+		x = -1
+		y = 1
+
+		prerequisite = {
+			focus = ETS_connect_to_dihua
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_connect_to_the_outer_areas"
+			add_one_random_infrastructure = yes
+			add_one_random_infrastructure = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_refurbish_dihua_industry
+		icon = GFX_goal_generic_construct_civ_factory
+		cost = 10
+
+		relative_position_id = ETS_connect_to_dihua
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = ETS_develop_the_cities
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_refurbish_dihua_industry"
+			617 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_dzungar_military_factory
+		icon = GFX_goal_generic_construct_mil_factory
+		cost = 10
+
+		relative_position_id = ETS_connect_to_dihua
+		x = -1
+		y = 2
+
+		prerequisite = {
+			focus = ETS_connect_to_the_outer_areas
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_dzungar_military_factory"
+			618 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = ETS_working_the_land
+		icon = GFX_goal_production
+		cost = 10
+
+		relative_position_id = ETS_connect_to_dihua
+		x = 0
+		y = 3
+
+		prerequisite = {
+			focus = ETS_refurbish_dihua_industry
+			focus = ETS_dzungar_military_factory
+		}
+
+		ai_will_do = { factor = 100 }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed ETS_working_the_land"
+			618 = { increase_state_category_by_one_level = yes }
+			617 = { increase_state_category_by_one_level = yes }
+			1083 = { increase_state_category_by_one_level = yes }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+}
+

@@ -1,0 +1,626 @@
+###########################
+# Namibia Focus Tree
+# split from Südwest
+###########################
+# By Beelzebub and Zankoas
+###########################
+
+###########################
+# Beginning of the Civil War Focuses
+###########################
+
+focus_tree = {
+	id = NMB_focus
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = NMB
+		}
+	}
+
+	default = no
+	continuous_focus_position = { x = 240 y = 720 }
+
+	### Shared with African Minors
+	shared_focus = AFR_Independence_Conflict
+	shared_focus = AFR_a_Homegrown_Industry
+	shared_focus = AFR_international_waters
+
+###########################
+# Generic Puppet Focuses
+###########################
+
+###########################
+# Puppet Syndicalist Focuses
+###########################
+
+	focus = {
+		id = NMB_syndicalist_liberation
+		icon = GFX_goal_syndicalism
+		cost = 5
+
+		x = 14
+		y = 0
+
+		available = { hidden_trigger = { always = no } }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_syndicalist_liberation"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = NMB_first_congress
+		icon = GFX_goal_generic_revolutionary_government
+		cost = 5
+
+		relative_position_id = NMB_syndicalist_liberation
+		x = 1
+		y = 1
+
+		prerequisite = { focus = NMB_syndicalist_liberation }
+
+		available = { has_socialist_government = yes }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_first_congress"
+			country_event = { id = namibia_events.30 days = 1 }
+		}
+	}
+
+	focus = {
+		id = NMB_cultural_assimilation
+		icon = GFX_goal_KTG_Educate_natives
+		cost = 5
+
+		relative_position_id = NMB_syndicalist_liberation
+		x = -1
+		y = 1
+
+		available = { has_socialist_government = yes }
+
+		prerequisite = { focus = NMB_syndicalist_liberation }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_cultural_assimilation"
+			add_manpower = 5000
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = NMB_dealing_german
+		icon = GFX_goal_social_reforms
+		cost = 5
+
+		relative_position_id = NMB_cultural_assimilation
+		x = 0
+		y = 1
+
+		available = { has_socialist_government = yes }
+
+		prerequisite = { focus = NMB_cultural_assimilation }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_dealing_german"
+			set_temp_variable = { ideology_change_var = 0.05 }
+			change_ruling_party_popularity = yes
+			add_stability = 0.05
+		}
+	}
+
+	focus = {
+		id = NMB_end_cultural_divides
+		icon = GFX_goal_generic_crisis
+		cost = 5
+
+		relative_position_id = NMB_cultural_assimilation
+		x = 0
+		y = 2
+
+		available = { has_socialist_government = yes }
+
+		prerequisite = { focus = NMB_dealing_german }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_end_cultural_divides"
+			add_stability = 0.10
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = NMB_industry_people
+		icon = GFX_goal_generic_food_processing
+		cost = 5
+
+		relative_position_id = NMB_cultural_assimilation
+		x = 0
+		y = 4
+
+		prerequisite = { focus = NMB_end_cultural_divides }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_industry_people"
+			add_one_random_civilian_factory = yes
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+###########################
+# Puppet Industry Focuses
+###########################
+
+	focus = {
+		id = NMB_calm_ovambo
+		icon = GFX_focus_generic_self_management
+		cost = 5
+
+		relative_position_id = NMB_syndicalist_liberation
+		x = 1
+		y = 2
+
+		prerequisite = {
+			focus = NMB_first_congress
+			focus = NMB_first_election
+			focus = NMB_strengthen_state
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_calm_ovambo"
+			add_timed_idea = { idea = NMB_ovambo_calming_process days = 124 }
+		}
+	}
+
+	focus = {
+		id = NMB_windhoek_odajena
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 5
+
+		relative_position_id = NMB_calm_ovambo
+		x = 0
+		y = 1
+
+		prerequisite = { focus = NMB_calm_ovambo }
+
+		available = { NOT = { has_idea = NMB_ovambo_calming_process } }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_windhoek_odajena"
+			add_one_random_infrastructure = yes
+			add_one_random_infrastructure = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = NMB_expand_swakopmund
+		icon = GFX_goal_generic_airports
+		cost = 5
+
+		relative_position_id = NMB_calm_ovambo
+		x = 0
+		y = 2
+
+		prerequisite = { focus = NMB_windhoek_odajena }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_expand_swakopmund"
+			541 = {
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+###########################
+# Puppet Democratic Focuses
+###########################
+
+	focus = {
+		id = NMB_democratic_mandate
+		icon = GFX_goal_liberty
+		cost = 5
+
+		relative_position_id = NMB_syndicalist_liberation
+		x = 4
+		y = 0
+
+		available = { hidden_trigger = { always = no } }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_democratic_mandate"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = NMB_first_election
+		icon = GFX_goal_new_treaty
+		cost = 5
+
+		relative_position_id = NMB_democratic_mandate
+		x = 0
+		y = 1
+
+		prerequisite = { focus = NMB_democratic_mandate }
+
+		available = { has_elected_government = yes }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_first_election"
+			country_event = { id = namibia_events.36 days = 1 }
+		}
+	}
+
+	focus = {
+		id = NMB_freedom_speech
+		icon = GFX_goal_generic_propaganda
+		cost = 5
+
+		relative_position_id = NMB_democratic_mandate
+		x = 0
+		y = 2
+
+		prerequisite = { focus = NMB_first_election }
+
+		available = { has_elected_government = yes }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_freedom_speech"
+			add_ideas = NMB_democratic_1
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = NMB_promote_immigration
+		icon = GFX_goal_conspiracy
+		cost = 5
+
+		relative_position_id = NMB_democratic_mandate
+		x = 0
+		y = 3
+
+		prerequisite = { focus = NMB_freedom_speech }
+
+		available = { has_elected_government = yes }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_promote_immigration"
+			add_ideas = NMB_democratic_2
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = NMB_end_north_south
+		icon = GFX_goal_COS_Peace
+		cost = 5
+
+		relative_position_id = NMB_democratic_mandate
+		x = 0
+		y = 4
+
+		prerequisite = { focus = NMB_promote_immigration }
+
+		available = { has_elected_government = yes }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_end_north_south"
+			add_stability = 0.10
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = NMB_namibian_miracle
+		icon = GFX_focus_generic_the_giant_wakes
+		cost = 5
+
+		relative_position_id = NMB_democratic_mandate
+		x = 0
+		y = 5
+
+		available = { has_elected_government = yes }
+
+		prerequisite = { focus = NMB_end_north_south }
+		prerequisite = { focus = NMB_expand_swakopmund }
+		prerequisite = { focus = NMB_prepare_conflict }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_namibian_miracle"
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+###########################
+# Puppet Army Focuses
+###########################
+
+	focus = {
+		id = NMB_namibian_defense_corp
+		icon = GFX_focus_generic_military_mission
+		cost = 5
+
+		relative_position_id = NMB_first_election
+		x = 3
+		y = 1
+
+		prerequisite = {
+			focus = NMB_first_congress
+			focus = NMB_first_election
+			focus = NMB_strengthen_state
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_namibian_defense_corp"
+			add_ideas = NMB_generic_army_1
+			custom_override_tooltip = {
+				tooltip = {
+					localization_key = tooltip_create_division_template
+					NAME = "Verteidigung Corp"
+					LINE_1 = { localization_key = line_battalion_tt NAME = irregular_infantry ICON = GFX_unit_irregular_infantry_icon_small COUNT = 4 }
+				}
+				if = {
+					limit = { has_template = "Verteidigung Corp" }
+					delete_unit_template_and_units = { division_template = "Verteidigung Corp" disband = yes } #no cheating
+				}
+				division_template = {
+					name = "Verteidigung Corp"			# Militia Division
+					division_names_group = GERM_AFR_MIL_01
+					regiments = {
+						irregular_infantry = { x = 0 y = 0 }
+						irregular_infantry = { x = 0 y = 1 }
+						irregular_infantry = { x = 1 y = 0 }
+						irregular_infantry = { x = 1 y = 1 }
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 1098 } #Namaqualand
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_spawn_units
+						COUNT = 3
+						TYPE = "Verteidigung Corp"
+					}
+					create_unit = {
+						division = "name = \"1. Verteidigung Corp\" division_template = \"Verteidigung Corp\" start_experience_factor = 1.0"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"2. Verteidigung Corp\" division_template = \"Verteidigung Corp\" start_experience_factor = 1.0"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"3. Verteidigung Corp\" division_template = \"Verteidigung Corp\" start_experience_factor = 1.0"
+						owner = ROOT
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = NMB_request_masters
+		icon = GFX_focus_generic_concessions
+		cost = 5
+
+		relative_position_id = NMB_namibian_defense_corp
+		x = 0
+		y = 1
+
+		prerequisite = { focus = NMB_namibian_defense_corp }
+
+		bypass = { is_subject = no }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_request_masters"
+			OVERLORD = {
+				country_event = { id = namibia_events.37 days = 1 }
+			}
+		}
+	}
+
+	focus = {
+		id = NMB_prepare_conflict
+		icon = GFX_goal_generic_small_arms
+		cost = 5
+
+		relative_position_id = NMB_namibian_defense_corp
+		x = 0
+		y = 2
+
+		prerequisite = { focus = NMB_request_masters }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_prepare_conflict"
+			swap_ideas = { remove_idea = NMB_generic_army_1 add_idea = NMB_generic_army_2 }
+		}
+	}
+
+###########################
+# Puppet Rightist Focuses
+###########################
+
+	focus = {
+		id = NMB_stern_state
+		icon = GFX_goal_authority
+		cost = 5
+
+		relative_position_id = NMB_syndicalist_liberation
+		x = 8
+		y = 0
+
+		available = { hidden_trigger = { always = no } }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_stern_state"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = NMB_strengthen_state
+		icon = GFX_focus_generic_authoritarian_government
+		cost = 5
+
+		relative_position_id = NMB_stern_state
+		x = 0
+		y = 1
+
+		prerequisite = { focus = NMB_stern_state }
+
+		available = { has_authoritarian_government = yes }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_strengthen_state"
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = NMB_silence_opposition
+		icon = GFX_focus_generic_oppression
+		cost = 5
+
+		relative_position_id = NMB_strengthen_state
+		x = 1
+		y = 1
+
+		prerequisite = { focus = NMB_strengthen_state }
+
+		available = { has_authoritarian_government = yes }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_silence_opposition"
+			set_temp_variable = { ideology_change_var = 0.2 }
+			change_ruling_party_popularity = yes
+		}
+	}
+
+	focus = {
+		id = NMB_remove_germans
+		icon = GFX_goal_generic_landowner_tax_cuts
+		cost = 5
+
+		relative_position_id = NMB_silence_opposition
+		x = 0
+		y = 1
+
+		prerequisite = { focus = NMB_silence_opposition }
+
+		available = {
+			has_authoritarian_government = yes
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_remove_germans"
+			add_political_power = 140
+			add_stability = -0.05
+		}
+	}
+
+	focus = {
+		id = NMB_close_country
+		icon = GFX_goal_PAL_Closed_Immigration
+		cost = 5
+
+		relative_position_id = NMB_silence_opposition
+		x = 0
+		y = 2
+
+		available = { has_authoritarian_government = yes }
+
+		prerequisite = { focus = NMB_remove_germans }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_close_country"
+			add_ideas = closed_economy
+		}
+	}
+
+	focus = {
+		id = NMB_windhoek_fortress
+		icon = GFX_goal_generic_construct_military
+		cost = 5
+
+		relative_position_id = NMB_stern_state
+		x = 0
+		y = 5
+
+		available = { has_authoritarian_government = yes }
+
+		prerequisite = { focus = NMB_close_country }
+		prerequisite = { focus = NMB_prepare_conflict }
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_windhoek_fortress"
+			541 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 4879
+						level = 4
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 4
+						VP = 4879
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = NMB_united_namibia
+		icon = GFX_goal_generic_construct_military
+		cost = 5
+
+		relative_position_id = NMB_democratic_mandate
+		x = 0
+		y = 6
+
+		prerequisite = {
+			focus = NMB_windhoek_fortress
+			focus = NMB_namibian_miracle
+			focus = NMB_industry_people
+		}
+
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed NMB_united_namibia"
+			964 = {
+				custom_override_tooltip = {
+					add_building_construction = {
+						type = bunker
+						province = 8136
+						level = 1
+						instant_build = yes
+					}
+					tooltip = {
+						localization_key = tooltip_add_building_on_victory_point
+						BUILDING = bunker
+						NUMBER = 1
+						VP = 8136
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION FOCUS_FILTER_INDUSTRY }
+	}
+}
+

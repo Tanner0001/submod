@@ -1,0 +1,319 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			SPA = {
+				every_core_state = {
+					remove_core_of = SPR
+					remove_core_of = SWF
+				}
+			}
+		}
+	}
+
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation_immediate = {
+		effect = {
+			if = {
+				limit = {
+					tag = SPK
+					has_civil_war = yes
+					country_exists = SPR
+					SPR = { has_capitulated = no }
+				}
+				SPR = { country_event = spanish_civil_war_events.500 }
+			}
+
+			if = { #So navy does not just disappear lol
+				limit = {
+					ROOT = {
+						OR = {
+							tag = SPK
+							tag = SPR
+							tag = SWF
+						}
+					}
+					FROM = {
+						OR = {
+							tag = SPK
+							tag = SPR
+							tag = SWF
+						}
+					}
+				}
+				transfer_navy = { target = FROM }
+			}
+
+			if = { #Mohamed Meziane flees to Morocco
+				limit = { tag = SPK }
+				event_target:original_spain = {
+					SPA_mohamed_naser_ben_mizzian = { set_nationality = MOR }
+				}
+				MOR = {
+					SPA_mohamed_naser_ben_mizzian = {
+						set_portraits = {
+							army = { large = GFX_portrait_SPA_mohamed_naser_ben_mizzian_army_large_morocco }
+						}
+						unit_leader_event = { id = spain_domestic_events.34 days = 3 }
+					}
+				}
+			}
+
+			if = { #So Gibraltar returned if GER capitulates
+				limit = {
+					ROOT = { tag = GER }
+					GER = { owns_state = 118 }
+					SPK = { has_country_flag = SPA_GER_gibraltar_lease }
+				}
+				118 = {
+					set_compliance = 0
+					transfer_state_to = SPK
+				}
+				SPK = {
+					country_event = { id = spain_foreign_policy_events.14 hours = 5 }
+					clr_country_flag = SPA_GER_gibraltar_lease
+				}
+			}
+		}
+	}
+
+	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
+	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = {
+					original_tag = SPA
+					has_civil_war = yes
+				}
+				SPA_calculate_fervor_effects = yes
+				FROM = { SPA_calculate_fervor_effects = yes }
+
+				# Random terror events when occupying states that are not yours
+				random_list = {
+					8 = {
+						country_event = { id = spanish_civil_war_events.122 days = 7 random_days = 20 }
+					}
+					92 = {
+						# Intentionally left empty
+					}
+				}
+
+				### Chance for POR to seize Galicia
+				if = {
+					limit = {
+						NOT = {
+							POR = {
+								has_country_flag = POR_chance_to_take_GLC
+							}
+						}
+						FROM = {
+							original_tag = SPA
+							owns_state = 171 # Galicia
+							has_full_control_of_state = 171 # Galicia
+						}
+						SWF = {
+							controls_state = 41 # Madrid
+							controls_state = 176 # Old Castile (Burgos)
+							controls_state = 174 # León
+						}
+					}
+					POR = {
+						country_event = { id = portugal_events.309 days = 3 random_days = 5 }
+					}
+				}
+			}
+
+			# Fall of Madrid
+			if = {
+				limit = {
+					FROM.FROM = { state = 41 } #Madrid
+					original_tag = SPA
+					FROM = { original_tag = SPA }
+					has_civil_war = yes
+				}
+				country_event = spanish_civil_war_events.3
+			}
+			# Fall of Burgos
+			if = {
+				limit = {
+					FROM.FROM = { state = 176 } #Burgos
+					original_tag = SPA
+					FROM = { original_tag = SPA }
+					has_civil_war = yes
+				}
+				country_event = spanish_civil_war_events.4
+			}
+			# Fall of Barcelona
+			if = {
+				limit = {
+					FROM.FROM = { state = 165 } #Barcelona
+					original_tag = SPA
+					FROM = { original_tag = SPA }
+					has_civil_war = yes
+				}
+				country_event = spanish_civil_war_events.5
+			}
+		}
+	}
+
+	#ROOT is winner #FROM is loser
+	on_peaceconference_ended = {
+		effect = {
+			if = {
+				limit = {
+					original_tag = SPA
+					FROM = { original_tag = SPA }
+					NOT = {
+						country_exists = SPK
+						country_exists = SPR
+					}
+				}
+				if = {
+					limit = { owns_state = 699 } #Rio de Oro
+					699 = { temporarily_disable_annexation = yes } #Rio de Oro
+					var:967.owner = { country_event = { id = spanish_civil_war_events.503 hours = 12 } } #Adrar
+				}
+				if = {
+					limit = { owns_state = 297 } #Equatorial Guinea
+					297 = { temporarily_disable_annexation = yes } #Equatorial Guinea
+					var:927.owner = { country_event = { id = spanish_civil_war_events.501 days = 6 } } #Douala
+				}
+				if = {
+					limit = { any_owned_state = { is_core_of = MOR } }
+					if = {
+						limit = { var:461.owner = { is_subject = yes } }
+						var:461.owner:overlord = { country_event = { id = spanish_civil_war_events.507 days = 11 } } #Rif
+					}
+					else = {
+						var:461.owner = { country_event = { id = spanish_civil_war_events.507 days = 11 } } #Rif
+					}
+				}
+			}
+
+			if = { #Shhhhhh
+				limit = {
+					FROM = { original_tag = NFA }
+					SPK = {
+						has_country_leader = { character = SPA_jaime_de_borbon }
+						is_in_faction_with = ENT
+					}
+				}
+				SPA = { country_event = { id = spain_foreign_policy_events.10 days = 5 } }
+			}
+
+			if = { #So GER returns Gibraltar after peace with INT
+				limit = {
+					FROM = {
+						tag = FRA
+						tag = ENG
+					}
+					ROOT = { tag = GER }
+					SPK = { has_country_flag = SPA_GER_gibraltar_lease }
+				}
+				GER = { country_event = { id = spain_foreign_policy_events.15 hours = 5 } }
+			}
+			else_if = { #In the case where FRA surrendered before ENG surrendered
+				limit = {
+					FROM = { tag = ENG }
+					ROOT = { tag = GER }
+					NOT = { country_exists = FRA }
+					SPK = { has_country_flag = SPA_GER_gibraltar_lease }
+				}
+				GER = { country_event = { id = spain_foreign_policy_events.15 hours = 5 } }
+			}
+			#Note: Treaty of London situation handled via event capitulation_events.31
+
+			if = { #So all cores and claims disappear when faction dies
+				limit = { has_global_flag = spanish_civil_war }
+				if = {
+					limit = {
+						ROOT = { original_tag = SPA }
+						FROM = { original_tag = SPA }
+					}
+					FROM = {
+						every_state = {
+							remove_core_of = PREV
+							remove_claim_by = PREV
+						}
+					}
+				}
+			}
+
+			if = { #to trigger end of civil war
+				limit = {
+					has_global_flag = spanish_civil_war
+					ROOT = {
+						has_war = no
+						OR = {
+							tag = SPK
+							tag = SPR
+							tag = SWF
+						}
+					}
+				}
+				if = {
+					limit = { tag = SPK }
+					SPK = { country_event = { id = spanish_civil_war_events.120 days = 1 } }
+				}
+				else_if = {
+					limit = { tag = SPR }
+					SPR = { country_event = { id = spanish_civil_war_events.320 days = 1 } }
+				}
+				else_if = {
+					limit = { tag = SWF }
+					SWF = { country_event = { id = spanish_civil_war_events.220 days = 1 } }
+				}
+				SPA = { country_event = { id = spain_foreign_policy_events.17 days = 60 } } #Return of Galicia if owned by POR
+				if = {
+					limit = {
+						ROM = { has_country_flag = ROM_cantacuzino_in_spain }
+						has_country_flag = ROM_romanian_volunteers
+					}
+					country_event = { id = romania_events.55 days = 14 } #Volunteers leave
+				}
+			}
+		}
+	}
+
+	#ROOT = attacking side
+	#FROM = defending side
+	on_declare_war = {
+		# SPK gets dragged into ENT or GER if attacked by INT
+		# Intentionally only fires when SPK ends up in defensive war for the first time
+		# The effects are visible when declaring war on Spain
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						tag = SPK
+						is_in_faction = no
+						is_subject = no
+						NOT = { has_completed_focus = SPA_place_in_the_world }
+					}
+					ROOT = { is_ally_with = INT }
+					OR = {
+						country_exists = ENT
+						country_exists = GER
+					}
+				}
+				custom_effect_tooltip = SPA_spain_dragged_into_enemy_faction_tt
+				hidden_effect = {
+					FROM = {
+						if = {
+							limit = { has_completed_focus = SPA_we_stand_alone }
+							uncomplete_national_focus = { focus = SPA_we_stand_alone uncomplete_children = yes }
+							remove_ideas = {
+								SPA_splendid_isolation
+								SPA_splendid_isolation2
+								SPA_increased_volunteers_idea
+								SPA_refugees1
+								SPA_refugees2
+								SPA_refugees_work
+							}
+						}
+						complete_national_focus = SPA_place_in_the_world #Unlocks faction joining decisions
+					}
+				}
+			}
+		}
+	}
+}

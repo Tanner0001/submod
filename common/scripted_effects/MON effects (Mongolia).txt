@@ -1,0 +1,391 @@
+MON_remove_russian_diplo_relations = {
+	if = {
+		limit = { has_idea = MON_russo_mongolian_trade_agreements }
+		remove_ideas = MON_russo_mongolian_trade_agreements
+	}
+	else_if = {
+		limit = { has_idea = MON_russian_eco_aid_2 }
+		remove_ideas = MON_russian_eco_aid_2
+	}
+	if = {
+		limit = { has_idea = MON_russian_military_mission }
+		remove_ideas = MON_russian_military_mission
+	}
+	if = {
+		limit = { is_in_faction_with = RUS }
+		leave_faction = yes
+		peace_out_non_neighbours_after_leaving_faction = yes
+	}
+	if = {
+		limit = { has_non_aggression_pact_with = RUS }
+		diplomatic_relation = {
+			country = RUS
+			relation = non_aggression_pact
+			active = no
+		}
+	}
+	if = {
+		limit = { has_military_access_to = RUS }
+		diplomatic_relation = {
+			country = RUS
+			relation = military_access
+			active = no
+		}
+	}
+	RUS = {
+		if = {
+			limit = { has_guaranteed = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = guarantee
+				active = no
+			}
+		}
+		if = {
+			limit = { has_military_access_to = ROOT }
+			diplomatic_relation = {
+				country = ROOT
+				relation = military_access
+				active = no
+			}
+		}
+	}
+}
+
+MON_puppet_setup = {
+	#IF YOU CHANGE THIS, MAKE SURE TO EDIT china_orchestrate_sinophile_coup
+
+	if = {
+		limit = {
+			ROOT = { #Only authoritarian monarchy, Semyonov and Diterikhs should put Ungern in power
+				is_russian_tag = yes
+				has_socialist_government = no
+				has_elected_government = no
+				RUS_savinkov = no
+			}
+		}
+		MON = {
+			MON_roman_ungern_sternberg = {
+				set_nationality = PREV
+				hidden_effect = { remove_all_country_leader_roles = yes }
+				add_country_leader_role = {
+					country_leader = {
+						desc = MON_roman_ungern_sternberg_leader_desc
+						ideology = paternal_autocrat_subtype
+						traits = { MON_the_mad_baron }
+					}
+					promote_leader = yes
+				}
+			}
+			MON_mikhail_tornovsky = { set_nationality = PREV }
+			MON_nikolay_kazagrandi = { set_nationality = PREV }
+			MON_boris_rezukhin = {
+				set_nationality = PREV
+				hidden_effect = {
+					remove_second_in_command_role = yes
+					add_advisor_role = {
+						advisor = {
+							slot = second_in_command
+							idea_token = MON_boris_rezukhin_sic
+							traits = { KR_faithful_lieutenant_sic }
+							cost = 0
+							can_be_fired = no
+						}
+					}
+				}
+			}
+			effect_tooltip = {
+				set_politics = {
+					ruling_party = paternal_autocrat
+					elections_allowed = no
+					name = MON_paternal_autocrat_party_sternberg
+				}
+			}
+			hidden_effect = {
+				set_political_party = {
+					ideology = paternal_autocrat
+					popularity = 60
+				}
+				set_politics = {
+					ruling_party = paternal_autocrat
+					elections_allowed = no
+					name = MON_paternal_autocrat_party_sternberg
+					long_name = MON_paternal_autocrat_party_sternberg_long
+				}
+				set_cosmetic_tag = MON_sternberg
+				load_focus_tree = {
+					tree = Mongolia_Sternberg
+					keep_completed = yes
+				}
+				uncomplete_national_focus = { focus = MON_the_khanate_unshackled uncomplete_children = yes }
+				unlock_national_focus = MON_riding_along_the_wide_steppe
+				if = {
+					limit = { NOT = { has_idea = MON_russo_mongolian_trade_agreements } }
+					add_ideas = MON_russo_mongolian_trade_agreements
+				}
+				remove_ideas = {
+					MON_a_khanate_of_many_faces_idea1
+					MON_a_khanate_of_many_faces_idea2
+					MON_a_khanate_of_many_faces_idea3
+					MON_return_of_the_true_revolutionaries3
+					MON_shining_brightly_upon_the_steppe
+					MON_shining_brightly_upon_the_steppe2
+				}
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			ROOT = { is_russian_tag = yes }
+		}
+		hidden_effect = {
+			MON = {
+				load_focus_tree = {
+					tree = Mongolia_Puppet
+					keep_completed = yes
+				}
+				uncomplete_national_focus = { focus = MON_the_khanate_unshackled uncomplete_children = yes }
+				unlock_national_focus = MON_riding_along_the_wide_steppe
+				remove_ideas = {
+					MON_a_khanate_of_many_faces_idea1
+					MON_a_khanate_of_many_faces_idea2
+					MON_a_khanate_of_many_faces_idea3
+					MON_at_home_among_strangers_a_stranger_among_his_own
+					MON_at_home_among_strangers_a_stranger_among_his_own_2
+					MON_at_home_among_strangers_a_stranger_among_his_own_3
+					MON_at_home_among_strangers_a_stranger_among_his_own_4
+					MON_return_of_the_true_revolutionaries3
+					MON_shining_brightly_upon_the_steppe
+					MON_shining_brightly_upon_the_steppe2
+				}
+			}
+		}
+	}
+	else = {
+		hidden_effect = {
+			MON = {
+				load_focus_tree = {
+					tree = Mongolia_Puppet
+					keep_completed = yes
+				}
+				remove_ideas = {
+					MON_russo_mongolian_trade_agreements
+					MON_russian_military_mission
+					MON_a_khanate_of_many_faces_idea1
+					MON_a_khanate_of_many_faces_idea2
+					MON_a_khanate_of_many_faces_idea3
+					MON_at_home_among_strangers_a_stranger_among_his_own
+					MON_at_home_among_strangers_a_stranger_among_his_own_2
+					MON_at_home_among_strangers_a_stranger_among_his_own_3
+					MON_at_home_among_strangers_a_stranger_among_his_own_4
+					MON_return_of_the_true_revolutionaries3
+					MON_shining_brightly_upon_the_steppe
+					MON_shining_brightly_upon_the_steppe2
+				}
+			}
+		}
+		if = {
+			limit = { ROOT = { is_chinese_tag = yes } }
+			if = {
+				limit = {
+					ROOT = {
+						china_alignment_left_kuomintang = yes
+					}
+				}
+				MON = {
+					#Setup MAN
+					MON_bai_yunti = {
+						hidden_effect = { remove_all_country_leader_roles = yes }
+						add_country_leader_role = {
+							country_leader = {
+								desc = MON_bai_yunti_leader_desc
+								ideology = radical_socialist_subtype
+							}
+							promote_leader = yes
+						}
+					}
+					set_politics = {
+						ruling_party = radical_socialist
+						elections_allowed = no
+						name = MON_kmt
+						long_name = MON_kmt_long
+					}
+					hidden_effect = {
+						set_political_party = {
+							ideology = radical_socialist
+							popularity = 60
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					ROOT = {
+						china_alignment_right_kuomintang = yes
+					}
+				}
+				MON = {
+					set_politics = {
+						ruling_party = social_conservative
+						elections_allowed = no
+					}
+					hidden_effect = {
+						set_political_party = {
+							ideology = social_conservative
+							popularity = 60
+						}
+					}
+				}
+			}
+			else = {
+				MON = {
+					set_politics = {
+						ruling_party = paternal_autocrat
+						elections_allowed = no
+					}
+					hidden_effect = {
+						set_political_party = {
+							ideology = paternal_autocrat
+							popularity = 60
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+MON_remove_sternberg = {
+	set_party_name = {
+		ideology = paternal_autocrat
+		name = MON_paternal_autocrat_party
+		long_name = MON_paternal_autocrat_party_long
+	}
+	custom_effect_tooltip = characters_will_be_retired
+	character_list_tooltip = {
+		limit = {
+			OR = {
+				is_character = MON_roman_ungern_sternberg
+				is_character = MON_mikhail_tornovsky
+				is_character = MON_nikolay_kazagrandi
+				is_character = MON_boris_rezukhin
+			}
+		}
+	}
+	hidden_effect = {
+		every_character = {
+			limit = {
+				OR = {
+					is_character = MON_roman_ungern_sternberg
+					is_character = MON_mikhail_tornovsky
+					is_character = MON_nikolay_kazagrandi
+					is_character = MON_boris_rezukhin
+				}
+			}
+			remove_all_country_leader_roles = yes
+			remove_civilian_advisor_roles = yes
+			remove_military_advisor_roles = yes
+			retire = yes
+		}
+	}
+}
+
+MON_remove_sternberg_man = {
+	set_party_name = {
+		ideology = paternal_autocrat
+		name = MON_paternal_autocrat_party
+		long_name = MON_paternal_autocrat_party_long
+	}
+	custom_effect_tooltip = characters_will_be_retired
+	character_list_tooltip = {
+		limit = {
+			OR = {
+				is_character = MON_roman_ungern_sternberg
+				is_character = MON_mikhail_tornovsky
+				is_character = MON_nikolay_kazagrandi
+				is_character = MON_boris_rezukhin
+				is_character = MON_urzhin_garmaev
+			}
+		}
+	}
+	hidden_effect = {
+		every_character = {
+			limit = {
+				OR = {
+					is_character = MON_roman_ungern_sternberg
+					is_character = MON_mikhail_tornovsky
+					is_character = MON_nikolay_kazagrandi
+					is_character = MON_boris_rezukhin
+					is_character = MON_urzhin_garmaev
+				}
+			}
+			remove_all_country_leader_roles = yes
+			remove_civilian_advisor_roles = yes
+			remove_military_advisor_roles = yes
+			retire = yes
+		}
+	}
+}
+
+MON_sternberg_flees_to_russia = {
+	if = {
+		limit = {
+			RUS = {
+				OR = {
+					is_monarchy = yes
+					has_dictatorship_government = yes
+					has_country_leader = { character = RUS_dmitry_romanov }
+				}
+				exists = yes
+				is_subject = no
+				has_capitulated = no
+			}
+		}
+		RUS = { country_event = { id = mongolia_events.80 days = 14 } }
+	}
+}
+
+### SiC Transfers
+
+MON_boris_rezukhin_sic_effect = {
+	if = {
+		limit = { MON_boris_rezukhin = { is_second_in_command = no } }
+		activate_advisor = MON_boris_rezukhin_sic
+	}
+}
+MON_buddhist_council_sic_effect = {
+	if = {
+		limit = { MON_buddhist_council = { is_second_in_command = no } }
+		activate_advisor = MON_buddhist_council_sic
+	}
+}
+MON_yondonwangchug_sic_effect = {
+	if = {
+		limit = { MON_yondonwangchug = { is_second_in_command = no } }
+		activate_advisor = MON_yondonwangchug_sic
+	}
+}
+MON_altanochir_sic_effect = {
+	if = {
+		limit = { MON_altanochir = { is_second_in_command = no } }
+		activate_advisor = MON_altanochir_sic
+	}
+}
+MON_bodoo_sic_effect = {
+	if = {
+		limit = { MON_dogsomyn_bodoo = { is_second_in_command = no } }
+		activate_advisor = MON_dogsomyn_bodoo_sic
+	}
+}
+MON_jamsrangiin_tseveen_sic_effect = {
+	if = {
+		limit = { MON_jamsrangiin_tseveen = { is_second_in_command = no } }
+		activate_advisor = MON_jamsrangiin_tseveen_sic
+	}
+}
+MON_dambyn_chagdarjav_effect = {
+	if = {
+		limit = { MON_dambyn_chagdarjav = { is_second_in_command = no } }
+		activate_advisor = MON_dambyn_chagdarjav_sic
+	}
+}

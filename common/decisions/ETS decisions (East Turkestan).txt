@@ -1,0 +1,938 @@
+###########################
+# ETS Decisions
+###########################
+# By Von_Laughing and WordZero
+###########################
+
+ETS_foreign_diplomacy = {
+	ETS_foreign_support_send_delegations_major = {
+		icon = generic_agreement
+
+		allowed = { always = no } #Activated from effect
+
+		visible = {
+			NOT = { has_war_with = FROM }
+		}
+
+		cost = 40
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 200 }
+
+		days_remove = 10
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ETS_foreign_support_send_delegations_major"
+			FROM = {
+				country_event = east_turkestan_events.2
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_foreign_support_send_delegations_minor = {
+		icon = generic_agreement
+
+		allowed = { always = no } #Activated from effect
+
+		visible = {
+			NOT = { has_war_with = FROM }
+		}
+
+		cost = 30
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 200 }
+
+		days_remove = 10
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ETS_foreign_support_send_delegations_minor"
+			FROM = {
+				country_event = east_turkestan_events.2
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_foreign_support_more_equipment_partial_support = { #need to ask everytime
+		icon = generic_agreement
+
+		allowed = { always = no }
+
+		visible = {
+			FROM = {
+				has_country_flag = { flag = ETS_partial_support days > 14 }
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		target_trigger = {
+			FROM = { NOT = { has_war_with = ROOT } }
+		}
+
+		fire_only_once = no
+
+		ai_will_do = { factor = 200 }
+
+		days_remove = 14
+		days_re_enable = 90
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ETS_foreign_support_more_equipment_partial_support"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ETS_foreign_support_more_equipment_partial_support"
+			FROM = {
+				country_event = east_turkestan_events.11
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_foreign_support_more_equipment_full_support = {
+		icon = generic_agreement
+
+		allowed = { always = no }
+
+		visible = {
+			FROM = {
+				has_country_flag = { flag = ETS_full_support days > 7 }
+				NOT = { has_war_with = ROOT }
+			}
+		}
+		target_trigger = {
+			FROM = { NOT = { has_war_with = ROOT } }
+		}
+
+		ai_will_do = { factor = 200 }
+
+		days_remove = 30
+		days_re_enable = 90
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ETS_foreign_support_more_equipment_full_support"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ETS_foreign_support_more_equipment_full_support"
+			FROM = {
+				country_event = east_turkestan_events.14
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+ETS_economics_of_war_decisions = {
+	ETS_convert_gold_to_currency = {
+		icon = steel
+		allowed = { always = no } #activated by focus ETS_uyghur_revolution
+
+		available = {
+			has_global_flag = ETS_rebellion_victory
+		}
+
+		fire_only_once = yes
+
+		ai_will_do = { factor = 200 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_convert_gold_to_currency"
+			add_political_power = 30
+			if = {
+				limit = { NOT = { check_variable = { ETS_gold_amount < 20 } } }
+				add_one_random_civilian_factory = yes
+			}
+			else = {
+				custom_effect_tooltip = ETS_not_enough_gold_for_factory_tt
+			}
+			clear_variable = ETS_gold_amount
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_weekly_hotan_gold = {
+		icon = GFX_decision_hol_attract_foreign_investors
+		allowed = { always = no } #Activated by focus ETS_hotan_gold
+		available = {
+			NOT = { controls_state = 619 }
+		}
+		is_good = yes
+
+		days_mission_timeout = 7
+		days_remove = 0
+
+		fire_only_once = yes
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout ETS_weekly_hotan_gold"
+			add_to_variable = { ETS_gold_amount = 1 tooltip = ETS_gold_increase }
+			hidden_effect = {
+				if = {
+					limit = { check_variable = { ETS_gold_amount < 20 } }
+					activate_mission = ETS_weekly_hotan_gold
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+#Hotan Factory
+	ETS_complete_hotan_conversion = {
+		icon = generic_industry
+
+		allowed = { always = no }
+
+		available = {
+			has_country_flag = ETS_firearm_expert_hired
+			has_country_flag = ETS_gunpowder_learned
+			has_country_flag = ETS_mineral_processing_learned
+		}
+
+		ai_will_do = { factor = 300 }
+
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_complete_hotan_conversion"
+			custom_effect_tooltip = ETS_convert_hotan_tt
+			set_country_flag = ETS_hotan_conversion_completed
+			hidden_effect = {
+				619 = {
+					if = {
+						limit = { industrial_complex > 0 }
+						remove_building = {
+							type = industrial_complex
+							level = 1
+						}
+					}
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_hire_firearm_expert_foreign = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by event east_turkestan_events.8 or east_turkestan_events.9
+
+		visible = {
+			has_completed_focus = ETS_emergency_factory_conversion
+			NOT = { has_country_flag = ETS_firearm_expert_hired }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_firearm_expert_hiring }
+		}
+
+		ai_will_do = { factor = 250 }
+
+		cost = 30
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_hire_firearm_expert_foreign"
+			set_country_flag = ETS_firearm_expert_hiring
+			custom_effect_tooltip = ETS_foreign_firearm_expert_hired_tooltip
+		}
+
+		days_remove = 14
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_hire_firearm_expert_foreign"
+			set_country_flag = ETS_firearm_expert_hired
+			clr_country_flag = ETS_firearm_expert_hiring
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_hire_firearm_expert_local = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by focus ETS_emergency_factory_conversion
+
+		visible = {
+			NOT = { has_country_flag = ETS_firearm_expert_hired }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_firearm_expert_hiring }
+		}
+
+		ai_will_do = { factor = 250 }
+
+		cost = 10
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_hire_firearm_expert_local"
+			set_country_flag = ETS_firearm_expert_hiring
+			custom_effect_tooltip = ETS_local_firearm_expert_hired_tooltip
+		}
+
+		days_remove = 30
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_hire_firearm_expert_local"
+			set_country_flag = ETS_firearm_expert_hired
+			clr_country_flag = ETS_firearm_expert_hiring
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_learn_gunpowder_foreign = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by event east_turkestan_events.8 or east_turkestan_events.9
+
+		visible = {
+			has_completed_focus = ETS_emergency_factory_conversion
+			NOT = { has_country_flag = ETS_gunpowder_learned }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_gunpowder_formula_discovery }
+		}
+
+		ai_will_do = { factor = 200 }
+
+		cost = 30
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_learn_gunpowder_foreign"
+			set_country_flag = ETS_gunpowder_formula_discovery
+			custom_effect_tooltip = ETS_foreign_gunpowder_tooltip
+		}
+
+		days_remove = 7
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_learn_gunpowder_foreign"
+			set_country_flag = ETS_gunpowder_learned
+			clr_country_flag = ETS_gunpowder_formula_discovery
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_learn_gunpowder_local = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by focus ETS_emergency_factory_conversion
+
+		visible = {
+			NOT = { has_country_flag = ETS_gunpowder_learned }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_gunpowder_formula_discovery }
+		}
+
+		ai_will_do = { factor = 200 }
+
+		cost = 10
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_learn_gunpowder_local"
+			set_country_flag = ETS_gunpowder_formula_discovery
+			custom_effect_tooltip = ETS_local_gunpowder_tooltip
+		}
+
+		days_remove = 30
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_learn_gunpowder_local"
+			set_country_flag = ETS_gunpowder_learned
+			clr_country_flag = ETS_gunpowder_formula_discovery
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_learn_mineral_processing_foreign = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by event east_turkestan_events.8 or east_turkestan_events.9
+
+		visible = {
+			has_completed_focus = ETS_emergency_factory_conversion
+			NOT = { has_country_flag = ETS_mineral_processing_learned }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_mineral_processing_learning }
+		}
+
+		ai_will_do = { factor = 250 }
+
+		cost = 30
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_learn_mineral_processing_foreign"
+			set_country_flag = ETS_mineral_processing_learning
+			custom_effect_tooltip = ETS_mineral_processing_tooltip
+		}
+
+		days_remove = 14
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_learn_mineral_processing_foreign"
+			set_country_flag = ETS_mineral_processing_learned
+			clr_country_flag = ETS_mineral_processing_learning
+			287 = {
+				add_resource = {
+					type = steel
+					amount = 12
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_learn_mineral_processing_local = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by focus ETS_emergency_factory_conversion
+
+		visible = {
+			NOT = { has_country_flag = ETS_mineral_processing_learned }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_mineral_processing_learning }
+		}
+
+		ai_will_do = { factor = 200 }
+
+		cost = 10
+		fire_only_once = yes
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_learn_mineral_processing_local"
+			set_country_flag = ETS_mineral_processing_learning
+			custom_effect_tooltip = ETS_mineral_processing_tooltip
+		}
+
+		days_remove = 30
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_learn_mineral_processing_local"
+			set_country_flag = ETS_mineral_processing_learned
+			clr_country_flag = ETS_mineral_processing_learning
+			287 = {
+				add_resource = {
+					type = steel
+					amount = 6
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+#Military
+ETS_military_operation = {
+	ETS_bughra_raise_militia = {
+		icon = GFX_decision_generic_army_support
+		allowed = { always = no } #Activated by focus ETS_uyghur_revolution
+
+		available = { controls_state = FROM }
+
+		custom_cost_text = CP_15_manpower_4500
+		custom_cost_trigger = {
+			NOT = { command_power < 15 }
+			NOT = { has_manpower < 4500 }
+		}
+
+		state_target = yes
+
+		ai_will_do = { factor = 300 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ETS_bughra_raise_militia"
+			add_manpower = -4500
+			hidden_effect = {
+				add_command_power = -15
+			}
+		}
+
+		days_remove = 28
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ETS_bughra_raise_militia"
+			custom_effect_tooltip = ETS_bughra_raise_militia_tt
+			hidden_effect = {
+				FROM = {
+					create_unit = {
+						division = "name = \"Bughra's Militia\" division_template = \"Bughra's Militia\" start_experience_factor = 0.1 start_equipment_factor = 0.5"
+						owner = ETS
+						prioritize_location = 4973
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = ETS_fledgling_military
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_morale_factor = -0.02
+				tooltip = army_morale_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_org_factor = -0.01
+				tooltip = army_org_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_attack_factor = -0.02
+				tooltip = army_attack_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_defence_factor = -0.02
+				tooltip = army_defence_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_recon_factor = -0.02
+				tooltip = recon_factor_tooltip
+			}
+			force_update_dynamic_modifier = yes
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { ETS_change = 2 }
+			ETS_change_popularities = yes
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_timur_raise_militia = {
+		icon = GFX_decision_generic_army_support
+		allowed = { always = no } #Activated by focus ETS_uyghur_revolution
+
+		available = { controls_state = FROM }
+
+		custom_cost_text = CP_15_manpower_4500
+		custom_cost_trigger = {
+			NOT = { command_power < 15 }
+			NOT = { has_manpower < 4500 }
+		}
+
+		state_target = yes
+
+		ai_will_do = { factor = 300 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ETS_timur_raise_militia"
+			add_manpower = -4500
+			hidden_effect = {
+				add_command_power = -15
+			}
+		}
+
+		days_remove = 28
+		fire_only_once = yes
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ETS_timur_raise_militia"
+			custom_effect_tooltip = ETS_timur_raise_militia_tt
+			hidden_effect = {
+				FROM = {
+					create_unit = {
+						division = "name = \"Timur's Militia\" division_template = \"Timur's Militia\" start_experience_factor = 0.1 start_equipment_factor = 0.5"
+						owner = ETS
+						prioritize_location = 2015
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = ETS_fledgling_military
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_morale_factor = -0.02
+				tooltip = army_morale_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_org_factor = -0.01
+				tooltip = army_org_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_attack_factor = -0.02
+				tooltip = army_attack_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_defence_factor = -0.02
+				tooltip = army_defence_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_recon_factor = -0.02
+				tooltip = recon_factor_tooltip
+			}
+			force_update_dynamic_modifier = yes
+			custom_effect_tooltip = tooltip_white_line
+			set_temp_variable = { ETS_change = -2 }
+			ETS_change_popularities = yes
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_army_training_adopt_formation_foreign = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by event east_turkestan_events.8 or east_turkestan_events.9
+
+		visible = {
+			has_completed_focus = ETS_army_training
+			check_variable = { ETS_fledgling_military_army_morale_factor < 0 }
+			check_variable = { ETS_fledgling_military_army_org_factor < 0 }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_army_adopt_formation_training }
+		}
+
+		ai_will_do = { factor = 200 }
+
+		cost = 20
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_army_training_adopt_formation_foreign"
+			set_country_flag = ETS_army_adopt_formation_training
+		}
+
+		days_remove = 14
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_army_training_adopt_formation_foreign"
+			clr_country_flag = ETS_army_adopt_formation_training
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = ETS_fledgling_military
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_morale_factor = 0.1
+				tooltip = army_morale_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_org_factor = 0.05
+				tooltip = army_org_factor_tooltip
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_army_morale_factor
+				min = -1
+				max = 0
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_army_org_factor
+				min = -1
+				max = 0
+			}
+			force_update_dynamic_modifier = yes
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_army_training_adopt_formation_local = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by focus ETS_army_training
+
+		visible = {
+			check_variable = { ETS_fledgling_military_army_morale_factor < 0 }
+			check_variable = { ETS_fledgling_military_army_org_factor < 0 }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_army_adopt_formation_training }
+		}
+
+		ai_will_do = { factor = 300 }
+
+		cost = 10
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_army_training_adopt_formation_local"
+			set_country_flag = ETS_army_adopt_formation_training
+		}
+
+		days_remove = 30
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_army_training_adopt_formation_local"
+			clr_country_flag = ETS_army_adopt_formation_training
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = ETS_fledgling_military
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_morale_factor = 0.05
+				tooltip = army_morale_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_org_factor = 0.025
+				tooltip = army_org_factor_tooltip
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_army_morale_factor
+				min = -1
+				max = 0
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_army_org_factor
+				min = -1
+				max = 0
+			}
+			force_update_dynamic_modifier = yes
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_army_training_combat_techniques_foreign = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by event east_turkestan_events.8 or east_turkestan_events.9
+
+		visible = {
+			has_completed_focus = ETS_army_training
+			check_variable = { ETS_fledgling_military_army_attack_factor < 0 }
+			check_variable = { ETS_fledgling_military_army_defence_factor < 0 }
+			check_variable = { ETS_fledgling_military_recon_factor < 0 }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_army_combat_techniques_training }
+		}
+
+		ai_will_do = { factor = 250 }
+
+		cost = 20
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_army_training_combat_techniques_foreign"
+			set_country_flag = ETS_army_combat_techniques_training
+		}
+
+		days_remove = 14
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_army_training_combat_techniques_foreign"
+			clr_country_flag = ETS_army_combat_techniques_training
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = ETS_fledgling_military
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_attack_factor = 0.1
+				tooltip = army_attack_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_defence_factor = 0.1
+				tooltip = army_defence_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_recon_factor = 0.1
+				tooltip = recon_factor_tooltip
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_army_attack_factor
+				min = -1
+				max = 0
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_army_defence_factor
+				min = -1
+				max = 0
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_recon_factor
+				min = -1
+				max = 0
+			}
+			force_update_dynamic_modifier = yes
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_army_training_combat_techniques_local = {
+		icon = generic_prepare_civil_war
+
+		allowed = { always = no } #Activated by focus ETS_army_training
+
+		visible = {
+			check_variable = { ETS_fledgling_military_army_attack_factor < 0 }
+			check_variable = { ETS_fledgling_military_army_defence_factor < 0 }
+			check_variable = { ETS_fledgling_military_recon_factor < 0 }
+		}
+
+		available = {
+			NOT = { has_country_flag = ETS_army_combat_techniques_training }
+		}
+
+		ai_will_do = { factor = 250 }
+
+		cost = 10
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete ETS_army_training_combat_techniques_local"
+			set_country_flag = ETS_army_combat_techniques_training
+		}
+
+		days_remove = 30
+
+		remove_effect = {
+			log = "[GetLogRoot]: Decision remove ETS_army_training_combat_techniques_local"
+			clr_country_flag = ETS_army_combat_techniques_training
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = ETS_fledgling_military
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_attack_factor = 0.05
+				tooltip = army_attack_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_army_defence_factor = 0.05
+				tooltip = army_defence_factor_tooltip
+			}
+			add_to_variable = {
+				ETS_fledgling_military_recon_factor = 0.05
+				tooltip = recon_factor_tooltip
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_army_attack_factor
+				min = -1
+				max = 0
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_army_defence_factor
+				min = -1
+				max = 0
+			}
+			clamp_variable = {
+				var = ETS_fledgling_military_recon_factor
+				min = -1
+				max = 0
+			}
+			force_update_dynamic_modifier = yes
+		}
+		fixed_random_seed = no
+	}
+
+	ETS_war_with_KUM = {
+		icon = generic_political_discourse
+		allowed = { always = no }
+
+		visible = {
+			can_declare_war_on = FROM
+		}
+
+		cost = 0
+		days_remove = 25
+		fire_only_once = yes
+		war_with_target_on_remove = yes
+
+		ai_will_do = { factor = 200 }
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel ETS_war_with_KUM"
+			clear_decision_attack_AI = yes
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ETS_war_with_KUM"
+			FROM = { incoming_war_notification_effect = yes }
+			setup_decision_attack_AI = yes
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove ETS_war_with_KUM"
+			add_war_support = 0.05
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+ETS_turkic_diplo_decisions = {
+	ETS_reach_out_to_country_decision = {
+		icon = hol_exchange_intelligence_data
+		allowed = { always = no }
+
+		visible = {
+			country_exists = FROM
+			FROM = { is_subject = no }
+		}
+
+		available = {
+			NOT = { has_war_with = FROM }
+		}
+
+		target_trigger = {
+			FROM = { is_subject = no }
+			NOT = { has_war_with = FROM }
+		}
+
+		cost = 40
+		fire_only_once = yes
+
+		ai_will_do = { factor = 200 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ETS_reach_out_to_country_decision"
+			FROM = {
+				country_event = { id = east_turkestan_events.53 days = 1 }
+			}
+			if = {
+				limit = { FROM = { tag = OTT } }
+				activate_targeted_decision = { decision = ETS_send_officers_to_train_in_otto_decision target = OTT }
+			}
+		}
+		fixed_random_seed = no
+	}
+	ETS_send_officers_to_train_in_otto_decision = {
+		icon = generic_army_support
+
+		allowed = { always = no }
+
+		visible = {
+			country_exists = FROM
+			FROM = { is_subject = no }
+		}
+
+		available = {
+			NOT = { has_war_with = FROM }
+		}
+
+		target_trigger = {
+			FROM = { is_subject = no }
+			NOT = { has_war_with = ETS }
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		ai_will_do = { factor = 2 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete ETS_send_officers_to_train_in_otto_decision"
+			FROM = {
+				country_event = { id = east_turkestan_events.54 days = 1 }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+

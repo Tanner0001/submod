@@ -1,0 +1,1532 @@
+# AI triggers
+# By Rylock and Alpinia
+
+#############################
+### VOLUNTEER AI TRIGGERS ###
+#############################
+
+### To have tags send volunteers whenever a war starts, add a new rule below
+### THIS is the tag sending the volunteers, PREV is the tag that receives them
+### If the conditions are fulfilled, THIS will automatically send volunteers to PREV whenever the latter is at war
+### When adding new rules, please try to follow the following order of triggers if performance allows - first global (when the rule should apply), then PREV triggers (who should receive the volunteers), then THIS triggers (who should send them)
+
+willing_to_send_volunteers_to_PREV = {
+	NOT = { check_variable = { PREV.modifier@cannot_receive_volunteers > 0 } }
+	NOT = { has_war_with = PREV }
+	NOT = { is_ally_with = PREV }
+	OR = {
+		AND = {
+			OR = {
+				spanish_civil_war_volunteers = yes
+				american_civil_war_volunteers = yes
+				chilean_argentinian_war_volunteers = yes
+				south_african_civil_war_volunteers = yes
+				indian_civil_war_volunteers = yes
+				greek_civil_war_volunteers = yes
+				levantine_war_volunteers = yes
+			}
+			## Socialist tags withhold volunteers during domestic conflicts
+			AI_socialist_resolved_domestic_conflicts = yes
+		}
+		fourth_balkan_war_volunteers = yes
+		second_weltkrieg_volunteers = yes
+		sichuan_volunteers = yes
+		venetian_rebellion_volunteers = yes
+		italian_civil_war_volunteers = yes
+		german_austrian_volunteers = yes
+		WCA_internationale_volunteers = yes
+		league_collapse_volunteers = yes
+		northwest_war_volunteers = yes
+		xinjiang_war_volunteers = yes
+		GEA_zhili_volunteers = yes
+		ANQ_volunteers = yes
+		brazil_volunteers_to_portugal = yes
+		quechua_volunteers = yes
+		indonesian_revolution_volunteers = yes
+		siamese_civil_war_volunteers = yes
+		maf_collapse_volunteers = yes
+		winter_war_volunteers = yes
+		indochinese_revolution_volunteers = yes
+		arab_war_of_unification_volunteers = yes
+		assyrian_volunteers = yes
+	}
+}
+
+spanish_civil_war_volunteers = {
+	SPA = { has_civil_war = yes }
+	OR = {
+		is_major = yes
+		num_divisions > 19
+		any_home_area_neighbor_country = { original_tag = SPA }
+		tag = IRE
+	}
+	OR = {
+		AND = {
+			PREV = { tag = SPR }
+			OR = {
+				original_tag = SIC
+				original_tag = POR
+				is_ally_with = ENT
+				AND = {
+					original_tag = IRE
+					has_country_flag = IRE_forpolpath_ent
+				}
+				AND = {
+					original_tag = BRA
+					is_monarchy = yes
+				}
+				AND = {
+					original_tag = ARG
+					has_government = national_populist
+				}
+			}
+			has_socialist_government = no
+		}
+		AND = {
+			PREV = { tag = SPK }
+			OR = {
+				AND = {
+					is_ally_with = GER
+					NOT = { is_subject_of = GER }
+				}
+				AND = {
+					is_ally_with = AUS
+					NOT = { is_subject_of = AUS }
+				}
+				AND = {
+					original_tag = IRE
+					NOT = { has_country_flag = IRE_forpolpath_ent }
+				}
+			}
+			has_socialist_government = no
+		}
+		AND = {
+			PREV = { tag = SWF }
+			has_socialist_government = yes
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- spanish_civil_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+american_civil_war_volunteers = {
+	has_global_flag = USA_civil_war_begun_flag
+	NOT = { has_global_flag = USA_civil_war_over_flag }
+	OR = {
+		AND = {
+			PREV = { tag = WCA }
+			has_socialist_government = yes
+			OR = {
+				is_major = yes
+				num_divisions > 24
+				num_of_military_factories > 8
+			}
+		}
+		AND = {
+			PREV = { tag = var:ACW_supported_tag }
+			num_of_military_factories > 4
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- american_civil_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+fourth_balkan_war_volunteers = {
+	country_exists = BPL
+	BPL = {
+		has_war_with = BUL
+		is_faction_leader = yes
+	}
+	OR = {
+		AND = {
+			PREV = {
+				original_tag = BUL
+				has_socialist_government = no
+			}
+			has_socialist_government = no
+			has_country_flag = SER_supported_bulgaria
+		}
+		AND = {
+			PREV = {
+				OR = {
+					AND = {
+						is_ally_with = BPL
+						NOT = { original_tag = ROM }
+					}
+					original_tag = GRE
+				}
+				has_war_with = BUL
+			}
+			OR = {
+				original_tag = ROM
+				original_tag = GRE
+				AND = {
+					is_ally_with = INT
+					PREV = { has_socialist_government = yes }
+				}
+				AND = {
+					is_ally_with = RUS
+					NOT = { is_subject_of = RUS }
+				}
+			}
+		}
+		AND = {
+			PREV = {
+				original_tag = ROM
+				has_war_with = BUL
+			}
+			OR = {
+				is_ally_with = BPL
+				original_tag = GRE
+				AND = {
+					is_ally_with = RUS
+					NOT = { is_subject_of = RUS }
+					PREV = { both_socialist_or_both_not_socialist = yes }
+				}
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- fourth_balkan_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+second_weltkrieg_volunteers = {
+	GER = { has_war_with = INT }
+	OR = {
+		AND = {
+			PREV = {
+				is_in_faction_with = INT
+				OR = {
+					is_major = yes
+					ic_ratio = { tag = INT ratio > 0.6 }
+				}
+			}
+			has_socialist_government = yes
+			OR = {
+				is_major = yes
+				is_in_europe = yes
+				is_in_north_america = yes
+				ic_ratio = { tag = INT ratio > 0.3 }
+			}
+		}
+		AND = {
+			PREV = {
+				is_in_faction_with = GER
+				OR = {
+					is_major = yes
+					ic_ratio = { tag = GER ratio > 0.6 }
+				}
+			}
+			has_socialist_government = no
+			has_opinion = { target = GER value > 15 }
+			NOT = { is_ally_with = ENT }
+			NOT = { is_ally_with = JAP }
+			NOT = { is_ally_with = RUS }
+			NOT = { is_ally_with = EGY }
+			NOT = { is_ally_with = PER }
+			OR = {
+				is_major = yes
+				is_in_europe = yes
+				is_in_north_america = yes
+				ic_ratio = { tag = GER ratio > 0.3 }
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- second_weltkrieg_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+chilean_argentinian_war_volunteers = {
+	FOP = { has_war_with = ARG }
+	ARG = { is_subject = no }
+	OR = {
+		AND = {
+			PREV = { tag = ARG }
+			has_socialist_government = no
+			OR = {
+				tag = PRU
+				tag = GER
+				AND = {
+					is_in_faction_with = ENT
+					is_major = yes
+					ARG = { has_country_flag = ARG_CAN_trade_deal }
+				}
+			}
+		}
+		AND = {
+			PREV = { is_ally_with = FOP }
+			has_socialist_government = yes
+			OR = {
+				tag = SWF
+				tag = MEX
+				AND = {
+					OR = {
+						is_in_europe = yes
+						is_in_americas = yes
+						is_in_faction_with = INT
+					}
+					num_of_military_factories > 8
+				}
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- chilean_argentinian_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+south_african_civil_war_volunteers = {
+	SAF = { has_civil_war = yes }
+	if = {
+		limit = {
+			any_country_with_original_tag = {
+				original_tag_to_check = SAF
+				has_socialist_government = yes
+			}
+		}
+		PREV = { original_tag = SAF }
+		OR = {
+			AND = {
+				PREV = { has_socialist_government = yes }
+				has_socialist_government = yes
+				num_of_military_factories > 8
+			}
+			AND = {
+				PREV = { has_socialist_government = no }
+				has_socialist_government = no
+				OR = {
+					is_ally_with = ENT
+					original_tag = GER
+					original_tag = MAF
+					original_tag = HOL
+					original_tag = SWE
+				}
+			}
+		}
+	}
+	else = {
+		has_socialist_government = no
+		OR = {
+			AND = {
+				PREV = { is_ally_with = NAT }
+				is_ally_with = ENT
+			}
+			AND = {
+				PREV = { is_ally_with = ZAR }
+				OR = {
+					original_tag = GER
+					original_tag = MAF
+					original_tag = HOL
+					original_tag = SWE
+				}
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- south_african_civil_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+indian_civil_war_volunteers = {
+	OR = {
+		HND = { has_war_with = RAJ }
+		HND = { has_war_with = PRF }
+		RAJ = { has_war_with = PRF }
+	}
+	OR = {
+		AND = {
+			PREV = {
+				tag = HND
+				has_socialist_government = yes
+			}
+			has_socialist_government = yes
+			num_divisions > 20
+		}
+		AND = {
+			PREV = { tag = PRF }
+			has_socialist_government = no
+			OR = {
+				tag = GER
+				tag = JAP
+				tag = TUR
+			}
+		}
+		AND = {
+			PREV = { tag = RAJ }
+			has_socialist_government = no
+			OR = {
+				AND = {
+					NOT = { country_exists = PRF }
+					OR = {
+						tag = GER
+						tag = JAP
+					}
+				}
+				is_in_faction_with = ENT
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- indian_civil_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+sichuan_volunteers = {
+	original_tag = SZC
+	china_compatible_alignment_to_PREV = yes
+	log = "willing_to_send_volunteers_to_PREV -- sichuan_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+venetian_rebellion_volunteers = {
+	ITA = {
+		has_country_flag = ITA_venice_will_rebel
+		has_war_with = VNC
+	}
+	PREV = { tag = VNC }
+	is_ally_with = AUS
+	is_subject = no
+	has_socialist_government = no
+	log = "willing_to_send_volunteers_to_PREV -- venetian_rebellion_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+italian_civil_war_volunteers = {
+	italy_balance_has_broken = no
+	SRI = {
+		has_war = yes
+		has_capitulated = no
+		OR = {
+			has_war_with = ITA
+			has_war_with = SIC
+			has_war_with = LOM
+			has_war_with = VNC
+			has_war_with = SRD
+		}
+	}
+	OR = {
+		is_major = yes
+		num_divisions > 19
+		is_neighbor_of = SRI
+		is_neighbor_of = ITA
+	}
+	OR = {
+		AND = {
+			PREV = { tag = SRI }
+			has_socialist_government = yes
+			OR = {
+				is_ally_with = INT
+				is_ally_with = RUS
+				tag = SWF
+			}
+			is_in_europe = yes
+		}
+		AND = {
+			PREV = {
+				OR = {
+					AND = {
+						tag = ITA
+						NOT = { has_government = national_populist }
+					}
+					tag = SIC
+					tag = LOM
+					tag = VNC
+				}
+			}
+			OR = {
+				is_ally_with = AUS
+				is_ally_with = GER
+			}
+			is_major = yes
+			is_in_europe = yes
+		}
+		AND = {
+			PREV = {
+				tag = ITA
+				has_government = national_populist
+			}
+			AUS = { is_subject = no }
+			any_state_of = {
+				target = { 76 109 }
+				owned_by_austria_or_puppet = yes
+			}
+			OR = {
+				is_ally_with = BPL
+				AND = {
+					has_government = national_populist
+					NOT = { is_ally_with = GER }
+					NOT = { is_ally_with = AUS }
+					NOT = { is_ally_with = ENT }
+				}
+			}
+			is_in_europe = yes
+		}
+		AND = {
+			PREV = {
+				tag = SIC
+				has_government = national_populist
+			}
+			OR = {
+				is_in_faction_with = ENT
+				AND = {
+					ITA = { NOT = { has_government = national_populist } }
+					OR = {
+						is_ally_with = AUS
+						is_ally_with = GER
+					}
+					is_major = yes
+				}
+			}
+		}
+		AND = {
+			PREV = { tag = SRD }
+			is_in_faction_with = ENT
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- italian_civil_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+greek_civil_war_volunteers = {
+	GRE = { has_civil_war = yes }
+	PREV = {
+		original_tag = GRE
+		both_socialist_or_both_not_socialist = yes
+	}
+	OR = {
+		original_tag = FRA
+		original_tag = ENG
+		original_tag = GER
+		original_tag = RUS
+		original_tag = SER
+	}
+	log = "willing_to_send_volunteers_to_PREV -- greek_civil_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+german_austrian_volunteers = {
+	original_tag = GER
+	PREV = { tag = AUS }
+	has_socialist_government = no
+	is_major = yes
+	PREV = {
+		is_subject = no
+		has_socialist_government = no
+		OR = {
+			has_civil_war = yes
+			has_war_with_major = yes
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- german_austrian_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+WCA_internationale_volunteers = {
+	original_tag = WCA
+	OR = {
+		has_idea = WCA_lead_revolution_idea
+		has_completed_focus = WCA_good_soldier
+	}
+	has_socialist_government = yes
+	PREV = {
+		has_socialist_government = yes
+		num_of_civilian_factories > 10
+		has_war_with_major = yes
+	}
+	log = "willing_to_send_volunteers_to_PREV -- WCA_internationale_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+league_collapse_volunteers = {
+	any_country_of = {
+		target = { LEP ANQ CHI SHD }
+		has_civil_war = yes
+	}
+	OR = {
+		AND = {
+			PREV = {
+				original_tag = LEP
+				NOT = { has_idea = china_anti_stalemate_idea_2 }
+			}
+			OR = {
+				original_tag = GEA
+				AND = {
+					original_tag = LEC
+					SHD = {
+						has_war_with = LEP
+						OR = {
+							has_government = authoritarian_democrat
+							has_government = national_populist
+						}
+					}
+				}
+				AND = {
+					OR = {
+						original_tag = QIE
+						AND = {
+							original_tag = SHD
+							has_idea = SHD_intervention_idea
+						}
+					}
+					QIE = { has_country_flag = wu_intervenes_proLEP }
+				}
+				AND = {
+					original_tag = GXC
+					has_country_leader = { character = GXC_lu_yuguang } #The offshoots probably wouldn't be in charge during League War. Or really shouldn't since they come after SSJW.
+				}
+			}
+		}
+		AND = {
+			PREV = {
+				original_tag = SHD
+				china_is_aligned_with_fengtian = yes
+				NOT = { has_idea = china_anti_stalemate_idea_2 }
+			}
+			NOT = { has_country_flag = sent_volunteers_ANQ }
+			OR = {
+				china_is_aligned_with_fengtian = yes
+				original_tag = JAP
+				AND = {
+					original_tag = GXC
+					has_country_leader = { character = GXC_lu_yuguang } #The offshoots probably wouldn't be in charge during League War. Or really shouldn't since they come after SSJW.
+				}
+			}
+		}
+		AND = {
+			PREV = {
+				original_tag = ANQ
+				china_is_aligned_with_fengtian = yes
+				NOT = { has_idea = china_anti_stalemate_idea_2 }
+			}
+			NOT = { has_country_flag = sent_volunteers_SHD }
+			OR = {
+				china_is_aligned_with_fengtian = yes
+				original_tag = JAP
+				AND = {
+					original_tag = GXC
+					has_country_leader = { character = GXC_lu_yuguang } #The offshoots probably wouldn't be in charge during League War. Or really shouldn't since they come after SSJW.
+				}
+			}
+		}
+		AND = {
+			PREV = {
+				original_tag = ANQ
+				NOT = { has_idea = china_anti_stalemate_idea_2 }
+			}
+			OR = {
+				original_tag = QIE
+				AND = {
+					original_tag = SHD
+					has_idea = SHD_intervention_idea
+				}
+				AND = {
+					original_tag = GXC
+					has_country_leader = { character = GXC_lu_yuguang } #The offshoots probably wouldn't be in charge during League War. Or really shouldn't since they come after SSJW.
+				}
+			}
+			QIE = { has_country_flag = wu_intervenes_proANQ }
+		}
+		AND = {
+			PREV = {
+				original_tag = CHI
+				NOT = { has_idea = china_anti_stalemate_idea_2 }
+			}
+			OR = {
+				original_tag = HND
+				original_tag = ENG
+				original_tag = FRA
+				original_tag = GXC
+				original_tag = YUN
+			}
+			OR = {
+				has_socialist_government = yes
+				china_is_aligned_with_kmt = yes
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- league_collapse_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+northwest_war_volunteers = {
+	any_country_of = {
+		target = { TIB MON }
+		has_war_with = XSM
+	}
+	OR = {
+		AND = {
+			PREV = {
+				original_tag = TIB
+				has_government = authoritarian_democrat
+			}
+			original_tag = RAJ
+		}
+		AND = {
+			PREV = {
+				original_tag = TIB
+				has_socialist_government = yes
+			}
+			original_tag = HND
+			has_socialist_government = yes
+		}
+		AND = {
+			PREV = {
+				original_tag = TIB
+				has_government = social_democrat
+			}
+			original_tag = CHI
+			has_socialist_government = yes
+		}
+		PREV = {
+			original_tag = XSM
+			china_compatible_alignment_to_PREV = yes
+		}
+		AND = {
+			PREV = {
+				original_tag = XSM
+				china_is_unaligned = yes
+			}
+			original_tag = QIE
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- northwest_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+xinjiang_war_volunteers = {
+	OR = {
+		SIK = { has_war_with = ETS }
+		SIK = { has_war_with = KUM }
+		KUM = { has_war_with = ETS }
+	}
+	OR = {
+		PREV = {
+			OR = {
+				original_tag = SIK
+				original_tag = KUM
+			}
+			china_compatible_alignment_to_PREV = yes #Handles QIE
+		}
+		AND = {
+			PREV = { original_tag = SIK }
+			OR = {
+				original_tag = HNN
+				original_tag = XSM
+				AND = {
+					PREV = { has_government = social_democrat }
+					OR = {
+						original_tag = CHI
+						original_tag = GXC
+					}
+				}
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- xinjiang_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+GEA_zhili_volunteers = {
+	original_tag = GEA
+	PREV = {
+		OR = {
+			AND = {
+				original_tag = LEP
+				NOT = { has_idea = china_anti_stalemate_idea_2 }
+			}
+			AND = {
+				original_tag = QIE
+				has_country_flag = wu_intervenes_proLEP
+			}
+			AND = {
+				original_tag = SZC
+				has_completed_focus = SZC_partners_of_law_and_order
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- GEA_zhili_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+ANQ_volunteers = {
+	original_tag = ANQ
+	has_country_flag = ANQ_peace
+	OR = {
+		has_completed_focus = ANQ_deepen_army_cooperation
+		has_completed_focus = ANQ_republican_focus
+	}
+	china_compatible_alignment_to_PREV = yes
+	log = "willing_to_send_volunteers_to_PREV -- ANQ_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+brazil_volunteers_to_portugal = {
+	original_tag = BRA
+	is_monarchy = yes
+	PREV = {
+		original_tag = POR
+		is_monarchy = yes
+	}
+	log = "willing_to_send_volunteers_to_PREV -- brazil_volunteers_to_portugal --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+quechua_volunteers = {
+	PRU = { has_civil_war = yes }
+	PREV = { has_country_leader = { character = PRU_pachacutec_ii } }
+	OR = {
+		original_tag = BRA
+		original_tag = ECU
+		original_tag = BOL
+	}
+	NOT = { has_government = national_populist }
+	log = "willing_to_send_volunteers_to_PREV -- quechua_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+indonesian_revolution_volunteers = {
+	INS = { has_war_with = DEI }
+	OR = {
+		AND = {
+			PREV = { original_tag = INS }
+			is_subject = no
+			OR = {
+				original_tag = CHI
+				original_tag = HND
+				original_tag = JAP
+				AND = {
+					original_tag = AST
+					has_socialist_government = yes
+				}
+			}
+		}
+		AND = {
+			PREV = { original_tag = DEI }
+			OR = {
+				original_tag = GEA
+				original_tag = RAJ
+				original_tag = POR
+				AND = {
+					original_tag = AST
+					has_socialist_government = no
+				}
+			}
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- indonesian_revolution_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+siamese_civil_war_volunteers = {
+	any_country_with_original_tag = { #only bother if it's not AuthDem vs PatAut
+		original_tag_to_check = SIA
+		has_civil_war = yes
+		has_socialist_government = yes
+	}
+	OR = {
+		is_major = yes
+		num_of_military_factories > 8
+	}
+	PREV = { original_tag = SIA }
+	if = {
+		limit = { PREV = { has_socialist_government = yes } }
+		has_socialist_government = yes
+		OR = {
+			original_tag = ENG
+			original_tag = FRA
+			original_tag = RUS
+			original_tag = BRM
+			original_tag = CHI
+			original_tag = HND
+		}
+	}
+	else = {
+		PREV = { has_socialist_government = no }
+		OR = {
+			original_tag = GEA
+			original_tag = GER
+			original_tag = MAF
+			original_tag = JAP
+			original_tag = RAJ
+			original_tag = PRF
+			original_tag = BRM
+			original_tag = DEI
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- siamese_civil_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+maf_collapse_volunteers = {
+	MAF_has_collapsed = yes
+	PREV = { original_tag = MAF }
+	OR = {
+		original_tag = GER
+		original_tag = GEA
+	}
+	log = "willing_to_send_volunteers_to_PREV -- maf_collapse_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+levantine_war_volunteers = {
+	OR = {
+		EGY = {
+			has_war_with = OTT
+			is_subject = no
+		}
+		PER = {
+			has_war_with = OTT
+			is_subject = no
+		}
+	}
+	OTT = { is_subject = no }
+	OR = {
+		AND = {
+			is_major = yes
+			is_in_europe = yes
+		}
+		is_neighbor_of = EGY
+		is_neighbor_of = PER
+		is_neighbor_of = OTT
+	}
+	OR = {
+		AND = {
+			PREV = { tag = OTT }
+			has_socialist_government = no
+			OR = {
+				original_tag = GER
+				original_tag = AUS
+			}
+		}
+		AND = {
+			PREV = { tag = OTT }
+			original_tag = BUL
+			has_relation_modifier = { target = PREV modifier = volunteer_limit_plus_three }
+			is_subject = no
+			has_socialist_government = no
+		}
+		AND = {
+			PREV = {
+				original_tag = PER
+				has_war_with = OTT
+			}
+			AND = {
+				OR = {
+					original_tag = RUS
+					has_socialist_government = yes
+				}
+				both_socialist_or_both_not_socialist = yes
+			}
+		}
+		AND = {
+			PREV = {
+				original_tag = ARM
+				has_war_with = OTT
+			}
+			original_tag = RUS
+			both_socialist_or_both_not_socialist = yes
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- levantine_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+winter_war_volunteers = {
+	PREV = {
+		original_tag = FIN
+		has_war_with = RUS
+		is_valid_peace_target = yes
+		has_socialist_government = no
+	}
+	OR = {
+		original_tag = GER
+		original_tag = SWE
+		original_tag = SCA
+	}
+	has_socialist_government = no
+	log = "willing_to_send_volunteers_to_PREV -- winter_war_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+indochinese_revolution_volunteers = {
+	has_global_flag = GEA_Indochina_Uprising_Fired
+	PREV = {
+		original_tag = INC
+		has_war_with = GER # Only meant to have volunteers sent happen if GER intervenes directly
+	}
+	OR = {
+		original_tag = JAP
+		original_tag = FRA
+		original_tag = HND
+	}
+	log = "willing_to_send_volunteers_to_PREV -- indochinese_revolution_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+arab_war_of_unification_volunteers = {
+	SAU = { has_war_with = JBS }
+	OR = {
+		AND = {
+			PREV = { original_tag = JBS }
+			tag = OTT
+		}
+		AND = {
+			PREV = { original_tag = SAU }
+			original_tag = EGY
+		}
+	}
+	log = "willing_to_send_volunteers_to_PREV -- arab_war_of_unification_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+assyrian_volunteers = {
+	has_global_flag = ASY_received_ENT_volunteers
+	ASY = { has_war_with = OTT }
+	PREV = { original_tag = ASY }
+	has_relation_modifier = { target = ASY modifier = volunteer_limit_plus_one }
+	log = "willing_to_send_volunteers_to_PREV -- assyrian_volunteers --- THIS = [THIS.GetName] PREV = [PREV.GetName]"
+}
+
+AI_socialist_resolved_domestic_conflicts = {
+	## Socialist tags withhold volunteers during domestic conflicts
+	if = {
+		limit = {
+			has_socialist_government = yes
+			is_subject = no
+		}
+
+		## BUL lost Balkan war, then reclaimed territory or reconciled with SER
+		if = {
+			limit = { original_tag = BUL }
+			OR = {
+				owns_state = 106
+				has_completed_focus = BUL_path_to_peace
+			}
+		}
+
+		## FOP has defeated or peacefully reunited with ARG
+		else_if = {
+			limit = {
+				OR = {
+					original_tag = CHL
+					original_tag = FOP
+				}
+			}
+			NOT = {
+				AND = {
+					country_exists = ARG
+					country_exists = FOP
+				}
+			}
+		}
+
+		## HND has unified India
+		else_if = {
+			limit = { original_tag = HND }
+			has_global_flag = india_united
+		}
+
+		## PER has defeated the Ottoman Empire
+		else_if = {
+			limit = { original_tag = PER }
+			has_global_flag = OTT_cairo_pact_war
+			NOT = { has_global_flag = OTT_cairo_pact_war_ongoing }
+		}
+
+		## SER has unified Yugoslavia
+		else_if = {
+			limit = { original_tag = SER }
+			has_cosmetic_tag = YUG_fed
+		}
+
+		## SRI has unified Italy
+		else_if = {
+			limit = { original_tag = SRI }
+			NOT = { has_idea = SRI_italy_balance_idea }
+		}
+
+		## WCA has started Second American Civil War
+		else_if = {
+			limit = { original_tag = WCA }
+			has_global_flag = USA_civil_war_begun_flag
+		}
+
+		## WIF has started their socialist revolution
+		else_if = {
+			limit = { original_tag = WIF }
+			has_completed_focus = WIF_join_internationale
+		}
+
+		## China has unified
+		else_if = {
+			limit = { china_alignment_left_kuomintang = yes }
+			has_global_flag = china_united
+		}
+	}
+}
+
+##############################
+### TECHNOLOGY AI TRIGGERS ###
+##############################
+anti_submarine_strategy_required_trigger = {
+	OR = {
+		convoy_threat > 0.3
+		AND = {
+			has_war = yes
+			any_enemy_country = {
+				has_navy_size = {
+					type = submarine
+					size > 30
+				}
+			}
+		}
+	}
+}
+
+###############################
+### WAR-RELATED AI TRIGGERS ###
+###############################
+
+country_has_any_active_threat = {
+	OR = {
+		has_war = yes
+		any_claim = yes
+		has_imminent_war = yes
+	}
+}
+
+country_is_in_dangerous_war = {
+	OR = {
+		has_civil_war = yes
+		any_claim = yes
+		alliance_strength_ratio < 1.25
+		surrender_progress > 0.05
+		has_imminent_war = yes
+	}
+}
+
+#on the target's scope
+dont_start_major_faction_wars = {
+	ROOT = {
+		num_faction_members > 1
+		is_faction_leader = no
+		is_major = no
+	}
+	OR = {
+		is_major = yes
+		num_faction_members > 1
+		AND = {
+			is_subject = yes
+			overlord = {
+				OR = {
+					is_major = yes
+					num_faction_members > 1
+				}
+			}
+		}
+		AND = {
+			has_guarantor = yes
+			any_collection_element = {
+				collection = collection:guarantors
+				OR = {
+					is_major = yes
+					num_faction_members > 1
+				}
+			}
+		}
+	}
+}
+
+#on the target's scope
+is_stronger_than_ROOT_and_not_vulnerable = {
+	strength_ratio = { tag = ROOT ratio > 1 }
+	alliance_strength_ratio > 1
+	surrender_progress < 0.1
+}
+
+#on the target's scope
+is_stronger_than_ROOT_and_not_vulnerable_consider_naval_strength = {
+	OR = {
+		strength_ratio = { tag = ROOT ratio > 1 }
+		AND = {
+			naval_strength_comparison = {
+				other = ROOT
+				ratio > 1
+				sub_unit_def_weights = {
+					submarine = 0.75
+					destroyer = 0.75
+					light_cruiser = 0.75
+					heavy_cruiser = 1
+					battle_cruiser = 1
+					battleship = 1
+					carrier = 1
+				}
+			}
+			alliance_naval_strength_ratio > 1.25
+		}
+	}
+	alliance_strength_ratio > 1
+	surrender_progress < 0.1
+}
+
+#on the target's scope
+faction_leader_is_stronger_than_ROOT_and_not_vulnerable = {
+	num_faction_members > 1
+	faction_leader = {
+		strength_ratio = { tag = ROOT ratio > 1 }
+		alliance_strength_ratio > 1
+		surrender_progress < 0.1
+	}
+}
+
+#on the target's scope
+faction_leader_is_stronger_than_ROOT_and_not_vulnerable_consider_naval_strength = {
+	num_faction_members > 1
+	faction_leader = {
+		OR = {
+			strength_ratio = { tag = ROOT ratio > 1 }
+			AND = {
+				naval_strength_comparison = {
+					other = ROOT
+					ratio > 1
+					sub_unit_def_weights = {
+						submarine = 0.75
+						destroyer = 0.75
+						light_cruiser = 0.75
+						heavy_cruiser = 1
+						battle_cruiser = 1
+						battleship = 1
+						carrier = 1
+					}
+				}
+				alliance_naval_strength_ratio > 1
+			}
+		}
+		alliance_strength_ratio > 1
+		surrender_progress < 0.1
+	}
+}
+
+#on the target's scope
+overlord_is_stronger_than_ROOT_and_not_vulnerable = {
+	is_subject = yes
+	overlord = {
+		strength_ratio = { tag = ROOT ratio > 0.8 }
+		alliance_strength_ratio > 1
+		surrender_progress < 0.1
+	}
+}
+
+#on the target's scope
+overlord_is_stronger_than_ROOT_and_not_vulnerable_consider_naval_strength = {
+	is_subject = yes
+	overlord = {
+		OR = {
+			strength_ratio = { tag = ROOT ratio > 0.8 }
+			AND = {
+				naval_strength_comparison = {
+					other = ROOT
+					ratio > 1
+					sub_unit_def_weights = {
+						submarine = 0.75
+						destroyer = 0.75
+						light_cruiser = 0.75
+						heavy_cruiser = 1
+						battle_cruiser = 1
+						battleship = 1
+						carrier = 1
+					}
+				}
+				alliance_naval_strength_ratio > 1.25
+			}
+		}
+		alliance_strength_ratio > 1
+		surrender_progress < 0.1
+	}
+}
+
+#on the target's scope
+guarantor_is_stronger_than_ROOT_and_not_vulnerable = {
+	has_guarantor = yes
+	any_collection_element = {
+		collection = collection:guarantors
+		alliance_strength_ratio > 1
+		OR = {
+			AND = {
+				surrender_progress < 0.1
+				strength_ratio = { tag = ROOT ratio > 0.7 }
+			}
+			AND = {
+				num_faction_members > 1
+				faction_leader = { surrender_progress < 0.2 }
+			}
+		}
+	}
+}
+
+default_attack_AI_trigger = {
+	OR = {
+		is_stronger_than_ROOT_and_not_vulnerable = yes
+		if = {
+			limit = { num_faction_members > 1 }
+			faction_leader_is_stronger_than_ROOT_and_not_vulnerable = yes
+		}
+		else = {
+			overlord_is_stronger_than_ROOT_and_not_vulnerable = yes
+		}
+		guarantor_is_stronger_than_ROOT_and_not_vulnerable = yes
+	}
+}
+
+default_attack_AI_trigger_consider_naval_strength = {
+	OR = {
+		is_stronger_than_ROOT_and_not_vulnerable_consider_naval_strength = yes
+		if = {
+			limit = { num_faction_members > 1 }
+			faction_leader_is_stronger_than_ROOT_and_not_vulnerable_consider_naval_strength = yes
+		}
+		else = {
+			overlord_is_stronger_than_ROOT_and_not_vulnerable_consider_naval_strength = yes
+		}
+		guarantor_is_stronger_than_ROOT_and_not_vulnerable = yes
+	}
+}
+
+#################################
+### AI AREA PRIORITY TRIGGERS ###
+#################################
+
+is_standard_european_focused_tag = {
+	OR = {
+		#Spain
+		original_tag = SPA
+		original_tag = GLC
+		original_tag = BAS
+		original_tag = CAT
+		original_tag = POR
+
+		#France
+		is_french_tag = yes
+		original_tag = BRI
+
+		#Britain/Ireland
+		is_british_tag = yes
+		original_tag = SCO
+		original_tag = WLS
+		original_tag = IRE
+		original_tag = NIR
+
+		#Benelux
+		original_tag = HOL
+		original_tag = BEL
+		original_tag = FLA
+		original_tag = WAL
+
+		#Germany
+		original_tag = GER
+		original_tag = GRU
+		original_tag = RHI
+		original_tag = BAY
+		original_tag = NGF
+		original_tag = PRE
+		original_tag = EPR
+
+		#Poland
+		is_polish_tag = yes
+
+		#Eastern Europe has its own logic
+
+		#Scandinavia has its own logic
+
+		#Switzerland
+		original_tag = SWI
+
+		#Italy
+		is_italian_tag = yes
+		original_tag = MLT
+
+		#Danubia/Balkans
+		is_danubian_tag = yes
+		is_balkan_tag = yes
+		original_tag = CYP
+
+		#Turkey has its own logic
+
+		#Russia has its own logic
+	}
+}
+
+is_eastern_europe_focused_tag = {
+	OR = {
+		#Eastern Europe
+		original_tag = EST
+		original_tag = LAT
+		original_tag = LIT
+		original_tag = BAT
+		original_tag = BLR
+		original_tag = UKR
+	}
+}
+
+is_scandinavian_focused_tag = {
+	OR = {
+		original_tag = SWE
+		original_tag = NOR
+		original_tag = FIN
+		original_tag = DEN
+		original_tag = ICE
+		original_tag = SCA
+	}
+}
+
+is_asian_focused_tag = {
+	OR = {
+		#India
+		is_indian_tag = yes
+		original_tag = BRM
+		original_tag = SHA
+		original_tag = KAC
+		original_tag = BHU
+		original_tag = NEP
+
+		#SEA
+		original_tag = SIA
+		original_tag = INC
+		original_tag = VIN
+		original_tag = LAO
+		original_tag = CAM
+		original_tag = MAL
+		original_tag = SAR
+		original_tag = INS
+		original_tag = PHI
+		original_tag = GEA
+		original_tag = DEI
+
+		#China
+		is_tag_in_china_area = yes
+		original_tag = LEC
+		original_tag = TAI
+
+		#Japan has its own logic
+
+		#Korea
+		original_tag = KOR
+
+		#Central Asia
+		is_central_asian_tag = yes
+
+		#Russia has its own logic
+	}
+}
+
+is_african_focused_tag = {
+	OR = {
+		#Maghreb + Egypt
+		original_tag = MOR
+		original_tag = ALG
+		original_tag = TRP
+		original_tag = LBA
+		original_tag = SUD
+		# Egypt has its own logic
+
+		#Horn of Africa
+		original_tag = ETH
+		original_tag = ERI
+		original_tag = SOM
+
+		#French Africa
+		# NFA uses European logic
+		original_tag = MRT
+		original_tag = MLI
+		original_tag = SEN
+		original_tag = GNA
+		original_tag = SIE
+		original_tag = IVO
+		original_tag = VOL
+		original_tag = NGR
+		original_tag = CHA
+		original_tag = LIB
+
+		#Portuguese Africa
+		# POR uses European logic
+		original_tag = ANG
+		original_tag = MZB
+		original_tag = GNB
+
+		#Spanish Africa
+		original_tag = EQG
+
+		#German Africa
+		original_tag = MAF
+		original_tag = GHA
+		original_tag = TOG
+		original_tag = DAH
+		original_tag = NGA
+		original_tag = HAU
+		original_tag = KBR
+		original_tag = BRT
+		original_tag = NMB
+		original_tag = ZAM
+		original_tag = BRT
+		original_tag = MLW
+		original_tag = KTG
+		original_tag = CAR
+		original_tag = CMR
+		original_tag = ADA
+		original_tag = GAB
+		original_tag = COG
+		original_tag = KIV
+		original_tag = TKE
+		original_tag = TZN
+		original_tag = ZAN
+		original_tag = UGA
+		original_tag = KEN
+		original_tag = RWA
+		original_tag = BRD
+		original_tag = MAD
+
+		#British Africa
+		original_tag = BOT
+		original_tag = SAF
+		original_tag = ZIM
+	}
+}
+
+is_north_america_focused_tag = {
+	OR = {
+		#USA
+		is_american_tag = yes
+
+		#Canada
+		tag = CAN
+		original_tag = QUE
+
+		#Central America
+		original_tag = MEX
+		original_tag = YUC
+		is_central_american_tag = yes
+		original_tag = PAN
+
+		#Caribbean
+		original_tag = CUB
+		original_tag = DOM
+		original_tag = HAI
+		original_tag = WIF
+		original_tag = JAM
+		original_tag = TRI
+		original_tag = ANT
+	}
+}
+
+is_south_america_focused_tag = {
+	OR = {
+		is_brazilian_tag = yes
+		is_spanish_south_american_tag = yes
+		original_tag = GYA
+		original_tag = SUR
+	}
+}
+
+is_pacific_focused_tag = {
+	OR = {
+		original_tag = AST
+		original_tag = NZL
+		original_tag = HAW
+		original_tag = PNG
+	}
+}
+
+#############################
+### CHARACTER AI TRIGGERS ###
+#############################
+
+AI_trigger_dont_hire_high_command_too_early = {
+	has_war = no
+	has_political_power < 200
+}
+AI_trigger_dont_hire_navy_chief_too_early = {
+	has_war = no
+	amount_taken_ideas = {
+		amount < 3
+		slots = { political_advisor }
+	}
+}
+
+#############################
+### TEMPLATE AI TRIGGERS ###
+#############################
+
+AI_trigger_can_upgrade_in_field = {
+	surrender_progress < 0.15
+	has_reached_maximum_divisions = no
+}

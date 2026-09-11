@@ -1,0 +1,4837 @@
+############################################
+## Democratric Central America Focus Tree ##
+##       Started By Raptor_Jesus          ##
+##			Done By Roparex               ##
+############################################
+
+focus_tree = {
+	id = CA_DEM_focus
+	country = {
+		factor = 0
+	}
+
+	default = no
+	continuous_focus_position = { x = 400 y = 1150 }
+
+	##Political Tree##
+
+	focus = {
+		id = CENdem_start_the_constitutional_convention
+		icon = GFX_goal_CEN_COA
+		cost = 10
+
+		x = 11
+		y = 0
+
+		ai_will_do = { factor = 100 }
+		select_effect = {
+			log = "[GetLogRoot]: Select Focus CENdem_start_the_constitutional_convention"
+			country_event = { id = central_america_democratic_events.1 days = 1 }
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_start_the_constitutional_convention"
+			log = "KR_Event_Logging;DEMOCRATIC CEN"
+			add_stability = 0.10
+			add_political_power = 150
+			if = {
+				limit = { is_subject = no }
+				country_event = central_america_democratic_events.19
+			}
+			else = {
+				country_event = central_america_democratic_events.17
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_the_unionist_paty_wins
+		icon = GFX_goal_ideology_social_conservative
+		cost = 0
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -11
+		y = 1
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		prerequisite = { focus = CENdem_start_the_constitutional_convention }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_unionist_paty_wins"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENdem_cultivate_our_common_culture
+		icon = GFX_BEL_Federalism
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -13
+		y = 2
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = { focus = CENdem_the_unionist_paty_wins }
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_ENT }
+				ENT = {
+					exists = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_CEN }
+				CEN = {
+					is_faction_leader = no
+					NOT = { is_in_faction_with = COS }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_cultivate_our_common_culture"
+			add_ideas = CENdem_a_new_central_american_identity
+			add_popularity = { ideology = social_conservative popularity = 0.02 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_destroy_the_UFC_influence
+		icon = GFX_HON_ufc_ban
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -14
+		y = 3
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = { focus = CENdem_cultivate_our_common_culture }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_destroy_the_UFC_influence"
+			add_timed_idea = { idea = CENdem_UFC_influence_rooted_out days = 90 }
+			add_popularity = { ideology = social_conservative popularity = 0.05 }
+			312 = { increase_state_category_by_one_level = yes }
+			317 = { increase_state_category_by_one_level = yes }
+			1071 = { increase_state_category_by_one_level = yes }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_the_military_as_a_unifying_factor
+		icon = GFX_goal_army_guy_2
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -12
+		y = 3
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = { focus = CENdem_cultivate_our_common_culture }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_military_as_a_unifying_factor"
+			swap_ideas = {
+				add_idea = CENdem_a_new_central_american_identity2
+				remove_idea = CENdem_a_new_central_american_identity
+			}
+			hidden_effect = {
+				country_event = { id = central_america_democratic_events.37 days = 35 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_the_industry_usurping_borders
+		icon = GFX_goal_factory_complex
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -11
+		y = 4
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = { focus = CENdem_the_military_as_a_unifying_factor }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_industry_usurping_borders"
+			add_one_random_civilian_factory = yes
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_strengthen_political_independence
+		icon = GFX_goal_HOL_CNA_restored_stability
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -13
+		y = 4
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = {
+			focus = CENdem_the_military_as_a_unifying_factor
+		}
+		prerequisite = {
+			focus = CENdem_destroy_the_UFC_influence
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_strengthen_political_independence"
+			swap_ideas = {
+				add_idea = CENdem_a_new_central_american_identity3
+				remove_idea = CENdem_a_new_central_american_identity2
+			}
+			add_popularity = { ideology = social_conservative popularity = 0.02 }
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_the_central_american_dream
+		icon = GFX_goal_double_research
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -15
+		y = 4
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = { focus = CENdem_destroy_the_UFC_influence }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_central_american_dream"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_our_southern_brothers
+		icon = GFX_goal_generic_national_unity
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -14
+		y = 5
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = { focus = CENdem_strengthen_political_independence }
+		prerequisite = { focus = CENdem_the_industry_usurping_borders }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_our_southern_brothers"
+			add_timed_idea = { idea = CENdem_spirit_of_reunification days = 365 }
+			add_war_support = 0.10
+			add_political_power = 50
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_restore_the_union_in_its_entirety
+		icon = GFX_goal_generic_major_alliance
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -15
+		y = 6
+
+		available = {
+			has_government = social_conservative
+			is_subject = no
+			is_neighbor_of = COS
+			COS = {
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+		bypass = {
+			has_subject = COS
+		}
+		prerequisite = {
+			focus = CENdem_our_southern_brothers
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_restore_the_union_in_its_entirety"
+			COS = { country_event = central_america_democratic_events.39 }
+			custom_effect_tooltip = if_they_accept_tt
+			effect_tooltip = {
+				COS = {
+					custom_effect_tooltip = tooltip_line_break
+					add_ideas = COS_CEN_ties
+				}
+				if = {
+					limit = {
+						CEN = {
+							is_faction_leader = yes
+							NOT = { is_in_faction_with = COS }
+						}
+					}
+					add_to_faction = COS
+				}
+			}
+			unlock_decision_tooltip = CENdem_continue_integration_of_COS
+		}
+	}
+
+	focus = {
+		id = CENdem_integrate_costa_rica
+		icon = GFX_goal_COS_COA
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -15
+		y = 7
+
+		available = {
+			has_subject = COS
+		}
+		prerequisite = {
+			focus = CENdem_restore_the_union_in_its_entirety
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_integrate_costa_rica"
+			hidden_effect = {
+				COS = { remove_ideas = COS_CEN_ties_3 }
+			}
+			316 = { remove_claim_and_add_core_of_ROOT = yes }
+			COS_democratic_characters_transfer_fancy_tooltip = yes
+			annex_country = {
+				target = COS
+				transfer_troops = yes
+			}
+			if = {
+				limit = { is_faction_leader = yes }
+				add_ideas = CENdem_beacon_democracy
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = CENdem_welcome_panama_as_the_6th_republic
+		icon = GFX_goal_constitutional_guarantees
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -13
+		y = 6
+
+		available = {
+			has_government = social_conservative
+			is_subject = no
+			is_neighbor_of = PAN
+			PAN = {
+				has_socialist_government = no
+				NOT = { has_war_with = ROOT }
+			}
+		}
+		bypass = {
+			has_subject = PAN
+		}
+		prerequisite = {
+			focus = CENdem_our_southern_brothers
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_welcome_panama_as_the_6th_republic"
+			PAN = { country_event = central_america_democratic_events.43 }
+			custom_effect_tooltip = if_they_accept_tt
+			effect_tooltip = {
+				PAN = {
+					custom_effect_tooltip = tooltip_line_break
+					add_ideas = COS_CEN_ties
+				}
+				if = {
+					limit = {
+						CEN = {
+							is_faction_leader = yes
+							NOT = { is_in_faction_with = PAN }
+						}
+					}
+					add_to_faction = PAN
+				}
+			}
+			unlock_decision_tooltip = CENdem_continue_integration_of_PAN
+		}
+	}
+
+	focus = {
+		id = CENdem_integrate_panama
+		icon = GFX_goal_PAN_COA
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -13
+		y = 7
+
+		available = {
+			has_subject = PAN
+		}
+		prerequisite = {
+			focus = CENdem_welcome_panama_as_the_6th_republic
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_integrate_panama"
+			hidden_effect = {
+				PAN = { remove_ideas = COS_CEN_ties_3 }
+			}
+			304 = { remove_claim_and_add_core_of_ROOT = yes }
+			685 = { remove_claim_and_add_core_of_ROOT = yes }
+			custom_effect_tooltip = characters_will_be_recruited
+			PAN = {
+				character_list_tooltip = {
+					limit = {
+						OR = {
+							PAN = { PAN_manuel_pino = { is_character = PREV.PREV } }
+							PAN = { PAN_jose_antonio_remon_cantera = { is_character = PREV.PREV } }
+							PAN = { PAN_saturnino_florez = { is_character = PREV.PREV } }
+							PAN = { PAN_alcibiades_arosemena = { is_character = PREV.PREV } }
+							PAN = { PAN_roberto_francisco_chiari_remon = { is_character = PREV.PREV } }
+						}
+					}
+				}
+			}
+			hidden_effect = { PAN = { PAN_transfer_characters = yes } }
+			annex_country = {
+				target = PAN
+				transfer_troops = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = CENdem_consolidate_the_republic
+		icon = GFX_goal_Centralised_Government
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -12
+		y = 5
+
+		available = {
+			has_government = social_conservative
+		}
+
+		prerequisite = { focus = CENdem_strengthen_political_independence }
+		prerequisite = { focus = CENdem_the_central_american_dream }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_consolidate_the_republic"
+			add_stability = 0.10
+			add_political_power = -50
+			add_popularity = { ideology = social_conservative popularity = 0.05 }
+			#I could switch this for an event that gives you the same effect. Oh well, another time maybe
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_the_supreme_court_of_central_america
+		icon = GFX_goal_DOM_The_Trial
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -11
+		y = 6
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = { focus = CENdem_consolidate_the_republic }
+		prerequisite = { focus = CENdem_connect_the_border_regions }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_supreme_court_of_central_america"
+			add_political_power = 100
+			#Country Event for Judges taking over, should grant pp and shit
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_impose_federal_laws_on_the_republics
+		icon = GFX_goal_DEI_focus_disband_volksraad
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -11
+		y = 7
+
+		available = {
+			has_government = social_conservative
+		}
+		prerequisite = { focus = CENdem_the_supreme_court_of_central_america }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_impose_federal_laws_on_the_republics"
+			swap_ideas = {
+				add_idea = CENdem_a_new_central_american_identity4
+				remove_idea = CENdem_a_new_central_american_identity3
+			}
+			add_popularity = { ideology = social_conservative popularity = 0.03 }
+			#Event for how the provinces are triggered but the law makes them more secure
+		}
+		search_filters = { FOCUS_FILTER_RESISTANCE FOCUS_FILTER_STABILITY FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_unify_the_road_and_rail_network
+		icon = GFX_goal_generic_forceful_treaty
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -9
+		y = 2
+
+		prerequisite = {
+			focus = CENdem_the_unionist_paty_wins
+			focus = CENdem_the_liberal_party_wins
+		}
+		ai_will_do = { factor = 100 }
+		available = {
+			OR = {
+				has_government = social_conservative
+				has_government = social_liberal
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_unify_the_road_and_rail_network"
+			if = {
+				limit = {
+					has_idea = CENdem_an_unstable_union
+				}
+				swap_ideas = {
+					remove_idea = CENdem_an_unstable_union
+					add_idea = CENdem_an_unstable_union2
+				}
+			}
+			317 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			312 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			314 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			313 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_oath_of_allengence_to_the_republic
+		icon = GFX_goal_COS_Peace
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -10
+		y = 3
+
+		available = {
+			OR = {
+				has_government = social_conservative
+				has_government = social_liberal
+			}
+		}
+		prerequisite = { focus = CENdem_unify_the_road_and_rail_network }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_oath_of_allengence_to_the_republic"
+			if = {
+				limit = {
+					OR = {
+						has_idea = CENdem_an_unstable_union
+						has_idea = CENdem_an_unstable_union2
+					}
+				}
+				swap_ideas = {
+					remove_idea = CENdem_an_unstable_union2
+					add_idea = CENdem_an_unstable_union3
+				}
+			}
+			add_political_power = 100
+			hidden_effect = { country_event = { id = central_america_democratic_events.107 days = 45 } }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_incentivise_national_corporations
+		icon = GFX_focus_generic_the_giant_wakes
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -8
+		y = 3
+
+		available = {
+			OR = {
+				has_government = social_conservative
+				has_government = social_liberal
+			}
+		}
+		prerequisite = { focus = CENdem_unify_the_road_and_rail_network }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_incentivise_national_corporations"
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_usurp_provincial_autonomy
+		icon = GFX_goal_COS_Ferrer_Coup
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -9
+		y = 4
+
+		available = {
+			OR = {
+				has_government = social_conservative
+				has_government = social_liberal
+			}
+		}
+		prerequisite = {
+			focus = CENdem_incentivise_national_corporations
+		}
+		prerequisite = {
+			focus = CENdem_oath_of_allengence_to_the_republic
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_usurp_provincial_autonomy"
+			add_ideas = CENcem_usurped_autonomy
+			if = {
+				limit = { has_idea = CENdem_an_unstable_union }
+				remove_ideas = CENdem_an_unstable_union
+			}
+			else_if = {
+				limit = { has_idea = CENdem_an_unstable_union2 }
+				remove_ideas = CENdem_an_unstable_union2
+			}
+			else_if = {
+				limit = { has_idea = CENdem_an_unstable_union3 }
+				remove_ideas = CENdem_an_unstable_union3
+			}
+			if = {
+				limit = { has_idea = CENdem_federation_principles }
+				remove_ideas = CENdem_federation_principles
+			}
+			else_if = {
+				limit = { has_idea = CENdem_federation_principles_2 }
+				remove_ideas = CENdem_federation_principles_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_connect_the_border_regions
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -10
+		y = 5
+
+		available = {
+			OR = {
+				has_government = social_conservative
+				has_government = social_liberal
+			}
+		}
+		prerequisite = {
+			focus = CENdem_usurp_provincial_autonomy
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_connect_the_border_regions"
+			if = {
+				limit = { 311 = { is_owned_and_controlled_by = ROOT } } # Belize
+				311 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			else = {
+				317 = { # Managua
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			312 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			1071 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_our_ties_to_the_archipelago
+		icon = GFX_goal_generic_intelligence_exchange
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -8
+		y = 5
+
+		available = {
+			OR = {
+				has_government = social_conservative
+				has_government = social_liberal
+			}
+		}
+		prerequisite = {
+			focus = CENdem_usurp_provincial_autonomy
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_our_ties_to_the_archipelago"
+			add_political_power = 25
+			every_other_country = {
+				limit = {
+					is_in_caribbean = yes
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+				effect_tooltip = { country_event = { id = central_america_democratic_events.201 days = 3 } }
+				hidden_effect = { country_event = { id = central_america_democratic_events.200 days = 3 } }
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_defending_our_interests
+		icon = GFX_goal_collaborate_local_elites
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -9
+		y = 6
+
+		available = {
+			OR = {
+				has_government = social_conservative
+				has_government = social_liberal
+			}
+			is_subject = no
+			is_in_faction = no
+		}
+		bypass = {
+			is_in_faction = yes
+		}
+		prerequisite = {
+			focus = CENdem_our_ties_to_the_archipelago
+		}
+		prerequisite = {
+			focus = CENdem_connect_the_border_regions
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_defending_our_interests"
+			if = {
+				limit = {
+					ENT = { is_faction_leader = yes }
+					NOT = { has_country_flag = CEN_demanded_belize_from_entente }
+				}
+				activate_targeted_decision = { target = ENT decision = CEN_join_faction }
+			}
+			activate_targeted_decision = { target = THIS decision = CENdem_form_faction }
+		}
+	}
+
+	focus = {
+		id = CENdem_the_liberal_party_wins
+		icon = GFX_goal_ideology_social_liberal
+		cost = 0
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -7
+		y = 1
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		prerequisite = { focus = CENdem_start_the_constitutional_convention }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_liberal_party_wins"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENdem_the_4_year_plan
+		icon = GFX_focus_generic_industry_2
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -5
+		y = 2
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_the_liberal_party_wins }
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_ENT }
+				ENT = {
+					exists = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_CEN }
+				CEN = {
+					is_faction_leader = no
+					NOT = { is_in_faction_with = COS }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_4_year_plan"
+			if = {
+				limit = {
+					NOT = {
+						has_completed_focus = CENdem_the_workers_plight
+						has_completed_focus = CENdem_pass_business_friendly_laws
+					}
+				}
+				add_ideas = CENdem_industrialisation_desperation_1
+			}
+			if = {
+				limit = { has_idea = CENdem_a_business_friendly_country }
+				remove_ideas = CENdem_a_business_friendly_country
+				add_ideas = CENdem_industrialisation_desperation_1
+			}
+			if = {
+				limit = { has_idea = CENdem_the_workers_plight_idea }
+				swap_ideas = {
+					remove_idea = CENdem_the_workers_plight_idea
+					add_idea = CENdem_industrialisation_desperation_1
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_the_workers_plight_idea_2 }
+				swap_ideas = {
+					remove_idea = CENdem_the_workers_plight_idea_2
+					add_idea = CENdem_industrialisation_desperation_1
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_the_workers_plight_idea_3 }
+				swap_ideas = {
+					remove_idea = CENdem_the_workers_plight_idea_3
+					add_idea = CENdem_industrialisation_desperation_1
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_the_workers_plight_idea_4 }
+				swap_ideas = {
+					remove_idea = CENdem_the_workers_plight_idea_4
+					add_idea = CENdem_industrialisation_desperation_1
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_the_workers_plight_idea_5 }
+				swap_ideas = {
+					remove_idea = CENdem_the_workers_plight_idea_5
+					add_idea = CENdem_industrialisation_desperation_1
+				}
+			}
+			add_popularity = { ideology = social_liberal popularity = 0.05 }
+		}
+	}
+
+	focus = {
+		id = CENdem_bring_in_corporations
+		icon = GFX_focus_generic_industry_3
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -6
+		y = 3
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_the_4_year_plan }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_bring_in_corporations"
+			swap_ideas = {
+				remove_idea = CENdem_industrialisation_desperation_1
+				add_idea = CENdem_industrialisation_desperation_2
+			}
+			add_one_random_civilian_factory = yes
+			add_popularity = { ideology = social_liberal popularity = 0.03 }
+			hidden_effect = { country_event = { id = central_america_democratic_events.110 days = 60 } }
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_attract_foreign_engineers
+		icon = GFX_goal_brain
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -4
+		y = 3
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_the_4_year_plan }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_attract_foreign_engineers"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_generous_tax_cuts_for_industry
+		icon = GFX_goal_ideology_market_liberal
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -7
+		y = 4
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_attract_foreign_engineers }
+		prerequisite = { focus = CENdem_bring_in_corporations }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_generous_tax_cuts_for_industry"
+			swap_ideas = {
+				remove_idea = CENdem_industrialisation_desperation_2
+				add_idea = CENdem_industrialisation_desperation_3
+			}
+			add_popularity = { ideology = social_liberal popularity = -0.02 }
+			hidden_effect = {
+				country_event = { id = central_america_democratic_events.111 days = 20 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_harshly_tax_cash_crops
+		icon = GFX_focus_rom_parties_end
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -3
+		y = 4
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_attract_foreign_engineers }
+		prerequisite = { focus = CENdem_bring_in_corporations }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_harshly_tax_cash_crops"
+			add_ideas = CENcem_bleeding_the_cash_crops_dry
+			hidden_effect = {
+				country_event = { id = central_america_democratic_events.111 days = 20 }
+				country_event = { id = central_america_democratic_events.109 days = 45 }
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_the_central_american_bank
+		icon = GFX_focus_generic_self_management
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -5
+		y = 4
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_attract_foreign_engineers }
+		prerequisite = { focus = CENdem_bring_in_corporations }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_central_american_bank"
+			country_event = central_america_democratic_events.108
+			custom_effect_tooltip = tooltip_white_line
+			custom_effect_tooltip = which_has_the_following_effect
+			effect_tooltip = { add_political_power = 200 }
+			hidden_effect = {
+				country_event = { id = central_america_democratic_events.111 days = 20 }
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_cheap_loans_for_local_industry
+		icon = GFX_goal_generic_price_controls
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -6
+		y = 5
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_generous_tax_cuts_for_industry }
+		prerequisite = { focus = CENdem_the_central_american_bank }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_cheap_loans_for_local_industry"
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_treaty_of_friendship_with_costa_rica
+		icon = GFX_goal_generic_major_alliance
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -7
+		y = 6
+
+		available = {
+			has_government = social_liberal
+			country_exists = COS
+			NOT = { has_war_with = COS }
+		}
+		bypass = {
+			OR = {
+				NOT = { country_exists = COS }
+				has_war_with = COS
+			}
+		}
+		prerequisite = { focus = CENdem_cheap_loans_for_local_industry }
+		prerequisite = { focus = CENdem_our_ties_to_the_archipelago }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_treaty_of_friendship_with_costa_rica"
+			COS = {
+				effect_tooltip = { country_event = central_america_democratic_events.201 }
+				hidden_effect = { country_event = central_america_democratic_events.200 }
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_eliminate_the_hostiles_to_the_south
+		icon = GFX_goal_backstab
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -7
+		y = 7
+
+		available = {
+			has_government = social_liberal
+			can_declare_war_on = COS
+			custom_override_tooltip = {
+				tooltip = CEN_inter_faction_war_warning
+				if = {
+					limit = {
+						OR = {
+							is_in_faction_with = GER
+							is_in_faction_with = ENT
+						}
+						FROM = {
+							OR = {
+								is_in_faction_with = GER
+								is_guaranteed_by = GER
+								is_in_faction_with = ENT
+								is_guaranteed_by = ENT
+							}
+						}
+					}
+					NOT = { GER = { has_war_with = ENT } }
+				}
+			}
+		}
+		bypass = {
+			NOT = { can_declare_war_on = COS }
+		}
+		prerequisite = { focus = CENdem_treaty_of_friendship_with_costa_rica }
+
+		will_lead_to_war_with = COS
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				country_has_any_active_threat = yes
+			}
+			modifier = {
+				factor = 0
+				COS = { default_attack_AI_trigger = yes }
+			}
+			modifier = {
+				factor = 0
+				COS = { dont_start_major_faction_wars = yes }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_eliminate_the_hostiles_to_the_south"
+			create_wargoal = {
+				type = annex_everything
+				target = COS
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+	}
+
+	focus = {
+		id = CENdem_realise_the_failures_of_our_policies
+		icon = GFX_goal_famine
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -4
+		y = 5
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_the_central_american_bank }
+
+		prerequisite = { focus = CENdem_harshly_tax_cash_crops }
+
+		prerequisite = { focus = CENdem_generous_tax_cuts_for_industry }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_realise_the_failures_of_our_policies"
+			add_stability = 0.2
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_moderation_is_key
+		icon = GFX_goal_agriculture
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -5
+		y = 6
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_realise_the_failures_of_our_policies }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_moderation_is_key"
+			swap_ideas = {
+				remove_idea = CENdem_industrialisation_desperation_3
+				add_idea = CENdem_industrialisation_desperation_fixed
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_rescind_the_harsh_cash_crop_policies
+		icon = GFX_focus_generic_concessions
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -5
+		y = 7
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_moderation_is_key }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_rescind_the_harsh_cash_crop_policies"
+			remove_ideas = CENcem_bleeding_the_cash_crops_dry
+		}
+	}
+
+	focus = {
+		id = CENdem_expand_workers_rights
+		icon = GFX_goal_generic_enforce_labor_regulation
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -3
+		y = 6
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_realise_the_failures_of_our_policies }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_expand_workers_rights"
+			add_stability = 0.05
+			add_popularity = { ideology = social_liberal popularity = 0.05 }
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_increase_taxes_on_industry
+		icon = GFX_goal_HOL_progressive_tax
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -3
+		y = 7
+
+		available = {
+			has_government = social_liberal
+		}
+		prerequisite = { focus = CENdem_expand_workers_rights }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_increase_taxes_on_industry"
+			add_political_power = 200
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_the_democratic_unification_party_wins
+		icon = GFX_goal_ideology_market_liberal
+		cost = 1
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 0
+		y = 1
+
+		available = {
+			always = no
+		}
+		prerequisite = { focus = CENdem_start_the_constitutional_convention }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_democratic_unification_party_wins"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENdem_diversify_trade_partners
+		icon = GFX_goal_generic_positive_trade_relations
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -2
+		y = 2
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_the_democratic_unification_party_wins }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_diversify_trade_partners"
+			add_ideas = CENcem_trading_priorities
+			custom_effect_tooltip = tooltip_white_line
+			add_offsite_building = { type = industrial_complex level = 1 }
+		}
+	}
+
+	focus = {
+		id = CENdem_completely_defang_the_military
+		icon = GFX_goal_checkmate
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 0
+		y = 2
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_the_democratic_unification_party_wins }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_completely_defang_the_military"
+			hidden_effect = { country_event = { id = central_america_democratic_events.113 days = 30 } }
+			add_ideas = CENdem_defanged_army
+		}
+	}
+
+	focus = {
+		id = CENdem_unity_in_diversity
+		icon = GFX_goal_support_democracy
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 2
+		y = 2
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_the_democratic_unification_party_wins }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_unity_in_diversity"
+			add_stability = 0.1
+			add_popularity = { ideology = market_liberal popularity = 0.02 }
+			hidden_effect = { country_event = { id = central_america_democratic_events.112 days = 45 } }
+			if = {
+				limit = { has_idea = CENdem_an_unstable_union }
+				swap_ideas = {
+					remove_idea = CENdem_an_unstable_union
+					add_idea = CENdem_an_unstable_union2
+				}
+			}
+			custom_effect_tooltip = CENdem_centralisation_idea
+			hidden_effect = {
+				remove_ideas = CENcem_usurped_autonomy
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_promoting_civilian_industry
+		icon = GFX_goal_generic_construct_civ_factory
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -1
+		y = 3
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_diversify_trade_partners }
+		prerequisite = { focus = CENdem_completely_defang_the_military }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_promoting_civilian_industry"
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_railway_projects_for_all_republics
+		icon = GFX_goal_generic_railway_construction
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -1
+		y = 4
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_promoting_civilian_industry }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_railway_projects_for_all_republics"
+			unlock_decision_category_tooltip = CENdem_railway_decisions
+			custom_effect_tooltip = tooltip_white_line
+			add_ideas = CENdem_infrastructure_grants
+		}
+	}
+
+	focus = {
+		id = CENdem_consolidate_the_federations_principles
+		icon = GFX_goal_new_treaty
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 1
+		y = 3
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_diversify_trade_partners }
+		prerequisite = { focus = CENdem_unity_in_diversity }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_consolidate_the_federations_principles"
+			add_ideas = CENdem_federation_principles
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = {
+					OR = {
+						has_idea = CENdem_an_unstable_union
+						has_idea = CENdem_an_unstable_union2
+					}
+				}
+				swap_ideas = {
+					remove_idea = CENdem_an_unstable_union2
+					add_idea = CENdem_an_unstable_union3
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_peace_in_our_time
+		icon = GFX_focus_SWE_refuge_from_war
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 1
+		y = 4
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_consolidate_the_federations_principles }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_peace_in_our_time"
+			add_war_support = -0.2
+			add_stability = 0.15
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_pass_business_friendly_laws
+		icon = GFX_goal_generic_production2
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = -2
+		y = 5
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_railway_projects_for_all_republics }
+		prerequisite = { focus = CENdem_peace_in_our_time }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_pass_business_friendly_laws"
+			add_ideas = CENdem_a_business_friendly_country
+			hidden_effect = {
+				remove_ideas = {
+					CENdem_the_workers_plight_idea
+					CENdem_the_workers_plight_idea_2
+					CENdem_the_workers_plight_idea_3
+					CENdem_the_workers_plight_idea_4
+					CENdem_the_workers_plight_idea_5
+					CENdem_industrialisation_desperation_1
+					CENdem_industrialisation_desperation_2
+					CENdem_industrialisation_desperation_3
+					CENdem_industrialisation_desperation_fixed
+				}
+			}
+			custom_effect_tooltip = CENdem_taxation_idea
+		}
+	}
+
+	focus = {
+		id = CENdem_friendship_in_central_america
+		icon = GFX_goal_generic_national_unity
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 0
+		y = 5
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_railway_projects_for_all_republics }
+		prerequisite = { focus = CENdem_peace_in_our_time }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_friendship_in_central_america"
+			add_political_power = 25
+			if = {
+				limit = { is_in_faction = no }
+				activate_targeted_decision = { target = THIS decision = CENdem_form_faction }
+			}
+			every_other_country = {
+				limit = {
+					OR = {
+						original_tag = COS
+						original_tag = MEX
+						original_tag = PAN
+						original_tag = YUC
+					}
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+				effect_tooltip = { country_event = { id = central_america_democratic_events.201 days = 3 } }
+				hidden_effect = { country_event = { id = central_america_democratic_events.200 days = 3 } }
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_entrench_our_freedoms
+		icon = GFX_goal_liberty
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 2
+		y = 5
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_railway_projects_for_all_republics }
+		prerequisite = { focus = CENdem_peace_in_our_time }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_entrench_our_freedoms"
+			swap_ideas = {
+				add_idea = CENdem_federation_principles_2
+				remove_idea = CENdem_federation_principles
+			}
+			if = {
+				limit = {
+					OR = {
+						has_idea = CENdem_an_unstable_union
+						has_idea = CENdem_an_unstable_union2
+						has_idea = CENdem_an_unstable_union3
+					}
+				}
+				remove_ideas = CENdem_an_unstable_union3
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_a_promising_future
+		icon = GFX_goal_economic_control
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 0
+		y = 6
+
+		available = {
+			has_government = market_liberal
+		}
+		prerequisite = { focus = CENdem_friendship_in_central_america }
+		prerequisite = { focus = CENdem_entrench_our_freedoms }
+		prerequisite = { focus = CENdem_pass_business_friendly_laws }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_a_promising_future"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_try_to_attain_neutrality
+		icon = GFX_goal_HOL_sustain_neutrality
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 0
+		y = 7
+
+		available = {
+			has_government = market_liberal
+			is_subject = no
+			is_in_faction = no
+		}
+		bypass = {
+			is_in_faction = yes
+		}
+		prerequisite = { focus = CENdem_a_promising_future }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_try_to_attain_neutrality"
+			if = {
+				limit = {
+					ENT = { tag = CAN }
+				}
+				ENT = { country_event = central_america_democratic_events.235 }
+			}
+			if = {
+				limit = {
+					country_exists = USA
+					NOT = {
+						USA = {
+							has_war_with = ACC
+							has_war_with = APG
+							has_war_with = WCA
+						}
+					}
+				}
+				USA = { country_event = central_america_democratic_events.235 }
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_the_labour_party_wins
+		icon = GFX_goal_ideology_social_democrat
+		cost = 0
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 7
+		y = 1
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		prerequisite = { focus = CENdem_start_the_constitutional_convention }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_labour_party_wins"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENdem_fund_universities_across_central_america
+		icon = GFX_goal_KTG_Bookstack
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 5
+		y = 2
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_the_labour_party_wins }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_fund_universities_across_central_america"
+			add_research_slot_until_five = yes
+			hidden_effect = {
+				country_event = { id = central_america_democratic_events.100 days = 45 }
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_encourage_the_self_employed
+		icon = GFX_goal_generic_deals
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 4
+		y = 3
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_fund_universities_across_central_america }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_encourage_the_self_employed"
+			add_ideas = CENdem_self_employment
+			add_popularity = { ideology = social_democrat popularity = 0.02 }
+		}
+	}
+
+	focus = {
+		id = CENdem_progressive_taxation
+		icon = GFX_goal_HOL_progressive_tax
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 6
+		y = 3
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_fund_universities_across_central_america }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_progressive_taxation"
+			add_ideas = CENdem_progressive_taxation_idea
+		}
+	}
+
+	focus = {
+		id = CENdem_strong_anti_trust_laws
+		icon = GFX_goal_new_treaty
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 3
+		y = 4
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_encourage_the_self_employed }
+		prerequisite = { focus = CENdem_progressive_taxation }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_strong_anti_trust_laws"
+			swap_ideas = {
+				remove_idea = CENdem_self_employment
+				add_idea = CENdem_anti_trust_laws
+			}
+			add_stability = 0.2
+			add_popularity = { ideology = social_democrat popularity = 0.03 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_expand_the_rights_of_the_republics
+		icon = GFX_goal_Centralised_Government
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 5
+		y = 4
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_encourage_the_self_employed }
+		prerequisite = { focus = CENdem_progressive_taxation }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_expand_the_rights_of_the_republics"
+			every_owned_state = {
+				limit = { is_core_of = ROOT }
+				add_extra_state_shared_building_slots = 1
+			}
+			custom_effect_tooltip = CENdem_centralisation_idea
+			hidden_effect = {
+				remove_ideas = {
+					CENcem_usurped_autonomy
+					CENdem_federation_principles
+					CENdem_federation_principles_2
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_reform_army_command_structure
+		icon = GFX_goal_generic_neutrality_focus
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 7
+		y = 4
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_encourage_the_self_employed }
+		prerequisite = { focus = CENdem_progressive_taxation }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_reform_army_command_structure"
+			add_ideas = CENdem_weakend_general_influence
+			add_popularity = { ideology = social_democrat popularity = 0.02 }
+		}
+	}
+
+	focus = {
+		id = CENdem_a_decentralised_economy
+		icon = GFX_goal_factory_complex
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 4
+		y = 5
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_expand_the_rights_of_the_republics }
+		prerequisite = { focus = CENdem_strong_anti_trust_laws }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_a_decentralised_economy"
+			add_ideas = CENdem_decentralised_economy
+			add_one_random_civilian_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_militray_staff_rotation
+		icon = GFX_goal_generic_cavalry
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 6
+		y = 5
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_expand_the_rights_of_the_republics }
+		prerequisite = { focus = CENdem_reform_army_command_structure }
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_ENT }
+				ENT = {
+					exists = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_CEN }
+				CEN = {
+					is_faction_leader = no
+					NOT = { is_in_faction_with = COS }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_militray_staff_rotation"
+			swap_ideas = {
+				add_idea = CENdem_weakend_general_influence_2
+				remove_idea = CENdem_weakend_general_influence
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_an_expanding_middle_class
+		icon = GFX_goal_collaborate_local_elites
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 5
+		y = 6
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_a_decentralised_economy }
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_ENT }
+				ENT = {
+					exists = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_CEN }
+				CEN = {
+					is_faction_leader = no
+					NOT = { is_in_faction_with = COS }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_an_expanding_middle_class"
+			add_popularity = { ideology = social_democrat popularity = 0.1 }
+		}
+	}
+
+	focus = {
+		id = CENdem_sickening_inequality_no_more
+		icon = GFX_focus_generic_the_giant_wakes
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 5
+		y = 7
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_an_expanding_middle_class }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_sickening_inequality_no_more"
+			add_political_power = 200
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_pounce_at_the_right_opportunity
+		icon = GFX_goal_generic_more_territorial_claims
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 3
+		y = 6
+
+		available = {
+			is_subject = no
+			is_in_faction = no
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_a_decentralised_economy }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_pounce_at_the_right_opportunity"
+			activate_targeted_decision = { target = THIS decision = CENdem_form_faction }
+			if = {
+				limit = { 316 = { is_claim_or_core_of_ROOT = no } }
+				add_state_claim = 316 #Costa Rica
+			}
+			if = {
+				limit = { 304 = { is_claim_or_core_of_ROOT = no } }
+				add_state_claim = 304 #Panama
+			}
+			if = {
+				limit = { 685 = { is_claim_or_core_of_ROOT = no } }
+				add_state_claim = 685 #Panama Canal
+			}
+			custom_effect_tooltip = CEN_foreign_expansion_tooltip
+		}
+	}
+
+	focus = {
+		id = CENdem_approach_the_entente
+		icon = GFX_goal_generic_major_alliance
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 3
+		y = 7
+
+		available = {
+			has_government = social_democrat
+			is_subject = no
+			is_in_faction = no
+			NOT = { has_country_flag = CEN_ongoing_diplomatic_efforts }
+			ENT = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+			NOT = { has_country_flag = CEN_demanded_belize_from_entente }
+			at_peace_or_same_enemies_as_ENT = yes
+		}
+		prerequisite = { focus = CENdem_pounce_at_the_right_opportunity }
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				add = 100
+				has_war = yes
+				ENT = { surrender_progress < 0.4 }
+				NOT = { has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_CEN } }
+			}
+			modifier = {
+				add = 100
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_ENT }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_approach_the_entente"
+			if = {
+				limit = {
+					311 = { is_claimed_by = ROOT } # Belize
+					ENT = {
+						original_tag = IMP
+						var:311.owner = { is_ally_of_PREV = yes }
+					}
+					NOT = { has_country_flag = CEN_negotiated_belize_claims } # Accounts for multiple CEN formations in a game
+				}
+				var:311.owner = { country_event = { id = central_america_democratic_events.204 days = 2 } }
+				custom_effect_tooltip = if_they_accept_tt
+				event_option_tooltip = central_america_democratic_events.205.a
+				set_country_flag = { flag = CEN_ongoing_diplomatic_efforts days = 15 value = 1 }
+			}
+			else_if = {
+				limit = { ENT = { is_faction_leader = yes } }
+				activate_targeted_decision = { target = ENT decision = CEN_join_faction }
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_the_army_will_threaten_democracy_no_more
+		icon = GFX_goal_DOM_End_Judicial_Corruption
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 7
+		y = 6
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_militray_staff_rotation }
+		prerequisite = { focus = CENdem_ensure_separation_of_state_organs }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_army_will_threaten_democracy_no_more"
+			swap_ideas = {
+				add_idea = CENdem_weakend_general_influence_3
+				remove_idea = CENdem_weakend_general_influence_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_local_law_jurisdiction_reigns_supreme
+		icon = GFX_goal_DOM_The_Trial
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 7
+		y = 7
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_the_army_will_threaten_democracy_no_more }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_local_law_jurisdiction_reigns_supreme"
+			add_stability = 0.1
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_the_workers_plight
+		icon = GFX_goal_refugee_management
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 9
+		y = 2
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = {
+			focus = CENdem_the_labour_party_wins
+			focus = CENdem_the_national_revolutionaries_win
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_completed_focus = CENdem_the_labour_party_wins
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_ENT }
+				ENT = {
+					exists = yes
+					NOT = { is_in_faction_with = ROOT }
+				}
+			}
+			modifier = {
+				factor = 0
+				is_subject = no
+				has_game_rule = { rule = CEN_dem_forpol option = CEN_DEM_FORPOL_CEN }
+				CEN = {
+					is_faction_leader = no
+					NOT = { is_in_faction_with = COS }
+				}
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_workers_plight"
+			if = {
+				limit = {
+					has_idea = CENdem_an_unstable_union
+				}
+				swap_ideas = {
+					remove_idea = CENdem_an_unstable_union
+					add_idea = CENdem_an_unstable_union2
+				}
+			}
+			add_ideas = CENdem_the_workers_plight_idea
+			hidden_effect = {
+				remove_ideas = {
+					CENdem_industrialisation_desperation_1
+					CENdem_industrialisation_desperation_2
+					CENdem_industrialisation_desperation_3
+					CENdem_industrialisation_desperation_fixed
+					CENdem_a_business_friendly_country
+				}
+			}
+			custom_effect_tooltip = CENdem_taxation_idea
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_clamp_down_on_tax_evasion
+		icon = GFX_focus_rom_parties_end
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 8
+		y = 3
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_the_workers_plight }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_clamp_down_on_tax_evasion"
+			if = {
+				limit = {
+					OR = {
+						has_idea = CENdem_an_unstable_union
+						has_idea = CENdem_an_unstable_union2
+					}
+				}
+				swap_ideas = {
+					remove_idea = CENdem_an_unstable_union2
+					add_idea = CENdem_an_unstable_union3
+				}
+			}
+			swap_ideas = {
+				remove_idea = CENdem_the_workers_plight_idea
+				add_idea = CENdem_the_workers_plight_idea_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_have_corruption_stand_trial
+		icon = GFX_goal_national_mobilization
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 10
+		y = 3
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_the_workers_plight }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_have_corruption_stand_trial"
+			country_event = { id = central_america_democratic_events.114 days = 14 }
+		}
+	}
+
+	focus = {
+		id = CENdem_a_guaranteed_minimum_wage
+		icon = GFX_focus_generic_concessions
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 9
+		y = 4
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = {
+			focus = CENdem_clamp_down_on_tax_evasion
+		}
+		prerequisite = {
+			focus = CENdem_have_corruption_stand_trial
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_a_guaranteed_minimum_wage"
+			if = {
+				limit = {
+					OR = {
+						has_idea = CENdem_an_unstable_union
+						has_idea = CENdem_an_unstable_union2
+						has_idea = CENdem_an_unstable_union3
+					}
+				}
+				remove_ideas = CENdem_an_unstable_union3
+			}
+			swap_ideas = {
+				remove_idea = CENdem_the_workers_plight_idea_2
+				add_idea = CENdem_the_workers_plight_idea_3
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_ensure_separation_of_state_organs
+		icon = GFX_focus_generic_treaty
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 8
+		y = 5
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = {
+			focus = CENdem_a_guaranteed_minimum_wage
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_ensure_separation_of_state_organs"
+			add_stability = 0.05
+			add_popularity = { ideology = social_democrat popularity = 0.04 }
+			add_popularity = { ideology = radical_socialist popularity = 0.06 }
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_ensure_a_liveable_pension
+		icon = GFX_focus_generic_self_management
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 10
+		y = 5
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = {
+			focus = CENdem_a_guaranteed_minimum_wage
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_ensure_a_liveable_pension"
+			swap_ideas = {
+				remove_idea = CENdem_the_workers_plight_idea_3
+				add_idea = CENdem_the_workers_plight_idea_4
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_a_fledgling_welfare_state
+		icon = GFX_goal_socialist_infrastructure
+		cost = 5
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 9
+		y = 6
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = {
+			focus = CENdem_ensure_separation_of_state_organs
+		}
+		prerequisite = {
+			focus = CENdem_ensure_a_liveable_pension
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_a_fledgling_welfare_state"
+			swap_ideas = {
+				remove_idea = CENdem_the_workers_plight_idea_4
+				add_idea = CENdem_the_workers_plight_idea_5
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_pass_laws_allowing_nationalisation
+		icon = GFX_goal_generic_forceful_treaty
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 12
+		y = 5
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_schooling_for_every_central_american }
+		prerequisite = { focus = CENdem_for_the_defense_of_the_caribbean }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_pass_laws_allowing_nationalisation"
+			add_stability = -0.1
+			add_ideas = CENdem_key_industries_nationalised
+			hidden_effect = { country_event = { id = central_america_democratic_events.115 days = 14 } }
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_nationalise_the_telephonic_industry
+		icon = GFX_goal_generic_phone_crisis
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 11
+		y = 6
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_ensure_a_liveable_pension }
+		prerequisite = { focus = CENdem_pass_laws_allowing_nationalisation }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_nationalise_the_telephonic_industry"
+			swap_ideas = {
+				remove_idea = CENdem_key_industries_nationalised
+				add_idea = CENdem_key_industries_nationalised_2
+			}
+			add_popularity = { ideology = radical_socialist popularity = 0.05 }
+			add_stability = 0.2
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_nationalise_the_railroads
+		icon = GFX_goal_generic_soviet_construction
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 11
+		y = 7
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_nationalise_the_telephonic_industry }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_nationalise_the_railroads"
+			swap_ideas = {
+				remove_idea = CENdem_key_industries_nationalised_2
+				add_idea = CENdem_key_industries_nationalised_3
+			}
+			add_popularity = { ideology = radical_socialist popularity = 0.05 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_the_national_revolutionaries_win
+		icon = GFX_goal_red_star_green_wreath
+		cost = 0
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 11
+		y = 1
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+		prerequisite = { focus = CENdem_start_the_constitutional_convention }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_national_revolutionaries_win"
+			custom_effect_tooltip = unlock_focuses
+		}
+	}
+
+	focus = {
+		id = CENdem_the_people_have_spoken
+		icon = GFX_goal_support_democracy
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 13
+		y = 2
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_the_national_revolutionaries_win }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_people_have_spoken"
+			add_political_power = 100
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_reject_the_ideal_of_centroamerica
+		icon = GFX_goal_centroamerica
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 14
+		y = 3
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_the_people_have_spoken }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_reject_the_ideal_of_centroamerica"
+			add_stability = 0.1
+			add_ideas = CENdem_democratic_socialism
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_promote_equality_between_races
+		icon = GFX_goal_POR_burden_empire
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 12
+		y = 3
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_the_people_have_spoken }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_promote_equality_between_races"
+			add_political_power = -50
+			add_ideas = CENdem_racial_equality
+			hidden_effect = { country_event = { id = central_america_democratic_events.112 days = 45 } }
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_schooling_for_every_central_american
+		icon = GFX_focus_generic_socialist_science
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 11
+		y = 4
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_promote_equality_between_races }
+		prerequisite = { focus = CENdem_reject_the_ideal_of_centroamerica }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_schooling_for_every_central_american"
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_for_the_defense_of_the_caribbean
+		icon = GFX_goal_army_guy_2
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 13
+		y = 4
+
+		available = {
+			has_government = social_democrat
+		}
+		bypass = {
+			is_in_faction = yes
+		}
+		prerequisite = { focus = CENdem_promote_equality_between_races }
+		prerequisite = { focus = CENdem_reject_the_ideal_of_centroamerica }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_for_the_defense_of_the_caribbean"
+			activate_targeted_decision = { target = THIS decision = CENdem_form_faction }
+		}
+	}
+
+	focus = {
+		id = CENdem_land_reform
+		icon = GFX_goal_agrarian_reform
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 15
+		y = 4
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_promote_equality_between_races }
+		prerequisite = { focus = CENdem_reject_the_ideal_of_centroamerica }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_land_reform"
+			add_ideas = CENdem_land_reform_0
+			add_popularity = { ideology = radical_socialist popularity = 0.04 }
+			add_popularity = { ideology = social_democrat popularity = 0.04 }
+			custom_effect_tooltip = tooltip_white_line
+			country_event = central_america_democratic_events.117
+			custom_effect_tooltip = tooltip_event_allows_choice
+			custom_effect_tooltip = tooltip_event_choice_option_1
+			event_option_tooltip = central_america_democratic_events.117.a
+			custom_effect_tooltip = tooltip_event_choice_option_2
+			event_option_tooltip = central_america_democratic_events.117.b
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_trading_partners_in_the_gulf
+		icon = GFX_goal_generic_national_unity
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 14
+		y = 5
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_for_the_defense_of_the_caribbean }
+		prerequisite = { focus = CENdem_land_reform }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_trading_partners_in_the_gulf"
+			add_political_power = 25
+			every_other_country = {
+				limit = {
+					is_in_caribbean = yes
+					is_subject = no
+					NOT = { has_war_with = ROOT }
+				}
+				effect_tooltip = { country_event = { id = central_america_democratic_events.201 days = 3 } }
+				hidden_effect = { country_event = { id = central_america_democratic_events.200 days = 3 } }
+			}
+		}
+	}
+
+	focus = {
+		id = CENdem_raise_the_tax_ceiling
+		icon = GFX_goal_generic_price_controls
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 15
+		y = 6
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = { focus = CENdem_trading_partners_in_the_gulf }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_raise_the_tax_ceiling"
+			add_political_power = 100
+			add_ideas = CENdem_fair_taxation_scheme
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_agricultural_subsidies
+		icon = GFX_focus_ARG_capitalize_the_beef_industry
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 15
+		y = 7
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = {
+			focus = CENdem_raise_the_tax_ceiling
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_agricultural_subsidies"
+			add_stability = 0.1
+			add_popularity = { ideology = radical_socialist popularity = 0.05 }
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_invest_in_state_companies
+		icon = GFX_goal_state_economy
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 13
+		y = 6
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = {
+			focus = CENdem_trading_partners_in_the_gulf
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_invest_in_state_companies"
+			add_political_power = -50
+			add_one_random_civilian_factory = yes
+			add_one_random_civilian_factory = yes
+
+			add_one_random_military_factory = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_negligible_unemployment
+		icon = GFX_goal_production
+		cost = 7
+
+		relative_position_id = CENdem_start_the_constitutional_convention
+		x = 13
+		y = 7
+
+		available = {
+			has_government = social_democrat
+		}
+		prerequisite = {
+			focus = CENdem_invest_in_state_companies
+		}
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_negligible_unemployment"
+			add_stability = 0.15
+			add_popularity = { ideology = radical_socialist popularity = 0.05 }
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_federalised_army
+		icon = GFX_goal_liberty
+		cost = 5
+
+		x = 30
+		y = 0
+
+		available = {
+			has_completed_focus = CENdem_start_the_constitutional_convention
+			has_country_flag = CENdem_federal_army
+		}
+		mutually_exclusive = {
+			focus = CENdem_keep_the_republican_armies_separated focus = CENdem_the_central_american_task_force
+		}
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_federalised_army"
+			swap_ideas = {
+				add_idea = CENdem_integrating_army
+				remove_idea = CENdem_Incompetent_Army
+			}
+			if = {
+				limit = { has_land_grand_doctrine = no }
+				set_grand_doctrine = grand_battleplan
+				set_sub_doctrine = large_unit_tactics
+			}
+			else = {
+				if = {
+					limit = { has_subdoctrine_in_track = infantry }
+					army_experience = 50
+				}
+				else = {
+					army_experience = 25
+					set_sub_doctrine = large_unit_tactics
+				}
+			}
+			add_daily_mastery = {
+				name = CENdem_federalised_army
+				amount = 0.5
+				days = 200
+				track = infantry
+			}
+			if = {
+				limit = { is_faction_leader = yes }
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = COS_DUTY_TT
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = CENdem_drew_from_all_corners
+		icon = GFX_goal_army_guy_2
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = -1
+		y = 1
+
+		prerequisite = { focus = CENdem_federalised_army }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_drew_from_all_corners"
+			if = {
+				limit = { has_idea = CENdem_integrating_army }
+				swap_ideas = {
+					remove_idea = CENdem_integrating_army
+					add_idea = CENdem_integrating_army_2_a
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = CENdem_integrating_army_2_b
+					add_idea = CENdem_integrating_army_3
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_universal_recruit_training
+		icon = GFX_focus_generic_military_academy
+		cost = 4
+
+		relative_position_id = CENdem_federalised_army
+		x = -1
+		y = 3
+
+		prerequisite = { focus = CENdem_drew_from_all_corners }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_universal_recruit_training"
+			add_ideas = CENdem_federal_recruitment
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = CENdem_forging_uniformity
+		icon = GFX_focus_chi_army_reform
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 1
+		y = 1
+
+		prerequisite = { focus = CENdem_federalised_army }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_forging_uniformity"
+			if = {
+				limit = { has_idea = CENdem_integrating_army }
+				swap_ideas = {
+					remove_idea = CENdem_integrating_army
+					add_idea = CENdem_integrating_army_2_b
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = CENdem_integrating_army_2_a
+					add_idea = CENdem_integrating_army_3
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = CENdem_joint_comman_leaders
+		icon = GFX_focus_generic_military_mission
+		cost = 4
+
+		relative_position_id = CENdem_federalised_army
+		x = 1
+		y = 3
+
+		prerequisite = { focus = CENdem_forging_uniformity }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_joint_comman_leaders"
+			army_experience = 50
+			add_mastery_bonus = {
+				name = CENdem_joint_comman_leaders
+				bonus = 0.15
+				days = 365
+				folder = land
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_complete_the_integration
+		icon = GFX_goal_generic_military_deal
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 0
+		y = 2
+
+		prerequisite = { focus = CENdem_drew_from_all_corners }
+		prerequisite = { focus = CENdem_forging_uniformity }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_complete_the_integration"
+			swap_ideas = {
+				remove_idea = CENdem_integrating_army_3
+				add_idea = CENdem_completed_integration
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_long_term_planning
+		icon = GFX_goal_generic_occupy_states_ongoing_war
+		cost = 7
+
+		relative_position_id = CENdem_federalised_army
+		x = 0
+		y = 4
+
+		prerequisite = { focus = CENdem_complete_the_integration }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_long_term_planning"
+			add_ideas = CENdem_improved_planning
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_extensive_war_games
+		icon = GFX_goal_generic_more_territorial_claims
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = -2
+		y = 5
+
+		prerequisite = { focus = CENdem_long_term_planning }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_extensive_war_games"
+			enable_tech_jungle_warfare = yes
+			custom_effect_tooltip = tooltip_white_line
+			enable_tech_ski_infantry = yes
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_instate_long_conscription_times
+		icon = GFX_goal_ideology_paternal_autocrat
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 0
+		y = 5
+
+		prerequisite = { focus = CENdem_long_term_planning }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_instate_long_conscription_times"
+			add_ideas = CENdem_prolonged_conscription
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_entrenchment_training
+		icon = GFX_goal_nested_fortifications
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 2
+		y = 5
+
+		prerequisite = { focus = CENdem_long_term_planning }
+		ai_will_do = { factor = 70 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_entrenchment_training"
+			swap_ideas = {
+				remove_idea = CENdem_improved_planning
+				add_idea = CENdem_improved_planning_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_the_central_american_task_force
+		icon = GFX_focus_generic_little_entente
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 5
+		y = 0
+
+		available = {
+			has_completed_focus = CENdem_start_the_constitutional_convention
+			has_country_flag = CENdem_middle_option_army
+		}
+		mutually_exclusive = {
+			focus = CENdem_keep_the_republican_armies_separated focus = CENdem_federalised_army
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_central_american_task_force"
+			swap_ideas = {
+				add_idea = CENdem_preparing_a_task_force
+				remove_idea = CENdem_Incompetent_Army
+			}
+			if = {
+				limit = { has_land_grand_doctrine = no }
+				set_grand_doctrine = grand_battleplan
+				set_sub_doctrine = large_unit_tactics
+			}
+			else = {
+				if = {
+					limit = { has_subdoctrine_in_track = infantry }
+					army_experience = 50
+				}
+				else = {
+					army_experience = 25
+					set_sub_doctrine = large_unit_tactics
+				}
+			}
+			add_daily_mastery = {
+				name = CENdem_the_central_american_task_force
+				amount = 0.5
+				days = 200
+				track = infantry
+			}
+			if = {
+				limit = { is_faction_leader = yes }
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = COS_DUTY_TT
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = CENdem_autonomy_don_the_command_chain
+		icon = GFX_focus_generic_support_the_left_right
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 5
+		y = 1
+
+		prerequisite = { focus = CENdem_the_central_american_task_force }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_autonomy_don_the_command_chain"
+			if = {
+				limit = { has_idea = CENdem_preparing_a_task_force }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_0_1_0
+					remove_idea = CENdem_preparing_a_task_force
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_preparing_a_task_force_1_0_0 }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_1_1_0
+					remove_idea = CENdem_preparing_a_task_force_1_0_0
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_preparing_a_task_force_0_0_1 }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_0_1_1
+					remove_idea = CENdem_preparing_a_task_force_0_0_1
+				}
+			}
+			else = {
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_1_1_1
+					remove_idea = CENdem_preparing_a_task_force_1_0_1
+				}
+			}
+			if = {
+				limit = { has_subdoctrine_in_track = operations }
+				army_experience = 20
+			}
+			else = {
+				set_sub_doctrine = mission_type_tactics
+			}
+			add_daily_mastery = {
+				name = CENdem_autonomy_don_the_command_chain
+				amount = 0.5
+				days = 200
+				track = operations
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_support_teams_integration
+		icon = GFX_goal_generic_production2
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 4
+		y = 2
+
+		prerequisite = { focus = CENdem_the_central_american_task_force }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_support_teams_integration"
+			if = {
+				limit = { has_idea = CENdem_preparing_a_task_force }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_1_0_0
+					remove_idea = CENdem_preparing_a_task_force
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_preparing_a_task_force_0_1_0 }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_1_1_0
+					remove_idea = CENdem_preparing_a_task_force_0_1_0
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_preparing_a_task_force_0_0_1 }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_1_0_1
+					remove_idea = CENdem_preparing_a_task_force_0_0_1
+				}
+			}
+			else = {
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_1_1_1
+					remove_idea = CENdem_preparing_a_task_force_0_1_1
+				}
+			}
+			add_tech_bonus = {
+				name = CENdem_support_teams_integration
+				bonus = 1
+				uses = 1
+				category = support_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_incorporate_shelling_into_doctrine
+		icon = GFX_goal_generic_army_artillery2
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 6
+		y = 2
+
+		prerequisite = { focus = CENdem_the_central_american_task_force }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_incorporate_shelling_into_doctrine"
+			if = {
+				limit = { has_idea = CENdem_preparing_a_task_force }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_0_0_1
+					remove_idea = CENdem_preparing_a_task_force
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_preparing_a_task_force_1_0_0 }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_1_0_1
+					remove_idea = CENdem_preparing_a_task_force_1_0_0
+				}
+			}
+			else_if = {
+				limit = { has_idea = CENdem_preparing_a_task_force_0_1_0 }
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_0_1_1
+					remove_idea = CENdem_preparing_a_task_force_0_1_0
+				}
+			}
+			else = {
+				swap_ideas = {
+					add_idea = CENdem_preparing_a_task_force_1_1_1
+					remove_idea = CENdem_preparing_a_task_force_1_1_0
+				}
+			}
+			add_tech_bonus = {
+				name = CENdem_incorporate_shelling_into_doctrine
+				bonus = 1
+				uses = 1
+				category = artillery
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_the_best_of_the_best
+		icon = GFX_goal_generic_CAS
+		cost = 7
+
+		relative_position_id = CENdem_federalised_army
+		x = 5
+		y = 3
+
+		prerequisite = { focus = CENdem_incorporate_shelling_into_doctrine }
+		prerequisite = { focus = CENdem_autonomy_don_the_command_chain }
+		prerequisite = { focus = CENdem_support_teams_integration }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_best_of_the_best"
+			swap_ideas = {
+				add_idea = CENdem_the_central_american_task_force_idea
+				remove_idea = CENdem_preparing_a_task_force_1_1_1
+			}
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_acquire_tank_designs
+		icon = GFX_goal_generic_army_tanks
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 4
+		y = 4
+
+		prerequisite = { focus = CENdem_the_best_of_the_best }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_acquire_tank_designs"
+			if = {
+				limit = { has_dlc_nsb = yes }
+				if = {
+					limit = { NOT = { has_tech = gwtank_chassis } }
+					set_technology = { gwtank_chassis = 1 }
+					custom_effect_tooltip = tooltip_white_line
+					add_tech_bonus = {
+						name = CENdem_acquire_tank_designs
+						bonus = 1
+						uses = 1
+						category = armor
+					}
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_acquire_tank_designs
+						bonus = 1
+						uses = 2
+						category = armor
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = gwtank } }
+					set_technology = { gwtank = 1 }
+					custom_effect_tooltip = tooltip_white_line
+					add_tech_bonus = {
+						name = CENdem_acquire_tank_designs
+						bonus = 1
+						uses = 1
+						category = armor
+					}
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_acquire_tank_designs
+						bonus = 1
+						uses = 2
+						category = armor
+					}
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_idea = CENdem_mobile_army_b }
+				swap_ideas = {
+					add_idea = CENdem_mobile_army_2
+					remove_idea = CENdem_mobile_army_b
+				}
+			}
+			else = {
+				add_ideas = CENdem_mobile_army_a
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_begin_motorisation
+		icon = GFX_goal_generic_army_motorized
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 6
+		y = 4
+
+		prerequisite = { focus = CENdem_the_best_of_the_best }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_begin_motorisation"
+			if = {
+				limit = { NOT = { has_tech = motorised_infantry } }
+				set_technology = { motorised_infantry = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENdem_begin_motorisation
+					bonus = 1
+					uses = 1
+					category = motorized_equipment
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			if = {
+				limit = { has_idea = CENdem_mobile_army_a }
+				swap_ideas = {
+					add_idea = CENdem_mobile_army_2
+					remove_idea = CENdem_mobile_army_a
+				}
+			}
+			else = {
+				add_ideas = CENdem_mobile_army_b
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_swiftness_is_key
+		icon = GFX_goal_doctrine_tank_warfare
+		cost = 6
+
+		relative_position_id = CENdem_federalised_army
+		x = 4
+		y = 5
+
+		prerequisite = {
+			focus = CENdem_acquire_tank_designs
+			focus = CENdem_begin_motorisation
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_swiftness_is_key"
+			add_ideas = CENdem_swiftness_training
+			custom_effect_tooltip = tooltip_white_line
+			add_daily_mastery = {
+				name = CENdem_swiftness_is_key
+				amount = 0.4
+				days = 200
+				track = armor
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_combined_arms_training
+		icon = GFX_goal_generic_more_territorial_claims
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 6
+		y = 5
+
+		prerequisite = { focus = CENdem_acquire_tank_designs }
+		prerequisite = { focus = CENdem_begin_motorisation }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_combined_arms_training"
+			swap_ideas = {
+				add_idea = CENdem_combine_arms
+				remove_idea = CENdem_mobile_army_2
+			}
+			add_mastery_bonus = {
+				name = CENdem_combined_arms_training
+				bonus = 0.1
+				days = 365
+				folder = air
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_keep_the_republican_armies_separated
+		icon = GFX_goal_conscription
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 10
+		y = 0
+
+		available = {
+			has_completed_focus = CENdem_start_the_constitutional_convention
+			has_country_flag = CENdem_confederate_army
+		}
+		mutually_exclusive = {
+			focus = CENdem_the_central_american_task_force focus = CENdem_federalised_army
+		}
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_keep_the_republican_armies_separated"
+			swap_ideas = {
+				add_idea = CENdem_republican_armies
+				remove_idea = CENdem_Incompetent_Army
+			}
+			if = {
+				limit = { has_land_grand_doctrine = no }
+				set_grand_doctrine = grand_battleplan
+				set_sub_doctrine = large_unit_tactics
+			}
+			else = {
+				if = {
+					limit = { has_subdoctrine_in_track = infantry }
+					army_experience = 50
+				}
+				else = {
+					army_experience = 25
+					set_sub_doctrine = large_unit_tactics
+				}
+			}
+			add_daily_mastery = {
+				name = CENdem_the_central_american_task_force
+				amount = 0.5
+				days = 200
+				track = infantry
+			}
+			if = {
+				limit = { is_faction_leader = yes }
+				custom_effect_tooltip = tooltip_white_line
+				custom_effect_tooltip = COS_DUTY_TT
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = CENdem_divided_but_equal
+		icon = GFX_goal_generic_small_arms
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 10
+		y = 1
+
+		prerequisite = { focus = CENdem_keep_the_republican_armies_separated }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_divided_but_equal"
+			swap_ideas = {
+				add_idea = CENdem_republican_armies_2
+				remove_idea = CENdem_republican_armies
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_watchers_of_the_army
+		icon = GFX_focus_generic_military_mission
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 8
+		y = 2
+
+		prerequisite = { focus = CENdem_divided_but_equal }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_watchers_of_the_army"
+			add_stability = 0.1
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {
+		id = CENdem_voluntery_but_encourage_conscription
+		icon = GFX_goal_army_guy_2
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 10
+		y = 2
+
+		prerequisite = { focus = CENdem_divided_but_equal }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_voluntery_but_encourage_conscription"
+			swap_ideas = {
+				add_idea = CENdem_republican_armies_3
+				remove_idea = CENdem_republican_armies_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_MANPOWER }
+	}
+
+	focus = {
+		id = CENdem_inter_republican_war_plan_simulations
+		icon = GFX_goal_generic_major_war
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 12
+		y = 2
+
+		prerequisite = { focus = CENdem_divided_but_equal }
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_inter_republican_war_plan_simulations"
+			if = {
+				limit = { has_subdoctrine_in_track = operations }
+				army_experience = 30
+			}
+			else = {
+				set_sub_doctrine = grand_assault
+			}
+			add_daily_mastery = {
+				name = CENdem_inter_republican_war_plan_simulations
+				amount = 0.5
+				days = 200
+				track = operations
+			}
+			add_research_slot_until_five = yes
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = CENdem_army_infrastucture_projects
+		icon = GFX_goal_generic_construct_infrastructure
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 9
+		y = 3
+
+		prerequisite = { focus = CENdem_watchers_of_the_army }
+		prerequisite = { focus = CENdem_voluntery_but_encourage_conscription }
+		prerequisite = { focus = CENdem_inter_republican_war_plan_simulations }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_army_infrastucture_projects"
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					is_valid_state_for_development = yes
+					free_building_slots = { building = infrastructure size > 0 }
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_ideas = CENdem_military_supplies
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_discourage_nepotism
+		icon = GFX_goal_generic_army_doctrines
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 11
+		y = 3
+
+		prerequisite = { focus = CENdem_watchers_of_the_army }
+		prerequisite = { focus = CENdem_voluntery_but_encourage_conscription }
+		prerequisite = { focus = CENdem_inter_republican_war_plan_simulations }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_discourage_nepotism"
+			add_stability = 0.05
+			add_ideas = CENdem_democratic_armies
+		}
+		search_filters = { FOCUS_FILTER_STABILITY FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_military_parades
+		icon = GFX_goal_generic_propaganda
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 9
+		y = 4
+
+		prerequisite = { focus = CENdem_army_infrastucture_projects }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_military_parades"
+			country_event = central_america_democratic_events.241
+			custom_effect_tooltip = which_has_the_following_effect
+			event_option_tooltip = central_america_democratic_events.241.a
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_ingrain_democracy_in_the_army
+		icon = GFX_focus_CZE_german_puppet
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 11
+		y = 4
+
+		prerequisite = { focus = CENdem_discourage_nepotism }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_ingrain_democracy_in_the_army"
+			add_political_power = 20
+			swap_ideas = {
+				add_idea = CENdem_democratic_armies_2
+				remove_idea = CENdem_democratic_armies
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = CENdem_a_most_loyal_army_to_the_confederation
+		icon = GFX_goal_generic_defence
+		cost = 5
+
+		relative_position_id = CENdem_federalised_army
+		x = 10
+		y = 5
+
+		prerequisite = { focus = CENdem_military_parades
+			focus = CENdem_ingrain_democracy_in_the_army }
+
+		ai_will_do = { factor = 100 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_a_most_loyal_army_to_the_confederation"
+			swap_ideas = {
+				add_idea = CENdem_republican_armies_4
+				remove_idea = CENdem_republican_armies_3
+			}
+			add_mastery_bonus = {
+				name = CENdem_a_most_loyal_army_to_the_confederation
+				bonus = 0.1
+				days = 365
+				folder = land
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS }
+	}
+
+	focus = {
+		id = CENdem_propose_naval_ventures
+		icon = GFX_goal_generic_sea_focused_navy
+		cost = 5
+
+		x = 31
+		y = 6
+
+		available = {
+			has_completed_focus = CENdem_start_the_constitutional_convention
+		}
+
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0
+				has_idea = CENdem_an_unstable_union
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_propose_naval_ventures"
+			add_ideas = CENdem_expanding_our_navy
+			custom_effect_tooltip = tooltip_white_line
+			add_doctrine_cost_reduction = {
+				name = CENdem_propose_naval_ventures
+				cost_reduction = 0.5
+				uses = 2
+				category = naval_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_the_merchant_fleet
+		icon = GFX_goal_generic_coastal_navy
+		cost = 5
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = -2
+		y = 1
+
+		prerequisite = { focus = CENdem_propose_naval_ventures }
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 1.5
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_the_merchant_fleet"
+			add_one_random_dockyard = yes
+			add_equipment_to_stockpile = {
+				type = convoy
+				amount = 50
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_next_generation_of_naval_officers
+		icon = GFX_goal_generic_navy_cruiser
+		cost = 5
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = 0
+		y = 1
+
+		prerequisite = { focus = CENdem_propose_naval_ventures }
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 1.5
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_next_generation_of_naval_officers"
+			navy_experience = 50
+			swap_ideas = {
+				remove_idea = CENdem_expanding_our_navy
+				add_idea = CENdem_expanding_our_navy_2
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_new_drydocks
+		icon = GFX_goal_generic_construct_naval_dockyard
+		cost = 5
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = 2
+		y = 1
+
+		prerequisite = { focus = CENdem_propose_naval_ventures }
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 1.5
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_new_drydocks"
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+			add_one_random_dockyard = yes
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_convoy_defence_fleet
+		icon = GFX_focus_generic_destroyer
+		cost = 5
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = -1
+		y = 2
+
+		prerequisite = { focus = CENdem_the_merchant_fleet }
+		prerequisite = { focus = CENdem_next_generation_of_naval_officers }
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 1.5
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_convoy_defence_fleet"
+			if = {
+				limit = { has_idea = CENdem_convoy_protection_tactics_b }
+				swap_ideas = {
+					remove_idea = CENdem_convoy_protection_tactics_b
+					add_idea = CENdem_convoy_protection_tactics_2
+				}
+			}
+			else = {
+				add_ideas = CENdem_convoy_protection_tactics_a
+				custom_effect_tooltip = tooltip_white_line
+			}
+			add_tech_bonus = {
+				name = CENdem_convoy_defence_fleet
+				bonus = 1
+				uses = 1
+				category = dd_tech
+			}
+			add_tech_bonus = {
+				name = CENdem_convoy_defence_fleet
+				bonus = 1
+				uses = 1
+				category = asw_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_sea_lane_patrols
+		icon = GFX_goal_generic_navy_anti_submarine
+		cost = 5
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = 1
+		y = 2
+
+		prerequisite = { focus = CENdem_next_generation_of_naval_officers }
+		prerequisite = { focus = CENdem_new_drydocks }
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 1.5
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_sea_lane_patrols"
+			if = {
+				limit = { has_idea = CENdem_convoy_protection_tactics_a }
+				swap_ideas = {
+					remove_idea = CENdem_convoy_protection_tactics_a
+					add_idea = CENdem_convoy_protection_tactics_2
+				}
+			}
+			else = {
+				add_ideas = CENdem_convoy_protection_tactics_b
+				custom_effect_tooltip = tooltip_white_line
+			}
+			add_tech_bonus = {
+				name = CENdem_sea_lane_patrols
+				bonus = 1
+				uses = 1
+				category = ca_tech
+			}
+			add_tech_bonus = {
+				name = CENdem_sea_lane_patrols
+				bonus = 1
+				uses = 1
+				category = naval_artillery
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_military_fleet_expansion
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		cost = 5
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = -1
+		y = 3
+
+		mutually_exclusive = {
+			focus = CENdem_civilian_fleet_focus
+		}
+		prerequisite = { focus = CENdem_sea_lane_patrols }
+		prerequisite = { focus = CENdem_convoy_defence_fleet }
+		available = {
+			has_tech = electronic_mechanical_engineering
+		}
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 2
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_military_fleet_expansion"
+			if = {
+				limit = { NOT = { has_tech = early_ship_hull_cruiser } }
+				set_technology = { early_ship_hull_cruiser = 1 }
+				set_technology = { basic_ship_hull_cruiser = 1 }
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_ship_hull_cruiser } }
+				set_technology = { basic_ship_hull_cruiser = 1 }
+				add_tech_bonus = {
+					name = CENdem_military_fleet_expansion
+					bonus = 1
+					uses = 1
+					category = ca_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENdem_military_fleet_expansion
+					bonus = 0.75
+					uses = 2
+					category = ca_tech
+				}
+			}
+			if = {
+				limit = { NOT = { has_tech = basic_battery } }
+				set_technology = { basic_battery = 1 }
+				add_tech_bonus = {
+					name = CENdem_military_fleet_expansion
+					bonus = 1
+					uses = 1
+					category = ship_modules_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENdem_military_fleet_expansion
+					bonus = 0.75
+					uses = 2
+					category = ship_modules_tech
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			create_equipment_variant = {
+				name = "Progreso Class"
+				type = ship_hull_cruiser_2
+				allow_without_tech = yes
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_medium_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_2
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					rear_1_custom_slot = ship_light_medium_battery_1
+					mid_1_custom_slot = ship_torpedo_1
+				}
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_cruiser_2
+					version_name = "Progreso Class"
+				}
+				progress = 0.7
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_cruiser_2
+					version_name = "Progreso Class"
+				}
+				progress = 0.7
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_civilian_fleet_focus
+		icon = GFX_goal_generic_occupy_states_coastal
+		cost = 7
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = 1
+		y = 3
+
+		mutually_exclusive = {
+			focus = CENdem_military_fleet_expansion
+		}
+		prerequisite = { focus = CENdem_sea_lane_patrols }
+		prerequisite = { focus = CENdem_convoy_defence_fleet }
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_civilian_fleet_focus"
+			swap_ideas = {
+				remove_idea = CENdem_expanding_our_navy_2
+				add_idea = CENdem_large_merchant_navy
+			}
+			add_equipment_to_stockpile = {
+				type = convoy
+				amount = 50
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_fleet_mainstay
+		icon = GFX_focus_generic_cruiser2
+		cost = 7
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = 0
+		y = 4
+
+		available = {
+			has_tech = electronic_mechanical_engineering
+		}
+
+		prerequisite = { focus = CENdem_civilian_fleet_focus focus = CENdem_military_fleet_expansion }
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 2
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_fleet_mainstay"
+			if = {
+				limit = { NOT = { has_tech = early_ship_hull_light } }
+				set_technology = { early_ship_hull_light = 1 }
+				set_technology = { basic_ship_hull_light = 1 }
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_ship_hull_light } }
+				set_technology = { basic_ship_hull_light = 1 }
+				add_tech_bonus = {
+					name = CENdem_fleet_mainstay
+					bonus = 1
+					uses = 1
+					category = dd_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENdem_fleet_mainstay
+					bonus = 0.75
+					uses = 2
+					category = dd_tech
+				}
+			}
+			if = {
+				limit = { NOT = { has_tech = basic_depth_charges } }
+				set_technology = { basic_depth_charges = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENdem_fleet_mainstay
+					bonus = 1
+					uses = 1
+					category = asw_tech
+				}
+			}
+			if = {
+				limit = { NOT = { has_tech = basic_torpedo } }
+				set_technology = { basic_torpedo = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENdem_fleet_mainstay
+					bonus = 1
+					uses = 1
+					category = cat_torpedoes
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			create_equipment_variant = {
+				name = "José Cecilio Díaz del Valle Class"
+				type = ship_hull_light_2
+				allow_without_tech = yes #irrelevant, but makes a cleaner tooltip
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = light_ship_engine_2
+					fixed_ship_torpedo_slot = ship_torpedo_1
+					rear_1_custom_slot = ship_light_battery_1
+					mid_1_custom_slot = ship_depth_charge_1
+				}
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_light_2
+					version_name = "José Cecilio Díaz del Valle Class"
+				}
+				progress = 0.5
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_light_2
+					version_name = "José Cecilio Díaz del Valle Class"
+				}
+				progress = 0.5
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_light_2
+					version_name = "José Cecilio Díaz del Valle Class"
+				}
+				progress = 0.5
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_light_2
+					version_name = "José Cecilio Díaz del Valle Class"
+				}
+				progress = 0.5
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_flagship_designs
+		icon = GFX_goal_generic_navy_battleship
+		cost = 7
+
+		relative_position_id = CENdem_propose_naval_ventures
+		x = 0
+		y = 5
+
+		available = {
+			has_tech = interwar_antiair
+			has_tech = mechanical_computing
+		}
+
+		prerequisite = { focus = CENdem_fleet_mainstay }
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 3
+				has_country_flag = COS_legion_faction
+				NOT = { has_idea = CENdem_Incompetent_Army }
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_flagship_designs"
+
+				### If for some reason AI picks this focus without taking CENdem_military_fleet_expansion
+			if = {
+				limit = { NOT = { has_tech = early_ship_hull_cruiser } }
+				set_technology = { early_ship_hull_cruiser = 1 }
+				set_technology = { basic_ship_hull_cruiser = 1 }
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_ship_hull_cruiser } }
+				set_technology = { basic_ship_hull_cruiser = 1 }
+			}
+			if = {
+				limit = { NOT = { has_tech = basic_fire_control_system } }
+				set_technology = { basic_fire_control_system = 1 }
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENdem_flagship_designs
+					bonus = 1
+					uses = 1
+					category = electronics
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_tech = basic_heavy_battery }
+					NOT = { has_tech = basic_cruiser_armor_scheme }
+				}
+				set_technology = { basic_heavy_battery = 1 }
+				set_technology = { basic_cruiser_armor_scheme = 1 }
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_heavy_battery } }
+				set_technology = { basic_heavy_battery = 1 }
+				add_tech_bonus = {
+					name = CENdem_flagship_designs
+					bonus = 1
+					uses = 1
+					category = ship_modules_tech
+				}
+			}
+			else_if = {
+				limit = { NOT = { has_tech = basic_cruiser_armor_scheme } }
+				set_technology = { basic_cruiser_armor_scheme = 1 }
+				add_tech_bonus = {
+					name = CENdem_flagship_designs
+					bonus = 1
+					uses = 1
+					category = ship_modules_tech
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = CENdem_flagship_designs
+					bonus = 0.75
+					uses = 2
+					category = ship_modules_tech
+				}
+			}
+			custom_effect_tooltip = tooltip_white_line
+			create_equipment_variant = {
+				name = "Gabino Gaínza y Fernández de Medrano Class"
+				type = ship_hull_cruiser_2
+				allow_without_tech = yes
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_medium_battery_2
+					fixed_ship_anti_air_slot = ship_anti_air_2
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_1
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_2
+					fixed_ship_secondaries_slot = ship_secondaries_2
+					fixed_ship_armor_slot = ship_armor_cruiser_2
+					rear_1_custom_slot = ship_medium_battery_2
+					mid_1_custom_slot = empty
+					mid_2_custom_slot = ship_torpedo_1
+					front_1_custom_slot = ship_medium_battery_2
+				}
+			}
+			add_equipment_production = {
+				equipment = {
+					type = ship_hull_cruiser_2
+					version_name = "Gabino Gaínza y Fernández de Medrano Class"
+				}
+				progress = 0.4
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_mastery_bonus = {
+				name = CENdem_flagship_designs
+				bonus = 0.15
+				days = 365
+				folder = naval
+			}
+		}
+		search_filters = { FOCUS_FILTER_NAVY_BONUS FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_airplane_trials
+		icon = GFX_goal_generic_air_fighter2_new
+		cost = 7
+
+		x = 37
+		y = 6
+
+		available = {
+			has_completed_focus = CENdem_start_the_constitutional_convention
+		}
+
+		ai_will_do = {
+			factor = 80
+			modifier = {
+				factor = 0
+				has_idea = CENdem_an_unstable_union
+			}
+		}
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_airplane_trials"
+			air_experience = 35
+			if = {
+				limit = { has_dlc_bba = yes }
+				if = {
+					limit = { NOT = { has_tech = iw_small_airframe } }
+					set_technology = { iw_small_airframe = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_airplane_trials
+						bonus = 1
+						uses = 1
+						category = air_equipment
+					}
+				}
+				if = {
+					limit = { NOT = { has_tech = aa_lmg } }
+					set_technology = { aa_lmg = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_airplane_trials
+						bonus = 1
+						uses = 1
+						category = plane_modules_tech
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				create_equipment_variant = {
+					name = "P-6"
+					type = small_plane_airframe_0
+					modules = {
+						fixed_main_weapon_slot = light_mg_2x
+						fixed_auxiliary_weapon_slot_1 = empty
+						engine_type_slot = engine_1_1x
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = early_fighter } }
+					set_technology = { early_fighter = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_airplane_trials
+						bonus = 1
+						uses = 1
+						category = light_fighter
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = CENdem_airfield_constructions
+		icon = GFX_goal_generic_air_production
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = -1
+		y = 1
+
+		prerequisite = { focus = CENdem_airplane_trials }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_airfield_constructions"
+			if = {
+				limit = { owns_state = 313 }
+				313 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = { owns_state = 314 }
+				314 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = { owns_state = 316 }
+				316 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = { owns_state = 317 }
+				317 = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+	focus = {
+		id = CENdem_flak_gun_advancements
+		icon = GFX_focus_generic_air_defense
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = 1
+		y = 1
+
+		prerequisite = { focus = CENdem_airplane_trials }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_flak_gun_advancements"
+			if = {
+				limit = {
+					NOT = { has_tech = interwar_antiair }
+				}
+				set_technology = { interwar_antiair = 1 }
+			}
+			if = {
+				limit = { owns_state = 313 }
+				313 = {
+					add_building_construction = {
+						type = anti_air_building
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = { owns_state = 314 }
+				314 = {
+					add_building_construction = {
+						type = anti_air_building
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = { owns_state = 316 }
+				316 = {
+					add_building_construction = {
+						type = anti_air_building
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = { owns_state = 317 }
+				317 = {
+					add_building_construction = {
+						type = anti_air_building
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_ace_pilot_initiative
+		icon = GFX_goal_generic_air_doctrine
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = 0
+		y = 2
+
+		prerequisite = { focus = CENdem_airfield_constructions }
+		prerequisite = { focus = CENdem_flak_gun_advancements }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_ace_pilot_initiative"
+			add_ideas = CENcem_prestigious_pilots
+			add_doctrine_cost_reduction = {
+				name = CENdem_ace_pilot_initiative
+				cost_reduction = 0.5
+				uses = 2
+				category = air_doctrine
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = CENdem_fighters_arms_race
+		icon = GFX_goal_generic_air_fighter_new
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = -2
+		y = 3
+
+		prerequisite = { focus = CENdem_ace_pilot_initiative }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_fighters_arms_race"
+			add_tech_bonus = {
+				name = CENdem_fighters_arms_race
+				ahead_reduction = 1
+				uses = 1
+				category = light_fighter
+				category = cat_heavy_fighter
+			}
+			add_tech_bonus = {
+				name = CENdem_fighters_arms_race
+				bonus = 1
+				uses = 1
+				category = light_fighter
+				category = cat_heavy_fighter
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_dogfight_training
+		icon = GFX_goal_expand_the_luftwaffe
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = 0
+		y = 3
+
+		prerequisite = { focus = CENdem_ace_pilot_initiative }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_dogfight_training"
+			swap_ideas = {
+				remove_idea = CENcem_prestigious_pilots
+				add_idea = CENcem_well_trained_pilots
+			}
+			add_mastery_bonus = {
+				name = CENdem_dogfight_training
+				bonus = 0.15
+				days = 365
+				folder = air
+			}
+		}
+		search_filters = { FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = CENdem_long_range_detection
+		icon = GFX_goal_generic_radar
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = 2
+		y = 3
+		available = {
+			has_tech = electronic_mechanical_engineering
+		}
+
+		prerequisite = { focus = CENdem_ace_pilot_initiative }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_long_range_detection"
+			if = {
+				limit = { has_tech = cavity_magnatron }
+				random_owned_controlled_state = {
+					prioritize = { 317 }
+					limit = {
+						is_core_of = ROOT
+						has_maximum_radar_station_level = no
+						impassable = no
+					}
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_controlled_state = {
+					prioritize = { 313 }
+					limit = {
+						is_core_of = ROOT
+						has_maximum_radar_station_level = no
+						impassable = no
+					}
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			else_if = {
+				limit = { is_special_project_completed = sp:sp_air_radar }
+				set_technology = { cavity_magnatron = 1 }
+				custom_effect_tooltip = tooltip_white_line
+				random_owned_controlled_state = {
+					prioritize = { 317 }
+					limit = {
+						is_core_of = ROOT
+						has_maximum_radar_station_level = no
+						impassable = no
+					}
+					add_building_construction = {
+						type = radar_station
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			else = {
+				complete_special_project = sp:sp_air_radar
+				set_technology = { cavity_magnatron = 1 }
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_tech_bonus = {
+				name = CENdem_long_range_detection
+				bonus = 1
+				uses = 1
+				category = radar_tech
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = CENdem_multirole_bombers
+		icon = GFX_goal_generic_air_tactical_bomber_new
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = -1
+		y = 4
+
+		mutually_exclusive = {
+			focus = CENdem_fighter_bombers
+		}
+		prerequisite = { focus = CENdem_dogfight_training }
+		prerequisite = { focus = CENdem_fighters_arms_race }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_multirole_bombers"
+			if = {
+				limit = { has_dlc_bba = yes }
+				if = {
+					limit = { NOT = { has_tech = iw_medium_airframe } }
+					set_technology = { iw_medium_airframe = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_multirole_bombers
+						bonus = 1
+						uses = 1
+						category = air_equipment
+					}
+				}
+				add_tech_bonus = {
+					name = CENdem_multirole_bombers
+					bonus = 1
+					uses = 1
+					category = plane_modules_tech
+				}
+				custom_effect_tooltip = tooltip_white_line
+				create_equipment_variant = {
+					name = "B-2"
+					type = medium_plane_airframe_0
+					modules = {
+						fixed_main_weapon_slot = medium_bomb_bay
+						fixed_auxiliary_weapon_slot_1 = empty
+						engine_type_slot = engine_1_2x
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = early_bomber } }
+					set_technology = { early_bomber = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_multirole_bombers
+						bonus = 1
+						uses = 1
+						category = tactical_bomber
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = CENdem_fighter_bombers
+		icon = GFX_goal_generic_air_CAS_new
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = 1
+		y = 4
+
+		mutually_exclusive = {
+			focus = CENdem_multirole_bombers
+		}
+		prerequisite = { focus = CENdem_dogfight_training }
+		prerequisite = { focus = CENdem_long_range_detection }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_fighter_bombers"
+			if = {
+				limit = { has_dlc_bba = yes }
+				if = {
+					limit = { NOT = { has_tech = iw_small_airframe } }
+					set_technology = { iw_small_airframe = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_fighter_bombers
+						bonus = 1
+						uses = 1
+						category = air_equipment
+					}
+				}
+				if = {
+					limit = { NOT = { has_tech = early_bombs } }
+					set_technology = { early_bombs = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_fighter_bombers
+						bonus = 1
+						uses = 1
+						category = plane_modules_tech
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				create_equipment_variant = {
+					name = "A-3"
+					type = small_plane_cas_airframe_0
+					modules = {
+						fixed_main_weapon_slot = bomb_locks
+						fixed_auxiliary_weapon_slot_1 = light_mg_2x
+						engine_type_slot = engine_1_1x
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = CAS1 } }
+					set_technology = { CAS1 = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_fighter_bombers
+						bonus = 1
+						uses = 1
+						category = cas_bomber
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+
+	focus = {
+		id = CENdem_sea_bombers_trials
+		icon = GFX_goal_generic_air_naval_bomber2_new
+		cost = 7
+
+		relative_position_id = CENdem_airplane_trials
+		x = 0
+		y = 5
+
+		prerequisite = { focus = CENdem_multirole_bombers focus = CENdem_fighter_bombers }
+		ai_will_do = { factor = 80 }
+		completion_reward = {
+			log = "[GetLogRoot]: Focus Completed CENdem_sea_bombers_trials"
+			if = {
+				limit = { has_dlc_bba = yes }
+				if = {
+					limit = { NOT = { has_tech = iw_small_airframe } }
+					set_technology = { iw_small_airframe = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_sea_bombers_trials
+						bonus = 1
+						uses = 1
+						category = air_equipment
+					}
+				}
+				if = {
+					limit = { NOT = { has_tech = air_torpedoe_1 } }
+					set_technology = { air_torpedoe_1 = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_sea_bombers_trials
+						bonus = 1
+						uses = 1
+						category = plane_modules_tech
+					}
+				}
+				custom_effect_tooltip = tooltip_white_line
+				create_equipment_variant = {
+					name = "P2Y"
+					type = small_plane_naval_bomber_airframe_0
+					modules = {
+						fixed_main_weapon_slot = torpedo_mounting
+						fixed_auxiliary_weapon_slot_1 = empty
+						engine_type_slot = engine_1_1x
+					}
+				}
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_tech = naval_bomber1 } }
+					set_technology = { naval_bomber1 = 1 }
+				}
+				else = {
+					add_tech_bonus = {
+						name = CENdem_sea_bombers_trials
+						bonus = 1
+						uses = 1
+						category = naval_bomber
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIRFORCE_BONUS }
+	}
+}
+

@@ -1,0 +1,1378 @@
+WAL_reset_focus_tree_and_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			WAL_Monarchy
+			WAL_Monarchy_Army
+			WAL_Monarchy_Conscription
+			WAL_Republic_Chant_Des_Wallons
+			WAL_Monarchy_Disorderly
+			WAL_Monarchy_Disorderly2
+			WAL_Monarchy_Royal_Councillor
+			WAL_Monarchy_Constitution
+
+			WAL_REX
+			WAL_REX_SOC
+			WAL_REX_ROY
+			WAL_REX_BOTH
+			WAL_REX_CORP
+			WAL_REX_MIL
+
+			WAL_SYNDICALIST_LIB_DIS
+			WAL_SYNDICALIST_POB_PRES
+			WAL_SYNDICALIST_SYN_CHAIR
+			WAL_SYNDICALIST_SEIZE_BASIC
+			WAL_SYNDICALIST_NATIONAL_COMPANY
+			WAL_SYNDICALIST_STATE_EDUCATION
+			WAL_SYNDICALIST_CATHOLIC_EDUCATION_BANNED
+			WAL_SYNDICALIST_POB_CONTROL
+			WAL_SYNDICALIST_SYN_CONTROL
+
+			WAL_TOTALIST_RESISTANCE
+			WAL_TOTALIST_RESISTANCE2
+			WAL_TOTALIST_RESISTANCE3
+			WAL_TOTALIST_RESISTANCE4
+			WAL_TOTALIST_CONGRESS
+			WAL_TOTALIST_ARMY
+			WAL_TOTALIST_ROYAL_ASSETS
+		}
+		if = {
+			limit = { has_completed_focus = WAL_Hold_On_To_The_Monarchy }
+			uncomplete_national_focus = {
+				focus = WAL_Hold_On_To_The_Monarchy
+				uncomplete_children = yes
+			}
+		}
+		if = {
+			limit = { has_completed_focus = WAL_Reform_Into_A_Republic }
+			uncomplete_national_focus = {
+				focus = WAL_Reform_Into_A_Republic
+				uncomplete_children = yes
+			}
+		}
+		if = {
+			limit = { has_completed_focus = WAL_Syndicalist_Revolution }
+			uncomplete_national_focus = {
+				focus = WAL_Syndicalist_Revolution
+				uncomplete_children = yes
+			}
+		}
+		if = {
+			limit = { has_completed_focus = WAL_The_Government_Has_Failed }
+			uncomplete_national_focus = {
+				focus = WAL_The_Government_Has_Failed
+				uncomplete_children = yes
+			}
+		}
+		if = {
+			limit = { has_completed_focus = WAL_Retain_German_Staff }
+			uncomplete_national_focus = {
+				focus = WAL_Retain_German_Staff
+				uncomplete_children = yes
+			}
+		}
+		if = {
+			limit = { has_socialist_government = yes }
+			complete_national_focus = WAL_Syndicalist_Revolution
+			if = {
+				limit = { has_government = totalist }
+				complete_national_focus = WAL_Revolution_By_Force
+			}
+			else = {
+				complete_national_focus = WAL_Peaceful_Transition
+			}
+			BEL_remove_adelbert = yes
+		}
+		else_if = {
+			limit = { has_dictatorship_government = yes }
+			add_ideas = WAL_REX
+			complete_national_focus = WAL_The_Government_Has_Failed
+			BEL_remove_adelbert = yes
+		}
+		else_if = {
+			limit = { ROOT = { tag = GER } }
+			BEL_create_adelbert = yes
+			set_politics = {
+				ruling_party = authoritarian_democrat
+				elections_allowed = no
+				name = WAL_monarchy_authoritarian_democrat_party
+				long_name = WAL_monarchy_authoritarian_democrat_party_long
+			}
+			set_political_party = {
+				ideology = authoritarian_democrat
+				popularity = 60
+			}
+			add_ideas = WAL_Monarchy
+			add_ideas = WAL_Monarchy_Disorderly
+			complete_national_focus = WAL_Hold_On_To_The_Monarchy
+		}
+		else = {
+			add_ideas = WAL_Republic
+			complete_national_focus = WAL_Reform_Into_A_Republic
+			BEL_remove_adelbert = yes
+		}
+	}
+}
+
+WAL_move_unit_leaders = {
+	hidden_effect = {
+		BEL = {
+			every_unit_leader = {
+				limit = { has_character_flag = BEL_walloon_character }
+				set_nationality = PREV
+			}
+		}
+		WAL = {
+			every_unit_leader = {
+				limit = { has_character_flag = BEL_walloon_character }
+				set_nationality = PREV
+			}
+		}
+		FLA = {
+			every_unit_leader = {
+				limit = { has_character_flag = BEL_walloon_character }
+				set_nationality = PREV
+			}
+		}
+	}
+}
+
+FLA_move_unit_leaders = {
+	hidden_effect = {
+		BEL = {
+			every_unit_leader = {
+				limit = { has_character_flag = BEL_flemish_character }
+				set_nationality = PREV
+			}
+		}
+		WAL = {
+			every_unit_leader = {
+				limit = { has_character_flag = BEL_flemish_character }
+				set_nationality = PREV
+			}
+		}
+		FLA = {
+			every_unit_leader = {
+				limit = { has_character_flag = BEL_flemish_character }
+				set_nationality = PREV
+			}
+		}
+	}
+}
+
+Release_Flanders = {
+	hidden_effect = {
+		if = {
+			limit = { has_idea = BEL_Flandres_Lost }
+			remove_ideas = BEL_Flandres_Lost
+		}
+		if = {
+			limit = { has_idea = BEL_Military_Struck }
+			remove_ideas = BEL_Military_Struck
+		}
+		if = {
+			limit = { has_idea = BEL_Mass_Desertion }
+			remove_ideas = BEL_Mass_Desertion
+		}
+		if = {
+			limit = { has_idea = BEL_Protest_1936 }
+			remove_ideas = BEL_Protest_1936
+		}
+
+		WAL = {
+			if = {
+				limit = { BEL = { GER_is_in_mitteleuropa = yes } }
+				set_country_flag = MIT_was_in_mitteleuropa
+			}
+			add_state_core = 34 #Hainaut
+			add_state_core = 741 #Verviers
+			add_state_core = 948 #Liège
+			transfer_technology = yes
+			WAL_move_unit_leaders = yes
+		}
+		random_owned_state = {
+			limit = { is_core_of = WAL }
+			transfer_state_to = WAL
+		}
+
+		FLA_move_country_leaders = yes
+		FLA = {
+			if = {
+				limit = { BEL = { GER_is_in_mitteleuropa = yes } }
+				set_country_flag = MIT_was_in_mitteleuropa
+			}
+			add_state_core = 6 #Flanders
+			add_state_core = 29 #Dunkirk
+			add_state_core = 925 #Brabant
+			add_state_core = 979 #Westerscheldt
+			transfer_technology = yes
+			FLA_move_unit_leaders = yes
+		}
+		release = FLA
+		FLA = {
+			FLA_create_starting_units = yes
+			BEL_create_naval_variants = yes
+			country_event = { id = flanders_revolution_events.1 days = 2 }
+		}
+		transfer_navy = { target = FLA }
+		if = {
+			limit = { NOT = { has_event_target = BEL_terneuzen } }
+			GER = { add_to_faction = FLA }
+		}
+
+		WAL_move_country_leaders = yes
+		BEL_adelbert_von_hohenzollern = { set_nationality = WAL }
+		WAL = {
+			BEL_create_adelbert = yes
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = WAL_monarchy_authoritarian_democrat_party_long
+				name = WAL_monarchy_authoritarian_democrat_party
+			}
+			BEL_create_naval_variants = yes
+			country_event = { id = wallonia_events.1 days = 2 } #Flanders-Wallonia ceases to exist
+			annex_country = {
+				target = ROOT
+				transfer_troops = yes
+			}
+			WAL_create_starting_units = yes
+		}
+	}
+}
+
+WAL_ultimatum_for_flanders = {
+	if = {
+		limit = { country_exists = FLA }
+		FLA = {
+			if = {
+				limit = { is_subject = yes }
+				overlord = { country_event = wallonia_events.10 }
+			}
+			else = {
+				country_event = wallonia_events.10
+			}
+		}
+	}
+	else_if = {
+		limit = { NOT = { owns_state = 6 } }
+		var:6.owner = {
+			if = {
+				limit = { is_subject = yes }
+				overlord = { country_event = wallonia_events.103 }
+			}
+			else = {
+				country_event = wallonia_events.103
+			}
+		}
+	}
+	if = {
+		limit = {
+			NOT = { owns_state = 925 }
+			NOT = { var:6.owner = { owns_state = 925 } }
+		}
+		var:925.owner = {
+			if = {
+				limit = { is_subject = yes }
+				overlord = { country_event = wallonia_events.103 }
+			}
+			else = {
+				country_event = wallonia_events.103
+			}
+		}
+	}
+}
+
+WAL_breaks_from_germany = {
+	if = {
+		limit = {
+			is_subject = yes
+			overlord = { has_socialist_government = no }
+		}
+		overlord = {
+			set_autonomy = {
+				target = ROOT
+				autonomy_state = autonomy_free
+			}
+			if = {
+				limit = { tag = GER }
+				set_temp_variable = { WAL_was_in_german_sphere = 1 }
+			}
+		}
+	}
+	if = {
+		limit = {
+			is_in_faction = yes
+			faction_leader = { has_socialist_government = no }
+		}
+		if = {
+			limit = { faction_leader = { tag = GER } }
+			set_temp_variable = { WAL_was_in_german_sphere = 1 }
+		}
+		leave_faction = yes
+	}
+	if = {
+		limit = {
+			has_war = yes
+			any_enemy_country = { has_socialist_government = yes }
+		}
+		separate_peace_all_wars = yes
+	}
+	if = {
+		limit = { has_variable = WAL_was_in_german_sphere }
+		GER = { country_event = { id = wallonia_events.112 hours = 4 } }
+	}
+}
+
+BEL_remove_monarchy = {
+	if = {
+		limit = { has_cosmetic_tag = BEL_flanders_wallonia }
+		if = {
+			limit = { original_tag = BEL }
+			effect_tooltip = { set_cosmetic_tag = BEL }
+			drop_cosmetic_tag = yes
+		}
+		else = {
+			set_cosmetic_tag = BEL
+		}
+	}
+	BEL_remove_adelbert = yes
+	if = {
+		limit = { has_character = BEL_albert_van_belgie }
+		BEL_albert_van_belgie = {
+			set_character_name = BEL_albert_van_belgie
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			retire = yes
+		}
+	}
+	if = {
+		limit = { has_character = BEL_leopold_van_belgie }
+		BEL_leopold_van_belgie = {
+			set_character_name = BEL_leopold_van_belgie
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			retire = yes
+		}
+	}
+	if = {
+		limit = { has_character = BEL_karel_van_vlaanderen }
+		BEL_karel_van_vlaanderen = {
+			set_character_name = BEL_karel_van_vlaanderen
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			retire = yes
+		}
+	}
+}
+
+BEL_remove_adelbert = {
+	if = {
+		limit = { has_character = BEL_adelbert_von_hohenzollern }
+		BEL_adelbert_von_hohenzollern = {
+			set_character_name = BEL_adelbert_von_hohenzollern
+			hidden_effect = { remove_all_country_leader_roles = yes }
+			retire = yes
+		}
+	}
+}
+
+BEL_create_adelbert = {
+	if = {
+		limit = {
+			original_tag = BEL
+			NOT = { has_cosmetic_tag = BEL_flanders_wallonia }
+		}
+		set_cosmetic_tag = BEL_flanders_wallonia
+	}
+	BEL = {
+		BEL_adelbert_von_hohenzollern = {
+			character_becomes_leader_of_ruling_party_effect_tooltip = yes
+			hidden_effect = {
+				set_nationality = PREV.PREV
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_adelbert_von_hohenzollern_leader_desc
+						ideology = social_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_adelbert_von_hohenzollern_leader_desc
+						ideology = social_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_adelbert_von_hohenzollern_leader_desc
+						ideology = market_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_adelbert_von_hohenzollern_leader_desc
+						ideology = social_conservative_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_adelbert_von_hohenzollern_leader_desc
+						ideology = authoritarian_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_adelbert_von_hohenzollern_leader_desc
+						ideology = paternal_autocrat_subtype
+					}
+					promote_leader = yes
+				}
+			}
+		}
+	}
+}
+
+BEL_create_albert = {
+	if = {
+		limit = { has_idea = BEL_King_Exile2 }
+		remove_ideas = BEL_King_Exile2
+	}
+	else_if = {
+		limit = { has_idea = BEL_King_Exile }
+		remove_ideas = BEL_King_Exile
+	}
+	BEL = {
+		BEL_albert_van_belgie = {
+			effect_tooltip = {
+				meta_effect = {
+					text = {
+						add_country_leader_role = {
+							country_leader = {
+								# Tooltip only, doesn't need desc
+								ideology = [IDEOLOGY]
+								traits = { BEL_soldier_king }
+							}
+							promote_leader = yes
+						}
+					}
+					IDEOLOGY = "[PREV.GetRulingIdeologySubtype]"
+				}
+			}
+			hidden_effect = {
+				set_nationality = PREV.PREV
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_albert_van_belgie_leader_desc
+						ideology = social_democrat_subtype
+						traits = { BEL_soldier_king }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_albert_van_belgie_leader_desc
+						ideology = social_liberal_subtype
+						traits = { BEL_soldier_king }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_albert_van_belgie_leader_desc
+						ideology = market_liberal_subtype
+						traits = { BEL_soldier_king }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_albert_van_belgie_leader_desc
+						ideology = social_conservative_subtype
+						traits = { BEL_soldier_king }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_albert_van_belgie_leader_desc
+						ideology = authoritarian_democrat_subtype
+						traits = { BEL_soldier_king }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_albert_van_belgie_leader_desc
+						ideology = paternal_autocrat_subtype
+						traits = { BEL_soldier_king }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_albert_van_belgie_leader_desc
+						ideology = national_populist_subtype
+						traits = { BEL_soldier_king }
+					}
+					promote_leader = yes
+				}
+			}
+		}
+		hidden_effect = {
+			BEL_leopold_van_belgie = { set_nationality = PREV.PREV }
+		}
+	}
+}
+
+FLA_create_karel = {
+	FLA = {
+		BEL_karel_van_vlaanderen = {
+			character_becomes_leader_of_ruling_party_effect_tooltip = yes
+			hidden_effect = {
+				set_nationality = PREV.PREV
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_karel_van_vlaanderen_leader_desc
+						ideology = social_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_karel_van_vlaanderen_leader_desc
+						ideology = social_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_karel_van_vlaanderen_leader_desc
+						ideology = market_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_karel_van_vlaanderen_leader_desc
+						ideology = social_conservative_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_karel_van_vlaanderen_leader_desc
+						ideology = authoritarian_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_karel_van_vlaanderen_leader_desc
+						ideology = paternal_autocrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_karel_van_vlaanderen_leader_desc
+						ideology = national_populist_subtype
+					}
+					promote_leader = yes
+				}
+			}
+		}
+	}
+}
+
+BEL_becomes_independent = {
+	hidden_effect = {
+		if = {
+			limit = { is_ally_with = GER }
+			GER = { country_event = { id = belgium_events.461 days = 5 } }
+		}
+	}
+	clear_all_relations = yes
+	if = {
+		limit = {
+			LEC_is_legation_council_member = yes
+			NOT = { LEC = { is_guaranteed_by = ROOT } }
+		}
+		hidden_effect = {
+			diplomatic_relation = {
+				country = LEC
+				relation = guarantee
+				active = yes
+			}
+			if = {
+				limit = { NOT = { is_ally_with = LEC } }
+				diplomatic_relation = {
+					country = LEC
+					relation = non_aggression_pact
+					active = yes
+				}
+				LEC = { give_military_access = PREV }
+			}
+		}
+	}
+
+	if = {
+		limit = { has_cosmetic_tag = BEL_flanders_wallonia }
+		effect_tooltip = { set_cosmetic_tag = BEL }
+		hidden_effect = { drop_cosmetic_tag = yes }
+	}
+	load_focus_tree = BEL_Independent_focus
+	if = {
+		limit = { has_country_leader = { character = BEL_adelbert_von_hohenzollern } }
+		BEL_remove_monarchy = yes
+	}
+	if = {
+		limit = { has_idea = BEL_anti_german_sentiment1 }
+		remove_ideas = BEL_anti_german_sentiment1
+	}
+	else_if = {
+		limit = { has_idea = BEL_anti_german_sentiment2 }
+		remove_ideas = BEL_anti_german_sentiment2
+	}
+	else_if = {
+		limit = { has_idea = BEL_anti_german_sentiment3 }
+		remove_ideas = BEL_anti_german_sentiment3
+	}
+	else_if = {
+		limit = { has_idea = BEL_anti_german_sentiment4 }
+		remove_ideas = BEL_anti_german_sentiment4
+	}
+	else_if = {
+		limit = { has_idea = BEL_anti_german_sentiment5 }
+		remove_ideas = BEL_anti_german_sentiment5
+	}
+	if = {
+		limit = { has_idea = BEL_Flandres_Lost }
+		remove_ideas = BEL_Flandres_Lost
+	}
+	if = {
+		limit = { has_idea = BEL_Military_Struck }
+		remove_ideas = BEL_Military_Struck
+	}
+	if = {
+		limit = { has_idea = BEL_Mass_Desertion }
+		remove_ideas = BEL_Mass_Desertion
+	}
+	if = {
+		limit = { has_idea = BEL_Protest_1936 }
+		remove_ideas = BEL_Protest_1936
+	}
+	if = {
+		limit = { has_idea = BEL_Abolish_Flemish_Council_idea }
+		remove_ideas = BEL_Abolish_Flemish_Council_idea
+	}
+	if = {
+		limit = { has_idea = BEL_German_Immigration }
+		remove_ideas = BEL_German_Immigration
+	}
+	if = {
+		limit = { has_idea = BEL_Create_VRT }
+		remove_ideas = BEL_Create_VRT
+	}
+	if = {
+		limit = { has_idea = BEL_More_Soldiers }
+		remove_ideas = BEL_More_Soldiers
+	}
+	if = {
+		limit = { has_idea = BEL_Caritas_idea }
+		remove_ideas = BEL_Caritas_idea
+	}
+	if = {
+		limit = { has_idea = BEL_Flemish_Lion }
+		remove_ideas = BEL_Flemish_Lion
+	}
+	if = {
+		limit = { has_idea = BEL_Economic_Regions }
+		remove_ideas = BEL_Economic_Regions
+	}
+	if = {
+		limit = { has_idea = BEL_welfare_state }
+		remove_ideas = BEL_welfare_state
+	}
+	if = {
+		limit = { has_idea = BEL_Cat_Science }
+		remove_ideas = BEL_Cat_Science
+	}
+	if = {
+		limit = { has_political_power < 0 }
+		set_political_power = 0
+	}
+	hidden_effect = {
+		news_event = belgium_news_events.1
+	}
+}
+
+WAL_move_country_leaders = {
+	hidden_effect = {
+		BEL = {
+			every_character = {
+				limit = { has_character_flag = BEL_walloon_character }
+				set_nationality = WAL
+			}
+			BEL_charles_daspremont_lynden = {
+				set_nationality = WAL
+				promote_character = authoritarian_democrat_subtype
+			}
+			BEL_georges_prosper_remi = {
+				set_nationality = WAL
+				promote_character = national_populist_subtype
+			}
+			BEL_leon_degrelle = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = WAL
+					promote_character = national_populist_subtype
+				}
+			}
+		}
+	}
+}
+
+FLA_move_country_leaders = {
+	hidden_effect = {
+		BEL = {
+			every_character = {
+				limit = { has_character_flag = BEL_flemish_character }
+				set_nationality = FLA
+			}
+			BEL_hendrik_de_man = {
+				set_nationality = FLA
+				promote_character = totalist_subtype
+			}
+			BEL_paul_henri_spaak = {
+				set_nationality = FLA
+				promote_character = social_liberal_subtype
+			}
+			BEL_joris_van_severen = {
+				set_nationality = FLA
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_joris_van_severen_leader_desc
+						ideology = national_populist_subtype
+					}
+					promote_leader = yes
+				}
+			}
+		}
+	}
+}
+
+BEL_move_country_leaders = {
+	hidden_effect = {
+		WAL = {
+			every_character = {
+				limit = { has_character_flag = BEL_walloon_character }
+				set_nationality = BEL
+			}
+		}
+		FLA = {
+			every_character = {
+				limit = { has_character_flag = BEL_flemish_character }
+				set_nationality = BEL
+			}
+		}
+		BEL = {
+			#Flanders
+			BEL_hendrik_de_man = {
+				set_nationality = BEL
+				promote_character = totalist_subtype
+			}
+			BEL_paul_henri_spaak = {
+				set_nationality = BEL
+				promote_character = social_liberal_subtype
+			}
+			BEL_joris_van_severen = {
+				set_nationality = BEL
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = BEL_joris_van_severen_leader_desc
+						ideology = paternal_autocrat_subtype
+					}
+					promote_leader = yes
+				}
+			}
+
+			#Wallonia
+			BEL_charles_daspremont_lynden = {
+				set_nationality = BEL
+				promote_character = authoritarian_democrat_subtype
+			}
+			BEL_georges_prosper_remi = {
+				set_nationality = BEL
+				promote_character = national_populist_subtype
+			}
+			BEL_leon_degrelle = {
+				if = {
+					limit = { is_dead = no }
+					set_nationality = BEL
+					promote_character = national_populist_subtype
+				}
+			}
+		}
+	}
+}
+
+BEL_puppet_setup = {
+	hidden_effect = {
+		BEL_move_country_leaders = yes
+		WAL_move_unit_leaders = yes
+		FLA_move_unit_leaders = yes
+		if = {
+			limit = { has_focus_tree = BEL_Independent_focus }
+			unlock_national_focus = BEL_Elections
+			if = {
+				limit = { is_monarchy = yes }
+				unlock_national_focus = BEL_Monarchy
+				if = {
+					limit = { has_completed_focus = BEL_Republic }
+					uncomplete_national_focus = {
+						focus = BEL_Republic
+						uncomplete_children = yes
+					}
+				}
+			}
+			else = {
+				unlock_national_focus = BEL_Republic
+				if = {
+					limit = { has_completed_focus = BEL_Monarchy }
+					uncomplete_national_focus = {
+						focus = BEL_Monarchy
+						uncomplete_children = yes
+					}
+				}
+			}
+		}
+	}
+}
+
+FLA_puppet_setup = {
+	hidden_effect = {
+		FLA_move_country_leaders = yes
+		FLA_move_unit_leaders = yes
+	}
+}
+
+WAL_puppet_setup = {
+	hidden_effect = {
+		set_party_name = {
+			ideology = authoritarian_democrat
+			name = BEL_interim_government
+			long_name = BEL_interim_government
+		}
+		WAL_move_country_leaders = yes
+		WAL_reset_focus_tree_and_ideas = yes
+		WAL_move_unit_leaders = yes
+		if = {
+			limit = { has_socialist_government = yes }
+			remove_ideas = {
+				WAL_Monarchy
+				WAL_Monarchy_Army
+				WAL_Monarchy_Conscription
+				WAL_Monarchy_Disorderly
+				WAL_Monarchy_Disorderly2
+				WAL_Monarchy_Royal_Councillor
+				WAL_Monarchy_Constitution
+				WAL_REX
+				WAL_REX_SOC
+				WAL_REX_ROY
+				WAL_REX_BOTH
+				WAL_REX_CORP
+				WAL_REX_MIL
+			}
+		}
+		else = {
+			remove_ideas = {
+				WAL_SYNDICALIST_LIB_DIS
+				WAL_SYNDICALIST_POB_PRES
+				WAL_SYNDICALIST_SYN_CHAIR
+				WAL_SYNDICALIST_SEIZE_BASIC
+				WAL_SYNDICALIST_NATIONAL_COMPANY
+				WAL_SYNDICALIST_STATE_EDUCATION
+				WAL_SYNDICALIST_CATHOLIC_EDUCATION_BANNED
+				WAL_SYNDICALIST_POB_CONTROL
+				WAL_SYNDICALIST_SYN_CONTROL
+				WAL_TOTALIST_RESISTANCE
+				WAL_TOTALIST_RESISTANCE2
+				WAL_TOTALIST_RESISTANCE3
+				WAL_TOTALIST_RESISTANCE4
+				WAL_TOTALIST_RESISTANCE5
+				WAL_TOTALIST_CONGRESS
+				WAL_TOTALIST_ARMY
+				WAL_TOTALIST_ROYAL_ASSETS
+			}
+		}
+		if = {
+			limit = { NOT = { is_subject_of = GER } }
+			remove_ideas = {
+				WAL_ECONOMIC_TROUBLE_GER
+				WAL_ECONOMIC_GERMAN_EXPORT
+				WAL_ECONOMIC_CONGOLESE_RESOURCES
+				WAL_ARMY_GERMAN
+			}
+		}
+	}
+}
+
+BEL_create_destroyer_variant = {
+	if = {
+		limit = { has_tech = advanced_ship_hull_light }
+		create_equipment_variant = {
+			name = "Scaldis Class"
+			type = ship_hull_light_4
+			name_group = BEL_RIVERS_THEME
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_battery_2
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_engine_slot = light_ship_engine_4
+				fixed_ship_torpedo_slot = ship_torpedo_3
+				front_1_custom_slot = ship_anti_air_1
+				mid_1_custom_slot = ship_torpedo_3
+				rear_1_custom_slot = ship_torpedo_3
+			}
+			design_team = mio:BEL_boel_zonen_organisation
+		}
+		set_temp_variable = { level = 4 }
+	}
+	else_if = {
+		limit = { has_tech = improved_ship_hull_light }
+		create_equipment_variant = {
+			name = "Scaldis Class"
+			type = ship_hull_light_3
+			name_group = BEL_RIVERS_THEME
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_battery_2
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_engine_slot = light_ship_engine_3
+				fixed_ship_torpedo_slot = ship_torpedo_2
+				mid_1_custom_slot = ship_torpedo_2
+				rear_1_custom_slot = ship_torpedo_2
+			}
+			design_team = mio:BEL_boel_zonen_organisation
+		}
+		set_temp_variable = { level = 3 }
+	}
+	else_if = {
+		limit = { has_tech = basic_ship_hull_light }
+		create_equipment_variant = {
+			name = "Scaldis Class"
+			type = ship_hull_light_2
+			name_group = BEL_RIVERS_THEME
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_battery_1
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_engine_slot = light_ship_engine_2
+				fixed_ship_torpedo_slot = ship_torpedo_1
+				mid_1_custom_slot = ship_torpedo_1
+				rear_1_custom_slot = ship_torpedo_1
+			}
+			design_team = mio:BEL_boel_zonen_organisation
+		}
+		set_temp_variable = { level = 2 }
+	}
+	else = {
+		create_equipment_variant = {
+			name = "Scaldis Class"
+			type = ship_hull_light_1
+			name_group = BEL_RIVERS_THEME
+			parent_version = 0
+			modules = {
+				fixed_ship_battery_slot = ship_light_battery_1
+				fixed_ship_anti_air_slot = ship_anti_air_1
+				fixed_ship_engine_slot = light_ship_engine_1
+				fixed_ship_torpedo_slot = ship_torpedo_1
+				mid_1_custom_slot = ship_torpedo_1
+				rear_1_custom_slot = ship_torpedo_1
+			}
+			design_team = mio:BEL_boel_zonen_organisation
+		}
+		set_temp_variable = { level = 1 }
+	}
+	meta_effect = {
+		text = {
+			add_equipment_production = {
+				equipment = {
+					type = [HULL]
+					version_name = "Scaldis Class"
+				}
+				progress = 0.65
+				industrial_manufacturer = mio:BEL_boel_zonen_organisation
+			}
+			add_equipment_production = {
+				equipment = {
+					type = [HULL]
+					version_name = "Scaldis Class"
+				}
+				progress = 0.65
+				industrial_manufacturer = mio:BEL_boel_zonen_organisation
+			}
+			add_equipment_production = {
+				equipment = {
+					type = [HULL]
+					version_name = "Scaldis Class"
+				}
+				progress = 0.65
+				industrial_manufacturer = mio:BEL_boel_zonen_organisation
+			}
+		}
+		HULL = "ship_hull_light_[?level]"
+	}
+}
+
+BEL_create_submarine_variant = {
+	if = {
+		limit = { has_tech = advanced_ship_hull_submarine }
+		create_equipment_variant = {
+			name = "Ysara Class"
+			type = ship_hull_submarine_4
+			name_group = BEL_SM
+			parent_version = 0
+			modules = {
+				fixed_ship_torpedo_slot = ship_torpedo_sub_3
+				fixed_ship_engine_slot = sub_ship_engine_4
+				front_1_custom_slot = ship_torpedo_sub_3
+				mid_1_custom_slot = ship_sub_snorkel_1
+				rear_1_custom_slot = ship_torpedo_sub_3
+			}
+			design_team = mio:BEL_boel_zonen_organisation
+		}
+		set_temp_variable = { level = 4 }
+	}
+	else_if = {
+		limit = { has_tech = improved_ship_hull_submarine }
+		create_equipment_variant = {
+			name = "Ysara Class"
+			type = ship_hull_submarine_3
+			name_group = BEL_SM
+			parent_version = 0
+			modules = {
+				fixed_ship_torpedo_slot = ship_torpedo_sub_2
+				fixed_ship_engine_slot = sub_ship_engine_3
+				front_1_custom_slot = ship_torpedo_sub_2
+				rear_1_custom_slot = ship_torpedo_sub_2
+			}
+			design_team = mio:BEL_boel_zonen_organisation
+		}
+		set_temp_variable = { level = 3 }
+	}
+	else_if = {
+		limit = { has_tech = basic_ship_hull_submarine }
+		create_equipment_variant = {
+			name = "Ysara Class"
+			type = ship_hull_submarine_2
+			name_group = BEL_SM
+			parent_version = 0
+			modules = {
+				fixed_ship_torpedo_slot = ship_torpedo_sub_2
+				fixed_ship_engine_slot = sub_ship_engine_2
+				rear_1_custom_slot = ship_torpedo_sub_2
+			}
+			design_team = mio:BEL_boel_zonen_organisation
+		}
+		set_temp_variable = { level = 2 }
+	}
+	else = {
+		create_equipment_variant = {
+			name = "Ysara Class"
+			type = ship_hull_submarine_1
+			name_group = BEL_SM
+			parent_version = 0
+			modules = {
+				fixed_ship_torpedo_slot = ship_torpedo_sub_1
+				fixed_ship_engine_slot = sub_ship_engine_1
+				rear_1_custom_slot = ship_torpedo_sub_1
+			}
+			design_team = mio:BEL_boel_zonen_organisation
+		}
+		set_temp_variable = { level = 1 }
+	}
+	meta_effect = {
+		text = {
+			add_equipment_production = {
+				equipment = {
+					type = [HULL]
+					version_name = "Ysara Class"
+				}
+				progress = 0.35
+				industrial_manufacturer = mio:BEL_boel_zonen_organisation
+			}
+			add_equipment_production = {
+				equipment = {
+					type = [HULL]
+					version_name = "Ysara Class"
+				}
+				progress = 0.35
+				industrial_manufacturer = mio:BEL_boel_zonen_organisation
+			}
+			add_equipment_production = {
+				equipment = {
+					type = [HULL]
+					version_name = "Ysara Class"
+				}
+				progress = 0.35
+				industrial_manufacturer = mio:BEL_boel_zonen_organisation
+			}
+			add_equipment_production = {
+				equipment = {
+					type = [HULL]
+					version_name = "Ysara Class"
+				}
+				progress = 0.35
+				industrial_manufacturer = mio:BEL_boel_zonen_organisation
+			}
+		}
+		HULL = "ship_hull_submarine_[?level]"
+	}
+}
+
+BEL_create_naval_variants = {
+	#NOTE: INTENTIONALLY DOES NOT EXECUTE FOR BEL!
+	#MEANT FOR WAL AND FLA
+	create_equipment_variant = {
+		name = "Graudenz/Cöln/Königsberg Class"
+		type = ship_hull_cruiser_1
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = cruiser_ship_engine_1
+			fixed_ship_armor_slot = ship_armor_cruiser_1
+			mid_1_custom_slot = ship_torpedo_1
+			mid_2_custom_slot = ship_torpedo_1
+			rear_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "Gent Class"
+		type = ship_hull_light_1
+		modules = {
+			fixed_ship_battery_slot = ship_light_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = light_ship_engine_1
+			fixed_ship_torpedo_slot = ship_torpedo_1
+			mid_1_custom_slot = empty
+			rear_1_custom_slot = ship_depth_charge_1
+		}
+		obsolete = yes
+	}
+	create_equipment_variant = {
+		name = "König/Kaiser Class"
+		type = ship_hull_heavy_1
+		modules = {
+			fixed_ship_battery_slot = ship_heavy_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_armor_slot = ship_armor_bb_1
+			front_1_custom_slot = empty
+			mid_1_custom_slot = ship_airplane_launcher_1
+			mid_2_custom_slot = ship_secondaries_1
+			rear_1_custom_slot = ship_heavy_battery_1
+		}
+	}
+	create_equipment_variant = {
+		name = "Nassau/Helgoland Class"
+		type = ship_hull_heavy_1
+		modules = {
+			fixed_ship_battery_slot = ship_heavy_battery_1
+			fixed_ship_anti_air_slot = ship_anti_air_1
+			fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+			fixed_ship_radar_slot = empty
+			fixed_ship_engine_slot = heavy_ship_engine_1
+			fixed_ship_secondaries_slot = ship_secondaries_1
+			fixed_ship_armor_slot = ship_armor_bb_1
+			front_1_custom_slot = ship_heavy_battery_1
+			mid_1_custom_slot = ship_secondaries_1
+			mid_2_custom_slot = ship_secondaries_1
+			rear_1_custom_slot = empty
+		}
+		obsolete = yes
+	}
+}
+
+FLA_create_starting_units = {
+	division_template = {
+		name = "Infanterie Divisie met Artillerie Ondersteuning"
+		division_names_group = BEL_INF_01
+		regiments = {
+			infantry = { x = 0 y = 0 }
+			infantry = { x = 0 y = 1 }
+			infantry = { x = 0 y = 2 }
+			infantry = { x = 1 y = 0 }
+			infantry = { x = 1 y = 1 }
+			infantry = { x = 1 y = 2 }
+			infantry = { x = 2 y = 0 }
+			infantry = { x = 2 y = 1 }
+			infantry = { x = 2 y = 2 }
+		}
+		support = {
+			artillery = { x = 0 y = 0 }
+		}
+	}
+	division_template = {
+		name = "Armoured-Division"
+		division_names_group = BEL_ARM_01
+		regiments = {
+			light_armor = { x = 0 y = 0 }
+			light_armor = { x = 0 y = 1 }
+			light_armor = { x = 0 y = 2 }
+			motorized = { x = 1 y = 0 }
+			motorized = { x = 1 y = 1 }
+			motorized = { x = 1 y = 2 }
+		}
+	}
+
+	925 = { #Flanders
+		create_unit = {
+			division = "name = \"1. Infanterie Divisie Antwerpen\" division_template = \"Infanterie Divisie met Artillerie Ondersteuning\" start_experience_factor = 0.3"
+			owner = PREV
+			prioritize_location = 6598
+		}
+		create_unit = {
+			division = "name = \"2. Infanterie Divisie Brussel\" division_template = \"Infanterie Divisie met Artillerie Ondersteuning\" start_experience_factor = 0.3"
+			owner = PREV
+			prioritize_location = 516
+		}
+	}
+	6 = { #Flanders
+		create_unit = {
+			division = "name = \"3. Infanterie Divisie Gent\" division_template = \"Infanterie Divisie met Artillerie Ondersteuning\" start_experience_factor = 0.3"
+			owner = PREV
+			prioritize_location = 6560
+		}
+		create_unit = {
+			division = "name = \"1. Bevrijdingsleger West\" division_template = \"Infanterie Divisie met Artillerie Ondersteuning\" start_experience_factor = 0.7"
+			owner = PREV
+			prioritize_location = 6560
+		}
+		create_unit = {
+			division = "name = \"2. Bevrijdingsleger Oost\" division_template = \"Infanterie Divisie met Artillerie Ondersteuning\" start_experience_factor = 0.7"
+			owner = PREV
+			prioritize_location = 6560
+		}
+	}
+}
+
+WAL_create_starting_units = {
+	division_template = {
+		name = "Division d'Infanterie"
+		division_names_group = WAL_INF_01
+		regiments = {
+			infantry = { x = 0 y = 0 }
+			infantry = { x = 0 y = 1 }
+			infantry = { x = 0 y = 2 }
+			infantry = { x = 1 y = 0 }
+			infantry = { x = 1 y = 1 }
+			infantry = { x = 1 y = 2 }
+			infantry = { x = 2 y = 0 }
+			infantry = { x = 2 y = 1 }
+			infantry = { x = 2 y = 2 }
+		}
+	}
+	division_template = {
+		name = "Motorised-Division"
+		division_names_group = WAL_MOT_01
+		regiments = {
+			motorized = { x = 0 y = 0 }
+			motorized = { x = 0 y = 1 }
+			motorized = { x = 0 y = 2 }
+			motorized = { x = 1 y = 0 }
+			motorized = { x = 1 y = 1 }
+			motorized = { x = 1 y = 2 }
+		}
+	}
+	division_template = {
+		name = "Armoured-Division"
+		division_names_group = WAL_ARM_01
+		regiments = {
+			light_armor = { x = 0 y = 0 }
+			light_armor = { x = 0 y = 1 }
+			light_armor = { x = 0 y = 2 }
+			infantry = { x = 1 y = 0 }
+			infantry = { x = 1 y = 1 }
+			infantry = { x = 1 y = 2 }
+		}
+	}
+
+	34 = { #Hainaut
+		create_unit = {
+			division = "name = \"1. Division d'Infanterie Carolorégienne\" division_template = \"Division d'Infanterie\" start_experience_factor = 0.3"
+			owner = PREV
+			prioritize_location = 13081
+		}
+		create_unit = {
+			division = "name = \"3. Division d'Infanterie Namuroise\" division_template = \"Division d'Infanterie\" start_experience_factor = 0.3"
+			owner = PREV
+			prioritize_location = 3516
+		}
+	}
+	948 = { #Liege
+		create_unit = {
+			division = "name = \"2. Division d'Infanterie Liégeoise\" division_template = \"Division d'Infanterie\" start_experience_factor = 0.3"
+			owner = PREV
+			prioritize_location = 11519
+		}
+		create_unit = {
+			division = "name = \"4. Division d'Infanterie Montoise\" division_template = \"Division d'Infanterie\" start_experience_factor = 0.3"
+			owner = PREV
+			prioritize_location = 11519
+		}
+		create_unit = {
+			division = "name = \"5. Division d'Infanterie Spadoise\" division_template = \"Division d'Infanterie\" start_experience_factor = 0.3"
+			owner = PREV
+			prioritize_location = 11519
+		}
+	}
+}
+
+BEL_create_benesam_faction = {
+	create_faction_from_template = { template = faction_template_generic name = benesam }
+	scope:faction = { set_variable = { non_ideological_faction = 1 } }
+}
+
+BEL_increase_flemish_coup_chance = {
+	modify_country_flag = { flag = BEL_wacht_coup value = 1 }
+	hidden_effect = {
+		if = {
+			limit = {
+				has_country_flag = { flag = BEL_wacht_coup value > 3 }
+				has_cosmetic_tag = BEL_flanders_wallonia
+			}
+			country_event = { id = flanders_wallonia_events.29 days = 60 random_days = 30 }
+		}
+	}
+}
+
+BEL_increase_flemish_violence = {
+	modify_country_flag = { flag = BEL_wacht_violence value = 1 }
+	hidden_effect = {
+		if = {
+			limit = {
+				has_completed_focus = BEL_Abolish_Flemish_Council
+				has_country_flag = { flag = BEL_wacht_violence value > 3 }
+			}
+			country_event = { id = flanders_wallonia_events.43 days = 5 random_days = 2 }
+		}
+		else_if = {
+			limit = { has_country_flag = { flag = BEL_wacht_violence value > 1 } }
+			country_event = { id = flanders_wallonia_events.6 days = 1 random_days = 2 }
+		}
+	}
+}

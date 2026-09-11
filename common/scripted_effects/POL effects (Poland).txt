@@ -1,0 +1,1904 @@
+POL_percent_to_absolute = {
+	if = {
+		limit = {
+			check_variable = { POL_influence_change > -1 } #== percent value
+			check_variable = { POL_influence_change < 1 } #== percent value
+		}
+		multiply_temp_variable = { POL_influence_change = 100 }
+	}
+}
+
+POL_add_royal_influence = {
+	if = {
+		limit = { is_monarchy = yes }
+		POL_percent_to_absolute = yes
+
+		custom_effect_tooltip = POL_add_royal_influence
+
+		# lower limit = syndicalist influence * -1
+		set_temp_variable = { POL_lower_limit = { value = POL_royal_influence multiply = -1 } }
+
+		# upper limit = republican + nationalist + syndicalist
+		set_temp_variable = {
+			POL_upper_limit = {
+				value = POL_rep_influence
+				add = POL_nat_influence
+				add = POL_soc_influence
+			}
+		}
+
+		# avoid values outside the allowed range
+		clamp_temp_variable = {
+			var = POL_influence_change
+			min = POL_lower_limit
+			max = POL_upper_limit
+		}
+
+		#calculate proportional reductions
+		set_temp_variable = {
+			POL_reduction_republican = {
+				value = POL_rep_influence
+				divide = POL_upper_limit
+				multiply = POL_influence_change
+			}
+		}
+
+		#calculate proportional reductions
+		set_temp_variable = {
+			POL_reduction_nationalist = {
+				value = POL_nat_influence
+				divide = POL_upper_limit
+				multiply = POL_influence_change
+			}
+		}
+
+		#calculate proportional reductions
+		set_temp_variable = {
+			POL_reduction_syndicalist = {
+				value = POL_soc_influence
+				divide = POL_upper_limit
+				multiply = POL_influence_change
+			}
+		}
+
+		#make sure the above values add up to POL_influence_change
+		add_to_temp_variable = {
+			POL_reduction_nationalist = {
+				value = POL_influence_change
+				subtract = POL_reduction_republican
+				subtract = POL_reduction_nationalist
+				subtract = POL_reduction_syndicalist
+			}
+		}
+
+		#finally set the variables
+		add_to_variable = { POL_royal_influence = POL_influence_change }
+		subtract_from_variable = { POL_rep_influence = POL_reduction_republican }
+		subtract_from_variable = { POL_nat_influence = POL_reduction_nationalist }
+		subtract_from_variable = { POL_soc_influence = POL_reduction_syndicalist }
+
+		### event checks
+		POL_predict_election = yes
+	}
+}
+
+POL_account_for_disabled_royal_influence = {
+	if = {
+		limit = { is_monarchy = no }
+		#calculate the total non-royal influence
+		set_temp_variable = {
+			POL_non_royal_total = {
+				value = POL_soc_influence
+				add = POL_rep_influence
+				add = POL_nat_influence
+			}
+		}
+
+		#calculate proportional syndicalist increase
+		set_temp_variable = {
+			POL_royal_to_soc = {
+				value = POL_royal_influence
+				multiply = POL_soc_influence
+				divide = POL_non_royal_total
+			}
+		}
+
+		#calculate proportional republican increase
+		set_temp_variable = {
+			POL_royal_to_rep = {
+				value = POL_royal_influence
+				multiply = POL_rep_influence
+				divide = POL_non_royal_total
+			}
+		}
+
+		#calculate proportional nationalist increase
+		set_temp_variable = {
+			POL_royal_to_nat = {
+				value = POL_royal_influence
+				multiply = POL_nat_influence
+				divide = POL_non_royal_total
+			}
+		}
+
+		#make sure the above values add up to POL_royal_influence
+		add_to_temp_variable = {
+			POL_royal_to_rep = {
+				value = POL_royal_influence
+				subtract = POL_royal_to_soc
+				subtract = POL_royal_to_rep
+				subtract = POL_royal_to_nat
+			}
+		}
+
+		#finally set the variables
+		add_to_variable = { POL_soc_influence = POL_royal_to_soc }
+		add_to_variable = { POL_rep_influence = POL_royal_to_rep }
+		add_to_variable = { POL_nat_influence = POL_royal_to_nat }
+		set_variable = { POL_royal_influence = 0 }
+	}
+}
+
+POL_add_syndicalist_influence = {
+	POL_percent_to_absolute = yes
+	if = {
+		limit = { check_variable = { POL_influence_change > 0 } }
+		custom_effect_tooltip = POL_soc_tt
+	}
+	else_if = {
+		limit = { check_variable = { POL_influence_change < 0 } }
+		custom_effect_tooltip = POL_soc_reduce_tt
+	}
+
+	POL_account_for_disabled_royal_influence = yes
+
+	# lower limit = syndicalist influence * -1
+	set_temp_variable = { POL_lower_limit = { value = POL_soc_influence multiply = -1 } }
+
+	# upper limit = republican + nationalist + monarchy
+	set_temp_variable = {
+		POL_upper_limit = {
+			value = POL_rep_influence
+			add = POL_nat_influence
+			add = POL_royal_influence
+		}
+	}
+
+	# avoid values outside the allowed range
+	clamp_temp_variable = {
+		var = POL_influence_change
+		min = POL_lower_limit
+		max = POL_upper_limit
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_republican = {
+			value = POL_rep_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_nationalist = {
+			value = POL_nat_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_royal = {
+			value = POL_royal_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#make sure the above values add up to POL_influence_change
+	add_to_temp_variable = {
+		POL_reduction_nationalist = {
+			value = POL_influence_change
+			subtract = POL_reduction_republican
+			subtract = POL_reduction_nationalist
+			subtract = POL_reduction_royal
+		}
+	}
+
+	#finally set the variables
+	add_to_variable = { POL_soc_influence = POL_influence_change }
+	subtract_from_variable = { POL_rep_influence = POL_reduction_republican }
+	subtract_from_variable = { POL_nat_influence = POL_reduction_nationalist }
+	subtract_from_variable = { POL_royal_influence = POL_reduction_royal }
+
+	### event checks
+	POL_predict_election = yes
+}
+
+POL_add_republican_influence = {
+	POL_percent_to_absolute = yes
+	if = {
+		limit = { check_variable = { POL_influence_change > 0 } }
+		custom_effect_tooltip = POL_rep_tt
+	}
+	else_if = {
+		limit = { check_variable = { POL_influence_change < 0 } }
+		custom_effect_tooltip = POL_rep_reduce_tt
+	}
+
+	POL_account_for_disabled_royal_influence = yes
+
+	# lower limit = republican influence * -1
+	set_temp_variable = { POL_lower_limit = { value = POL_rep_influence multiply = -1 } }
+
+	# upper limit = syndicalist + nationalist + monarchy
+	set_temp_variable = {
+		POL_upper_limit = {
+			value = POL_soc_influence
+			add = POL_nat_influence
+			add = POL_royal_influence
+		}
+	}
+
+	# avoid values outside the allowed range
+	clamp_temp_variable = {
+		var = POL_influence_change
+		min = POL_lower_limit
+		max = POL_upper_limit
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_syndicalist = {
+			value = POL_soc_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_nationalist = {
+			value = POL_nat_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_royal = {
+			value = POL_royal_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#make sure the above values add up to POL_influence_change
+	add_to_temp_variable = {
+		POL_reduction_syndicalist = {
+			value = POL_influence_change
+			subtract = POL_reduction_syndicalist
+			subtract = POL_reduction_nationalist
+			subtract = POL_reduction_royal
+		}
+	}
+
+	#finally set the variables
+	add_to_variable = { POL_rep_influence = POL_influence_change }
+	subtract_from_variable = { POL_nat_influence = POL_reduction_nationalist }
+	subtract_from_variable = { POL_soc_influence = POL_reduction_syndicalist }
+	subtract_from_variable = { POL_royal_influence = POL_reduction_royal }
+
+	### event checks
+	POL_predict_election = yes
+}
+
+POL_add_nationalist_influence = {
+	POL_percent_to_absolute = yes
+	if = {
+		limit = { check_variable = { POL_influence_change > 0 } }
+		custom_effect_tooltip = POL_nat_tt
+	}
+	else_if = {
+		limit = { check_variable = { POL_influence_change < 0 } }
+		custom_effect_tooltip = POL_nat_reduce_tt
+	}
+
+	POL_account_for_disabled_royal_influence = yes
+
+	# lower limit = nationalist influence * -1
+	set_temp_variable = { POL_lower_limit = { value = POL_nat_influence multiply = -1 } }
+
+	# upper limit = syndicalist + republican + monarchy
+	set_temp_variable = {
+		POL_upper_limit = {
+			value = POL_soc_influence
+			add = POL_rep_influence
+			add = POL_royal_influence
+		}
+	}
+
+	# avoid values outside the allowed range
+	clamp_temp_variable = {
+		var = POL_influence_change
+		min = POL_lower_limit
+		max = POL_upper_limit
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_syndicalist = {
+			value = POL_soc_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_republican = {
+			value = POL_rep_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#calculate proportional reductions
+	set_temp_variable = {
+		POL_reduction_royal = {
+			value = POL_royal_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	#make sure the above values add up to POL_influence_change
+	add_to_temp_variable = {
+		POL_reduction_republican = {
+			value = POL_influence_change
+			subtract = POL_reduction_syndicalist
+			subtract = POL_reduction_republican
+			subtract = POL_reduction_royal
+		}
+	}
+
+	#finally set the variables
+	add_to_variable = { POL_nat_influence = POL_influence_change }
+	subtract_from_variable = { POL_soc_influence = POL_reduction_syndicalist }
+	subtract_from_variable = { POL_rep_influence = POL_reduction_republican }
+	subtract_from_variable = { POL_royal_influence = POL_reduction_royal }
+
+	### event checks
+	POL_predict_election = yes
+}
+
+POL_predict_election = { #calculate the winner
+	set_variable = { POL_circle_victory = POL_royal_influence }
+	if = {
+		limit = { NOT = { has_idea = POL_coalition_broken } }
+		add_to_variable = { POL_circle_victory = POL_nat_influence }
+	}
+	set_variable = { POL_centrolew_victory = POL_rep_influence }
+	add_to_variable = { POL_centrolew_victory = POL_soc_influence }
+}
+
+POL_add_austrian_influence = {
+	POL_percent_to_absolute = yes
+	custom_effect_tooltip = POL_add_POL_AUS_influence_tt
+	hidden_effect = {
+		if = {
+			limit = { check_variable = { POL_influence_change > 0 } }
+			add_popularity = { ideology = social_liberal popularity = 0.01 }
+		}
+	}
+	set_temp_variable = { POL_lower_limit = { value = POL_AUS_influence multiply = -1 } }
+
+	set_temp_variable = { POL_upper_limit = { value = POL_GER_influence add = POL_influence } }
+
+	clamp_temp_variable = {
+		var = POL_influence_change
+		min = POL_lower_limit
+		max = POL_upper_limit
+	}
+
+	set_temp_variable = {
+		POL_reduction_GER = {
+			value = POL_GER_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	set_temp_variable = {
+		POL_reduction_POL = {
+			value = POL_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	add_to_temp_variable = {
+		POL_reduction_POL = {
+			value = POL_influence_change
+			subtract = POL_reduction_GER
+			subtract = POL_reduction_POL
+		}
+	}
+
+	add_to_variable = { POL_AUS_influence = POL_influence_change }
+	subtract_from_variable = { POL_GER_influence = POL_reduction_GER }
+	subtract_from_variable = { POL_influence = POL_reduction_POL }
+
+	POL = { POL_update_foreign_eco = yes }
+}
+POL_add_german_influence = {
+	POL_percent_to_absolute = yes
+	custom_effect_tooltip = POL_add_POL_GER_influence_tt
+	hidden_effect = {
+		if = { limit = { check_variable = { POL_influence_change > 0 } }
+			add_popularity = { ideology = authoritarian_democrat popularity = 0.01 }
+		}
+	}
+
+	set_temp_variable = { POL_lower_limit = { value = POL_GER_influence multiply = -1 } }
+
+	set_temp_variable = { POL_upper_limit = { value = POL_AUS_influence add = POL_influence } }
+
+	clamp_temp_variable = {
+		var = POL_influence_change
+		min = POL_lower_limit
+		max = POL_upper_limit
+	}
+
+	set_temp_variable = {
+		POL_reduction_AUS = {
+			value = POL_AUS_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	set_temp_variable = {
+		POL_reduction_POL = {
+			value = POL_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	add_to_temp_variable = {
+		POL_reduction_POL = {
+			value = POL_influence_change
+			subtract = POL_reduction_AUS
+			subtract = POL_reduction_POL
+		}
+	}
+
+	add_to_variable = { POL_GER_influence = POL_influence_change }
+	subtract_from_variable = { POL_AUS_influence = POL_reduction_AUS }
+	subtract_from_variable = { POL_influence = POL_reduction_POL }
+
+	POL = { POL_update_foreign_eco = yes }
+}
+POL_add_polish_influence = {
+	POL_percent_to_absolute = yes
+	custom_effect_tooltip = POL_add_POL_influence_tt
+
+	set_temp_variable = { POL_lower_limit = { value = POL_influence multiply = -1 } }
+
+	set_temp_variable = { POL_upper_limit = { value = POL_AUS_influence add = POL_GER_influence } }
+
+	clamp_temp_variable = {
+		var = POL_influence_change
+		min = POL_lower_limit
+		max = POL_upper_limit
+	}
+
+	set_temp_variable = {
+		POL_reduction_AUS = {
+			value = POL_AUS_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	set_temp_variable = {
+		POL_reduction_GER = {
+			value = POL_GER_influence
+			divide = POL_upper_limit
+			multiply = POL_influence_change
+		}
+	}
+
+	add_to_temp_variable = {
+		POL_reduction_GER = {
+			value = POL_influence_change
+			subtract = POL_reduction_AUS
+			subtract = POL_reduction_GER
+		}
+	}
+
+	add_to_variable = { POL_influence = POL_influence_change }
+	subtract_from_variable = { POL_AUS_influence = POL_reduction_AUS }
+	subtract_from_variable = { POL_GER_influence = POL_reduction_GER }
+
+	POL = { POL_update_foreign_eco = yes }
+}
+POL_reduce_polarisation = {
+	if = {
+		limit = { has_idea = POL_polarised_society_1 }
+		swap_ideas = {
+			remove_idea = POL_polarised_society_1
+			add_idea = POL_polarised_society_2
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_polarised_society_2 }
+		swap_ideas = {
+			remove_idea = POL_polarised_society_2
+			add_idea = POL_polarised_society_3
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_polarised_society_3 }
+		swap_ideas = {
+			remove_idea = POL_polarised_society_3
+			add_idea = POL_polarised_society_4
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = POL_polarised_society_4
+			has_socialist_government = no #socialists cannot remvoe entirely, just like conservatives cannot remove Those Left Behind completely
+		}
+		remove_ideas = POL_polarised_society_4
+	}
+}
+
+POL_enable_black_monday = {
+	custom_override_tooltip = {
+		tooltip = {
+			localization_key = tooltip_add_dynmod
+			DYNMOD = POL_black_monday_modifier
+		}
+		add_dynamic_modifier = { modifier = POL_black_monday_modifier }
+	}
+	set_variable = {
+		POL_black_monday_consumer_goods = 0.5
+		tooltip = consumer_goods_factor_tooltip
+	}
+	set_variable = {
+		POL_black_monday_stability = -0.3
+		tooltip = stability_factor_tooltip
+	}
+	set_variable = {
+		POL_black_monday_construction_speed = -0.3
+		tooltip = production_speed_buildings_factor_tooltip
+	}
+	set_variable = {
+		POL_black_monday_factory_output = -0.3
+		tooltip = industrial_capacity_factory_tooltip
+	}
+	force_update_dynamic_modifier = yes
+}
+
+POL_reduce_black_monday = {
+	custom_effect_tooltip = {
+		localization_key = tooltip_modify_dynmod
+		DYNMOD = POL_black_monday_modifier
+	}
+	if = {
+		limit = { check_variable = { POL_black_monday_consumer_goods > 0.09 } }
+		add_to_variable = {
+			POL_black_monday_consumer_goods = -0.1
+			tooltip = consumer_goods_factor_tooltip
+		}
+	}
+	if = {
+		limit = { check_variable = { POL_black_monday_stability < -0.03 } }
+		add_to_variable = {
+			POL_black_monday_stability = 0.04
+			tooltip = stability_factor_tooltip
+		}
+	}
+	if = {
+		limit = { check_variable = { POL_black_monday_construction_speed < -0.03 } }
+		add_to_variable = {
+			POL_black_monday_construction_speed = 0.04
+			tooltip = production_speed_buildings_factor_tooltip
+		}
+	}
+	if = {
+		limit = { check_variable = { POL_black_monday_factory_output < -0.03 } }
+		add_to_variable = {
+			POL_black_monday_factory_output = 0.04
+			tooltip = industrial_capacity_factory_tooltip
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { POL_black_monday_stability > -0.04 }
+			check_variable = { POL_black_monday_factory_output > -0.04 }
+			check_variable = { POL_black_monday_consumer_goods < 0.1 }
+		}
+		remove_dynamic_modifier = { modifier = POL_black_monday_modifier }
+		clear_variable = POL_black_monday_consumer_goods
+		clear_variable = POL_black_monday_stability
+		clear_variable = POL_black_monday_construction_speed
+		clear_variable = POL_black_monday_factory_output
+	}
+}
+
+POL_add_ruling_influence = {
+	if = {
+		limit = { is_monarchy = yes }
+		POL_add_royal_influence = yes
+	}
+	else_if = {
+		limit = { has_soclib_or_socdem_government = yes }
+		POL_add_republican_influence = yes
+	}
+	else_if = {
+		limit = { POL_has_nationalist = yes }
+		POL_add_nationalist_influence = yes
+	}
+}
+
+POL_remove_foreign_eco_ideas = {
+	hidden_effect = {
+		remove_ideas = POL_german_control0
+		remove_ideas = POL_german_control1
+		remove_ideas = POL_german_control2
+		remove_ideas = POL_german_control3
+		remove_ideas = POL_german_control4
+		remove_ideas = POL_austrian_assets0
+		remove_ideas = POL_austrian_assets1
+		remove_ideas = POL_austrian_assets2
+		remove_ideas = POL_austrian_assets3
+		remove_ideas = POL_austrian_assets4
+	}
+}
+POL_update_foreign_eco = {
+	hidden_effect = {
+		if = {
+			limit = { has_country_flag = POL_trade_finished }
+			POL_remove_foreign_eco_ideas = yes
+		}
+		else = {
+			POL_remove_foreign_eco_ideas = yes
+			if = {
+				limit = { check_variable = { POL_GER_influence > 69 } }
+				add_ideas = POL_german_control4
+			}
+			else_if = {
+				limit = { check_variable = { POL_GER_influence > 49 } }
+				add_ideas = POL_german_control3
+			}
+			else_if = {
+				limit = { check_variable = { POL_GER_influence > 29 } }
+				add_ideas = POL_german_control2
+			}
+			else_if = {
+				limit = { check_variable = { POL_GER_influence > 9 } }
+				add_ideas = POL_german_control1
+			}
+			else = { add_ideas = POL_german_control0 }
+			if = {
+				limit = { check_variable = { POL_AUS_influence > 69 } }
+				add_ideas = POL_austrian_assets4
+			}
+			else_if = {
+				limit = { check_variable = { POL_AUS_influence > 49 } }
+				add_ideas = POL_austrian_assets3
+			}
+			else_if = {
+				limit = { check_variable = { POL_AUS_influence > 29 } }
+				add_ideas = POL_austrian_assets2
+			}
+			else_if = {
+				limit = { check_variable = { POL_AUS_influence > 9 } }
+				add_ideas = POL_austrian_assets1
+			}
+			else = { add_ideas = POL_austrian_assets0 }
+		}
+	}
+}
+POL_rebuilding = {
+	if = {
+		limit = { has_idea = POL_uprising_crash2 }
+		swap_ideas = {
+			remove_idea = POL_uprising_crash2
+			add_idea = POL_uprising_crash1
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_uprising_crash1 }
+		swap_ideas = {
+			remove_idea = POL_uprising_crash1
+			add_idea = POL_recovering_eco1
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_uprising_crash4 }
+		swap_ideas = {
+			remove_idea = POL_uprising_crash4
+			add_idea = POL_uprising_crash3
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_uprising_crash3 }
+		swap_ideas = {
+			remove_idea = POL_uprising_crash3
+			add_idea = POL_recovering_eco1
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_uprising_crash6 }
+		swap_ideas = {
+			remove_idea = POL_uprising_crash6
+			add_idea = POL_uprising_crash5
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_uprising_crash5 }
+		swap_ideas = {
+			remove_idea = POL_uprising_crash5
+			add_idea = POL_recovering_eco1
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_recovering_eco1 }
+		swap_ideas = {
+			remove_idea = POL_recovering_eco1
+			add_idea = POL_recovering_eco2
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_recovering_eco2 }
+		swap_ideas = {
+			remove_idea = POL_recovering_eco2
+			add_idea = POL_recovering_eco3
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_recovering_eco3 }
+		remove_ideas = POL_recovering_eco3
+		add_ideas = POL_polish_control
+		clr_country_flag = POL_uprising_crash
+	}
+}
+POL_nationalist_coup = {
+	if = {
+		limit = {
+			has_socialist_government = no
+			OR = {
+				AND = {
+					check_variable = { POL_nat_influence > 25 }
+					OR = {
+						has_idea = POL_republic_instability1 #Poland can never have this idea when the coup happens because it's always switched to POL_republic_instability2 through the focus tree
+						has_idea = POL_republic_instability2
+					}
+					NOT = { has_country_flag = POL_rydz_coup_attempt }
+					if = {
+						limit = {
+							POL = { is_ai = yes }
+						}
+						NOT = { has_game_rule = { rule = POL_election option = POL_ELECTION_SOCDEM_AUS } }
+						NOT = { has_game_rule = { rule = POL_election option = POL_ELECTION_SOCDEM_GER } }
+						NOT = { has_game_rule = { rule = POL_election option = POL_ELECTION_SOCLIB_AUS } }
+						NOT = { has_game_rule = { rule = POL_election option = POL_ELECTION_SOCLIB_GER } }
+					}
+				}
+				AND = {
+					POL = { is_ai = yes }
+					OR = {
+						has_game_rule = { rule = POL_election option = POL_ELECTION_REP_SOCCON_AUS }
+						has_game_rule = { rule = POL_election option = POL_ELECTION_REP_SOCCON_GER }
+					}
+				}
+			}
+		}
+		hidden_effect = {
+			country_event = { id = poland_events.240 days = 3 }
+		}
+		custom_effect_tooltip = POL_nationalist_threat_tt
+	}
+	else_if = {
+		limit = { has_socialist_government = no }
+		custom_effect_tooltip = POL_nationalist_threat_safe_tt
+	}
+}
+POL_remove_centrolew = {
+	hidden_effect = {
+		remove_ideas = POL_secularisation
+		remove_ideas = POL_secularisation_resistance
+		remove_ideas = POL_waning_secularisation_resistance
+		remove_ideas = POL_republic_instability1
+		remove_ideas = POL_republic_instability2
+		remove_ideas = POL_dawn_of_progress_pps_1
+		remove_ideas = POL_dawn_of_progress_psl_1
+		remove_ideas = POL_dawn_of_progress_pps_psl
+		remove_ideas = POL_dawn_of_progress_pps_2
+		remove_ideas = POL_dawn_of_progress_psl_2
+		remove_ideas = POL_dawn_of_progress_pps_psl_2
+		remove_ideas = POL_dawn_of_progress_pps_3
+		remove_ideas = POL_dawn_of_progress_psl_3
+		if = {
+			limit = { has_socialist_government = no }
+			remove_ideas = POL_tolerance_1
+			remove_ideas = POL_tolerance_2
+			remove_ideas = POL_tolerance_3
+			remove_ideas = POL_tolerance_4
+			remove_ideas = POL_tolerance_5
+			uncomplete_national_focus = {
+				focus = POL_Centrolew
+				uncomplete_children = yes
+			}
+		}
+	}
+}
+
+POL_consolidate_uprising = {
+	if = {
+		limit = { has_idea = POL_uprising }
+		swap_ideas = {
+			remove_idea = POL_uprising
+			add_idea = POL_uprising2
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_uprising2 }
+		swap_ideas = {
+			remove_idea = POL_uprising2
+			add_idea = POL_uprising3
+		}
+	}
+	else_if = {
+		limit = { has_idea = POL_uprising3 }
+		remove_ideas = POL_uprising3
+	}
+}
+POL_purge_left_generals = {
+	hidden_effect = {
+		if = {
+			limit = { has_character = GAL_wladyslaw_sikorski }
+			GAL_wladyslaw_sikorski = { retire = yes }
+		}
+		if = {
+			limit = { has_character = POL_kazimierz_sosnkowski }
+			POL_kazimierz_sosnkowski = { retire = yes }
+		}
+		if = {
+			limit = { has_character = POL_konstanty_rokossowski }
+			POL_konstanty_rokossowski = { set_nationality = event_target:system } #don't retire, will break owner scope
+		}
+	}
+}
+POL_purge_right_generals = {
+	hidden_effect = {
+		if = {
+			limit = { has_character = POL_edward_rydz_smigly }
+			POL_edward_rydz_smigly = { retire = yes }
+		}
+		if = {
+			limit = { has_character = POL_adam_koc }
+			POL_adam_koc = { retire = yes }
+		}
+		if = {
+			limit = { has_character = POL_jozef_haller_von_hallenburg }
+			POL_jozef_haller_von_hallenburg = { retire = yes }
+		}
+		if = {
+			limit = { has_character = POL_waclaw_stachiewicz }
+			POL_waclaw_stachiewicz = { retire = yes }
+		}
+	}
+}
+POL_return_purged_generals = {
+	hidden_effect = {
+		if = {
+			limit = { POL_has_progressive = yes }
+			if = {
+				limit = {
+					NOT = { has_character = GAL_wladyslaw_sikorski }
+					NOT = { GAL = { has_character = GAL_wladyslaw_sikorski } }
+				}
+				GAL = { GAL_wladyslaw_sikorski = { set_nationality = POL } }
+			}
+			if = {
+				limit = { NOT = { has_character = POL_kazimierz_sosnkowski } }
+				POL_kazimierz_sosnkowski = { set_nationality = POL }
+			}
+			if = {
+				limit = {
+					event_target:system = { has_character = POL_konstanty_rokossowski }
+					has_socialist_government = yes
+				}
+				POL_return_rokossowski = yes
+			}
+		}
+		else_if = {
+			limit = { POL_has_nationalist = yes }
+			if = {
+				limit = { NOT = { has_character = POL_edward_rydz_smigly } }
+				POL_edward_rydz_smigly = { set_nationality = POL }
+			}
+			if = {
+				limit = { NOT = { has_character = POL_adam_koc } }
+				POL_adam_koc = { set_nationality = POL }
+			}
+			if = {
+				limit = { NOT = { has_character = POL_waclaw_stachiewicz } }
+				POL_waclaw_stachiewicz = { set_nationality = POL }
+			}
+			if = {
+				limit = { NOT = { has_character = POL_jozef_haller_von_hallenburg } }
+				POL_jozef_haller_von_hallenburg = { set_nationality = POL }
+			}
+		}
+	}
+}
+POL_create_rydz = {
+	show_unit_leaders_tooltip = POL_edward_rydz_smigly
+	hidden_effect = {
+		POL_edward_rydz_smigly = {
+			set_nationality = PREV
+			promote_character = paternal_autocrat_subtype
+		}
+	}
+}
+POL_return_rokossowski = {
+	POL_konstanty_rokossowski = {
+		hidden_effect = {
+			owner = { country_event = poland_events.710 }
+			remove_unit_leader_trait = INT_polish_exile_trait
+			add_unit_leader_trait = RUS_red_army_trait
+			clr_character_flag = RUS_socialist
+			set_portraits = {
+				character = POL_konstanty_rokossowski
+				army = {
+					large = GFX_portrait_POL_konstanty_rokossowski_army_large
+					small = GFX_portrait_POL_konstanty_rokossowski_army_small
+				}
+			}
+			remove_military_advisor_roles = yes
+			add_advisor_role = {
+				advisor = {
+					slot = army_chief
+					idea_token = POL_konstanty_rokossowski_army_chief
+					desc = POL_konstanty_rokossowski_commander_desc
+					traits = { KR_army_chief_manoeuvre_3 }
+					cost = 200
+				}
+			}
+		}
+		set_nationality = POL
+	}
+}
+POL_remove_guderian = {
+	if = {
+		limit = { has_character = GER_heinz_guderian }
+		hidden_effect = {
+			if = {
+				limit = {
+					is_monarchy = no
+					has_character = POL_wolfgang_von_kries
+				}
+				POL_wolfgang_von_kries = { retire = yes }
+			}
+		}
+		if = {
+			limit = { NOT = { country_exists = GER } }
+			effect_tooltip = { retire_character = GER_heinz_guderian }
+			hidden_effect = { GER_heinz_guderian = { set_nationality = GER } }
+		}
+		else = {
+			GER_heinz_guderian = {
+				effect_tooltip = { set_nationality = GER }
+				hidden_effect = { retire = yes }
+			}
+			GER = { country_event = { id = poland_events.205 days = 1 } }
+		}
+	}
+}
+POL_remove_monarchy = {
+	if = {
+		limit = { has_cosmetic_tag = POL_kingdom }
+		drop_cosmetic_tag = yes
+	}
+	set_temp_variable = { POL_influence_change = -100 }
+	POL_add_royal_influence = yes
+	POL_august_von_hohenzollern = {
+		remove_all_country_leader_roles = yes
+		retire = yes
+	}
+	POL_alexander_von_hohenzollern = {
+		remove_all_country_leader_roles = yes
+		retire = yes
+	}
+	set_party_name = {
+		ideology = radical_socialist
+		long_name = POL_radical_socialist_party_long
+		name = POL_radical_socialist2_party
+	}
+	set_party_name = {
+		ideology = social_democrat
+		long_name = POL_social_democrat2_party_long
+		name = POL_social_democrat2_party
+	}
+	set_party_name = {
+		ideology = social_liberal
+		long_name = POL_social_liberal2_party_long
+		name = POL_social_liberal2_party
+	}
+	set_party_name = {
+		ideology = market_liberal
+		long_name = POL_market_liberal2_party_long
+		name = POL_market_liberal2_party
+	}
+	set_party_name = {
+		ideology = social_conservative
+		long_name = POL_social_conservative2_party_long
+		name = POL_social_conservative_party
+	}
+	set_party_name = {
+		ideology = paternal_autocrat
+		long_name = POL_paternal_autocrat2_party_long
+		name = POL_paternal_autocrat2_party
+	}
+	set_party_name = {
+		ideology = authoritarian_democrat
+		long_name = POL_authoritarian_democrat2_party_long
+		name = POL_authoritarian_democrat2_party
+	}
+	set_party_name = {
+		ideology = national_populist
+		long_name = POL_national_populist2_party_long
+		name = POL_national_populist2_party
+	}
+	uncomplete_national_focus = {
+		focus = POL_Circle
+		uncomplete_children = yes
+	}
+	remove_ideas = {
+		POL_decimated_underground
+		POL_weakened_underground
+		POL_active_underground
+		POL_enshrine_constitution
+		POL_enshrine_constitution_2
+		POL_enshrine_constitution_3
+		POL_control_by_geheimrat
+		POL_control_by_geheimrat_2
+		POL_control_by_geheimrat_3
+		POL_martial_law
+	}
+	if = {
+		limit = { POL_has_nationalist = no }
+		remove_ideas = {
+			POL_corporatism
+			POL_state_catholicism_1
+			POL_state_catholicism_2
+			POL_state_catholicism_3
+			POL_state_catholicism_4
+		}
+	}
+	set_can_be_fired_in_advisor_role = {
+		character = POL_maurycy_zamoyski
+		value = yes
+	}
+	set_can_be_fired_in_advisor_role = {
+		character = POL_stanislaw_downarowicz
+		value = yes
+	}
+	POL_update_military = yes
+	POL_return_purged_generals = yes
+	if = {
+		limit = { has_idea = POL_hub_of_mitteleuropa }
+		swap_ideas = {
+			remove_idea = POL_hub_of_mitteleuropa
+			add_idea = POL_central_industrial_region_5
+		}
+	}
+}
+POL_overthrow_monarchy = {
+	hidden_effect = {
+		POL_remove_monarchy = yes
+		GER = { end_puppet = POL }
+		if = {
+			limit = {
+				NOT = {
+					is_in_faction_with = GER
+					is_in_faction_with = AUS
+				}
+			}
+			GER_remove_from_mitteleuropa = yes
+		}
+		if = {
+			limit = { NOT = { is_in_faction_with = MIE } }
+			MIE_remove_from_intermarium = yes
+		}
+		if = {
+			limit = { is_subject = no }
+			separate_peace_all_wars = yes
+		}
+		add_popularity = { ideology = market_liberal popularity = -0.2 }
+		add_popularity = { ideology = authoritarian_democrat popularity = -0.2 }
+		country_event = { id = poland_events.239 days = 70 }
+	}
+}
+POL_set_up_uprising = {
+	POL_remove_centrolew = yes
+	increase_economic_mobilisation = yes
+	hidden_effect = {
+		POL_remove_guderian = yes
+		if = {
+			limit = { has_character = AUS_karl_albrecht_von_habsburg }
+			AUS_karl_albrecht_von_habsburg = { set_nationality = AUS }
+		}
+		POL_return_purged_generals = yes
+		clear_all_relations = yes
+	}
+	if = {
+		limit = { has_country_flag = POL_socialist_uprising }
+		complete_national_focus = POL_Revolutionary_Republic
+		hidden_effect = {
+			POL_purge_right_generals = yes
+			uncomplete_national_focus = {
+				focus = POL_Christian_Conservatism
+				uncomplete_children = yes
+			}
+			remove_ideas = {
+				POL_state_catholicism_1
+				POL_state_catholicism_2
+				POL_state_catholicism_3
+				POL_state_catholicism_4
+				POL_corporatism
+				POL_rydz_legion
+			}
+		}
+	}
+	if = {
+		limit = { NOT = { has_country_flag = POL_socialist_uprising } }
+		if = {
+			limit = { NOT = { has_completed_focus = POL_Christian_Conservatism } }
+			complete_national_focus = POL_Christian_Conservatism
+		}
+		set_party_name = {
+			ideology = paternal_autocrat
+			long_name = POL_paternal_autocrat2_party_long
+			name = POL_paternal_autocrat2_party
+		}
+		hidden_effect = {
+			remove_ideas = POL_tolerance_1
+			remove_ideas = POL_tolerance_2
+			remove_ideas = POL_tolerance_3
+			remove_ideas = POL_tolerance_4
+			remove_ideas = POL_tolerance_5
+		}
+	}
+	hidden_effect = {
+		for_each_scope_loop = {
+			array = POL_polish_lands
+			if = {
+				limit = { is_claim_or_core_of_ROOT = no }
+				add_claim_by = ROOT
+			}
+		}
+		country_event = { id = poland_events.543 days = 1 } #Defections
+		country_event = { id = poland_events.561 days = 14 }  #Economic crash
+		country_event = { id = poland_events.565 days = 45 } #The Platerowski
+		if = {
+			limit = { has_country_flag = POL_revolt_from_monarchy }
+			country_event = { id = poland_events.562 days = 97 } #King August Escapes
+			country_event = { id = poland_events.563 days = 62 } #King August Dies
+		}
+		if = {
+			limit = { has_socialist_government = yes }
+			country_event = { id = poland_events.546 days = 10 } #Red Guards
+			country_event = { id = poland_events.542 days = 15 } #Riflemen's Association
+			country_event = { id = poland_events.551 days = 60 random_days = 5 } #Zakrzewski's executive powers
+			country_event = { id = poland_events.555 days = 120 } #The Scythemen
+			country_event = { id = poland_flavour_events.40 days = 160 } #Zakrzewski's Myths
+			country_event = { id = poland_flavour_events.32 days = 320 } #Reovating the Royal Castle
+		}
+		else = {
+			country_event = { id = poland_events.547 days = 10 } #National Guard
+			country_event = { id = poland_events.550 days = 20 random_days = 3 } #OZN
+			country_event = { id = poland_events.549 days = 60 random_days = 5 } #ZRP
+			country_event = { id = poland_events.555 days = 120 } #The Scythemen
+		}
+		activate_mission = POL_reach_the_sea
+		every_state = {
+			limit = {
+				NOT = {
+					is_owned_by = ROOT
+					is_controlled_by = ROOT
+				}
+				ROOT = { divisions_in_state = { state = PREV size > 0 } }
+			}
+			teleport_armies = {
+				limit = { tag = ROOT }
+				to_state_array = owned_controlled_states
+			}
+		}
+		every_owned_state = {
+			teleport_armies = {
+				limit = {
+					NOT = {
+						is_ally_with = ROOT
+						has_war_with = ROOT
+					}
+				}
+			}
+		}
+		if = {
+			limit = { has_completed_focus = POL_Fill_The_Railway_Gaps }
+			uncomplete_national_focus = { focus = POL_Fill_The_Railway_Gaps }
+		}
+		if = { #Foolproof if some fool does not do the decision
+			limit = { NOT = { has_country_flag = POL_trade_finished } }
+			set_country_flag = POL_trade_finished
+			remove_ideas = POL_german_control0
+			remove_ideas = POL_german_control1
+			remove_ideas = POL_german_control2
+			remove_ideas = POL_german_control3
+			remove_ideas = POL_german_control4
+			remove_ideas = POL_austrian_assets0
+			remove_ideas = POL_austrian_assets1
+			remove_ideas = POL_austrian_assets2
+			remove_ideas = POL_austrian_assets3
+			remove_ideas = POL_austrian_assets4
+			add_ideas = POL_german_cooperation
+		}
+	}
+	add_ideas = POL_uprising
+	POL_update_military = yes
+	clear_decision_attack_AI = yes
+	AUS = {
+		clear_decision_attack_AI = yes
+		clr_country_flag = POL_revolt_warning_syndicalist
+		clr_country_flag = POL_revolt_warning_nationalist
+	}
+	GER = {
+		clear_decision_attack_AI = yes
+		declare_war_on = {
+			target = POL
+			type = annex_everything
+		}
+		clr_country_flag = POL_revolt_warning_syndicalist
+		clr_country_flag = POL_revolt_warning_nationalist
+	}
+}
+
+POL_transfer_popularity = {
+	#add up the states directly, since Galicia might not exist
+	set_temp_variable = { galicia_ratio = 0 }
+	GAL = {
+		every_core_state = {
+			limit = { is_owned_by = POL }
+			add_to_temp_variable = { galicia_ratio = state_population_k }
+		}
+	}
+	divide_temp_variable = { galicia_ratio = ROOT.max_manpower_k }
+
+	set_temp_variable = { poland_ratio = { value = 1 subtract = galicia_ratio } }
+	log = "Poland Ratio: [?poland_ratio]"
+	log = "Galicia Ratio: [?galicia_ratio]"
+	resize_temp_array = { POL_ideology_values = global.ideology_groups^num }
+	set_temp_variable = { popularity_total = 100 }
+	for_each_loop = {
+		array = global.ideology_groups
+		value = ideology_var
+		set_temp_variable = {
+			POL_ideology_values^i = {
+				value = POL.party_popularity_100@var:ideology_var #Poland
+				multiply = poland_ratio
+				add = { #Galicia
+					value = GAL.party_popularity_100@var:ideology_var
+					multiply = galicia_ratio
+				}
+			}
+		}
+		log = "Poland Original: [?POL.party_popularity_100@var:ideology_var] | Galicia Original: [?GAL.party_popularity_100@var:ideology_var]"
+		log = "[?ideology_var.GetTokenLocalizedKey]: [?POL_ideology_values^i]"
+		subtract_from_temp_variable = { popularity_total = POL_ideology_values^i }
+	}
+
+	# To get rid of rounding errors, rest goes to marlibs
+	add_to_temp_variable = { POL_ideology_values^5 = popularity_total } #Market liberals
+
+	set_popularities = {
+		totalist = POL_ideology_values^0
+		syndicalist = POL_ideology_values^1
+		radical_socialist = POL_ideology_values^2
+		social_democrat = POL_ideology_values^3
+		social_liberal = POL_ideology_values^4
+		market_liberal = POL_ideology_values^5
+		social_conservative = POL_ideology_values^6
+		authoritarian_democrat = POL_ideology_values^7
+		paternal_autocrat = POL_ideology_values^8
+		national_populist = POL_ideology_values^9
+	}
+}
+
+POL_clear_economy = {
+	hidden_effect = {
+		remove_ideas = POL_german_control0
+		remove_ideas = POL_german_control1
+		remove_ideas = POL_german_control2
+		remove_ideas = POL_german_control3
+		remove_ideas = POL_german_control4
+		remove_ideas = POL_austrian_assets0
+		remove_ideas = POL_austrian_assets1
+		remove_ideas = POL_austrian_assets2
+		remove_ideas = POL_austrian_assets3
+		remove_ideas = POL_austrian_assets4
+		remove_ideas = POL_german_cooperation
+		remove_ideas = POL_austrian_cooperation
+		remove_ideas = POL_austrian_friendship
+		remove_ideas = POL_austro_german_condominium
+		remove_ideas = POL_polish_control
+		remove_ideas = POL_german_hegemony
+	}
+}
+
+POL_create_august = {
+	if = {
+		limit = { POL = { POL_august_von_hohenzollern = { is_dead = no } } }
+		POL = {
+			POL_august_von_hohenzollern = {
+				effect_tooltip = {
+					meta_effect = {
+						text = {
+							add_country_leader_role = {
+								country_leader = {
+									# Tooltip only, doesn't need desc
+									ideology = [IDEOLOGY]
+									traits = { POL_effeminate_king }
+								}
+								promote_leader = yes
+							}
+						}
+						IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+					}
+				}
+				POL_add_monarchy_leader_traits_tooltip = yes
+				hidden_effect = {
+					set_nationality = PREV.PREV
+					set_character_name = POL_august_von_hohenzollern
+					remove_all_country_leader_roles = yes
+					add_country_leader_role = {
+						country_leader = {
+							desc = POL_alexander_von_hohenzollern_leader_desc
+							ideology = social_democrat_subtype
+							traits = { POL_effeminate_king }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = POL_alexander_von_hohenzollern_leader_desc
+							ideology = social_liberal_subtype
+							traits = { POL_effeminate_king }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = POL_alexander_von_hohenzollern_leader_desc
+							ideology = market_liberal_subtype
+							traits = { POL_effeminate_king }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = POL_alexander_von_hohenzollern_leader_desc
+							ideology = social_conservative_subtype
+							traits = { POL_effeminate_king }
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = POL_alexander_von_hohenzollern_leader_desc
+							ideology = authoritarian_democrat_subtype
+							traits = { POL_effeminate_king }
+						}
+						promote_leader = yes
+					}
+					POL_add_monarchy_leader_traits = yes
+				}
+			}
+		}
+	}
+	else = {
+		POL_create_alexander = yes
+	}
+}
+
+POL_create_alexander = {
+	if = {
+		limit = {
+			POL = {
+				POL_alexander_von_hohenzollern = { is_dead = no }
+				NOT = { has_country_flag = POL_alex_not_heir }
+			}
+		}
+		POL_alexander_von_hohenzollern = {
+			effect_tooltip = {
+				meta_effect = {
+					text = {
+						add_country_leader_role = {
+							country_leader = {
+								# Tooltip only, doesn't need desc
+								ideology = [IDEOLOGY]
+								traits = { POL_honorary_pole }
+							}
+							promote_leader = yes
+						}
+					}
+					IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+				}
+			}
+			POL_add_monarchy_leader_traits_tooltip = yes
+			hidden_effect = {
+				set_nationality = POL
+				set_character_name = POL_alexander_von_hohenzollern_regnal
+				remove_political_advisor_role = yes
+				remove_all_country_leader_roles = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = POL_alexander_von_hohenzollern_leader_desc
+						ideology = social_democrat_subtype
+						traits = { POL_honorary_pole }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = POL_alexander_von_hohenzollern_leader_desc
+						ideology = social_liberal_subtype
+						traits = { POL_honorary_pole }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = POL_alexander_von_hohenzollern_leader_desc
+						ideology = market_liberal_subtype
+						traits = { POL_honorary_pole }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = POL_alexander_von_hohenzollern_leader_desc
+						ideology = social_conservative_subtype
+						traits = { POL_honorary_pole }
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = POL_alexander_von_hohenzollern_leader_desc
+						ideology = authoritarian_democrat_subtype
+						traits = { POL_honorary_pole }
+					}
+					promote_leader = yes
+				}
+				POL_add_monarchy_leader_traits = yes
+			}
+		}
+	}
+}
+
+#on character scope
+POL_add_monarchy_leader_traits_tooltip = {
+	effect_tooltip = {
+		if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_geheimrat } } }
+			add_trait = { trait = POL_geheimrat }
+		}
+		else_if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_geheimrat1 } } }
+			add_trait = { trait = POL_geheimrat1 }
+		}
+		else_if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_geheimrat2 } } }
+			add_trait = { trait = POL_geheimrat2 }
+		}
+		else_if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_geheimrat3 } } }
+			add_trait = { trait = POL_geheimrat3 }
+		}
+		if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_patron_of_the_painters } } }
+			add_trait = { trait = POL_patron_of_the_painters }
+		}
+		if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_figurehead_hohenzollern } } }
+			add_trait = { trait = POL_figurehead_hohenzollern }
+		}
+		if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_king_of_the_elite } } }
+			add_trait = { trait = POL_king_of_the_elite }
+		}
+		if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_the_kaiser_maker } } }
+			add_trait = { trait = POL_the_kaiser_maker }
+		}
+		if = {
+			limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_last_hohenzollern } } }
+			add_trait = { trait = POL_last_hohenzollern }
+		}
+	}
+}
+
+#on character scope
+POL_add_monarchy_leader_traits = {
+	### Geheimrat traits ###
+	if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_geheimrat } } }
+		set_temp_variable = { trait_token = token:POL_geheimrat }
+	}
+	else_if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_geheimrat1 } } }
+		set_temp_variable = { trait_token = token:POL_geheimrat1 }
+	}
+	else_if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_geheimrat2 } } }
+		set_temp_variable = { trait_token = token:POL_geheimrat2 }
+	}
+	else_if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_geheimrat3 } } }
+		set_temp_variable = { trait_token = token:POL_geheimrat3 }
+	}
+	if = {
+		limit = { NOT = { check_variable = { trait_token = 0 } } }
+		add_trait_to_all_country_leader_roles = yes
+		set_temp_variable = { trait_token = 0 } #effectively clear_temp_variable
+	}
+
+	### Other traits ###
+	if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_patron_of_the_painters } } }
+		set_temp_variable = { trait_token = token:POL_patron_of_the_painters }
+	}
+	else_if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_figurehead_hohenzollern } } }
+		set_temp_variable = { trait_token = token:POL_figurehead_hohenzollern }
+	}
+	else_if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_king_of_the_elite } } }
+		set_temp_variable = { trait_token = token:POL_king_of_the_elite }
+	}
+	else_if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_the_kaiser_maker } } }
+		set_temp_variable = { trait_token = token:POL_the_kaiser_maker }
+	}
+	else_if = {
+		limit = { POL = { POL_august_von_hohenzollern = { has_character_flag = POL_last_hohenzollern } } }
+		set_temp_variable = { trait_token = token:POL_last_hohenzollern }
+	}
+	if = {
+		limit = { NOT = { check_variable = { trait_token = 0 } } }
+		add_trait_to_all_country_leader_roles = yes
+		set_temp_variable = { trait_token = 0 } #effectively clear_temp_variable
+	}
+}
+
+#var:tag_to_release scope
+POL_release_as_general_government = {
+	set_cosmetic_tag = POL_gengov
+	set_politics = {
+		ruling_party = paternal_autocrat
+		elections_allowed = no
+		name = POL_generalgouvernment_party
+		long_name = POL_generalgouvernment_party_long
+	}
+	POL_wolfgang_von_kries = {
+		hidden_effect = { set_nationality = PREV }
+		promote_character = paternal_autocrat_subtype
+	}
+	set_political_party = {
+		ideology = paternal_autocrat
+		popularity = 60
+	}
+	hidden_effect = {
+		activate_advisor = POL_wladyslaw_studnicki_sic
+		if = {
+			limit = { is_subject_of = GER }
+			set_temp_variable = { POL_influence_change = 60 }
+			POL_add_german_influence = yes
+			add_ideas = POL_german_hegemony
+		}
+		else = {
+			add_ideas = POL_BAT_german_hegemony
+		}
+		add_ideas = POL_martial_law
+		unlock_national_focus = POL_Circle
+		POL_update_military = yes
+		POL_purge_right_generals = yes
+		POL_remove_centrolew = yes
+		POL_remove_nationalists = yes
+	}
+}
+
+#var:tag_to_release scope
+POL_release_as_german_kingdom = {
+	set_cosmetic_tag = POL_kingdom
+	POL_create_august = yes
+	set_politics = {
+		ruling_party = authoritarian_democrat
+		elections_allowed = yes
+	}
+	set_political_party = {
+		ideology = authoritarian_democrat
+		popularity = 60
+	}
+	hidden_effect = {
+		activate_advisor = POL_wladyslaw_studnicki_sic
+		unlock_national_focus = POL_Circle
+		POL_update_military = yes
+		POL_purge_right_generals = yes
+		POL_wolfgang_von_kries = {
+			set_nationality = PREV
+			promote_character = paternal_autocrat_subtype
+		}
+		POL_remove_centrolew = yes
+		POL_remove_nationalists = yes
+	}
+}
+
+#var:tag_to_release scope
+POL_release_as_austrian_kingdom = {
+	set_cosmetic_tag = POL_AUS_kingdom
+	if = {
+		limit = { ROOT = { has_government = social_democrat } }
+		set_politics = {
+			ruling_party = social_democrat
+			elections_allowed = yes
+		}
+		set_political_party = {
+			ideology = social_democrat
+			popularity = 60
+		}
+	}
+	else_if = {
+		limit = { ROOT = { has_government = paternal_autocrat } }
+		set_politics = {
+			ruling_party = authoritarian_democrat
+			elections_allowed = yes
+		}
+		set_political_party = {
+			ideology = authoritarian_democrat
+			popularity = 60
+		}
+	}
+	else = {
+		set_politics = {
+			ruling_party = social_liberal
+			elections_allowed = yes
+		}
+		set_political_party = {
+			ideology = social_liberal
+			popularity = 60
+		}
+	}
+	GAL = {
+		if = {
+			limit = { has_country_leader = { character = AUS_karl_albrecht_von_habsburg } }
+			hidden_effect = { country_event = galicia_events.7 }
+		}
+		AUS_karl_albrecht_von_habsburg = {
+			set_nationality = PREV.PREV
+			set_character_as_monarch = yes
+			set_character_name = AUS_karl_albrecht_von_habsburg_regnal
+			remove_all_country_leader_roles = yes
+			add_country_leader_role = {
+				country_leader = {
+					desc = AUS_karl_albrecht_von_habsburg_POL_leader_desc
+					ideology = social_democrat_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = AUS_karl_albrecht_von_habsburg_POL_leader_desc
+					ideology = social_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = AUS_karl_albrecht_von_habsburg_POL_leader_desc
+					ideology = market_liberal_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = AUS_karl_albrecht_von_habsburg_POL_leader_desc
+					ideology = social_conservative_subtype
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				country_leader = {
+					desc = AUS_karl_albrecht_von_habsburg_POL_leader_desc
+					ideology = authoritarian_democrat_subtype
+				}
+				promote_leader = yes
+			}
+		}
+	}
+	hidden_effect = {
+		activate_advisor = POL_maksymilian_malinowski_sic
+		add_ideas = POL_austrian_cooperation
+		POL_update_military = yes
+		POL_purge_right_generals = yes
+	}
+}
+
+#var:tag_to_release scope
+POL_release_as_republic = {
+	hidden_effect = {
+		POL_remove_monarchy = yes #just in case
+		if = {
+			limit = { has_government = totalist }
+			activate_advisor = POL_stanislaw_bukowiecki_sic
+		}
+		else_if = {
+			limit = { has_government = syndicalist }
+			activate_advisor = POL_pawel_lew_marek_sic
+		}
+		else_if = {
+			limit = { has_government = radical_socialist }
+			activate_advisor = POL_stanislaw_dubois_sic
+		}
+		else_if = {
+			limit = { has_authdem_or_pataut_government = yes }
+			activate_advisor = POL_tadeusz_bielecki_sic
+		}
+		else = {
+			activate_advisor = POL_the_sejm_sic
+		}
+		add_ideas = POL_polish_control
+		POL_update_military = yes
+		POL_return_purged_generals = yes
+		if = {
+			limit = {
+				has_authoritarian_government = yes
+			}
+			POL_remove_centrolew = yes
+		}
+		if = {
+			limit = {
+				has_socialist_government = yes
+			}
+			POL_remove_nationalists = yes
+		}
+	}
+}
+
+POL_update_military = {
+	hidden_effect = {
+		if = {
+			limit = {
+				OR = {
+					has_war_with = GER
+					NOT = { is_in_faction_with = GER }
+				}
+				has_completed_focus = POL_Germanys_Eastern_Bulwark
+			}
+			uncomplete_national_focus = {
+				focus = POL_Germanys_Eastern_Bulwark
+				uncomplete_children = yes
+			}
+		}
+		if = {
+			limit = { has_idea = POL_german_hegemony }
+			if = {
+				limit = { POL = { has_completed_focus = POL_Armia_Ludowa } }
+				uncomplete_national_focus = {
+					focus = POL_Armia_Ludowa
+					uncomplete_children = yes
+				}
+			}
+			else_if = {
+				limit = { POL = { has_completed_focus = POL_Legacy_of_the_Legions } }
+				uncomplete_national_focus = {
+					focus = POL_Legacy_of_the_Legions
+					uncomplete_children = yes
+				}
+			}
+		}
+		if = {
+			limit = { POL = { has_socialist_government = yes } }
+			if = {
+				limit = { has_completed_focus = POL_Legacy_of_the_Legions }
+				uncomplete_national_focus = {
+					focus = POL_Legacy_of_the_Legions
+					uncomplete_children = yes
+				}
+			}
+		}
+		else = {
+			if = {
+				limit = { has_completed_focus = POL_Vanguard_of_the_Internationale }
+				uncomplete_national_focus = {
+					focus = POL_Vanguard_of_the_Internationale
+					uncomplete_children = yes
+				}
+			}
+		}
+	}
+}
+
+POL_galicia_joins_poland = {
+	POL = {
+		add_state_core = 88 #Krakow
+		add_state_claim = 91 #Lwow
+		add_state_claim = 89 #Stanislawow
+		GAL_characters_join_poland_immediate = yes
+		hidden_effect = {
+			POL_transfer_popularity = yes
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = -0.25
+			}
+			country_event = { id = poland_flavour_events.29 days = 365 }
+		}
+	}
+}
+
+POL_galicia_joins_poland_ukraine = {
+	POL = {
+		add_state_core = 88 #Krakow
+		add_state_claim = 91 #Lwow
+		GAL_characters_join_poland_immediate = yes
+		hidden_effect = {
+			POL_transfer_popularity = yes
+			add_popularity = {
+				ideology = authoritarian_democrat
+				popularity = -0.25
+			}
+			country_event = { id = poland_flavour_events.29 days = 365 }
+		}
+	}
+	UKR = {
+		add_state_claim = 80 #Cernauti
+		add_state_claim = 89 #Stanislaviv
+		GAL_characters_join_ukraine_immediate = yes
+	}
+	GAL = {
+		every_owned_state = {
+			limit = { is_claim_or_core_of_ROOT = no }
+			transfer_state_to = UKR
+		}
+	}
+}
+
+POL_remove_nationalists = {
+	hidden_effect = {
+		remove_ideas = POL_state_catholicism_1
+		remove_ideas = POL_state_catholicism_2
+		remove_ideas = POL_state_catholicism_3
+		remove_ideas = POL_state_catholicism_4
+		remove_ideas = POL_corporatism
+		remove_ideas = POL_polish_shogunate_1
+		remove_ideas = POL_polish_shogunate_2
+		remove_ideas = POL_polish_shogunate_3
+		remove_ideas = POL_polish_shogunate_4
+		remove_ideas = POL_polish_shogunate_5
+		uncomplete_national_focus = {
+			focus = POL_Christian_Conservatism
+			uncomplete_children = yes
+		}
+	}
+}

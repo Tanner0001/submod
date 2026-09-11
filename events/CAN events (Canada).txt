@@ -1,0 +1,7588 @@
+###########################
+# Canada Events
+###########################
+
+add_namespace = canada_events
+add_namespace = canada_flavour_events
+
+# Death of King George V
+country_event = {
+	id = canada_events.4
+	title = canada_events.4.t
+	desc = canada_events.4.d
+	picture = GFX_report_event_CAN_death_george
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_leader = { character = GBR_george_frederick_windsor }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.4 option canada_events.4.a"
+		name = canada_events.4.a
+		GBR_george_frederick_windsor = { kill_character = yes }
+		set_variable = { king_popularity = 2 }
+		set_variable = { global.king_edward_story = 0 }
+		add_stability = -0.05
+		custom_effect_tooltip = CAN_king_speech_unlocked
+		hidden_effect = {
+			GBR_create_edward = yes
+			# official coronation
+			country_event = { id = canada_events.5 days = 90 }
+			# country-specific death events
+			if = {
+				limit = { country_exists = RAJ }
+				RAJ = { country_event = dominion_of_india_events.3 }
+			}
+			if = {
+				limit = { country_exists = AST }
+				AST = { country_event = australasia_events.3 }
+			}
+			if = {
+				limit = { country_exists = NFA }
+				NFA = { country_event = french_republic_events.4 }
+			}
+			if = {
+				limit = { country_exists = SAF }
+				SAF = { country_event = south_africa_events.158 }
+			}
+			if = {
+				limit = { country_exists = IRE }
+				IRE = { country_event = ireland_events.2 }
+			}
+			# main news events
+			news_event = { id = canada_flavour_events.5 days = 3 }
+		}
+	}
+}
+
+# Coronation of King Edward
+country_event = {
+	id = canada_events.5
+	title = canada_events.5.t
+	desc = canada_events.5.d
+	picture = GFX_report_event_CAN_coronation
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_country_leader = { character = GBR_edward_windsor }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.5 option canada_events.5.a"
+		name = canada_events.5.a
+		add_stability = 0.05
+		clr_global_flag = CAN_king_busy
+		custom_effect_tooltip = CAN_king_coronated
+		custom_effect_tooltip = CAN_king_popularity_increase
+		add_to_variable = { king_popularity = 1 }
+		CAN_calc_royal_visit_effects = yes
+		hidden_effect = {
+			country_event = { id = entente_events.50 days = 60 } #begin random royal events
+		}
+	}
+}
+
+# The King's First Address
+country_event = {
+	id = canada_events.6
+	title = canada_events.6.t
+
+	desc = {
+		text = canada_events.6.d
+		trigger = { NOT = { has_global_flag = CAN_had_1936_election } }
+	}
+	desc = {
+		text = canada_events.6.alt1 # manion won
+		trigger = {
+			has_global_flag = CAN_had_1936_election
+			has_government = social_conservative
+		}
+	}
+	desc = {
+		text = canada_events.6.alt2 # king won
+		trigger = {
+			has_global_flag = CAN_had_1936_election
+			NOT = { has_government = social_conservative }
+		}
+	}
+
+	picture = GFX_report_event_CAN_edward2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.6 option canada_events.6.a"
+		name = canada_events.6.a #He will prepare the nation for war
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					has_country_flag = CAN_exile_ai
+					has_country_flag = CAN_unionist_ai
+				}
+			}
+		}
+		save_event_target_as = CAN_address_war
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.6 option canada_events.6.b"
+		name = canada_events.6.b #He will endorse the Conservatives
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				has_country_flag = CAN_conservative_ai
+				NOT = { has_country_flag = CAN_exile_ai }
+				NOT = { has_country_flag = CAN_unionist_ai }
+			}
+		}
+		save_event_target_as = CAN_address_cons
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.6 option canada_events.6.c"
+		name = canada_events.6.c #He will support the Canadian government
+		trigger = {
+			OR = {
+				NOT = { has_global_flag = CAN_had_1936_election }
+				has_government = market_liberal
+			}
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				factor = 100
+				has_country_flag = CAN_liberal_ai
+				NOT = { has_country_flag = CAN_exile_ai }
+				NOT = { has_country_flag = CAN_unionist_ai }
+			}
+		}
+		save_event_target_as = CAN_address_gov
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.7 days = 1 }
+		}
+	}
+}
+
+# Results of the Address
+country_event = {
+	id = canada_events.7
+	picture = GFX_report_event_CAN_microphone
+
+	title = {
+		text = canada_events.7.t.war
+		trigger = { has_event_target = CAN_address_war }
+	}
+	title = {
+		text = canada_events.7.t.cons
+		trigger = { has_event_target = CAN_address_cons }
+	}
+	title = {
+		text = canada_events.7.t.gov
+		trigger = { has_event_target = CAN_address_gov }
+	}
+
+	desc = {
+		text = canada_events.7.d.war
+		trigger = { has_event_target = CAN_address_war }
+	}
+	desc = {
+		text = canada_events.7.d.cons
+		trigger = { has_event_target = CAN_address_cons }
+	}
+	desc = {
+		text = canada_events.7.d.gov
+		trigger = { has_event_target = CAN_address_gov }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.7 option canada_events.7.a"
+		name = canada_events.7.a #We must liberate our brothers in Britain!
+		trigger = { has_event_target = CAN_address_war }
+		add_war_support = 0.10
+		if = {
+			limit = { check_variable = { king_influence < 5 } }
+			custom_effect_tooltip = CAN_exile_influence_increase
+			add_to_variable = { king_influence = 1 }
+			CAN_calc_exile_influence_effects = yes
+		}
+		add_to_variable = { CAN_conservative_support = 1 }
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.05 }
+		add_popularity = { ideology = social_conservative popularity = 0.05 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.7 option canada_events.7.b"
+		name = canada_events.7.b #This election will be vital for our future!
+		trigger = { has_event_target = CAN_address_cons }
+		add_war_support = 0.05
+		add_political_power = 50
+		if = {
+			limit = { check_variable = { king_popularity < 5 } }
+			custom_effect_tooltip = CAN_king_popularity_increase
+			add_to_variable = { king_popularity = 1 }
+			CAN_calc_royal_visit_effects = yes
+		}
+		add_to_variable = { CAN_conservative_support = 2 }
+		add_popularity = { ideology = social_conservative popularity = 0.10 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.7 option canada_events.7.c"
+		name = canada_events.7.c #The 20th century shall be Canada's Century!
+		trigger = { has_event_target = CAN_address_gov }
+		add_to_variable = { CAN_liberal_support = 1 }
+		add_political_power = 100
+		add_stability = 0.03
+		add_war_support = -0.05
+		add_popularity = { ideology = market_liberal popularity = 0.05 }
+	}
+}
+
+# Status of the Privy Council (fired by focus)
+country_event = {
+	id = canada_events.8
+	title = canada_events.8.t
+	desc = canada_events.8.d
+	picture = GFX_report_event_CAN_cabinet
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.8 option canada_events.8.a"
+		name = canada_events.8.a #Let the king pick his replacement
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0.5
+				has_government = market_liberal
+				check_variable = { CAN_liberal_support < 1 }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = GBR_path option = GBR_PATH_SOCCON }
+			}
+		}
+		add_war_support = 0.05
+		CAN_remove_current_british_pm = yes
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_henry_page_croft_sic
+		}
+		else = {
+			activate_advisor = GBR_henry_page_croft_advisor
+		}
+		if = {
+			limit = { check_variable = { king_influence < 5 } }
+			custom_effect_tooltip = CAN_exile_influence_increase
+			add_to_variable = { king_influence = 1 }
+			CAN_calc_exile_influence_effects = yes
+		}
+		add_to_variable = { CAN_conservative_support = 1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.8 option canada_events.8.b"
+		name = canada_events.8.b #We should push for a moderate candidate
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0.25
+				has_government = social_conservative
+				check_variable = { CAN_conservative_support > 0 }
+			}
+			modifier = {
+				factor = 0.5
+				has_government = social_conservative
+				check_variable = { CAN_conservative_support < 1 }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GBR_path option = GBR_PATH_ELECTED_AUTDEM }
+					has_game_rule = { rule = GBR_path option = GBR_PATH_GUIDED_AUTDEM }
+				}
+			}
+		}
+		add_political_power = 50
+		CAN_remove_current_british_pm = yes
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_robert_gascoyne_cecil_sic
+		}
+		else = {
+			activate_advisor = GBR_robert_gascoyne_cecil_advisor
+		}
+		if = {
+			limit = { check_variable = { king_influence > 0 } }
+			custom_effect_tooltip = CAN_exile_influence_decrease
+			subtract_from_variable = { king_influence = 1 }
+			CAN_calc_exile_influence_effects = yes
+		}
+		add_to_variable = { CAN_liberal_support = 1 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.8 option canada_events.8.c"
+		name = canada_events.8.c #A vote by the Exiles should be organised
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = GBR_path option = GBR_PATH_ELECTED_AUTDEM }
+					has_game_rule = { rule = GBR_path option = GBR_PATH_GUIDED_AUTDEM }
+				}
+			}
+		}
+		CAN_remove_current_british_pm = yes
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_anthony_eden_sic
+		}
+		else = {
+			activate_advisor = GBR_anthony_eden_advisor
+		}
+		add_stability = 0.03
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+	}
+}
+
+# The New Governor-General? (fired by focus)
+country_event = {
+	id = canada_events.9
+	title = canada_events.9.t
+	desc = canada_events.9.d
+	picture = GFX_report_event_CAN_commons2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.9 option canada_events.9.a"
+		name = canada_events.9.a #Push for John Buchan, 1st Baron Tweedsmuir, to be the Governor-General.
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_country_flag = CAN_unionist_ai
+					has_country_flag = CAN_exile_ai
+				}
+			}
+			modifier = {
+				factor = 0.1
+				has_government = social_conservative
+			}
+		}
+		country_event = { id = canada_events.10 days = 5 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.9 option canada_events.9.b"
+		name = canada_events.9.b #Let’s not fight this battle, let the Exiles and King make their choice.
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				OR = {
+					has_country_flag = CAN_ccf_ai
+					has_country_flag = CAN_liberal_ai
+				}
+			}
+		}
+		add_political_power = 20
+		country_event = { id = canada_events.11 days = 5 }
+	}
+}
+
+# John Buchan appointed Governor-General!
+country_event = {
+	id = canada_events.10
+	title = canada_events.10.t
+	desc = canada_events.10.d
+	picture = GFX_report_event_CAN_commons2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.10 option canada_events.10.a"
+		name = canada_events.10.a
+		add_popularity = { ideology = market_liberal popularity = 0.05 }
+		if = {
+			limit = { check_variable = { king_popularity > 0 } }
+			custom_effect_tooltip = CAN_king_popularity_increase
+			add_to_variable = { king_popularity = 1 }
+			CAN_calc_royal_visit_effects = yes
+		}
+		hidden_effect = {
+			retire_character = CAN_ernest_makins
+		}
+	}
+}
+
+# Ernest Makins appoined Governor-General.
+country_event = {
+	id = canada_events.11
+	title = canada_events.11.t
+	desc = canada_events.11.d
+	picture = GFX_report_event_CAN_commons2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.11 option canada_events.11.a"
+		name = canada_events.11.a
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.05 }
+		if = {
+			limit = { check_variable = { king_influence > 0 } }
+			custom_effect_tooltip = CAN_exile_influence_increase
+			add_to_variable = { king_influence = 1 }
+			CAN_calc_exile_influence_effects = yes
+		}
+		hidden_effect = {
+			retire_character = CAN_john_buchan
+		}
+	}
+}
+
+### Begin pre-election events
+
+# 1936 Stanley Cup Finals
+country_event = {
+	id = canada_events.20
+	title = canada_events.20.t
+	desc = canada_events.20.d
+	picture = GFX_report_event_CAN_hockey
+
+	is_triggered_only = yes
+	major = yes
+
+	show_major = {
+		OR = {
+			tag = CAN
+			tag = USA
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.20 option canada_events.20.a"
+		name = canada_events.20.a
+		trigger = { tag = CAN }
+		hidden_effect = {
+			random_list = {
+				seed = global.date
+				55 = {
+					country_event = { id = canada_events.21 days = 2 } #Detroit wins
+				}
+				45 = {
+					country_event = { id = canada_events.22 days = 2 } #Toronto wins
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.20 option canada_events.20.b"
+		name = canada_events.20.b
+		trigger = { tag = USA }
+	}
+}
+
+# Detroit wins
+country_event = {
+	id = canada_events.21
+	title = canada_events.21.t
+	desc = canada_events.21.d
+	picture = GFX_report_event_CAN_redwings
+
+	is_triggered_only = yes
+	major = yes
+
+	show_major = {
+		OR = {
+			tag = CAN
+			tag = USA
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.21 option canada_events.21.a"
+		name = canada_events.21.a
+		trigger = { tag = CAN }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.21 option canada_events.21.b"
+		name = canada_events.21.b
+		trigger = { tag = USA }
+	}
+}
+
+# Toronto wins
+country_event = {
+	id = canada_events.22
+	title = canada_events.22.t
+	desc = canada_events.22.d
+	picture = GFX_report_event_CAN_mapleleafs
+
+	is_triggered_only = yes
+	major = yes
+
+	show_major = {
+		OR = {
+			tag = CAN
+			tag = USA
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.22 option canada_events.22.a"
+		name = canada_events.22.a
+		trigger = { tag = CAN }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.22 option canada_events.22.b"
+		name = canada_events.22.b
+		trigger = { tag = USA }
+	}
+}
+
+# Black Monday hits Canada
+country_event = {
+	id = canada_events.23
+	title = canada_events.23.t
+	desc = canada_events.23.d
+	picture = GFX_report_event_CAN_mission
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { has_idea = CAN_great_depression_3 }
+				save_event_target_as = CAN_great_depression_3
+				swap_ideas = {
+					remove_idea = CAN_great_depression_3
+					add_idea = CAN_great_depression_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = CAN_great_depression_2 }
+				save_event_target_as = CAN_great_depression_2
+				swap_ideas = {
+					remove_idea = CAN_great_depression_2
+					add_idea = CAN_great_depression_1
+				}
+			}
+			else = {
+				add_ideas = CAN_great_depression_3
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.23 option canada_events.23.a"
+		name = canada_events.23.a
+		add_stability = -0.05
+		effect_tooltip = {
+			if = {
+				limit = { has_event_target = CAN_great_depression_3 }
+				swap_ideas = {
+					remove_idea = CAN_great_depression_3
+					add_idea = CAN_great_depression_2
+				}
+			}
+			else_if = {
+				limit = { has_event_target = CAN_great_depression_2 }
+				swap_ideas = {
+					remove_idea = CAN_great_depression_2
+					add_idea = CAN_great_depression_1
+				}
+			}
+			else = {
+				add_ideas = CAN_great_depression_3
+			}
+		}
+	}
+}
+
+# Government calls for election
+country_event = {
+	id = canada_events.24
+	title = canada_events.24.t
+	desc = canada_events.24.d
+	picture = GFX_report_event_CAN_commons2
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.24 option canada_events.24.a"
+		name = canada_events.24.a
+		hidden_effect = {
+			country_event = { id = canada_events.25 days = 20 }
+		}
+	}
+}
+
+# Liberal explaination event
+country_event = {
+	id = canada_events.25
+	title = canada_events.25.t
+	desc = canada_events.25.d
+	picture = GFX_report_event_CAN_mackenzie_king
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.25 option canada_events.25.a"
+		name = canada_events.25.a
+		add_popularity = { ideology = market_liberal popularity = 0.05 }
+		hidden_effect = {
+			country_event = { id = canada_events.26 days = 20 random_days = 10 }
+		}
+	}
+}
+
+# Conservative explaination event
+country_event = {
+	id = canada_events.26
+	title = canada_events.26.t
+	desc = canada_events.26.d
+	picture = GFX_report_event_CAN_manion
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.26 option canada_events.26.a"
+		name = canada_events.26.a
+		add_popularity = { ideology = social_conservative popularity = 0.03 }
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.02 }
+		hidden_effect = {
+			country_event = { id = canada_events.27 days = 20 random_days = 10 }
+		}
+	}
+}
+
+# The Spectre of Conscription
+country_event = {
+	id = canada_events.27
+	title = canada_events.27.t
+	desc = canada_events.27.d
+	picture = GFX_report_event_CAN_meighen
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.27 option canada_events.27.a"
+		name = canada_events.27.a
+		add_stability = -0.03
+		add_ideas = CAN_divided_nation
+		hidden_effect = {
+			country_event = { id = canada_events.28 days = 20 random_days = 10 }
+		}
+	}
+}
+
+# Blueshirts demonstrations at King speech
+country_event = {
+	id = canada_events.28
+	title = canada_events.28.t
+	desc = canada_events.28.d
+	picture = GFX_report_event_king_speech
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.28 option canada_events.28.a"
+		name = canada_events.28.a #They shouldn't have been there
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = CAN_conservative_ai
+			}
+		}
+		add_stability = -0.02
+		add_to_variable = { CAN_liberal_support = 1 }
+		add_popularity = { ideology = market_liberal popularity = 0.05 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.28 option canada_events.28.b"
+		name = canada_events.28.b #They were unfairly provoked
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = CAN_liberal_ai
+			}
+		}
+		add_stability = -0.02
+		add_to_variable = { CAN_conservative_support = 1 }
+		add_popularity = { ideology = paternal_autocrat popularity = 0.02 }
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.30 days = 10 random_days = 5 }
+		}
+	}
+}
+
+# Maurice Duplessis becomes Premier of Quebec
+country_event = {
+	id = canada_events.29
+	title = canada_events.29.t
+	desc = canada_events.29.d
+	picture = GFX_report_event_CAN_duplessis
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.29 option canada_events.29.a"
+		name = canada_events.29.a
+		swap_ideas = {
+			remove_idea = CAN_anglo_french_tensions_2
+			add_idea = CAN_anglo_french_tensions_1
+		}
+	}
+}
+
+# Manion rejects conscription
+country_event = {
+	id = canada_events.30
+	title = canada_events.30.t
+	desc = canada_events.30.d
+	picture = GFX_report_event_CAN_manion
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.30 option canada_events.30.a"
+		name = canada_events.30.a #It seems like Québec is happy with his response...
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = CAN_liberal_ai
+			}
+		}
+		add_to_variable = { CAN_conservative_support = 1 }
+		add_popularity = { ideology = social_conservative popularity = 0.05 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.30 option canada_events.30.b"
+		name = canada_events.30.b #...his party however, would like some words.
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = CAN_conservative_ai
+			}
+		}
+		add_to_variable = { CAN_liberal_support = 1 }
+		add_popularity = { ideology = social_conservative popularity = -0.03 }
+		add_popularity = { ideology = authoritarian_democrat popularity = 0.02 }
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.31 days = 10 random_days = 5 }
+		}
+	}
+}
+
+# CCF explaination event
+country_event = {
+	id = canada_events.31
+	title = canada_events.31.t
+	desc = canada_events.31.d
+	picture = GFX_report_event_CAN_ccf
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.31 option canada_events.31.a"
+		name = canada_events.31.a
+		add_popularity = { ideology = social_democrat popularity = 0.05 }
+		add_popularity = { ideology = radical_socialist popularity = 0.02 }
+		hidden_effect = {
+			country_event = { id = canada_events.32 days = 20 random_days = 10 }
+		}
+	}
+}
+
+# Rise of the Social Credit Party
+country_event = {
+	id = canada_events.32
+	title = canada_events.32.t
+	desc = canada_events.32.d
+	picture = GFX_report_event_generic_rally
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.32 option canada_events.32.a"
+		name = canada_events.32.a
+		add_popularity = { ideology = national_populist popularity = 0.05 }
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.33 days = 5 }
+		}
+	}
+}
+
+# Progressives explaination event
+country_event = {
+	id = canada_events.33
+	title = canada_events.33.t
+	desc = canada_events.33.d
+
+	is_triggered_only = yes
+
+	trigger = {
+		tag = CAN
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.33 option canada_events.33.a"
+		name = canada_events.33.a
+		add_popularity = { ideology = social_liberal popularity = 0.02 }
+	}
+}
+
+# Recommendations of the National Employment Commission (triggered by focus)
+country_event = {
+	id = canada_events.34
+	title = canada_events.34.t
+	desc = canada_events.34.d
+	picture = GFX_report_event_CAN_camp
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			has_idea = CAN_national_employment_commission
+			has_idea = CAN_national_employment_commission_2
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.34 option canada_events.34.a"
+		name = canada_events.34.a # Implement the public works...
+		trigger = {
+			has_idea = CAN_national_employment_commission
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 2
+				has_government = market_liberal
+			}
+			modifier = {
+				factor = 0.5
+				has_government = social_conservative
+			}
+		}
+		add_political_power = 25
+		swap_ideas = {
+			remove_idea = CAN_national_employment_commission
+			add_idea = CAN_national_employment_commission_2
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.34 option canada_events.34.b"
+		name = canada_events.34.b # ...and start looking into unemployment insurance.
+		trigger = {
+			has_elected_government = yes
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.5
+				has_government = social_conservative
+			}
+		}
+		add_political_power = -50
+		if = {
+			limit = { has_idea = CAN_national_employment_commission }
+			swap_ideas = {
+				remove_idea = CAN_national_employment_commission
+				add_idea = CAN_national_employment_commission_2
+			}
+		}
+		custom_effect_tooltip = CAN_unemployment_insurance_tt
+		hidden_effect = {
+			country_event = { id = canada_events.36 days = 400 random_days = 60 }
+		}
+	}
+}
+
+# Unemployment Insurance Amendment
+country_event = {
+	id = canada_events.36
+	title = canada_events.36.t
+	picture = GFX_report_event_CAN_camp
+	desc = canada_events.36.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.36 option canada_events.36.a"
+		name = canada_events.36.a # Through public pressure Alberta relents, the law passes.
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 2
+				has_government = social_democrat
+			}
+			modifier = {
+				factor = 2
+				is_part_of_government_social_democrat = yes
+			}
+			modifier = {
+				factor = 0.20
+				has_political_power < 0
+			}
+		}
+		add_political_power = -50
+		if = {
+			limit = { has_idea = CAN_national_employment_commission }
+			swap_ideas = {
+				remove_idea = CAN_national_employment_commission
+				add_idea = CAN_unemployment_insurance_idea
+			}
+		}
+		else_if = {
+			limit = { has_idea = CAN_national_employment_commission_2 }
+			swap_ideas = {
+				remove_idea = CAN_national_employment_commission_2
+				add_idea = CAN_unemployment_insurance_idea
+			}
+		}
+		else = {
+			add_ideas = CAN_unemployment_insurance_idea
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.36 option canada_events.36.b"
+		name = canada_events.36.b # Alberta remains stubborn, unemployment insurance is killed in Edmonton.
+		trigger = {
+			OR = {
+				has_idea = CAN_national_employment_commission
+				has_idea = CAN_national_employment_commission_2
+			}
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 2
+				has_political_power < 0
+			}
+		}
+		add_stability = -0.05
+		add_popularity = { ideology = social_democrat popularity = 0.05 }
+		add_popularity = { ideology = national_populist popularity = -0.10 }
+	}
+}
+
+# Anti-Syndicalism on the Canadian Broadcasting Corp (triggered by focus)
+country_event = {
+	id = canada_events.37
+	title = canada_events.37.t
+	desc = canada_events.37.d
+	picture = GFX_report_event_spain_civil_war_soldiers
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_idea = CAN_cbc_idea
+		has_socialist_government = no
+		country_exists = ENG
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.37 option canada_events.37.a"
+		name = canada_events.37.a #The CBC is fine as it is
+		ai_chance = { base = 40 }
+		add_political_power = 25
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.37 option canada_events.37.b"
+		name = canada_events.37.b #Put Reith in charge of the CBC
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				OR = {
+					has_country_flag = CAN_ccf_ai
+					is_in_coalition_with_social_democrat = yes
+				}
+			}
+		}
+		add_stability = -0.02
+		add_popularity = { ideology = social_democrat popularity = -0.03 }
+		add_popularity = { ideology = syndicalist popularity = -0.03 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.37 option canada_events.37.c"
+		name = canada_events.37.c #Put Reith in charge, so long as he focuses attention on our foes abroad
+		ai_chance = { base = 40 }
+		add_war_support = 0.10
+		every_country = {
+			limit = { has_socialist_government = yes }
+			add_opinion_modifier = { target = CAN modifier = KR_hates_govt }
+		}
+	}
+}
+
+# Billy Bishop demands more priority for the airforce
+country_event = {
+	id = canada_events.38
+	title = canada_events.38.t
+	desc = canada_events.38.d
+	picture = GFX_report_event_SWE_aircraft
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_character = CAN_william_avery_bishop
+		CAN_william_avery_bishop = {
+			OR = {
+				is_air_chief = yes
+				is_high_command = yes
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.38 option canada_events.38.a"
+		name = canada_events.38.a #Bishop is a good man and I trust his methods
+		ai_chance = { base = 75 }
+		add_political_power = -50
+		add_manpower = -5000
+		add_doctrine_cost_reduction = {
+			name = canada_events.38.t
+			cost_reduction = 0.5
+			uses = 1
+			category = air_doctrine
+		}
+		add_tech_bonus = {
+			name = canada_events.38.t
+			bonus = 1
+			uses = 1
+			category = air_equipment
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.38 option canada_events.38.b"
+		name = canada_events.38.b #The air force will get no more of a priority
+		ai_chance = { base = 25 }
+	}
+}
+
+# Naval Exercises in the Atlantic (triggered by focus)
+country_event = {
+	id = canada_events.39
+	title = canada_events.39.t
+	desc = canada_events.39.d
+	picture = GFX_report_event_NOR_navy
+
+	is_triggered_only = yes
+
+	trigger = {
+		NOT = { country_exists = GBR }
+		NOT = { has_war_with = ENG }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.39 option canada_events.39.a"
+		name = canada_events.39.a #Conduct a large exercise off the coast of Britain and Ireland
+		trigger = { country_exists = ENG }
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.2
+				threat > 0.5
+			}
+		}
+		add_named_threat = {
+			threat = 4
+			name = CAN_provocative_naval_exercise
+		}
+		navy_experience = 75
+		ENG = {
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			country_event = canada_events.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.39 option canada_events.39.b"
+		name = canada_events.39.b #Conduct a large exercise in the North Sea
+		trigger = {
+			country_exists = GER
+			NOT = { has_war_with = GER }
+		}
+		ai_chance = { base = 10 }
+		add_named_threat = {
+			threat = 2
+			name = CAN_provocative_naval_exercise
+		}
+		navy_experience = 50
+		GER = {
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			country_event = canada_events.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.39 option canada_events.39.c"
+		name = canada_events.39.c #Conduct a large exercise off the American Coast
+		trigger = {
+			country_exists = USA
+			NOT = { has_war_with = USA }
+			OR = {
+				NOT = { has_global_flag = USA_civil_war_begun_flag }
+				has_global_flag = USA_civil_war_over_flag
+			}
+		}
+		ai_chance = { base = 10 }
+		add_named_threat = {
+			threat = 1
+			name = CAN_provocative_naval_exercise
+		}
+		navy_experience = 35
+		USA = {
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			country_event = canada_events.40
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.39 option canada_events.39.e"
+		name = canada_events.39.e
+		ai_chance = { base = 30 }
+		navy_experience = 25
+	}
+}
+
+# Country alarmed by naval exercises
+country_event = {
+	id = canada_events.40
+	title = canada_events.40.t
+	desc = canada_events.40.d
+	picture = GFX_report_event_NOR_navy
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.40 option canada_events.40.a"
+		name = canada_events.40.a #We'll play their game
+		ai_chance = { base = 90 }
+		effect_tooltip = {
+			random_list = {
+				60 = { country_event = canada_events.41 }
+				40 = { country_event = canada_events.42 }
+			}
+		}
+		hidden_effect = {
+			random_list = {
+				60 = {
+					country_event = { id = canada_events.41 days = 3 }
+					CAN = { country_event = { id = canada_events.42 days = 3 } }
+				}
+				40 = {
+					country_event = { id = canada_events.42 days = 3 }
+					CAN = { country_event = { id = canada_events.41 days = 3 } }
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.40 option canada_events.40.b"
+		name = canada_events.40.b #Ignore them
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				tag = ENG
+			}
+		}
+		add_political_power = -30
+	}
+}
+
+# Lost the naval games
+country_event = {
+	id = canada_events.41
+	title = canada_events.41.t
+	picture = GFX_report_event_NOR_navy
+
+	desc = {
+		text = canada_events.41.can
+		trigger = { tag = CAN }
+	}
+	desc = {
+		text = canada_events.41.oth
+		trigger = { NOT = { tag = CAN } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.41 option canada_events.41.a"
+		name = canada_events.41.a
+		navy_experience = 25
+		add_political_power = -50
+		add_timed_idea = {
+			idea = CAN_navy_games_lost
+			days = 180
+		}
+	}
+}
+
+# Won the naval games
+country_event = {
+	id = canada_events.42
+	title = canada_events.42.t
+	picture = GFX_report_event_NOR_navy
+
+	desc = {
+		text = canada_events.42.can
+		trigger = { tag = CAN }
+	}
+	desc = {
+		text = canada_events.42.oth
+		trigger = { NOT = { tag = CAN } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.42 option canada_events.42.a"
+		name = canada_events.42.a
+		trigger = { tag = CAN }
+		navy_experience = 50
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.42 option canada_events.42.b"
+		name = canada_events.42.b
+		trigger = { NOT = { tag = CAN } }
+		navy_experience = 25
+	}
+	after = {
+		add_political_power = 50
+		add_timed_idea = {
+			idea = CAN_navy_games_won
+			days = 180
+		}
+	}
+}
+
+### COALITION NEGOTIATION EVENTS
+
+# Start of Negotiations
+
+country_event = {
+	id = canada_events.43
+	title = canada_events.43.t
+	picture = GFX_report_event_CAN_commons1
+
+	desc = canada_events.43.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.43 option canada_events.43.a"
+		name = canada_events.43.a
+		hidden_effect = {
+			country_event = { id = canada_events.44 days = 4 }
+		}
+	}
+}
+
+# Progressive Party
+
+country_event = {
+	id = canada_events.44
+	title = canada_events.44.t
+	picture = GFX_report_event_CAN_cabinet
+
+	desc = {
+		text = canada_events.44.d.lib
+		trigger = { has_government = market_liberal }
+	}
+	desc = {
+		text = canada_events.44.d.con
+		trigger = { has_government = social_conservative }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.44 option canada_events.44.a"
+		name = canada_events.44.a
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		hidden_effect = {
+			if = {
+				limit = { is_in_coalition_with_authoritarian_democrat = yes }
+				set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+				add_to_coalition = yes
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.44 option canada_events.44.b"
+		name = canada_events.44.b
+		add_political_power = 50
+	}
+	after = {
+		hidden_effect = {
+			if = {
+				limit = { has_government = market_liberal }
+				country_event = { id = canada_events.45 days = 4 }
+			}
+			if = {
+				limit = { has_government = social_conservative }
+				country_event = { id = canada_events.46 days = 4 }
+			}
+		}
+	}
+}
+
+# CCF
+
+country_event = {
+	id = canada_events.45
+	title = canada_events.45.t
+	picture = GFX_report_event_CAN_ccf
+
+	desc = canada_events.45.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.45 option canada_events.45.a"
+		name = canada_events.45.a
+		ai_chance = { base = 100 }
+		set_temp_variable = { coalition_partner_var = token:social_democrat }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_stability_var = 0.25 }
+		set_coalition_stability_radical_socialist = yes
+		hidden_effect = {
+			if = {
+				limit = { is_in_coalition_with_social_liberal = yes }
+				set_temp_variable = { coalition_partner_var = token:social_liberal }
+				add_to_coalition = yes
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.45 option canada_events.45.b"
+		name = canada_events.45.b
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				has_country_flag = CAN_ccf_ai
+			}
+		}
+		add_political_power = 50
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.47 days = 4 }
+		}
+	}
+}
+
+# Social Credit
+
+country_event = {
+	id = canada_events.46
+	title = canada_events.46.t
+	picture = GFX_report_event_CAN_commons2
+
+	desc = canada_events.46.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.46 option canada_events.46.a"
+		name = canada_events.46.a
+		set_temp_variable = { coalition_partner_var = token:national_populist }
+		add_to_coalition = yes
+		hidden_effect = {
+			if = {
+				limit = { is_in_coalition_with_social_liberal = yes }
+				set_temp_variable = { coalition_partner_var = token:social_liberal }
+				add_to_coalition = yes
+			}
+			if = {
+				limit = { is_in_coalition_with_authoritarian_democrat = yes }
+				set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+				add_to_coalition = yes
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.46 option canada_events.46.b"
+		name = canada_events.46.b
+		add_political_power = 50
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.47 days = 4 }
+		}
+	}
+}
+
+# End of Negotiations
+
+country_event = {
+	id = canada_events.47
+	title = canada_events.47.t
+	picture = GFX_report_event_CAN_commons1
+
+	desc = canada_events.47.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.47 option canada_events.47.a"
+		name = canada_events.47.a
+	}
+}
+
+### ELECTION EVENTS
+
+# 1936 Election
+country_event = {
+	id = canada_events.50
+	title = canada_events.50.t
+	desc = canada_events.50.d
+	picture = GFX_report_event_CAN_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+		NOT = { has_global_flag = CAN_had_1936_election }
+	}
+
+	immediate = {
+		hidden_effect = {
+			multiply_variable = { CAN_conservative_support = 10 }
+			multiply_variable = { CAN_liberal_support = 10 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.50 option canada_events.50.a"
+		name = canada_events.50.a #Liberals under Mackenzie King
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = CAN_conservative_ai
+			}
+		}
+		clear_variable = CAN_conservative_support
+		clear_variable = CAN_liberal_support
+		set_global_flag = CAN_had_1936_election
+		add_popularity = { ideology = market_liberal popularity = 0.10 }
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		remove_from_coalition = yes
+		set_politics = {
+			ruling_party = market_liberal
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		CAN_add_mackenzie_king_sic = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.50 option canada_events.50.b"
+		name = canada_events.50.b #Conservatives under Robert Manion
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_country_flag = CAN_liberal_ai
+			}
+		}
+		clear_variable = CAN_conservative_support
+		clear_variable = CAN_liberal_support
+		set_global_flag = CAN_had_1936_election
+		add_popularity = { ideology = social_conservative popularity = 0.10 }
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		CAN_add_conservative_second_in_command = yes
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.51 days = 1 }
+			country_event = { id = canada_events.52 days = 4 }
+		}
+	}
+}
+
+# King Congratulates Government
+country_event = {
+	id = canada_events.51
+	picture = GFX_report_event_CAN_edward2
+
+	title = {
+		text = canada_events.51.t.lib
+		trigger = {
+			has_government = market_liberal
+		}
+	}
+	title = {
+		text = canada_events.51.t.con
+		trigger = {
+			has_government = social_conservative
+		}
+	}
+
+	desc = {
+		text = canada_events.51.d.lib
+		trigger = {
+			has_government = market_liberal
+		}
+	}
+	desc = {
+		text = canada_events.51.d.con
+		trigger = {
+			has_government = social_conservative
+		}
+	}
+
+	trigger = {
+		tag = CAN
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.51 option canada_events.51.a"
+		name = canada_events.51.a
+		if = {
+			limit = { is_part_of_government_social_democrat = yes }
+			add_stability = 0.05
+		}
+		else = {
+			add_stability = 0.10
+		}
+	}
+}
+
+# Bill 7 Debate Begins
+country_event = {
+	id = canada_events.52
+	title = canada_events.52.t
+	picture = GFX_report_event_CAN_commons1
+	desc = canada_events.52.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.52 option canada_events.52.a"
+		name = canada_events.52.a
+		hidden_effect = {
+			country_event = { id = canada_events.53 days = 4 }
+		}
+	}
+}
+
+# Bill 7: Economic Recovery
+country_event = {
+	id = canada_events.53
+	title = canada_events.53.t
+	desc = canada_events.53.d
+	picture = GFX_report_event_CAN_commons1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.53 option canada_events.53.a"
+		name = canada_events.53.a #We need to recover quickly, interventionism is the way forward.
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+		}
+		set_global_flag = CAN_C7_full_interventionism
+		custom_effect_tooltip = CAN_modify_bill_7
+		add_to_variable = {
+			global.CAN_b7_industrial_capacity_factory = 0.1
+			tooltip = industrial_capacity_factory_tooltip
+		}
+		add_to_variable = {
+			global.CAN_b7_industrial_capacity_dockyard = 0.1
+			tooltip = industrial_capacity_dockyard_tooltip
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.53 option canada_events.53.b"
+		name = canada_events.53.b #We need to save our resources, it’s time for austerity measures.
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = market_liberal
+			}
+		}
+		set_global_flag = CAN_C7_austerity
+		custom_effect_tooltip = CAN_modify_bill_7
+		add_to_variable = {
+			global.CAN_b7_consumer_goods_factor = -0.15
+			tooltip = consumer_goods_factor_tooltip
+		}
+		add_political_power = 25
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.53 option canada_events.53.c"
+		name = canada_events.53.c #Now is the time for compromise, a limited intervention is best.
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = market_liberal
+			}
+		}
+		set_global_flag = CAN_C7_limited_interventionism
+		custom_effect_tooltip = CAN_modify_bill_7
+		add_to_variable = {
+			global.CAN_b7_consumer_goods_factor = -0.075
+			tooltip = consumer_goods_factor_tooltip
+		}
+		add_to_variable = {
+			global.CAN_b7_industrial_capacity_factory = 0.05
+			tooltip = industrial_capacity_factory_tooltip
+		}
+		add_to_variable = {
+			global.CAN_b7_industrial_capacity_dockyard = 0.05
+			tooltip = industrial_capacity_dockyard_tooltip
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.56 days = 7 } #Industry
+		}
+	}
+}
+
+# Bill 7: The Future of Canada's Industry
+country_event = {
+	id = canada_events.56
+	title = canada_events.56.t
+	desc = canada_events.56.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.56 option canada_events.56.a"
+		name = canada_events.56.a # Liberal plan
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+		}
+		set_global_flag = CAN_C7_econ_lib
+		custom_effect_tooltip = CAN_modify_bill_7
+		add_to_variable = {
+			global.CAN_b7_global_building_slots_factor = 0.2
+			tooltip = global_building_slots_factor_tooltip
+		}
+		add_to_variable = {
+			global.CAN_b7_production_speed_industrial_complex_factor = 0.1
+			tooltip = production_speed_industrial_complex_factor_tooltip
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.56 option canada_events.56.b"
+		name = canada_events.56.b # Conservative plan
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = market_liberal
+			}
+		}
+		set_global_flag = CAN_C7_econ_conserv
+		custom_effect_tooltip = CAN_modify_bill_7
+		add_to_variable = {
+			global.CAN_b7_production_speed_arms_factory_factor = 0.2
+			tooltip = production_speed_arms_factory_factor_tooltip
+		}
+		add_to_variable = {
+			global.CAN_b7_production_speed_dockyard_factor = 0.1
+			tooltip = production_speed_dockyard_factor_tooltip
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.56 option canada_events.56.c"
+		name = canada_events.56.c # Compromise plan
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = market_liberal
+			}
+		}
+		add_political_power = 25
+		set_global_flag = CAN_C7_econ_comp
+		custom_effect_tooltip = CAN_modify_bill_7
+		add_to_variable = {
+			global.CAN_b7_global_building_slots_factor = 0.1
+			tooltip = global_building_slots_factor_tooltip
+		}
+		add_to_variable = {
+			global.CAN_b7_production_speed_industrial_complex_factor = 0.05
+			tooltip = production_speed_industrial_complex_factor_tooltip
+		}
+		add_to_variable = {
+			global.CAN_b7_production_speed_arms_factory_factor = 0.10
+			tooltip = production_speed_arms_factory_factor_tooltip
+		}
+		add_to_variable = {
+			global.CAN_b7_production_speed_dockyard_factor = 0.05
+			tooltip = production_speed_dockyard_factor_tooltip
+		}
+	}
+
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.57 days = 7 } #Security
+		}
+	}
+}
+
+# Bill 7: Domestic Security
+country_event = {
+	id = canada_events.57
+	title = canada_events.57.t
+	desc = canada_events.57.d
+	picture = GFX_report_event_HOL_dutch_police
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.57 option canada_events.57.a"
+		name = canada_events.57.a # Secret Police under George White
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = market_liberal
+			}
+		}
+		add_political_power = 50
+		set_temp_variable = { ideology_change_var = -0.1 }
+		change_ruling_party_popularity = yes
+		set_global_flag = CAN_C7_sec_winter
+		custom_effect_tooltip = CAN_secret_police_winter
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.57 option canada_events.57.b"
+		name = canada_events.57.b # Secret Police under Lucien Cannon
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = market_liberal
+			}
+		}
+		set_temp_variable = { ideology_change_var = -0.05 }
+		change_ruling_party_popularity = yes
+		set_global_flag = CAN_C7_sec_lapointe
+		custom_effect_tooltip = CAN_secret_police_lapointe
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.57 option canada_events.57.c"
+		name = canada_events.57.c # We can’t risk radicalising our left-wing even further, we aren’t empowering the RCMP.
+		ai_chance = {
+			modifier = {
+				factor = 0
+				has_government = social_conservative
+			}
+		}
+		set_global_flag = CAN_C7_sec_none
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+	}
+	after = {
+		hidden_effect = {
+			country_event = { id = canada_events.58 days = 5 } #Voting on the Bill Begins
+		}
+	}
+}
+
+# Voting on the Bill Begins
+country_event = {
+	id = canada_events.58
+	title = canada_events.58.t
+	desc = canada_events.58.d
+	picture = GFX_report_event_CAN_commons1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.58 option canada_events.58.a"
+		name = canada_events.58.a
+		trigger = { has_government = social_conservative }
+		hidden_effect = {
+			if = {
+				limit = { is_ai = no }
+				set_variable = { chance_pass = 40 }
+				if = {
+					limit = { has_global_flag = CAN_C7_limited_interventionism }
+					add_to_variable = { chance_pass = 20 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_austerity }
+					add_to_variable = { chance_pass = 10 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_full_interventionism }
+					subtract_from_variable = { chance_pass = 20 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_econ_comp }
+					add_to_variable = { chance_pass = 15 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_econ_conserv }
+					add_to_variable = { chance_pass = 10 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_econ_lib }
+					subtract_from_variable = { chance_pass = 15 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_sec_none }
+					subtract_from_variable = { chance_pass = 15 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_sec_lapointe }
+					add_to_variable = { chance_pass = 10 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_sec_winter }
+					add_to_variable = { chance_pass = 25 }
+				}
+				set_variable = { vote = random }
+				multiply_variable = { vote = 100 }
+				if = {
+					limit = { check_variable = { vote < chance_pass } }
+					country_event = { id = canada_events.59 days = 1 }
+				}
+				else = {
+					country_event = { id = canada_events.61 days = 1 }
+				}
+			}
+			else_if = {
+				limit = {
+					NOT = { has_country_flag = CAN_unionist_ai }
+					NOT = { has_country_flag = CAN_exile_ai }
+				}
+				country_event = { id = canada_events.59 days = 1 }
+			}
+			else = {
+				country_event = { id = canada_events.61 days = 1 }
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.58 option canada_events.58.a"
+		name = canada_events.58.a
+		trigger = { has_government = market_liberal }
+		hidden_effect = {
+			if = {
+				limit = { is_ai = no }
+				set_variable = { chance_pass = 40 }
+				if = {
+					limit = { has_global_flag = CAN_C7_limited_interventionism }
+					subtract_from_variable = { chance_pass = 10 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_austerity }
+					subtract_from_variable = { chance_pass = 20 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_full_interventionism }
+					add_to_variable = { chance_pass = 30 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_econ_conserv }
+					subtract_from_variable = { chance_pass = 20 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_econ_lib }
+					add_to_variable = { chance_pass = 20 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_sec_none }
+					add_to_variable = { chance_pass = 10 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_sec_lapointe }
+					subtract_from_variable = { chance_pass = 20 }
+				}
+				if = {
+					limit = { has_global_flag = CAN_C7_sec_winter }
+					subtract_from_variable = { chance_pass = 30 }
+				}
+				set_variable = { vote = random }
+				multiply_variable = { vote = 100 }
+				if = {
+					limit = { check_variable = { vote < chance_pass } }
+					country_event = { id = canada_events.59 days = 1 }
+				}
+				else = {
+					country_event = { id = canada_events.61 days = 1 }
+				}
+			}
+			else_if = {
+				limit = {
+					NOT = { has_country_flag = CAN_unionist_ai }
+					NOT = { has_country_flag = CAN_exile_ai }
+				}
+				country_event = { id = canada_events.59 days = 1 }
+			}
+			else = {
+				country_event = { id = canada_events.61 days = 1 }
+			}
+		}
+	}
+}
+
+# Bill C-7 Passes!
+country_event = {
+	id = canada_events.59
+	title = canada_events.59.t
+	desc = canada_events.59.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.59 option canada_events.59.a"
+		name = canada_events.59.a
+		add_political_power = 200
+		if = {
+			limit = { has_idea = CAN_divided_nation }
+			remove_ideas = CAN_divided_nation
+		}
+		add_dynamic_modifier = { modifier = CAN_bill_7_modifier }
+		# add industry changes
+		if = {
+			limit = { has_global_flag = CAN_C7_econ_lib }
+			276 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			832 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			466 = {
+				add_extra_state_shared_building_slots = 1
+			}
+			739 = {
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+		if = {
+			limit = { has_global_flag = CAN_C7_econ_conserv }
+			276 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			464 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		if = {
+			limit = { has_global_flag = CAN_C7_econ_comp }
+			276 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			832 = {
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+		# add security changes
+		if = {
+			limit = { has_global_flag = CAN_C7_sec_winter }
+			add_ideas = CAN_mounties_2
+		}
+		if = {
+			limit = { has_global_flag = CAN_C7_sec_lapointe }
+			add_ideas = CAN_mounties_1
+		}
+
+		set_global_flag = CAN_C7_passed
+		clear_variable = chance_pass
+		clear_variable = vote
+		clr_global_flag = CAN_C7_full_interventionism
+		clr_global_flag = CAN_C7_austerity
+		clr_global_flag = CAN_C7_limited_interventionism
+		clr_global_flag = CAN_C7_econ_lib
+		clr_global_flag = CAN_C7_econ_conserv
+		clr_global_flag = CAN_C7_econ_comp
+		clr_global_flag = CAN_C7_sec_winter
+		clr_global_flag = CAN_C7_sec_lapointe
+
+		hidden_effect = {
+			if = {
+				limit = { has_government = market_liberal }
+				country_event = { id = canada_events.63 days = 90 } #Bennett replaces Manion
+			}
+		}
+	}
+}
+
+# Bill C-7 Fails!
+country_event = {
+	id = canada_events.61
+	title = canada_events.61.t
+	desc = canada_events.61.d
+	picture = GFX_report_event_AST_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.61 option canada_events.61.a"
+		name = canada_events.61.a
+		add_political_power = -100
+		hidden_effect = {
+			country_event = { id = canada_events.62 days = 3 }
+		}
+	}
+}
+
+# Vote of No Confidence - Government Falls
+country_event = {
+	id = canada_events.62
+	title = canada_events.62.t
+	picture = GFX_report_event_AST_parliament1
+
+	desc = {
+		text = canada_events.62.d.cons
+		trigger = { has_government = social_conservative }
+	}
+	desc = {
+		text = canada_events.62.d.lib
+		trigger = { NOT = { has_government = social_conservative } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.62 option canada_events.62.a"
+		name = canada_events.62.a
+		set_global_flag = CAN_fallen_government
+		custom_effect_tooltip = elections_in_three_months
+		add_stability = -0.10
+		set_temp_variable = { ideology_change_var = -0.1 }
+		change_ruling_party_popularity = yes
+		hidden_effect = {
+			if = {
+				limit = { has_government = market_liberal }
+				set_variable = { CAN_conservative_support = 3 }
+			}
+			if = {
+				limit = { has_government = social_conservative }
+				set_variable = { CAN_liberal_support = 3 }
+				activate_advisor = CAN_robert_manion_sic
+			}
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = var:current_party_ideology_group
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 3
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+			country_event = { id = canada_events.63 days = 10 } #Bennett replaces Manion
+			country_event = { id = canada_events.65 days = 25 } #King Promises New Deal
+			country_event = { id = canada_events.66 days = 45 } #Bennett Outlines Bill C-8
+		}
+	}
+}
+
+# Bennett Replaces Manion as Conservative Leader
+country_event = {
+	id = canada_events.63
+	title = canada_events.63.t
+	picture = GFX_report_event_CAN_bennett
+
+	desc = {
+		text = canada_events.63.d.fallen
+		trigger = {
+			has_government = social_conservative
+			has_global_flag = CAN_fallen_government
+		}
+	}
+	desc = {
+		text = canada_events.63.d.stepdown
+		trigger = {
+			has_government = social_conservative
+			NOT = { has_global_flag = CAN_fallen_government }
+		}
+	}
+	desc = {
+		text = canada_events.63.d.challenge
+		trigger = {
+			NOT = { has_government = social_conservative }
+			has_global_flag = CAN_fallen_government
+		}
+	}
+	desc = {
+		text = canada_events.63.d
+		trigger = {
+			NOT = { has_government = social_conservative }
+			NOT = { has_global_flag = CAN_fallen_government }
+		}
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_character = CAN_richard_bedford_bennett
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.63 option canada_events.63.a"
+		name = canada_events.63.a
+		add_popularity = { ideology = social_conservative popularity = 0.05 }
+		if = {
+			limit = { CAN_is_dominion = no }
+			promote_character = CAN_richard_bedford_bennett
+		}
+		else_if = {
+			limit = { has_government = social_conservative }
+			activate_advisor = CAN_richard_bedford_bennett_sic
+		}
+		hidden_effect = {
+			CAN_robert_manion = { remove_second_in_command_role = yes }
+		}
+	}
+}
+
+# King Promises New Deal
+country_event = {
+	id = canada_events.65
+	title = canada_events.65.t
+	picture = GFX_report_event_CAN_mackenzie_king2
+
+	is_triggered_only = yes
+
+	desc = {
+		text = canada_events.65.d.cons
+		trigger = { NOT = { has_government = market_liberal } }
+	}
+	desc = {
+		text = canada_events.65.d.lib
+		trigger = { has_government = market_liberal }
+	}
+
+	trigger = {
+		has_global_flag = CAN_fallen_government
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.65 option canada_events.65.a"
+		name = canada_events.65.a
+		add_stability = 0.02
+		add_popularity = { ideology = market_liberal popularity = 0.05 }
+	}
+}
+
+# Bennett Outlines Bill 8
+country_event = {
+	id = canada_events.66
+	title = canada_events.66.t
+	picture = GFX_report_event_CAN_bennett
+
+	desc = {
+		text = canada_events.66.d.cons
+		trigger = { has_government = social_conservative }
+	}
+	desc = {
+		text = canada_events.66.d.lib
+		trigger = { NOT = { has_government = social_conservative } }
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_global_flag = CAN_fallen_government
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.66 option canada_events.66.a"
+		name = canada_events.66.a
+		add_stability = 0.02
+		add_popularity = { ideology = social_conservative popularity = 0.05 }
+	}
+}
+
+# New Election
+country_event = {
+	id = canada_events.67
+	title = canada_events.67.t
+	desc = canada_events.67.d
+	picture = GFX_report_event_CAN_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_global_flag = CAN_fallen_government
+		has_global_flag = CAN_had_1936_election
+		has_elected_government = yes
+	}
+
+	immediate = {
+		hidden_effect = {
+			multiply_variable = { CAN_conservative_support = 20 }
+			multiply_variable = { CAN_liberal_support = 20 }
+			clr_country_flag = CAN_liberal_ai
+			clr_country_flag = CAN_conservative_ai
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.67 option canada_events.67.a"
+		name = canada_events.67.a #Liberals gets majority
+		ai_chance = { base = 0 }
+		clear_variable = CAN_conservative_support
+		clear_variable = CAN_liberal_support
+		clr_global_flag = CAN_fallen_government
+		add_popularity = { ideology = market_liberal popularity = 0.10 }
+		set_politics = {
+			ruling_party = market_liberal
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		CAN_add_mackenzie_king_sic = yes
+		hidden_effect = {
+			country_event = { id = canada_events.68 days = 10 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.67 option canada_events.67.b"
+		name = canada_events.67.b #Conservatives get majority
+		ai_chance = { base = 100 }	#AI will only fail Bill 7 when they are going AutDem or PatAut, which needs Bennet's Conservatives in power
+		clear_variable = CAN_conservative_support
+		clear_variable = CAN_liberal_support
+		clr_global_flag = CAN_fallen_government
+		add_popularity = { ideology = social_conservative popularity = 0.10 }
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		CAN_add_conservative_second_in_command = yes
+		hidden_effect = {
+			country_event = { id = canada_events.69 days = 10 }
+		}
+	}
+}
+
+# Liberals Pass 'New Deal' Bill 7
+country_event = {
+	id = canada_events.68
+	title = canada_events.68.t
+	desc = canada_events.68.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable = { global.CAN_b7_industrial_capacity_factory = 0.1 }
+		set_variable = { global.CAN_b7_industrial_capacity_dockyard = 0.1 }
+		set_variable = { global.CAN_b7_global_building_slots_factor = 0.2 }
+		set_variable = { global.CAN_b7_production_speed_industrial_complex_factor = 0.1 }
+
+		clear_variable = global.CAN_b7_consumer_goods_factor
+		clear_variable = global.CAN_b7_production_speed_arms_factory_factor
+		clear_variable = global.CAN_b7_production_speed_dockyard_factor
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.68 option canada_events.68.a"
+		name = canada_events.68.a
+		add_political_power = 200
+		if = {
+			limit = { has_idea = CAN_divided_nation }
+			remove_ideas = CAN_divided_nation
+		}
+		# add industry changes
+		add_dynamic_modifier = { modifier = CAN_bill_7_modifier }
+		276 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		832 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		473 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		466 = {
+			add_extra_state_shared_building_slots = 1
+		}
+		739 = {
+			add_extra_state_shared_building_slots = 1
+		}
+
+		set_global_flag = CAN_C7_passed
+		clear_variable = chance_pass
+		clear_variable = vote
+		clr_global_flag = CAN_C7_full_interventionism
+		clr_global_flag = CAN_C7_austerity
+		clr_global_flag = CAN_C7_limited_interventionism
+		clr_global_flag = CAN_C7_econ_lib
+		clr_global_flag = CAN_C7_econ_conserv
+		clr_global_flag = CAN_C7_econ_comp
+		clr_global_flag = CAN_C7_sec_winter
+		clr_global_flag = CAN_C7_sec_lapointe
+
+		hidden_effect = {
+			activate_targeted_decision = { decision = CAN_enact_full_conscription target = ROOT }
+		}
+	}
+}
+
+# Conservatives Pass Bill C-8
+country_event = {
+	id = canada_events.69
+	title = canada_events.69.t
+	desc = canada_events.69.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable = { global.CAN_b7_consumer_goods_factor = -0.15 }
+		set_variable = { global.CAN_b7_production_speed_arms_factory_factor = 0.1 }
+		set_variable = { global.CAN_b7_production_speed_dockyard_factor = 0.1 }
+
+		clear_variable = global.CAN_b7_industrial_capacity_factory
+		clear_variable = global.CAN_b7_industrial_capacity_dockyard
+		clear_variable = global.CAN_b7_global_building_slots_factor
+		clear_variable = global.CAN_b7_production_speed_industrial_complex_factor
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.69 option canada_events.69.a"
+		name = canada_events.69.a
+		add_political_power = 200
+		if = {
+			limit = { has_idea = CAN_divided_nation }
+			remove_ideas = CAN_divided_nation
+		}
+		# add economic recovery changes
+		add_dynamic_modifier = { modifier = CAN_bill_8_modifier }
+		# add industry changes
+		276 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		832 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		464 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		473 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		# add security changes
+		add_ideas = CAN_mounties_1
+
+		set_global_flag = CAN_C7_passed
+		clear_variable = chance_pass
+		clear_variable = vote
+		clr_global_flag = CAN_C7_full_interventionism
+		clr_global_flag = CAN_C7_austerity
+		clr_global_flag = CAN_C7_limited_interventionism
+		clr_global_flag = CAN_C7_econ_lib
+		clr_global_flag = CAN_C7_econ_conserv
+		clr_global_flag = CAN_C7_econ_comp
+		clr_global_flag = CAN_C7_sec_winter
+		clr_global_flag = CAN_C7_sec_lapointe
+	}
+}
+
+# Mackenzie King Retires
+country_event = {
+	id = canada_events.70
+	title = canada_events.70.t
+	desc = canada_events.70.d
+	picture = GFX_report_event_CAN_mackenzie_king
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_character = CAN_william_lyon_mackenzie_king
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.70 option canada_events.70.a"
+		name = canada_events.70.a
+		retire_character = CAN_william_lyon_mackenzie_king
+		effect_tooltip = {
+			set_party_name = {
+				ideology = social_liberal
+				name = CAN_market_liberal_party
+				long_name = CAN_market_liberal_party
+			}
+		}
+		if = {
+			limit = { has_government = market_liberal }
+			set_politics = {
+				ruling_party = social_liberal
+				election_frequency = 60
+				elections_allowed = yes
+			}
+			set_temp_variable = { coalition_partner_var = token:market_liberal }
+			add_to_coalition = yes
+			CAN_add_louis_st_laurent_sic = yes
+		}
+		add_popularity = { ideology = social_liberal popularity = 0.20 }
+		if = {
+			limit = { market_liberal < 0.20 }
+			add_popularity = { ideology = market_liberal popularity = -0.20 }
+		}
+		else = {
+			add_popularity = { ideology = market_liberal popularity = -0.10 }
+		}
+		hidden_effect = {
+			if = {
+				limit = { is_part_of_government_social_democrat = yes }
+				set_temp_variable = { coalition_partner_var = token:social_democrat }
+				set_temp_variable = { coalition_partner_var = token:radical_socialist }
+				add_to_coalition = yes
+				set_temp_variable = { coalition_stability_var = 0.25 }
+				set_coalition_stability_radical_socialist = yes
+			}
+			set_party_name = {
+				ideology = social_liberal
+				long_name = CAN_liberal_party_long
+				name = CAN_liberal_party
+			}
+		}
+	}
+}
+
+# J.S. Woodsworth loses CCF leadership to Coldwell
+country_event = {
+	id = canada_events.72
+	title = canada_events.72.t
+	desc = canada_events.72.d
+	picture = GFX_report_event_CAN_coldwell
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_character = CAN_james_shaver_woodsworth
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.72 option canada_events.72.a"
+		name = canada_events.72.a
+		retire_character = CAN_james_shaver_woodsworth
+		add_popularity = { ideology = social_democrat popularity = 0.05 }
+		if = {
+			limit = { CAN_is_dominion = no }
+			promote_character = CAN_major_james_coldwell
+		}
+		else_if = {
+			limit = { has_government = social_democrat }
+			activate_advisor = CAN_major_james_coldwell_sic
+		}
+	}
+}
+
+# Death of Hugh Guthrie
+country_event = {
+	id = canada_events.73
+	title = canada_events.73.t
+	desc = {
+		text = canada_events.73.unionist
+		trigger = {
+			has_authdem_or_pataut_government = yes
+		}
+	}
+
+	desc = {
+		text = canada_events.73.notunionist
+		trigger = {
+			has_elected_government = yes
+		}
+	}
+
+	picture = GFX_report_event_CAN_commons1
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_character = CAN_hugh_guthrie
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.73 option canada_events.73.a"
+		name = canada_events.73.a
+		trigger = {
+			has_government = authoritarian_democrat
+		}
+		if = {
+			limit = { CAN_is_dominion = yes }
+			activate_advisor = CAN_george_stewart_henry_sic
+		}
+		else = {
+			promote_character = CAN_george_stewart_henry
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.73 option canada_events.73.b"
+		name = canada_events.73.b
+		trigger = {
+			NOT = { has_government = authoritarian_democrat }
+		}
+	}
+
+	after = {
+		CAN_hugh_guthrie = { kill_character = yes }
+	}
+}
+
+# Elections after 1936
+country_event = {
+	id = canada_events.75
+	title = canada_events.75.t
+	desc = canada_events.75.desc
+	picture = GFX_report_event_CAN_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_elected_government = yes
+		has_global_flag = CAN_had_1936_election
+		NOT = { has_global_flag = CAN_fallen_government }
+	}
+
+	immediate = {
+		clr_country_flag = CAN_liberal_ai
+		clr_country_flag = CAN_conservative_ai
+		clr_country_flag = CAN_unionist_ai
+		clr_country_flag = CAN_exile_ai
+		clr_country_flag = CAN_ccf_ai
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.75 option canada_events.75.a"
+		name = canada_events.75.a #Liberals get majority
+		ai_chance = {
+			base = 45
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = CAN_path option = CAN_PATH_SOCCON }
+					has_game_rule = { rule = CAN_path option = CAN_PATH_AUTDEM }
+					has_game_rule = { rule = CAN_path option = CAN_PATH_PATAUT }
+					has_game_rule = { rule = CAN_path option = CAN_PATH_NATPOP }
+					AND = {
+						has_game_rule = { rule = CAN_path option = CAN_PATH_SOCDEM }
+						has_completed_focus = CAN_return_of_the_king
+						NOT = { has_character = CAN_james_shaver_woodsworth }
+					}
+				}
+			}
+			modifier = {
+				add = -10
+				CAN_is_dominion = no
+			}
+		}
+		if = {
+			limit = { has_character = CAN_william_lyon_mackenzie_king }
+			if = {
+				limit = { market_liberal < 0.40 }
+				add_popularity = { ideology = market_liberal popularity = 0.20 }
+			}
+			else_if = {
+				limit = { market_liberal < 0.60 }
+				add_popularity = { ideology = market_liberal popularity = 0.10 }
+			}
+			set_politics = {
+				ruling_party = market_liberal
+				election_frequency = 60
+				elections_allowed = yes
+			}
+			set_temp_variable = { coalition_partner_var = token:social_liberal }
+			add_to_coalition = yes
+			CAN_add_mackenzie_king_sic = yes
+		}
+		else = {
+			if = {
+				limit = { social_liberal < 0.40 }
+				add_popularity = { ideology = social_liberal popularity = 0.20 }
+			}
+			else_if = {
+				limit = { social_liberal < 0.60 }
+				add_popularity = { ideology = social_liberal popularity = 0.10 }
+			}
+			set_politics = {
+				ruling_party = social_liberal
+				election_frequency = 60
+				elections_allowed = yes
+			}
+			set_temp_variable = { coalition_partner_var = token:market_liberal }
+			add_to_coalition = yes
+			CAN_add_louis_st_laurent_sic = yes
+		}
+		hidden_effect = {
+			country_event = { id = canada_events.76 days = 60 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.75 option canada_events.75.b"
+		name = canada_events.75.b #Conservatives get majority
+		ai_chance = {
+			base = 45
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = CAN_path option = CAN_PATH_MARLIB }
+					has_game_rule = { rule = CAN_path option = CAN_PATH_SOCDEM }
+					AND = {
+						has_game_rule = { rule = CAN_path option = CAN_PATH_NATPOP }
+						CAN_is_dominion = no
+						has_completed_focus = CAN_new_path
+					}
+				}
+			}
+			modifier = {
+				add = -30
+				CAN_is_dominion = no
+			}
+		}
+		if = {
+			limit = { social_conservative < 0.40 }
+			add_popularity = { ideology = social_conservative popularity = 0.20 }
+		}
+		else_if = {
+			limit = { social_conservative < 0.60 }
+			add_popularity = { ideology = social_conservative popularity = 0.10 }
+		}
+		set_politics = {
+			ruling_party = social_conservative
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		CAN_add_conservative_second_in_command = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.75 option canada_events.75.d"
+		name = canada_events.75.d #Social Credit wins minority with Conservative support
+		trigger = {
+			CAN_is_dominion = no
+			has_completed_focus = CAN_new_path
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_NATPOP } }
+			}
+		}
+		if = {
+			limit = { national_populist < 0.40 }
+			add_popularity = { ideology = national_populist popularity = 0.10 }
+		}
+		else_if = {
+			limit = { national_populist < 0.60 }
+			add_popularity = { ideology = national_populist popularity = 0.05 }
+		}
+		if = {
+			limit = { social_conservative < 0.40 }
+			add_popularity = { ideology = social_conservative popularity = 0.10 }
+		}
+		else_if = {
+			limit = { social_conservative < 0.60 }
+			add_popularity = { ideology = social_conservative popularity = 0.05 }
+		}
+		set_politics = {
+			ruling_party = national_populist
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_stability_var = 0.25 }
+		set_coalition_stability_authoritarian_democrat = yes
+		hidden_effect = {
+			country_event = { id = canada_events.76 days = 60 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.75 option canada_events.75.c"
+		name = canada_events.75.c # CCF wins minority with Liberal support
+		trigger = {
+			has_completed_focus = CAN_return_of_the_king
+			NOT = { has_character = CAN_james_shaver_woodsworth }
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_SOCDEM } }
+			}
+			modifier = {
+				add = 15
+				CAN_is_dominion = no
+			}
+		}
+		if = {
+			limit = { social_liberal < 0.40 }
+			add_popularity = { ideology = social_liberal popularity = 0.10 }
+		}
+		else_if = {
+			limit = { social_liberal < 0.60 }
+			add_popularity = { ideology = social_liberal popularity = 0.05 }
+		}
+		if = {
+			limit = { social_democrat < 0.40 }
+			add_popularity = { ideology = social_democrat popularity = 0.10 }
+		}
+		else_if = {
+			limit = { social_democrat < 0.60 }
+			add_popularity = { ideology = social_democrat popularity = 0.05 }
+		}
+		if = {
+			limit = { radical_socialist < 0.40 }
+			add_popularity = { ideology = radical_socialist popularity = 0.05 }
+		}
+		else_if = {
+			limit = { radical_socialist < 0.60 }
+			add_popularity = { ideology = radical_socialist popularity = 0.025 }
+		}
+		set_politics = {
+			ruling_party = social_democrat
+			election_frequency = 60
+			elections_allowed = yes
+		}
+		set_temp_variable = { coalition_partner_var = token:radical_socialist }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		CAN_add_major_james_coldwell_sic = yes
+		hidden_effect = {
+			country_event = { id = canada_events.76 days = 60 }
+		}
+	}
+}
+
+# Conservative party rebranded under Bracken
+country_event = {
+	id = canada_events.76
+	title = canada_events.76.t
+	desc = canada_events.76.d
+	picture = GFX_report_event_CAN_cabinet
+
+	trigger = {
+		date > 1941.1.1
+		OR = {
+			has_character = CAN_richard_bedford_bennett
+			has_character = CAN_robert_manion
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.76 option canada_events.76.a"
+		name = canada_events.76.a
+		add_popularity = { ideology = social_conservative popularity = 0.05 }
+		effect_tooltip = {
+			set_party_name = {
+				ideology = social_conservative
+				name = CAN_prog_conservative_party
+				long_name = CAN_prog_conservative_party
+			}
+			set_party_name = {
+				ideology = authoritarian_democrat
+				name = CAN_prog_conservative_party_old
+				long_name = CAN_prog_conservative_party_old
+			}
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = social_conservative
+				long_name = CAN_prog_conservative_party_long
+				name = CAN_prog_conservative_party
+			}
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = CAN_prog_conservative_party_old_long
+				name = CAN_prog_conservative_party_old
+			}
+			if = {
+				limit = { has_character = CAN_richard_bedford_bennett }
+				CAN_robert_manion = { remove_second_in_command_role = yes }
+			}
+			if = {
+				limit = { has_character = CAN_robert_manion }
+				CAN_robert_manion = { remove_second_in_command_role = yes }
+			}
+		}
+		if = {
+			limit = { CAN_is_dominion = no }
+			promote_character = CAN_john_bracken
+		}
+		else_if = {
+			limit = { has_government = social_conservative }
+			activate_advisor = CAN_john_bracken_sic
+		}
+	}
+}
+
+# King replaces British PM
+country_event = {
+	id = canada_events.77
+	title = canada_events.77.t
+	desc = canada_events.77.d
+	picture = GFX_report_event_CAN_rideau
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		has_global_flag = CAN_king_replaces_pm
+		has_country_flag = KR_british_king_base
+		NOT = { has_idea = CAN_rally_the_country }
+		GBR = { GBR_robert_vansittart = { NOT = { check_variable = { global.GBR_prime_minister = THIS } } } }
+	}
+
+	mean_time_to_happen = {
+		months = 3
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.77 option canada_events.77.a"
+		name = canada_events.77.a
+		clr_global_flag = CAN_king_replaces_pm
+		CAN_remove_current_british_pm = yes
+		if = {
+			limit = { has_global_flag = GBR_british_pm_slot_changed }
+			activate_advisor = GBR_robert_vansittart_sic
+		}
+		else = {
+			activate_advisor = GBR_robert_vansittart_advisor
+		}
+		custom_effect_tooltip = CAN_exile_influence_decrease
+		if = {
+			limit = { check_variable = { king_influence > 0 } }
+			subtract_from_variable = { king_influence = 1 }
+		}
+		else = {
+			set_variable = { king_influence = 0 }
+		}
+		CAN_calc_exile_influence_effects = yes
+	}
+}
+
+### RED STEEL BELT CHAIN
+
+#The Steel Belt Turns Red
+country_event = {
+	id = canada_events.97
+	title = canada_events.97.t
+	desc = canada_events.97.d
+	picture = GFX_report_event_CAN_strike
+
+	trigger = {
+		tag = CAN
+		has_global_flag = USA_WCA_existed
+	}
+
+	mean_time_to_happen = {
+		days = 5
+	}
+
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.97 option canada_events.97.a"
+		name = canada_events.97.a
+		country_event = { id = canada_events.98 days = 15 }
+	}
+}
+
+#A Bipartisan Bill
+country_event = {
+	id = canada_events.98
+	title = canada_events.98.t
+	desc = canada_events.98.d
+	picture = GFX_report_event_CAN_cabinet
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.98 option canada_events.98.a"
+		name = canada_events.98.a
+		country_event = { id = canada_events.99 days = 5 }
+	}
+}
+
+#A Small Push
+country_event = {
+	id = canada_events.99
+	title = canada_events.99.t
+	desc = canada_events.99.d
+	picture = GFX_report_event_CAN_rideau
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.99 option canada_events.99.a"
+		name = canada_events.99.a
+		country_event = { id = canada_events.100 days = 3 }
+	}
+}
+
+### QUEBEC EVENTS
+
+# Riots Across Quebec
+country_event = {
+	id = canada_events.100
+	title = canada_events.100.t
+	desc = canada_events.100.d
+	picture = GFX_report_event_CAN_quebec1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.100 option canada_events.100.a"
+		name = canada_events.100.a
+		add_stability = -0.10
+		add_ideas = CAN_quebec_in_flames_idea
+		if = {
+			limit = { has_idea = CAN_anglo_french_tensions_2 }
+			swap_ideas = {
+				remove_idea = CAN_anglo_french_tensions_2
+				add_idea = CAN_anglo_french_tensions_1
+			}
+		}
+		else_if = {
+			limit = { has_idea = CAN_anglo_french_tensions_3 }
+			swap_ideas = {
+				remove_idea = CAN_anglo_french_tensions_3
+				add_idea = CAN_anglo_french_tensions_1
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { has_idea = CAN_anglo_french_tensions_1 }
+				NOT = { has_idea = CAN_anglo_french_tensions_2 }
+				NOT = { has_idea = CAN_anglo_french_tensions_3 }
+			}
+			add_ideas = CAN_anglo_french_tensions_1
+		}
+		unlock_decision_tooltip = CAN_war_measures_act
+		QUE = {
+			every_core_state = {
+				limit = {
+					is_owned_by = ROOT
+					impassable = no
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_add_dynmod
+						DYNMOD = CAN_quebecois_resistance_modifier
+					}
+					add_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+				}
+				add_to_variable = {
+					CAN_qr_state_resources_factor = -0.6
+					tooltip = state_resources_factor_tooltip
+				}
+				add_to_variable = {
+					CAN_qr_local_manpower = -0.6
+					tooltip = local_manpower_tooltip
+				}
+				add_to_variable = {
+					CAN_qr_local_factory_sabotage = 0.3
+					tooltip = local_factory_sabotage_tooltip
+				}
+			}
+		}
+		hidden_effect = {
+			country_event = { id = canada_events.101 days = 15 random_days = 30 } #Bounce event
+			news_event = { id = canada_events.112 days = 1 }
+			activate_targeted_decision = { decision = CAN_war_measures_act target = ROOT }
+		}
+	}
+}
+
+# Hidden bounce event for resistance events
+country_event = {
+	id = canada_events.101
+
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		CAN = { has_idea = CAN_quebec_in_flames_idea }
+	}
+
+	immediate = {
+		CAN = { country_event = { id = canada_events.101 days = 90 random_days = 45 } } #Bounce event
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.101 option AI_OPTION"
+		name = AI_OPTION #Industrial Sabotage
+		trigger = {
+			QUE = {
+				any_core_state = {
+					has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+					non_damaged_building_level = { building = industrial_complex level > 0 }
+				}
+			}
+		}
+		ai_chance = { base = 20 }
+		save_event_target_as = CAN_quebec_civ
+		QUE = {
+			random_core_state = {
+				limit = {
+					has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+					non_damaged_building_level = { building = industrial_complex level > 0 }
+				}
+				save_event_target_as = french_state
+			}
+		}
+		CAN = { country_event = canada_events.102 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.101 option AI_OPTION"
+		name = AI_OPTION #Arms Sabotage
+		trigger = {
+			QUE = {
+				any_core_state = {
+					has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+					non_damaged_building_level = { building = arms_factory level > 0 }
+				}
+			}
+		}
+		ai_chance = { base = 20 }
+		save_event_target_as = CAN_quebec_arms
+		QUE = {
+			random_core_state = {
+				limit = {
+					has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+					non_damaged_building_level = { building = arms_factory level > 0 }
+				}
+				save_event_target_as = french_state
+			}
+		}
+		CAN = { country_event = canada_events.102 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.101 option AI_OPTION"
+		name = AI_OPTION #Riots
+		trigger = {
+			QUE = {
+				any_core_state = {
+					has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+					non_damaged_building_level = { building = infrastructure level > 0 }
+				}
+			}
+		}
+		ai_chance = { base = 20 }
+		save_event_target_as = CAN_quebec_riots
+		QUE = {
+			random_core_state = {
+				limit = {
+					has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+					non_damaged_building_level = { building = infrastructure level > 0 }
+				}
+				save_event_target_as = french_state
+			}
+		}
+		CAN = { country_event = canada_events.102 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.101 option AI_OPTION"
+		name = AI_OPTION #Ringleaders Arrested
+		trigger = {
+			QUE = {
+				any_core_state = {
+					has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+					CAN_quebec_resistance_level_2 = yes
+				}
+			}
+		}
+		ai_chance = { base = 10 }
+		save_event_target_as = CAN_quebec_ringleader
+		QUE = {
+			random_core_state = {
+				limit = {
+					has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+					CAN_quebec_resistance_level_2 = yes
+				}
+				save_event_target_as = french_state
+			}
+		}
+		CAN = { country_event = canada_events.102 }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.101 option AI_OPTION"
+		name = AI_OPTION #Nothing
+		ai_chance = {
+			base = 40
+			modifier = {
+				add = 20
+				NOT = {
+					QUE = {
+						any_core_state = {
+							has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+							CAN_quebec_resistance_level_3 = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				add = 20
+				NOT = {
+					QUE = {
+						any_core_state = {
+							has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+							CAN_quebec_resistance_level_2 = yes
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# Resistance event
+country_event = {
+	id = canada_events.102
+	picture = GFX_report_event_generic_bombing
+
+	title = {
+		text = canada_events.102.t.civ
+		trigger = { has_event_target = CAN_quebec_civ }
+	}
+	title = {
+		text = canada_events.102.t.arms
+		trigger = { has_event_target = CAN_quebec_arms }
+	}
+	title = {
+		text = canada_events.102.t.riots
+		trigger = { has_event_target = CAN_quebec_riots }
+	}
+	title = {
+		text = canada_events.102.t.ringleader
+		trigger = { has_event_target = CAN_quebec_ringleader }
+	}
+
+	desc = {
+		text = canada_events.102.d.civ
+		trigger = { has_event_target = CAN_quebec_civ }
+	}
+	desc = {
+		text = canada_events.102.d.arms
+		trigger = { has_event_target = CAN_quebec_arms }
+	}
+	desc = {
+		text = canada_events.102.d.riots
+		trigger = { has_event_target = CAN_quebec_riots }
+	}
+	desc = {
+		text = canada_events.102.d.ringleader
+		trigger = { has_event_target = CAN_quebec_ringleader }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.102 option canada_events.102.a"
+		name = canada_events.102.a
+		trigger = { NOT = { has_event_target = CAN_quebec_ringleader } }
+		event_target:french_state = {
+			if = {
+				limit = { has_event_target = CAN_quebec_civ }
+				damage_building = {
+					type = industrial_complex
+					damage = 0.5
+				}
+			}
+			else_if = {
+				limit = { has_event_target = CAN_quebec_arms }
+				damage_building = {
+					type = arms_factory
+					damage = 0.5
+				}
+			}
+			else_if = {
+				limit = { has_event_target = CAN_quebec_riots }
+				damage_building = {
+					type = infrastructure
+					damage = 1
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.102 option canada_events.102.b"
+		name = canada_events.102.b
+		trigger = { has_event_target = CAN_quebec_ringleader }
+		event_target:french_state = { CAN_reduce_quebecois_resistance = yes }
+	}
+}
+
+# A Meeting with Le Chef (fired by focus)
+country_event = {
+	id = canada_events.104
+	title = canada_events.104.t
+	desc = canada_events.104.d
+	picture = GFX_report_event_CAN_montreal
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.104 option canada_events.104.a"
+		name = canada_events.104.a
+		CAN_improve_french_tensions_idea = yes
+		every_owned_state = {
+			limit = { has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier } }
+			CAN_reduce_quebecois_resistance = yes
+		}
+	}
+}
+
+# Our Promises Fulfilled (fired by focus)
+country_event = {
+	id = canada_events.105
+	title = canada_events.105.t
+	desc = canada_events.105.d
+	picture = GFX_report_event_CAN_quebec2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.105 option canada_events.105.a"
+		name = canada_events.105.a
+		add_stability = 0.15
+		add_ideas = CAN_anglo_french_friendship
+	}
+}
+
+# The RCMP in Québec (fired by focus)
+country_event = {
+	id = canada_events.106
+	title = canada_events.106.t
+	desc = canada_events.106.d
+	picture = GFX_report_event_CAN_army3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.106 option canada_events.106.a"
+		name = canada_events.106.a
+		set_temp_variable = { ideology_change_var = -0.1 }
+		change_ruling_party_popularity = yes
+		custom_effect_tooltip = tooltip_white_line
+		every_owned_state = {
+			limit = { has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier } }
+			ROOT = { activate_targeted_decision = { decision = CAN_suppress_quebecois_state target = PREV } }
+		}
+	}
+}
+
+# The Arrest of Camillien Houde (fired by focus)
+country_event = {
+	id = canada_events.107
+	title = canada_events.107.t
+	desc = canada_events.107.d
+	picture = GFX_report_event_CAN_quebec2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.107 option canada_events.107.a"
+		name = canada_events.107.a
+		set_temp_variable = { ideology_change_var = -0.03 }
+		change_ruling_party_popularity = yes
+		CAN_improve_french_tensions_idea = yes
+	}
+}
+
+# A Second Unionist Government?
+country_event = {
+	id = canada_events.108
+	title = canada_events.108.t
+	picture = GFX_report_event_CAN_wmact
+
+	desc = canada_events.108.d
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.108 option canada_events.108.a"
+		name = canada_events.108.a
+		add_political_power = 200
+		add_war_support = -0.10
+		CAN_add_hugh_guthrie_sic = yes
+		unlock_decision_tooltip = CAN_emergency_draft
+		if = {
+			limit = {
+				OR = {
+					has_idea = extensive_conscription
+					has_idea = service_by_requirement
+					has_idea = all_adults_serve
+					has_idea = scraping_the_barrel
+				}
+			}
+			unlock_decision_tooltip = CAN_expand_conscription_policies
+		}
+		unlock_decision_tooltip = CAN_expand_secret_police
+		every_owned_state = {
+			limit = { has_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier } }
+			ROOT = { activate_targeted_decision = { decision = CAN_suppress_quebecois_state target = PREV } }
+		}
+		CAN_improve_french_tensions_idea = yes
+		effect_tooltip = {
+			set_party_name = {
+				ideology = authoritarian_democrat
+				name = CAN_unionist_party_hardliner
+				long_name = CAN_unionist_party_hardliner
+			}
+			set_party_name = {
+				ideology = social_conservative
+				name = CAN_independent_conservatives
+				long_name = CAN_independent_conservatives
+			}
+		}
+		if = {
+			limit = { check_variable = { king_influence < 5 } }
+			custom_effect_tooltip = CAN_exile_influence_increase
+			add_to_variable = { king_influence = 1 }
+			CAN_calc_exile_influence_effects = yes
+		}
+		if = {
+			limit = { check_variable = { king_popularity > 0 } }
+			custom_effect_tooltip = CAN_king_popularity_decrease
+			subtract_from_variable = { king_popularity = 1 }
+			CAN_calc_royal_visit_effects = yes
+		}
+		hidden_effect = {
+			news_event = { id = canada_events.113 days = 1 }
+			set_party_name = {
+				ideology = authoritarian_democrat
+				long_name = CAN_unionist_party_hardliner_long
+				name = CAN_unionist_party_hardliner
+			}
+			set_party_name = {
+				ideology = social_conservative
+				long_name = CAN_independent_conservatives_long
+				name = CAN_independent_conservatives
+			}
+		}
+	}
+}
+
+# Consolidating the Unionist Government (fired by focus)
+country_event = {
+	id = canada_events.109
+	title = canada_events.109.t
+	desc = canada_events.109.d
+	picture = GFX_report_event_CAN_commons2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.109 option canada_events.109.a"
+		name = canada_events.109.a
+		set_temp_variable = { coalition_partner_var = token:market_liberal }
+		add_to_coalition = yes
+		set_temp_variable = { coalition_partner_var = token:social_conservative }
+		add_to_coalition = yes
+		effect_tooltip = {
+			set_party_name = {
+				ideology = market_liberal
+				name = CAN_unionist_party_liberal
+				long_name = CAN_unionist_party_liberal
+			}
+			set_party_name = {
+				ideology = social_conservative
+				name = CAN_unionist_party_moderate
+				long_name = CAN_unionist_party_moderate
+			}
+		}
+		hidden_effect = {
+			set_party_name = {
+				ideology = social_conservative
+				long_name = CAN_unionist_party_moderate_long
+				name = CAN_unionist_party_moderate
+			}
+			set_party_name = {
+				ideology = market_liberal
+				long_name = CAN_unionist_party_liberal_long
+				name = CAN_unionist_party_liberal
+			}
+		}
+	}
+}
+
+# Demonstrations Across Canada (fired by focus)
+country_event = {
+	id = canada_events.110
+	title = canada_events.110.t
+	desc = canada_events.110.d
+	picture = GFX_report_event_CAN_protest
+
+	is_triggered_only = yes
+
+	trigger = {
+		has_government = authoritarian_democrat
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.110 option canada_events.110.a"
+		name = canada_events.110.a
+		add_stability = -0.10
+		if = {
+			limit = { check_variable = { king_popularity > 0 } }
+			custom_effect_tooltip = CAN_king_popularity_decrease
+			subtract_from_variable = { king_popularity = 1 }
+			CAN_calc_royal_visit_effects = yes
+		}
+		CAN_improve_french_tensions_idea = yes
+		hidden_effect = {
+			country_event = { id = canada_events.115 days = 180 }
+		}
+	}
+}
+
+# Parliament Suspended (fired by focus)
+country_event = {
+	id = canada_events.111
+	title = canada_events.111.t
+	desc = canada_events.111.d
+	picture = GFX_report_event_CAN_meighen
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.111 option canada_events.111.a"
+		name = canada_events.111.a
+		custom_effect_tooltip = CAN_king_popularity_decrease
+		set_variable = { king_popularity = 1 }
+		CAN_calc_royal_visit_effects = yes
+		custom_effect_tooltip = tooltip_white_line
+		add_stability = -0.10
+		add_political_power = 200
+		add_popularity = { ideology = authoritarian_democrat popularity = -0.10 }
+		add_popularity = { ideology = paternal_autocrat popularity = 0.10 }
+		unlock_decision_tooltip = CAN_consolidate_power
+		unlock_decision_tooltip = CAN_increase_factory_prod
+		unlock_decision_tooltip = CAN_fund_the_military
+		custom_effect_tooltip = tooltip_white_line
+		set_temp_variable = { coalition_partner_var = token:authoritarian_democrat }
+		add_to_coalition = yes
+		CAN_convert_british_pm_slots = yes
+		hidden_effect = {
+			news_event = { id = canada_events.114 days = 1 }
+		}
+	}
+}
+
+# News: Conscription Crisis in Quebec
+news_event = {
+	id = canada_events.112
+	immediate = { log = "[GetLogInfo]: event canada_events.112" }
+	title = canada_events.112.t
+	desc = canada_events.112.d
+	picture = GFX_news_event_CAN_conscription
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = canada_events.112.a
+		trigger = {
+			is_in_faction_with = CAN
+		}
+	}
+	option = {
+		name = canada_events.112.b
+		trigger = {
+			NOT = {
+				is_in_faction_with = CAN
+			}
+		}
+	}
+}
+
+# News: Canada invokes War Measures Act
+news_event = {
+	id = canada_events.113
+	immediate = { log = "[GetLogInfo]: event canada_events.113" }
+	title = canada_events.113.t
+	desc = canada_events.113.d
+	picture = GFX_news_event_CAN_parliament2
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = canada_events.113.a
+		trigger = {
+			is_in_faction_with = CAN
+		}
+	}
+	option = {
+		name = canada_events.113.b
+		trigger = {
+			NOT = {
+				is_in_faction_with = CAN
+			}
+		}
+	}
+}
+
+# News: Parliament Suspended
+news_event = {
+	id = canada_events.114
+	immediate = { log = "[GetLogInfo]: event canada_events.114" }
+	title = canada_events.114.t
+	desc = canada_events.114.d
+	picture = GFX_news_event_CAN_parliament
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = canada_events.114.a
+		trigger = {
+			is_in_faction_with = CAN
+			has_socialist_government = no
+		}
+	}
+	option = {
+		name = canada_events.114.b
+		trigger = {
+			NOT = { is_in_faction_with = CAN }
+			has_socialist_government = no
+		}
+	}
+	option = {
+		name = canada_events.114.c
+		trigger = {
+			has_socialist_government = yes
+		}
+	}
+}
+
+# Quebec Subdued
+country_event = {
+	id = canada_events.115
+	title = canada_events.115.t
+	desc = canada_events.115.d
+	picture = GFX_report_event_CAN_meighen
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.115 option canada_events.115.a"
+		name = canada_events.115.a
+		CAN_improve_french_tensions_idea = yes
+	}
+}
+
+### WAR EVENTS
+
+# A potential alliance with Ireland?
+country_event = {
+	id = canada_events.150
+	title = canada_events.150.t
+	desc = canada_events.150.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	trigger = {
+		CAN_is_dominion = yes
+		is_subject = no
+		is_in_faction = yes
+		IRE = {
+			IRE_has_parliamentary_govt = yes
+			at_peace_or_same_enemies_as_ENT = yes
+			is_subject = no
+			is_in_faction = no
+			has_socialist_government = no
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.150 option canada_events.150.a"
+		name = canada_events.150.a #Yes
+		ai_chance = { base = 0 }	# For human CAN only
+		if = {
+			limit = { NOT = { has_completed_focus = CAN_within_arms_reach } }
+			custom_effect_tooltip = CAN_reconcile_with_ireland_req
+			unlock_decision_tooltip = CAN_reconcile_with_ireland
+		}
+		else = {
+			activate_targeted_decision = { decision = CAN_approach_ireland target = IRE }
+		}
+		custom_effect_tooltip = IRE_join_entente_tt
+		hidden_effect = {
+			set_country_flag = CAN_considering_alliance_ireland
+			if = {
+				limit = {
+					NOT = { has_game_rule = { rule = IRE_forpol option = IRE_FORPOL_NEUT } }
+					NOT = { has_game_rule = { rule = IRE_forpol option = IRE_FORPOL_GER } }
+				}
+				IRE = {
+					clr_country_flag = IRE_forpolpath_neut
+					clr_country_flag = IRE_forpolpath_rp
+					set_country_flag = IRE_forpolpath_ent
+					IRE_handle_ACW_volunteers = yes
+				}
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.150 option canada_events.150.b"
+		name = canada_events.150.b #No
+		ai_chance = { base = 100 }
+	}
+}
+
+# Ireland offered alliance
+country_event = {
+	id = canada_events.151
+	title = canada_events.151.t
+	desc = canada_events.151.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = {
+			CAN_is_dominion = yes
+			is_subject = no
+			is_in_faction = yes
+		}
+		IRE_has_parliamentary_govt = yes
+		at_peace_or_same_enemies_as_ENT = yes
+		is_subject = no
+		is_in_faction = no
+		has_socialist_government = no
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.151 option canada_events.151.a"
+		name = canada_events.151.a #Yes
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = IRE_forpol option = IRE_FORPOL_NEUT }
+					has_game_rule = { rule = IRE_forpol option = IRE_FORPOL_GER }
+				}
+			}
+		}
+		FROM = {
+			country_event = canada_events.152
+			add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.151 option canada_events.151.b"
+		name = canada_events.151.b #No
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				OR = {
+					has_game_rule = { rule = IRE_forpol option = IRE_FORPOL_NEUT }
+					has_game_rule = { rule = IRE_forpol option = IRE_FORPOL_GER }
+				}
+			}
+		}
+		FROM = {
+			country_event = canada_events.153
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+		}
+	}
+}
+
+# Ireland accepts
+country_event = {
+	id = canada_events.152
+	title = canada_events.152.t
+	desc = canada_events.152.d
+	picture = GFX_report_event_generic_cabinet_meeting
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.152 option canada_events.152.a"
+		name = canada_events.152.a
+		faction_leader = { add_to_faction = FROM }
+		hidden_effect = {
+			clr_country_flag = CAN_considering_alliance_ireland
+		}
+		hidden_effect = {
+			GBR = { set_country_flag = CAN_promised_ireland_ind }
+			if = {
+				limit = { original_tag = IMP }
+				set_country_flag = CAN_promised_ireland_ind
+				every_state = {
+					limit = { region = 4 } #Ireland
+					clear_variable = ambition_area_GBR
+				}
+			}
+		}
+		FROM = {
+			add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+			hidden_effect = {
+				country_event = { id = canada_events.154 days = 1 }
+				IRE_remove_faction_decisions = yes
+				clr_country_flag = IRE_joining_faction
+				set_country_flag = IRE_1916_entente_event
+				IRE_replace_erin_go_bragh_idea = yes
+				country_event = { id = ireland_events.2017 days = 3 }
+				if = {
+					limit = { GER_is_in_mitteleuropa = yes }
+					country_event = { id = ireland_events.2018 days = 14 }
+					set_country_flag = IRE_considering_leaving_mitteleuropa
+					set_country_flag = CAN_refused_iedc
+				}
+			}
+		}
+	}
+}
+
+# Ireland refuses
+country_event = {
+	id = canada_events.153
+	title = canada_events.153.t
+	desc = canada_events.153.d
+	picture = GFX_report_event_generic_cabinet_meeting
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.153 option canada_events.153.a"
+		name = canada_events.153.a #Fair enough
+		clr_country_flag = CAN_considering_alliance_ireland
+		FROM = {
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			clr_country_flag = IRE_joining_faction
+			clr_country_flag = IRE_forpolpath_ent
+			set_country_flag = IRE_forpolpath_neut
+			IRE_handle_ACW_volunteers = yes
+		}
+	}
+}
+
+# How does Ireland want to use the aid?
+country_event = {
+	id = canada_events.154
+	title = canada_events.154.t
+	desc = canada_events.154.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.154 option canada_events.154.a"
+		name = canada_events.154.a #Civilian
+		ai_chance = { base = 50 }
+		add_timed_idea = {
+			idea = CAN_imp_investment_1
+			days = 180
+		}
+		add_one_random_civilian_factory = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.154 option canada_events.154.b"
+		name = canada_events.154.b #Military
+		ai_chance = { base = 35 }
+		add_timed_idea = {
+			idea = CAN_imp_advisors_1
+			days = 180
+		}
+		add_one_random_military_factory = yes
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.154 option canada_events.154.c"
+		name = canada_events.154.c #Naval
+		ai_chance = { base = 15 }
+		add_timed_idea = {
+			idea = CAN_iedc_naval1
+			days = 180
+		}
+		add_one_random_dockyard = yes
+	}
+}
+
+# Ireland offered protection for bases
+country_event = {
+	id = canada_events.155
+	title = canada_events.155.t
+	desc = canada_events.155.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	trigger = {
+		FROM = {
+			CAN_is_dominion = yes
+			is_subject = no
+		}
+		is_in_faction_with = GER
+		is_subject = no
+		has_socialist_government = no
+		NOT = { gives_military_access_to = FROM }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.155 option canada_events.155.a"
+		name = canada_events.155.a #Accept
+		ai_chance = { base = 1 }
+		add_political_power = 50
+		FROM = {
+			effect_tooltip = {
+				add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+				diplomatic_relation = {
+					country = ROOT
+					relation = military_access
+					active = yes
+				}
+				diplomatic_relation = {
+					country = ROOT
+					relation = docking_rights
+					active = yes
+				}
+			}
+			country_event = canada_events.156
+		}
+		country_event = canada_events.154
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.155 option canada_events.155.b"
+		name = canada_events.155.b #Refuse
+		ai_chance = { base = 0 }
+		FROM = {
+			effect_tooltip = {
+				add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			}
+			country_event = canada_events.157
+		}
+	}
+}
+
+# Ireland accepts
+country_event = {
+	id = canada_events.156
+	title = canada_events.156.t
+	desc = canada_events.156.d
+	picture = GFX_report_event_generic_cabinet_meeting
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.156 option canada_events.156.a"
+		name = canada_events.156.a
+		diplomatic_relation = {
+			country = FROM
+			relation = military_access
+			active = yes
+		}
+		diplomatic_relation = {
+			country = FROM
+			relation = docking_rights
+			active = yes
+		}
+		add_opinion_modifier = { target = FROM modifier = KR_approves_of_govt }
+	}
+}
+
+# Ireland refuses
+country_event = {
+	id = canada_events.157
+	title = canada_events.157.t
+	desc = canada_events.157.d
+	picture = GFX_report_event_generic_cabinet_meeting
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.157 option canada_events.157.a"
+		name = canada_events.157.a
+		add_political_power = 50
+		add_opinion_modifier = { target = FROM modifier = KR_disapproves_of_govt }
+	}
+}
+
+# Canada reacts to NIR rising up against far-right IRE
+country_event = {
+	id = canada_events.158
+	title = canada_events.158.t
+	desc = canada_events.158.d
+	picture = GFX_report_event_IRE_orange_order
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.158 option canada_events.158.a"
+		name = canada_events.158.a
+		unlock_decision_tooltip = NIR_send_rifles
+		unlock_decision_tooltip = NIR_send_advisors
+	}
+}
+
+# Canada reacts to socialist Ireland
+country_event = {
+	id = canada_events.159
+	title = canada_events.159.t
+	desc = canada_events.159.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	trigger = {
+		CAN_is_dominion = yes
+		is_subject = no
+		is_in_faction = yes
+		IRE = {
+			is_in_faction = yes
+			has_socialist_government = yes
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.159 option canada_events.159.a"
+		name = canada_events.159.a #Yes
+		trigger = { IRE = { is_ai = yes } }
+		ai_chance = { base = 0 }	# For human CAN only
+		if = {
+			limit = { NOT = { has_completed_focus = CAN_contact_loyalists } }
+			custom_effect_tooltip = CAN_contact_northern_irish_loyalists_req
+		}
+		unlock_decision_tooltip = CAN_contact_northern_irish_loyalists
+		custom_effect_tooltip = tooltip_white_line
+		custom_effect_tooltip = canada_events.159.a.tt
+		hidden_effect = {
+			set_country_flag = CAN_contacting_northern_loyalists
+			IRE = {
+				clr_country_flag = IRE_NIR_revolt_guaranteed
+				set_country_flag = IRE_NIR_revolt_avoided
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.159 option canada_events.159.b"
+		name = canada_events.159.b #No
+		ai_chance = { base = 100 }
+		custom_effect_tooltip = canada_events.159.b.tt
+	}
+}
+
+# Iceland offered bailout for alliance
+country_event = {
+	id = canada_events.170
+	title = canada_events.170.t
+	desc = canada_events.170.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.170 option canada_events.170.a"
+		name = canada_events.170.a #Accept
+		ai_chance = { base = 75 }
+		if = {
+			limit = {
+				NOT = { has_idea = ICE_danish_bailout }
+			}
+			add_timed_idea = {
+				idea = ICE_canadian_bailout
+				days = 3000
+			}
+		}
+		ICE_improve_economy_2 = yes
+		complete_national_focus = ICE_Ottawa_King
+		FROM = {
+			country_event = canada_events.171
+			add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+			effect_tooltip = { add_to_faction = ROOT }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.170 option canada_events.170.b"
+		name = canada_events.170.b #Refuse
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 2
+				has_idea = ICE_danish_bailout
+			}
+		}
+		FROM = {
+			country_event = canada_events.172
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+		}
+	}
+}
+
+# Iceland accepts
+country_event = {
+	id = canada_events.171
+	title = canada_events.171.t
+	desc = canada_events.171.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.171 option canada_events.171.a"
+		name = canada_events.171.a
+		effect_tooltip = { add_to_faction = FROM }
+		FROM = {
+			add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+		}
+	}
+}
+
+# Iceland refuses
+country_event = {
+	id = canada_events.172
+	title = canada_events.172.t
+	desc = canada_events.172.d
+	picture = GFX_report_event_NOR_parliament
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.172 option canada_events.172.a"
+		name = canada_events.172.a
+		add_political_power = 100
+		FROM = {
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+		}
+	}
+}
+
+# Funding Icelandic resistance against UoB
+country_event = {
+	id = canada_events.173
+	title = canada_events.173.t
+	desc = canada_events.173.d
+	picture = GFX_report_event_CAN_army2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.173 option canada_events.173.a"
+		name = canada_events.173.a
+		add_political_power = 50
+		hidden_effect = {
+			add_to_variable = {
+				var = resistance_ICE_strength
+				value = 10
+			}
+		}
+	}
+}
+
+# the King thinks it's time to attack
+country_event = {
+	id = canada_events.174
+	title = canada_events.174.t
+	desc = canada_events.174.d
+	picture = GFX_report_event_CAN_army2
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		ENG = { has_war_with = GER }
+		has_country_flag = KR_british_king_base
+		can_declare_war_on = ENG
+		alliance_strength_ratio > 1
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.174 option canada_events.174.a"
+		name = canada_events.174.a #Perhaps he's right...
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_authoritarian_government = no
+				OR = {
+					has_war = yes
+					NOT = {
+						has_tech = mtg_transport
+						has_completed_focus = CAN_contact_loyalists
+						has_completed_focus = CAN_economic_recovery
+						has_completed_focus = CAN_deal_with_admiralty
+						has_completed_focus = CAN_new_munitions_plants
+					}
+				}
+			}
+		}
+		add_war_support = 0.05
+		declare_war_on = {
+			target = ENG
+			type = annex_everything
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.174 option canada_events.174.b"
+		name = canada_events.174.b #We will attack when we're ready, no sooner
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				has_authoritarian_government = yes
+			}
+		}
+		add_war_support = -0.01
+	}
+}
+
+# Contacting the British Loyalists (fired by decision)
+country_event = {
+	id = canada_events.175
+	title = canada_events.175.t
+	picture = GFX_report_event_CAN_army2
+
+	desc = {
+		text = canada_events.175.d.scotland
+		trigger = {
+			ENG = {
+				NOT = {
+					any_owned_state = {
+						OR = {
+							region = 1 #Southern England
+							region = 2 #Northern England
+						}
+						is_core_of = ENG
+						is_controlled_by = CAN
+					}
+				}
+				any_owned_state = {
+					region = 3 #Scotland
+					is_core_of = ENG
+					NOT = { state = 938 } #Orkney & Shetland
+					is_controlled_by = CAN
+				}
+			}
+		}
+	}
+	desc = {
+		text = canada_events.175.d.england
+		trigger = {
+			ENG = {
+				any_owned_state = {
+					OR = {
+						region = 1 #Southern England
+						region = 2 #Northern England
+					}
+					is_core_of = ENG
+					is_controlled_by = CAN
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			ENG = {
+				random_owned_state = {
+					limit = {
+						is_great_britain = yes
+						is_core_of = ENG
+						NOT = { state = 938 } #Orkney & Shetland
+						is_controlled_by = CAN
+					}
+					save_event_target_as = invasion_state
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.175 option canada_events.175.a"
+		name = canada_events.175.a
+		CAN_spawn_loyalist_units = yes
+		hidden_effect = {
+			ENG = { country_event = canada_events.176 }
+		}
+	}
+}
+
+# Informing ENG of uprising
+country_event = {
+	id = canada_events.176
+	title = canada_events.176.t
+	desc = canada_events.176.d
+	picture = GFX_report_event_CAN_army2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.176 option canada_events.176.a"
+		name = canada_events.176.a
+		add_manpower = -60000
+		add_stability = -0.10
+		add_timed_idea = {
+			idea = CAN_loyalist_uprising
+			days = 90
+		}
+	}
+}
+
+# Contacting the Northern Irish Loyalists (fired by decision)
+country_event = {
+	id = canada_events.177
+	title = canada_events.177.t
+	desc = canada_events.177.d
+	picture = GFX_report_event_CAN_army2
+
+	is_triggered_only = yes
+
+	immediate = {
+		var:119.owner = { save_event_target_as = northern_ireland_owner }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.177 option canada_events.177.a"
+		name = canada_events.177.a
+		set_global_flag = IRE_had_NIR_revolt
+		NIR = {
+			save_event_target_as = unionist_uprising
+			add_state_core = 119 #Northern Ireland
+			transfer_state = 119
+			transfer_technology = yes
+			declare_war_on = {
+				target = IRE
+				type = annex_everything
+			}
+			hidden_effect = {
+				add_ideas = {
+					NIR_catholics
+					partial_economic_mobilisation
+				}
+				add_timed_idea = { idea = NIR_no_surrender days = 365 }
+				unlock_national_focus = NIR_for_god_and_ulster
+				division_template = {
+					name = "Ulster Volunteers"
+					division_names_group = NIR_MIL_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						infantry = { x = 2 y = 0 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
+					}
+					support = {
+						artillery = { x = 0 y = 0 }
+					}
+				}
+				add_manpower = 80000
+				add_political_power = 100
+				add_equipment_to_stockpile = { type = infantry_equipment_1 amount = 2500 producer = CAN }
+				set_temp_variable = { coalition_partner_var = token:social_conservative }
+				add_to_coalition = yes
+			}
+		}
+		119 = {
+			create_unit = {
+				division = "division_template = \"Ulster Volunteers\" start_experience_factor = 0.1"
+				owner = NIR
+				count = 5
+			}
+			hidden_effect = {
+				remove_dynamic_modifier = { modifier = IRE_reluctant_countrymen_modifier }
+			}
+		}
+		set_temp_variable = { target = NIR }
+		puppet_country_without_changing_government = yes
+		hidden_effect = {
+			IRE = {
+				remove_mission = IRE_NIR_mission
+				remove_mission = IRE_soc_NIR_mission
+				remove_mission = IRE_improve_discontent_mission
+				remove_mission = IRE_improve_anger_mission
+				clr_country_flag = IRE_NIR_revolt_guaranteed
+				clr_country_flag = IRE_NIR_revolt_available
+				remove_state_core = 119
+				add_state_claim = 119
+			}
+			news_event = northern_ireland_events.1690
+		}
+		IRE = { country_event = canada_events.178 }
+	}
+}
+
+# Informing ENG/IRE of uprising
+country_event = {
+	id = canada_events.178
+	title = canada_events.178.t
+	desc = canada_events.178.d
+	picture = GFX_report_event_CAN_army2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.178 option canada_events.178.a"
+		name = canada_events.178.a
+		if = {
+			limit = { tag = event_target:northern_ireland_owner }
+			add_stability = -0.05
+			add_manpower = -40000
+		}
+		else = {
+			effect_tooltip = {
+				event_target:northern_ireland_owner = {
+					add_stability = -0.05
+					add_manpower = -40000
+				}
+			}
+		}
+		if = {
+			limit = { has_event_target = unionist_uprising }
+			effect_tooltip = {
+				event_target:unionist_uprising = {
+					every_core_state = { set_state_owner_to = event_target:unionist_uprising }
+					declare_war_on = {
+						target = event_target:northern_ireland_owner
+						type = independence_wargoal
+					}
+				}
+				119 = {
+					create_unit = {
+						division = "division_template = \"Loyalist Rebels\""
+						owner = event_target:unionist_uprising
+						allow_spawning_on_enemy_provs = yes
+						count = 5
+					}
+				}
+				ENT = { add_to_faction = event_target:unionist_uprising }
+			}
+		}
+		else = {
+			effect_tooltip = {
+				FROM = { set_state_controller = 119 }
+				119 = {
+					teleport_armies = {
+						limit = { is_ally_with = event_target:northern_ireland_owner }
+						to_state = var:capital
+					}
+					create_unit = {
+						division = "division_template = \"Loyalist Rebels\""
+						owner = FROM
+						allow_spawning_on_enemy_provs = yes
+						count = 5
+					}
+				}
+			}
+		}
+	}
+}
+
+### AMERICAN CIVIL WAR EVENTS
+
+# New England governors ask Canada for intervention (before the ACW begins)
+country_event = {
+	id = canada_events.200
+	title = canada_events.200.t
+	desc = canada_events.200.d
+	picture = GFX_report_event_USA_soldiers_running
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.200 option canada_events.200.a"
+		name = canada_events.200.a
+		hidden_effect = {
+			set_variable = { refugee_states = 0 }
+			country_event = { id = canada_events.206 days = 60 random_days = 10 } # American trade impacted
+			country_event = { id = canada_events.207 days = 90 random_days = 20 } # Clashes in Windsor
+			country_event = { id = canada_events.210 days = 150 random_days = 20 } # Sympathy Strike for the WCA/AUS
+		}
+	}
+}
+
+# Picking a side (fired by focus)
+country_event = {
+	id = canada_events.201
+	title = canada_events.201.t
+	desc = canada_events.201.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.201 option canada_events.201.a"
+		name = canada_events.201.a #We should not get involved
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 3
+				NOT = { country_exists = WCA }
+			}
+			modifier = {
+				factor = 2
+				has_war_with = ENG
+			}
+			modifier = {
+				factor = 2
+				NOT = { has_global_flag = CAN_seized_new_england }
+				NOT = { has_global_flag = CAN_seized_alaska }
+			}
+			modifier = {
+				factor = 1.5
+				has_global_flag = CAN_seized_alaska
+				NOT = { has_global_flag = CAN_seized_new_england }
+			}
+			modifier = {
+				factor = 0.5
+				country_exists = WCA
+				check_variable = { WCA.num_controlled_states > USA.num_controlled_states }
+				check_variable = { WCA.num_controlled_states > APG.num_controlled_states }
+				check_variable = { WCA.num_controlled_states > ACC.num_controlled_states }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_acw_support option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_acw_support option = CAN_ACW_SUPPORT_NONE } }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_global_flag = CAN_player_support_federal
+					has_global_flag = CAN_player_support_pacific
+					has_global_flag = CAN_player_support_union
+					has_global_flag = CAN_player_support_new_england
+				}
+			}
+		}
+		set_global_flag = CAN_supports_noone
+		add_stability = 0.05
+		add_political_power = 50
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.201 option canada_events.201.b"
+		name = canada_events.201.b #USA is the legit government
+		trigger = {
+			country_exists = USA
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				factor = 0.5
+				OR = {
+					is_in_faction_with = NEE
+					owns_state = 932
+				}
+			}
+			modifier = {
+				factor = 2
+				OR = {
+					has_government = social_conservative
+					has_authoritarian_government = yes
+				}
+			}
+			modifier = {
+				factor = 1.5
+				USA = { has_country_flag = USA_ACW_austerity_rejected }
+			}
+			modifier = {
+				factor = 0.5
+				USA = { has_completed_focus = USA_raise_entente_tariffs }
+			}
+			modifier = {
+				factor = 2
+				has_country_flag = USA_compromise_reached
+			}
+			modifier = {
+				factor = 0.5
+				OR = {
+					check_variable = { USA.num_controlled_states < 5 }
+					USA = { surrender_progress > 0.50 }
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_acw_support option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_acw_support option = CAN_ACW_SUPPORT_USA } }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_global_flag = CAN_player_support_no_faction
+					has_global_flag = CAN_player_support_pacific
+					has_global_flag = CAN_player_support_union
+					has_global_flag = CAN_player_support_new_england
+				}
+			}
+		}
+		add_war_support = 0.05
+		set_global_flag = CAN_supports_USA
+		add_ideas = ACW_support_USA
+		USA = {
+			add_opinion_modifier = { target = CAN modifier = KR_supported_us }
+			country_event = canada_events.220
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.201 option canada_events.201.c"
+		name = canada_events.201.c #ACC is the legit government
+		trigger = {
+			country_exists = ACC
+		}
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.5
+				has_government = social_conservative
+			}
+			modifier = {
+				factor = 0.2
+				has_authoritarian_government = yes
+			}
+			modifier = {
+				factor = 0.5
+				OR = {
+					check_variable = { ACC.num_controlled_states < 5 }
+					ACC = { surrender_progress > 0.50 }
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_acw_support option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_acw_support option = CAN_ACW_SUPPORT_ACC } }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_global_flag = CAN_player_support_no_faction
+					has_global_flag = CAN_player_support_federal
+					has_global_flag = CAN_player_support_union
+					has_global_flag = CAN_player_support_new_england
+				}
+			}
+		}
+		add_war_support = 0.05
+		set_global_flag = CAN_supports_ACC
+		add_ideas = ACW_support_ACC
+		ACC = {
+			add_opinion_modifier = { target = CAN modifier = KR_supported_us }
+			country_event = canada_events.220
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.201 option canada_events.201.e"
+		name = canada_events.201.e #We support Huey Long
+		trigger = {
+			country_exists = APG
+			OR = {
+				has_global_flag = CAN_player_support_union
+				has_authoritarian_government = yes
+				NOT = {
+					country_exists = USA
+					country_exists = ACC
+				}
+				AND = {
+					is_ai = yes
+					has_game_rule = { rule = CAN_acw_support option = CAN_ACW_SUPPORT_APG }
+				}
+			}
+		}
+		ai_chance = {
+			base = 5
+			modifier = {
+				factor = 0.5
+				OR = {
+					check_variable = { APG.num_controlled_states < 5 }
+					APG = { surrender_progress > 0.50 }
+				}
+			}
+			modifier = {
+				factor = 0
+				has_elected_government = yes
+				NOT = { has_global_flag = CAN_player_support_union }
+				NOT = { has_game_rule = { rule = CAN_acw_support option = CAN_ACW_SUPPORT_APG } }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_acw_support option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_acw_support option = CAN_ACW_SUPPORT_APG } }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_global_flag = CAN_player_support_no_faction
+					has_global_flag = CAN_player_support_pacific
+					has_global_flag = CAN_player_support_federal
+					has_global_flag = CAN_player_support_new_england
+				}
+			}
+		}
+		add_war_support = 0.05
+		set_global_flag = CAN_supports_APG
+		add_ideas = ACW_support_APG
+		APG = {
+			add_opinion_modifier = { target = CAN modifier = KR_supported_us }
+			country_event = canada_events.220
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.201 option canada_events.201.f"
+		name = canada_events.201.f #We support New England
+		trigger = {
+			is_in_faction_with = NEE
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 2
+				OR = {
+					NOT = { country_exists = USA }
+					USA = { surrender_progress > 0.1 }
+				}
+			}
+			modifier = {
+				factor = 2
+				has_global_flag = USA_ACC_existed
+				OR = {
+					NOT = { country_exists = ACC }
+					ACC = { surrender_progress > 0.1 }
+				}
+			}
+			modifier = {
+				factor = 0.5
+				OR = {
+					country_exists = ACC
+					USA = {
+						exists = yes
+						has_elected_government = yes
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_acw_support option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_acw_support option = CAN_ACW_SUPPORT_NEE } }
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_global_flag = CAN_player_support_no_faction
+					has_global_flag = CAN_player_support_pacific
+					has_global_flag = CAN_player_support_federal
+					has_global_flag = CAN_player_support_union
+				}
+			}
+		}
+		add_war_support = 0.05
+		set_global_flag = CAN_supports_NEE
+		NEE = {
+			add_opinion_modifier = { target = CAN modifier = KR_supported_us }
+			country_event = canada_events.220
+		}
+	}
+}
+
+# American refugees flood into state (repeating event)
+country_event = {
+	id = canada_events.202
+	title = canada_events.202.t
+	desc = canada_events.202.d
+	picture = GFX_report_event_CAN_refugees
+
+	trigger = {
+		tag = CAN
+		is_subject = no
+		has_global_flag = USA_civil_war_begun_flag
+		check_variable = { refugee_states < 10 }
+		NOT = {
+			has_war_with = USA
+			has_war_with = WCA
+			has_war_with = ACC
+			has_war_with = APG
+			has_war_with = NEE
+			has_idea = CAN_refugee_crisis_sec
+			has_country_flag = CAN_ref_shipped_to_nee
+			has_global_flag = USA_civil_war_over_flag
+		}
+		any_owned_state = {
+			is_controlled_by = CAN
+			NOT = { has_dynamic_modifier = { modifier = CAN_american_refugee_modifier } }
+			any_neighbor_state = {
+				state_population_k > 750
+				OR = {
+					is_owned_by = WCA
+					controller = {
+						is_american_tag = yes
+						NOT = { owns_state = PREV }
+					}
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 60
+		modifier = {
+			factor = 0.5
+			check_variable = { refugee_states < 1 }
+		}
+		modifier = {
+			factor = 1.5
+			check_variable = { refugee_states > 2 }
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			random_owned_controlled_state = {
+				limit = {
+					NOT = { has_dynamic_modifier = { modifier = CAN_american_refugee_modifier } }
+					any_neighbor_state = {
+						state_population_k > 750
+						OR = {
+							is_owned_by = WCA
+							controller = {
+								is_american_tag = yes
+								NOT = { owns_state = PREV }
+							}
+						}
+					}
+				}
+				save_event_target_as = refugee_state
+				set_variable = { CAN_american_refugee_local_supplies = -0.2 }
+				random_neighbor_state = {
+					limit = {
+						state_population_k > 750
+						OR = {
+							is_owned_by = WCA
+							controller = {
+								is_american_tag = yes
+								NOT = { owns_state = PREV }
+							}
+						}
+					}
+					save_event_target_as = flee_from_state
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.202 option canada_events.202.a"
+		name = canada_events.202.a
+		event_target:refugee_state = {
+			custom_effect_tooltip = tooltip_line_break
+			add_dynamic_modifier = { modifier = CAN_american_refugee_modifier }
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_help }
+			add_manpower = 7500
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_sam }
+			add_manpower = 12500
+		}
+		hidden_effect = {
+			add_to_variable = { refugee_states = 1 }
+		}
+	}
+}
+
+# Even more American refugees flood into state (repeating event)
+country_event = {
+	id = canada_events.203
+	title = canada_events.203.t
+	desc = canada_events.203.d
+	picture = GFX_report_event_CAN_refugees2
+
+	trigger = {
+		tag = CAN
+		is_subject = no
+		has_global_flag = USA_civil_war_begun_flag
+		check_variable = { refugee_states < 10 }
+		NOT = {
+			has_war_with = USA
+			has_war_with = WCA
+			has_war_with = ACC
+			has_war_with = APG
+			has_war_with = NEE
+			has_idea = CAN_refugee_crisis_sec
+			has_country_flag = CAN_ref_shipped_to_nee
+			has_global_flag = USA_civil_war_over_flag
+		}
+		any_owned_state = {
+			is_controlled_by = CAN
+			check_variable = { CAN_american_refugee_local_supplies = -0.20 }
+			any_neighbor_state = {
+				state_population_k > 1250
+				OR = {
+					is_owned_by = WCA
+					controller = {
+						is_american_tag = yes
+						NOT = { owns_state = PREV }
+					}
+				}
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 90
+		modifier = {
+			factor = 1.5
+			check_variable = { refugee_states > 2 }
+		}
+	}
+
+	immediate = {
+		hidden_effect = {
+			random_owned_controlled_state = {
+				limit = {
+					check_variable = { CAN_american_refugee_local_supplies = -0.20 }
+					any_neighbor_state = {
+						state_population_k > 1250
+						OR = {
+							is_owned_by = WCA
+							controller = {
+								is_american_tag = yes
+								NOT = { owns_state = PREV }
+							}
+						}
+					}
+				}
+				save_event_target_as = refugee_state
+				random_neighbor_state = {
+					limit = {
+						state_population_k > 1250
+						OR = {
+							is_owned_by = WCA
+							controller = {
+								is_american_tag = yes
+								NOT = { owns_state = PREV }
+							}
+						}
+					}
+					save_event_target_as = flee_from_state
+				}
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.203 option canada_events.203.a"
+		name = canada_events.203.a
+		event_target:refugee_state = {
+			custom_effect_tooltip = {
+				localization_key = tooltip_modify_dynmod
+				DYNMOD = CAN_american_refugee_modifier
+			}
+			custom_effect_tooltip = tooltip_white_line
+			add_to_variable = { CAN_american_refugee_local_supplies = -0.2 tooltip = local_supplies_tooltip }
+			force_update_dynamic_modifier = yes
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_help }
+			add_manpower = 7500
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_sam }
+			add_manpower = 12500
+		}
+		hidden_effect = {
+			add_to_variable = { refugee_states = 1 }
+		}
+	}
+}
+
+# American refugees are causing issues
+country_event = {
+	id = canada_events.204
+	title = canada_events.204.t
+	desc = canada_events.204.d
+	picture = GFX_report_event_CAN_refugees
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		has_global_flag = USA_civil_war_begun_flag
+		check_variable = { refugee_states > 2 }
+		NOT = {
+			has_idea = CAN_refugee_crisis_1
+			has_global_flag = USA_civil_war_over_flag
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 30
+		modifier = {
+			factor = 0.5
+			check_variable = { refugee_states > 3 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.204 option canada_events.204.a"
+		name = canada_events.204.a
+		add_ideas = CAN_refugee_crisis_1
+	}
+}
+
+# American refugees are causing bigger issues
+country_event = {
+	id = canada_events.205
+	title = canada_events.205.t
+	desc = canada_events.205.d
+	picture = GFX_report_event_CAN_refugees3
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		has_global_flag = USA_civil_war_begun_flag
+		has_idea = CAN_refugee_crisis_1
+		check_variable = { refugee_states > 5 }
+		NOT = {
+			has_idea = CAN_refugee_crisis_2
+			has_completed_focus = CAN_new_home_of_the_free
+			has_global_flag = USA_civil_war_over_flag
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 30
+		modifier = {
+			factor = 0.5
+			check_variable = { refugee_states > 6 }
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.205 option canada_events.205.a"
+		name = canada_events.205.a
+		swap_ideas = {
+			remove_idea = CAN_refugee_crisis_1
+			add_idea = CAN_refugee_crisis_2
+		}
+	}
+}
+
+# American trade impacted
+country_event = {
+	id = canada_events.206
+	title = canada_events.206.t
+	desc = canada_events.206.d
+	picture = GFX_report_event_CAN_army1
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		NOT = {
+			has_war_with = WCA
+			has_war_with = APG
+			has_war_with = USA
+			has_war_with = ACC
+			has_war_with = NEE
+			has_global_flag = USA_civil_war_over_flag
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.206 option canada_events.206.a"
+		name = canada_events.206.a
+		add_ideas = CAN_impacted_us_trade
+	}
+}
+
+# Clashes in Windsor
+country_event = {
+	id = canada_events.207
+	title = canada_events.207.t
+	desc = canada_events.207.d
+	picture = GFX_report_event_CAN_army2
+
+	is_triggered_only = yes
+
+	trigger = {
+		276 = { is_owned_and_controlled_by = CAN }
+		WCA = {
+			NOT = { has_war_with = CAN }
+			owns_state = 393
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.207 option canada_events.207.a"
+		name = canada_events.207.a
+		add_stability = -0.02
+		276 = {
+			damage_building = {
+				type = industrial_complex
+				damage = 0.5
+			}
+		}
+	}
+}
+
+# Syndicalists in BC (triggered by WCA uprising in Washington)
+country_event = {
+	id = canada_events.208
+	title = canada_events.208.t
+	desc = canada_events.208.d
+	picture = GFX_report_event_USA_soldiers_running
+
+	is_triggered_only = yes
+
+	trigger = {
+		473 = { is_owned_and_controlled_by = CAN }
+		NOT = { has_war_with = WCA }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.208 option canada_events.208.a"
+		name = canada_events.208.a
+		add_stability = -0.02
+		473 = {
+			damage_building = {
+				type = infrastructure
+				damage = 1.0
+			}
+		}
+	}
+}
+
+# Riot at St. Catherines Refugee Camp
+country_event = {
+	id = canada_events.209
+	title = canada_events.209.t
+	desc = canada_events.209.d
+	picture = GFX_report_event_GRE_riot
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		276 = {
+			is_owned_and_controlled_by = CAN
+			has_dynamic_modifier = { modifier = CAN_american_refugee_modifier }
+		}
+		has_global_flag = USA_civil_war_begun_flag
+		NOT = { has_global_flag = USA_civil_war_over_flag }
+	}
+
+	mean_time_to_happen = {
+		months = 1
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.209 option canada_events.209.a"
+		name = canada_events.209.a
+		add_stability = -0.02
+	}
+}
+
+# Sympathy Strike for the WCA/AUS
+country_event = {
+	id = canada_events.210
+	title = canada_events.210.t
+	picture = GFX_report_event_HOL_february_strike2
+
+	desc = {
+		text = canada_events.210.d.wca
+		trigger = { country_exists = WCA }
+	}
+	desc = {
+		text = canada_events.210.d.aus
+		trigger = { NOT = { country_exists = WCA } }
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			country_exists = WCA
+			country_exists = APG
+		}
+		NOT = {
+			has_war_with = WCA
+			has_war_with = APG
+			has_war_with = USA
+			has_war_with = ACC
+			has_war_with = NEE
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.210 option canada_events.210.a"
+		name = canada_events.210.a
+		add_stability = -0.02
+		add_war_support = -0.05
+		if = {
+			limit = { country_exists = WCA }
+			add_popularity = { ideology = syndicalist popularity = 0.05 }
+		}
+		else = {
+			add_popularity = { ideology = national_populist popularity = 0.05 }
+		}
+	}
+}
+
+# New Home of the Free (fired by focus)
+country_event = {
+	id = canada_events.211
+	title = canada_events.211.t
+	picture = GFX_report_event_CAN_parliament1
+
+	desc = {
+		text = canada_events.211.d.nee
+		trigger = {
+			NEE = { is_subject_of = CAN }
+		}
+	}
+	desc = {
+		text = canada_events.211.d.nonee
+		trigger = {
+			NOT = {
+				NEE = { is_subject_of = CAN }
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.211 option canada_events.211.a"
+		name = canada_events.211.a # Security is paramount
+		trigger = {
+			NOT = {
+				NEE = { is_subject_of = CAN }
+			}
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				OR = {
+					has_government = social_conservative
+					has_authoritarian_government = yes
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_government = market_liberal
+			}
+			modifier = {
+				factor = 2
+				has_political_power < 0
+			}
+		}
+		add_political_power = -50
+		set_temp_variable = { ideology_change_var = -0.05 }
+		change_ruling_party_popularity = yes
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_1 }
+			swap_ideas = {
+				remove_idea = CAN_refugee_crisis_1
+				add_idea = CAN_refugee_crisis_sec
+			}
+		}
+		else = {
+			swap_ideas = {
+				remove_idea = CAN_refugee_crisis_2
+				add_idea = CAN_refugee_crisis_sec
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.211 option canada_events.211.b"
+		name = canada_events.211.b # Ship them to New England
+		trigger = {
+			NEE = { is_subject_of = CAN }
+		}
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 2
+				OR = {
+					has_government = social_conservative
+					has_authoritarian_government = yes
+				}
+			}
+			modifier = {
+				factor = 0.5
+				has_government = market_liberal
+			}
+		}
+		set_country_flag = CAN_ref_shipped_to_nee
+		add_political_power = -50
+		set_temp_variable = { ideology_change_var = -0.05 }
+		change_ruling_party_popularity = yes
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_1 }
+			remove_ideas = CAN_refugee_crisis_1
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_2 }
+			remove_ideas = CAN_refugee_crisis_2
+		}
+		NEE = {
+			add_opinion_modifier = { target = CAN modifier = KR_disapproves_of_govt }
+			country_event = canada_events.212
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.211 option canada_events.211.c"
+		name = canada_events.211.c # We need to help them, within reason
+		ai_chance = { base = 40 }
+		add_political_power = -100
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_1 }
+			swap_ideas = {
+				remove_idea = CAN_refugee_crisis_1
+				add_idea = CAN_refugee_crisis_help
+			}
+		}
+		else = {
+			swap_ideas = {
+				remove_idea = CAN_refugee_crisis_2
+				add_idea = CAN_refugee_crisis_help
+			}
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.211 option canada_events.211.e"
+		name = canada_events.211.e # enact Project Samaritan
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0.5
+				has_authoritarian_government = yes
+			}
+			modifier = {
+				factor = 0.5
+				has_political_power < 0
+			}
+		}
+		add_political_power = -250
+		add_stability = -0.10
+		set_temp_variable = { ideology_change_var = 0.05 }
+		change_ruling_party_popularity = yes
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_1 }
+			swap_ideas = {
+				remove_idea = CAN_refugee_crisis_1
+				add_idea = CAN_refugee_crisis_sam
+			}
+		}
+		else = {
+			swap_ideas = {
+				remove_idea = CAN_refugee_crisis_2
+				add_idea = CAN_refugee_crisis_sam
+			}
+		}
+	}
+}
+
+# Refugees shipped to New England
+country_event = {
+	id = canada_events.212
+	title = canada_events.212.t
+	desc = canada_events.212.d
+	picture = GFX_report_event_CAN_refugees2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.212 option canada_events.212.a"
+		name = canada_events.212.a
+		set_country_flag = CAN_directs_refugees
+	}
+}
+
+# Recruitment of Refugees begins (fired by focus)
+country_event = {
+	id = canada_events.213
+	title = canada_events.213.t
+	desc = canada_events.213.d
+	picture = GFX_report_event_CAN_army2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.213 option canada_events.213.a"
+		name = canada_events.213.a
+		set_temp_variable = { american_recruit = refugee_states }
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_help }
+			multiply_temp_variable = { american_recruit = 7500 }
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_sam }
+			multiply_temp_variable = { american_recruit = 12500 }
+		}
+		add_manpower = american_recruit?0
+	}
+}
+
+# American refugees leave for home once ACW is over
+country_event = {
+	id = canada_events.214
+	title = canada_events.214.t
+	picture = GFX_report_event_CAN_refugees2
+
+	desc = {
+		text = canada_events.214.d.ceasefirewca
+		trigger = {
+			country_exists = WCA
+			has_global_flag = ACC_rockies_ceasefire
+		}
+	}
+	desc = {
+		text = canada_events.214.d.ceasefirenowca
+		trigger = {
+			NOT = { country_exists = WCA }
+			has_global_flag = ACC_rockies_ceasefire
+		}
+	}
+	desc = {
+		text = canada_events.214.d.noceasefirewca
+		trigger = {
+			country_exists = WCA
+			NOT = { has_global_flag = ACC_rockies_ceasefire }
+		}
+	}
+	desc = {
+		text = canada_events.214.d.noceasefirenowca
+		trigger = {
+			NOT = { country_exists = WCA }
+			NOT = { has_global_flag = ACC_rockies_ceasefire }
+		}
+	}
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		OR = {
+			has_idea = CAN_refugee_crisis_1
+			has_idea = CAN_refugee_crisis_2
+			has_idea = CAN_refugee_crisis_sec
+			has_idea = CAN_refugee_crisis_help
+			has_idea = CAN_refugee_crisis_sam
+			check_variable = { refugee_states > 0 }
+		}
+		has_global_flag = USA_civil_war_over_flag
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.214 option canada_events.214.a"
+		name = canada_events.214.a
+		if = {
+			limit = {
+				has_completed_focus = CAN_american_recruitment
+				OR = {
+					has_idea = CAN_refugee_crisis_help
+					has_idea = CAN_refugee_crisis_sam
+				}
+			}
+			set_temp_variable = { american_recruit = refugee_states }
+			if = {
+				limit = { has_idea = CAN_refugee_crisis_help }
+				multiply_temp_variable = { american_recruit = -7500 }
+			}
+			if = {
+				limit = { has_idea = CAN_refugee_crisis_sam }
+				multiply_temp_variable = { american_recruit = -12500 }
+			}
+			if = {
+				limit = {
+					country_exists = WCA
+					has_global_flag = ACC_rockies_ceasefire
+				}
+				multiply_temp_variable = { american_recruit = 0.40 }
+			}
+			else_if = {
+				limit = {
+					country_exists = WCA
+					NOT = { has_global_flag = ACC_rockies_ceasefire }
+				}
+				multiply_temp_variable = { american_recruit = 0.20 }
+			}
+			else = {
+				multiply_temp_variable = { american_recruit = 0.60 }
+			}
+			add_manpower = american_recruit
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_1 }
+			remove_ideas = CAN_refugee_crisis_1
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_2 }
+			remove_ideas = CAN_refugee_crisis_2
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_sec }
+			remove_ideas = CAN_refugee_crisis_sec
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_help }
+			remove_ideas = CAN_refugee_crisis_help
+		}
+		if = {
+			limit = { has_idea = CAN_refugee_crisis_sam }
+			remove_ideas = CAN_refugee_crisis_sam
+		}
+		hidden_effect = {
+			clear_variable = refugee_states
+			every_state = {
+				limit = { has_dynamic_modifier = { modifier = CAN_american_refugee_modifier } }
+				remove_dynamic_modifier = { modifier = CAN_american_refugee_modifier }
+				clear_variable = CAN_american_refugee_local_supplies
+			}
+			NEE = {
+				if = {
+					limit = { has_idea = CAN_refugee_crisis_2 }
+					remove_ideas = CAN_refugee_crisis_2
+				}
+			}
+		}
+	}
+}
+
+# Visit by the Canadian PM to New England
+country_event = {
+	id = canada_events.216
+	title = canada_events.216.t
+	desc = canada_events.216.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.216 option canada_events.216.a"
+		name = canada_events.216.a #We value their alliance
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 3
+				has_country_flag = CAN_returned_land
+			}
+			modifier = {
+				factor = 1.5
+				CAN = {
+					any_owned_state = {
+						is_claim_or_core_of_ROOT = yes
+					}
+				}
+			}
+		}
+		every_owned_state = {
+			limit = {
+				OR = {
+					is_core_of = CAN
+					is_claimed_by = CAN
+				}
+				is_claim_or_core_of_ROOT = no
+			}
+			transfer_state_to = CAN
+		}
+		CAN = {
+			add_opinion_modifier = { target = ROOT modifier = KR_close_allies }
+			effect_tooltip = {
+				every_owned_state = {
+					limit = {
+						is_claim_or_core_of_ROOT = yes
+						NOT = {
+							is_claimed_by = CAN
+							is_core_of = CAN
+						}
+					}
+					transfer_state_to = ROOT
+				}
+				if = {
+					limit = {
+						is_in_faction = yes
+						ROOT = { is_in_faction = no }
+					}
+					faction_leader = { add_to_faction = ROOT }
+				}
+			}
+			country_event = canada_events.217
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.216 option canada_events.216.b"
+		name = canada_events.216.b #We are fine as we are
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.2
+				is_in_faction_with = CAN
+			}
+			modifier = {
+				factor = 2
+				has_country_flag = NEE_refused_home_rule
+			}
+		}
+		CAN = {
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			country_event = canada_events.218
+		}
+	}
+}
+
+# New England wants to keep alliance
+country_event = {
+	id = canada_events.217
+	title = canada_events.217.t
+	desc = canada_events.217.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.217 option canada_events.217.a"
+		name = canada_events.217.a
+		add_political_power = 100
+		reverse_add_opinion_modifier = { target = FROM modifier = KR_close_allies }
+		every_owned_state = {
+			limit = {
+				is_claim_or_core_of_FROM = yes
+				NOT = {
+					is_claimed_by = CAN
+					is_core_of = CAN
+				}
+			}
+			transfer_state_to = FROM
+		}
+		if = {
+			limit = {
+				is_in_faction = yes
+				FROM = { is_in_faction = no }
+			}
+			faction_leader = { add_to_faction = FROM }
+		}
+	}
+}
+
+# New England keeps us at arms length
+country_event = {
+	id = canada_events.218
+	title = canada_events.218.t
+	desc = canada_events.218.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.218 option canada_events.218.a"
+		name = canada_events.218.a
+		add_political_power = 50
+		reverse_add_opinion_modifier = { target = FROM modifier = KR_disapproves_of_govt }
+	}
+}
+
+# Entente member informed of support for faction
+country_event = {
+	id = canada_events.219
+	desc = canada_events.219.d
+	picture = GFX_report_event_CAN_parliament1
+
+	title = {
+		text = canada_events.219.t.USA
+		trigger = { FROM = { tag = USA } }
+	}
+	title = {
+		text = canada_events.219.t.ACC
+		trigger = { FROM = { tag = ACC } }
+	}
+	title = {
+		text = canada_events.219.t.APG
+		trigger = { FROM = { tag = APG } }
+	}
+	title = {
+		text = canada_events.219.t.NEE
+		trigger = { FROM = { tag = NEE } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.219 option canada_events.219.a"
+		name = canada_events.219.a
+		if = {
+			limit = { FROM = { tag = USA } }
+			add_ideas = ACW_support_USA
+		}
+		else_if = {
+			limit = { FROM = { tag = ACC } }
+			add_ideas = ACW_support_ACC
+		}
+		else_if = {
+			limit = { FROM = { tag = APG } }
+			add_ideas = ACW_support_APG
+		}
+		FROM = {
+			add_opinion_modifier = { target = ROOT modifier = KR_supported_us }
+		}
+	}
+}
+
+# ACW Faction informed of Entente support
+country_event = {
+	id = canada_events.220
+	desc = canada_events.220.d
+	picture = GFX_report_event_CAN_parliament1
+
+	title = {
+		text = canada_events.220.t.USA
+		trigger = { tag = USA }
+	}
+	title = {
+		text = canada_events.220.t.ACC
+		trigger = { tag = ACC }
+	}
+	title = {
+		text = canada_events.220.t.APG
+		trigger = { tag = APG }
+	}
+	title = {
+		text = canada_events.220.t.NEE
+		trigger = { tag = NEE }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.220 option canada_events.220.a"
+		name = canada_events.220.a
+		if = {
+			limit = { tag = NEE }
+			add_ideas = NEE_canadian_backing
+			set_country_flag = NEE_more_likely_independent
+			set_temp_variable = { NEE_legitimacy_change = 20 }
+			NEE_Change_Legitimacy = yes
+		}
+		every_other_country = {
+			limit = { is_in_faction_with = CAN }
+			add_opinion_modifier = { target = ROOT modifier = ACW_entente_helping }
+			if = {
+				limit = { NOT = { tag = CAN } }
+				hidden_effect = { country_event = canada_events.219 }
+			}
+		}
+		hidden_effect = {
+			every_country = {
+				limit = {
+					is_in_north_america = yes
+					NOT = {
+						tag = ROOT
+						tag = CAN
+						is_in_faction_with = CAN
+					}
+					is_in_central_america = no
+				}
+				country_event = canada_events.221
+			}
+		}
+	}
+}
+
+# Other countries informed of Entente support
+country_event = {
+	id = canada_events.221
+	desc = canada_events.221.d
+	picture = GFX_report_event_CAN_parliament1
+
+	title = {
+		text = canada_events.221.t.USA
+		trigger = { FROM = { tag = USA } }
+	}
+	title = {
+		text = canada_events.221.t.ACC
+		trigger = { FROM = { tag = ACC } }
+	}
+	title = {
+		text = canada_events.221.t.APG
+		trigger = { FROM = { tag = APG } }
+	}
+	title = {
+		text = canada_events.221.t.NEE
+		trigger = { FROM = { tag = NEE } }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.221 option canada_events.221.a"
+		name = canada_events.221.a
+		trigger = { is_american_tag = yes }
+		add_opinion_modifier = { target = CAN modifier = KR_outraged }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.221 option canada_events.221.b"
+		name = canada_events.221.b
+		trigger = { is_american_tag = no }
+	}
+}
+
+# Entente intervenes in the ACW
+country_event = {
+	id = canada_events.222
+	title = canada_events.222.t
+	desc = canada_events.222.d
+	picture = GFX_report_event_CAN_army1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.222 option canada_events.222.a"
+		name = canada_events.222.a
+		every_country = {
+			limit = {
+				OR = {
+					tag = CAN
+					is_in_faction_with = CAN
+				}
+			}
+			hidden_effect = {
+				add_opinion_modifier = { target = ROOT 	modifier = KR_approves_of_govt }
+				reverse_add_opinion_modifier = { target = ROOT 	modifier = KR_approves_of_govt }
+			}
+			diplomatic_relation = {
+				country = ROOT
+				relation = non_aggression_pact
+				active = yes
+			}
+			diplomatic_relation = {
+				country = ROOT
+				relation = docking_rights
+				active = yes
+			}
+			ROOT = {
+				diplomatic_relation = {
+					country = PREV
+					relation = docking_rights
+					active = yes
+				}
+			}
+		}
+		hidden_effect = {
+			random_other_country = {
+				limit = { is_ai = yes }
+				news_event = canada_events.230
+			}
+		}
+	}
+}
+
+# WCA becomes aware of possible intervention
+country_event = {
+	id = canada_events.223
+	title = canada_events.223.t
+	desc = canada_events.223.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		tag = WCA
+		CAN = {
+			focus_progress = {
+				focus = CAN_crossing_the_border
+				progress > 0.25
+			}
+			NOT = { has_war_with = ROOT }
+			NOT = { has_war_with = USA }
+			NOT = { has_war_with = APG }
+			NOT = { has_war_with = ACC }
+			NOT = { has_war_with = NEE }
+		}
+		is_subject = no
+	}
+
+	#mean_time_to_happen = {
+	#	days = 3
+	#}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.223 option canada_events.223.a"
+		name = canada_events.223.a
+		activate_targeted_decision = { decision = CAN_delay_canadian_intervention target = CAN }
+	}
+}
+
+# Canada wracked by WCA-sponsored strikes
+country_event = {
+	id = canada_events.224
+
+	title = {
+		text = canada_events.224.t.first
+		trigger = { NOT = { FROM = { has_variable = CAN_strike_cost } } }
+	}
+	title = {
+		text = canada_events.224.t.later
+		trigger = { FROM = { has_variable = CAN_strike_cost } }
+	}
+
+	desc = {
+		text = canada_events.224.d.first
+		trigger = { NOT = { FROM = { has_variable = CAN_strike_cost } } }
+	}
+	desc = {
+		text = canada_events.224.d.later
+		trigger = { FROM = { has_variable = CAN_strike_cost } }
+	}
+
+	picture = GFX_report_event_CAN_strike
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.224 option canada_events.224.a"
+		name = canada_events.224.a
+		if = {
+			limit = { has_idea = CAN_crippling_strikes }
+			modify_timed_idea = {
+				idea = CAN_crippling_strikes
+				days = 90
+			}
+		}
+		else = {
+			add_timed_idea = {
+				idea = CAN_crippling_strikes
+				days = 90
+			}
+		}
+	}
+}
+
+# Asking surviving ACW country to join Entente
+country_event = {
+	id = canada_events.227
+	title = canada_events.227.t
+	picture = GFX_report_event_CAN_parliament1
+
+	desc = {
+		text = canada_events.227.d
+		trigger = {
+			NOT = {
+				any_state = {
+					OR = {
+						is_owned_by = CAN
+						owner = {
+							is_ally_with = CAN
+							NOT = {
+								tag = NEE
+								tag = HAW
+								tag = PUE
+							}
+						}
+					}
+					OR = {
+						is_mainland_america = yes
+						state = 463 #Alaska
+						state = 629 #Hawaii
+						state = 685 #Panama Canal
+						state = 686 #Puerto Rico
+					}
+				}
+			}
+		}
+	}
+	desc = {
+		text = canada_events.227.d.owned
+		trigger = {
+			any_state = {
+				OR = {
+					is_owned_by = CAN
+					owner = {
+						is_ally_with = CAN
+						NOT = {
+							tag = NEE
+							tag = HAW
+							tag = PUE
+						}
+					}
+				}
+				OR = {
+					is_mainland_america = yes
+					state = 463 #Alaska
+					state = 629 #Hawaii
+					state = 685 #Panama Canal
+					state = 686 #Puerto Rico
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.227 option canada_events.227.a"
+		name = canada_events.227.a #Yes
+		ai_chance = {
+			base = 80
+			modifier = {
+				factor = 1.4
+				has_country_flag = USA_agreed_nee_rejoin
+			}
+			modifier = {
+				factor = 1.2
+				USA = { has_country_flag = USA_compromise_reached }
+			}
+			modifier = {
+				factor = 1.2
+				has_global_flag = CAN_supports_@ROOT
+			}
+			modifier = {
+				factor = 0
+				tag = USA
+				NOT = { has_game_rule = { rule = USA_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = USA_forpol option = USA_FORPOL_ENT } }
+			}
+			modifier = {
+				factor = 0
+				tag = APG
+				NOT = { has_game_rule = { rule = APG_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = APG_forpol option = APG_FORPOL_ENT } }
+			}
+			modifier = {
+				factor = 0
+				tag = ACC
+				NOT = { has_game_rule = { rule = ACC_forpol option = DEFAULT } }
+				NOT = { has_game_rule = { rule = ACC_forpol option = ACC_FORPOL_ENT } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = RSA_forpol option = RSA_FORPOL_ACW_VICTOR }
+				GER = { exists = yes }
+			}
+		}
+		effect_tooltip = {
+			every_state = {
+				limit = {
+					OR = {
+						is_owned_by = CAN
+						owner = {
+							is_ally_with = CAN
+							NOT = {
+								tag = NEE
+								tag = HAW
+								tag = PUE
+							}
+						}
+					}
+					OR = {
+						is_mainland_america = yes
+						state = 463 #Alaska
+						state = 629 #Hawaii
+						state = 685 #Panama Canal
+						state = 686 #Puerto Rico
+					}
+				}
+				transfer_state_to = ROOT
+			}
+		}
+		USA_disable_league_of_american_states = yes
+		CAN = {
+			effect_tooltip = { add_to_faction = ROOT }
+			country_event = canada_events.228
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.227 option canada_events.227.b"
+		name = canada_events.227.b #No
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 2
+				NOT = { has_global_flag = CAN_supports_@ROOT }
+				OR = {
+					has_global_flag = CAN_supports_USA
+					has_global_flag = CAN_supports_ACC
+					has_global_flag = CAN_supports_APG
+				}
+			}
+			modifier = {
+				factor = 1.5
+				NOT = {
+					has_global_flag = CAN_supports_USA
+					has_global_flag = CAN_supports_ACC
+					has_global_flag = CAN_supports_APG
+				}
+			}
+			modifier = {
+				factor = 1.5
+				USA = { has_country_flag = USA_no_compromise_reached }
+			}
+			modifier = {
+				factor = 2
+				has_country_flag = USA_refused_entente_demand
+			}
+			modifier = {
+				factor = 3
+				has_country_flag = USA_refused_nee_rejoin
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					AND = {
+						tag = USA
+						has_game_rule = { rule = USA_forpol option = USA_FORPOL_ENT }
+					}
+					AND = {
+						tag = APG
+						has_game_rule = { rule = APG_forpol option = APG_FORPOL_ENT }
+					}
+					AND = {
+						tag = ACC
+						has_game_rule = { rule = ACC_forpol option = ACC_FORPOL_ENT }
+					}
+				}
+				NOT = {
+					AND = {
+						has_game_rule = { rule = RSA_forpol option = RSA_FORPOL_ACW_VICTOR }
+						GER = { exists = yes }
+					}
+				}
+			}
+		}
+		CAN = {
+			country_event = canada_events.229
+		}
+	}
+}
+
+# ACW country agrees
+country_event = {
+	id = canada_events.228
+	title = canada_events.228.t
+	desc = canada_events.228.d
+	picture = GFX_report_event_generic_diplomacy3
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.228 option canada_events.228.a"
+		name = canada_events.228.a
+		add_political_power = 100
+		add_to_faction = FROM
+		every_state = {
+			limit = {
+				OR = {
+					is_owned_by = CAN
+					owner = {
+						is_ally_with = CAN
+						NOT = {
+							tag = NEE
+							tag = HAW
+							tag = PUE
+						}
+					}
+				}
+				OR = {
+					is_mainland_america = yes
+					state = 463 #Alaska
+					state = 629 #Hawaii
+					state = 685 #Panama Canal
+					state = 686 #Puerto Rico
+				}
+			}
+			if = {
+				limit = { is_claimed_by = CAN }
+				remove_claim_by = CAN
+			}
+			transfer_state_to = FROM
+		}
+	}
+}
+
+# ACW country refuses
+country_event = {
+	id = canada_events.229
+	title = canada_events.229.t
+	desc = canada_events.229.d
+	picture = GFX_report_event_generic_diplomacy4
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.229 option canada_events.229.a"
+		name = canada_events.229.a
+		add_political_power = 50
+	}
+}
+
+# News: Canada Intervenes in ACW
+news_event = {
+	id = canada_events.230
+	immediate = { log = "[GetLogInfo]: event canada_events.230" }
+	title = canada_events.230.t
+	desc = canada_events.230.d
+	picture = GFX_news_event_canadian_soldiers
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	is_triggered_only = yes
+	fire_for_sender = no
+	major = yes
+
+	option = {
+		name = canada_events.230.a
+		trigger = {
+			is_in_faction_with = CAN
+		}
+	}
+	option = {
+		name = canada_events.230.b
+		trigger = {
+			has_war_with = FROM
+		}
+	}
+	option = {
+		name = canada_events.230.c
+		trigger = {
+			NOT = {
+				has_war_with = FROM
+				is_in_faction_with = CAN
+			}
+		}
+	}
+}
+
+# Denmark: Canada seizes Greenland
+country_event = {
+	id = canada_events.231
+	title = canada_events.231.t
+	desc = canada_events.231.d
+	picture = GFX_report_event_CAN_army1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.231 option canada_events.231.a"
+		name = canada_events.231.a
+		add_opinion_modifier = { target = FROM modifier = KR_hates_govt }
+	}
+}
+
+# Player Entente member is consulted about Canadian ACW support
+country_event = {
+	id = canada_events.232
+	title = canada_events.232.t
+	desc = canada_events.232.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.232 option canada_events.232.a"
+		name = canada_events.232.a #The Entente should not support a faction
+		CAN = {
+			set_global_flag = CAN_player_support_no_faction
+			country_event = canada_events.201
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.232 option canada_events.232.b"
+		name = canada_events.232.b #Support the Federal government
+		trigger = { country_exists = USA }
+		CAN = {
+			set_global_flag = CAN_player_support_federal
+			country_event = canada_events.201
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.232 option canada_events.232.c"
+		name = canada_events.232.c #Support the Pacific government
+		trigger = { country_exists = ACC }
+		CAN = {
+			set_global_flag = CAN_player_support_pacific
+			country_event = canada_events.201
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.232 option canada_events.232.e"
+		name = canada_events.232.e #Support the Union government
+		trigger = { country_exists = APG }
+		CAN = {
+			set_global_flag = CAN_player_support_union
+			country_event = canada_events.201
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.232 option canada_events.232.f"
+		name = canada_events.232.f #Support New England
+		trigger = { is_in_faction_with = NEE }
+		CAN = {
+			set_global_flag = CAN_player_support_new_england
+			country_event = canada_events.201
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.232 option canada_events.232.g"
+		name = canada_events.232.g #Canada can make its own decision
+		CAN = { country_event = canada_events.201 }
+	}
+}
+
+### Post-War Events
+
+# UK has been restored
+country_event = {
+	id = canada_events.300
+	title = canada_events.300.t
+	desc = canada_events.300.d
+	picture = GFX_report_event_CAN_fleeing
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.300 option canada_events.300.a"
+		name = canada_events.300.a
+		add_war_support = -0.20
+		add_timed_idea = {
+			idea = CAN_british_exodus
+			days = 365
+		}
+		if = {
+			limit = { has_authdem_or_pataut_government = no }
+			effect_tooltip = {
+				set_party_name = {
+					ideology = paternal_autocrat
+					name = CAN_united_empire_loyalist_party
+					long_name = CAN_united_empire_loyalist_party
+				}
+			}
+			hidden_effect = {
+				set_party_name = {
+					ideology = paternal_autocrat
+					long_name = CAN_united_empire_loyalist_party_long
+					name = CAN_united_empire_loyalist_party
+				}
+			}
+		}
+		else_if = {
+			limit = { is_subject = no }
+			hidden_effect = { country_event = { id = canada_events.301 days = 3 } }
+		}
+		hidden_effect = { country_event = { id = canada_flavour_events.1 days = 100 random_days = 80 } }
+	}
+}
+
+# Restoring civilian government in Canada
+country_event = {
+	id = canada_events.301
+	title = canada_events.301.t
+	desc = canada_events.301.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_authdem_or_pataut_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.301 option canada_events.301.a"
+		name = canada_events.301.a
+		if = {
+			limit = { has_government = authoritarian_democrat }
+			set_country_flag = CAN_was_authdem
+			add_popularity = { ideology = authoritarian_democrat popularity = -0.20 }
+		}
+		if = {
+			limit = { has_government = paternal_autocrat }
+			set_country_flag = CAN_was_pataut
+			add_popularity = { ideology = paternal_autocrat popularity = -0.20 }
+		}
+		if = {
+			limit = { social_conservative < 0.40 }
+			add_popularity = { ideology = social_conservative popularity = 0.10 }
+		}
+		meta_effect = {
+			text = {
+				set_politics = {
+					ruling_party = social_conservative
+					last_election = "[CURRENT_DATE]"
+					election_frequency = 12
+					elections_allowed = yes
+				}
+			}
+			CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+		}
+		CAN_set_republic_party_names = yes
+	}
+}
+
+# The Canadian Governor General (fired by UK focus)
+country_event = {
+	id = canada_events.302
+	title = canada_events.302.t
+	desc = canada_events.302.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	trigger = {
+		CAN = {
+			is_in_faction_with = GBR
+			CAN_is_dominion = yes
+		}
+	}
+
+	option = { # appoint Prince Albert
+		log = "[GetLogInfo]: event canada_events.302 option canada_events.302.a"
+		name = canada_events.302.a
+		trigger = { ENT_king_edward_viii = yes }
+		ai_chance = { base = 60 }
+		CAN = {
+			save_event_target_as = CAN_gov_gen_albert
+			country_event = canada_events.303
+		}
+	}
+	option = { # appoint Lord Mountbatten
+		log = "[GetLogInfo]: event canada_events.302 option canada_events.302.b"
+		name = canada_events.302.b
+		ai_chance = { base = 40 }
+		add_political_power = 50
+		effect_tooltip = { GBR_louis_mountbatten = { set_nationality = CAN } }
+		CAN = {
+			save_event_target_as = CAN_gov_gen_mountbatten
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			country_event = canada_events.303
+		}
+	}
+	option = { # appoint John Vereker
+		log = "[GetLogInfo]: event canada_events.302 option canada_events.302.c"
+		name = canada_events.302.c
+		ai_chance = { base = 20 }
+		add_political_power = 30
+		effect_tooltip = { GBR_john_vereker = { set_nationality = CAN } }
+		CAN = {
+			save_event_target_as = CAN_gov_gen_vereker
+			add_opinion_modifier = { target = ROOT modifier = KR_disapproves_of_govt }
+			country_event = canada_events.303
+		}
+	}
+	option = { # Appoint a Canadian
+		log = "[GetLogInfo]: event canada_events.302 option canada_events.302.e"
+		name = canada_events.302.e
+		ai_chance = { base = 30 }
+		add_political_power = -50
+		CAN = {
+			save_event_target_as = CAN_gov_gen_mcnaughton
+			add_opinion_modifier = { target = ROOT modifier = KR_approves_of_govt }
+			country_event = canada_events.303
+		}
+	}
+}
+
+# Canada gets its new Governor General
+country_event = {
+	id = canada_events.303
+	title = canada_events.303.t
+	picture = GFX_report_event_royal_parade
+
+	desc = {
+		text = canada_events.303.d.albert
+		trigger = { has_event_target = CAN_gov_gen_albert }
+	}
+	desc = {
+		text = canada_events.303.d.mountbatten
+		trigger = { has_event_target = CAN_gov_gen_mountbatten }
+	}
+	desc = {
+		text = canada_events.303.d.vereker
+		trigger = { has_event_target = CAN_gov_gen_vereker }
+	}
+	desc = {
+		text = canada_events.303.d.mcnaughton
+		trigger = { has_event_target = CAN_gov_gen_mcnaughton }
+	}
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = { has_event_target = CAN_gov_gen_albert }
+				GBR = { GBR_albert_windsor = { set_nationality = ROOT } }
+			}
+			else_if = {
+				limit = { has_event_target = CAN_gov_gen_mountbatten }
+				GBR = { GBR_louis_mountbatten = { set_nationality = ROOT } }
+			}
+			else_if = {
+				limit = { has_event_target = CAN_gov_gen_vereker }
+				GBR = { GBR_john_vereker = { set_nationality = ROOT } }
+			}
+		}
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.303 option canada_events.303.a"
+		name = canada_events.303.a
+		if = {
+			limit = { has_event_target = CAN_gov_gen_albert }
+			effect_tooltip = {
+				meta_effect = {
+					text = {
+						add_country_leader_role = {
+							character = GBR_albert_windsor
+							country_leader = {
+								desc = GBR_albert_windsor_governor_CAN_leader_desc
+								ideology = [IDEOLOGY]
+							}
+							promote_leader = yes
+						}
+					}
+					IDEOLOGY = "[ROOT.GetRulingIdeologySubtype]"
+				}
+			}
+			hidden_effect = {
+				GBR_albert_windsor = {
+					set_character_as_regent = yes
+					remove_all_country_leader_roles = yes
+					add_country_leader_role = {
+						country_leader = {
+							desc = GBR_albert_windsor_governor_CAN_leader_desc
+							ideology = social_democrat_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = GBR_albert_windsor_governor_CAN_leader_desc
+							ideology = social_liberal_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = GBR_albert_windsor_governor_CAN_leader_desc
+							ideology = market_liberal_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = GBR_albert_windsor_governor_CAN_leader_desc
+							ideology = social_conservative_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = GBR_albert_windsor_governor_CAN_leader_desc
+							ideology = authoritarian_democrat_subtype
+						}
+						promote_leader = yes
+					}
+					add_country_leader_role = {
+						country_leader = {
+							desc = GBR_albert_windsor_governor_CAN_leader_desc
+							ideology = paternal_autocrat_subtype
+						}
+						promote_leader = yes
+					}
+				}
+			}
+		}
+		else_if = {
+			limit = { has_event_target = CAN_gov_gen_mountbatten }
+			add_political_power = -50
+			subtract_from_variable = { CAN_was_king_popularity = 1 }
+			GBR_louis_mountbatten = {
+				set_character_as_regent = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_louis_mountbatten_leader_desc
+						ideology = social_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_louis_mountbatten_leader_desc
+						ideology = social_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_louis_mountbatten_leader_desc
+						ideology = market_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_louis_mountbatten_leader_desc
+						ideology = social_conservative_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_louis_mountbatten_leader_desc
+						ideology = authoritarian_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_louis_mountbatten_leader_desc
+						ideology = paternal_autocrat_subtype
+					}
+					promote_leader = yes
+				}
+			}
+		}
+		else_if = {
+			limit = { has_event_target = CAN_gov_gen_vereker }
+			add_political_power = -30
+			subtract_from_variable = { CAN_was_king_popularity = 1 }
+			GBR_john_vereker = {
+				set_character_as_regent = yes
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_john_vereker_leader_desc
+						ideology = social_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_john_vereker_leader_desc
+						ideology = social_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_john_vereker_leader_desc
+						ideology = market_liberal_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_john_vereker_leader_desc
+						ideology = social_conservative_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_john_vereker_leader_desc
+						ideology = authoritarian_democrat_subtype
+					}
+					promote_leader = yes
+				}
+				add_country_leader_role = {
+					country_leader = {
+						desc = GBR_john_vereker_leader_desc
+						ideology = paternal_autocrat_subtype
+					}
+					promote_leader = yes
+				}
+			}
+		}
+		else = {
+			add_political_power = 50
+		}
+	}
+}
+
+# Debate on the referendum begins (fired by focus)
+country_event = {
+	id = canada_events.304
+	title = canada_events.304.t
+	desc = canada_events.304.d
+	picture = GFX_report_event_CAN_commons2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.304 option canada_events.304.a"
+		name = canada_events.304.a
+		hidden_effect = {
+			if = {
+				limit = {
+					OR = {
+						has_completed_focus = CAN_send_in_the_rcmp
+						has_completed_focus = CAN_a_second_unionist_government
+					}
+				}
+				country_event = { id = canada_events.305 days = 8 random_hours = 72 }
+			}
+			if = {
+				limit = { check_variable = { CAN_was_king_popularity < 2 } }
+				country_event = { id = canada_events.306 days = 15 random_hours = 72 }
+			}
+			else = {
+				country_event = { id = canada_events.307 days = 15 random_hours = 72 }
+			}
+			country_event = { id = canada_events.308 days = 20 random_hours = 72 }
+			if = {
+				limit = { has_completed_focus = CAN_a_second_unionist_government }
+				country_event = { id = canada_events.309 days = 25 random_hours = 72 }
+			}
+			else = {
+				country_event = { id = canada_events.310 days = 25 random_hours = 72 }
+			}
+		}
+	}
+}
+
+# Anti-Monarchy Demonstrations in Quebec (if suppressed)
+country_event = {
+	id = canada_events.305
+	title = canada_events.305.t
+	desc = canada_events.305.d
+	picture = GFX_report_event_CAN_quebec1
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+		QUE = { any_core_state = { is_owned_and_controlled_by = ROOT } }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.305 option canada_events.305.a"
+		name = canada_events.305.a
+		add_stability = -0.05
+	}
+}
+
+# March on Rideau Hall (if 1 pop)
+country_event = {
+	id = canada_events.306
+	title = canada_events.306.t
+	desc = canada_events.306.d
+	picture = GFX_report_event_CAN_rideau
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+		739 = { is_owned_and_controlled_by = CAN }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.306 option canada_events.306.a"
+		name = canada_events.306.a
+		add_stability = -0.05
+	}
+}
+
+# Support for the King (if 2+ pop)
+country_event = {
+	id = canada_events.307
+	title = canada_events.307.t
+	desc = canada_events.307.d
+	picture = GFX_report_event_CAN_crowd2
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+		276 = { is_owned_and_controlled_by = CAN }
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.307 option canada_events.307.a"
+		name = canada_events.307.a
+		add_stability = -0.05
+	}
+}
+
+# Address by the King
+country_event = {
+	id = canada_events.308
+	title = canada_events.308.t
+	desc = canada_events.308.d
+	picture = GFX_report_event_CAN_microphone
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.308 option canada_events.308.a"
+		name = canada_events.308.a
+		add_stability = 0.02
+	}
+}
+
+# The Fleming Inquiry (if WMA invoked)
+country_event = {
+	id = canada_events.309
+	title = canada_events.309.t
+	picture = GFX_report_event_generic_reporters
+
+	desc = {
+		text = canada_events.309.d.wma
+		trigger = { has_country_flag = CAN_was_authdem }
+	}
+	desc = {
+		text = canada_events.309.d.pataut
+		trigger = { has_country_flag = CAN_was_pataut }
+	}
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.309 option canada_events.309.a"
+		name = canada_events.309.a
+		if = {
+			limit = { has_country_flag = CAN_was_authdem }
+			add_political_power = -50
+		}
+		else = {
+			add_political_power = -100
+		}
+		add_stability = -0.05
+	}
+}
+
+# PM Calls for Unity (if no WMA invoked)
+country_event = {
+	id = canada_events.310
+	title = canada_events.310.t
+	desc = canada_events.310.d
+	picture = GFX_report_event_CAN_cabinet
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.310 option canada_events.310.a"
+		name = canada_events.310.a
+		add_stability = 0.02
+		hidden_effect = {
+			every_allied_country = {
+				limit = { CAN_is_commonwealth_tag = yes }
+				country_event = { id = canada_events.311 days = 1 }
+			}
+		}
+	}
+}
+
+# Allies informed of impending vote
+country_event = {
+	id = canada_events.311
+	title = canada_events.311.t
+	desc = canada_events.311.d
+	picture = GFX_report_event_CAN_parliament1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.311 option canada_events.311.a"
+		name = canada_events.311.a #Campaign hard for them to remain
+		trigger = { tag = GBR }
+		add_political_power = -100
+		hidden_effect = {
+			CAN = { set_country_flag = CAN_british_campaign_vote }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.311 option canada_events.311.b"
+		name = canada_events.311.b #It's their decision
+		trigger = { tag = GBR }
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.311 option canada_events.311.c"
+		name = canada_events.311.c
+		trigger = { NOT = { tag = GBR } }
+	}
+}
+
+# The Referendum
+country_event = {
+	id = canada_events.315
+	title = canada_events.315.t
+	desc = canada_events.315.d
+	picture = GFX_report_event_CAN_election
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_subject = no
+		has_elected_government = yes
+	}
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.315 option canada_events.315.a"
+		name = canada_events.315.a #Cut ties with the monarchy
+		ai_chance = {
+			base = 30
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = CAN_referendum option = CAN_REFERENDUM_EMPIRE }
+			}
+			modifier = {
+				factor = 1.5
+				check_variable = { CAN_was_king_popularity < 3 }
+			}
+			modifier = {
+				factor = 1.5
+				check_variable = { CAN_was_king_popularity < 2 }
+			}
+			modifier = {
+				factor = 1.2
+				has_completed_focus = CAN_send_in_the_rcmp
+				any_state_of = {
+					target = { 466 468 832 } #Saguenay, Saint Lawrence, Quebec
+					is_owned_and_controlled_by = CAN
+				}
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = CAN_was_authdem
+			}
+			modifier = {
+				factor = 2
+				has_country_flag = CAN_was_pataut
+			}
+		}
+		clr_country_flag = CAN_british_campaign_vote
+		clr_country_flag = CAN_was_authdem
+		clr_country_flag = CAN_was_pataut
+		add_political_power = -200
+		add_stability = -0.20
+		custom_effect_tooltip = CAN_becomes_republic
+		if = {
+			limit = { WIF = { is_subject_of = CAN } }
+			set_autonomy = {
+				target = WIF
+				autonomy_state = autonomy_free
+			}
+		}
+		if = {
+			limit = { AST = { is_subject_of = CAN } }
+			set_autonomy = {
+				target = AST
+				autonomy_state = autonomy_free
+			}
+		}
+		if = {
+			limit = { NZL = { is_subject_of = CAN } }
+			set_autonomy = {
+				target = NZL
+				autonomy_state = autonomy_free
+			}
+		}
+		effect_tooltip = { set_cosmetic_tag = CAN }
+		hidden_effect = {
+			CAN_create_republic = yes
+			news_event = { id = canada_events.316 days = 1 }
+		}
+	}
+	option = {
+		log = "[GetLogInfo]: event canada_events.315 option canada_events.315.b"
+		name = canada_events.315.b #We are a loyal member of the Empire
+		ai_chance = {
+			base = 70
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = CAN_referendum option = CAN_REFERENDUM_REP }
+			}
+			modifier = {
+				factor = 1.5
+				check_variable = { CAN_was_king_popularity > 2 }
+			}
+			modifier = {
+				factor = 1.5
+				check_variable = { CAN_was_king_popularity > 3 }
+			}
+			modifier = {
+				factor = 2
+				check_variable = { CAN_was_king_popularity > 4 }
+			}
+			modifier = {
+				factor = 1.2
+				has_completed_focus = CAN_invest_in_la_belle_province
+				any_state_of = {
+					target = { 466 468 832 } #Saguenay, Saint Lawrence, Quebec
+					is_owned_and_controlled_by = CAN
+				}
+			}
+			modifier = {
+				factor = 1.2
+				has_country_leader = { character = CAN_andrew_mcnaughton }
+			}
+			modifier = {
+				factor = 1.5
+				has_country_flag = CAN_british_campaign_vote
+			}
+		}
+		clr_country_flag = CAN_british_campaign_vote
+		clr_country_flag = CAN_was_authdem
+		clr_country_flag = CAN_was_pataut
+		add_political_power = 100
+		add_stability = 0.05
+		uncomplete_national_focus = {
+			focus = CAN_canadian_referendum
+			uncomplete_children = yes
+		}
+		unlock_national_focus = CAN_loyalty_to_the_empire
+		hidden_effect = {
+			news_event = { id = canada_events.317 days = 1 }
+		}
+	}
+}
+
+# News: Canada cuts ties with the monarchy
+news_event = {
+	id = canada_events.316
+	immediate = { log = "[GetLogInfo]: event canada_events.316" }
+	title = canada_events.316.t
+	desc = canada_events.316.d
+	picture = GFX_news_event_CAN_parliament
+
+	fire_for_sender = no
+	is_triggered_only = yes
+	major = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = canada_events.316.a
+		trigger = {
+			OR = {
+				tag = CAN
+				tag = GBR
+				is_in_faction_with = GBR
+			}
+		}
+	}
+	option = {
+		name = canada_events.316.b
+		trigger = {
+			NOT = {
+				tag = CAN
+				tag = GBR
+				is_in_faction_with = GBR
+			}
+		}
+	}
+}
+
+# News: Canada referendum fails
+news_event = {
+	id = canada_events.317
+	immediate = { log = "[GetLogInfo]: event canada_events.317" }
+	title = canada_events.317.t
+	desc = canada_events.317.d
+	picture = GFX_news_event_CAN_parliament
+
+	is_triggered_only = yes
+	major = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = canada_events.317.a
+		trigger = {
+			OR = {
+				tag = CAN
+				tag = GBR
+				is_in_faction_with = GBR
+			}
+		}
+	}
+	option = {
+		name = canada_events.317.b
+		trigger = {
+			NOT = {
+				tag = CAN
+				tag = GBR
+				is_in_faction_with = GBR
+			}
+		}
+	}
+}
+
+# Patriation of the Canadian Constitution (fired by focus)
+country_event = {
+	id = canada_events.321
+	title = canada_events.321.t
+	desc = canada_events.321.d
+	picture = GFX_report_event_generic_sign_treaty1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.321 option canada_events.321.a"
+		name = canada_events.321.a
+		add_political_power = 100
+	}
+}
+
+# The Birth of Canadian nationalism (fired by focus)
+country_event = {
+	id = canada_events.322
+	title = canada_events.322.t
+	desc = canada_events.322.d
+	picture = GFX_report_event_CAN_crowd2
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.322 option canada_events.322.a"
+		name = canada_events.322.a
+		add_war_support = 0.10
+		add_popularity = { ideology = national_populist popularity = 0.05 }
+		463 = { enable_state_integration_80_compliance = yes } #Alaska
+		custom_effect_tooltip = tooltip_white_line
+		activate_targeted_decision = { decision = CAN_claim_alaska target = 463 }
+		activate_targeted_decision = { decision = CAN_claim_washington target = 386 }
+		activate_targeted_decision = { decision = CAN_claim_maine target = 357 }
+		hidden_effect = {
+			country_event = { id = canada_events.325 days = 60 }
+		}
+	}
+}
+
+# News: Canada withdraws from the Entente
+news_event = {
+	id = canada_events.323
+	immediate = { log = "[GetLogInfo]: event canada_events.323" }
+	title = canada_events.323.t
+	desc = canada_events.323.d
+	picture = GFX_news_event_CAN_parliament
+
+	is_triggered_only = yes
+	major = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = canada_events.323.a
+		trigger = { tag = CAN }
+	}
+	option = {
+		name = canada_events.323.b
+		trigger = {
+			NOT = { tag = CAN }
+			OR = {
+				tag = ENT
+				is_in_faction_with = ENT
+			}
+		}
+	}
+	option = {
+		name = canada_events.323.c
+		trigger = {
+			NOT = {
+				tag = CAN
+				tag = ENT
+				is_in_faction_with = ENT
+			}
+		}
+	}
+}
+
+# Canada claims a state
+country_event = {
+	id = canada_events.324
+	title = canada_events.324.t
+	desc = canada_events.324.d
+	picture = GFX_report_event_CAN_army1
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.324 option canada_events.324.a"
+		name = canada_events.324.a
+		add_opinion_modifier = { target = FROM modifier = KR_hates_govt }
+		if = {
+			limit = { gives_military_access_to = FROM }
+			FROM = {
+				diplomatic_relation = {
+					country = ROOT
+					relation = military_access
+					active = no
+				}
+			}
+		}
+		if = {
+			limit = { FROM = { gives_military_access_to = ROOT } }
+			diplomatic_relation = {
+				country = FROM
+				relation = military_access
+				active = no
+			}
+		}
+		if = {
+			limit = { has_non_aggression_pact_with = FROM }
+			diplomatic_relation = {
+				country = FROM
+				relation = non_aggression_pact
+				active = no
+			}
+		}
+	}
+}
+
+# Growth of the Nationalist Party
+country_event = {
+	id = canada_events.325
+	title = canada_events.325.t
+	desc = canada_events.325.d
+	picture = GFX_report_event_generic_rally
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.325 option canada_events.325.a"
+		name = canada_events.325.a
+		add_popularity = { ideology = national_populist popularity = 0.1 }
+	}
+}
+
+# Canadian investments in Britain (fired by focus)
+country_event = {
+	id = canada_events.326
+	title = canada_events.326.t
+	desc = canada_events.326.d
+	picture = GFX_report_event_generic_factory
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.326 option canada_events.326.a"
+		name = canada_events.326.a
+		add_ideas = CAN_canadian_investments_1
+	}
+}
+
+# New officers for Canada (fired by focus)
+country_event = {
+	id = canada_events.327
+	title = canada_events.327.t
+	desc = canada_events.327.d
+	picture = GFX_report_event_british_inspect_troops
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_events.327 option canada_events.327.a"
+		name = canada_events.327.a
+		show_unit_leaders_tooltip = CAN_john_hamilton_roberts
+		show_unit_leaders_tooltip = CAN_harry_leonard_nowell_salmon
+		show_unit_leaders_tooltip = CAN_george_kitching
+		show_unit_leaders_tooltip = CAN_garner_ormsby_currie
+		show_unit_leaders_tooltip = CAN_horatio_nelson_lay
+		hidden_effect = {
+			CAN_john_hamilton_roberts = { set_nationality = ROOT }
+			CAN_harry_leonard_nowell_salmon = { set_nationality = ROOT }
+			CAN_george_kitching = { set_nationality = ROOT }
+			CAN_garner_ormsby_currie = { set_nationality = ROOT }
+			CAN_horatio_nelson_lay = { set_nationality = ROOT }
+		}
+	}
+}
+
+country_event = { #This is how AI picks who wins the election. Unionists/Exiles can get in power through either route.
+	id = canada_events.500
+	title = canada_events.500.t
+	desc = canada_events.500.d
+	picture = GFX_report_event_generic_diplomacy1
+	hidden = yes
+	is_triggered_only = yes
+	trigger = { is_ai = yes }
+
+	immediate = {
+		country_event = { id = canada_events.501 hours = 6 }
+	}
+
+	option = { #Liberals
+		log = "[GetLogInfo]: event canada_events.500 option canada_events.500.a"
+		name = canada_events.500.a
+		ai_chance = {
+			base = 45
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = CAN_path option = CAN_PATH_SOCCON }
+			}
+		}
+		set_country_flag = CAN_liberal_ai
+	}
+	option = { #Conservatives
+		log = "[GetLogInfo]: event canada_events.500 option canada_events.500.b"
+		name = canada_events.500.b
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = { rule = CAN_path option = CAN_PATH_MARLIB }
+					has_game_rule = { rule = CAN_path option = CAN_PATH_SOCDEM }
+				}
+			}
+		}
+		set_country_flag = CAN_conservative_ai
+	}
+}
+
+country_event = { #This is how AI picks subpaths. These will have the AI chose options preferable to the eventual outcome.
+	id = canada_events.501
+	title = canada_events.501.t
+	desc = canada_events.501.d
+	picture = GFX_report_event_generic_diplomacy1
+	hidden = yes
+	is_triggered_only = yes
+	trigger = { is_ai = yes }
+
+	option = { #Liberals
+		log = "[GetLogInfo]: event canada_events.501 option canada_events.501.a"
+		name = canada_events.501.a
+		trigger = { has_country_flag = CAN_liberal_ai }
+		ai_chance = {
+			base = 425
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_MARLIB } }
+			}
+		}
+	}
+	option = { #CCF
+		log = "[GetLogInfo]: event canada_events.501 option canada_events.501.b"
+		name = canada_events.501.b
+		trigger = { has_country_flag = CAN_liberal_ai }
+		ai_chance = {
+			base = 425
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_SOCDEM } }
+			}
+		}
+		set_country_flag = CAN_ccf_ai
+	}
+	option = { #Conservatives
+		log = "[GetLogInfo]: event canada_events.501 option canada_events.501.c"
+		name = canada_events.501.c
+		trigger = { has_country_flag = CAN_conservative_ai }
+		ai_chance = {
+			base = 850
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_SOCCON } }
+			}
+		}
+	}
+	option = { #Unionists
+		log = "[GetLogInfo]: event canada_events.501 option canada_events.501.e"
+		name = canada_events.501.e
+		ai_chance = {
+			base = 100
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_AUTDEM } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_NATPOP } }
+			}
+		}
+		set_country_flag = CAN_unionist_ai
+	}
+	option = { #Exiles
+		log = "[GetLogInfo]: event canada_events.501 option canada_events.501.f"
+		name = canada_events.501.f
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				NOT = { has_game_rule = { rule = CAN_path option = DEFAULT } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_PATAUT } }
+				NOT = { has_game_rule = { rule = CAN_path option = CAN_PATH_NATPOP } }
+			}
+		}
+		set_country_flag = CAN_exile_ai
+	}
+}
+
+### Flavour
+
+country_event = {
+	id = canada_flavour_events.1
+	title = canada_flavour_events.1.t
+	desc = canada_flavour_events.1.d
+	picture = GFX_report_event_CAN_their_finest_hour
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_flavour_events.1 option canada_flavour_events.1.a"
+		name = canada_flavour_events.1.a
+	}
+}
+
+country_event = { #The Hobbit for Canada, Formerly in Entente Flavour events.txt
+	id = canada_flavour_events.2
+	title = canada_flavour_events.2.t
+	desc = canada_flavour_events.2.d
+
+	is_triggered_only = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_flavour_events.2 option canada_flavour_events.2.a"
+		name = canada_flavour_events.2.a
+	}
+}
+
+country_event = { #Gilbert K. Chesterton dies, Formerly in Entente Flavour events.txt
+	id = canada_flavour_events.3
+	title = canada_flavour_events.3.t
+	desc = canada_flavour_events.3.d
+
+	is_triggered_only = yes
+	minor_flavor = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_flavour_events.3 option canada_flavour_events.3.a"
+		name = canada_flavour_events.3.a
+	}
+}
+
+country_event = { #Edmund Allenby dies, Formerly in Entente Flavour events.txt
+	id = canada_flavour_events.4
+	title = canada_flavour_events.4.t
+	desc = canada_flavour_events.4.d
+
+	is_triggered_only = yes
+	minor_flavor = yes
+
+	option = {
+		log = "[GetLogInfo]: event canada_flavour_events.4 option canada_flavour_events.4.a"
+		name = canada_flavour_events.4.a
+	}
+}
+
+# Edward VIII ascends
+news_event = {
+	id = canada_flavour_events.5
+	immediate = { log = "[GetLogInfo]: event canada_flavour_events.5" }
+	title = canada_flavour_events.5.t
+	desc = canada_flavour_events.5.d
+	picture = GFX_news_event_CAN_coronation_of_king_edward_viii
+
+	major = yes
+	fire_for_sender = no
+	is_triggered_only = yes
+
+	trigger = { wants_world_news = yes } #Global news event
+
+	option = {
+		name = canada_flavour_events.5.a
+	}
+}

@@ -1,0 +1,394 @@
+#### American Civil War Decisions by Herkles ####
+
+political_actions = {
+	JAP_hold_hawaii = {
+		icon = GFX_decision_generic_agreement
+
+		allowed = { always = no } #manually activated
+
+		available = {
+			HAW = { has_capitulated = no }
+		}
+
+		cancel_trigger = {
+			NOT = { has_war_with = var:HAW.faction_leader }
+		}
+
+		is_good = yes
+		fire_only_once = yes
+		days_mission_timeout = 180
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout JAP_hold_hawaii"
+			var:HAW.faction_leader = { country_event = hawaii_events.111 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+HAW_foreign_policy_decisions = {
+	HAW_join_faction = {
+		name = join_faction
+		icon = generic_political_discourse
+
+		available = {
+			at_peace_or_same_enemies_as_FROM = yes
+			hidden_trigger = { NOT = { has_global_flag = HAW_join_faction_event_active } }
+		}
+
+		visible = {
+			is_in_faction = no
+			has_socialist_government = no
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		targets = { ENT GER JAP }
+		target_root_trigger = {
+			has_country_flag = HAW_can_join_factions
+			has_socialist_government = no
+			is_in_faction = no
+		}
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = HAW_forpol option = HAW_FORPOL_ENT }
+				NOT = { FROM = { tag = ENT } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = HAW_forpol option = HAW_FORPOL_GER }
+				NOT = { FROM = { original_tag = GER } }
+			}
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = HAW_forpol option = HAW_FORPOL_JAP }
+				NOT = { FROM = { original_tag = JAP } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete HAW_join_faction"
+			set_global_flag = HAW_join_faction_event_active
+			FROM = { country_event = hawaii_events.101 }
+		}
+		fixed_random_seed = no
+	}
+	HAW_join_international = {
+		name = join_faction
+		icon = generic_political_discourse
+
+		available = {
+			at_peace_or_same_enemies_as_FROM = yes
+		}
+
+		visible = {
+			is_in_faction = no
+			has_socialist_government = yes
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		cost = 0
+		fire_only_once = yes
+
+		targets = { INT }
+		target_root_trigger = {
+			has_country_flag = HAW_can_join_factions
+			has_socialist_government = yes
+			is_in_faction = no
+		}
+		target_trigger = {
+			FROM = {
+				is_faction_leader = yes
+				NOT = { has_war_with = ROOT }
+			}
+		}
+
+		ai_will_do = { factor = 100 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete HAW_join_international"
+			FROM = { country_event = hawaii_events.101 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+HAW_economic_decisions = {
+	HAW_attract_industrial_investment = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by focus HAW_foreign_investments
+
+		target_trigger = {
+			is_in_faction = yes
+			is_faction_leader = no
+		}
+
+		cost = 50
+
+		ai_will_do = { factor = 70 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete HAW_attract_industrial_investment"
+			add_tech_bonus = {
+				name = HAW_attract_industrial_investment
+				bonus = 0.75
+				uses = 2
+				category = industry
+			}
+			hidden_effect = {
+				remove_targeted_decision = { decision = HAW_attract_industrial_investment target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	HAW_attract_military_investment = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by focus HAW_foreign_investments
+
+		target_trigger = {
+			is_in_faction = yes
+			is_faction_leader = no
+		}
+
+		cost = 50
+
+		ai_will_do = { factor = 70 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete HAW_attract_military_investment"
+			add_offsite_building = { type = arms_factory level = 2 }
+			hidden_effect = {
+				remove_targeted_decision = { decision = HAW_attract_military_investment target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	HAW_attract_commercial_investment = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by focus HAW_foreign_investments
+
+		target_trigger = {
+			is_in_faction = yes
+			is_faction_leader = no
+		}
+
+		cost = 50
+
+		ai_will_do = { factor = 70 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete HAW_attract_commercial_investment"
+			add_offsite_building = { type = industrial_complex level = 2 }
+			hidden_effect = {
+				remove_targeted_decision = { decision = HAW_attract_commercial_investment target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+	HAW_attract_naval_investment = {
+		icon = generic_research
+
+		allowed = { always = no } #activated by focus HAW_foreign_investments
+
+		target_trigger = {
+			is_in_faction = yes
+			is_faction_leader = no
+		}
+
+		cost = 50
+
+		ai_will_do = { factor = 70 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete HAW_attract_naval_investment"
+			add_offsite_building = { type = dockyard level = 2 }
+			hidden_effect = {
+				remove_targeted_decision = { decision = HAW_attract_naval_investment target = FROM }
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+HAW_buying_ships_decisions = {
+	HAW_buy_light_cruisers = {
+		icon = generic_research
+
+		visible = {
+			country_exists = FROM
+			FROM = {
+				NOT = { has_war_with = ROOT }
+				if = {
+					limit = { is_american_tag = yes }
+					has_global_flag = USA_civil_war_over_flag
+				}
+			}
+			if = {
+				limit = { has_socialist_government = yes }
+				FROM = { has_socialist_government = yes }
+			}
+			else = {
+				FROM = { has_socialist_government = no }
+			}
+		}
+
+		cost = 50
+		days_remove = 135
+		fire_only_once = yes
+
+		targets = { AST CAN WCA ACC APG USA GER JAP }
+		target_root_trigger = { has_completed_focus = HAW_navy }
+		target_trigger = {
+			FROM = {
+				NOT = { has_war_with = ROOT }
+				if = {
+					limit = { is_american_tag = yes }
+					has_global_flag = USA_civil_war_over_flag
+				}
+			}
+			if = {
+				limit = { has_socialist_government = yes }
+				FROM = { has_socialist_government = yes }
+			}
+			else = {
+				FROM = { has_socialist_government = no }
+			}
+		}
+
+		targeted_modifier = {
+			tag = FROM
+			cic_to_target_factor = 0.3
+		}
+
+		ai_will_do = { factor = 70 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete HAW_buy_light_cruisers"
+			if = {
+				limit = { NOT = { has_country_flag = HAW_added_cruiser_variant } }
+				set_country_flag = HAW_added_cruiser_variant
+				create_equipment_variant = {
+					name = "Mokupuni Class"
+					type = ship_hull_cruiser_1
+					parent_version = 0
+					name_group = HAW_ISLANDS
+					modules = {
+						fixed_ship_battery_slot = ship_light_medium_battery_1
+						fixed_ship_anti_air_slot = ship_anti_air_1
+						fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+						fixed_ship_radar_slot = empty
+						fixed_ship_engine_slot = cruiser_ship_engine_1
+						fixed_ship_armor_slot = ship_armor_cruiser_1
+						mid_1_custom_slot = ship_torpedo_1
+						mid_2_custom_slot = ship_anti_air_1
+						rear_1_custom_slot = ship_light_battery_1
+					}
+				}
+			}
+			create_ship = { type = ship_hull_cruiser_1 equipment_variant = "Mokupuni Class" }
+		}
+		fixed_random_seed = no
+	}
+	HAW_buy_destroyers = {
+		icon = generic_research
+
+		visible = {
+			country_exists = FROM
+			FROM = {
+				NOT = { has_war_with = ROOT }
+				if = {
+					limit = { is_american_tag = yes }
+					has_global_flag = USA_civil_war_over_flag
+				}
+			}
+			if = {
+				limit = { has_socialist_government = yes }
+				FROM = { has_socialist_government = yes }
+			}
+			else = {
+				FROM = { has_socialist_government = no }
+			}
+		}
+
+		cost = 50
+		days_remove = 80
+		fire_only_once = yes
+
+		targets = { AST CAN WCA ACC APG USA GER JAP }
+		target_root_trigger = { has_completed_focus = HAW_navy }
+		target_trigger = {
+			FROM = {
+				NOT = { has_war_with = ROOT }
+				if = {
+					limit = { is_american_tag = yes }
+					has_global_flag = USA_civil_war_over_flag
+				}
+			}
+			if = {
+				limit = { has_socialist_government = yes }
+				FROM = { has_socialist_government = yes }
+			}
+			else = {
+				FROM = { has_socialist_government = no }
+			}
+		}
+
+		targeted_modifier = {
+			tag = FROM
+			cic_to_target_factor = 0.3
+		}
+
+		ai_will_do = { factor = 70 }
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete HAW_buy_destroyers"
+			if = {
+				limit = { NOT = { has_tech = basic_ship_hull_light } }
+				set_technology = { basic_ship_hull_light = 1 }
+			}
+			if = {
+				limit = { NOT = { has_country_flag = HAW_added_destroyer_variant } }
+				set_country_flag = HAW_added_destroyer_variant
+				create_equipment_variant = {
+					name = "Mauna Class"
+					type = ship_hull_light_2
+					parent_version = 0
+					name_group = HAW_ISLANDS
+					modules = {
+						fixed_ship_battery_slot = ship_light_battery_2
+						fixed_ship_anti_air_slot = ship_anti_air_1
+						fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+						fixed_ship_radar_slot = ship_sonar_1
+						fixed_ship_engine_slot = light_ship_engine_2
+						fixed_ship_torpedo_slot = ship_torpedo_1
+						mid_1_custom_slot = ship_torpedo_1
+						rear_1_custom_slot = ship_depth_charge_1
+					}
+				}
+			}
+			create_ship = { type = ship_hull_light_2 equipment_variant = "Mauna Class" }
+			create_ship = { type = ship_hull_light_2 equipment_variant = "Mauna Class" }
+		}
+		fixed_random_seed = no
+	}
+}

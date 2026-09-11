@@ -1,0 +1,169 @@
+on_actions = {
+	on_ruling_party_change_immediate = {
+		effect = {
+			if = {
+				limit = { original_tag = AST }
+				if = {
+					limit = {
+						OR = {
+							AST_is_dominion = no
+							has_socialist_government = yes
+							has_government = paternal_autocrat
+						}
+					}
+					activate_advisor = AST_federal_parliament_sic
+				}
+				else = {
+					if = {
+						limit = { has_government = social_democrat }
+						if = {
+							limit = { has_character = AST_john_curtin }
+							activate_advisor = AST_john_curtin_sic
+						}
+						else_if = {
+							limit = {
+								has_character = NZL_peter_fraser
+								NZL_peter_fraser = { has_advisor_role = second_in_command }
+							}
+							activate_advisor = NZL_peter_fraser_sic
+						}
+						else = {
+							activate_advisor = AST_joseph_benedict_chifley_sic
+						}
+					}
+					else_if = {
+						limit = { has_government = social_liberal }
+						activate_advisor = AST_john_thomas_lang_sic
+					}
+					else_if = {
+						limit = { has_government = market_liberal }
+						if = {
+							limit = { has_character = AST_earle_christmas_grafton_page }
+							activate_advisor = AST_earle_christmas_grafton_page_sic
+						}
+						else = {
+							activate_advisor = AST_arthur_william_fadden_sic
+						}
+					}
+					else_if = {
+						limit = { has_government = social_conservative }
+						if = {
+							limit = { has_character = AST_stanley_melbourne_bruce }
+							activate_advisor = AST_stanley_melbourne_bruce_sic
+						}
+						else_if = {
+							limit = {
+								has_character = NZL_sidney_george_holland
+								NZL_sidney_george_holland = { has_advisor_role = second_in_command }
+							}
+							activate_advisor = NZL_sidney_george_holland_sic
+						}
+						else = {
+							activate_advisor = AST_robert_gordon_menzies_sic
+						}
+					}
+					else_if = {
+						limit = { has_government = authoritarian_democrat }
+						activate_advisor = AST_william_morris_hughes_sic
+					}
+					else_if = {
+						limit = {
+							has_government = national_populist
+							has_character = AST_eric_campbell
+						}
+						activate_advisor = AST_eric_campbell_sic
+					}
+					else = {
+						activate_advisor = AST_federal_parliament_sic
+					}
+				}
+			}
+		}
+	}
+
+	on_ruling_party_change = {
+		effect = {
+			if = {
+				limit = { original_tag = AST }
+				country_event = { id = australasia_events.35 days = 10 random_days = 10 } # The Great Schism of the Australasian Labor Party
+				country_event = { id = australasia_events.303 days = 150 random_days = 20 } # Resignation of Stanley Bruce
+			}
+		}
+	}
+
+	on_peace = {
+		effect = {
+			### Add AST to INT when scripted ENT/AST war ends
+			if = {
+				limit = { original_tag = AST }
+				country_event = { id = australasia_events.248 days = 5 random_days = 5 } # The Loss of New Zealand
+				country_event = { id = australasia_events.249 days = 5 random_days = 5 } # New Zealand Restored
+				country_event = { id = australasia_events.250 days = 50 random_days = 20 } # A Referendum in New Zealand?
+				if = {
+					limit = {
+						country_exists = INT
+						has_country_flag = AST_can_join_internationale
+					}
+					country_event = { id = australasia_events.107 days = 2 } # Join the Internationale?
+					clr_country_flag = AST_can_join_internationale
+				}
+			}
+		}
+	}
+
+	#ROOT is attacker
+	#FROM is defender
+	#fired when two countries end up at war with each other (on_war is fired when a country goes to war against anyone and is not fired again when it enters war against another country unless it went to peace first)
+	on_war_relation_added = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						original_tag = AST
+						is_major = yes
+					}
+					FROM = {
+						OR = {
+							original_tag = AST
+							is_major = yes
+						}
+					}
+				}
+				country_event = { id = australasia_events.256 days = 20 random_days = 10 } # The Volunteer Defence Corps
+				country_event = { id = australasia_events.263 days = 50 random_days = 15 } # Formation of a Māori Battalion?
+			}
+			### Add AST to INT if the two go to war during scripted ENT/AST war
+			if = {
+				limit = {
+					OR = {
+						tag = ENT
+						tag = INT
+					}
+					FROM = {
+						OR = {
+							tag = ENT
+							tag = INT
+						}
+					}
+				}
+				AST = { country_event = { id = australasia_events.266 days = 50 random_days = 20 } } # Curtin Visits [CAN.GetNameDef]
+				if = {
+					limit = { AST = { has_country_flag = AST_can_join_internationale } }
+					AST = {
+						country_event = { id = australasia_events.107 days = 2 } # Join the Internationale?
+						clr_country_flag = AST_can_join_internationale
+					}
+				}
+			}
+		}
+	}
+
+	on_war = {
+		effect = {
+			if = {
+				limit = { original_tag = AST }
+				country_event = { id = australasia_events.33 days = 30 random_days = 5 } # AFM Protests the War
+			}
+		}
+	}
+}

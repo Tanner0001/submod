@@ -1,0 +1,2026 @@
+###########################
+# Australasia Decisions
+###########################
+# By Rylock
+###########################
+
+political_actions = {
+	AST_conscription_plebiscite = {
+		icon = generic_decision
+
+		allowed = {
+			original_tag = AST
+		}
+
+		available = {
+			OR = {
+				has_war_with_major = yes
+				AND = {
+					has_completed_focus = AST_artillery_focus
+					has_completed_focus = AST_improve_equipment
+					has_completed_focus = AST_clarify_anzac
+				}
+			}
+		}
+
+		visible = {
+			has_idea = volunteer_only
+			has_dictatorship_government = no
+		}
+
+		cost = 100
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+			modifier = {
+				factor = 100
+				has_manpower < 25000
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_conscription_plebiscite"
+			country_event = australasia_events.215
+		}
+		fixed_random_seed = no
+	}
+
+	AST_skip_plebiscite = {
+		icon = generic_civil_support
+
+		allowed = {
+			original_tag = AST
+		}
+
+		available = {
+			OR = {
+				has_war_with_major = yes
+				AND = {
+					has_completed_focus = AST_artillery_focus
+					has_completed_focus = AST_improve_equipment
+					has_completed_focus = AST_clarify_anzac
+				}
+			}
+		}
+
+		visible = {
+			has_idea = volunteer_only
+			NOT = { has_country_flag = AST_plebiscite_failed }
+			OR = {
+				has_elected_government = no
+				has_war = yes
+			}
+		}
+
+		cost = 100
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_elected_government = yes
+			}
+			modifier = {
+				factor = 5
+				has_war = yes
+			}
+			modifier = {
+				factor = 100
+				has_manpower < 25000
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_skip_plebiscite"
+			set_country_flag = AST_plebiscite_forced
+			if = {
+				limit = { surrender_progress > 0 }
+				add_stability = -0.1
+			}
+			else_if = {
+				limit = { has_war_with_major = yes }
+				add_stability = -0.2
+			}
+			else = {
+				add_stability = -0.30
+			}
+			add_ideas = limited_conscription
+			AST_enable_conscription = yes
+		}
+		fixed_random_seed = no
+	}
+
+	AST_force_conscription = {
+		icon = generic_civil_support
+
+		allowed = {
+			original_tag = AST
+		}
+
+		visible = {
+			has_idea = volunteer_only
+			has_country_flag = AST_plebiscite_failed
+		}
+
+		cost = 100
+		fire_only_once = yes
+
+		ai_will_do = {
+			base = 20
+			modifier = {
+				factor = 0
+				has_war_with_major = no
+			}
+			modifier = {
+				factor = 5
+				surrender_progress > 0
+			}
+			modifier = {
+				factor = 10
+				has_manpower < 25000
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_force_conscription"
+			set_country_flag = AST_plebiscite_forced
+			if = {
+				limit = { surrender_progress > 0 }
+				add_stability = -0.1
+			}
+			else_if = {
+				limit = { has_war_with_major = yes }
+				add_stability = -0.2
+			}
+			else = {
+				add_stability = -0.30
+			}
+			add_ideas = limited_conscription
+			AST_enable_conscription = yes
+		}
+		fixed_random_seed = no
+	}
+
+	AST_trade_mission_commonwealth = {
+		icon = generic_agreement
+
+		allowed = {
+			original_tag = AST
+		}
+
+		available = {
+			has_capitulated = no
+		}
+
+		visible = {
+			has_completed_focus = AST_trade_commonwealth
+			is_in_faction_with = ENT
+			FROM = {
+				is_in_faction_with = ROOT
+				OR = {
+					is_subject = no
+					original_tag = WIF
+				}
+				controls_all_owned_states = yes
+				NOT = { has_country_flag = AST_approached_trade }
+			}
+		}
+
+		target_array = faction_members
+
+		target_root_trigger = {
+			has_completed_focus = AST_trade_commonwealth
+		}
+
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = ROOT
+				NOT = { has_country_flag = AST_approached_trade }
+				OR = {
+					is_subject = no
+					original_tag = WIF
+				}
+				controls_all_owned_states = yes
+			}
+		}
+
+		cost = 25
+		days_remove = 90
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 20
+				FROM = { is_major = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel AST_trade_mission_commonwealth"
+			add_political_power = 25
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_trade_mission_commonwealth"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_trade_mission_commonwealth"
+			FROM = { country_event = australasia_events.201 }
+		}
+		fixed_random_seed = no
+	}
+
+	AST_trade_mission_new = {
+		icon = generic_agreement
+
+		allowed = {
+			original_tag = AST
+		}
+
+		available = {
+			has_capitulated = no
+		}
+
+		visible = {
+			OR = {
+				has_completed_focus = AST_new_markets
+				AND = {
+					has_completed_focus = AST_trade_commonwealth
+					NOT = { is_in_faction_with = ENT }
+				}
+			}
+			FROM = {
+				num_of_factories > 10
+				both_socialist_or_both_not_socialist = yes
+				is_subject = no
+				NOT = { is_in_faction_with = ENT }
+				NOT = { has_war_with = AST }
+				NOT = { has_country_flag = AST_approached_trade }
+			}
+		}
+
+		targets = { JAP SAF MDR MYS TRV PRF HND SIA WCA USA FRA ENG ACC APG NEE QIE FNG GXC SZC CHI YUN LEC FER RUS }
+
+		target_root_trigger = {
+			OR = {
+				has_completed_focus = AST_new_markets
+				AND = {
+					has_completed_focus = AST_trade_commonwealth
+					NOT = { is_in_faction_with = ENT }
+				}
+			}
+		}
+
+		target_trigger = {
+			FROM = {
+				num_of_factories > 10
+				NOT = { has_country_flag = AST_approached_trade }
+				both_socialist_or_both_not_socialist = yes
+				is_subject = no
+				NOT = { is_in_faction_with = ENT }
+				NOT = { has_war_with = AST }
+			}
+		}
+
+		cost = 25
+		days_remove = 90
+		fire_only_once = yes
+		cancel_if_not_visible = yes
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 20
+				FROM = { is_major = yes }
+			}
+		}
+
+		cancel_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision cancel AST_trade_mission_new"
+			add_political_power = 25
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_trade_mission_new"
+		}
+
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_trade_mission_new"
+			FROM = { country_event = australasia_events.201 }
+		}
+		fixed_random_seed = no
+	}
+}
+
+AST_anderson_policy_decisions = {
+	AST_claim_singapore = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 336 }
+		}
+
+		available = {
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			336 = {
+				NOT = { has_state_flag = AST_claimed_anderson }
+				owner = {
+					NOT = {
+						is_ally_with = AST
+						AND = {
+							has_global_flag = ENT_agree_colonies
+							AST = { is_in_faction_with = ENT }
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 100
+
+		ai_will_do = {
+			factor = 20
+			# syndicalist AST will not use on fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				336 = { owner = { has_socialist_government = yes } }
+			}
+			# democratic AST will not use unless owned by a different government type
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+				336 = {
+					owner = {
+						NOT = {
+							AND = {
+								country_exists = GER
+								is_ally_with = GER
+							}
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 5
+				336 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_singapore"
+			336 = {
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+				owner = {
+					country_event = australasia_events.354
+					if = {
+						limit = { is_subject = yes }
+						overlord = { country_event = australasia_events.354 }
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_claim_sarawak = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 333 }
+		}
+
+		available = {
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			333 = {
+				NOT = { has_state_flag = AST_claimed_anderson }
+				owner = {
+					NOT = {
+						is_ally_with = AST
+						AND = {
+							has_global_flag = ENT_agree_colonies
+							AST = { is_in_faction_with = ENT }
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		ai_will_do = {
+			factor = 10
+			# syndicalist AST will not use on fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				333 = { owner = { has_socialist_government = yes } }
+			}
+			# democratic AST will not use unless owned by a different government type
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+				333 = {
+					owner = {
+						NOT = {
+							AND = {
+								country_exists = GER
+								is_ally_with = GER
+							}
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 5
+				333 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_sarawak"
+			every_state = {
+				limit = {
+					OR = {
+						state = 333 #North Borneo
+						state = 828 #Sabah
+					}
+					NOT = { owner = { is_ally_with = ROOT } }
+				}
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+			}
+			every_other_country = {
+				limit = {
+					NOT = { is_ally_with = ROOT }
+					owns_any_state_of = {
+						333 #North Borneo
+						828 #Sabah
+					}
+				}
+				country_event = australasia_events.355
+				if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = australasia_events.355 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_claim_new_guinea = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 757 }
+		}
+
+		available = {
+			owns_state = 523 #New Guinea
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			757 = {
+				NOT = { has_state_flag = AST_claimed_anderson }
+				owner = {
+					NOT = {
+						is_ally_with = AST
+						AND = {
+							has_global_flag = ENT_agree_colonies
+							AST = { is_in_faction_with = ENT }
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		ai_will_do = {
+			factor = 10
+			# syndicalist AST will not use if owned by fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				757 = { owner = { has_socialist_government = yes } }
+			}
+			# democratic AST will not use unless owned by a syndicalist country
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+				757 = {
+					owner = {
+						NOT = {
+							AND = {
+								country_exists = GER
+								is_ally_with = GER
+							}
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			# democratic AST will not use on GER/GEA unless at war with them
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+				757 = {
+					owner = {
+						AND = {
+							country_exists = GER
+							is_ally_with = GER
+						}
+						NOT = {
+							has_war_with = AST
+							GER = { has_war_with = AST }
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 5
+				757 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_new_guinea"
+			every_state = {
+				limit = {
+					OR = {
+						state = 757 #NE. New Guinea
+						state = 737 #Bismarck Archipelago
+					}
+					NOT = { owner = { is_ally_with = ROOT } }
+				}
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+			}
+			every_other_country = {
+				limit = {
+					NOT = { is_ally_with = ROOT }
+					owns_any_state_of = {
+						757 #NE. New Guinea
+						737 #Bismarck Archipelago
+					}
+				}
+				country_event = australasia_events.350
+				if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = australasia_events.350 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_claim_melanesia = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 634 }
+		}
+
+		available = {
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			634 = {
+				NOT = { has_state_flag = AST_claimed_anderson }
+				owner = {
+					NOT = {
+						is_ally_with = AST
+						AND = {
+							has_global_flag = ENT_agree_colonies
+							AST = { is_in_faction_with = ENT }
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		ai_will_do = {
+			factor = 10
+			# syndicalist AST will not use on fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				634 = { owner = { has_socialist_government = yes } }
+			}
+			# democratic AST will not use unless owned by syndicalists
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+				634 = {
+					owner = {
+						NOT = {
+							AND = {
+								country_exists = GER
+								is_ally_with = GER
+							}
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 5
+				634 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_melanesia"
+			every_state = {
+				limit = {
+					OR = {
+						state = 634 #Solomon Islands
+						state = 635 #New Caledonia
+						state = 725 #Nauru
+						state = 734 #Nendo
+					}
+					NOT = { owner = { is_ally_with = ROOT } }
+				}
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+			}
+			every_other_country = {
+				limit = {
+					NOT = { is_ally_with = ROOT }
+					owns_any_state_of = {
+						634 #Solomon Islands
+						635 #New Caledonia
+						725 #Nauru
+						734 #Nendo
+					}
+				}
+				country_event = australasia_events.351
+				if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = australasia_events.351 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_claim_south_pacific = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 643 }
+		}
+
+		available = {
+			owns_any_state_of = {
+				636 #Fiji
+				284 #New Zealand
+			}
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			643 = {
+				NOT = { has_state_flag = AST_claimed_anderson }
+				owner = {
+					NOT = {
+						is_ally_with = AST
+						AND = {
+							has_global_flag = ENT_agree_colonies
+							AST = { is_in_faction_with = ENT }
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		ai_will_do = {
+			factor = 10
+			# syndicalist AST will not use on fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				643 = { owner = { has_socialist_government = yes } }
+			}
+			# democratic AST will not use unless owned by syndicalists
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+				643 = {
+					owner = {
+						NOT = {
+							AND = {
+								country_exists = GER
+								is_ally_with = GER
+							}
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 5
+				643 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_south_pacific"
+			every_state = {
+				limit = {
+					OR = {
+						state = 941 #Western Samoa
+						state = 641 #Tahiti
+						state = 643 #Ellice Islands
+						state = 639 #Gilbert Islands
+					}
+					NOT = { owner = { is_ally_with = ROOT } }
+				}
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+			}
+			every_other_country = {
+				limit = {
+					NOT = { is_ally_with = ROOT }
+					owns_any_state_of = {
+						941 #Western Samoa
+						641 #Tahiti
+						643 #Ellice Islands
+						639 #Gilbert Islands
+					}
+				}
+				country_event = australasia_events.352
+				if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = australasia_events.352 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_claim_caroline_islands = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 684 }
+		}
+
+		available = {
+			OR = {
+				controls_state = 757 #NE. New Guinea
+				controls_state = 639 #Gilbert Islands
+				controls_state = 684 #Caroline Islands
+			}
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			684 = {
+				NOT = { has_state_flag = AST_claimed_anderson }
+				owner = {
+					NOT = {
+						is_ally_with = AST
+						AND = {
+							has_global_flag = ENT_agree_colonies
+							AST = { is_in_faction_with = ENT }
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		ai_will_do = {
+			factor = 10
+			# syndicalist AST will not use on fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				684 = { owner = { has_socialist_government = yes } }
+			}
+			# democratic AST will not use unless owned by syndicalists
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+				684 = {
+					owner = {
+						NOT = {
+							AND = {
+								country_exists = GER
+								is_ally_with = GER
+							}
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			# democratic AST will not use on GER/GEA unless at war with them
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+				684 = {
+					owner = {
+						AND = {
+							country_exists = GER
+							is_ally_with = GER
+						}
+						NOT = {
+							has_war_with = AST
+							GER = { has_war_with = AST }
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 5
+				684 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_caroline_islands"
+			every_state = {
+				limit = {
+					OR = {
+						state = 633 #Marshall Islands
+						state = 684 #Caroline Islands
+						state = 647 #Palau
+						state = 646 #Mariana Islands
+					}
+					NOT = { owner = { is_ally_with = ROOT } }
+				}
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+			}
+			every_other_country = {
+				limit = {
+					NOT = { is_ally_with = ROOT }
+					owns_any_state_of = {
+						633 #Marshall Islands
+						684 #Caroline Islands
+						647 #Palau
+						646 #Mariana Islands
+					}
+				}
+				country_event = australasia_events.353
+				if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = australasia_events.353 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_claim_malaya = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 846 }
+		}
+
+		available = {
+			OR = {
+				controls_state = 336 #Singapore
+				controls_state = 333 #North Borneo
+				controls_state = 846 #Malaya
+			}
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			846 = {
+				NOT = { has_state_flag = AST_claimed_anderson }
+				owner = {
+					NOT = {
+						is_ally_with = ROOT
+						AND = {
+							has_global_flag = ENT_agree_colonies
+							AST = { is_in_faction_with = ENT }
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 100
+
+		ai_will_do = {
+			factor = 20
+			# syndicalist AST will not use on fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				846 = { owner = { has_socialist_government = yes } }
+			}
+			# democratic AST will not use
+			modifier = {
+				factor = 0
+				NOT = {
+					has_socialist_government = yes
+					has_government = national_populist
+				}
+			}
+			modifier = {
+				factor = 5
+				846 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_malaya"
+			every_state = {
+				limit = {
+					OR = {
+						state = 846 #Johore
+						state = 751 #Kelantan
+						state = 846 #Johore
+						state = 999 #Kedah-Perlis
+						state = 963 #Perak
+						state = 1002 #Pahang
+					}
+					NOT = { owner = { is_ally_with = ROOT } }
+				}
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+			}
+			every_other_country = {
+				limit = {
+					NOT = { is_ally_with = ROOT }
+					owns_any_state_of = {
+						846 #Johore
+						963 #Perak
+						1002 #Pahang
+					}
+				}
+				country_event = australasia_events.356
+				if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = australasia_events.356 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_claim_western_new_guinea = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 843 }
+		}
+
+		available = {
+			owns_state = 523 #New Guinea
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			OR = {
+				has_government = national_populist
+				has_socialist_government = yes
+			}
+			843 = {
+				NOT = {
+					has_state_flag = AST_claimed_anderson
+					owner = { is_ally_with = ROOT }
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 100
+
+		ai_will_do = {
+			factor = 1
+			# syndicalist AST will not use if owned by fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				843 = { owner = { has_socialist_government = yes } }
+			}
+			# nat pop AST will not use unless owned by a syndicalist country or at war
+			modifier = {
+				factor = 0
+				has_government = national_populist
+				843 = {
+					owner = {
+						NOT = {
+							has_war_with = AST
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 5
+				843 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_western_new_guinea"
+			every_state = {
+				limit = {
+					OR = {
+						state = 843 #SW. New Guinea
+						state = 669 #NW. New Guinea
+					}
+					NOT = { owner = { is_ally_with = ROOT } }
+				}
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+			}
+			every_other_country = {
+				limit = {
+					NOT = { is_ally_with = ROOT }
+					owns_any_state_of = {
+						843 #SW. New Guinea
+						669 #NW. New Guinea
+					}
+				}
+				country_event = australasia_events.357
+				if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = australasia_events.357 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_claim_timor = {
+		icon = generic_nationalism
+
+		highlight_states = {
+			highlight_state_targets = { state = 721 }
+		}
+
+		available = {
+			controls_all_owned_states = yes
+		}
+
+		visible = {
+			OR = {
+				has_government = national_populist
+				has_socialist_government = yes
+			}
+			721 = {
+				NOT = {
+					has_state_flag = AST_claimed_anderson
+					owner = { is_ally_with = ROOT }
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 100
+
+		ai_will_do = {
+			factor = 1
+			# syndicalist AST will not use if owned by fellow syndicalists
+			modifier = {
+				factor = 0
+				has_socialist_government = yes
+				721 = { owner = { has_socialist_government = yes } }
+			}
+			# nat pop AST will not use unless owned by a syndicalist country or at war
+			modifier = {
+				factor = 0
+				has_government = national_populist
+				721 = {
+					owner = {
+						NOT = {
+							has_war_with = AST
+							has_socialist_government = yes
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 5
+				721 = { owner = { has_war_with = AST } }
+			}
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_claim_timor"
+			every_state = {
+				limit = {
+					OR = {
+						state = 721 #East Timor
+						state = 1017 #West Timor
+					}
+					NOT = { owner = { is_ally_with = ROOT } }
+				}
+				set_state_flag = AST_claimed_anderson
+				add_claim_by = AST
+			}
+			every_other_country = {
+				limit = {
+					NOT = { is_ally_with = ROOT }
+					owns_any_state_of = {
+						721 #East Timor
+						1017 #West Timor
+					}
+				}
+				country_event = australasia_events.358
+				if = {
+					limit = { is_subject = yes }
+					overlord = { country_event = australasia_events.358 }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_demand_claimed_territory = {
+		icon = generic_prepare_civil_war
+
+		available = {
+			controls_all_owned_states = yes
+			NOT = {
+				has_idea = AST_new_unrest
+				has_country_flag = AST_recently_made_demand
+				has_non_aggression_pact_with = FROM
+				has_war_together_with = FROM
+			}
+		}
+
+		visible = {
+			has_global_flag = ENT_agree_colonies
+			is_in_faction_with = ENT
+		}
+
+		target_root_trigger = {
+			has_global_flag = ENT_agree_colonies
+			is_in_faction_with = ENT
+		}
+
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = GER
+				any_owned_state = {
+					is_claimed_by = ROOT
+					has_state_flag = AST_claimed_anderson
+				}
+			}
+			can_declare_war_on = FROM
+		}
+
+		cost = 0
+		days_remove = 180
+		fire_only_once = no
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_demand_claimed_territory"
+			set_country_flag = { flag = AST_recently_made_demand days = 180 value = 1 }
+			if = {
+				limit = { FROM = { is_subject = yes } }
+				FROM = {
+					save_event_target_as = puppet_owner
+					overlord = { country_event = australasia_events.360 }
+				}
+				else = {
+					FROM = { country_event = australasia_events.360 }
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				OR = {
+					country_is_in_dangerous_war = yes
+					FROM = { default_attack_AI_trigger = yes }
+					FROM = { dont_start_major_faction_wars = yes }
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_seize_new_guinea = {
+		icon = infiltrate_state
+
+		available = {
+			divisions_in_state = { state = 523 size > 0 } #SE. New Guinea
+		}
+
+		visible = {
+			523 = { is_owned_and_controlled_by = ROOT }
+			757 = {
+				has_state_flag = AST_claimed_anderson
+				is_claimed_by = AST
+				owner = {
+					has_war = yes
+					OR = {
+						surrender_progress > 0.5
+						AND = {
+							is_subject = yes
+							overlord = { surrender_progress > 0.5 }
+						}
+					}
+					NOT = {
+						is_ally_with = AST
+						has_war_with = AST
+						has_war_together_with = AST
+						AND = {
+							has_global_flag = ENT_agree_colonies
+							AST = { is_in_faction_with = ENT }
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 50
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_seize_new_guinea"
+			757 = {
+				owner = {
+					country_event = australasia_events.364
+				}
+			}
+			if = {
+				limit = {
+					757 = {
+						owner = {
+							owns_state = 737 #Bismark Archipelago
+							divisions_in_state = { state = 737 size < 1 }
+						}
+					}
+				}
+				effect_tooltip = {
+					transfer_state = 737
+				}
+			}
+			effect_tooltip = {
+				transfer_state = 757
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_seize_western_new_guinea = {
+		icon = infiltrate_state
+
+		available = {
+			OR = {
+				divisions_in_state = { state = 523 size > 0 } #SE. New Guinea
+				divisions_in_state = { state = 757 size > 0 } #NE. New Guinea
+			}
+		}
+
+		visible = {
+			any_state_of = {
+				target = { 523 757 }
+				is_owned_and_controlled_by = AST
+			}
+			OR = {
+				843 = {
+					has_state_flag = AST_claimed_anderson
+					is_claimed_by = AST
+					owner = {
+						has_war = yes
+						OR = {
+							surrender_progress > 0.5
+							AND = {
+								is_subject = yes
+								overlord = { surrender_progress > 0.5 }
+							}
+						}
+						NOT = {
+							is_ally_with = AST
+							has_war_with = AST
+							has_war_together_with = AST
+						}
+					}
+				}
+				669 = {
+					has_state_flag = AST_claimed_anderson
+					is_claimed_by = AST
+					owner = {
+						has_war = yes
+						OR = {
+							surrender_progress > 0.5
+							AND = {
+								is_subject = yes
+								overlord = { surrender_progress > 0.5 }
+							}
+						}
+						NOT = {
+							is_ally_with = AST
+							has_war_with = AST
+							has_war_together_with = AST
+						}
+					}
+				}
+			}
+		}
+
+		fire_only_once = no
+
+		cost = 50
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_seize_western_new_guinea"
+			every_other_country = {
+				limit = {
+					has_war = yes
+					owns_any_state_of = {
+						843 #SW. New Guinea
+						669 #NW. New Guinea
+					}
+					OR = {
+						surrender_progress > 0.5
+						AND = {
+							is_subject = yes
+							overlord = { surrender_progress > 0.5 }
+						}
+					}
+					NOT = {
+						is_ally_with = AST
+						has_war_with = AST
+						has_war_together_with = AST
+					}
+				}
+				country_event = australasia_events.365
+				if = {
+					limit = {
+						owns_state = 843
+					}
+					effect_tooltip = {
+						AST = { transfer_state = 843 }
+					}
+				}
+				if = {
+					limit = {
+						owns_state = 669
+					}
+					effect_tooltip = {
+						AST = { transfer_state = 669 }
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_seize_timor = {
+		icon = infiltrate_state
+
+		available = {
+			divisions_in_state = { state = 520 size > 0 } #Northern Territory
+		}
+
+		visible = {
+			520 = { is_owned_and_controlled_by = AST }
+			OR = {
+				721 = {
+					has_state_flag = AST_claimed_anderson
+					is_claimed_by = AST
+					owner = {
+						has_war = yes
+						OR = {
+							surrender_progress > 0.5
+							AND = {
+								is_subject = yes
+								overlord = { surrender_progress > 0.5 }
+							}
+						}
+						NOT = {
+							is_ally_with = AST
+							has_war_with = AST
+							has_war_together_with = AST
+						}
+					}
+				}
+				1017 = {
+					has_state_flag = AST_claimed_anderson
+					is_claimed_by = AST
+					owner = {
+						has_war = yes
+						OR = {
+							surrender_progress > 0.5
+							AND = {
+								is_subject = yes
+								overlord = { surrender_progress > 0.5 }
+							}
+						}
+						NOT = {
+							is_ally_with = AST
+							has_war_with = AST
+							has_war_together_with = AST
+						}
+					}
+				}
+			}
+		}
+
+		cost = 50
+		fire_only_once = no
+
+		ai_will_do = { factor = 50 }
+
+		complete_effect = {
+			log = "[GetLogRoot]: Decision complete AST_seize_timor"
+			every_other_country = {
+				limit = {
+					has_war = yes
+					owns_any_state_of = {
+						721 #East Timor
+						1017 #West Timor
+					}
+					OR = {
+						surrender_progress > 0.5
+						AND = {
+							is_subject = yes
+							overlord = { surrender_progress > 0.5 }
+						}
+					}
+					NOT = {
+						is_ally_with = AST
+						has_war_with = AST
+						has_war_together_with = AST
+					}
+				}
+				country_event = australasia_events.366
+				if = {
+					limit = {
+						owns_state = 721
+					}
+					effect_tooltip = {
+						AST = { transfer_state = 721 }
+					}
+				}
+				if = {
+					limit = {
+						owns_state = 1017
+					}
+					effect_tooltip = {
+						AST = { transfer_state = 1017 }
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
+AST_exploit_resources = {
+	AST_develop_queensland_coal_mines = {
+		icon = coal
+		allowed = { always = no }
+
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_develop_queensland_coal_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_develop_queensland_coal_mines"
+			FROM = {
+				add_resource = {
+					type = coal
+					amount = 5
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+		fixed_random_seed = no
+	}
+
+	AST_develop_victoria_aluminium_deposits = {
+		icon = aluminium
+		allowed = { always = no }
+
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_develop_victoria_aluminium_deposits"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_develop_victoria_aluminium_deposits"
+			FROM = {
+				add_resource = {
+					type = aluminium
+					amount = 12
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+		fixed_random_seed = no
+	}
+
+	AST_develop_tasmania_iron_mines = {
+		icon = steel
+		allowed = { always = no }
+
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_develop_tasmania_iron_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_develop_tasmania_iron_mines"
+			FROM = {
+				add_resource = {
+					type = steel
+					amount = 4
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+		fixed_random_seed = no
+	}
+
+	AST_develop_new_zealand_coal_mines = {
+		icon = coal
+		allowed = { always = no }
+
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+			has_tech = excavation2
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_develop_new_zealand_coal_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_develop_new_zealand_coal_mines"
+			FROM = {
+				add_resource = {
+					type = coal
+					amount = 5
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+		fixed_random_seed = no
+	}
+
+	AST_develop_nsw_aluminium_deposits = {
+		icon = aluminium
+		allowed = { always = no }
+
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_develop_nsw_aluminium_deposits"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_develop_nsw_aluminium_deposits"
+			FROM = {
+				add_resource = {
+					type = aluminium
+					amount = 8
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+		fixed_random_seed = no
+	}
+
+	AST_develop_kimberley_iron_mines = {
+		icon = steel
+		allowed = { always = no }
+
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 1
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_develop_kimberley_iron_mines"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_develop_kimberley_iron_mines"
+			FROM = {
+				add_resource = {
+					type = steel
+					amount = 3
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+		fixed_random_seed = no
+	}
+
+	AST_develop_queensland_oil_deposits = {
+		icon = oil
+		allowed = { always = no }
+
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 2
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 3
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_develop_queensland_oil_deposits"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_develop_queensland_oil_deposits"
+			FROM = {
+				add_resource = {
+					type = oil
+					amount = 12
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+		fixed_random_seed = no
+	}
+
+	AST_develop_new_zealand_oil_deposits = {
+		icon = oil
+		allowed = { always = no }
+
+		available = {
+			FROM = { is_owned_and_controlled_by = ROOT }
+			num_of_civilian_factories_available_for_projects > 1
+			has_tech = excavation2
+		}
+
+		fire_only_once = yes
+
+		cost = 25
+		days_remove = 60
+		state_target = yes
+
+		modifier = {
+			civilian_factory_use = 2
+		}
+
+		complete_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision complete AST_develop_new_zealand_oil_deposits"
+		}
+		remove_effect = {
+			log = "[GetLogRoot][GetLogFrom]: Decision remove AST_develop_new_zealand_oil_deposits"
+			FROM = {
+				add_resource = {
+					type = oil
+					amount = 5
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+		fixed_random_seed = no
+	}
+}
+
+operations = {
+	AST_defeat_new_zealand = {
+		icon = generic_ignite_civil_war
+
+		allowed = { tag = AST }
+
+		activation = {
+			has_war_with = NZL
+			is_valid_peace_target = yes
+			NZL = {
+				is_valid_peace_target = yes
+				surrender_progress < 0.1
+			}
+		}
+
+		available = {
+			NZL = { surrender_progress > 0.1 }
+		}
+
+		cancel_trigger = {
+			OR = {
+				NZL = { is_valid_peace_target = no }
+				is_valid_peace_target = no
+				NOT = { has_war_with = NZL }
+			}
+		}
+
+		is_good = no
+		fire_only_once = no
+		days_mission_timeout = 180
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout AST_defeat_new_zealand"
+			effect_tooltip = {
+				NZL = { country_event = new_zealand_events.10 }
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_defeat_australia = {
+		icon = generic_ignite_civil_war
+
+		allowed = { tag = ENT }
+
+		activation = {
+			has_war_with = AST
+			is_valid_peace_target = yes
+			AST = {
+				is_valid_peace_target = yes
+				surrender_progress < 0.1
+			}
+		}
+
+		available = {
+			AST = { surrender_progress > 0.1 }
+		}
+
+		cancel_trigger = {
+			OR = {
+				AST = { is_valid_peace_target = no }
+				is_valid_peace_target = no
+				NOT = { has_war_with = AST }
+			}
+		}
+
+		is_good = no
+		fire_only_once = no
+		days_mission_timeout = 180
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout AST_defeat_australia"
+			effect_tooltip = {
+				AST = {
+					if = {
+						limit = {
+							NZL = {
+								has_war_with = AST
+								is_in_faction_with = ROOT
+								has_capitulated = yes
+							}
+							controls_state = 284 #New Zealand
+							controls_state = 723 #South Island
+						}
+						country_event = australasia_events.167
+					}
+					else = {
+						country_event = australasia_events.170
+					}
+				}
+			}
+		}
+		fixed_random_seed = no
+	}
+
+	AST_hold_out_vs_australia = {
+		icon = generic_ignite_civil_war
+
+		allowed = { tag = NZL }
+
+		activation = {
+			has_war_with = AST
+			is_valid_peace_target = yes
+			AST = { is_valid_peace_target = yes }
+			surrender_progress < 0.1
+		}
+
+		available = {
+			surrender_progress > 0.1
+		}
+
+		cancel_trigger = {
+			OR = {
+				AST = { is_valid_peace_target = no }
+				is_valid_peace_target = no
+				NOT = { has_war_with = AST }
+			}
+		}
+
+		is_good = yes
+		fire_only_once = no
+		days_mission_timeout = 180
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout AST_hold_out_vs_australia"
+			country_event = new_zealand_events.10
+		}
+		fixed_random_seed = no
+	}
+
+	AST_hold_out_vs_entente = {
+		icon = generic_ignite_civil_war
+
+		allowed = { tag = AST }
+
+		activation = {
+			has_war_with = ENT
+			is_valid_peace_target = yes
+			ENT = { is_valid_peace_target = yes }
+			surrender_progress < 0.1
+		}
+
+		available = {
+			surrender_progress > 0.1
+		}
+
+		cancel_trigger = {
+			OR = {
+				ENT = { is_valid_peace_target = no }
+				is_valid_peace_target = no
+				NOT = { has_war_with = ENT }
+			}
+		}
+
+		is_good = yes
+		fire_only_once = no
+		days_mission_timeout = 180
+
+		timeout_effect = {
+			log = "[GetLogRoot]: Decision timeout AST_hold_out_vs_entente"
+			if = {
+				limit = {
+					NZL = {
+						has_war_with = ROOT
+						is_in_faction_with = ENT
+						has_capitulated = yes
+					}
+					controls_state = 284 #New Zealand
+					controls_state = 723 #South Island
+				}
+				country_event = australasia_events.167
+			}
+			else = {
+				country_event = australasia_events.170
+			}
+		}
+		fixed_random_seed = no
+	}
+}
+
