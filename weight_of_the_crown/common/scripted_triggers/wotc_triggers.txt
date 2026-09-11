@@ -1,0 +1,74 @@
+### Weight of the Crown - shared triggers ###
+### Scope: country, unless noted otherwise ###
+
+# True while the country is playing as the exiled Crown seated in Canada
+# (CAN is a tag alias of IMP, active only while IMP_is_canada is set —
+# see common/country_tag_aliases/tag_aliases.txt)
+wotc_is_canada = {
+	tag = CAN
+}
+
+# --- Exiles vs. Autonomy tiers (wotc_exile_influence, 0-100) ---
+wotc_tier_sovereignty = {
+	wotc_exile_influence < 30
+}
+
+wotc_tier_compromise = {
+	wotc_exile_influence >= 30
+	wotc_exile_influence <= 69
+}
+
+wotc_tier_exile_dominance = {
+	wotc_exile_influence > 69
+}
+
+# --- 49th Parallel border-state check (state scope) ---
+# TODO: verify/extend this list against the current state map. Confirmed against
+# this repo's localisation as of writing: Washington 386, Idaho 387, Montana 388,
+# North Dakota 389, Minnesota 391, Michigan 393, Ohio 261, Maine 30/357,
+# Vermont 933, New Hampshire 934. Vanilla New York's state id was not found
+# overridden in this repo and must be filled in from the base game files.
+wotc_is_49th_parallel_state = {
+	OR = {
+		id = 386 # Washington
+		id = 387 # Idaho
+		id = 388 # Montana
+		id = 389 # North Dakota
+		id = 391 # Minnesota
+		id = 393 # Michigan
+		id = 261 # Ohio
+		id = 30  # Maine
+		id = 357 # Maine
+		id = 933 # Vermont
+		id = 934 # New Hampshire
+		# id = XXX # New York - TODO
+	}
+}
+
+# True (state scope) if the state's current controller is hostile to Canada
+# for 49th Parallel purposes. This repo's 2ACW belligerents are USA, ACC
+# (American Constitutional Coalition), WCA, and APG (American Peoples
+# Government) - there is no "CSA" tag in this version of Kaiserreich. Fill in
+# whichever of these (or their dynamic-tag equivalents) should count as
+# hostile to Canada before relying on this trigger; direct has_war_with is
+# the only part of this that's solid without that confirmation.
+wotc_state_controller_is_hostile_to_canada = {
+	controller = { has_war_with = CAN }
+	# OR = {
+	# 	controller = { original_tag = APG } # TODO: confirm which 2ACW faction(s) this should include
+	# }
+}
+
+# --- Border tension tiers (wotc_border_tension, 0-100) ---
+wotc_tier_observation = {
+	wotc_border_tension < 34
+}
+
+wotc_tier_covert_proxy = {
+	wotc_border_tension >= 34
+	wotc_border_tension <= 66
+}
+
+wotc_tier_intervention = {
+	wotc_border_tension > 66
+}

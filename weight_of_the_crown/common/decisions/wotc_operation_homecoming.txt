@@ -1,0 +1,64 @@
+### Weight of the Crown - Operation Homecoming ###
+
+wotc_operation_homecoming = {
+	icon = GFX_decision_category_generic
+
+	visible = {
+		wotc_is_canada = yes
+		has_war_with = ENG # confirm actual UoB tag - assumed ENG (Union of Britain) per KR convention
+	}
+
+	wotc_phase1_reconnaissance = {
+		icon = GFX_decision_generic_radar
+		available = {
+			NOT = { has_country_flag = wotc_homecoming_phase_1_done }
+		}
+		cost = 50
+
+		complete_effect = {
+			set_country_flag = wotc_homecoming_phase_1_done
+			add_ideas = wotc_idea_north_sea_intel # permanent naval intel buff, defined alongside the other ideas
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_phase2_stepping_stones = {
+		icon = GFX_decision_generic_navy_invasion
+		available = {
+			has_country_flag = wotc_homecoming_phase_1_done
+			NOT = { has_country_flag = wotc_homecoming_phase_2_done }
+		}
+		cost = 100
+		days_remove = 21 # the "timed mission" window itself
+
+		complete_effect = {
+			set_country_flag = wotc_homecoming_phase_2_done
+			# TODO: state-target the Faroe/Shetland states directly with a
+			# temporary supply-hub-range modifier - needs
+			# state_target_trigger, this is a country-scope stub.
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_phase3_commit_to_the_landing = {
+		icon = GFX_decision_generic_invasion
+		available = {
+			has_country_flag = wotc_homecoming_phase_2_done
+			NOT = { has_country_flag = wotc_homecoming_phase_3_active }
+		}
+		cost = 150
+
+		complete_effect = {
+			set_country_flag = { flag = wotc_homecoming_phase_3_active days = 14 }
+			add_ideas = wotc_idea_homecoming_landing_bonus
+			# Phase 3's bonus is meant to ramp rather than sit flat for the
+			# whole window - stagger it with a couple of scheduled effects,
+			# e.g. a stronger idea for days 1-4 swapped for a lighter one for
+			# the remainder, rather than one flat 14-day modifier.
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+}

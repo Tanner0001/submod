@@ -1,0 +1,95 @@
+### Weight of the Crown - 49th Parallel Escalation ###
+
+wotc_49th_parallel = {
+	icon = GFX_decision_category_generic
+
+	visible = {
+		wotc_is_canada = yes
+	}
+
+	wotc_border_guard_deployment = {
+		icon = GFX_decision_generic_defence
+		available = {
+			wotc_tier_observation = yes
+		}
+		cost = 25
+		days_re_enable = 45
+
+		complete_effect = {
+			add_political_power = -25
+			# TODO: grant temporary civilian population / off-map factories -
+			# use whichever KR effect the 2ACW refugee content already uses
+			# (check common/scripted_effects for an existing "off_map" or
+			# "refugee" effect before writing a new one).
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_covert_infantry_aid = {
+		icon = GFX_decision_generic_send_supplies
+		available = {
+			wotc_tier_covert_proxy = yes
+		}
+		cost = 40
+		days_re_enable = 30
+
+		complete_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_1
+				amount = -200
+				producer = CAN
+			}
+			add_to_variable = { wotc_border_tension = 3 } # covert action carries its own escalation risk
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_sabotage_rail_hubs = {
+		icon = GFX_decision_generic_sabotage
+		available = {
+			wotc_tier_covert_proxy = yes
+		}
+		cost = 60
+		days_re_enable = 60
+
+		complete_effect = {
+			log = "[GetLogRoot]: wotc_sabotage_rail_hubs - hook into an off-map operation, not scripted here"
+			# TODO: this should call into KR's existing operations system
+			# (common/operations/) rather than a bespoke effect - check
+			# common/operations for a rail/infrastructure-sabotage operation
+			# template to extend instead of duplicating the framework.
+		}
+
+		ai_will_do = { factor = 0.5 }
+	}
+
+	wotc_intervention_war_justification = {
+		icon = GFX_decision_generic_war
+		available = {
+			wotc_tier_intervention = yes
+			# NOT = { has_war_with = XXX } # TODO: gate on the actual hostile
+			# 2ACW faction tag once confirmed (see wotc_triggers.txt note -
+			# this repo has no "CSA" tag; candidates are ACC/WCA/APG).
+		}
+		cost = 150
+
+		complete_effect = {
+			log = "[GetLogRoot]: wotc_intervention_war_justification - bypasses World Tension, mirror an existing KR proxy-war justification effect"
+			# TODO: copy the actual bypass-WT wargoal effect from an existing
+			# KR proxy-war system (per the GDD review, this pattern is already
+			# precedented elsewhere in the mod) rather than inventing new
+			# create_wargoal syntax here untested.
+			if = {
+				limit = { NOT = { has_government = democratic } }
+				add_stability = -0.15
+			}
+			else = {
+				add_stability = -0.05
+			}
+		}
+
+		ai_will_do = { factor = 0.2 }
+	}
+}

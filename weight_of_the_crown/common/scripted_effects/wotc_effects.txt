@@ -1,0 +1,114 @@
+### Weight of the Crown - shared effects ###
+### Scope: country, unless noted otherwise ###
+
+wotc_init_variables = {
+	if = {
+		limit = { check_variable = { wotc_exile_influence = 0 } NOT = { has_country_flag = wotc_vars_initialized } }
+		set_variable = { wotc_exile_influence = 50 } # start at the King's Compromise
+	}
+	set_variable = { wotc_border_tension = 0 }
+	set_country_flag = wotc_vars_initialized
+}
+
+# Call after any add_to_variable = { wotc_exile_influence = X } to (re)apply the
+# correct tier's ideas with hysteresis, so the tier only flips once the value
+# has crossed a threshold by a margin, not right at the boundary.
+wotc_reapply_exile_tier = {
+	if = {
+		limit = {
+			wotc_exile_influence < 27
+			NOT = { has_idea = wotc_idea_sovereignty }
+		}
+		wotc_clear_exile_tier_ideas = yes
+		add_ideas = wotc_idea_sovereignty
+	}
+	else_if = {
+		limit = {
+			wotc_exile_influence > 73
+			NOT = { has_idea = wotc_idea_exile_dominance }
+		}
+		wotc_clear_exile_tier_ideas = yes
+		add_ideas = wotc_idea_exile_dominance
+	}
+	else_if = {
+		limit = {
+			wotc_exile_influence >= 27
+			wotc_exile_influence <= 73
+			NOT = { has_idea = wotc_idea_kings_compromise }
+		}
+		wotc_clear_exile_tier_ideas = yes
+		add_ideas = wotc_idea_kings_compromise
+	}
+}
+
+wotc_clear_exile_tier_ideas = {
+	if = { limit = { has_idea = wotc_idea_sovereignty } remove_ideas = wotc_idea_sovereignty }
+	if = { limit = { has_idea = wotc_idea_kings_compromise } remove_ideas = wotc_idea_kings_compromise }
+	if = { limit = { has_idea = wotc_idea_exile_dominance } remove_ideas = wotc_idea_exile_dominance }
+}
+
+# Same hysteresis pattern for the 49th Parallel tension tiers.
+wotc_reapply_tension_tier = {
+	if = {
+		limit = {
+			wotc_border_tension < 31
+			NOT = { has_idea = wotc_idea_tension_observation }
+		}
+		wotc_clear_tension_tier_ideas = yes
+		add_ideas = wotc_idea_tension_observation
+	}
+	else_if = {
+		limit = {
+			wotc_border_tension > 69
+			NOT = { has_idea = wotc_idea_tension_intervention }
+		}
+		wotc_clear_tension_tier_ideas = yes
+		add_ideas = wotc_idea_tension_intervention
+	}
+	else_if = {
+		limit = {
+			wotc_border_tension >= 31
+			wotc_border_tension <= 69
+			NOT = { has_idea = wotc_idea_tension_covert_proxy }
+		}
+		wotc_clear_tension_tier_ideas = yes
+		add_ideas = wotc_idea_tension_covert_proxy
+	}
+}
+
+wotc_clear_tension_tier_ideas = {
+	if = { limit = { has_idea = wotc_idea_tension_observation } remove_ideas = wotc_idea_tension_observation }
+	if = { limit = { has_idea = wotc_idea_tension_covert_proxy } remove_ideas = wotc_idea_tension_covert_proxy }
+	if = { limit = { has_idea = wotc_idea_tension_intervention } remove_ideas = wotc_idea_tension_intervention }
+}
+
+# Slow passive decay so a temporary border incident doesn't lock in permanent
+# high alert. Hook this into on_actions on_daily_pulse_x_days below.
+wotc_decay_border_tension = {
+	if = {
+		limit = { wotc_border_tension > 0 }
+		subtract_from_variable = { wotc_border_tension = 1 }
+	}
+}
+
+### --- Entente High Command: AI-bias helpers --- ###
+# CAVEAT: `add_ai_strategy` types are patch-specific and this repo has no
+# existing usage to copy from directly - `befriend` (alliance/opinion bias)
+# below is real and documented, but there is no confirmed vanilla/KR strategy
+# type for "prioritize this sea zone" or "garrison this port". Before relying
+# on Objective Mandates as designed, grep the shipped game's ai_strategy
+# documentation / other majors' AI files for a zone- or area-targeting type,
+# or fall back to a simpler lever (temporary combat_width/org modifier on the
+# target state, which is guaranteed to work) instead of an AI-strategy hook.
+wotc_apply_ally_alignment_mandate = {
+	FROM = {
+		add_ai_strategy = {
+			type = befriend
+			id = CAN
+			value = 50
+		}
+	}
+}
+
+# Removal is time-gated via the decision's own `days_remove` rather than a
+# separate scheduled effect - simpler and avoids orphaned strategy entries.

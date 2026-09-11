@@ -1,0 +1,137 @@
+### Weight of the Crown - ideas ###
+### Modifier keys marked VERIFIED were cross-checked against this repo's own
+### common/modifiers/00_static_modifiers.txt usage. Keys marked UNVERIFIED
+### are my best guess at the real vanilla key name and must be checked
+### against the game's modifier documentation (or a working test save)
+### before relying on them - do not ship without checking these.
+
+ideas = {
+	country = {
+
+		# --- Exiles vs. Autonomy tiers (hidden, applied by wotc_effects.txt) ---
+		wotc_idea_sovereignty = {
+			picture = GFX_idea_generic_stability_positive
+			allowed = { always = yes }
+			removal_cost = -1
+
+			modifier = {
+				consumer_goods_factor = -0.10 # VERIFIED
+				industrial_capacity_factory = 0.10 # VERIFIED
+				stability_factor = 0.10 # VERIFIED
+				command_power_gain_mult = -0.20 # VERIFIED (renamed from a wrong key name)
+			}
+			# "Locks out advanced conscription laws" isn't a modifier at all -
+			# HOI4 gates conscription laws via the law's own `available =`
+			# trigger. Implement this by adding
+			# `NOT = { has_idea = wotc_idea_sovereignty }` to the
+			# `available` block of whichever conscription law(s) count as
+			# "advanced" in common/ideas (conscription law category), not here.
+		}
+
+		wotc_idea_kings_compromise = {
+			picture = GFX_idea_generic_balanced
+			allowed = { always = yes }
+			removal_cost = -1
+			modifier = {
+				political_power_factor = 0.05 # requires active PP spend to hold the balance, per design
+			}
+		}
+
+		wotc_idea_exile_dominance = {
+			picture = GFX_idea_generic_military_effort
+			allowed = { always = yes }
+			removal_cost = -1
+
+			modifier = {
+				army_org_factor = 0.10 # VERIFIED
+				planning_speed = 0.15 # VERIFIED (renamed from a wrong key name)
+				industrial_capacity_factory = 0.05 # VERIFIED - military factory construction speed proxy
+				special_forces_cap = 0.20 # UNVERIFIED - confirm key name
+			}
+
+			# "Severe resistance in French-Canadian states" is a per-state
+			# resistance mechanic, not a country-scope targeted_modifier -
+			# implement via state modifiers (resistance_growth, per this
+			# repo's own usage) applied to Quebec-majority states with an
+			# effect/on_action, not an idea's targeted_modifier block.
+		}
+
+		# --- 49th Parallel tension tiers ---
+		wotc_idea_tension_observation = {
+			picture = GFX_idea_generic_border_patrol
+			allowed = { always = yes }
+			removal_cost = -1
+			modifier = {
+				# Deliberately near-zero - this tier only unlocks decisions
+				# (border guard deployments, refugee intake), it shouldn't
+				# passively buff/debuff the country.
+			}
+		}
+
+		wotc_idea_tension_covert_proxy = {
+			picture = GFX_idea_generic_intelligence
+			allowed = { always = yes }
+			removal_cost = -1
+			modifier = {
+				stability_factor = -0.03
+			}
+		}
+
+		wotc_idea_tension_intervention = {
+			picture = GFX_idea_generic_war_support_positive
+			allowed = { always = yes }
+			removal_cost = -1
+			modifier = {
+				stability_factor = -0.08
+				war_support_factor = 0.10
+			}
+		}
+
+		# --- Entente High Command: Shared Arsenal upkeep ---
+		wotc_idea_shared_arsenal_active = {
+			picture = GFX_idea_generic_industry
+			allowed = { always = yes }
+			cancel = { always = yes }
+			removal_cost = 10
+
+			modifier = {
+				consumer_goods_factor = 0.03 # upkeep cost of running the lend-lease pipeline
+			}
+		}
+
+		# --- Entente Cohesion (gates Joint Invasions per the redesign) ---
+		wotc_idea_entente_cohesion_low = {
+			picture = GFX_idea_generic_alliance
+			allowed = { always = yes }
+			removal_cost = -1
+		}
+
+		wotc_idea_entente_cohesion_high = {
+			picture = GFX_idea_generic_alliance_positive
+			allowed = { always = yes }
+			removal_cost = -1
+			modifier = {
+				send_manpower_to_ally = 0.10 # UNVERIFIED - confirm key name
+			}
+		}
+
+		# --- Operation Homecoming ---
+		wotc_idea_north_sea_intel = {
+			picture = GFX_idea_generic_intel_agency
+			allowed = { always = yes }
+			removal_cost = -1
+			modifier = {
+				enemy_intel_network_gain_factor = -0.15 # VERIFIED key family, confirm exact sign/behavior wanted
+			}
+		}
+
+		wotc_idea_homecoming_landing_bonus = {
+			picture = GFX_idea_generic_military_effort
+			allowed = { always = yes }
+			removal_cost = -1
+			modifier = {
+				amphibious_invasion = 0.15 # UNVERIFIED - confirm key name (shore bombardment/amphibious assault bonus)
+			}
+		}
+	}
+}

@@ -1,0 +1,83 @@
+add_namespace = wotc_canada
+
+# Hidden pulse event: reschedules itself every 5 days on Canada to decay
+# border tension and occasionally fire a flavor incident. This is the
+# standard Paradox-modding idiom for "run this periodically" - there is no
+# generic on_action for that, so a self-rescheduling hidden event is the
+# correct tool, not a shortcut.
+country_event = {
+	id = wotc_canada.1
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		wotc_decay_border_tension = yes
+		wotc_reapply_tension_tier = yes
+
+		if = {
+			limit = { wotc_tier_covert_proxy = yes }
+			random_events = {
+				100 = 0 # nothing happens
+				15 = wotc_canada.10 # border incident
+			}
+		}
+		else_if = {
+			limit = { wotc_tier_intervention = yes }
+			random_events = {
+				100 = 0
+				30 = wotc_canada.10 # border incident
+				10 = wotc_canada.11 # draft riot flavor, only meaningful at Exile Dominance
+			}
+		}
+
+		country_event = { id = wotc_canada.1 days = 5 }
+	}
+}
+
+# Border incident flavor event - fires more often at higher tension tiers.
+country_event = {
+	id = wotc_canada.10
+	title = wotc_canada.10.t
+	desc = wotc_canada.10.d
+	picture = GFX_report_event_generic_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = wotc_canada.10.a
+		add_to_variable = { wotc_border_tension = 5 }
+		add_stability = -0.02
+	}
+	option = {
+		name = wotc_canada.10.b
+		add_political_power = -50
+		add_to_variable = { wotc_border_tension = -3 }
+	}
+}
+
+# Draft riot flavor - only reachable while in the Exile Dominance tier, per
+# the GDD's "potential for draft riots" consequence.
+country_event = {
+	id = wotc_canada.11
+	title = wotc_canada.11.t
+	desc = wotc_canada.11.d
+	picture = GFX_report_event_civil_unrest
+
+	is_triggered_only = yes
+
+	trigger = {
+		wotc_tier_exile_dominance = yes
+	}
+
+	option = {
+		name = wotc_canada.11.a
+		add_stability = -0.05
+		add_to_variable = { wotc_exile_influence = -5 }
+		wotc_reapply_exile_tier = yes
+	}
+	option = {
+		name = wotc_canada.11.b
+		add_dissent = 10 # placeholder - align to whichever unrest/resistance
+		                 # mechanic Kaiserreich uses on the current patch
+	}
+}

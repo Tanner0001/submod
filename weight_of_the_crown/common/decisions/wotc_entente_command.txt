@@ -1,0 +1,113 @@
+### Weight of the Crown - Entente High Command ###
+
+wotc_entente_command = {
+	icon = GFX_decision_category_generic
+
+	visible = {
+		wotc_is_canada = yes
+		is_in_faction_with = ENT
+	}
+
+	wotc_toggle_shared_arsenal = {
+		icon = GFX_decision_generic_construction
+		available = {
+			is_faction_leader = yes
+		}
+
+		complete_effect = {
+			if = {
+				limit = { has_idea = wotc_idea_shared_arsenal_active }
+				remove_ideas = wotc_idea_shared_arsenal_active
+			}
+			else = {
+				add_ideas = wotc_idea_shared_arsenal_active
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	# Recurring drawdown while Shared Arsenal is active. Re-enables itself
+	# via days_re_enable so it functions as the "repeating decision" that
+	# actually moves equipment, rather than a one-off transfer.
+	wotc_shared_arsenal_transfer = {
+		icon = GFX_decision_generic_send_supplies
+
+		available = {
+			has_idea = wotc_idea_shared_arsenal_active
+		}
+
+		targets = { NFA AUS } # NatFrance / Australasia (verified against country_tags/00_countries.txt)
+		target_trigger = {
+			FROM = { is_in_faction_with = ENT }
+		}
+
+		cost = 50 # PP
+		days_re_enable = 30
+
+		complete_effect = {
+			# NOTE: this is a faked transfer (stockpile debit/credit), not the
+			# real lend-lease system - see the GDD review caveat. Tune the
+			# equipment type/amount to whatever's actually excess for Canada.
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_1
+				amount = -500
+				producer = CAN
+			}
+			FROM = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment_1
+					amount = 500
+					producer = CAN
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	# See wotc_effects.txt caveat: `add_ai_strategy` has no confirmed
+	# zone/garrison-priority type. This decision is scaffolded but its
+	# complete_effect needs a verified implementation before use.
+	wotc_objective_mandate = {
+		icon = GFX_decision_generic_navy
+
+		available = {
+			is_faction_leader = yes
+		}
+
+		targets = { NFA AUS }
+		target_trigger = {
+			FROM = { is_in_faction_with = ENT }
+		}
+
+		cost = 75
+		days_remove = 60
+
+		complete_effect = {
+			wotc_apply_ally_alignment_mandate = yes
+		}
+
+		ai_will_do = { factor = 0 } # left at 0 until the effect above is verified
+	}
+
+	wotc_joint_invasion_prep = {
+		icon = GFX_decision_generic_invasion
+
+		available = {
+			has_idea = wotc_idea_entente_cohesion_high
+		}
+
+		cost = 100
+		days_remove = 14
+
+		complete_effect = {
+			log = "[GetLogRoot]: wotc_joint_invasion_prep activated - target state modifier not yet scoped to a specific state"
+			# TODO: this needs a state-target decision (state_target_trigger),
+			# not a country decision, so the org/combat-width bonus lands on
+			# the actual staging state. Left as a country-scope stub.
+		}
+
+		ai_will_do = { factor = 0 }
+	}
+}
