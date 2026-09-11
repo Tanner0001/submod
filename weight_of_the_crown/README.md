@@ -24,9 +24,9 @@ script files before considering any of it play-tested.
    `send_manpower_to_ally`, `amphibious_invasion`,
    `enemy_intel_network_gain_factor`) against the actual game data - they
    were not found anywhere in this repo to cross-check.
-3. Confirm which 2ACW faction tag(s) should count as "hostile" in
-   `wotc_state_controller_is_hostile_to_canada` (this repo has no `CSA` tag;
-   candidates are `ACC`/`WCA`/`APG`).
+3. ~~Confirm which 2ACW faction tag(s) should count as "hostile"~~ - resolved:
+   WCA (Workers Congress of America) and APG (American Peoples Government).
+   USA and ACC are not hostile.
 4. Verify a real `add_ai_strategy` type exists for zone/garrison priority
    before shipping Objective Mandates - none was found in this repo to copy.
 5. `descriptor.mod`'s `path=` needs to point at your local mod folder.
