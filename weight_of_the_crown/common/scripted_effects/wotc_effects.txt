@@ -1,5 +1,9 @@
 ### Weight of the Crown - shared effects ###
 ### Scope: country, unless noted otherwise ###
+###
+### FIX (from actual game error.log): every bare `wotc_some_variable < X`
+### comparison below was invalid - wrapped in check_variable = { ... },
+### same fix as common/scripted_triggers/wotc_triggers.txt.
 
 wotc_init_variables = {
 	if = {
@@ -16,7 +20,7 @@ wotc_init_variables = {
 wotc_reapply_exile_tier = {
 	if = {
 		limit = {
-			wotc_exile_influence < 27
+			check_variable = { wotc_exile_influence < 27 }
 			NOT = { has_idea = wotc_idea_sovereignty }
 		}
 		wotc_clear_exile_tier_ideas = yes
@@ -24,7 +28,7 @@ wotc_reapply_exile_tier = {
 	}
 	else_if = {
 		limit = {
-			wotc_exile_influence > 73
+			check_variable = { wotc_exile_influence > 73 }
 			NOT = { has_idea = wotc_idea_exile_dominance }
 		}
 		wotc_clear_exile_tier_ideas = yes
@@ -32,8 +36,8 @@ wotc_reapply_exile_tier = {
 	}
 	else_if = {
 		limit = {
-			wotc_exile_influence >= 27
-			wotc_exile_influence <= 73
+			check_variable = { wotc_exile_influence >= 27 }
+			check_variable = { wotc_exile_influence <= 73 }
 			NOT = { has_idea = wotc_idea_kings_compromise }
 		}
 		wotc_clear_exile_tier_ideas = yes
@@ -51,7 +55,7 @@ wotc_clear_exile_tier_ideas = {
 wotc_reapply_tension_tier = {
 	if = {
 		limit = {
-			wotc_border_tension < 31
+			check_variable = { wotc_border_tension < 31 }
 			NOT = { has_idea = wotc_idea_tension_observation }
 		}
 		wotc_clear_tension_tier_ideas = yes
@@ -59,7 +63,7 @@ wotc_reapply_tension_tier = {
 	}
 	else_if = {
 		limit = {
-			wotc_border_tension > 69
+			check_variable = { wotc_border_tension > 69 }
 			NOT = { has_idea = wotc_idea_tension_intervention }
 		}
 		wotc_clear_tension_tier_ideas = yes
@@ -67,8 +71,8 @@ wotc_reapply_tension_tier = {
 	}
 	else_if = {
 		limit = {
-			wotc_border_tension >= 31
-			wotc_border_tension <= 69
+			check_variable = { wotc_border_tension >= 31 }
+			check_variable = { wotc_border_tension <= 69 }
 			NOT = { has_idea = wotc_idea_tension_covert_proxy }
 		}
 		wotc_clear_tension_tier_ideas = yes
@@ -88,7 +92,7 @@ wotc_clear_tension_tier_ideas = {
 # periodically" since there's no generic on_action for it.
 wotc_decay_border_tension = {
 	if = {
-		limit = { wotc_border_tension > 0 }
+		limit = { check_variable = { wotc_border_tension > 0 } }
 		subtract_from_variable = { wotc_border_tension = 1 }
 	}
 }

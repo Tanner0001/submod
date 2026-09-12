@@ -15,6 +15,50 @@ script files before considering any of it play-tested.
 | Operation Homecoming (§4, redesigned) | **Considered done.** Iceland (state 100) is a two-step overture-then-occupy chain (45-day buildup). Faroe Islands (state 337, DEN) gets its own overture-then-annex chain, gated on Iceland. Orkney & Shetland (state 938, ENG - already has `add_claim_by = IMP` and a level-8 naval base + supply hub) is a real invasion objective, not annexed by decision - activates once Canada controls it via `is_controlled_by = CAN`. The landing requires both secured, and its bonus now ramps: `wotc_idea_homecoming_landing_bonus_peak` (amphibious_invasion 0.30) for days 1-4, swapped to the lighter sustain idea (0.15) for days 5-14 via `events/wotc_canada.txt`'s wotc_canada.20/.21 pair, then removed. Every modifier key this system uses (`intel_network_gain`, `special_forces_cap`, `amphibious_invasion`, `supply_consumption_factor`) is now cross-checked against real usage elsewhere in this repo, not guessed. |
 | Operation Anvil (new - NFA + USA naval invasion of France) | Fully gated: `USA = { is_in_faction_with = ENT }` for the diplomatic/staging decisions, and the launch decision requires `has_war_with = FRA`. Resolved via kaiserreich.wiki - FRA (Commune of France) occupies mainland France; NFA only holds Algeria/Tunisia/French West Africa/Corsica in this timeline. |
 
+## Load-time bugs fixed from real in-game error.log (2026-09-12)
+
+Everything in the sections above was written against repo conventions but
+never actually run in the engine until now. First launch produced a real
+error.log with ~20 distinct errors; every one is now fixed:
+
+- **Decision categories were never registered.** `wotc_49th_parallel`,
+  `wotc_entente_command`, `wotc_operation_homecoming`, and
+  `wotc_operation_anvil` all threw "Unknown category" - decision categories
+  need a separate registration in `common/decisions/categories/` (now
+  `wotc_decision_cats.txt`), confirmed against this repo's own
+  `annexation_decisions` example. This was the single biggest cause of
+  cascading errors across four files.
+- **Decision groups can't carry `icon`/`visible` directly** - only
+  individual decisions can. The category-level gating conditions moved into
+  the new categories file's `available` blocks instead.
+- **Scripted triggers can't live inside a decisions file.**
+  `wotc_anvil_occupier_tag` was defined in `wotc_operation_anvil.txt` and
+  broke that whole file's parsing - moved to
+  `common/scripted_triggers/wotc_triggers.txt`.
+- **Bare variable comparisons are invalid.** Every `wotc_exile_influence < X`
+  / `wotc_border_tension > X` needed `check_variable = { ... }` around it
+  (confirmed via this repo's own `CAN_quebec_resistance_level_3`) - fixed
+  throughout `wotc_triggers.txt` and `wotc_effects.txt`.
+- **`id = X` is not a real state-matching trigger.** The 49th Parallel
+  border-state list now tags each state with `set_state_flag =
+  wotc_49th_parallel_state` on `on_startup` and checks `has_state_flag`
+  instead.
+- **`random_events` isn't a real effect** - replaced with `random_list`
+  (confirmed via `ALB focus (Albania).txt`), whose weights map to effect
+  blocks, not bare event ids.
+- **`save_temp_scope_as`/`temp_scope:` aren't real** - replaced with
+  `save_event_target_as`/`event_target:` (confirmed via
+  `00_on_actions_global.txt`).
+- **`interface/wotc_custom_gui.gui`'s `size` field used `x=/y=`** -
+  `containerWindowType`'s size takes `width=/height=` (confirmed via
+  `interface/browser.gui` - the same file uses `x=/y=` correctly for a
+  *different* element type, which is what misled the first pass).
+- **The localisation file was missing its UTF-8 BOM**, which HOI4 requires
+  and warns about loudly - fixed.
+
+Brace-balance checked across every `.txt`/`.gui` file in this submod after
+all fixes; all matched.
+
 ## Known gaps to close before this is playable
 
 Everything below is a genuine open item - not a placeholder pretending to be

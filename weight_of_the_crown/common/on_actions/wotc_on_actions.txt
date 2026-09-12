@@ -2,10 +2,32 @@
 ### These blocks merge with the base game's/Kaiserreich's on_actions of the
 ### same name - do not duplicate on_startup/on_state_control_changed logic
 ### that already exists elsewhere in the load order.
+###
+### FIX (from actual game error.log): save_temp_scope_as/temp_scope: aren't
+### real effects/triggers - replaced with save_event_target_as/event_target:,
+### confirmed via common/on_actions/00_on_actions_global.txt's own
+### `From.From = { save_event_target_as = exile_nation }`.
 
 on_actions = {
 	on_startup = {
 		effect = {
+			# Tags the 49th Parallel border states once at game start, since
+			# wotc_is_49th_parallel_state now checks a state flag rather than
+			# a bare `id = X` (not a real trigger - see wotc_triggers.txt).
+			# Idempotent, so running it once per country's on_startup call is
+			# harmless.
+			386 = { set_state_flag = wotc_49th_parallel_state } # Washington
+			387 = { set_state_flag = wotc_49th_parallel_state } # Idaho
+			388 = { set_state_flag = wotc_49th_parallel_state } # Montana
+			389 = { set_state_flag = wotc_49th_parallel_state } # North Dakota
+			391 = { set_state_flag = wotc_49th_parallel_state } # Minnesota
+			393 = { set_state_flag = wotc_49th_parallel_state } # Michigan
+			261 = { set_state_flag = wotc_49th_parallel_state } # Ohio
+			30  = { set_state_flag = wotc_49th_parallel_state } # Maine
+			357 = { set_state_flag = wotc_49th_parallel_state } # Maine
+			933 = { set_state_flag = wotc_49th_parallel_state } # Vermont
+			934 = { set_state_flag = wotc_49th_parallel_state } # New Hampshire
+
 			if = {
 				limit = { wotc_is_canada = yes }
 				wotc_init_variables = yes
@@ -26,11 +48,11 @@ on_actions = {
 				limit = {
 					FROM.FROM = { wotc_is_49th_parallel_state = yes }
 				}
-				FROM.FROM = { save_temp_scope_as = wotc_changed_state }
+				FROM.FROM = { save_event_target_as = wotc_changed_state }
 				CAN = {
 					if = {
 						limit = {
-							temp_scope:wotc_changed_state = { wotc_state_controller_is_hostile_to_canada = yes }
+							event_target:wotc_changed_state = { wotc_state_controller_is_hostile_to_canada = yes }
 						}
 						add_to_variable = { wotc_border_tension = 8 }
 					}

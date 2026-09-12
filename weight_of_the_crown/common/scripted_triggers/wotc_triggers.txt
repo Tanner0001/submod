@@ -1,5 +1,13 @@
 ### Weight of the Crown - shared triggers ###
 ### Scope: country, unless noted otherwise ###
+###
+### FIX (from actual game error.log): every bare `wotc_some_variable < X`
+### comparison below was invalid - custom variables MUST be wrapped in
+### `check_variable = { ... }`, confirmed against this repo's own
+### CAN_quebec_resistance_level_3 (common/scripted_triggers/CAN triggers
+### (Canada).txt). Also switched the border-state list from `id = X` (not a
+### real trigger - confirmed by the same error.log) to state flags set once
+### on_startup (see common/on_actions/wotc_on_actions.txt).
 
 # True while the country is playing as the exiled Crown seated in Canada
 # (CAN is a tag alias of IMP, active only while IMP_is_canada is set —
@@ -10,16 +18,16 @@ wotc_is_canada = {
 
 # --- Exiles vs. Autonomy tiers (wotc_exile_influence, 0-100) ---
 wotc_tier_sovereignty = {
-	wotc_exile_influence < 30
+	check_variable = { wotc_exile_influence < 30 }
 }
 
 wotc_tier_compromise = {
-	wotc_exile_influence >= 30
-	wotc_exile_influence <= 69
+	check_variable = { wotc_exile_influence >= 30 }
+	check_variable = { wotc_exile_influence <= 69 }
 }
 
 wotc_tier_exile_dominance = {
-	wotc_exile_influence > 69
+	check_variable = { wotc_exile_influence > 69 }
 }
 
 # --- 49th Parallel border-state check (state scope) ---
@@ -36,20 +44,7 @@ wotc_tier_exile_dominance = {
 # confirmed here - needs the base game's state files or an in-game check,
 # not a guess.
 wotc_is_49th_parallel_state = {
-	OR = {
-		id = 386 # Washington
-		id = 387 # Idaho
-		id = 388 # Montana
-		id = 389 # North Dakota
-		id = 391 # Minnesota
-		id = 393 # Michigan
-		id = 261 # Ohio
-		id = 30  # Maine
-		id = 357 # Maine
-		id = 933 # Vermont
-		id = 934 # New Hampshire
-		# id = XXX # upstate New York - still unresolved, see note above
-	}
+	has_state_flag = wotc_49th_parallel_state
 }
 
 # True (state scope) if the state's current controller is hostile to Canada
@@ -66,14 +61,26 @@ wotc_state_controller_is_hostile_to_canada = {
 
 # --- Border tension tiers (wotc_border_tension, 0-100) ---
 wotc_tier_observation = {
-	wotc_border_tension < 34
+	check_variable = { wotc_border_tension < 34 }
 }
 
 wotc_tier_covert_proxy = {
-	wotc_border_tension >= 34
-	wotc_border_tension <= 66
+	check_variable = { wotc_border_tension >= 34 }
+	check_variable = { wotc_border_tension <= 66 }
 }
 
 wotc_tier_intervention = {
-	wotc_border_tension > 66
+	check_variable = { wotc_border_tension > 66 }
+}
+
+# --- Operation Anvil (NFA) ---
+# Moved here from common/decisions/wotc_operation_anvil.txt - scripted
+# triggers can't be defined inside a decisions file (the game tried to
+# parse it as a decision category and threw cascading errors for that
+# whole file - confirmed via error.log). FRA (Commune of France) occupies
+# mainland France in this timeline; see the Anvil file's own header for
+# the full reasoning.
+wotc_anvil_occupier_tag = {
+	country_exists = FRA
+	has_war_with = FRA
 }
