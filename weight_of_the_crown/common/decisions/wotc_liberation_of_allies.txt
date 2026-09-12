@@ -72,8 +72,25 @@ wotc_liberation_of_allies = {
 			create_wargoal = { target = event_target:wotc_liberation_target type = topple_government }
 			set_country_flag = { flag = wotc_liberation_war_active days = 14 }
 			add_ideas = wotc_idea_liberation_offensive_bonus
+
+			# Tags the target so the on_capitulation hook in
+			# wotc_on_actions.txt can recognize "this specific capitulation
+			# is the one we're waiting for" without an uncertain
+			# scope-vs-event-target equality check.
+			event_target:wotc_liberation_target = {
+				set_country_flag = wotc_is_liberation_target
+			}
 		}
 
 		ai_will_do = { factor = 1 }
 	}
 }
+
+### The Fate of [Ally]'s Homeland ###
+### Fires as an event (events/wotc_canada.txt, id wotc_canada.40), not a
+### decision - mirrors Kaiserreich's own precedent for exactly this kind of
+### choice, "The Fate of America" (american_civil_war_events.156 in
+### events/01 American Civil War events.txt), which uses the same
+### give-the-territory-to-X-or-Y pattern via release/puppet-style effects
+### rather than a decision. See that file's on_capitulation extension for
+### the trigger condition (Canada beats the specific tracked conqueror).

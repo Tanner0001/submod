@@ -155,3 +155,54 @@ country_event = {
 		name = wotc_canada.30.a
 	}
 }
+
+# The Fate of [Ally]'s Homeland - fires once Canada personally defeats the
+# conqueror tracked by wotc_declare_liberation (common/on_actions/
+# wotc_on_actions.txt's on_capitulation extension). Mirrors Kaiserreich's
+# own "The Fate of America" (american_civil_war_events.156 in
+# events/01 American Civil War events.txt) - a real Canada-scoped event
+# doing the same give-the-territory-to-X choice, not a decision.
+country_event = {
+	id = wotc_canada.40
+	title = wotc_canada.40.t
+	desc = wotc_canada.40.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+
+	immediate = {
+		clr_country_flag = wotc_hosting_ally_exile
+		clr_country_flag = wotc_legions_rallied
+		clr_country_flag = wotc_liberation_war_active
+		if = {
+			limit = { has_idea = wotc_idea_free_legions_support }
+			remove_ideas = wotc_idea_free_legions_support
+		}
+		if = {
+			limit = { has_idea = wotc_idea_liberation_offensive_bonus }
+			remove_ideas = wotc_idea_liberation_offensive_bonus
+		}
+	}
+
+	option = {
+		name = wotc_canada.40.a # Restore Independence
+		release = event_target:wotc_fallen_ally
+		add_stability = 0.03
+	}
+	option = {
+		name = wotc_canada.40.b # Establish a Protectorate
+		release_puppet = event_target:wotc_fallen_ally
+		add_political_power = -75
+		add_stability = -0.02
+	}
+	option = {
+		name = wotc_canada.40.c # Absorb the Conquerors
+		puppet = { target = event_target:wotc_liberation_target }
+		add_political_power = -150
+		add_stability = -0.05
+		every_other_country = {
+			limit = { is_in_faction_with = ENT }
+			add_opinion_modifier = { target = CAN modifier = KR_disapproves_of_govt }
+		}
+	}
+}

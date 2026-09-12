@@ -71,6 +71,25 @@ on_actions = {
 					set_country_flag = wotc_ally_needs_sanctuary
 				}
 			}
+
+			# "The Fate of [Ally]'s Homeland" trigger: fires when Canada
+			# specifically defeats the tracked conqueror
+			# (wotc_declare_liberation tags them with wotc_is_liberation_target
+			# at the moment it resolves the wargoal target, avoiding an
+			# uncertain scope-vs-event-target equality check here).
+			if = {
+				limit = {
+					ROOT = { has_country_flag = wotc_is_liberation_target }
+					FROM = { tag = CAN }
+				}
+				ROOT = {
+					save_global_event_target_as = wotc_liberation_target
+					clr_country_flag = wotc_is_liberation_target
+				}
+				CAN = {
+					country_event = { id = wotc_canada.40 days = 1 }
+				}
+			}
 		}
 	}
 
