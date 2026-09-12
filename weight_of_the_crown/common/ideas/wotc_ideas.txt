@@ -46,7 +46,7 @@ ideas = {
 				army_org_factor = 0.10 # VERIFIED
 				planning_speed = 0.15 # VERIFIED (renamed from a wrong key name)
 				industrial_capacity_factory = 0.05 # VERIFIED - military factory construction speed proxy
-				special_forces_cap = 0.20 # UNVERIFIED - confirm key name
+				special_forces_cap = 0.20 # VERIFIED (common/ideas/CAN ideas (Canada).txt uses 0.10)
 			}
 
 			# "Severe resistance in French-Canadian states" is a per-state
@@ -111,7 +111,13 @@ ideas = {
 			allowed = { always = yes }
 			removal_cost = -1
 			modifier = {
-				send_manpower_to_ally = 0.10 # UNVERIFIED - confirm key name
+				# `send_manpower_to_ally` doesn't exist anywhere in this repo -
+				# replaced with lend_lease_tension, a real key (confirmed in
+				# common/ideas/USA ideas (United States).txt, used there as a
+				# positive cost on an isolationism-flavored idea). Negative
+				# here represents strong cohesion easing the domestic
+				# friction of supporting allies.
+				lend_lease_tension = -0.5
 			}
 		}
 
@@ -121,7 +127,15 @@ ideas = {
 			allowed = { always = yes }
 			removal_cost = -1
 			modifier = {
-				enemy_intel_network_gain_factor = -0.15 # VERIFIED key family, confirm exact sign/behavior wanted
+				# `enemy_intel_network_gain_factor` (unqualified) isn't real -
+				# the only confirmed variant in this repo is
+				# `..._over_occupied_tag`, which needs a target tag and
+				# doesn't fit a passive country modifier. Replaced with
+				# `intel_network_gain` (flat, real, used the same way in
+				# common/ideas/CAN ideas (Canada).txt at 0.20) - boosts our
+				# own intel gathering, matching "a clear picture of enemy
+				# naval movements" better than an enemy-facing debuff anyway.
+				intel_network_gain = 0.20
 			}
 		}
 
@@ -139,12 +153,25 @@ ideas = {
 			}
 		}
 
+		# Days 1-4 of the landing (the actual beachhead) - stronger than the
+		# sustain idea below, swapped out by events/wotc_canada.txt's
+		# wotc_canada.20/.21 pair rather than sitting flat for all 14 days.
+		wotc_idea_homecoming_landing_bonus_peak = {
+			picture = GFX_idea_generic_military_effort
+			allowed = { always = yes }
+			removal_cost = -1
+			modifier = {
+				amphibious_invasion = 0.30 # VERIFIED key, double the sustain value for the initial beachhead
+			}
+		}
+
+		# Days 5-14 - the taper after the beachhead is secured.
 		wotc_idea_homecoming_landing_bonus = {
 			picture = GFX_idea_generic_military_effort
 			allowed = { always = yes }
 			removal_cost = -1
 			modifier = {
-				amphibious_invasion = 0.15 # UNVERIFIED - confirm key name (shore bombardment/amphibious assault bonus)
+				amphibious_invasion = 0.15 # VERIFIED (common/ideas/CAN ideas (Canada).txt uses 0.10/0.20)
 			}
 		}
 
@@ -154,7 +181,7 @@ ideas = {
 			allowed = { always = yes }
 			removal_cost = -1
 			modifier = {
-				amphibious_invasion = 0.15 # UNVERIFIED - same key as wotc_idea_homecoming_landing_bonus
+				amphibious_invasion = 0.15 # VERIFIED - same key as wotc_idea_homecoming_landing_bonus
 			}
 		}
 	}

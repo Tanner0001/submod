@@ -81,3 +81,35 @@ country_event = {
 		                 # mechanic Kaiserreich uses on the current patch
 	}
 }
+
+# Operation Homecoming Phase 3 ramp, part 1: swaps the peak beachhead bonus
+# for the lighter sustain bonus 4 days after the landing decision fires.
+# Scheduled from wotc_operation_homecoming.txt's wotc_phase3_commit_to_the_landing.
+country_event = {
+	id = wotc_canada.20
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = { has_idea = wotc_idea_homecoming_landing_bonus_peak }
+			remove_ideas = wotc_idea_homecoming_landing_bonus_peak
+			add_ideas = wotc_idea_homecoming_landing_bonus
+		}
+		country_event = { id = wotc_canada.21 days = 10 } # remaining 10 of the 14-day window
+	}
+}
+
+# Part 2: removes the sustain bonus once the full 14-day window has elapsed.
+country_event = {
+	id = wotc_canada.21
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		if = {
+			limit = { has_idea = wotc_idea_homecoming_landing_bonus }
+			remove_ideas = wotc_idea_homecoming_landing_bonus
+		}
+	}
+}
