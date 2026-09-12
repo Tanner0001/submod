@@ -1,0 +1,79 @@
+### Weight of the Crown - Liberation of Fallen Allies ###
+### Generalized version of the original India-only "Liberation of India"
+### design: triggers off common/on_actions/wotc_on_actions.txt's
+### on_capitulation hook, which fires for ANY country that capitulates while
+### in the Entente (event_target:wotc_fallen_ally), not hardcoded to
+### RAJ/HND. Whoever currently controls the fallen ally's capital at the
+### moment "Declare the Liberation" is taken becomes the wargoal target -
+### determined dynamically, not stored at capitulation time, so it stays
+### correct even if control changes hands in between.
+###
+### Single-slot by design: if a second ally falls before the first case is
+### resolved, the tracked fallen-ally target is overwritten. Not built to
+### handle multiple simultaneous cases.
+###
+### Actual restoration of the fallen country as a country is NOT scripted
+### here - that's the existing player-led peace conference "liberate"
+### action (common/peace_conference/ai_peace/player_led_peace_conferences.txt),
+### which already exists and doesn't need rebuilding.
+
+wotc_liberation_of_allies = {
+	wotc_offer_sanctuary = {
+		icon = GFX_decision_generic_agreement
+		available = {
+			has_country_flag = wotc_ally_needs_sanctuary
+			NOT = { has_country_flag = wotc_hosting_ally_exile }
+		}
+		cost = 30
+
+		complete_effect = {
+			clr_country_flag = wotc_ally_needs_sanctuary
+			set_country_flag = wotc_hosting_ally_exile
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_rally_free_legions = {
+		icon = GFX_decision_generic_agreement
+		available = {
+			has_country_flag = wotc_hosting_ally_exile
+			NOT = { has_country_flag = wotc_legions_rallied }
+		}
+		cost = 50
+
+		complete_effect = {
+			set_country_flag = wotc_legions_rallied
+			add_ideas = wotc_idea_free_legions_support
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_declare_liberation = {
+		icon = GFX_decision_generic_war
+		available = {
+			has_country_flag = wotc_hosting_ally_exile
+			NOT = { has_country_flag = wotc_liberation_war_active }
+		}
+		cost = 100
+
+		complete_effect = {
+			# Dynamically resolve "whoever controls the fallen ally's capital
+			# right now" into a wargoal target, rather than trusting who
+			# conquered them originally at capitulation time.
+			event_target:wotc_fallen_ally = {
+				capital_scope = {
+					controller = {
+						save_event_target_as = wotc_liberation_target
+					}
+				}
+			}
+			create_wargoal = { target = event_target:wotc_liberation_target type = topple_government }
+			set_country_flag = { flag = wotc_liberation_war_active days = 14 }
+			add_ideas = wotc_idea_liberation_offensive_bonus
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+}

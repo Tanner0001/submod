@@ -53,6 +53,27 @@ on_actions = {
 		}
 	}
 
+	# ROOT = the country that just capitulated, FROM = the winner (confirmed
+	# via this repo's own comment above on_annex/on_capitulation in
+	# 00_on_actions_global.txt). This is the generic "an ally fell" hook for
+	# common/decisions/wotc_liberation_of_allies.txt - fires for any country,
+	# not just RAJ/India, so the same system covers whoever it happens to be.
+	# Single-slot by design: only the most recently fallen ENT member is
+	# tracked at a time, not a full list of simultaneous cases.
+	on_capitulation = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = { is_in_faction_with = ENT }
+				}
+				ROOT = { save_global_event_target_as = wotc_fallen_ally }
+				CAN = {
+					set_country_flag = wotc_ally_needs_sanctuary
+				}
+			}
+		}
+	}
+
 	# Fires in the scope of the country that just gained control of a state.
 	# FROM = previous controller, FROM.FROM = the state itself. Tension is
 	# tracked on Canada regardless of which country this fires for, so we
