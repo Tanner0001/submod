@@ -83,7 +83,9 @@ wotc_clear_tension_tier_ideas = {
 }
 
 # Slow passive decay so a temporary border incident doesn't lock in permanent
-# high alert. Hook this into on_actions on_daily_pulse_x_days below.
+# high alert. Called from events/wotc_canada.txt's self-rescheduling pulse
+# event (wotc_canada.1), the standard Paradox-modding idiom for "run this
+# periodically" since there's no generic on_action for it.
 wotc_decay_border_tension = {
 	if = {
 		limit = { wotc_border_tension > 0 }
@@ -92,23 +94,10 @@ wotc_decay_border_tension = {
 }
 
 ### --- Entente High Command: AI-bias helpers --- ###
-# CAVEAT: `add_ai_strategy` types are patch-specific and this repo has no
-# existing usage to copy from directly - `befriend` (alliance/opinion bias)
-# below is real and documented, but there is no confirmed vanilla/KR strategy
-# type for "prioritize this sea zone" or "garrison this port". Before relying
-# on Objective Mandates as designed, grep the shipped game's ai_strategy
-# documentation / other majors' AI files for a zone- or area-targeting type,
-# or fall back to a simpler lever (temporary combat_width/org modifier on the
-# target state, which is guaranteed to work) instead of an AI-strategy hook.
-wotc_apply_ally_alignment_mandate = {
-	FROM = {
-		add_ai_strategy = {
-			type = befriend
-			id = CAN
-			value = 50
-		}
-	}
-}
-
-# Removal is time-gated via the decision's own `days_remove` rather than a
-# separate scheduled effect - simpler and avoids orphaned strategy entries.
+# The zone/garrison-priority add_ai_strategy type this was originally meant
+# to wrap doesn't exist anywhere in this repo (checked every real usage -
+# see common/decisions/wotc_entente_command.txt's wotc_objective_mandate for
+# the full list of confirmed types). Objective Mandate now calls
+# add_ai_strategy directly with the real `prepare_for_war` type instead of
+# going through this wrapper, so there's nothing left here that isn't
+# already superseded.

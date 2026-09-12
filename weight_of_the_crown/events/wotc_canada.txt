@@ -77,8 +77,29 @@ country_event = {
 	}
 	option = {
 		name = wotc_canada.11.b
-		add_dissent = 10 # placeholder - align to whichever unrest/resistance
-		                 # mechanic Kaiserreich uses on the current patch
+		# Hooks into KR's own existing Quebec unrest system rather than
+		# inventing a new one - confirmed real via events/CAN events
+		# (Canada).txt's CAN_war_measures_act chain, which applies
+		# CAN_quebecois_resistance_modifier the same way. QUE is a real
+		# country tag (common/country_tags/00_countries.txt).
+		QUE = {
+			every_core_state = {
+				limit = {
+					is_owned_by = CAN
+					impassable = no
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = tooltip_add_dynmod
+						DYNMOD = CAN_quebecois_resistance_modifier
+					}
+					add_dynamic_modifier = { modifier = CAN_quebecois_resistance_modifier }
+				}
+				add_to_variable = { CAN_qr_state_resources_factor = -0.2 }
+				add_to_variable = { CAN_qr_local_manpower = -0.2 }
+				add_to_variable = { CAN_qr_local_factory_sabotage = 0.1 }
+			}
+		}
 	}
 }
 

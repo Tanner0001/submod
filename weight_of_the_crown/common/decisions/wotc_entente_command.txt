@@ -66,9 +66,17 @@ wotc_entente_command = {
 		ai_will_do = { factor = 1 }
 	}
 
-	# See wotc_effects.txt caveat: `add_ai_strategy` has no confirmed
-	# zone/garrison-priority type. This decision is scaffolded but its
-	# complete_effect needs a verified implementation before use.
+	# Rescoped from the original "prioritize a naval zone/garrison a port"
+	# idea: no add_ai_strategy type for that exists anywhere in this repo
+	# (checked every usage - real types are prepare_for_war, antagonize,
+	# support, send_volunteers_desire, send_lend_lease_desire,
+	# dont_defend_ally_borders, spare_unit_factor, conquer, declare_war,
+	# diplo_action_desire/acceptance - nothing zone- or garrison-targeted).
+	# `prepare_for_war` (real, confirmed via this repo's own
+	# common/decisions/CAN decisions (Canada).txt) biases an ally's war
+	# preparation posture toward a target country - reframed as "direct
+	# an ally's war effort against Britain specifically," which is a
+	# real lever instead of an invented one.
 	wotc_objective_mandate = {
 		icon = GFX_decision_generic_navy
 
@@ -85,12 +93,30 @@ wotc_entente_command = {
 		days_remove = 60
 
 		complete_effect = {
-			wotc_apply_ally_alignment_mandate = yes
+			FROM = {
+				add_ai_strategy = {
+					type = prepare_for_war
+					id = ENG
+					value = 50
+				}
+			}
 		}
 
-		ai_will_do = { factor = 0 } # left at 0 until the effect above is verified
+		ai_will_do = { factor = 1 }
 	}
 
+	# Checked how HOI4 decisions actually target states (there is no
+	# `state_target_trigger` - that name doesn't exist anywhere in this repo
+	# or the vanilla decision system). The real mechanism is `highlight_states`
+	# for cosmetic map highlighting plus a hardcoded state id per decision
+	# (see common/decisions/SER decisions (Serbia).txt's SER_IMRO_reb_lull_phase),
+	# not a free-form "player picks any state" feature - so this can't be
+	# one generic decision the way it's written. It needs to become several
+	# concrete decisions, one per real target state (the GDD's own example
+	# was Algiers/Malta), each with a hardcoded state id. That's a design
+	# choice (which states, matching which ally) I haven't made rather than
+	# a syntax gap, so it's left as a country-wide bonus for now instead of
+	# a fake per-state effect.
 	wotc_joint_invasion_prep = {
 		icon = GFX_decision_generic_invasion
 
@@ -102,12 +128,9 @@ wotc_entente_command = {
 		days_remove = 14
 
 		complete_effect = {
-			log = "[GetLogRoot]: wotc_joint_invasion_prep activated - target state modifier not yet scoped to a specific state"
-			# TODO: this needs a state-target decision (state_target_trigger),
-			# not a country decision, so the org/combat-width bonus lands on
-			# the actual staging state. Left as a country-scope stub.
+			add_ideas = wotc_idea_shetland_staging_bonus # reuses the real, verified supply_consumption_factor idea as a stand-in country-wide logistics bonus until real per-state targets are chosen
 		}
 
-		ai_will_do = { factor = 0 }
+		ai_will_do = { factor = 1 }
 	}
 }
