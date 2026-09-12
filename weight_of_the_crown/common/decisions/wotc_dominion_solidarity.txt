@@ -1,0 +1,103 @@
+### Weight of the Crown - Dominion Solidarity (Canada -> RAJ) ###
+### Canada-led support for RAJ (Dominion of India), a fellow Entente
+### Dominion, in its war against HND (Bharatiya Peoples Republic). Mirrors
+### Operation Anvil's shape (request -> stage -> commit), but decisions run
+### from Canada's side rather than RAJ's, per design choice - Canada is the
+### one extending help, not the one being helped.
+###
+### Verified against this repo's own RAJ content: RAJ starts in its own
+### separate faction with PRF as an ally (history/countries/RAJ - Dominion
+### of India.txt), not an enemy - confirms PRF shouldn't be a target here.
+### RAJ's own focus tree has a real path into the Entente
+### (`ENT = { add_to_faction = RAJ }`) and a real war path against HND
+### (`will_lead_to_war_with = HND`), so both gates below are achievable in
+### an actual game, not hypothetical.
+
+wotc_dominion_solidarity = {
+	wotc_raj_dispatch_advisors = {
+		icon = GFX_decision_generic_agreement
+		available = {
+			is_faction_leader = yes
+			NOT = { has_country_flag = wotc_raj_advisors_committed }
+		}
+
+		targets = { RAJ }
+		target_trigger = {
+			FROM = { is_in_faction_with = ENT }
+		}
+
+		cost = 50
+
+		complete_effect = {
+			set_country_flag = wotc_raj_advisors_committed
+			FROM = {
+				add_ideas = wotc_idea_raj_advisor_support
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	# Mirrors wotc_shared_arsenal_transfer's stockpile-transfer pattern
+	# (common/decisions/wotc_entente_command.txt) but kept as its own
+	# decision rather than folding RAJ into that one, per the "dedicated
+	# system" request.
+	wotc_raj_equipment_shipment = {
+		icon = GFX_decision_generic_send_supplies
+		available = {
+			has_country_flag = wotc_raj_advisors_committed
+		}
+
+		targets = { RAJ }
+		target_trigger = {
+			FROM = { is_in_faction_with = ENT }
+		}
+
+		cost = 50
+		days_re_enable = 30
+
+		complete_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_1
+				amount = -300
+				producer = CAN
+			}
+			FROM = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment_1
+					amount = 300
+					producer = CAN
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_raj_joint_offensive = {
+		icon = GFX_decision_generic_invasion
+		available = {
+			has_country_flag = wotc_raj_advisors_committed
+		}
+
+		targets = { RAJ }
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = ENT
+				has_war_with = HND
+			}
+		}
+
+		cost = 100
+		days_remove = 14
+
+		complete_effect = {
+			FROM = {
+				set_country_flag = { flag = wotc_raj_offensive_active days = 14 }
+				add_ideas = wotc_idea_raj_offensive_bonus
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+}
