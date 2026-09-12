@@ -10,6 +10,4 @@ picture="wotc_thumbnail.jpg"
 dependencies={
 	"Kaiserreich"
 }
-# NOTE: set `path=` in your local copy of this descriptor before loading it
-# in the launcher, e.g.:
-# path="C:/Users/<you>/Documents/Paradox Interactive/Hearts of Iron IV/mod/weight_of_the_crown"
+path="C:/Users/sheac/OneDrive/Documents/Paradox Interactive/Hearts of Iron IV/mod/weight_of_the_crown"
