@@ -3,13 +3,22 @@
 wotc_49th_parallel = {
 	# One-time only (not repeatable - see wotc_rcmp_ert_deployed flag), or
 	# this would spawn 3 free divisions every 45 days. Spawns real RCMP
-	# Emergency Response Team garrisons at three border-facing cities,
-	# using Canada's own existing "District Militia" division template
-	# (history/units/CAN.txt - a real, already-defined small garrison
-	# template, not invented here) at three verified real locations:
-	# Toronto (state 276), Quebec/Montreal (state 832), Winnipeg/Manitoba
-	# (state 467) - all confirmed via this repo's own victory-point
-	# localisation and history/states files, not guessed.
+	# Emergency Response Team garrisons at three verified real border-facing
+	# cities - Toronto (state 276), Quebec/Montreal (state 832),
+	# Winnipeg/Manitoba (state 467), confirmed via this repo's own
+	# victory-point localisation and history/states files.
+	#
+	# Uses a genuinely new division template (not the existing "District
+	# Militia" reuse from an earlier pass), built from ranger_battalion
+	# (real, special-forces-flagged - common/units/infantry.txt) via
+	# wotc_initialize_rcmp_ert_template (common/scripted_effects/
+	# wotc_effects.txt), which follows the exact same real pattern the base
+	# game uses to create the vanilla "Rangers" template from rangers_tech.
+	# ranger_battalion is gated behind the "No Compromise, No Surrender" DLC
+	# (has_dlc_ncns) and the rangers_tech tech, so if the player owns the
+	# DLC this force-researches that tech and builds the template; if they
+	# don't own the DLC (a hard limit nothing can script around), this
+	# falls back to the old "District Militia" template instead of failing.
 	wotc_border_guard_deployment = {
 		icon = GFX_decision_generic_defence
 		available = {
@@ -27,22 +36,53 @@ wotc_49th_parallel = {
 			add_political_power = -25
 			set_country_flag = wotc_rcmp_ert_deployed
 
-			276 = { # Toronto
-				create_unit = {
-					division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
-					owner = ROOT
+			if = {
+				limit = { has_dlc_ncns = yes }
+				set_technology = { rangers_tech = 1 }
+				if = {
+					limit = { NOT = { has_template_containing_unit = ranger_battalion } }
+					wotc_initialize_rcmp_ert_template = yes
+				}
+				276 = { # Toronto
+					create_unit = {
+						division = "name = \"RCMP Emergency Response Team\" division_template = \"RCMP Emergency Response Team\" start_experience_factor = 0.8"
+						owner = ROOT
+					}
+				}
+				832 = { # Quebec (Montreal / Quebec City)
+					create_unit = {
+						division = "name = \"RCMP Emergency Response Team\" division_template = \"RCMP Emergency Response Team\" start_experience_factor = 0.8"
+						owner = ROOT
+					}
+				}
+				467 = { # Winnipeg (Manitoba)
+					create_unit = {
+						division = "name = \"RCMP Emergency Response Team\" division_template = \"RCMP Emergency Response Team\" start_experience_factor = 0.8"
+						owner = ROOT
+					}
 				}
 			}
-			832 = { # Quebec (Montreal / Quebec City)
-				create_unit = {
-					division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
-					owner = ROOT
+			else = {
+				# No DLC - ranger_battalion is unavailable, fall back to
+				# Canada's own existing small-garrison template so the
+				# decision still does something instead of silently failing.
+				276 = {
+					create_unit = {
+						division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
+						owner = ROOT
+					}
 				}
-			}
-			467 = { # Winnipeg (Manitoba)
-				create_unit = {
-					division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
-					owner = ROOT
+				832 = {
+					create_unit = {
+						division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
+						owner = ROOT
+					}
+				}
+				467 = {
+					create_unit = {
+						division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
+						owner = ROOT
+					}
 				}
 			}
 		}
