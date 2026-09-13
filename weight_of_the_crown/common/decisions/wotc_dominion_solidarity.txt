@@ -1,9 +1,14 @@
-### Weight of the Crown - Dominion Solidarity (Canada -> RAJ) ###
-### Canada-led support for RAJ (Dominion of India), a fellow Entente
-### Dominion, in its war against HND (Bharatiya Peoples Republic). Mirrors
-### Operation Anvil's shape (request -> stage -> commit), but decisions run
-### from Canada's side rather than RAJ's, per design choice - Canada is the
-### one extending help, not the one being helped.
+### Weight of the Crown - Dominion Solidarity ###
+### Canada-led support for fellow Entente Dominions while they're still
+### fighting - before anything has fallen (see Liberation of Fallen Allies
+### for what happens after). Mirrors Operation Anvil's shape (request ->
+### stage -> commit), but decisions run from Canada's side rather than the
+### recipient's, per design choice - Canada is the one extending help, not
+### the one being helped.
+###
+### Two targets so far, each with its own section below: RAJ (Dominion of
+### India, vs. HND) and NAT (Natal, vs. the rump South African government
+### after the Third Boer War).
 ###
 ### Verified against this repo's own RAJ content: RAJ starts in its own
 ### separate faction with PRF as an ally (history/countries/RAJ - Dominion
@@ -14,6 +19,8 @@
 ### an actual game, not hypothetical.
 
 wotc_dominion_solidarity = {
+	### --- Canada -> RAJ (Dominion of India) --- ###
+
 	wotc_raj_dispatch_advisors = {
 		icon = GFX_decision_generic_agreement
 		available = {
@@ -95,6 +102,104 @@ wotc_dominion_solidarity = {
 			FROM = {
 				set_country_flag = { flag = wotc_raj_offensive_active days = 14 }
 				add_ideas = wotc_idea_raj_offensive_bonus
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	### --- Canada -> NAT (Natal) --- ###
+	### The Third Boer War: confirmed real via common/scripted_effects/SAF
+	### effects (South Africa).txt's SAF_natal_secedes (sets global flag
+	### SAF_third_boer_war_happened, spawns Natal via start_civil_war as a
+	### market_liberal, Entente-loyal splinter) and the real tag alias
+	### (NAT = { original_tag = SAF has_country_flag = SAF_is_natal }).
+	###
+	### Unlike RAJ/HND, the rump South African government Natal fights is a
+	### dynamically generated civil-war tag, not a fixed one - there's no
+	### equivalent of "HND" to hardcode. So wotc_natal_joint_offensive gates
+	### on `has_war = yes` (NAT is fighting someone) rather than naming an
+	### opponent, since Canada's support here doesn't need to know who
+	### specifically it is - only Liberation of Fallen Allies (which already
+	### covers Natal generically if it ever falls) needs to resolve that.
+
+	wotc_natal_dispatch_advisors = {
+		icon = GFX_decision_generic_agreement
+		available = {
+			is_faction_leader = yes
+			NOT = { has_country_flag = wotc_natal_advisors_committed }
+		}
+
+		targets = { NAT }
+		target_trigger = {
+			FROM = { is_in_faction_with = ENT }
+		}
+
+		cost = 50
+
+		complete_effect = {
+			set_country_flag = wotc_natal_advisors_committed
+			FROM = {
+				add_ideas = wotc_idea_natal_advisor_support
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_natal_equipment_shipment = {
+		icon = GFX_decision_generic_send_supplies
+		available = {
+			has_country_flag = wotc_natal_advisors_committed
+		}
+
+		targets = { NAT }
+		target_trigger = {
+			FROM = { is_in_faction_with = ENT }
+		}
+
+		cost = 50
+		days_re_enable = 30
+
+		complete_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_1
+				amount = -300
+				producer = CAN
+			}
+			FROM = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment_1
+					amount = 300
+					producer = CAN
+				}
+			}
+		}
+
+		ai_will_do = { factor = 1 }
+	}
+
+	wotc_natal_joint_offensive = {
+		icon = GFX_decision_generic_invasion
+		available = {
+			has_country_flag = wotc_natal_advisors_committed
+		}
+
+		targets = { NAT }
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = ENT
+				has_war = yes
+			}
+		}
+
+		cost = 100
+		days_remove = 14
+
+		complete_effect = {
+			FROM = {
+				set_country_flag = { flag = wotc_natal_offensive_active days = 14 }
+				add_ideas = wotc_idea_natal_offensive_bonus
 			}
 		}
 
