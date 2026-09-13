@@ -1,22 +1,50 @@
 ### Weight of the Crown - 49th Parallel Escalation ###
 
 wotc_49th_parallel = {
+	# One-time only (not repeatable - see wotc_rcmp_ert_deployed flag), or
+	# this would spawn 3 free divisions every 45 days. Spawns real RCMP
+	# Emergency Response Team garrisons at three border-facing cities,
+	# using Canada's own existing "District Militia" division template
+	# (history/units/CAN.txt - a real, already-defined small garrison
+	# template, not invented here) at three verified real locations:
+	# Toronto (state 276), Quebec/Montreal (state 832), Winnipeg/Manitoba
+	# (state 467) - all confirmed via this repo's own victory-point
+	# localisation and history/states files, not guessed.
 	wotc_border_guard_deployment = {
 		icon = GFX_decision_generic_defence
 		available = {
 			wotc_tier_observation = yes
+			NOT = { has_country_flag = wotc_rcmp_ert_deployed }
 		}
 		cost = 25
-		days_re_enable = 45
 
 		complete_effect = {
 			# Does NOT grant CAN_refugee_crisis_help - confirmed the base
 			# mod already grants that through its own event chain
 			# (events/CAN events (Canada).txt), on the actual refugee
 			# crisis mechanic. Duplicating it here would double-grant the
-			# same idea outside that mechanic's real conditions - this
-			# decision is just the border-guard cost/flavor on its own.
+			# same idea outside that mechanic's real conditions.
 			add_political_power = -25
+			set_country_flag = wotc_rcmp_ert_deployed
+
+			276 = { # Toronto
+				create_unit = {
+					division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
+					owner = ROOT
+				}
+			}
+			832 = { # Quebec (Montreal / Quebec City)
+				create_unit = {
+					division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
+					owner = ROOT
+				}
+			}
+			467 = { # Winnipeg (Manitoba)
+				create_unit = {
+					division = "name = \"RCMP Emergency Response Team\" division_template = \"District Militia\" start_experience_factor = 0.8"
+					owner = ROOT
+				}
+			}
 		}
 
 		ai_will_do = { factor = 1 }
