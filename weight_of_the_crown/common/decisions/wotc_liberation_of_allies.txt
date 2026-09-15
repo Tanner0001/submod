@@ -69,7 +69,18 @@ wotc_liberation_of_allies = {
 					}
 				}
 			}
-			create_wargoal = { target = event_target:wotc_liberation_target type = topple_government }
+			# type = annex_everything, NOT topple_government - confirmed real
+			# (events/GBR events (United Kingdom).txt's united_kingdom_events.127
+			# uses the identical create_wargoal shape). topple_government only
+			# forces a government change on victory and transfers no territory
+			# at all, which was the actual bug behind "The Fate of a Homeland"
+			# doing nothing: release/release_puppet/puppet need Canada to
+			# actually own the fallen ally's homeland by the time that event
+			# fires, and a topple_government win never gives it to us.
+			# annex_everything makes Canada annex the conqueror's full
+			# territory (including the ally's former homeland) on victory,
+			# which is what the disposal choice is supposed to be disposing of.
+			create_wargoal = { target = event_target:wotc_liberation_target type = annex_everything }
 			set_country_flag = { flag = wotc_liberation_war_active days = 14 }
 			add_ideas = wotc_idea_liberation_offensive_bonus
 
