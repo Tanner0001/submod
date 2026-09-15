@@ -35,7 +35,14 @@ wotc_operation_homecoming = {
 	wotc_ice_overture = {
 		icon = GFX_decision_generic_agreement
 		available = {
-			NOT = { 100 = { owner = CAN } }
+			# FIX (from in-game report): `owner = CAN` inside a state scope
+			# isn't a real trigger anywhere in this repo or the base game -
+			# it's a history-file key, not a trigger. The real trigger is
+			# `is_owned_by = CAN` (confirmed via events/wotc_canada.txt's own
+			# usage and many base-game events). This was making the
+			# prerequisite always show as failing regardless of Iceland's
+			# actual ownership.
+			NOT = { 100 = { is_owned_by = CAN } }
 			NOT = { has_country_flag = wotc_ice_overture_done }
 			NOT = { has_country_flag = wotc_ice_overture_pending }
 		}
@@ -54,7 +61,7 @@ wotc_operation_homecoming = {
 		available = {
 			has_country_flag = wotc_ice_overture_done
 			NOT = { has_country_flag = wotc_ice_overture_pending } # the 45-day buildup has elapsed
-			NOT = { 100 = { owner = CAN } }
+			NOT = { 100 = { is_owned_by = CAN } } # is_owned_by, not owner - see wotc_ice_overture's fix note
 		}
 		cost = 50
 
@@ -82,7 +89,7 @@ wotc_operation_homecoming = {
 		icon = GFX_decision_generic_agreement
 		available = {
 			has_country_flag = wotc_homecoming_iceland_secured
-			NOT = { 337 = { owner = CAN } }
+			NOT = { 337 = { is_owned_by = CAN } } # is_owned_by, not owner - see wotc_ice_overture's fix note
 			NOT = { has_country_flag = wotc_faroe_overture_done }
 			NOT = { has_country_flag = wotc_faroe_overture_pending }
 		}
@@ -101,7 +108,7 @@ wotc_operation_homecoming = {
 		available = {
 			has_country_flag = wotc_faroe_overture_done
 			NOT = { has_country_flag = wotc_faroe_overture_pending }
-			NOT = { 337 = { owner = CAN } }
+			NOT = { 337 = { is_owned_by = CAN } } # is_owned_by, not owner - see wotc_ice_overture's fix note
 		}
 		cost = 40
 
